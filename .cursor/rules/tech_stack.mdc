@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Stack Technique
+
+La tech stack du projet est détaillée ci-dessous et doit être strictement respectée. Avant d'envisager l'ajout de nouveaux outils ou technologies, assure-toi de privilégier en priorité cette stack afin de garantir la cohérence et la maintenabilité du projet.
+
+## Frontend
+- **Framework & Langages** : Next.js, TypeScript (TSX)  
+- **UI & Styling** : TailwindCSS, Shadcn/UI  
+- **State Management** : Zustand  
+- **Data Fetching** : TanStack Query  
+- **Formulaire** : React Hook Form  
+- **Validation** : Zod  
+
+## Backend
+- **Framework** : NestJS, Typescript 
+- **ORM** : Prisma  
+- **Base de données** : PostgreSQL  
+
+## Authentification
+- **Solution** : SuperTokens
+
+## Gestion de Projet
+- **Outil** : Linear  
+
+## Documentation
+- **API** : Swagger  
+- **Autre** : Fumadocs  
+
+## Ops
+- **Containerisation** : Docker  
+- **Monorepo** : Turborepo  
+
+## Testing
+- **Framework de test** : Jest, Playwright 
