@@ -8,7 +8,7 @@ alwaysApply: true
 La tech stack du projet est détaillée ci-dessous et doit être strictement respectée. Avant d'envisager l'ajout de nouveaux outils ou technologies, assure-toi de privilégier en priorité cette stack afin de garantir la cohérence et la maintenabilité du projet.
 
 ## Frontend
-- **Framework & Langages** : Next.js, TypeScript (TSX)  
+- **Framework & Langages** : Next.js 15 (App Router), TypeScript (TSX)  
 - **UI & Styling** : TailwindCSS, Shadcn/UI  
 - **State Management** : Zustand  
 - **Data Fetching** : TanStack Query  
