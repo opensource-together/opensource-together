@@ -21,3 +21,26 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  link        String?
+  status      ProjectStatus?
+  userId      String
+  techStacks  TechStack[]
+}
+
+model TechStack {
+  id       String    @id @default(uuid())
+  name     String
+  iconUrl  String
+  projects Project[]
+}
