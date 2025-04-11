@@ -30,7 +30,7 @@ enum ProjectStatus {
 }
 
 model Project {
-  id          String         @id @default(uuid())
+  id          String        @id @default(uuid())
   title       String
   description String
   link        String?
