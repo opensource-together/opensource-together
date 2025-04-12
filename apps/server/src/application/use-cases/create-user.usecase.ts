@@ -1,5 +1,5 @@
 import { UserRepositoryPort } from '@application/ports/user.repository.port';
-import { CreateUserDtoInput } from '@application/dto/CreateUserDtoInput.dto';
+import { CreateUserDtoInput } from '@/application/dto/create-user-input.dto';
 import { Result } from '@shared/result';
 import { UserFactory } from '@/domain/user/user.factory';
 import { User } from '@domain/user/user.entity';
@@ -23,8 +23,10 @@ export class CreateUserUseCase {
       createUserDtoInput.email,
     );
     if (!user.success) return Result.fail(user.error);
-    await this.userRepo.save(user.value);
+    const savedUser = await this.userRepo.save(user.value);
+    if (!savedUser)
+      return Result.fail("Erreur lors de la création de l'utilisateur.");
 
-    return Result.ok(user.value);
+    return Result.ok(savedUser);
   }
 }
