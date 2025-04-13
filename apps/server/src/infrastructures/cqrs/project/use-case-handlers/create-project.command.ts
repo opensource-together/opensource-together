@@ -5,8 +5,8 @@ export class CreateProjectCommand implements ICommand {
     public readonly id: string,
     public readonly title: string,
     public readonly description: string,
-    public readonly link: string | null,
-    public readonly status: 'PUBLISHED',
+    public readonly link: string,
+    public readonly status: 'PUBLISHED' | 'DRAFT',
     public readonly techStacks: string[],
     public readonly userId: string,
   ) {}

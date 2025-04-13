@@ -2,110 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { ProjectRepositoryPort } from '@application/ports/project.repository.port';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
-import { Result } from '@/shared/result';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { PrismaProjectMapper } from './project/prisma.project.mapper';
+import { ProjectFactory } from '@/domain/project/project.factory';
+
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async save(project: Project): Promise<Result<Project>> {
-    try {
-      const repoProject = PrismaProjectMapper.toRepo(project);
-      if (!repoProject.success) return Result.fail(repoProject.error);
-
-      const savedProject = await this.prisma.project.create({
-        data: repoProject.value,
-        include: { techStacks: true },
-      });
-      const domainProject = PrismaProjectMapper.toDomain(savedProject);
-      if (!domainProject.success) return Result.fail(domainProject.error);
-      return Result.ok(domainProject.value);
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002')
-          return Result.fail('Project already exists');
-        else if (error.code === 'P2025')
-          return Result.fail('TechStack not found');
-      } else {
-        console.error(error);
-        return Result.fail('Unknown error');
-      }
-      return Result.fail('Unknown error');
-    }
+  async save(project: Project): Promise<void> {
+    await this.prisma.project.create({
+      data: {
+        id: project.getId(),
+        title: project.getTitle(),
+        description: project.getDescription(),
+        link: project.getLink(),
+        status: project.getStatus(),
+        userId: project.getUserId(),
+        techStacks: project.getTechStacks(),
+      },
+    });
   }
 
-  async findProjectByTitle(title: string): Promise<Result<Project[]>> {
-    try {
-      if (!title || typeof title !== 'string' || title.trim() === '')
-        return Result.ok([]);
-
-      const prismaProjects = await this.prisma.project.findMany({
-        where: {
-          title: {
-            mode: 'insensitive',
-            startsWith: title,
-          },
-        },
-        include: { techStacks: true },
-      });
-
-      if (prismaProjects.length === 0) return Result.ok([]);
-
-      const domainProjects: Project[] = [];
-
-      for (const projectPrisma of prismaProjects) {
-        const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
-        if (!domainProject.success) return Result.fail(domainProject.error);
-        domainProjects.push(domainProject.value);
-      }
-
-      return Result.ok(domainProjects);
-    } catch (error) {
-      console.error(error);
-      return Result.fail('Unknown error');
-    }
+  async findById(id: string): Promise<Project | null> {
+    const project = await this.prisma.project.findUnique({
+      where: { id },
+    });
+    return project ? ProjectFactory.create(project) : null;
   }
 
-  async findProjectById(id: string): Promise<Result<Project>> {
-    try {
-      const projectPrisma = await this.prisma.project.findUnique({
-        where: { id },
-        include: { techStacks: true },
-      });
-
-      if (!projectPrisma) return Result.fail('Project not found');
-
-      const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
-      if (!domainProject.success) return Result.fail(domainProject.error);
-
-      return Result.ok(domainProject.value);
-    } catch (error) {
-      console.error(error);
-      return Result.fail('Unknown error');
-    }
-  }
-
-  async getAllProjects(): Promise<Result<Project[]>> {
-    try {
-      const projectsPrisma = await this.prisma.project.findMany({
-        include: { techStacks: true },
-      });
-
-      if (!projectsPrisma) return Result.ok([]);
-
-      const domainProjects: Project[] = [];
-
-      for (const projectPrisma of projectsPrisma) {
-        const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
-        if (!domainProject.success) return Result.fail(domainProject.error);
-        domainProjects.push(domainProject.value);
-      }
-
-      return Result.ok(domainProjects);
-    } catch (error) {
-      console.error(error);
-      return Result.fail('Unknown error');
-    }
+  async findByUserId(userId: string): Promise<Project[] | null> {
+    const projects = await this.prisma.project.findMany({
+      where: { userId },
+    });
+    return projects.map((project) => ProjectFactory.create(project));
   }
 }
