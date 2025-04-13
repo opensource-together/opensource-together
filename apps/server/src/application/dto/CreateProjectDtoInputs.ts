@@ -3,7 +3,7 @@ export class CreateProjectDtoInput {
   title: string;
   description: string;
   link: string;
-  status: 'pending' | 'in_progress' | 'completed';
+  status: 'PUBLISHED' | 'DRAFT';
   userId: string;
   techStacks: string[];
 }
