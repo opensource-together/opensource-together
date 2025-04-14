@@ -2,54 +2,46 @@ export class Project {
   private readonly id: string;
   private title: string;
   private description: string;
-  private techStacks: string[];
-  private link: string;
-  private status: 'PUBLISHED' | 'DRAFT';
+  private techStacks: any;
+  private link: string | null;
+  private status: any;
   private userId: string;
 
-	constructor({
-		id,
-		title,
-		description,
-		techStacks,
-		link,
-		status,
-		userId,
-	}) {
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.techStacks = techStacks;
-		this.link = link;
-		this.status = status;
-		this.userId = userId;
-	}
+  constructor({ id, title, description, techStacks, link, status, userId }) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.techStacks = techStacks;
+    this.link = link;
+    this.status = status;
+    this.userId = userId;
+  }
 
-	public getId() {
-		return this.id;
-	}
+  public getId() {
+    return this.id;
+  }
 
-	public getTitle() {
-		return this.title;
-	}
+  public getTitle() {
+    return this.title;
+  }
 
-	public getDescription() {
-		return this.description;
-	}
-	
-	public getTechStacks() {
-		return this.techStacks;
-	}
+  public getDescription() {
+    return this.description;
+  }
 
-	public getLink() {
-		return this.link;
-	}
+  public getTechStacks() {
+    return this.techStacks;
+  }
 
-	public getStatus() {
-		return this.status;
-	}
+  public getLink() {
+    return this.link;
+  }
 
-	public getUserId() {
-		return this.userId;
-	}
+  public getStatus() {
+    return this.status;
+  }
+
+  public getUserId() {
+    return this.userId;
+  }
 }
