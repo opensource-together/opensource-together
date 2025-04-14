@@ -6,10 +6,10 @@ export class ProjectFactory {
     id: string,
     title: string,
     description: string,
-    link: string,
-    status: 'PUBLISHED' | 'DRAFT',
+    link: string | null,
+    status: any,
     userId: string,
-    techStacks: string[],
+    techStacks: any,
   ): Result<Project> {
     return Result.ok(
       new Project({

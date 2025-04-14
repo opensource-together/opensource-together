@@ -2,9 +2,9 @@ export class Project {
   private readonly id: string;
   private title: string;
   private description: string;
-  private techStacks: string[];
-  private link: string;
-  private status: 'PUBLISHED' | 'DRAFT';
+  private techStacks: any;
+  private link: string | null;
+  private status: any;
   private userId: string;
 
   constructor({ id, title, description, techStacks, link, status, userId }) {

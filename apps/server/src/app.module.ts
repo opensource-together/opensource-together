@@ -7,7 +7,7 @@ import { SuperTokensAuthGuard } from 'supertokens-nestjs';
 import { AuthModule } from '@infrastructures/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CqrsWiringModule } from '@infrastructures/cqrs/cqrs-wiring.module';
-import { ProjectModule } from '@/presentation/project/project.module';
+import { ProjectModule } from './presentation/project/project.module';
 @Module({
   imports: [
     CqrsModule.forRoot(),

@@ -3,6 +3,7 @@ import { ProjectRepositoryPort } from '@application/ports/project.repository.por
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
 import { ProjectFactory } from '@/domain/project/project.factory';
+import { Result } from '@/shared/result';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
@@ -25,14 +26,47 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
   async findById(id: string): Promise<Project | null> {
     const project = await this.prisma.project.findUnique({
       where: { id },
+      include: { techStacks: true },
     });
-    return project ? ProjectFactory.create(project) : null;
+
+    if (!project) return null;
+
+    const result = ProjectFactory.create(
+      project.id,
+      project.title,
+      project.description,
+      project.link,
+      project.status,
+      project.userId,
+      project.techStacks,
+    );
+
+    return result.success ? result.value : null;
   }
 
   async findByUserId(userId: string): Promise<Project[] | null> {
     const projects = await this.prisma.project.findMany({
       where: { userId },
+      include: { techStacks: true },
     });
-    return projects.map((project) => ProjectFactory.create(project));
+
+    const result = projects.map((project) =>
+      ProjectFactory.create(
+        project.id,
+        project.title,
+        project.description,
+        project.link,
+        project.status,
+        project.userId,
+        project.techStacks,
+      ),
+    );
+
+    // Filtrer les projets valides uniquement
+    const validProjects = result
+      .filter((res): res is Result<Project> & { success: true } => res.success)
+      .map((res) => res.value);
+
+    return validProjects.length > 0 ? validProjects : null;
   }
 }
