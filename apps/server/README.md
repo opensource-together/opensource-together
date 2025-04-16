@@ -25,6 +25,77 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Configuration de l'environnement de développement
+
+### Prérequis
+- Docker et Docker Compose
+- Node.js (version recommandée : 22.x)
+- pnpm (gestionnaire de paquets)
+
+### Structure du projet
+Le projet utilise une architecture monorepo avec Docker pour l'environnement de développement. Les principaux composants sont :
+
+- `Dockerfile.dev` : Configuration Docker pour l'environnement de développement
+- `docker-compose.dev.yml` : Orchestration des services (backend, bases de données, etc.)
+- `.env` : Variables d'environnement (copier `.env.example` pour commencer)
+
+### Services Docker
+- **backend** : Service NestJS principal
+- **business-db** : Base de données PostgreSQL principale
+- **supertokens-db** : Base de données pour l'authentification
+- **supertokens** : Service d'authentification
+- **migrate** : Service de migration Prisma
+
+### Installation et démarrage
+
+1. Cloner le projet et installer les dépendances :
+```bash
+# Installation des dépendances
+pnpm install
+```
+
+2. Configurer l'environnement :
+```bash
+# Copier le fichier d'exemple
+cp .env.example .env
+# Éditer les variables selon vos besoins
+```
+
+3. Démarrer l'environnement de développement :
+```bash
+# Démarrer tous les services
+docker compose -f docker-compose.dev.yml up --build
+```
+
+### Hot Reload et développement
+Le projet est configuré avec le hot reload pour le développement. Les modifications du code source sont automatiquement détectées et appliquées.
+
+### Installation de nouvelles dépendances
+Pour installer de nouvelles dépendances et les synchroniser entre l'environnement local et le container :
+
+```bash
+# Installation locale et dans le container
+pnpm install --save package-name && pnpm docker:backend:update
+```
+
+### Scripts utiles
+```bash
+# Mise à jour des dépendances dans le container
+pnpm docker:backend:update
+
+# Génération du client Prisma
+pnpm prisma:generate
+
+# Migration de la base de données (développement)
+pnpm prisma:migrate:dev
+
+# Déploiement des migrations
+pnpm prisma:migrate:deploy
+
+# Interface Prisma Studio
+pnpm prisma:studio
+```
+
 ## Project setup
 
 ```bash
