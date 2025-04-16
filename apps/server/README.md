@@ -96,3 +96,73 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Workflow de développement avec Prisma et Docker
+
+### Premier démarrage
+```sh
+# Installer les dépendances
+pnpm install
+
+# Démarrer les containers
+docker compose up --build
+```
+
+### Modifier le schéma Prisma
+1. Modifie `src/infrastructures/orm/prisma/schema.prisma`
+2. Lance la commande de migration :
+   ```sh
+   pnpm db:migrate
+   ```
+   Cette commande va :
+   - Générer le client Prisma
+   - Créer une nouvelle migration dans le dossier `prisma/migrations`
+   - Appliquer la migration à la base de données
+
+3. Commit les fichiers de migration générés :
+   ```sh
+   git add src/infrastructures/orm/prisma/migrations
+   git commit -m "feat(db): add new migration for [description]"
+   ```
+
+### Après un git pull ou un changement de branche
+1. Installer les dépendances si nécessaire :
+   ```sh
+   pnpm install
+   ```
+
+2. Appliquer les migrations :
+   ```sh
+   pnpm db:deploy
+   ```
+
+3. Redémarrer les services :
+   ```sh
+   docker compose restart backend
+   ```
+
+### Réinitialiser la base de données
+Si vous rencontrez des problèmes de synchronisation ou souhaitez repartir de zéro :
+
+```sh
+# Arrêter tous les containers
+docker compose down
+
+# Supprimer les volumes
+docker compose down -v
+
+# Redémarrer
+docker compose up --build
+```
+
+### Points importants
+- Le dossier `src/infrastructures/orm/prisma/migrations` doit TOUJOURS être versionné
+- Ne JAMAIS modifier manuellement les fichiers de migration
+- Toujours utiliser `pnpm db:migrate` pour créer de nouvelles migrations
+- Utiliser `pnpm db:deploy` pour appliquer les migrations existantes
+
+### Outils utiles
+- `pnpm docker:prisma:studio` : Explorer la base de données
+- `pnpm docker:backend <cmd>` : Exécuter une commande dans le container backend
+- `pnpm db:migrate` : Créer et appliquer une nouvelle migration (développement)
+- `pnpm db:deploy` : Appliquer les migrations existantes (production)
