@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CreateProjectCommand } from '@/infrastructures/cqrs/project/use-case-handlers/create-project.command';
 import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -9,6 +9,11 @@ export class ProjectController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  // @Get(':id')
+  // async getProject(@Param('id') id: string) {
+  //   return await this.queryBus.execute(new GetProjectQuery(id));
+  // }
 
   @Post()
   async createProject(
