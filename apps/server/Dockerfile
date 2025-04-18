@@ -1,31 +1,46 @@
-# Base image
-FROM node:20-alpine
-RUN apk add --no-cache postgresql-client
+FROM node:22-alpine AS base
 
-# Install pnpm
-RUN npm install -g pnpm
 
-# Create app directory
-WORKDIR /usr/src/app
+FROM base AS deps
 
-# Copy package files
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
+WORKDIR /app
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 
-# Install dependencies
-RUN pnpm install --no-frozen-lockfile
+RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
-# Copy application source
+
+FROM base AS builder
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# RUN pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma
-# RUN pnpm prisma db push --schema=src/infrastructures/orm/prisma/schema.prisma
-# Expose port
-EXPOSE 4000
+RUN corepack enable pnpm && \
+    pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma && \
+    pnpm run build
 
-# Set environment to development
-ENV NODE_ENV=development
 
-# Command to run the app in development mode
-COPY entrypoint.sh .
-CMD ["sh", "./entrypoint.sh"]
+FROM base AS runner
+
+WORKDIR /app
+
+RUN apk add --no-cache postgresql-client
+
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
+
+COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /app/src/infrastructures/orm/prisma ./schema
+
+USER nestjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+WORKDIR /app/dist
+CMD ["node", "main"]

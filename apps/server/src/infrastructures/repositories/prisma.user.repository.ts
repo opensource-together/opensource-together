@@ -3,21 +3,30 @@ import { UserRepositoryPort } from '@application/ports/user.repository.port';
 import { User } from '@domain/user/user.entity';
 import { PrismaService } from '@infrastructures/orm/prisma/prisma.service';
 import { UserFactory } from '@domain/user/user.factory';
+import { Result } from '@/shared/result';
 @Injectable()
 export class PrismaUserRepository implements UserRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async save(user: User): Promise<void> {
+  async save(user: User): Promise<User | null> {
     const id = user.getId();
     const username = user.getUsername();
     const email = user.getEmail();
-    await this.prisma.user.create({
+    const savedUser = await this.prisma.user.create({
       data: {
         id,
         username,
         email,
       },
     });
+    if (!savedUser) return null;
+    const userResult: Result<User> = UserFactory.create(
+      savedUser.id,
+      savedUser.username,
+      savedUser.email,
+    );
+    if (!userResult.success) return null;
+    return userResult.value;
   }
 
   async findByEmail(email: string): Promise<User | null> {

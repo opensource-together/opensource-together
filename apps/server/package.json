@@ -17,7 +17,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker:backend:update": "docker compose --project-directory .. exec backend pnpm install",
+    "prisma:generate": "pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma && docker compose --project-directory .. exec backend pnpm prisma generate --schema=/app/src/infrastructures/orm/prisma/schema.prisma",
+    "prisma:migrate:dev": "docker compose --project-directory .. exec backend pnpm prisma migrate dev --schema=/app/src/infrastructures/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma",
+    "prisma:migrate:deploy": "docker compose --project-directory .. exec backend pnpm prisma migrate deploy --schema=/app/src/infrastructures/orm/prisma/schema.prisma",
+    "prisma:studio": "docker compose --project-directory .. exec backend pnpm prisma studio --schema=/app/src/infrastructures/orm/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -28,6 +33,8 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.1.0",
     "@prisma/client": "6.5.0",
+    "@sentry/nestjs": "^9.12.0",
+    "@sentry/profiling-node": "^9.12.0",
     "prisma": "^6.5.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
