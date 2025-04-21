@@ -26,7 +26,7 @@ export class CreateProjectUseCase {
     }
 
     const project = ProjectFactory.create(
-      createProjectDtoInput.id,
+      null,
       createProjectDtoInput.title,
       createProjectDtoInput.description,
       createProjectDtoInput.link,

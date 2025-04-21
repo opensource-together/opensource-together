@@ -3,7 +3,6 @@ import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
-    public readonly id: string,
     public readonly title: string,
     public readonly description: string,
     public readonly link: string,

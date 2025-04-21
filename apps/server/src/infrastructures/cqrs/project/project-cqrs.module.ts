@@ -3,7 +3,7 @@ import { PROJECT_REPOSITORY_PORT } from '@application/ports/project.repository.p
 import { PrismaProjectRepository } from '@infrastructures/repositories/prisma.project.repository';
 import { RepositoryModule } from '@infrastructures/repositories/repository.module';
 import { CreateProjectHandler } from './use-case-handlers/create-project.handler';
-import { CreateProjectCommand } from './use-case-handlers/create-project.command';
+import { findTitleHandler } from './queries/find-title.handler';
 @Module({
   imports: [RepositoryModule],
   providers: [
@@ -12,6 +12,7 @@ import { CreateProjectCommand } from './use-case-handlers/create-project.command
       useClass: PrismaProjectRepository,
     },
     CreateProjectHandler,
+    findTitleHandler,
   ],
   exports: [],
 })
