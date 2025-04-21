@@ -3,15 +3,7 @@ export class TechStack {
   private readonly name: string;
   private readonly iconUrl: string;
 
-  constructor({
-    id,
-    name,
-    iconUrl,
-  }: {
-    id: string;
-    name: string;
-    iconUrl: string;
-  }) {
+  constructor({ id, name, iconUrl }) {
     this.id = id;
     this.name = name;
     this.iconUrl = iconUrl;

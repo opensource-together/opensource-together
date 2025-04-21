@@ -1,4 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
+import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -7,7 +8,7 @@ export class CreateProjectCommand implements ICommand {
     public readonly description: string,
     public readonly link: string,
     public readonly status: 'PUBLISHED' | 'DRAFT',
-    public readonly techStacks: string[],
+    public readonly techStacks: TechStackDto[],
     public readonly userId: string,
   ) {}
 }

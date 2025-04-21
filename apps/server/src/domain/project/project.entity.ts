@@ -1,8 +1,10 @@
+import { TechStack } from '../techStack/techstack.entity';
+
 export class Project {
   private readonly id: string;
   private title: string;
   private description: string;
-  private techStacks: any;
+  private techStacks: TechStack[];
   private link: string | null;
   private status: any;
   private userId: string;
