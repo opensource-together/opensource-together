@@ -4,4 +4,5 @@ export interface ProjectRepositoryPort {
   save(project: Project): Promise<void>;
   findProjectById(id: string): Promise<Project | null>;
   findProjectByTitle(title: string): Promise<Project[] | null>;
+  getAllProjects(): Promise<Project[]>;
 }
