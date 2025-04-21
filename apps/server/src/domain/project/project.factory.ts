@@ -1,9 +1,10 @@
 import { Result } from '@/shared/result';
 import { Project } from './project.entity';
 import { TechStack } from '../techStack/techstack.entity';
+import { UUID } from 'crypto';
 export class ProjectFactory {
   static create(
-    id: string,
+    id: string | null,
     title: string,
     description: string,
     link: string | null,
