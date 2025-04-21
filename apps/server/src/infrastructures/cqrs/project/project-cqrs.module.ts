@@ -5,6 +5,7 @@ import { RepositoryModule } from '@infrastructures/repositories/repository.modul
 import { CreateProjectHandler } from './use-case-handlers/create-project.handler';
 import { findProjectByTitleHandler } from './queries/find-project-by-title.handler';
 import { FindProjectByIdHandler } from './queries/find-project-by-id.handler';
+import { GetProjectsHandler } from './queries/get-projects.handler';
 @Module({
   imports: [RepositoryModule],
   providers: [
@@ -15,6 +16,7 @@ import { FindProjectByIdHandler } from './queries/find-project-by-id.handler';
     CreateProjectHandler,
     findProjectByTitleHandler,
     FindProjectByIdHandler,
+    GetProjectsHandler,
   ],
   exports: [],
 })

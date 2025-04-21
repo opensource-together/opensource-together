@@ -6,7 +6,7 @@ import { Session } from 'supertokens-nestjs';
 import { Project } from '@/domain/project/project.entity';
 import { findProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-title.query';
 import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-id.query';
-
+import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-projects.query';
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -15,7 +15,13 @@ export class ProjectController {
   ) {}
 
   @Get()
-  async getProjects(@Query('title') title: string): Promise<Project> {
+  async getProjects(): Promise<Project[]> {
+    console.log('Get all projects');
+    return await this.queryBus.execute(new GetProjectsQuery());
+  }
+
+  @Get('search')
+  async getProjectsFiltered(@Query('title') title: string): Promise<Project> {
     console.log('Title rechercher : ', title);
     return await this.queryBus.execute(new findProjectByTitleQuery(title));
   }

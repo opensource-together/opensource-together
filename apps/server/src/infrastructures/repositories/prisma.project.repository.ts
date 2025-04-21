@@ -98,10 +98,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       throw new Error('Error project not found');
     }
 
-    // const techStacks = projectPrisma.techStacks.map((techStack) => {
-    //   const techStack = TechStackFactory.create(techStack);
-    // });
-
     const techStacks = TechStackFactory.createMany(projectPrisma.techStacks);
 
     if (!techStacks.success) {
@@ -123,5 +119,39 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
 
     return project.value;
+  }
+
+  async getAllProjects(): Promise<Project[]> {
+    const projectsPrisma = await this.prisma.project.findMany({
+      include: { techStacks: true },
+    });
+
+    if (!projectsPrisma) {
+      throw new Error('Error projects not found');
+    }
+
+    const projects = projectsPrisma.map((projectPrisma) => {
+      const techStacks = TechStackFactory.createMany(projectPrisma.techStacks);
+      if (!techStacks.success) {
+        throw new Error('Error creation techStacks');
+      }
+
+      const project = ProjectFactory.create(
+        projectPrisma.id,
+        projectPrisma.title,
+        projectPrisma.description,
+        projectPrisma.link,
+        projectPrisma.status,
+        projectPrisma.userId,
+        techStacks.value,
+      );
+
+      if (!project.success) {
+        throw new Error('Error creation project');
+      }
+
+      return project.value;
+    });
+    return projects;
   }
 }
