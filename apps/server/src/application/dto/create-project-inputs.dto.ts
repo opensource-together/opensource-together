@@ -1,3 +1,5 @@
+import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
+
 export class CreateProjectDtoInput {
   id: string;
   title: string;
@@ -5,5 +7,5 @@ export class CreateProjectDtoInput {
   link: string;
   status: 'PUBLISHED' | 'DRAFT';
   userId: string;
-  techStacks: string[];
+  techStacks: TechStackDto[];
 }

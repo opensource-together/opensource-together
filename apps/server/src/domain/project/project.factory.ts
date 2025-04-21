@@ -1,6 +1,6 @@
 import { Result } from '@/shared/result';
 import { Project } from './project.entity';
-
+import { TechStack } from '../techStack/techstack.entity';
 export class ProjectFactory {
   static create(
     id: string,
@@ -9,7 +9,7 @@ export class ProjectFactory {
     link: string | null,
     status: any,
     userId: string,
-    techStacks: any,
+    techStacks: TechStack[],
   ): Result<Project> {
     return Result.ok(
       new Project({

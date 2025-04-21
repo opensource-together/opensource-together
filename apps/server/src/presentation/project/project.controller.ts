@@ -20,10 +20,10 @@ export class ProjectController {
     @Session('userId') userId: string,
     @Body() project: CreateProjectDtoRequest,
   ) {
-    console.log('Post request received !!!!!');
+    console.log('Post request received !!!');
     return await this.commandBus.execute(
       new CreateProjectCommand(
-        'test',
+        '2',
         project.title,
         project.description,
         project.link,
