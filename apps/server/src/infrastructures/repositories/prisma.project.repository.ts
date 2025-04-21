@@ -38,7 +38,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
-  async findByTitle(title: string): Promise<Project[] | null> {
+  async findProjectByTitle(title: string): Promise<Project[] | null> {
     if (!title || typeof title !== 'string' || title.trim() === '') {
       console.log(title);
       throw new Error('❌ Le titre fourni est vide ou invalide');
@@ -47,7 +47,11 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     console.log('🔍 Recherche du projet avec le titre :', title);
 
     const prismaProjects = await this.prisma.project.findMany({
-      where: { title: title },
+      where: {
+        title: {
+          contains: title,
+        },
+      },
       include: { techStacks: true },
     });
 
@@ -84,36 +88,40 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     return projects;
   }
 
-  // async findById(id: string): Promise<Project | null> {
-  //   const project = await this.prisma.project.findUnique({
-  //     where: { id },
-  //     include: { techStacks: true },
-  //   });
-  // }
+  async findProjectById(id: string): Promise<Project | null> {
+    const projectPrisma = await this.prisma.project.findUnique({
+      where: { id },
+      include: { techStacks: true },
+    });
 
-  // async findByUserId(userId: string): Promise<Project[] | null> {
-  //   const projects = await this.prisma.project.findMany({
-  //     where: { userId },
-  //     include: { techStacks: true },
-  //   });
+    if (!projectPrisma) {
+      throw new Error('Error project not found');
+    }
 
-  //   const result = projects.map((project) =>
-  //     ProjectFactory.create(
-  //       project.id,
-  //       project.title,
-  //       project.description,
-  //       project.link,
-  //       project.status,
-  //       project.userId,
-  //       project.techStacks,
-  //     ),
-  //   );
+    // const techStacks = projectPrisma.techStacks.map((techStack) => {
+    //   const techStack = TechStackFactory.create(techStack);
+    // });
 
-  //   // Filtrer les projets valides uniquement
-  //   const validProjects = result
-  //     .filter((res): res is Result<Project> & { success: true } => res.success)
-  //     .map((res) => res.value);
+    const techStacks = TechStackFactory.createMany(projectPrisma.techStacks);
 
-  //   return validProjects.length > 0 ? validProjects : null;
-  // }
+    if (!techStacks.success) {
+      throw new Error("Erreur lors de la creation de l'entité techStacks");
+    }
+
+    const project = ProjectFactory.create(
+      projectPrisma.id,
+      projectPrisma.title,
+      projectPrisma.description,
+      projectPrisma.link,
+      projectPrisma.status,
+      projectPrisma.userId,
+      techStacks.value,
+    );
+
+    if (!project.success) {
+      throw new Error("Erreur lors de la creation de l'entité project");
+    }
+
+    return project.value;
+  }
 }
