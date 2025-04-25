@@ -2,7 +2,7 @@ import { TechStackFactory } from '../techStack/techStack.factory';
 import { TechStack } from '../techStack/techstack.entity';
 import { ProjectFactory } from './project.factory';
 import { unwrapResult } from '../../shared/test-utils';
-import { ProjectStatus } from '@/shared/project-status.type';
+import { ProjectStatus } from '@prisma/client';
 
 class ProjectTestBuilder {
   private id: string | null = '1';

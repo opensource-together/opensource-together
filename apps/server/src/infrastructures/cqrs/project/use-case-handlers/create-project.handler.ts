@@ -5,7 +5,7 @@ import {
   ProjectRepositoryPort,
 } from '@application/ports/project.repository.port';
 import { CreateProjectUseCase } from '@application/use-cases/create-project.usecase';
-import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 @CommandHandler(CreateProjectCommand)
 export class CreateProjectHandler
