@@ -1,24 +1,21 @@
+import { ProjectStatus } from '@/shared/project-status.type';
 import { Result } from '@/shared/result';
 
 export class Status {
-  private constructor(private readonly status: 'Active' | 'Archived') {}
+  private constructor(private readonly status: ProjectStatus) {}
 
-  static create(status: 'Active' | 'Archived'): Result<Status> {
-    if (!status) {
-      return Result.fail('Status is required');
-    }
-
-    if (status !== 'Active' && status !== 'Archived') {
-      return Result.fail('Status must be Active or Archived');
+  static create(status: ProjectStatus): Result<Status> {
+    if (status !== 'PUBLISHED' && status !== 'ARCHIVED' && status !== 'DRAFT') {
+      return Result.fail('Status must be PUBLISHED or ARCHIVED or DRAFT');
     }
     return Result.ok(new Status(status));
   }
 
-  public getStatus(): string {
+  public getStatus(): ProjectStatus | null {
     return this.status;
   }
 
-  static fromPersistence(status: 'Active' | 'Archived'): Status {
+  static fromPersistence(status: ProjectStatus): Status {
     return new Status(status);
   }
 }

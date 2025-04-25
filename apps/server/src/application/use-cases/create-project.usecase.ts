@@ -10,13 +10,6 @@ export class CreateProjectUseCase {
   async execute(
     createProjectDtoInput: CreateProjectDtoInput,
   ): Promise<Result<Project>> {
-    // const projectExists = await this.projectRepo.findById(
-    //   createProjectDtoInput.id,
-    // );
-    // if (projectExists) {
-    //   return Result.fail('Project already exists');
-    // }
-
     const techStacks = TechStackFactory.createMany(
       createProjectDtoInput.techStacks,
     );

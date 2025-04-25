@@ -10,7 +10,7 @@ export class Project {
   private description: Description;
   private techStacks: TechStack[];
   private link: Link | null;
-  private status: Status;
+  private status: Status | null;
   private userId: string;
 
   constructor({
@@ -27,7 +27,7 @@ export class Project {
     description: Description;
     techStacks: TechStack[];
     link: Link | null;
-    status: Status;
+    status: Status | null;
     userId: string;
   }) {
     this.id = id;
@@ -60,7 +60,7 @@ export class Project {
   }
 
   public getStatus() {
-    return this.status.getStatus();
+    return this.status ? this.status.getStatus() : null;
   }
 
   public getUserId() {

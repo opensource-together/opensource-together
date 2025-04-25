@@ -3,9 +3,7 @@ import { ProjectRepositoryPort } from '@application/ports/project.repository.por
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
 import { ProjectFactory } from '@/domain/project/project.factory';
-import { Result } from '@/shared/result';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
-import { TechStack } from '@/domain/techStack/techstack.entity';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
@@ -40,11 +38,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
   async findProjectByTitle(title: string): Promise<Project[] | null> {
     if (!title || typeof title !== 'string' || title.trim() === '') {
-      console.log(title);
       throw new Error('❌ Le titre fourni est vide ou invalide');
     }
-
-    console.log('🔍 Recherche du projet avec le titre :', title);
 
     const prismaProjects = await this.prisma.project.findMany({
       where: {
