@@ -1,11 +1,15 @@
-import { Result } from '@shared/result';
+import { Result } from '@/shared/result';
 
 export class Status {
-  private constructor(private readonly status: string) {}
+  private constructor(private readonly status: 'Active' | 'Archived') {}
 
-  static create(status: string): Result<Status> {
-    if (status !== 'PUBLISHED' && status !== 'ARCHIVED' && status !== 'DRAFT') {
-      return Result.fail('Status must be PUBLISHED or ARCHIVED or DRAFT');
+  static create(status: 'Active' | 'Archived'): Result<Status> {
+    if (!status) {
+      return Result.fail('Status is required');
+    }
+
+    if (status !== 'Active' && status !== 'Archived') {
+      return Result.fail('Status must be Active or Archived');
     }
     return Result.ok(new Status(status));
   }
@@ -14,8 +18,7 @@ export class Status {
     return this.status;
   }
 
-  static fromPersistence(status: string): Status {
-    //pas de vérification ?
+  static fromPersistence(status: 'Active' | 'Archived'): Status {
     return new Status(status);
   }
 }

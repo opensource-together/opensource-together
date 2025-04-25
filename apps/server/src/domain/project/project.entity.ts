@@ -1,15 +1,35 @@
 import { TechStack } from '../techStack/techstack.entity';
+import { Title } from './title.vo';
+import { Description } from './description.vo';
+import { Status } from './status.vo';
+import { Link } from './link.vo';
 
 export class Project {
-  private readonly id: string;
-  private title: string;
-  private description: string;
+  private readonly id: string | null;
+  private title: Title;
+  private description: Description;
   private techStacks: TechStack[];
-  private link: string | null;
-  private status: any;
+  private link: Link | null;
+  private status: Status;
   private userId: string;
 
-  constructor({ id, title, description, techStacks, link, status, userId }) {
+  constructor({
+    id,
+    title,
+    description,
+    techStacks,
+    link,
+    status,
+    userId,
+  }: {
+    id: string | null;
+    title: Title;
+    description: Description;
+    techStacks: TechStack[];
+    link: Link | null;
+    status: Status;
+    userId: string;
+  }) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -24,11 +44,11 @@ export class Project {
   }
 
   public getTitle() {
-    return this.title;
+    return this.title.getTitle();
   }
 
   public getDescription() {
-    return this.description;
+    return this.description.getDescription();
   }
 
   public getTechStacks() {
@@ -36,11 +56,11 @@ export class Project {
   }
 
   public getLink() {
-    return this.link;
+    return this.link ? this.link.getLink() : null;
   }
 
   public getStatus() {
-    return this.status;
+    return this.status.getStatus();
   }
 
   public getUserId() {
