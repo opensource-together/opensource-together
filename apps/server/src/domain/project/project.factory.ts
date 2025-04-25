@@ -5,7 +5,7 @@ import { Title } from './title.vo';
 import { Description } from './description.vo';
 import { Status } from './status.vo';
 import { Link } from './link.vo';
-import { ProjectStatus } from '@/shared/project-status.type';
+import { ProjectStatus } from '@prisma/client';
 
 export class ProjectFactory {
   static create(

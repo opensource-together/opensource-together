@@ -1,5 +1,5 @@
 import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
-import { ProjectStatus } from '@/shared/project-status.type';
+import { ProjectStatus } from '@prisma/client';
 export class CreateProjectDtoInput {
   title: string;
   description: string;

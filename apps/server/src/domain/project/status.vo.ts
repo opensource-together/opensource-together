@@ -1,4 +1,4 @@
-import { ProjectStatus } from '@/shared/project-status.type';
+import { ProjectStatus } from '@prisma/client';
 import { Result } from '@/shared/result';
 
 export class Status {
