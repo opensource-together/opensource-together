@@ -2,13 +2,14 @@ import { TechStackFactory } from '../techStack/techStack.factory';
 import { TechStack } from '../techStack/techstack.entity';
 import { ProjectFactory } from './project.factory';
 import { unwrapResult } from '../../shared/test-utils';
+import { ProjectStatus } from '@/shared/project-status.type';
 
 class ProjectTestBuilder {
   private id: string | null = '1';
   private title: string = 'Test Project';
   private description: string = 'Test Description';
   private link: string | null = null;
-  private status: 'Active' | 'Archived' = 'Active';
+  private status: ProjectStatus = 'PUBLISHED';
   private techStacks: TechStack[] = [
     unwrapResult(TechStackFactory.create('1', 'React', 'https://react.dev/')),
     unwrapResult(
@@ -32,7 +33,7 @@ class ProjectTestBuilder {
     return this;
   }
 
-  withStatus(status: 'Active' | 'Archived') {
+  withStatus(status: ProjectStatus) {
     this.status = status;
     return this;
   }
@@ -91,7 +92,7 @@ describe('Project Entity', () => {
       expect(project).toBeDefined();
       expect(project.getTitle()).toBe('Test Project');
       expect(project.getDescription()).toBe('Test Description');
-      expect(project.getStatus()).toBe('Active');
+      expect(project.getStatus()).toBe('PUBLISHED');
       expect(project.getUserId()).toBe('1');
       expect(project.getTechStacks()).toHaveLength(2);
     });
@@ -173,22 +174,28 @@ describe('Project Entity', () => {
   });
 
   describe('Gestion du statut', () => {
-    it('devrait accepter un statut Active', () => {
-      const project = new ProjectTestBuilder().withStatus('Active').build();
+    it('devrait accepter un statut PUBLISHED', () => {
+      const project = new ProjectTestBuilder().withStatus('PUBLISHED').build();
 
-      expect(project.getStatus()).toBe('Active');
+      expect(project.getStatus()).toBe('PUBLISHED');
     });
 
-    it('devrait accepter un statut Archived', () => {
-      const project = new ProjectTestBuilder().withStatus('Archived').build();
+    it('devrait accepter un statut ARCHIVED', () => {
+      const project = new ProjectTestBuilder().withStatus('ARCHIVED').build();
 
-      expect(project.getStatus()).toBe('Archived');
+      expect(project.getStatus()).toBe('ARCHIVED');
     });
 
     it('devrait rejeter un statut invalide', () => {
       expect(() => {
         new ProjectTestBuilder().withStatus('Pending' as any).build();
-      }).toThrow('Status must be Active or Archived');
+      }).toThrow('Status must be PUBLISHED or ARCHIVED');
+    });
+
+    it('devrait accepter un statut null', () => {
+      const project = new ProjectTestBuilder().withStatus(null as any).build();
+
+      expect(project.getStatus()).toBeNull();
     });
   });
 

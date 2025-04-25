@@ -5,19 +5,21 @@ import { Title } from './title.vo';
 import { Description } from './description.vo';
 import { Status } from './status.vo';
 import { Link } from './link.vo';
+import { ProjectStatus } from '@/shared/project-status.type';
+
 export class ProjectFactory {
   static create(
     id: string | null,
     title: string,
     description: string,
     link: string | null,
-    status: 'Active' | 'Archived',
+    status: ProjectStatus | null,
     userId: string,
     techStacks: TechStack[],
   ): Result<Project> {
     const titleResult = Title.create(title);
     const descriptionResult = Description.create(description);
-    const statusResult = Status.create(status);
+    const statusResult = status ? Status.create(status) : Result.ok(null);
     const linkResult = link ? Link.create(link) : Result.ok(null);
 
     if (!titleResult.success) {
