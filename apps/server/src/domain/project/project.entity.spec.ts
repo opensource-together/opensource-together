@@ -89,6 +89,7 @@ describe('Project Entity', () => {
     it('devrait créer un projet avec des valeurs valides', () => {
       const project = new ProjectTestBuilder().build();
 
+      console.log(project.getTitle());
       expect(project).toBeDefined();
       expect(project.getTitle()).toBe('Test Project');
       expect(project.getDescription()).toBe('Test Description');
