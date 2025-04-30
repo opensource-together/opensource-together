@@ -1,0 +1,140 @@
+---
+description: Ceci donnes une documentation de la clean architecture utilisé et de sa logique. Elle met du contexte quand on parle de notre clean architecture et de comment integrer de nouvelles choses si necessaire
+globs: 
+alwaysApply: false
+---
+# 🏗️ Architecture du Monorepo et Configuration Docker Compose
+
+## Vue d'ensemble du Monorepo
+
+Le projet est structuré en monorepo pour faciliter la gestion des différentes applications et packages partagés. Cela permet une meilleure organisation, une gestion centralisée des dépendances, et une optimisation des builds.
+
+## Services Principaux
+
+### Base de Données Métier (PostgreSQL)
+- **Port** : 5433  
+- **Objectif** : Stockage des données principales de l'application
+
+### Base de Données SuperTokens (PostgreSQL)
+- **Port** : 5432  
+- **Objectif** : Stockage des données d'authentification
+
+### SuperTokens Core
+- **Port** : 3567  
+- **Objectif** : Service d'authentification
+
+### Backend (NestJS)
+- **Port** : 4000  
+- **Objectif** : Serveur API
+
+### Frontend (Next.js)
+- **Port** : 3000  
+- **Objectif** : Application web
+
+## Configuration Docker Compose
+
+- **Isolation des Services** : Chaque service est conteneurisé, assurant une isolation complète et une communication via un réseau Docker personnalisé.  
+- **Volumes** : Utilisation de volumes pour la persistance des données et le rechargement à chaud des applications.  
+- **Vérifications de Santé** : Implémentation de vérifications de santé pour garantir le bon démarrage et la disponibilité des services.  
+- **Dépendances** : Utilisation de `depends_on` pour assurer l'ordre de démarrage correct des services.
+
+## Avantages de cette Configuration
+
+- **Développement Simplifié** : Hot reload et gestion centralisée des dépendances.  
+- **Scalabilité** : Facilité d'ajout de nouveaux services ou de mise à jour des existants.  
+- **Maintenance** : Structure claire et modulaire facilitant la maintenance et l'évolution du projet.
+
+---
+
+# 🧱 Architecture de l'application server — Clean Architecture + CQRS avec NestJS
+
+## 🏗️ Vue d'ensemble
+
+Le projet suit les principes de **Clean Architecture**, en séparant clairement les responsabilités entre les couches :
+
+- **Présentation (Interface)** : gère les entrées HTTP (contrôleurs)  
+- **Infrastructure** : fait le lien entre NestJS et l'application (via CQRS, ORM, etc.)  
+- **Application** : contient la logique métier sous forme de Use Cases, Ports et DTOs  
+- **Domaine** : le cœur métier pur, indépendant de toute technologie
+
+Le pattern **CQRS (Command Query Responsibility Segregation)** est utilisé pour séparer clairement :
+
+- les **commands** (écriture)  
+- les **queries** (lecture)  
+
+Chaque action utilisateur transite par cette structure, facilitant le découplage, le test et l'évolution.
+
+## 🛡️ Utilisation du pattern CQRS dans ce projet
+
+Le pattern CQRS est utilisé ici comme un outil de routage intelligent entre l’infrastructure (NestJS) et la logique métier (use cases). Il sert à :
+
+- Faciliter l’injection de dépendances grâce aux `CommandBus` et `QueryBus` de NestJS  
+- Centraliser le wiring via des modules dédiés (`user-cqrs.module.ts`, `cqrs-wiring.module.ts`)  
+- Garantir une séparation stricte entre les couches **domain/application** et **infrastructure**  
+- Maintenir les use cases indépendants du framework NestJS pour une **portabilité, testabilité et découplage complet**
+
+Cette approche assure que l’application respecte les principes de Clean Architecture tout en bénéficiant des fonctionnalités avancées de NestJS (injection, modules, décorateurs), sans en dépendre directement dans la logique métier.
+
+---
+
+## 📁 Structure des dossiers
+
+### `src/application`
+
+Contient la logique métier applicative (use cases) et les abstractions nécessaires pour exécuter ces cas d’usage.
+
+- `dto/` : Data Transfer Objects pour la couche application (`XxxDtoInput`, `XxxDtoOutput`)  
+- `ports/` : Interfaces (ex: `UserRepositoryPort`) que l’infra doit implémenter  
+- `use-cases/` : Les cas d’usage (ex: `create-user.usecase.ts`)  
+
+### `src/domain`
+
+Contient la représentation métier pure, indépendante de NestJS ou de toute autre lib/framework. Organisé par entité.
+
+- `email.vo.ts`, `username.vo.ts` → Value Objects (`Email`, `Username`, etc.)  
+- `user.entity.ts` → Entité  
+- `user.factory.ts` → Fabrique pour créer l’entité à partir d'objets primitifs  
+
+**✳️ Convention de nommage VO :**  
+- Fichier : `xxx.vo.ts`  
+- Classe : `Email`, `Username`, etc. (pas besoin d’ajouter "Vo" dans le nom de la classe)
+
+### `src/infrastructures`
+
+Cette couche contient les éléments techniques concrets :
+
+- `auth/` : Intégration de l’authentification (ex: Supertokens)  
+- `cqrs/user/` :  
+  - `commands/` et `queries/` : fichiers déclarant les objets `Command` / `Query`  
+  - `use-case-handlers/` : Handlers qui interceptent les commandes et appellent le bon Use Case  
+  - `user-cqrs.module.ts` : regroupe les handlers CQRS utilisateur  
+- `repositories/` : Implémentations concrètes des ports (ex: Prisma)  
+- `orm/` : Configuration ORM  
+
+Un module central `cqrs-wiring.module.ts` permet de rassembler tous les handlers et de les injecter dans l’app principale.
+
+### `src/presentation`
+
+Contient les contrôleurs NestJS, responsables de recevoir les requêtes HTTP et d’appeler les `CommandBus` / `QueryBus`.
+
+- `user.controller.ts` : appel des Command ou Query selon la logique  
+- `dto/` : DTO de requête/réponse (ex: `XxxDtoRequest`, `XxxDtoResponse`)  
+
+> Les contrôleurs ne contiennent **aucune logique métier**, seulement l’appel du bon use case et le formatage de la réponse HTTP.
+
+### `src/shared`
+
+Contient tout ce qui est réutilisable globalement :
+
+- `result.ts` : Implémentation du **Result Pattern** pour éviter les exceptions levées de manière incontrôlée. Permet de retourner des succès ou des erreurs de façon explicite et typée (`Result.ok()`, `Result.fail()`)
+
+---
+
+## 🔁 Flux de traitement typique (commandes)
+
+1. Le contrôleur reçoit une requête HTTP  
+2. Il utilise le `CommandBus` ou `QueryBus` pour déclencher l’action  
+3. Le handler CQRS intercepte la commande et appelle le Use Case  
+4. Le Use Case applique la logique métier et utilise les ports  
+5. L’implémentation concrète du port (infra) exécute l’action (ex: via Prisma)  
+6. Un objet `Result` est retourné au contrôleur, qui le transforme en réponse HTTP

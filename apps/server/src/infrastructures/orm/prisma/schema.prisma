@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "linux-musl-arm64-openssl-3.0.x"]
+  previewFeatures = ["prismaSchemaFolder"]
 }
 
 datasource db {
@@ -20,4 +21,27 @@ model User {
   email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Project {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  link        String?
+  status      ProjectStatus?
+  userId      String
+  techStacks  TechStack[]
+}
+
+model TechStack {
+  id       String    @id @default(uuid())
+  name     String
+  iconUrl  String
+  projects Project[]
 }
