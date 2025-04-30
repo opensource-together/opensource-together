@@ -30,7 +30,6 @@ export class CreateProjectUseCase {
     if (!project.success) {
       return Result.fail(project.error);
     }
-    console.log(project.value);
     await this.projectRepo.save(project.value);
     return Result.ok(project.value);
   }

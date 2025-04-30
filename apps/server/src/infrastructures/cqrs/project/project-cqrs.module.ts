@@ -18,6 +18,5 @@ import { GetProjectsHandler } from './queries/get-projects.handler';
     FindProjectByIdHandler,
     GetProjectsHandler,
   ],
-  exports: [],
 })
 export class ProjectCqrsModule {}

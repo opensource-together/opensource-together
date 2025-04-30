@@ -27,7 +27,6 @@ export const emailPasswordRecipe = ({
             // first we check for if it's an email
             const validEmail: Result<Email> = Email.create(value);
             if (!validEmail.success) {
-              console.log({ value });
               const validUsername: Result<Username> = Username.create(value);
               if (validUsername.success) {
                 return undefined;
@@ -102,7 +101,6 @@ export const emailPasswordRecipe = ({
               ),
             );
             if (!createUserResult.success) {
-              console.log(createUserResult.error);
               return {
                 status: 'GENERAL_ERROR',
                 message: createUserResult.error,

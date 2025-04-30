@@ -5,6 +5,6 @@ import { ProjectCqrsModule } from '@infrastructures/cqrs/project/project-cqrs.mo
 @Module({
   imports: [UserCqrsModule, ProjectCqrsModule],
   providers: [],
-  exports: [],
+  exports: [UserCqrsModule, ProjectCqrsModule],
 })
 export class CqrsWiringModule {}

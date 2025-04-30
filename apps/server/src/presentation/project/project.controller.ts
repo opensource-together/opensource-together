@@ -7,7 +7,7 @@ import { Project } from '@/domain/project/project.entity';
 import { findProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-title.query';
 import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-id.query';
 import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-projects.query';
-import { toProjectResponseDto } from '@/application/dto/response/project-response.mapper';
+import { toProjectResponseDto } from '@/application/dto/response/project-response.adapter';
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -17,7 +17,6 @@ export class ProjectController {
 
   @Get()
   async getProjects(): Promise<Project[]> {
-    console.log('Get all projects');
     const projects = await this.queryBus.execute(new GetProjectsQuery());
     return projects.map((project: Project) => toProjectResponseDto(project));
   }
