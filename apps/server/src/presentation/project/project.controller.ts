@@ -7,6 +7,7 @@ import { Project } from '@/domain/project/project.entity';
 import { findProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-title.query';
 import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-id.query';
 import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-projects.query';
+import { toProjectResponseDto } from '@/application/dto/response/project-response.mapper';
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -17,18 +18,26 @@ export class ProjectController {
   @Get()
   async getProjects(): Promise<Project[]> {
     console.log('Get all projects');
-    return await this.queryBus.execute(new GetProjectsQuery());
+    const projects = await this.queryBus.execute(new GetProjectsQuery());
+    return projects.map((project: Project) => toProjectResponseDto(project));
   }
 
   @Get('search')
-  async getProjectsFiltered(@Query('title') title: string): Promise<Project> {
-    console.log('Title rechercher : ', title);
-    return await this.queryBus.execute(new findProjectByTitleQuery(title));
+  async getProjectsFiltered(@Query('title') title: string): Promise<Project[]> {
+    const projectsFiltered = await this.queryBus.execute(
+      new findProjectByTitleQuery(title),
+    );
+    return projectsFiltered.map((project: Project) =>
+      toProjectResponseDto(project),
+    );
   }
 
   @Get(':id')
   async getProject(@Param('id') id: string) {
-    return await this.queryBus.execute(new FindProjectByIdQuery(id));
+    const projectRes = await this.queryBus.execute(
+      new FindProjectByIdQuery(id),
+    );
+    return { success: true, value: toProjectResponseDto(projectRes.value) };
   }
 
   @Post()
@@ -36,8 +45,7 @@ export class ProjectController {
     @Session('userId') userId: string,
     @Body() project: CreateProjectDtoRequest,
   ) {
-    console.log('Post request received !!!');
-    return await this.commandBus.execute(
+    const projectRes = await this.commandBus.execute(
       new CreateProjectCommand(
         project.title,
         project.description,
@@ -47,5 +55,6 @@ export class ProjectController {
         userId,
       ),
     );
+    return { success: true, value: toProjectResponseDto(projectRes.value) };
   }
 }
