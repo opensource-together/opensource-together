@@ -44,6 +44,7 @@ export class ProjectController {
     @Session('userId') userId: string,
     @Body() project: CreateProjectDtoRequest,
   ) {
+    console.log(project);
     const projectRes = await this.commandBus.execute(
       new CreateProjectCommand(
         project.title,
@@ -54,6 +55,7 @@ export class ProjectController {
         userId,
       ),
     );
+    console.log(projectRes);
     return { success: true, value: toProjectResponseDto(projectRes.value) };
   }
 }
