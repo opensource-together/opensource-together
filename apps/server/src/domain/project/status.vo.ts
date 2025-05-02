@@ -1,21 +1,21 @@
-import { ProjectStatus } from '@prisma/client';
-import { Result } from '@/shared/result';
+import { Result } from '@shared/result';
 
 export class Status {
-  private constructor(private readonly status: ProjectStatus) {}
+  private constructor(private readonly status: string) {}
 
-  static create(status: ProjectStatus): Result<Status> {
+  static create(status: string): Result<Status> {
     if (status !== 'PUBLISHED' && status !== 'ARCHIVED' && status !== 'DRAFT') {
       return Result.fail('Status must be PUBLISHED or ARCHIVED or DRAFT');
     }
     return Result.ok(new Status(status));
   }
 
-  public getStatus(): ProjectStatus | null {
+  public getStatus(): string {
     return this.status;
   }
 
-  static fromPersistence(status: ProjectStatus): Status {
+  static fromPersistence(status: string): Status {
+    //pas de vérification ?
     return new Status(status);
   }
 }

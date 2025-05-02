@@ -2,14 +2,13 @@ import { TechStackFactory } from '../techStack/techStack.factory';
 import { TechStack } from '../techStack/techstack.entity';
 import { ProjectFactory } from './project.factory';
 import { unwrapResult } from '../../shared/test-utils';
-import { ProjectStatus } from '@prisma/client';
 
 export class ProjectTestBuilder {
   private id: string | null = '1';
   private title: string = 'Test Project';
   private description: string = 'Test Description';
   private link: string | null = null;
-  private status: ProjectStatus = 'PUBLISHED';
+  private status: string = 'PUBLISHED';
   private techStacks: TechStack[] = [
     unwrapResult(TechStackFactory.create('1', 'React', 'https://react.dev/')),
     unwrapResult(
@@ -33,7 +32,7 @@ export class ProjectTestBuilder {
     return this;
   }
 
-  withStatus(status: ProjectStatus) {
+  withStatus(status: string) {
     this.status = status;
     return this;
   }
@@ -54,15 +53,14 @@ export class ProjectTestBuilder {
   }
 
   build() {
-    const result = ProjectFactory.create(
-      this.id,
-      this.title,
-      this.description,
-      this.link,
-      this.status,
-      this.userId,
-      this.techStacks,
-    );
+    const result = ProjectFactory.create({
+      title: this.title,
+      description: this.description,
+      link: this.link,
+      status: this.status,
+      userId: this.userId,
+      techStacks: this.techStacks,
+    });
 
     if (!result.success) {
       throw new Error(result.error);

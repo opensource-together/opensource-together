@@ -10,6 +10,7 @@ export class CreateProjectUseCase {
   async execute(
     createProjectDtoInput: CreateProjectDtoInput,
   ): Promise<Result<Project>> {
+    //verifier toutes les regle métier avant ? que techStacks ?
     const techStacks = TechStackFactory.createMany(
       createProjectDtoInput.techStacks,
     );
@@ -18,19 +19,19 @@ export class CreateProjectUseCase {
       return Result.fail(techStacks.error);
     }
 
-    const project = ProjectFactory.create(
-      null,
-      createProjectDtoInput.title,
-      createProjectDtoInput.description,
-      createProjectDtoInput.link,
-      createProjectDtoInput.status,
-      createProjectDtoInput.userId,
-      techStacks.value,
-    );
+    //vérifier si un projet n'existe pas déjà avec le même titre ?
+    const project = ProjectFactory.create({
+      ...createProjectDtoInput,
+      techStacks: techStacks.value,
+    });
     if (!project.success) {
       return Result.fail(project.error);
     }
-    await this.projectRepo.save(project.value);
-    return Result.ok(project.value);
+    const savedProject = await this.projectRepo.save(project.value);
+    if (!savedProject.success) {
+      return Result.fail(savedProject.error);
+    }
+
+    return Result.ok(savedProject.value);
   }
 }
