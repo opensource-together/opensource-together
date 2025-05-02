@@ -1,13 +1,13 @@
 import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
-import { CreateProjectCommand } from '@/infrastructures/cqrs/project/use-case-handlers/create-project.command';
+import { CreateProjectCommand } from '@/infrastructures/cqrs/project/commands/create-project/create-project.command';
 import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
 import { Project } from '@/domain/project/project.entity';
-import { findProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-title.query';
-import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-id.query';
-import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-projects.query';
 import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
+import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-all/get-projects.query';
+import { FindProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-by-title/find-project-by-title.query';
+import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-by-id/find-project-by-id.query';
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -25,7 +25,7 @@ export class ProjectController {
   @Get('search')
   async getProjectsFiltered(@Query('title') title: string): Promise<Project[]> {
     const projectsFiltered = await this.queryBus.execute(
-      new findProjectByTitleQuery(title),
+      new FindProjectByTitleQuery(title),
     );
     return projectsFiltered.map((project: Project) =>
       toProjectResponseDto(project),
