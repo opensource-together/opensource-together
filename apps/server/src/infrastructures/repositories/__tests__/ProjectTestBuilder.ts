@@ -1,4 +1,8 @@
+import { Description } from '@/domain/project/description.vo';
+import { Link } from '@/domain/project/link.vo';
 import { Project } from '@/domain/project/project.entity';
+import { Status } from '@/domain/project/status.vo';
+import { Title } from '@/domain/project/title.vo';
 import { TechStack } from '@/domain/techStack/techstack.entity';
 
 export class ProjectTestBuilder {
