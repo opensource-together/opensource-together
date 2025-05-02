@@ -1,3 +1,5 @@
+import Homepage from "../Homepage";
+
 export default function DashboardPage() {
-  return <div>Dashboard</div>;
+  return <Homepage />;
 }
