@@ -3,6 +3,7 @@ import Billboard from '@/shared/ui/Billboard';
 import ProjectFilters from '../components/ProjectFilters';
 import ProjectSearchBar from '../components/ProjectSearchBar';
 import ProjectCard from '../components/ProjectCard';
+import SkeletonProjectCard from '../components/SkeletonProjectCard';
 import Pagination from '@/shared/ui/Pagination';
 import Footer from '@/shared/layout/Footer';
 import Header from '@/shared/layout/Header';
@@ -16,8 +17,10 @@ export default function HomepageViews() {
   const renderProjectGrid = () => {
     if (isLoading) {
       return (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+          {[...Array(6)].map((_, index) => (
+            <SkeletonProjectCard key={`skeleton-${index}`} />
+          ))}
         </div>
       );
     }
