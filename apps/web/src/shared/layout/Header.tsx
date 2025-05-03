@@ -6,6 +6,7 @@ import beta from "../icons/beta.svg";
 import x from "../icons/x.svg";
 import github from "../icons/github.svg";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, Dispatch, SetStateAction } from "react";
 
 export default function Header({ onViewChange }: { onViewChange?: Dispatch<SetStateAction<string>> }) {
@@ -47,16 +48,17 @@ export default function Header({ onViewChange }: { onViewChange?: Dispatch<SetSt
         <nav className="hidden md:flex items-center space-x-3 lg:space-x-6">
           <div 
             className="flex items-center justify-center bg-[black]/5 w-[55px] h-[20px] rounded-[3px] cursor-pointer"
-            onClick={() => handleViewChange("projects")}
           >
-            Home
+            <Link href="/">
+              Home
+            </Link>
           </div>
-          <div 
+          <Link 
+            href="/profile"
             className="text-[black]/70 cursor-pointer"
-            onClick={() => handleViewChange("profile")}
           >
             Profile
-          </div>
+          </Link>
           <div className="text-[black]/70">My Projects</div>
         </nav>
       </section>
@@ -79,12 +81,12 @@ export default function Header({ onViewChange }: { onViewChange?: Dispatch<SetSt
         >
           Home
         </div>
-        <div 
+        <Link 
+          href="/profile"
           className="flex items-center justify-center w-full py-1.5 text-[black]/70 cursor-pointer"
-          onClick={() => handleViewChange("profile")}
         >
           Profile
-        </div>
+        </Link>
         <div className="flex items-center justify-center w-full py-1.5 text-[black]/70">My Projects</div>
         
         <div className="flex items-center justify-center space-x-6 py-2">
