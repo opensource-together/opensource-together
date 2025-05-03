@@ -3,7 +3,7 @@ import ProfileCard from "../components/ProfileCard";
 import ProfileSidebar from "../components/ProfileSidebar";
 import ProjectCard from "@/features/profile/components/ProjectCard";
 
-export default function ProfileCardView() {
+export default function ProfilePageView() {
   return (
     <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
       {/* Section du haut avec le profil et la sidebar */}
