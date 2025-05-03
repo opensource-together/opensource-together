@@ -10,6 +10,7 @@ import { Title } from '@/domain/project/title.vo';
 import { Description } from '@/domain/project/description.vo';
 import { Link } from '@/domain/project/link.vo';
 import { Status } from '@/domain/project/status.vo';
+import { Result } from '@/shared/result';
 
 describe('FindProjectByIdHandler', () => {
   let handler: FindProjectByIdHandler; // Instance du handler qu'on teste
@@ -53,7 +54,9 @@ describe('FindProjectByIdHandler', () => {
       });
 
       // On configure le comportement du mock
-      projectRepositoryMock.findProjectById.mockResolvedValue(mockProject);
+      projectRepositoryMock.findProjectById.mockResolvedValue(
+        Result.ok(mockProject),
+      );
 
       // Act (Action)
       const query = new FindProjectByIdQuery(projectId);
@@ -70,7 +73,9 @@ describe('FindProjectByIdHandler', () => {
     it("devrait retourner null quand le projet n'existe pas", async () => {
       // Arrange
       const projectId = 'non-existent';
-      projectRepositoryMock.findProjectById.mockResolvedValue(null);
+      projectRepositoryMock.findProjectById.mockResolvedValue(
+        Result.fail('Project not found'),
+      );
 
       // Act
       const query = new FindProjectByIdQuery(projectId);

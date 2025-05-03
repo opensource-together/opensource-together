@@ -6,7 +6,7 @@ import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/application/ports/project.repository.port';
-
+import { Result } from '@/shared/result';
 @QueryHandler(FindProjectByTitleQuery)
 export class FindProjectByTitleHandler
   implements IQueryHandler<FindProjectByTitleQuery>
@@ -16,8 +16,13 @@ export class FindProjectByTitleHandler
     private readonly projectRepo: ProjectRepositoryPort,
   ) {}
 
-  async execute(query: FindProjectByTitleQuery): Promise<Project[] | null> {
+  async execute(
+    query: FindProjectByTitleQuery,
+  ): Promise<Result<Project[] | null>> {
     const projects = await this.projectRepo.findProjectByTitle(query.title);
-    return projects;
+    if (projects.success) {
+      return Result.ok(projects.value);
+    }
+    return Result.fail(projects.error);
   }
 }

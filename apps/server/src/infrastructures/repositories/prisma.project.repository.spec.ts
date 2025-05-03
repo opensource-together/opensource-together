@@ -28,7 +28,10 @@ describe('PrismaProjectRepository', () => {
 
       prismaMock.project.create.mockResolvedValueOnce({});
 
-      await expect(repo.save(project)).resolves.toBeUndefined();
+      await expect(repo.save(project)).resolves.toMatchObject({
+        success: true,
+        value: project,
+      });
 
       expect(prismaMock.project.create).toHaveBeenCalledWith({
         data: {
@@ -49,23 +52,30 @@ describe('PrismaProjectRepository', () => {
         .buildAsMock();
 
       prismaMock.project.create.mockRejectedValueOnce({ code: 'P2002' });
-      await expect(repo.save(project)).rejects.toThrow(
-        'Project already exists',
-      );
+      await expect(repo.save(project)).resolves.toMatchObject({
+        success: false,
+        error: 'Project already exists',
+      });
     });
 
     it('doit lever une erreur si une stack est inexistante', async () => {
       prismaMock.project.create.mockRejectedValueOnce({ code: 'P2025' });
       await expect(
         repo.save(ProjectTestBuilder.aProject().buildAsMock()),
-      ).rejects.toThrow('TechStack not found');
+      ).resolves.toMatchObject({
+        success: false,
+        error: 'TechStack not found',
+      });
     });
 
     it("doit lever une unknown erreur si l'enregistrement en db echoue", async () => {
       prismaMock.project.create.mockRejectedValueOnce({});
       await expect(
         repo.save(ProjectTestBuilder.aProject().buildAsMock()),
-      ).rejects.toThrow('Unknown error');
+      ).resolves.toMatchObject({
+        success: false,
+        error: 'Unknown error',
+      });
     });
   });
 
@@ -96,8 +106,10 @@ describe('PrismaProjectRepository', () => {
       const projects = await repo.findProjectByTitle('Mon projet');
 
       // 3. Assert
-      expect(projects).toBeTruthy();
-      expect(projects!.map(toProjectResponseDto)).toEqual([prismaResult]);
+      expect(projects.success).toBe(true);
+      expect(projects.success ? projects.value : null).toBe(
+        ProjectTestBuilder.aProject().withTechStacks([techStack]).buildAsMock(),
+      );
     });
 
     it("doit gérer le cas où aucun projet n'est trouvé", async () => {
@@ -148,15 +160,18 @@ describe('PrismaProjectRepository', () => {
       const project = await repo.findProjectById('1');
 
       // 3. Assert
-      expect(project).toBeTruthy();
-      expect(toProjectResponseDto(project!)).toEqual(prismaResult);
+      expect(project.success).toBe(true);
+      expect(
+        project.success ? toProjectResponseDto(project.value!) : null,
+      ).toEqual(prismaResult);
     });
 
     it("doit lever une erreur si le projet n'existe pas", async () => {
       prismaMock.project.findUnique.mockResolvedValueOnce(null);
-      await expect(repo.findProjectById('999')).rejects.toThrow(
-        'Error project not found',
-      );
+      await expect(repo.findProjectById('999')).resolves.toMatchObject({
+        success: false,
+        error: 'Error project not found',
+      });
     });
 
     it('doit lever une erreur si la création des techStacks échoue', async () => {
@@ -172,9 +187,10 @@ describe('PrismaProjectRepository', () => {
         error: 'Erreur creation techStacks',
       });
 
-      await expect(repo.findProjectById('1')).rejects.toThrow(
-        "Erreur lors de la creation de l'entité techStacks",
-      );
+      await expect(repo.findProjectById('1')).resolves.toMatchObject({
+        success: false,
+        error: "Erreur lors de la creation de l'entité techStacks",
+      });
     });
 
     it('doit lever une erreur si la création du projet échoue', async () => {
@@ -196,9 +212,10 @@ describe('PrismaProjectRepository', () => {
         error: 'Erreur creation project',
       });
 
-      await expect(repo.findProjectById('1')).rejects.toThrow(
-        "Erreur lors de la creation de l'entité project",
-      );
+      await expect(repo.findProjectById('1')).resolves.toMatchObject({
+        success: false,
+        error: "Erreur lors de la creation de l'entité project",
+      });
     });
   });
 
@@ -238,15 +255,16 @@ describe('PrismaProjectRepository', () => {
       const projects = await repo.getAllProjects();
 
       // 3. Assert
-      expect(projects).toHaveLength(2);
-      expect(projects.map(toProjectResponseDto)).toEqual(prismaResults);
+      expect(projects.success).toBe(true);
+      expect(projects.success ? projects.value : null).toEqual(prismaResults);
     });
 
     it("doit lever une erreur si aucun projet n'est trouvé", async () => {
       prismaMock.project.findMany.mockResolvedValueOnce(null);
-      await expect(repo.getAllProjects()).rejects.toThrow(
-        'Error projects not found',
-      );
+      await expect(repo.getAllProjects()).resolves.toMatchObject({
+        success: false,
+        error: 'Error projects not found',
+      });
     });
 
     it('doit lever une erreur si la création des techStacks échoue', async () => {
@@ -260,9 +278,10 @@ describe('PrismaProjectRepository', () => {
         error: 'Erreur creation techStacks',
       });
 
-      await expect(repo.getAllProjects()).rejects.toThrow(
-        'Error creation techStacks',
-      );
+      await expect(repo.getAllProjects()).resolves.toMatchObject({
+        success: false,
+        error: 'Error creation techStacks',
+      });
     });
 
     it("doit lever une erreur si la création d'un projet échoue", async () => {
@@ -281,9 +300,10 @@ describe('PrismaProjectRepository', () => {
         error: 'Erreur creation project',
       });
 
-      await expect(repo.getAllProjects()).rejects.toThrow(
-        'Error creation project',
-      );
+      await expect(repo.getAllProjects()).resolves.toMatchObject({
+        success: false,
+        error: 'Error creation project',
+      });
     });
   });
 });

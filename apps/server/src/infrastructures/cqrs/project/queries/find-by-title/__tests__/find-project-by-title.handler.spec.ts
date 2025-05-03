@@ -10,6 +10,7 @@ import { Title } from '@/domain/project/title.vo';
 import { Description } from '@/domain/project/description.vo';
 import { Link } from '@/domain/project/link.vo';
 import { Status } from '@/domain/project/status.vo';
+import { Result } from '@/shared/result';
 
 describe('FindProjectByTitleHandler', () => {
   let handler: FindProjectByTitleHandler;
@@ -62,7 +63,9 @@ describe('FindProjectByTitleHandler', () => {
           userId: 'user-2',
         }),
       ];
-      projectRepositoryMock.findProjectByTitle.mockResolvedValue(mockProjects);
+      projectRepositoryMock.findProjectByTitle.mockResolvedValue(
+        Result.ok(mockProjects),
+      );
 
       // Act
       const query = new FindProjectByTitleQuery(searchTitle);
@@ -80,7 +83,7 @@ describe('FindProjectByTitleHandler', () => {
     it('devrait retourner un tableau vide quand aucun projet ne correspond', async () => {
       // Arrange
       const searchTitle = 'NonExistent';
-      projectRepositoryMock.findProjectByTitle.mockResolvedValue([]);
+      projectRepositoryMock.findProjectByTitle.mockResolvedValue(Result.ok([]));
 
       // Act
       const query = new FindProjectByTitleQuery(searchTitle);

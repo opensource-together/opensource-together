@@ -9,6 +9,7 @@ import { Title } from '@/domain/project/title.vo';
 import { Description } from '@/domain/project/description.vo';
 import { Link } from '@/domain/project/link.vo';
 import { Status } from '@/domain/project/status.vo';
+import { Result } from '@/shared/result';
 
 describe('GetProjectsHandler', () => {
   let handler: GetProjectsHandler;
@@ -67,7 +68,9 @@ describe('GetProjectsHandler', () => {
           userId: 'user-3',
         }),
       ];
-      projectRepositoryMock.getAllProjects.mockResolvedValue(mockProjects);
+      projectRepositoryMock.getAllProjects.mockResolvedValue(
+        Result.ok(mockProjects),
+      );
 
       // Act
       const result = await handler.execute();
@@ -81,7 +84,7 @@ describe('GetProjectsHandler', () => {
 
     it("devrait retourner un tableau vide quand il n'y a pas de projets", async () => {
       // Arrange
-      projectRepositoryMock.getAllProjects.mockResolvedValue([]);
+      projectRepositoryMock.getAllProjects.mockResolvedValue(Result.ok([]));
 
       // Act
       const result = await handler.execute();

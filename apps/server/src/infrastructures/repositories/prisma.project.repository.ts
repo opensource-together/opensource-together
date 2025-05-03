@@ -4,12 +4,13 @@ import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
 import { ProjectFactory } from '@/domain/project/project.factory';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
+import { Result } from '@/shared/result';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
-  async save(project: Project): Promise<void> {
+  async save(project: Project): Promise<Result<Project>> {
     try {
       await this.prisma.project.create({
         data: {
@@ -27,18 +28,19 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       });
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new Error('Project already exists');
+        return Result.fail('Project already exists');
       } else if (error.code === 'P2025') {
-        throw new Error('TechStack not found');
+        return Result.fail('TechStack not found');
       } else {
-        throw new Error('Unknown error');
+        return Result.fail('Unknown error');
       }
     }
+    return Result.ok(project);
   }
 
-  async findProjectByTitle(title: string): Promise<Project[] | null> {
+  async findProjectByTitle(title: string): Promise<Result<Project[] | null>> {
     if (!title || typeof title !== 'string' || title.trim() === '') {
-      throw new Error('❌ Le titre fourni est vide ou invalide');
+      return Result.fail('❌ Le titre fourni est vide ou invalide');
     }
 
     const prismaProjects = await this.prisma.project.findMany({
@@ -51,7 +53,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     });
 
     if (prismaProjects.length === 0) {
-      return null;
+      return Result.fail('❌ Aucun projet trouvé');
     }
 
     const projects = prismaProjects.map((prismaProject) => {
@@ -80,23 +82,23 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       return project.value;
     });
 
-    return projects;
+    return Result.ok(projects);
   }
 
-  async findProjectById(id: string): Promise<Project | null> {
+  async findProjectById(id: string): Promise<Result<Project | null>> {
     const projectPrisma = await this.prisma.project.findUnique({
       where: { id },
       include: { techStacks: true },
     });
 
     if (!projectPrisma) {
-      throw new Error('Error project not found');
+      return Result.fail('Error project not found');
     }
 
     const techStacks = TechStackFactory.createMany(projectPrisma.techStacks);
 
     if (!techStacks.success) {
-      throw new Error("Erreur lors de la creation de l'entité techStacks");
+      return Result.fail("Erreur lors de la creation de l'entité techStacks");
     }
 
     const project = ProjectFactory.create(
@@ -113,16 +115,16 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       throw new Error("Erreur lors de la creation de l'entité project");
     }
 
-    return project.value;
+    return Result.ok(project.value);
   }
 
-  async getAllProjects(): Promise<Project[]> {
+  async getAllProjects(): Promise<Result<Project[]>> {
     const projectsPrisma = await this.prisma.project.findMany({
       include: { techStacks: true },
     });
 
     if (!projectsPrisma) {
-      throw new Error('Error projects not found');
+      return Result.fail('Error projects not found');
     }
 
     const projects = projectsPrisma.map((projectPrisma) => {
@@ -147,6 +149,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return project.value;
     });
-    return projects;
+    return Result.ok(projects);
   }
 }
