@@ -6,9 +6,9 @@ import beta from "../icons/beta.svg";
 import x from "../icons/x.svg";
 import github from "../icons/github.svg";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 
-export default function Header() {
+export default function Header({ onViewChange }: { onViewChange?: Dispatch<SetStateAction<string>> }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mutation = useCreateProject();
   
@@ -26,6 +26,15 @@ export default function Header() {
     });
   };
 
+  const handleViewChange = (view: string) => {
+    if (onViewChange) {
+      onViewChange(view);
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    }
+  };
+
   return (
     <header className="font-geist text-[13px] font-normal h-auto min-h-[60px] md:min-h-[70px] lg:h-[81px] px-4 sm:px-6 md:px-10 lg:px-[73px] flex flex-wrap items-center justify-between py-3 md:py-0">
       <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
@@ -36,8 +45,18 @@ export default function Header() {
 
         {/* Navigation pour desktop et tablette */}
         <nav className="hidden md:flex items-center space-x-3 lg:space-x-6">
-          <div className="flex items-center justify-center bg-[black]/5 w-[55px] h-[20px] rounded-[3px]">Home</div>
-          <div className="text-[black]/70">Profile</div>
+          <div 
+            className="flex items-center justify-center bg-[black]/5 w-[55px] h-[20px] rounded-[3px] cursor-pointer"
+            onClick={() => handleViewChange("projects")}
+          >
+            Home
+          </div>
+          <div 
+            className="text-[black]/70 cursor-pointer"
+            onClick={() => handleViewChange("profile")}
+          >
+            Profile
+          </div>
           <div className="text-[black]/70">My Projects</div>
         </nav>
       </section>
@@ -54,8 +73,18 @@ export default function Header() {
 
       {/* Menu mobile */}
       <nav className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:hidden flex-col w-full py-3 space-y-3`}>
-        <div className="flex items-center justify-center bg-[black]/5 w-full py-1.5 rounded-[3px]">Home</div>
-        <div className="flex items-center justify-center w-full py-1.5 text-[black]/70">Profile</div>
+        <div 
+          className="flex items-center justify-center bg-[black]/5 w-full py-1.5 rounded-[3px] cursor-pointer"
+          onClick={() => handleViewChange("projects")}
+        >
+          Home
+        </div>
+        <div 
+          className="flex items-center justify-center w-full py-1.5 text-[black]/70 cursor-pointer"
+          onClick={() => handleViewChange("profile")}
+        >
+          Profile
+        </div>
         <div className="flex items-center justify-center w-full py-1.5 text-[black]/70">My Projects</div>
         
         <div className="flex items-center justify-center space-x-6 py-2">

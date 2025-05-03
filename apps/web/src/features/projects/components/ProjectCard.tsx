@@ -99,7 +99,7 @@ export default function ProjectCard({
             {description}
           </div>
         )}
-
+        {/* Line */}
         <div className="border-t border-dashed border-[black]/10 my-4" />
 
         {showRoles && (

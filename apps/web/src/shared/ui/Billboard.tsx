@@ -1,5 +1,5 @@
 import Image from "next/image";
-import billboard from "../../../public/billboard-image.svg";
+import billboard from "../../../public/billboardost.svg";
 import chevronRight from "@/shared/icons/chevron-right.svg";
 import chevronLeft from "@/shared/icons/chevron-left.svg";
 
@@ -11,13 +11,14 @@ const Billboard = () => {
         <div 
           className="absolute inset-0 pointer-events-none" 
           style={{ 
-            background: 'linear-gradient(to bottom, rgba(255,255,255,0) 30%, rgba(255,255,255,0.7) 70%, rgba(255,255,255,1) 95%)' 
+            background: 'linear-gradient(to bottom, rgba(255,255,255,0) 30%, rgba(255,255,255,0.7) 40%, rgba(255,255,255,1) 85%)' 
           }} 
         />
       </div>
       <div className="absolute bottom-8 left-10 text-left">
-        <div className="font-geist text-[40px] font-medium">Change Log #04</div>
-        <div className="font-geist text-[14px] text-[#000000]/70 font-light max-w-[500px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</div>
+        <div className="font-geist text-[40px] font-medium">OsT Changelog #001</div>
+        {/* changelog content hidden */}
+        <div className="hidden font-geist text-[14px] text-[#000000]/70 font-light max-w-[500px]">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</div>
       </div>
       <div className="absolute bottom-12 right-10 flex items-center gap-2">
         <div className="flex items-center pr-[1px] justify-center bg-white border border-[#000000]/10 rounded-[30px] w-[40px] h-[40px]">
