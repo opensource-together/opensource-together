@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SkeletonProjectCard = () => {
+export default function SkeletonProjectCard() {
   return (
     <div className="px-[12px] py-[12px] relative group rounded-[20px] shadow-md border border-slate-200 transition duration-200 ease-in-out bg-white overflow-hidden h-[207px] max-w-[731px] w-full">
       {/* Effet de vague animé avec un meilleur contraste */}
@@ -51,6 +51,4 @@ const SkeletonProjectCard = () => {
       </div>
     </div>
   );
-};
-
-export default SkeletonProjectCard; 
+} 

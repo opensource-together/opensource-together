@@ -1,38 +1,26 @@
 import React from 'react';
 import Image from 'next/image';
-import leftChevron from '@/shared/icons/chevron-left-small.svg';
-import rightChevron from '@/shared/icons/chevron-right-small.svg';
+import arrowLeft from '../icons/arrow-left.svg';
+import arrowRight from '../icons/arrow-right.svg';
 
-const Pagination = () => {
+export default function Pagination() {
   return (
-    <div className="flex items-center justify-center gap-3">
-      <button className="flex items-center gap-1 px-2 py-1 font-geist font-semibold text-[14px] text-[black]">
-        <Image src={leftChevron} alt="Previous" width={5} height={10} />
-        <span>Previous</span>
-      </button>
-      
-      <div className="flex items-center gap-2">
-        <button className="h-[30px] min-w-[30px] px-2 font-geist font-semibold text-[14px] flex items-center justify-center">
-          1
-        </button>
-        
-        <button className="h-[30px] min-w-[30px] px-2 font-geist font-semibold text-[14px] flex items-center justify-center border border-[black]/10 rounded-[4px]">
-          2
-        </button>
-        
-        <button className="h-[30px] min-w-[30px] px-2 font-geist font-semibold text-[14px] flex items-center justify-center">
-          3
-        </button>
-        
-        <span className="mx-1 font-geist">...</span>
+    <div className="font-geist flex justify-center items-center gap-4 md:gap-5 w-full mt-8 md:mt-10">
+      <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center border border-[black]/10 rounded-[5px] cursor-pointer">
+        <Image src={arrowLeft} alt="arrowLeft" width={9} height={9} />
       </div>
       
-      <button className="flex items-center gap-1 px-2 py-1 font-geist font-semibold text-[14px] text-[black]">
-        <span>Next</span>
-        <Image src={rightChevron} alt="Next" width={5} height={10} />
-      </button>
+      <div className="flex gap-1 md:gap-2">
+        <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center bg-[#0354EC] rounded-[5px] text-white text-[12px] cursor-pointer">1</div>
+        <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center border border-[black]/10 rounded-[5px] text-[12px] cursor-pointer hover:bg-[#F5F5F5]">2</div>
+        <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center border border-[black]/10 rounded-[5px] text-[12px] cursor-pointer hover:bg-[#F5F5F5]">3</div>
+        <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center text-[12px]">...</div>
+        <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center border border-[black]/10 rounded-[5px] text-[12px] cursor-pointer hover:bg-[#F5F5F5]">12</div>
+      </div>
+      
+      <div className="w-[25px] h-[25px] md:w-[30px] md:h-[30px] flex items-center justify-center border border-[black]/10 rounded-[5px] cursor-pointer">
+        <Image src={arrowRight} alt="arrowRight" width={9} height={9} />
+      </div>
     </div>
   );
-};
-
-export default Pagination; 
+} 
