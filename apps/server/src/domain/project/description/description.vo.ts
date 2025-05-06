@@ -1,4 +1,4 @@
-import { Result } from '../../shared/result';
+import { Result } from '@/shared/result';
 
 export class Description {
   private constructor(private readonly description: string) {}

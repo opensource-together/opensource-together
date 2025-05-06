@@ -1,5 +1,5 @@
 import { Project as DomainProject } from '@/domain/project/project.entity';
-import { ProjectFactory } from '@/domain/project/project.factory';
+import { ProjectFactory } from '@/domain/project/factory/project.factory';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
 import { Result } from '@/shared/result';
 import {

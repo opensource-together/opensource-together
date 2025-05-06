@@ -1,4 +1,4 @@
-import { ProjectTestBuilder } from './ProjectTestBuilder';
+import { ProjectTestBuilder } from '../ProjectTestBuilder';
 
 describe('Status VO', () => {
   it('devrait accepter un statut PUBLISHED', () => {

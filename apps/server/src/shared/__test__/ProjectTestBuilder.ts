@@ -1,8 +1,9 @@
-import { Description } from '@/domain/project/description.vo';
-import { Link } from '@/domain/project/link.vo';
+import { CreateProjectDtoInput } from '@/application/dto/create-project-inputs.dto';
+import { Description } from '@/domain/project/description/description.vo';
+import { Link } from '@/domain/project/link/link.vo';
 import { Project } from '@/domain/project/project.entity';
-import { Status } from '@/domain/project/status.vo';
-import { Title } from '@/domain/project/title.vo';
+import { Status } from '@/domain/project/status/status.vo';
+import { Title } from '@/domain/project/title/title.vo';
 import { TechStack } from '@/domain/techStack/techstack.entity';
 
 export class ProjectTestBuilder {
@@ -65,6 +66,18 @@ export class ProjectTestBuilder {
     } as Project;
   }
 
+  public buildAsInput(): Project {
+    return new Project({
+      id: null,
+      title: Title.fromPersistence(this.title),
+      description: Description.fromPersistence(this.description),
+      link: Link.fromPersistence(this.link),
+      status: Status.fromPersistence(this.status),
+      userId: this.userId,
+      techStacks: this.techStacks,
+    });
+  }
+
   public buildAsPrismaResult() {
     return {
       id: this.id,
@@ -78,6 +91,21 @@ export class ProjectTestBuilder {
         name: ts.getName(),
         iconUrl: ts.getIconUrl(),
       })),
+    };
+  }
+
+  public buildAsDtoInput(): CreateProjectDtoInput {
+    return {
+      title: this.title,
+      description: this.description,
+      link: this.link,
+      status: this.status,
+      techStacks: this.techStacks.map((ts) => ({
+        id: ts.getId(),
+        name: ts.getName(),
+        iconUrl: ts.getIconUrl(),
+      })),
+      userId: this.userId,
     };
   }
 }

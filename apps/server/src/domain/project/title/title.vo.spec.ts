@@ -1,4 +1,4 @@
-import { ProjectTestBuilder } from './ProjectTestBuilder';
+import { ProjectTestBuilder } from '../ProjectTestBuilder';
 
 describe('Title VO', () => {
   it('devrait rejeter un titre trop court (moins de 2 caractères)', () => {

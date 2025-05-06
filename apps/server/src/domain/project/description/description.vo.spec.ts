@@ -1,4 +1,4 @@
-import { ProjectTestBuilder } from './ProjectTestBuilder';
+import { ProjectTestBuilder } from '../ProjectTestBuilder';
 
 describe('Description VO', () => {
   describe('Contraintes de longueur', () => {

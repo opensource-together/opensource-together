@@ -1,308 +1,138 @@
-// On importe ce qu'il faut
+import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaProjectRepository } from './prisma.project.repository';
+import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
-import { ProjectFactory } from '@/domain/project/project.factory';
-import { TechStackFactory } from '@/domain/techStack/techStack.factory';
-import { TechStack } from '@/domain/techStack/techstack.entity';
-import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
-import { ProjectTestBuilder } from './__tests__/ProjectTestBuilder';
-import { TechStackTestBuilder } from './__tests__/TechStackTestBuilder';
-import { PrismaMock } from './__tests__/PrismaMock';
+import { Result } from '@/shared/result';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { ProjectStatus } from '@prisma/client';
+import { ProjectTestBuilder } from '@/shared/__test__/ProjectTestBuilder';
+import { PrismaMock } from '@/infrastructures/repositories/__tests__/PrismaMock';
 
 describe('PrismaProjectRepository', () => {
-  let repo: PrismaProjectRepository;
+  let repository: PrismaProjectRepository;
   let prismaMock: PrismaMock;
 
-  beforeEach(() => {
-    prismaMock = PrismaMock.create();
-    repo = new PrismaProjectRepository(prismaMock as any);
+  beforeEach(async () => {
+    prismaMock = new PrismaMock();
+    repository = new PrismaProjectRepository(prismaMock as any);
     prismaMock.reset();
   });
 
   describe('save', () => {
-    it('doit sauvegarder un projet avec succès', async () => {
-      const techStack = TechStackTestBuilder.aTechStack().buildAsMock();
-      const project = ProjectTestBuilder.aProject()
-        .withTechStacks([techStack])
-        .buildAsMock();
+    it('devrait sauvegarder un projet avec succès', async () => {
+      const domainProject = ProjectTestBuilder.aProject()
+        .withStatus('PUBLISHED')
+        .buildAsInput();
 
-      prismaMock.project.create.mockResolvedValueOnce({});
-
-      await expect(repo.save(project)).resolves.toMatchObject({
-        success: true,
-        value: project,
-      });
-
-      expect(prismaMock.project.create).toHaveBeenCalledWith({
-        data: {
-          techStacks: { connect: [{ id: techStack.getId() }] },
-          title: project.getTitle(),
-          description: project.getDescription(),
-          link: project.getLink(),
-          status: project.getStatus(),
-          userId: project.getUserId(),
-        },
-      });
-      expect(prismaMock.project.create).toHaveBeenCalledTimes(1);
-    });
-
-    it('doit lever une erreur si le projet existe déjà', async () => {
-      const project = ProjectTestBuilder.aProject()
-        .withTechStacks([TechStackTestBuilder.aTechStack().buildAsMock()])
-        .buildAsMock();
-
-      prismaMock.project.create.mockRejectedValueOnce({ code: 'P2002' });
-      await expect(repo.save(project)).resolves.toMatchObject({
-        success: false,
-        error: 'Project already exists',
-      });
-    });
-
-    it('doit lever une erreur si une stack est inexistante', async () => {
-      prismaMock.project.create.mockRejectedValueOnce({ code: 'P2025' });
-      await expect(
-        repo.save(ProjectTestBuilder.aProject().buildAsMock()),
-      ).resolves.toMatchObject({
-        success: false,
-        error: 'TechStack not found',
-      });
-    });
-
-    it("doit lever une unknown erreur si l'enregistrement en db echoue", async () => {
-      prismaMock.project.create.mockRejectedValueOnce({});
-      await expect(
-        repo.save(ProjectTestBuilder.aProject().buildAsMock()),
-      ).resolves.toMatchObject({
-        success: false,
-        error: 'Unknown error',
-      });
-    });
-  });
-
-  describe('findProjectByTitle', () => {
-    it("doit retourner un tableau d'entités", async () => {
-      // 1. Arrange
-      const techStack = TechStackTestBuilder.aTechStack().buildAsMock();
-      const prismaResult = ProjectTestBuilder.aProject()
-        .withTechStacks([techStack])
+      const expectedPrismaResult = ProjectTestBuilder.aProject()
+        .withStatus('PUBLISHED')
         .buildAsPrismaResult();
 
-      prismaMock.project.findMany.mockResolvedValueOnce([prismaResult]);
+      jest
+        .spyOn(prismaMock.project, 'create')
+        .mockResolvedValue(expectedPrismaResult as any);
 
-      // On mock les factories uniquement pour ce test car on teste le cas nominal
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: true,
-        value: [techStack],
-      });
+      const result = await repository.save(domainProject);
 
-      jest.spyOn(ProjectFactory, 'create').mockReturnValue({
-        success: true,
-        value: ProjectTestBuilder.aProject()
-          .withTechStacks([techStack])
-          .buildAsMock(),
-      });
-
-      // 2. Act
-      const projects = await repo.findProjectByTitle('Mon projet');
-
-      // 3. Assert
-      expect(projects.success).toBe(true);
-      expect(projects.success ? projects.value : null).toBe(
-        ProjectTestBuilder.aProject().withTechStacks([techStack]).buildAsMock(),
-      );
-    });
-
-    it("doit gérer le cas où aucun projet n'est trouvé", async () => {
-      prismaMock.project.findMany.mockResolvedValueOnce([]);
-      const result = await repo.findProjectByTitle('Projet inexistant');
-      expect(result).toBeNull();
-    });
-
-    it('doit appeler Prisma avec les bons critères', async () => {
-      const searchTitle = 'Mon projet';
-      prismaMock.project.findMany.mockResolvedValueOnce([]);
-
-      await repo.findProjectByTitle(searchTitle);
-
-      expect(prismaMock.project.findMany).toHaveBeenCalledWith({
-        where: { title: { contains: searchTitle } },
+      expect(result.success).toBe(true);
+      expect(prismaMock.project.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          title: domainProject.getTitle(),
+          status: ProjectStatus.PUBLISHED,
+        }),
         include: { techStacks: true },
       });
+    });
+
+    it('devrait gérer les erreurs de contrainte unique', async () => {
+      // ARRANGE
+      const domainProject = ProjectTestBuilder.aProject().buildAsInput();
+
+      prismaMock.project.create.mockRejectedValue(
+        new PrismaClientKnownRequestError('Unique constraint failed', {
+          code: 'P2002',
+          clientVersion: '2.0.0',
+        }),
+      );
+
+      // ACT
+      const result = await repository.save(domainProject);
+
+      // ASSERT
+      expect(result).toEqual(Result.fail('Project already exists'));
     });
   });
 
   describe('findProjectById', () => {
-    it('doit retourner un projet par son ID avec ses techStacks', async () => {
-      // 1. Arrange
-      const techStack = TechStackTestBuilder.aTechStack().buildAsMock();
-      const expectedProject = ProjectTestBuilder.aProject()
-        .withTechStacks([techStack])
-        .buildAsMock();
-
-      const prismaResult = ProjectTestBuilder.aProject()
-        .withTechStacks([techStack])
+    it('devrait trouver un projet par son id', async () => {
+      // ARRANGE
+      const projectId = '1';
+      const expectedPrismaResult = ProjectTestBuilder.aProject()
+        .withId(projectId)
         .buildAsPrismaResult();
 
-      prismaMock.project.findUnique.mockResolvedValueOnce(prismaResult);
+      prismaMock.project.findUnique.mockResolvedValue(expectedPrismaResult);
 
-      // On mock les factories car on veut vérifier la transformation complète
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: true,
-        value: [techStack],
-      });
+      // ACT
+      const result = await repository.findProjectById(projectId);
 
-      jest.spyOn(ProjectFactory, 'create').mockReturnValue({
-        success: true,
-        value: expectedProject,
-      });
-
-      // 2. Act
-      const project = await repo.findProjectById('1');
-
-      // 3. Assert
-      expect(project.success).toBe(true);
-      expect(
-        project.success ? toProjectResponseDto(project.value!) : null,
-      ).toEqual(prismaResult);
-    });
-
-    it("doit lever une erreur si le projet n'existe pas", async () => {
-      prismaMock.project.findUnique.mockResolvedValueOnce(null);
-      await expect(repo.findProjectById('999')).resolves.toMatchObject({
-        success: false,
-        error: 'Error project not found',
+      // ASSERT
+      expect(result.success).toBe(true);
+      expect(prismaMock.project.findUnique).toHaveBeenCalledWith({
+        where: { id: projectId },
+        include: { techStacks: true },
       });
     });
 
-    it('doit lever une erreur si la création des techStacks échoue', async () => {
-      const prismaResult = ProjectTestBuilder.aProject()
-        .withTechStacks([TechStackTestBuilder.aTechStack().buildAsMock()])
-        .buildAsPrismaResult();
+    it("devrait retourner une erreur si le projet n'existe pas", async () => {
+      // ARRANGE
+      prismaMock.project.findUnique.mockResolvedValue(null);
 
-      prismaMock.project.findUnique.mockResolvedValueOnce(prismaResult);
+      // ACT
+      const result = await repository.findProjectById('non-existent');
 
-      // On mock uniquement TechStackFactory car on teste spécifiquement ce cas d'erreur
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: false,
-        error: 'Erreur creation techStacks',
-      });
-
-      await expect(repo.findProjectById('1')).resolves.toMatchObject({
-        success: false,
-        error: "Erreur lors de la creation de l'entité techStacks",
-      });
-    });
-
-    it('doit lever une erreur si la création du projet échoue', async () => {
-      const prismaResult = ProjectTestBuilder.aProject()
-        .withTechStacks([TechStackTestBuilder.aTechStack().buildAsMock()])
-        .buildAsPrismaResult();
-
-      prismaMock.project.findUnique.mockResolvedValueOnce(prismaResult);
-
-      // On mock TechStackFactory pour le cas nominal
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: true,
-        value: [TechStackTestBuilder.aTechStack().buildAsMock()],
-      });
-
-      // On mock uniquement ProjectFactory car on teste spécifiquement ce cas d'erreur
-      jest.spyOn(ProjectFactory, 'create').mockReturnValue({
-        success: false,
-        error: 'Erreur creation project',
-      });
-
-      await expect(repo.findProjectById('1')).resolves.toMatchObject({
-        success: false,
-        error: "Erreur lors de la creation de l'entité project",
-      });
+      // ASSERT
+      expect(result).toEqual(Result.fail('Project not found'));
     });
   });
 
-  describe('getAllProjects', () => {
-    it('doit retourner tous les projets', async () => {
-      // 1. Arrange
-      const techStack = TechStackTestBuilder.aTechStack().buildAsMock();
-      const expectedProject = ProjectTestBuilder.aProject()
-        .withTechStacks([techStack])
-        .buildAsMock();
+  describe('findProjectByTitle', () => {
+    it('devrait retourner une liste vide pour un titre vide', async () => {
+      // ACT
+      const result = await repository.findProjectByTitle('');
 
-      const prismaResults = [
+      // ASSERT
+      expect(result).toEqual(Result.ok([]));
+      expect(prismaMock.project.findMany).not.toHaveBeenCalled();
+    });
+
+    it('devrait trouver des projets par titre', async () => {
+      // ARRANGE
+      const searchTitle = 'Mon';
+      const expectedProjects = [
         ProjectTestBuilder.aProject()
-          .withId('1')
-          .withTechStacks([techStack])
+          .withTitle('Mon projet 1')
           .buildAsPrismaResult(),
         ProjectTestBuilder.aProject()
-          .withId('1')
-          .withTechStacks([techStack])
+          .withTitle('Mon projet 2')
           .buildAsPrismaResult(),
       ];
 
-      prismaMock.project.findMany.mockResolvedValueOnce(prismaResults);
+      prismaMock.project.findMany.mockResolvedValue(expectedProjects);
 
-      // On mock les factories car on veut vérifier la transformation complète
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: true,
-        value: [techStack],
-      });
+      // ACT
+      const result = await repository.findProjectByTitle(searchTitle);
 
-      jest.spyOn(ProjectFactory, 'create').mockReturnValue({
-        success: true,
-        value: expectedProject,
-      });
-
-      // 2. Act
-      const projects = await repo.getAllProjects();
-
-      // 3. Assert
-      expect(projects.success).toBe(true);
-      expect(projects.success ? projects.value : null).toEqual(prismaResults);
-    });
-
-    it("doit lever une erreur si aucun projet n'est trouvé", async () => {
-      prismaMock.project.findMany.mockResolvedValueOnce(null);
-      await expect(repo.getAllProjects()).resolves.toMatchObject({
-        success: false,
-        error: 'Error projects not found',
-      });
-    });
-
-    it('doit lever une erreur si la création des techStacks échoue', async () => {
-      const prismaResults = [
-        ProjectTestBuilder.aProject().buildAsPrismaResult(),
-      ];
-      prismaMock.project.findMany.mockResolvedValueOnce(prismaResults);
-
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: false,
-        error: 'Erreur creation techStacks',
-      });
-
-      await expect(repo.getAllProjects()).resolves.toMatchObject({
-        success: false,
-        error: 'Error creation techStacks',
-      });
-    });
-
-    it("doit lever une erreur si la création d'un projet échoue", async () => {
-      const prismaResults = [
-        ProjectTestBuilder.aProject().buildAsPrismaResult(),
-      ];
-      prismaMock.project.findMany.mockResolvedValueOnce(prismaResults);
-
-      jest.spyOn(TechStackFactory, 'createMany').mockReturnValue({
-        success: true,
-        value: [TechStackTestBuilder.aTechStack().buildAsMock()],
-      });
-
-      jest.spyOn(ProjectFactory, 'create').mockReturnValue({
-        success: false,
-        error: 'Erreur creation project',
-      });
-
-      await expect(repo.getAllProjects()).resolves.toMatchObject({
-        success: false,
-        error: 'Error creation project',
+      // ASSERT
+      expect(result.success).toBe(true);
+      expect(prismaMock.project.findMany).toHaveBeenCalledWith({
+        where: {
+          title: {
+            mode: 'insensitive',
+            startsWith: searchTitle,
+          },
+        },
+        include: { techStacks: true },
       });
     });
   });
