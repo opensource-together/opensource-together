@@ -24,6 +24,8 @@ FROM base AS runner
 
 WORKDIR /app
 
+LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
+
 RUN apk add --no-cache postgresql-client
 
 ENV NODE_ENV=production
