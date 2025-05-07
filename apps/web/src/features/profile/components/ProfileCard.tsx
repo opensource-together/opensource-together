@@ -124,7 +124,7 @@ export default function ProfileCard() {
         <div className="flex items-center justify-between mb-7">
           <h3 className="text-[14px] font-medium">Contribution Activity</h3>
           <div className="flex items-center gap-2">
-            <span className="text-[12px] text-[#000000]/70">2024-2023</span>
+            <span className="text-[12px] text-[#000000]/70">2023-2024</span>
             <select className="text-[12px] border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-4">
               <option>Current</option>
               <option>Last Year</option>
