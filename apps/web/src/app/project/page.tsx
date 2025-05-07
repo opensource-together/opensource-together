@@ -1,5 +1,5 @@
-import MyProjectPageView from "@/features/projects/views/MyProjectPageView";
+import ProjectDetailView from "@/features/projects/views/ProjectDetailView";
 
 export default function ProjectPage() {
-  return <MyProjectPageView />;
+  return <ProjectDetailView />;
 }
