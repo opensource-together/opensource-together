@@ -5,6 +5,7 @@ import ProfileCard from "../components/ProfileCard";
 import ProfileSidebar from "../components/ProfileSidebar";
 import ProjectCard from "@/features/profile/components/ProjectCard";
 import Header from "@/shared/layout/Header";
+
 export default function ProfilePageView() {
   return (
     <>
@@ -19,7 +20,7 @@ export default function ProfilePageView() {
       </div>
       
       {/* Section des projets pinnés en dessous */}
-      <div className="w-full lg:pl-0 mt-2">
+      <div className="w-full lg:pl-0 mt-2 mb-30">
         <h2 className="text-[20px] font-medium mb-10 font-geist">Pinned Projects</h2>
         <div className="flex flex-col gap-6 lg:max-w-[731px]">
           <ProjectCard />

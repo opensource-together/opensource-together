@@ -56,7 +56,7 @@ export default function ProfileCard() {
   const skills = ["UX Designer", "Front-end Developer", "MongoDB"];
 
   return (
-    <div className="bg-white w-full sm:w-[540px] lg:w-[721.96px] h-auto rounded-[25px] border border-[#000000]/10 p-8 font-geist">
+    <div className="bg-white w-full sm:w-[540px] lg:w-[731.96px] h-auto rounded-[25px] border border-[#000000]/10 p-8 font-geist">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <div className="relative mr-4">

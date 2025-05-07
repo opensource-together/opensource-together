@@ -58,7 +58,7 @@ export default function ProjectCard({
   className = "",
 }: ProjectCardProps) {
   return (
-    <section className={`font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] h-[207px] py-5 px-8 ${className}`}>
+    <section className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1)] font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] h-[207px] py-5 px-8 ${className}`}>
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <div className="w-[50px] h-[50px] bg-gray-100 rounded-sm" />
