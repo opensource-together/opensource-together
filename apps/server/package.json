@@ -35,6 +35,7 @@
     "@prisma/client": "6.5.0",
     "@sentry/nestjs": "^9.12.0",
     "@sentry/profiling-node": "^9.12.0",
+    "class-validator": "^0.14.1",
     "prisma": "^6.5.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -83,6 +84,13 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1",
+      "^@application/(.*)$": "<rootDir>/application/$1",
+      "^@domain/(.*)$": "<rootDir>/domain/$1",
+      "^@infrastructures/(.*)$": "<rootDir>/infrastructures/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/$1"
+    }
   }
 }

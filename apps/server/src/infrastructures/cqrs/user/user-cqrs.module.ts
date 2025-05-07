@@ -15,6 +15,5 @@ import { RepositoryModule } from '@infrastructures/repositories/repository.modul
     ...userHandlerContainer,
     ...userUsecaseHandlersContainer,
   ],
-  exports: [],
 })
 export class UserCqrsModule {}
