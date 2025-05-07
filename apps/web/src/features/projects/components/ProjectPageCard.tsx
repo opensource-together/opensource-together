@@ -1,3 +1,4 @@
+import React from 'react';
 import Image from "next/image";
 import typescriptIcon from "@/shared/icons/typescript (2).svg";
 import reactIcon from "@/shared/icons/react.svg";
@@ -47,7 +48,7 @@ export default function ProjectPageCard() {
             Join Project <Image src={joinedIcon} alt="joined" width={10} height={10} style={{ filter: 'invert(1)' }} />
           </Button>
         </div>
-      </div>    
+      </div>
 
       {/* Description */}
       <div className="mt-2">
@@ -100,6 +101,45 @@ export default function ProjectPageCard() {
             </div>
             <span className="text-[14px] font-normal font-geist">TailwindCSS</span>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function SkeletonProjectPageCard() {
+  return (
+    <section className="w-[710px] h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist animate-pulse">
+      {/* Header */}
+      <div className="flex items-center gap-5 mb-4">
+        <div className="w-[82px] h-[80px] rounded-[16px] bg-gray-200" />
+        <div className="flex flex-col gap-2 flex-1">
+          <div className="h-6 w-40 bg-gray-200 rounded" />
+          <div className="h-5 w-24 bg-gray-100 rounded" />
+        </div>
+      </div>
+      <div className="flex gap-3 items-center mb-4">
+        <div className="h-5 w-32 bg-gray-200 rounded" />
+        <div className="h-9 w-28 bg-gray-200 rounded ml-2" />
+      </div>
+      {/* Description */}
+      <div className="mt-2">
+        <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
+        <div className="h-4 w-3/4 bg-gray-100 rounded mb-2" />
+        <div className="w-[629px] h-[220px] flex flex-col gap-2 mt-2">
+          {[...Array(7)].map((_, i) => (
+            <div key={i} className="h-4 w-full bg-gray-100 rounded" />
+          ))}
+        </div>
+      </div>
+      <div className="border-t border-dashed border-black/10 w-full mt-12 mb-3"></div>
+      {/* Technical Stack */}
+      <div className="mt-2">
+        <div className="h-5 w-32 bg-gray-200 rounded mb-3" />
+        <div className="flex gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="w-[60px] h-[28px] bg-gray-100 rounded" />
+          ))}
         </div>
       </div>
     </section>

@@ -49,3 +49,21 @@ const RoleCard: React.FC<RoleCardProps> = ({
 );
 
 export default RoleCard;
+
+export function SkeletonRoleCard() {
+  return (
+    <div className="w-[717px] h-[183px] bg-white rounded-[16px] border border-black/10 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] px-8 py-6 flex flex-col justify-between mb-6 animate-pulse">
+      <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
+      <div className="h-4 w-3/4 bg-gray-100 rounded mb-4" />
+      <div className="border-t border-dashed border-black/10 w-full mb-3"></div>
+      <div className="flex items-end justify-between mt-auto">
+        <div className="flex gap-2">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="w-[60px] h-[24px] bg-gray-100 rounded" />
+          ))}
+        </div>
+        <div className="h-8 w-32 bg-gray-200 rounded ml-auto" />
+      </div>
+    </div>
+  );
+}

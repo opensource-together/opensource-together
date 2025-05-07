@@ -36,4 +36,14 @@ const ProjectFilters: React.FC<ProjectFiltersProps> = ({ filters }) => {
   );
 };
 
-export default ProjectFilters; 
+export default ProjectFilters;
+
+export function SkeletonProjectFilters({ count = 3 }: { count?: number }) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 sm:gap-2 animate-pulse">
+      {[...Array(count)].map((_, i) => (
+        <div key={i} className="h-[35px] w-[110px] bg-gray-200 rounded-[5px]" />
+      ))}
+    </div>
+  );
+} 
