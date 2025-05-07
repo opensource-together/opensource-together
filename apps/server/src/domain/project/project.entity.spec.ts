@@ -1,21 +1,10 @@
 import { TechStackFactory } from '../techStack/techStack.factory';
 import { TechStack } from '../techStack/techstack.entity';
 import { unwrapResult } from '../../shared/test-utils';
+import { ProjectStatus } from '@prisma/client';
 import { ProjectTestBuilder } from './ProjectTestBuilder';
 
 describe('Project Entity', () => {
-  let defaultTechStacks: TechStack[];
-
-  // Setup commun pour tous les tests
-  beforeEach(() => {
-    defaultTechStacks = [
-      unwrapResult(TechStackFactory.create('1', 'React', 'https://react.dev/')),
-      unwrapResult(
-        TechStackFactory.create('2', 'Node.js', 'https://nodejs.org/en/'),
-      ),
-    ];
-  });
-
   describe('Création', () => {
     it('devrait créer un projet avec des valeurs valides', () => {
       const project = new ProjectTestBuilder().build();
@@ -41,18 +30,43 @@ describe('Project Entity', () => {
     });
   });
 
-  describe('Invariants et règles métier', () => {
-    it("devrait préserver l'immutabilité de l'ID", () => {
-      const project = new ProjectTestBuilder().withId('123').build();
+  describe('Gestion des TechStacks', () => {
+    it('devrait accepter un projet sans techStack', () => {
+      const project = new ProjectTestBuilder().withTechStacks([]).build();
 
-      expect(project.getId()).toBe('123');
-      // TODO: Vérifier qu'on ne peut pas modifier l'ID après création
+      expect(project.getTechStacks()).toHaveLength(0);
     });
 
-    // TODO: Ajouter d'autres tests d'invariants
+    it('devrait correctement gérer plusieurs techStacks', () => {
+      const project = new ProjectTestBuilder().build();
+
+      const techStacks = project.getTechStacks();
+      expect(techStacks).toHaveLength(2);
+      expect(techStacks[0].getName()).toBe('React');
+      expect(techStacks[1].getName()).toBe('Node.js');
+    });
   });
 
-  // Tests des cas d'erreur combinés
+  describe('Gestion du statut', () => {
+    it('devrait accepter un statut PUBLISHED', () => {
+      const project = new ProjectTestBuilder().withStatus('PUBLISHED').build();
+
+      expect(project.getStatus()).toBe('PUBLISHED');
+    });
+
+    it('devrait rejeter un statut invalide', () => {
+      expect(() => {
+        new ProjectTestBuilder().withStatus('Pending' as any).build();
+      }).toThrow('Status must be PUBLISHED or ARCHIVED');
+    });
+
+    it('devrait accepter un statut null', () => {
+      const project = new ProjectTestBuilder().withStatus(null as any).build();
+
+      expect(project.getStatus()).toBeNull();
+    });
+  });
+
   describe('Validation combinée', () => {
     it('devrait rejeter un projet avec plusieurs violations', () => {
       expect(() => {

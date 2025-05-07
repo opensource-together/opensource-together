@@ -1,4 +1,4 @@
-import { ProjectTestBuilder } from './ProjectTestBuilder';
+import { ProjectTestBuilder } from '../ProjectTestBuilder';
 
 describe('Link VO', () => {
   it('devrait accepter un projet sans lien', () => {

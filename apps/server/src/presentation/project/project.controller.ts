@@ -1,13 +1,25 @@
-import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
-import { CreateProjectCommand } from '@/infrastructures/cqrs/project/use-case-handlers/create-project.command';
-import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { Project } from '@/domain/project/project.entity';
+import { Result } from '@shared/result';
+import { ProjectResponseDto } from '@/application/dto/adapters/project-response.dto';
+import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
-import { Project } from '@/domain/project/project.entity';
-import { findProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-title.query';
-import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-project-by-id.query';
-import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-projects.query';
-import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
+import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-inputs.dto';
+import { CreateProjectCommand } from '@/infrastructures/cqrs/project/commands/create-project/create-project.command';
+import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-by-id/find-project-by-id.query';
+import { FindProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-by-title/find-project-by-title.query';
+import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-all/get-projects.query';
+
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -16,35 +28,50 @@ export class ProjectController {
   ) {}
 
   @Get()
-  async getProjects(): Promise<Project[]> {
-    const projects = await this.queryBus.execute(new GetProjectsQuery());
-    return projects.map((project: Project) => toProjectResponseDto(project));
+  async getProjects(): Promise<ProjectResponseDto[]> {
+    const projects: Result<Project[]> = await this.queryBus.execute(
+      new GetProjectsQuery(),
+    );
+    if (!projects.success) {
+      throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
+    }
+    return projects.value.map((project: Project) =>
+      toProjectResponseDto(project),
+    );
   }
 
   @Get('search')
-  async getProjectsFiltered(@Query('title') title: string): Promise<Project[]> {
-    const projectsFiltered = await this.queryBus.execute(
-      new findProjectByTitleQuery(title),
+  async getProjectsFiltered(
+    @Query('title') title: string,
+  ): Promise<ProjectResponseDto[]> {
+    const projectsFiltered: Result<Project[]> = await this.queryBus.execute(
+      new FindProjectByTitleQuery(title),
     );
-    return projectsFiltered.map((project: Project) =>
+    if (!projectsFiltered.success) {
+      throw new HttpException(projectsFiltered.error, HttpStatus.BAD_REQUEST);
+    }
+    return projectsFiltered.value.map((project: Project) =>
       toProjectResponseDto(project),
     );
   }
 
   @Get(':id')
   async getProject(@Param('id') id: string) {
-    const projectRes = await this.queryBus.execute(
+    const projectRes: Result<Project> = await this.queryBus.execute(
       new FindProjectByIdQuery(id),
     );
-    return { success: true, value: toProjectResponseDto(projectRes.value) };
+    if (!projectRes.success) {
+      throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
+    }
+    return toProjectResponseDto(projectRes.value);
   }
 
   @Post()
   async createProject(
     @Session('userId') userId: string,
-    @Body() project: CreateProjectDtoRequest,
+    @Body() project: CreateProjectDtoInput,
   ) {
-    const projectRes = await this.commandBus.execute(
+    const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand(
         project.title,
         project.description,
@@ -54,6 +81,10 @@ export class ProjectController {
         userId,
       ),
     );
-    return { success: true, value: toProjectResponseDto(projectRes.value) };
+    if (!projectRes.success) {
+      throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
+    }
+    console.log({ projectRes });
+    return toProjectResponseDto(projectRes.value);
   }
 }

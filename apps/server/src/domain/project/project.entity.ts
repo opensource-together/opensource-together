@@ -1,17 +1,17 @@
 import { TechStack } from '../techStack/techstack.entity';
-import { Title } from './title.vo';
-import { Description } from './description.vo';
-import { Status } from './status.vo';
-import { Link } from './link.vo';
+import { Title } from './title/title.vo';
+import { Description } from './description/description.vo';
+import { Status } from './status/status.vo';
+import { Link } from './link/link.vo';
 
 export class Project {
   private readonly id: string | null;
-  private title: Title;
-  private description: Description;
-  private techStacks: TechStack[];
-  private link: Link | null;
-  private status: Status | null;
-  private userId: string;
+  private _title: Title;
+  private _description: Description;
+  private _techStacks: TechStack[];
+  private _link: Link | null;
+  private _status: Status | null;
+  private _userId: string;
 
   constructor({
     id,
@@ -31,12 +31,12 @@ export class Project {
     userId: string;
   }) {
     this.id = id;
-    this.title = title;
-    this.description = description;
-    this.techStacks = techStacks;
-    this.link = link;
-    this.status = status;
-    this.userId = userId;
+    this._title = title;
+    this._description = description;
+    this._techStacks = techStacks;
+    this._link = link;
+    this._status = status;
+    this._userId = userId;
   }
 
   public getId() {
@@ -44,26 +44,26 @@ export class Project {
   }
 
   public getTitle() {
-    return this.title.getTitle();
+    return this._title.getTitle();
   }
 
   public getDescription() {
-    return this.description.getDescription();
+    return this._description.getDescription();
   }
 
   public getTechStacks() {
-    return this.techStacks;
+    return this._techStacks;
   }
 
   public getLink() {
-    return this.link ? this.link.getLink() : null;
+    return this._link ? this._link.getLink() : null;
   }
 
   public getStatus() {
-    return this.status ? this.status.getStatus() : null;
+    return this._status ? this._status.getStatus() : null;
   }
 
   public getUserId() {
-    return this.userId;
+    return this._userId;
   }
 }

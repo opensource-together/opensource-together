@@ -1,4 +1,5 @@
 import { ProjectTestBuilder } from '../project/ProjectTestBuilder';
+import { TechStackFactory } from './techStack.factory';
 
 const defaultTechStacks = [
   { getName: () => 'React' },
@@ -6,9 +7,12 @@ const defaultTechStacks = [
 ];
 
 describe('Gestion des TechStacks', () => {
-  it('devrait accepter un projet sans techStack', () => {
-    const project = new ProjectTestBuilder().withTechStacks([]).build();
-    expect(project.getTechStacks()).toHaveLength(0);
+  it('devrait refuser un projet sans techStack', () => {
+    const result = TechStackFactory.createMany([]);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBe("Aucune techStack n'ont été selectionnées");
+    }
   });
 
   it('devrait correctement gérer plusieurs techStacks', () => {
@@ -21,6 +25,4 @@ describe('Gestion des TechStacks', () => {
     expect(techStacks[0].getName()).toBe('React');
     expect(techStacks[1].getName()).toBe('Node.js');
   });
-
-  // TODO: Ajouter des tests pour la validation des techStacks invalides
 });
