@@ -4,6 +4,7 @@ import Header from "@/shared/layout/Header";
 import ProjectPageCard from "../components/ProjectPageCard";
 import ProjectSideBar from "../components/ProjectSideBar";
 import ProjectFilters from "../components/ProjectFilters";
+import RoleCard from '../components/RoleCard';
 
 export default function MyProjectPageView() {
   return (
@@ -18,11 +19,28 @@ export default function MyProjectPageView() {
       </div>
       <div>
         <p className="text-[20px] mb-3 font-medium font-geist">Open Roles</p>
-      <ProjectFilters
-        filters={[
-          { label: '', value: 'Plus Récent', isSortButton: true },
-        ]}
-      />
+        <ProjectFilters
+          filters={[
+            { label: '', value: 'Plus Récent', isSortButton: true },
+          ]}
+        />
+        <div className="flex flex-col gap-3 mt-6 mb-30">
+          <RoleCard
+            title="Back-end Developer"
+            description="We're hiring a Backend Developer to build robust, scalable server-side systems and APIs. You'll collaborate with cross-functional teams to deliver reliable backend systems using technologies like [ Node.js, Python, SQL, etc.]."
+            badges={[{ label: 'MongoDB', color: '#00D5BE', bgColor: '#CBFBF1' }]}
+          />
+          <RoleCard
+            title="UX Designer"
+            description="We're looking for a UX Designer to craft intuitive, user-centered experiences across web and mobile platforms.\nYou'll collaborate with product and dev teams to turn insights into wireframes, prototypes, and seamless user journeys."
+            badges={[{ label: 'Design', color: '#FDA5D5', bgColor: '#FDF2F8' }]}
+          />
+          <RoleCard
+            title="Front-end Developer"
+            description="We're looking for a Frontend Developer to build responsive, high-quality user interfaces using modern web technologies.\nYou'll be responsible for turning design concepts into fast, accessible, and interactive digital experiences."
+            badges={[{ label: 'React', color: '#00BCFF', bgColor: '#DFF2FE' }]}
+          />
+        </div>
       </div>
     </div>
     </>
