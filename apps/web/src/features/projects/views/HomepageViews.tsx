@@ -88,7 +88,14 @@ export default function HomepageViews() {
         
         <div className="px-4 sm:px-6 md:px-8 lg:px-12 mx-auto max-w-[1200px] py-4 md:py-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
-            <ProjectFilters />
+          <ProjectFilters
+            filters={[
+            { label: '', value: 'Plus Récent', isSortButton: true },
+            { label: 'Technology', value: '' },
+            { label: 'Roles', value: '' },
+            { label: 'Difficulty', value: '' },
+            ]}
+          />
             <ProjectSearchBar />
           </div>
           
