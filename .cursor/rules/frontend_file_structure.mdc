@@ -19,7 +19,7 @@ alwaysApply: false
 │   │   │   └── LoginForm.tsx
 │   │   ├── 📁 views/                  # Composants « smart » (présentation)
 │   │   │   └── LoginView.tsx
-│   │   ├── 📁 lib/                    # Fonctions métiers (appel API, etc.)
+│   │   ├── 📁 services/                    # Fonctions métiers (appel API, etc.)
 │   │   │   └── authApi.ts
 │   │   ├── 📁 hooks/                  # Hooks spécifiques à l'authentification
 │   │   │   └── useAuth.ts

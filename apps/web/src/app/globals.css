@@ -76,6 +76,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 .dark {
@@ -119,4 +122,40 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+/* Configuration des polices Geist */
+.font-geist {
+  font-family: var(--font-geist-sans);
+}
+
+.font-geist-mono {
+  font-family: var(--font-geist-mono);
+}
+
+/* Ajout explicite des poids de police */
+.font-medium {
+  font-weight: 500;
+}
+
+/* Ombres personnalisées */
+.shadow-inner-dark {
+  box-shadow: inset 0px 3px 4px #343434;
+}
+
+/* Ombres personnalisées */
+.shadow-inner-dark:hover {
+  box-shadow: inset 0px 3px 4px #0d0d0d;
 }
