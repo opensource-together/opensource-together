@@ -5,6 +5,7 @@ import arrowupright from "@/shared/icons/arrow-up-right.svg";
 import peopleicon from "@/shared/icons/people.svg";
 import miniuserIcon from "@/shared/icons/mini-user-icon-empty.svg";
 import emptystarIcon from "@/shared/icons/empty-star.svg";
+import Link from "next/link";
 
 interface TechIcon {
   icon: string;
@@ -123,9 +124,9 @@ export default function ProjectCard({
             )}
             
             {showViewProject && (
-              <div className="text-[12px] font-semibold ml-auto flex items-center gap-1">
+              <Link href="/project" className="text-[12px] font-semibold ml-auto flex items-center gap-1 hover:opacity-80 transition-opacity">
                 View Project <Image src={arrowupright} alt="arrowupright" width={10} height={10} />
-              </div>
+              </Link>
             )}
           </div>
         )}
