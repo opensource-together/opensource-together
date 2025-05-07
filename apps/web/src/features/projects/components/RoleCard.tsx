@@ -2,13 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
 import arrowupright from '@/shared/icons/arrow-up-right.svg';
-
-
-interface Badge {
-  label: string;
-  color: string;
-  bgColor: string;
-}
+import { Badge } from '../services/createProjectAPI';
 
 interface RoleCardProps {
   title: string;
