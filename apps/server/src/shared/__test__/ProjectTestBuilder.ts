@@ -1,10 +1,12 @@
-import { CreateProjectDtoInput } from '@/application/dto/create-project-inputs.dto';
+import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-inputs.dto';
 import { Description } from '@/domain/project/description/description.vo';
 import { Link } from '@/domain/project/link/link.vo';
 import { Project } from '@/domain/project/project.entity';
 import { Status } from '@/domain/project/status/status.vo';
 import { Title } from '@/domain/project/title/title.vo';
 import { TechStack } from '@/domain/techStack/techstack.entity';
+import { TechStackFactory } from '@/domain/techStack/techStack.factory';
+import { unwrapResult } from '@/shared/test-utils';
 
 export class ProjectTestBuilder {
   private id: string = '1';
@@ -13,7 +15,9 @@ export class ProjectTestBuilder {
   private link: string = 'https://github.com/monprojet';
   private status: string = 'ARCHIVED';
   private userId: string = 'user1';
-  private techStacks: TechStack[] = [];
+  private techStacks: TechStack[] = [
+    unwrapResult(TechStackFactory.create('1', 'React', 'https://react.png')),
+  ];
 
   public static aProject(): ProjectTestBuilder {
     return new ProjectTestBuilder();

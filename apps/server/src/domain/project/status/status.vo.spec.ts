@@ -1,24 +1,44 @@
-import { ProjectTestBuilder } from '../ProjectTestBuilder';
-
+import { Status } from './status.vo';
 describe('Status VO', () => {
   it('devrait accepter un statut PUBLISHED', () => {
-    const project = new ProjectTestBuilder().withStatus('PUBLISHED').build();
-    expect(project.getStatus()).toBe('PUBLISHED');
+    const project = Status.create('PUBLISHED');
+    expect(project.success).toBe(true);
+    if (project.success) {
+      expect(project.value.getStatus()).toBe('PUBLISHED');
+    }
   });
 
   it('devrait accepter un statut ARCHIVED', () => {
-    const project = new ProjectTestBuilder().withStatus('ARCHIVED').build();
-    expect(project.getStatus()).toBe('ARCHIVED');
+    const project = Status.create('ARCHIVED');
+    expect(project.success).toBe(true);
+    if (project.success) {
+      expect(project.value.getStatus()).toBe('ARCHIVED');
+    }
   });
 
   it('devrait rejeter un statut invalide', () => {
-    expect(() => {
-      new ProjectTestBuilder().withStatus('Pending' as any).build();
-    }).toThrow('Status must be PUBLISHED or ARCHIVED');
+    const project = Status.create('Pending' as any);
+    expect(project.success).toBe(false);
+    if (!project.success) {
+      expect(project.error).toBe(
+        'Status must be PUBLISHED or ARCHIVED or DRAFT',
+      );
+    }
   });
 
   it('devrait accepter un statut null', () => {
-    const project = new ProjectTestBuilder().withStatus(null as any).build();
-    expect(project.getStatus()).toBeNull();
+    const project = Status.create(null as any);
+    expect(project.success).toBe(false);
+    if (!project.success) {
+      expect(project.error).toBe(
+        'Status must be PUBLISHED or ARCHIVED or DRAFT',
+      );
+    }
+  });
+
+  it('devrait throw une erreur si le status est corrompu', () => {
+    expect(() => {
+      Status.fromPersistence('Pending' as any);
+    }).toThrow('Status must be PUBLISHED or ARCHIVED or DRAFT');
   });
 });

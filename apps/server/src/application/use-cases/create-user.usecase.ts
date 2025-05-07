@@ -1,5 +1,5 @@
 import { UserRepositoryPort } from '@application/ports/user.repository.port';
-import { CreateUserDtoInput } from '@/application/dto/create-user-input.dto';
+import { CreateUserDtoInput } from '@/application/dto/inputs/create-user-input.dto';
 import { Result } from '@shared/result';
 import { UserFactory } from '@/domain/user/user.factory';
 import { User } from '@domain/user/user.entity';

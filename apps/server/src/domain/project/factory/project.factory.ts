@@ -7,6 +7,20 @@ import { Status } from '../status/status.vo';
 import { Link } from '../link/link.vo';
 
 export class ProjectFactory {
+  /**
+   * @description
+   * Create a new Project entity with validated value objects,
+   *
+   * if the value objects are not valid, the factory will return an error
+   * @param {Object} params - The project creation parameters
+   * @param {string} params.title - The title of the project
+   * @param {string} params.description - The description of the project
+   * @param {string|null} params.link - Optional URL link for the project
+   * @param {string} params.status - The status of the project
+   * @param {string} params.userId - The ID of the user who owns the project
+   * @param {TechStack[]} params.techStacks - Array of technology stacks used in the project
+   * @returns {Result<Project>} Result containing either the created Project or an error
+   */
   static create({
     title,
     description,
@@ -56,6 +70,21 @@ export class ProjectFactory {
     );
   }
 
+  /**
+   * @description
+   * Reconstruct a Project entity from a persistence object,
+   *
+   * ensure the data is valid and the business rules are respected
+   * @param {Object} params - The project persistence parameters
+   * @param {string} params.id - The ID of the project
+   * @param {string} params.title - The title of the project
+   * @param {string} params.description - The description of the project
+   * @param {string|null} params.link - Optional URL link for the project
+   * @param {string} params.status - The status of the project
+   * @param {string} params.userId - The ID of the user who owns the project
+   * @param {TechStack[]} params.techStacks - Array of technology stacks used in the project
+   * @returns {Result<Project>} Result containing either the created Project or an error
+   */
   static fromPersistence({
     id,
     title,

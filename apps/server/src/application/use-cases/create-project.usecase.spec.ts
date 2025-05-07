@@ -3,7 +3,7 @@ import { ProjectRepositoryPort } from '../ports/project.repository.port';
 import { Result } from '@/shared/result';
 import { ProjectFactory } from '@/domain/project/factory/project.factory';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
-import { CreateProjectDtoInput } from '../dto/create-project-inputs.dto';
+import { CreateProjectDtoInput } from '../dto/inputs/create-project-inputs.dto';
 import { ProjectTestBuilder } from '@/shared/__test__/ProjectTestBuilder';
 
 describe('CreateProjectUseCase', () => {

@@ -14,7 +14,7 @@ import { ProjectResponseDto } from '@/application/dto/adapters/project-response.
 import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
-import { CreateProjectDtoInput } from '@/application/dto/create-project-inputs.dto';
+import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-inputs.dto';
 import { CreateProjectCommand } from '@/infrastructures/cqrs/project/commands/create-project/create-project.command';
 import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-by-id/find-project-by-id.query';
 import { FindProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-by-title/find-project-by-title.query';

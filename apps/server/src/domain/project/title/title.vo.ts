@@ -27,6 +27,16 @@ export class Title {
   }
 
   static fromPersistence(title: string): Title {
+    if (title.length > 20) {
+      throw new Error(
+        'Le titre du projet doit comporter au maximum 20 caracteres',
+      );
+    }
+    if (title.length < 2) {
+      throw new Error(
+        'Le titre du projet doit comporter au minimum 2 caracteres',
+      );
+    }
     return new Title(title);
   }
 }

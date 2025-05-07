@@ -27,6 +27,10 @@ export class TechStackFactory {
       }
     });
 
+    if (techStacks.length === 0) {
+      return Result.fail("Aucune techStack n'ont été selectionnées");
+    }
+
     return Result.ok(techStacks);
   }
 }
