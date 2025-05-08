@@ -127,11 +127,15 @@ export default function ProjectCard({
             <span className="text-[black]/20">+{roles.length - 3}</span>
           )}
           
-          {showViewProject && (
-            <div className="text-[12px] font-medium ml-auto flex items-center gap-1">
-              View Project <Image src={arrowupright} alt="arrowupright" width={10} height={10} />
-            </div>
-          )}
+          {/* View Project hidden for now
+
+            {showViewProject && (
+              <div className="text-[12px] font-medium ml-auto flex items-center gap-1">
+                View Project <Image src={arrowupright} alt="arrowupright" width={10} height={10} />
+              </div>
+            )}
+
+          */}
         </div>
       </article>
     </section>

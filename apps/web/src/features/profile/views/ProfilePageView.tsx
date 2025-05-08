@@ -5,7 +5,8 @@ import ProfileCard from "../components/ProfileCard";
 import ProfileSidebar from "../components/ProfileSidebar";
 import ProjectCard from "@/features/profile/components/ProjectCard";
 import Header from "@/shared/layout/Header";
-
+import pinnedIcon from "@/shared/icons/pinned-icon.svg";
+import Image from "next/image";
 export default function ProfilePageView() {
   return (
     <>
@@ -21,7 +22,7 @@ export default function ProfilePageView() {
       
       {/* Section des projets pinnés en dessous */}
       <div className="w-full lg:pl-0 mt-2 mb-30">
-        <h2 className="text-[20px] font-medium mb-10 font-geist">Pinned Projects</h2>
+        <h2 className="text-[20px] font-medium mb-10 font-geist flex items-center gap-1">Pinned Projects <Image src={pinnedIcon} alt="pinnedicon" width={18} height={17} /></h2>
         <div className="flex flex-col gap-6 lg:max-w-[731px]">
           <ProjectCard />
           <ProjectCard />
