@@ -15,7 +15,8 @@ interface ProjectDetailViewProps {
 
 export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
   const [simulateLoading, setSimulateLoading] = useState(true);
-  const { 
+  // Tanstack Query useProject hook to fetch project details by slug
+  const {
     data: project, 
     isLoading, 
     isError, 

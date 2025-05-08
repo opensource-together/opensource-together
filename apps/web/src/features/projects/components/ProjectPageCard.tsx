@@ -6,7 +6,7 @@ import mongodbIcon from "@/shared/icons/mongodb.svg";
 import tailwindIcon from "@/shared/icons/tailwindcss.svg";
 import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
 import Button from "@/shared/ui/Button";
-import arrowUpRightIcon from "@/shared/icons/arrow-up-right.svg";
+import githubIcon from "@/shared/icons/github.svg";
 import joinedIcon from '../../../shared/icons/joinedicon.svg';
 import exemplebyronIcon from '../../../shared/icons/exemplebyronIcon.svg';
 import { TechStack } from '../services/createProjectAPI';
@@ -65,18 +65,18 @@ export default function ProjectPageCard({
         <div className="flex gap-3 items-center mt-2">
           <a
             href="#"
-            className="text-[13px] font-medium font-geist flex items-center gap-1 text-black/80 hover:underline"
+            className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[43px] w-[130px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
             target="_blank"
             rel="noopener noreferrer"
           >
             View Repository
-            <Image src={arrowUpRightIcon} alt="arrowright" width={9} height={9} />
+            <Image src={githubIcon} alt="arrowright" width={15} height={15} />
           </a>
           <Button
-            width="126px"
+            width="120px"
             height="43px"
             minWidth={false}
-            className="ml-2 text-[13px] font-medium"
+            className="ml-2 text-[13px] font-medium tracking-[-0.5px]"
           >
             Join Project <Image src={joinedIcon} alt="joined" width={10} height={10} style={{ filter: 'invert(1)' }} />
           </Button>

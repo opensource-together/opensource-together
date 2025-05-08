@@ -13,7 +13,6 @@ import {
 export const getProjectBySlug = async (slug: string): Promise<Project> => {
   // In a real scenario, this would call the API
   // return get<Project>(`/projects/${slug}`);
-
   // For now, return mock data
   return Promise.resolve(mockProjects.find(p => p.slug === slug) || mockProjects[0]);
 };
