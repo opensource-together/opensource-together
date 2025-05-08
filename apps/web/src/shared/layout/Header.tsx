@@ -1,7 +1,7 @@
 import { useCreateProject } from "@/features/projects/hooks/useProjects";
 import Button from "../ui/Button";
 import crossIcon from "../icons/crossIcon.svg";
-import openSource from "../icons/openSource.svg";
+import openSource from "../icons/opensource.svg";
 import beta from "../icons/beta.svg";
 import x from "../icons/x.svg";
 import github from "../icons/github.svg";
