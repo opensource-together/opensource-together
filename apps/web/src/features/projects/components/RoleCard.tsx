@@ -10,6 +10,7 @@ interface RoleCardProps {
   badges?: Badge[];
   buttonLabel?: string;
   buttonHref?: string;
+  experienceBadge?: string;
 }
 
 const RoleCard: React.FC<RoleCardProps> = ({
@@ -18,9 +19,17 @@ const RoleCard: React.FC<RoleCardProps> = ({
   badges = [],
   buttonLabel = 'Apply for role',
   buttonHref = '#',
+  experienceBadge
 }) => (
   <div className="w-[717px] min-h-[174px] bg-white rounded-[16px] border border-black/10 shadow-[0_2px_5px_rgba(0,0,0,0.02)] px-8 py-6 flex flex-col mb-6">
-    <h3 className="font-geist font-medium text-[15px] text-black mb-2">{title}</h3>
+    <div className="flex justify-between items-start mb-2">
+      <h3 className="font-geist font-medium text-[18px] text-black">{title}</h3>
+      {experienceBadge && (
+        <div className="flex items-center h-[20px] bg-black/[0.02] rounded-full px-3">
+          <span className="font-geist font-normal text-[11px] tracking-[-0.5px] text-black/40">{experienceBadge}</span>
+        </div>
+      )}
+    </div>
     <p className="font-geist font-normal text-[12px] leading-[20px] text-black/70 mb-4">{description}</p>
     <div className="border-t-[0.5px] border-dashed border-black/10 w-full"></div>
     <div className="flex items-end justify-between mt-auto">
@@ -35,8 +44,8 @@ const RoleCard: React.FC<RoleCardProps> = ({
           </span>
         ))}
       </div>
-      <Link href="/role" className="text-[14px] font-semibold ml-auto flex font-geist items-center gap-1 hover:opacity-80 transition-opacity">
-        Apply For Role <Image src={arrowupright} alt="arrowupright" width={10} height={10} />
+      <Link href={buttonHref} className="text-[14px] font-semibold ml-auto flex font-geist items-center gap-1 hover:opacity-80 transition-opacity">
+        {buttonLabel} <Image src={arrowupright} alt="arrowupright" width={10} height={10} />
       </Link>
     </div>
   </div>
@@ -47,7 +56,10 @@ export default RoleCard;
 export function SkeletonRoleCard() {
   return (
     <div className="w-[717px] min-h-[174px] bg-white rounded-[16px] border border-black/10 shadow-[0_2px_5px_rgba(0,0,0,0.02)] px-8 py-6 flex flex-col mb-6 animate-pulse">
-      <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
+      <div className="flex justify-between items-start mb-2">
+        <div className="h-5 w-40 bg-gray-200 rounded" />
+        <div className="h-[20px] w-[118px] bg-gray-100 rounded-full" />
+      </div>
       <div className="h-4 w-3/4 bg-gray-100 rounded mb-4" />
       <div className="border-t border-dashed border-black/10 w-full my-3"></div>
       <div className="flex items-end justify-between mt-auto">

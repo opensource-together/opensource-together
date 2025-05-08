@@ -9,6 +9,8 @@ import Button from "@/shared/ui/Button";
 import githubIcon from "@/shared/icons/github.svg";
 import joinedIcon from '../../../shared/icons/joinedicon.svg';
 import exemplebyronIcon from '../../../shared/icons/exemplebyronIcon.svg';
+import difficultyBarGray from '@/shared/icons/Difficulty-bar-gray.svg';
+import difficultyBarLight from '@/shared/icons/Difficulty-bar-light.svg';
 import { TechStack } from '../services/createProjectAPI';
 
 interface ProjectPageCardProps {
@@ -17,6 +19,7 @@ interface ProjectPageCardProps {
   longDescription?: string;
   techStacks?: TechStack[];
   keyBenefits?: string[];
+  difficulty?: 'Easy' | 'Medium' | 'Hard';
 }
 
 export default function ProjectPageCard({
@@ -32,7 +35,8 @@ export default function ProjectPageCard({
     "Smart recommendations: Discover eco-friendly alternatives and habits based on your lifestyle and preferences.",
     "Data privacy: Your personal information stays secure—data is never shared without your consent.",
     "Multi-device support: Use the app seamlessly across smartphones, tablets, and web browsers."
-  ]
+  ],
+  difficulty = "Medium"
 }: ProjectPageCardProps) {
   // Map of tech stacks to icons - to be replaced with dynamic icon loading
   const techIconMap: Record<string, any> = {
@@ -44,8 +48,37 @@ export default function ProjectPageCard({
     'Tailwind': tailwindIcon,
   };
 
+  // Fonction pour rendre les barres de difficulté
+  const renderDifficultyBars = () => {
+    if (difficulty === 'Easy') {
+      return (
+        <div className="flex items-center gap-[2px]">
+          <Image src={difficultyBarGray} alt="Difficulty level" width={2} height={8} />
+          <Image src={difficultyBarLight} alt="Difficulty level" width={2} height={8} />
+          <Image src={difficultyBarLight} alt="Difficulty level" width={2} height={8} />
+        </div>
+      );
+    } else if (difficulty === 'Medium') {
+      return (
+        <div className="flex items-center gap-[2px]">
+          <Image src={difficultyBarGray} alt="Difficulty level" width={2} height={8} />
+          <Image src={difficultyBarGray} alt="Difficulty level" width={2} height={8} />
+          <Image src={difficultyBarLight} alt="Difficulty level" width={2} height={8} />
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center gap-[2px]">
+          <Image src={difficultyBarGray} alt="Difficulty level" width={2} height={8} />
+          <Image src={difficultyBarGray} alt="Difficulty level" width={2} height={8} />
+          <Image src={difficultyBarGray} alt="Difficulty level" width={2} height={8} />
+        </div>
+      );
+    }
+  };
+
   return (
-    <section className="w-[710px] h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
+    <section className="w-[710px] min-h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-5">
@@ -62,24 +95,30 @@ export default function ProjectPageCard({
             </div>
           </div>
         </div>
-        <div className="flex gap-3 items-center mt-2">
-          <a
-            href="#"
-            className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[43px] w-[130px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Repository
-            <Image src={githubIcon} alt="arrowright" width={15} height={15} />
-          </a>
-          <Button
-            width="120px"
-            height="43px"
-            minWidth={false}
-            className="ml-2 text-[13px] font-medium tracking-[-0.5px]"
-          >
-            Join Project <Image src={joinedIcon} alt="joined" width={10} height={10} style={{ filter: 'invert(1)' }} />
-          </Button>
+        <div className="flex flex-col items-end gap-4">
+          <div className="flex items-center h-[20px] w-[118px] bg-black/[0.02] rounded-full px-3">
+            <span className="font-geist font-normal text-[11px] tracking-[-0.5px] text-black/40 mr-1">{difficulty} Difficulty</span>
+            {renderDifficultyBars()}
+          </div>
+          <div className="flex gap-3 items-center">
+            <a
+              href="#"
+              className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[43px] w-[130px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Repository
+              <Image src={githubIcon} alt="arrowright" width={15} height={15} />
+            </a>
+            <Button
+              width="120px"
+              height="43px"
+              minWidth={false}
+              className="ml-2 text-[13px] font-medium tracking-[-0.5px]"
+            >
+              Join Project <Image src={joinedIcon} alt="joined" width={10} height={10} style={{ filter: 'invert(1)' }} />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -89,7 +128,7 @@ export default function ProjectPageCard({
         <p className="text-[13px] font-geist font-normal text-black/70 mb-4">
           {description}
         </p>
-        <div className="w-[629px] h-[220px]">
+        <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
             <>
               <p className="text-[13px] leading-[16px] font-geist font-normal text-black/70">Key benefits of our carbon tracking tool include:</p>
@@ -109,7 +148,7 @@ export default function ProjectPageCard({
       </div>
 
       {/* Ligne de séparation */}
-      <div className="border-t border-dashed border-black/10 w-full mt-12 mb-3"></div>
+      <div className="border-t border-dashed border-black/10 w-full mt-8 mb-3"></div>
 
       {/* Technical Stack */}
       <div className=" pt-4 ">
@@ -166,30 +205,35 @@ export default function ProjectPageCard({
 
 export function SkeletonProjectPageCard() {
   return (
-    <section className="w-[710px] h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist animate-pulse">
+    <section className="w-[710px] min-h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist animate-pulse">
       {/* Header */}
-      <div className="flex items-center gap-5 mb-4">
-        <div className="w-[82px] h-[80px] rounded-[16px] bg-gray-200" />
-        <div className="flex flex-col gap-2 flex-1">
-          <div className="h-6 w-40 bg-gray-200 rounded" />
-          <div className="h-5 w-24 bg-gray-100 rounded" />
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-5">
+          <div className="w-[82px] h-[80px] rounded-[16px] bg-gray-200" />
+          <div className="flex flex-col gap-2 flex-1">
+            <div className="h-6 w-40 bg-gray-200 rounded" />
+            <div className="h-5 w-24 bg-gray-100 rounded" />
+          </div>
         </div>
-      </div>
-      <div className="flex gap-3 items-center mb-4">
-        <div className="h-5 w-32 bg-gray-200 rounded" />
-        <div className="h-9 w-28 bg-gray-200 rounded ml-2" />
+        <div className="flex flex-col items-end gap-4">
+          <div className="h-[20px] w-[118px] bg-gray-100 rounded-full" />
+          <div className="flex gap-3 items-center">
+            <div className="h-[43px] w-[130px] bg-gray-200 rounded" />
+            <div className="h-[43px] w-[120px] bg-gray-200 rounded ml-2" />
+          </div>
+        </div>
       </div>
       {/* Description */}
       <div className="mt-2">
         <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
         <div className="h-4 w-3/4 bg-gray-100 rounded mb-2" />
-        <div className="w-[629px] h-[220px] flex flex-col gap-2 mt-2">
+        <div className="w-[629px] flex flex-col gap-2 mt-2">
           {[...Array(7)].map((_, i) => (
             <div key={i} className="h-4 w-full bg-gray-100 rounded" />
           ))}
         </div>
       </div>
-      <div className="border-t border-dashed border-black/10 w-full mt-12 mb-3"></div>
+      <div className="border-t border-dashed border-black/10 w-full mt-8 mb-3"></div>
       {/* Technical Stack */}
       <div className="mt-2">
         <div className="h-5 w-32 bg-gray-200 rounded mb-3" />

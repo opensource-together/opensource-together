@@ -18,6 +18,7 @@ export interface ProjectRole {
   title: string;
   description: string;
   badges: Badge[];
+  experienceBadge?: string;
 }
 
 export interface SocialLink {

@@ -127,6 +127,7 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
                   title={role.title}
                   description={role.description}
                   badges={role.badges}
+                  experienceBadge={role.experienceBadge}
                 />
               ))
             ) : (
@@ -135,26 +136,23 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
                 <RoleCard
                   title="Back-end Developer"
                   description="We're hiring a Backend Developer to build robust, scalable server-side systems and APIs. You'll collaborate with cross-functional teams to deliver reliable backend systems using technologies like [ Node.js, Python, SQL, etc.]."
-                  badges={[{ label: 'MongoDB', color: '#00C950', bgColor: '#F0FDF4' },
-                          { label: 'MongoDB', color: '#00C950', bgColor: '#F0FDF4' },
-                          { label: 'MongoDB', color: '#00C950', bgColor: '#F0FDF4' }
+                  badges={[{ label: 'MongoDB', color: '#00D5BE', bgColor: '#CBFBF1' },
+                          { label: 'MongoDB', color: '#00D5BE', bgColor: '#CBFBF1' },
+                          { label: 'MongoDB', color: '#00D5BE', bgColor: '#CBFBF1' }
                   ]}
+                  experienceBadge="3+ Years Experience"
                 />
                 <RoleCard
                   title="UX Designer"
                   description="We're looking for a UX Designer to craft intuitive, user-centered experiences across web and mobile platforms.\nYou'll collaborate with product and dev teams to turn insights into wireframes, prototypes, and seamless user journeys."
-                  badges={[{ label: 'Design', color: '#FDA5D5', bgColor: '#FDF2F8' },
-                          { label: 'Design', color: '#FDA5D5', bgColor: '#FDF2F8' },
-                          { label: 'Design', color: '#FDA5D5', bgColor: '#FDF2F8' }
-                  ]}
+                  badges={[{ label: 'Design', color: '#FDA5D5', bgColor: '#FDF2F8' }]}
+                  experienceBadge="2+ Years Experience"
                 />
                 <RoleCard
                   title="Front-end Developer"
                   description="We're looking for a Frontend Developer to build responsive, high-quality user interfaces using modern web technologies. You'll be responsible for turning design concepts into fast, accessible, and interactive digital experiences."
-                  badges={[{ label: 'React', color: '#00BCFF', bgColor: '#DFF2FE' },
-                          { label: 'React', color: '#00BCFF', bgColor: '#DFF2FE' },
-                          { label: 'React', color: '#00BCFF', bgColor: '#DFF2FE' }
-                  ]}
+                  badges={[{ label: 'React', color: '#00BCFF', bgColor: '#DFF2FE' }]}
+                  experienceBadge="1+ Year Experience"
                 />
               </>
             )}
