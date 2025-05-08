@@ -9,6 +9,8 @@ import RoleCard from '../components/RoleCard';
 import { useProject } from "../hooks/useProjects";
 import SkeletonProjectDetail from "../components/SkeletonProjectDetail";
 import Breadcrumb from "@/shared/ui/Breadcrumb";  
+import Image from "next/image";
+import peopleicon from "@/shared/icons/people.svg";
 
 interface ProjectDetailViewProps {
   slug: string;
@@ -82,7 +84,7 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
   return (
     <>
       <Header />  
-      <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
+      <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-1">
         <Breadcrumb 
           items={[
             { label: 'Home', href: '/' },
@@ -91,7 +93,7 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
           ]}
         />
       </div>
-      <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
+      <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-2 md:mt-4 gap-8">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
           <div className="lg:max-w-[721.96px] w-full">
             <ProjectPageCard 
@@ -113,12 +115,14 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
           />
         </div>
         <div>
-          <p className="text-[20px] mb-3 font-medium font-geist">Open Roles</p>
-          <ProjectFilters
-            filters={[
-              { label: '', value: 'Plus Récent', isSortButton: true },
-            ]}
-          />
+          <div className="flex justify-between items-center mb-3 lg:max-w-[721.96px]">
+            <p className="text-[20px] font-medium font-geist flex items-centers gap-1">Open Roles <Image src={peopleicon} className="mt-1" alt="peopleicon" width={14} height={14} /> </p>
+            <ProjectFilters
+              filters={[
+                { label: '', value: 'Plus Récent', isSortButton: true },
+              ]}
+            />
+          </div>
           <div className="flex flex-col gap-3 mt-6 mb-30">
             {project?.roles && project.roles.length > 0 ? (
               project.roles.map((role) => (
