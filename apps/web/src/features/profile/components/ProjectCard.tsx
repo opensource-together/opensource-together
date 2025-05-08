@@ -1,10 +1,13 @@
 import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
 import Image from "next/image";
-import jsIcon from "@/shared/icons/jsIcon.svg";
+import typescriptIcon from "@/shared/icons/typescript (2).svg";
+import reactIcon from "@/shared/icons/react.svg";
+import mongodbIcon from "@/shared/icons/mongodb.svg";
+import tailwindIcon from "@/shared/icons/tailwindcss.svg";
 import arrowupright from "@/shared/icons/arrow-up-right.svg";
 import peopleicon from "@/shared/icons/people.svg";
-import miniuserIcon from "@/shared/icons/mini-user-icon-empty.svg";
 import emptystarIcon from "@/shared/icons/empty-star.svg";
+import exemplebyronIcon from "@/shared/icons/exemplebyronIcon.svg";
 
 interface TechIcon {
   icon: string;
@@ -37,20 +40,20 @@ export default function ProjectCard({
   title = "EcoTrack",
   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud",
   techStack = [
-    { icon: jsIcon, alt: "jsIcon" },
-    { icon: jsIcon, alt: "jsIcon" },
-    { icon: jsIcon, alt: "jsIcon" },
-    { icon: jsIcon, alt: "jsIcon" },
+    { icon: typescriptIcon, alt: "TypeScript" },
+    { icon: reactIcon, alt: "React" },
+    { icon: mongodbIcon, alt: "MongoDB" },
+    { icon: tailwindIcon, alt: "TailwindCSS" },
   ],
   showTechStack = true,
-  creator = "Zinedine",
+  creator = "Byron Love",
   stars = 55,
   showCreator = true,
   showStars = true,
   roles = [
-    { name: "UX Designer", color: "#FFB900", bgColor: "#FEF3C6" },
-    { name: "Front-end Developer", color: "#51A2FF", bgColor: "#DBEAFE" },
-    { name: "MongoDB", color: "#05DF72", bgColor: "#DCFCE7" },
+    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
+    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
+    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
   ],
   roleCount = 5,
   showRoles = true,
@@ -58,7 +61,7 @@ export default function ProjectCard({
   className = "",
 }: ProjectCardProps) {
   return (
-    <section className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1)] font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] h-[207px] py-5 px-8 ${className}`}>
+    <section className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1),0_2px_5px_rgba(0,0,0,0.02)] font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] min-h-[207px] py-5 px-8 ${className}`}>
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <div className="w-[50px] h-[50px] bg-gray-100 rounded-sm" />
@@ -69,7 +72,7 @@ export default function ProjectCard({
               <div className="flex gap-1 mt-1">
                 {techStack.map((tech, index) => (
                   <div key={index} className="border border-[black]/10 rounded-[2px] w-[18px] h-[18px] flex items-center justify-center bg-white">
-                    <Image src={tech.icon} alt={tech.alt} width={11} height={8} />
+                    <Image src={tech.icon} alt={tech.alt} width={14.5} height={10.22} />
                   </div>
                 ))}
               </div>
@@ -79,13 +82,13 @@ export default function ProjectCard({
 
         <div className="flex gap-0 items-center text-sm">
           {showCreator && (
-            <div className="flex items-center gap-1.5 border border-[black]/10 rounded-[2px] px-1.5 py-1">
-              <div className="w-4 h-4 bg-gray-200 rounded-full"></div>
+            <div className="flex items-center gap-1.5 border border-[black]/10 rounded-[3px] px-1.5 py-1">
+              <Image className="mb-[0.5px]" src={exemplebyronIcon} alt="Byron Love" width={13} height={13} />
               <span className="text-[12px] text-[black]/80">{creator}</span>
             </div>
           )}
           {showStars && (
-            <div className="flex items-center ml-2 border border-[black]/10 rounded-[2px] px-1 py-0.5">
+            <div className="flex items-center ml-2 border border-[black]/10 rounded-[3px] px-1 py-0.5">
               <span className="text-[14px] text-[black]/50 mr-1">{stars}</span>
               <div className="w-3.5 h-3.5">
                 <Image src={emptystarIcon} alt="stars" width={14} height={14} />
@@ -106,14 +109,14 @@ export default function ProjectCard({
         <div className="border-t border-dashed border-[black]/10 my-4" />
 
         <div className="flex flex-wrap items-center gap-2 text-[11px] mt-5">
-          <div className="text-[12px] font-medium flex items-center gap-1 mr-2">
-            {roleCount} Roles <Image src={peopleicon} alt="peopleicon" width={11} height={11} />
+          <div className="text-[10px] font-medium flex items-center gap-1 mr-2">
+            <Image src={peopleicon} alt="peopleicon" width={11} height={11} /> {roleCount} Open Roles
           </div>
           
           {roles.map((role, index) => (
             <div 
               key={index} 
-              className="h-5 flex items-center px-2 rounded-[3px] text-[11px]"
+              className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
               style={{ color: role.color, backgroundColor: role.bgColor }}
             >
               {role.name}

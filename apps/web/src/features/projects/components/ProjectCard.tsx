@@ -1,11 +1,15 @@
 import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
 import Image from "next/image";
-import jsIcon from "@/shared/icons/jsIcon.svg";
+import typescriptIcon from "@/shared/icons/typescript (2).svg";
+import reactIcon from "@/shared/icons/react.svg";
+import mongodbIcon from "@/shared/icons/mongodb.svg";
+import tailwindIcon from "@/shared/icons/tailwindcss.svg";
 import arrowupright from "@/shared/icons/arrow-up-right.svg";
 import peopleicon from "@/shared/icons/people.svg";
-import miniuserIcon from "@/shared/icons/mini-user-icon-empty.svg";
 import emptystarIcon from "@/shared/icons/empty-star.svg";
 import Link from "next/link";
+import exemplebyronIcon from "@/shared/icons/exemplebyronIcon.svg";
+
 
 interface TechIcon {
   icon: string;
@@ -38,20 +42,20 @@ export default function ProjectCard({
   title = "EcoTrack",
   description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud",
   techStack = [
-    { icon: jsIcon, alt: "jsIcon" },
-    { icon: jsIcon, alt: "jsIcon" },
-    { icon: jsIcon, alt: "jsIcon" },
-    { icon: jsIcon, alt: "jsIcon" },
+    { icon: typescriptIcon, alt: "TypeScript" },
+    { icon: reactIcon, alt: "React" },
+    { icon: mongodbIcon, alt: "MongoDB" },
+    { icon: tailwindIcon, alt: "TailwindCSS" },
   ],
   showTechStack = true,
-  creator = "Zinedine",
+  creator = "Byron Love",
   stars = 55,
   showCreator = true,
   showStars = true,
   roles = [
-    { name: "Front-end Developer", color: "#51A2FF", bgColor: "#DBEAFE" },
-    { name: "UX Designer", color: "#FFB900", bgColor: "#FEF3C6" },
-    { name: "MongoDB", color: "#05DF72", bgColor: "#DCFCE7" },
+    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
+    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
+    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
   ],
   roleCount = 5,
   showRoles = true,
@@ -59,7 +63,7 @@ export default function ProjectCard({
   className = "",
 }: ProjectCardProps) {
   return (
-    <section className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1)] font-geist rounded-[20px] border border[black]/10 w-[540px] h-[207px] py-[25px] px-[30px] ${className}`}>
+    <section className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1),0_2px_5px_rgba(0,0,0,0.02)] font-geist rounded-[20px] border border[black]/10 w-[540px] h-[207px] py-[25px] px-[30px] ${className}`}>
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <Image src={emptyprojecticon} alt="emptyprojecticon" width={50} height={50} />
@@ -70,7 +74,7 @@ export default function ProjectCard({
               <div className="flex gap-[3px] mt-1">
                 {techStack.map((tech, index) => (
                   <div key={index} className="border border-[black]/10 rounded-[2px] w-[20px] h-[20px] flex items-center justify-center">
-                    <Image src={tech.icon} alt={tech.alt} width={10.22} height={10.22} />
+                    <Image src={tech.icon} alt={tech.alt} width={14.5} height={10.22} />
                   </div>
                 ))}
               </div>
@@ -81,7 +85,7 @@ export default function ProjectCard({
         <div className="flex gap-1 items-end justify-center text-sm">
           {showCreator && (
             <span className="border rounded-[3px] border-[black]/10 flex items-center justify-center gap-1 px-2 py-[2.5px]">
-              <Image src={miniuserIcon} alt="miniuserIcon" width={13} height={13} className="inline-block" />
+             <Image className="mb-[0.5px]" src={exemplebyronIcon} alt="Byron Love" width={13} height={13} />
               <span className="inline-flex items-center text-[12px]">{creator}</span>
             </span>
           )}
@@ -105,14 +109,14 @@ export default function ProjectCard({
 
         {showRoles && (
           <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <div className="text-[12px] font-medium flex items-center gap-1">
-              {roleCount} Roles <Image src={peopleicon} alt="peopleicon" width={11} height={11} />
+            <div className="text-[10px] font-medium flex items-center gap-1">
+            <Image src={peopleicon} alt="peopleicon" width={11} height={11} /> {roleCount} Open Roles 
             </div>
             
             {roles.map((role, index) => (
               <div 
                 key={index} 
-                className="h-[18px] flex items-center px-2 rounded"
+                className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
                 style={{ color: role.color, backgroundColor: role.bgColor }}
               >
                 {role.name}
