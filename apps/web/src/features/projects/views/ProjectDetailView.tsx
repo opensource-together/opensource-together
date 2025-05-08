@@ -8,6 +8,7 @@ import ProjectFilters from "../components/ProjectFilters";
 import RoleCard from '../components/RoleCard';
 import { useProject } from "../hooks/useProjects";
 import SkeletonProjectDetail from "../components/SkeletonProjectDetail";
+import Breadcrumb from "@/shared/ui/Breadcrumb";  
 
 interface ProjectDetailViewProps {
   slug: string;
@@ -37,6 +38,15 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
     return (
       <>
         <Header />
+        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
+          <Breadcrumb 
+            items={[
+              { label: 'Home', href: '/' },
+              { label: 'Projects', href: '/projects' },
+              { label: 'Error', href: '#', isActive: true }
+            ]}
+          />
+        </div>
         <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
           <div className="text-red-500 p-4 rounded-md bg-red-50">
             <h2 className="text-xl font-bold">Error loading project</h2>
@@ -55,6 +65,15 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
     return (
       <>
         <Header />
+        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
+          <Breadcrumb 
+            items={[
+              { label: 'Home', href: '/' },
+              { label: 'Projects', href: '/projects' },
+              { label: 'Loading...', href: '#', isActive: true }
+            ]}
+          />
+        </div>
         <SkeletonProjectDetail />
       </>
     );
@@ -63,6 +82,15 @@ export default function ProjectDetailView({ slug }: ProjectDetailViewProps) {
   return (
     <>
       <Header />  
+      <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Projects', href: '/projects' },
+            { label: project?.title || 'Project', href: '#', isActive: true }
+          ]}
+        />
+      </div>
       <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
           <div className="lg:max-w-[721.96px] w-full">
