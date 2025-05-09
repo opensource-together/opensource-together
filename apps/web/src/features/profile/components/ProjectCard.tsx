@@ -1,13 +1,11 @@
-import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
-import Image from "next/image";
-import typescriptIcon from "@/shared/icons/typescript (2).svg";
-import reactIcon from "@/shared/icons/react.svg";
-import mongodbIcon from "@/shared/icons/mongodb.svg";
-import tailwindIcon from "@/shared/icons/tailwindcss.svg";
-import arrowupright from "@/shared/icons/arrow-up-right.svg";
-import peopleicon from "@/shared/icons/people.svg";
 import emptystarIcon from "@/shared/icons/empty-star.svg";
 import exemplebyronIcon from "@/shared/icons/exemplebyronIcon.svg";
+import mongodbIcon from "@/shared/icons/mongodb.svg";
+import peopleicon from "@/shared/icons/people.svg";
+import reactIcon from "@/shared/icons/react.svg";
+import tailwindIcon from "@/shared/icons/tailwindcss.svg";
+import typescriptIcon from "@/shared/icons/typescript (2).svg";
+import Image from "next/image";
 
 interface TechIcon {
   icon: string;
@@ -61,7 +59,9 @@ export default function ProjectCard({
   className = "",
 }: ProjectCardProps) {
   return (
-    <section className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1),0_2px_5px_rgba(0,0,0,0.02)] font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] min-h-[207px] py-5 px-8 ${className}`}>
+    <section
+      className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1),0_2px_5px_rgba(0,0,0,0.02)] font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] min-h-[207px] py-5 px-8 ${className}`}
+    >
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <div className="w-[50px] h-[50px] bg-gray-100 rounded-sm" />
@@ -71,8 +71,16 @@ export default function ProjectCard({
             {showTechStack && techStack.length > 0 && (
               <div className="flex gap-1 mt-1">
                 {techStack.map((tech, index) => (
-                  <div key={index} className="border border-[black]/10 rounded-[2px] w-[18px] h-[18px] flex items-center justify-center bg-white">
-                    <Image src={tech.icon} alt={tech.alt} width={14.5} height={10.22} />
+                  <div
+                    key={index}
+                    className="border border-[black]/10 rounded-[2px] w-[18px] h-[18px] flex items-center justify-center bg-white"
+                  >
+                    <Image
+                      src={tech.icon}
+                      alt={tech.alt}
+                      width={14.5}
+                      height={10.22}
+                    />
                   </div>
                 ))}
               </div>
@@ -83,7 +91,13 @@ export default function ProjectCard({
         <div className="flex gap-0 items-center text-sm">
           {showCreator && (
             <div className="flex items-center gap-1.5 border border-[black]/10 rounded-[3px] px-1.5 py-1">
-              <Image className="mb-[0.5px]" src={exemplebyronIcon} alt="Byron Love" width={13} height={13} />
+              <Image
+                className="mb-[0.5px]"
+                src={exemplebyronIcon}
+                alt="Byron Love"
+                width={13}
+                height={13}
+              />
               <span className="text-[12px] text-[black]/80">{creator}</span>
             </div>
           )}
@@ -110,23 +124,24 @@ export default function ProjectCard({
 
         <div className="flex flex-wrap items-center gap-2 text-[11px] mt-5">
           <div className="text-[10px] font-medium flex items-center gap-1 mr-2">
-            <Image src={peopleicon} alt="peopleicon" width={11} height={11} /> {roleCount} Open Roles
+            <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
+            {roleCount} Open Roles
           </div>
-          
+
           {roles.map((role, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
               style={{ color: role.color, backgroundColor: role.bgColor }}
             >
               {role.name}
             </div>
           ))}
-          
+
           {roles.length > 3 && (
             <span className="text-[black]/20">+{roles.length - 3}</span>
           )}
-          
+
           {/* View Project hidden for now
 
             {showViewProject && (

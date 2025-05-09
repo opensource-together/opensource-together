@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from 'next/image';
-import chevronDown from '@/shared/icons/chevron-down.svg';
+import chevronDown from "@/shared/icons/chevron-down.svg";
+import Image from "next/image";
+import React from "react";
 
 interface FilterButtonProps {
   label: string;
@@ -9,12 +9,25 @@ interface FilterButtonProps {
   isSortButton?: boolean;
 }
 
-const FilterButton: React.FC<FilterButtonProps> = ({ label, value, hasChevron = true, isSortButton = false }) => {
+const FilterButton: React.FC<FilterButtonProps> = ({
+  label,
+  value,
+  hasChevron = true,
+  isSortButton = false,
+}) => {
   return (
     <button className="h-[35px] px-3 flex items-center gap-1 font-geist font-semibold text-[13px] border border-[black]/5 rounded-[5px] bg-white hover:bg-[#F9F9F9] transition-colors whitespace-nowrap">
-      {isSortButton && <span className="font-light text-[black]/50 hidden sm:inline">Sort by: </span>}
-      {label && !isSortButton && <span className="font-light text-[black] hidden sm:inline">{label}: </span>}
-      <span className='font-light'>{value}</span>
+      {isSortButton && (
+        <span className="font-light text-[black]/50 hidden sm:inline">
+          Sort by:{" "}
+        </span>
+      )}
+      {label && !isSortButton && (
+        <span className="font-light text-[black] hidden sm:inline">
+          {label}:{" "}
+        </span>
+      )}
+      <span className="font-light">{value}</span>
       {hasChevron && (
         <Image src={chevronDown} alt="Expand" width={10} height={6} />
       )}
@@ -46,4 +59,4 @@ export function SkeletonProjectFilters({ count = 3 }: { count?: number }) {
       ))}
     </div>
   );
-} 
+}

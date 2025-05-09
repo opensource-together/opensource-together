@@ -1,9 +1,8 @@
-import React from 'react';
-import Image from 'next/image';
-import Button from '../ui/Button';
-import githubWhite from '../icons/github-white.svg';
-import githubIcon from '../icons/github.svg';
-import xlogo from '../icons/x.svg';
+import Image from "next/image";
+import githubWhite from "../icons/github-white.svg";
+import githubIcon from "../icons/github.svg";
+import xlogo from "../icons/x.svg";
+import Button from "../ui/Button";
 
 export default function Footer() {
   return (
@@ -34,16 +33,32 @@ export default function Footer() {
         </div>
         {/* Center */}
         <div className="flex items-center gap-8 text-[13px] text-black font-geist">
-          <a href="#" className="hover:underline">Home</a>
-          <a href="#" className="hover:underline">Profile</a>
-          <a href="#" className="hover:underline">Marketing Website</a>
+          <a href="#" className="hover:underline">
+            Home
+          </a>
+          <a href="#" className="hover:underline">
+            Profile
+          </a>
+          <a href="#" className="hover:underline">
+            Marketing Website
+          </a>
         </div>
         {/* Right */}
         <div className="flex items-center gap-3">
-          <a href="#" aria-label="GitHub"><Image src={githubIcon} alt="GitHub" width={17} height={18}  /></a>
-          <a href="#" aria-label="X"><Image src={xlogo} alt="X" width={16} height={17} style={{ filter: 'brightness(0) saturate(100%)' }} /></a>
+          <a href="#" aria-label="GitHub">
+            <Image src={githubIcon} alt="GitHub" width={17} height={18} />
+          </a>
+          <a href="#" aria-label="X">
+            <Image
+              src={xlogo}
+              alt="X"
+              width={16}
+              height={17}
+              style={{ filter: "brightness(0) saturate(100%)" }}
+            />
+          </a>
         </div>
       </div>
     </>
   );
-} 
+}
