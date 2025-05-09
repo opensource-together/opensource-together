@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.4](https://github.com/opensource-together/opensource-together/compare/v0.1.3...v0.1.4) (2025-05-09)
+
+
+### Features
+
+* display project details using projectId in params ([b56e15e](https://github.com/opensource-together/opensource-together/commit/b56e15ef9f7b56342ef8eaacee48d00ceb91b9ea))
+
+
+### Miscellaneous
+
+* remove unused ProfileLayout and ProjectPage components ([5311dc4](https://github.com/opensource-together/opensource-together/commit/5311dc4930a416913e5b095ccca021be4dc046ea))
+
 ## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-05-09)
 
 
