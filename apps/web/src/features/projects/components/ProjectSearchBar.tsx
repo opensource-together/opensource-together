@@ -1,11 +1,10 @@
-import React from 'react';
-import Image from 'next/image';
-import searchIcon from '@/shared/icons/search.svg';
+import searchIcon from "@/shared/icons/search.svg";
+import Image from "next/image";
 
 export default function ProjectSearchBar() {
   return (
     <div className="relative w-full max-w-[447px] h-[35px]">
-      <input 
+      <input
         type="text"
         placeholder="Find your next open source project"
         className="w-full h-full bg-[#F5F5F5] border border-[black]/5 rounded-[5px] px-3 font-geist text-[13px] text-[black]/80 focus:outline-none focus:ring-1 focus:ring-[black]/10"

@@ -1,12 +1,10 @@
-import React from 'react';
-import Image from 'next/image';
-import githubIcon from '../../../shared/icons/githubgrisicon.svg';
-import linkedinIcon from '../../../shared/icons/linkedingrisicon.svg';
-import twitterIcon from '../../../shared/icons/twitterxgrisicon.svg';
-import joinedIcon from '../../../shared/icons/joinedicon.svg';
-import starIcon from '../../../shared/icons/blackstaricon.svg';
-import createdIcon from '../../../shared/icons/createdprojectsicon.svg';
-import { SocialLink, CommunityStats } from '../services/createProjectAPI';
+import Image from "next/image";
+import starIcon from "../../../shared/icons/blackstaricon.svg";
+import createdIcon from "../../../shared/icons/createdprojectsicon.svg";
+import githubIcon from "../../../shared/icons/githubgrisicon.svg";
+import linkedinIcon from "../../../shared/icons/linkedingrisicon.svg";
+import twitterIcon from "../../../shared/icons/twitterxgrisicon.svg";
+import { CommunityStats, SocialLink } from "../services/createProjectAPI";
 
 interface ProjectSideBarProps {
   socialLinks?: SocialLink[];
@@ -14,10 +12,10 @@ interface ProjectSideBarProps {
   showForks?: boolean;
 }
 
-export default function ProjectSideBar({ 
+export default function ProjectSideBar({
   socialLinks = [],
   communityStats,
-  showForks = true
+  showForks = true,
 }: ProjectSideBarProps) {
   return (
     <div className="w-[270px] font-geist flex flex-col gap-10 ">
@@ -34,13 +32,13 @@ export default function ProjectSideBar({
             <span className="text-[14px] text-black/70">Share on X</span>
           </div>
           {socialLinks.map((link, index) => {
-            if (link.type === 'github') {
+            if (link.type === "github") {
               return (
                 <div key={index} className="flex items-center gap-3">
                   <Image src={githubIcon} alt="GitHub" width={15} height={15} />
-                  <a 
-                    href={link.url} 
-                    target="_blank" 
+                  <a
+                    href={link.url}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-[14px] text-black/70 hover:underline"
                   >
@@ -119,4 +117,4 @@ export function SkeletonProjectSideBar() {
       </div>
     </div>
   );
-} 
+}
