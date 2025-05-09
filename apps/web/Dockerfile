@@ -40,6 +40,8 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
+LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
+
 ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
