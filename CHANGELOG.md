@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-05-09)
+
+
+### Bug Fixes
+
+* add PAT to release please ([abd4cf1](https://github.com/opensource-together/opensource-together/commit/abd4cf189aaad96eece97f1629e4e08c7cbff05a))
+* add PAT to release please ([38ab8b4](https://github.com/opensource-together/opensource-together/commit/38ab8b4f9b4cc7bad558737cd3b2f07a23ee2e32))
+
 ## [0.1.2](https://github.com/opensource-together/opensource-together/compare/v0.1.1...v0.1.2) (2025-05-09)
 
 
