@@ -22,13 +22,28 @@ const FilterButton: React.FC<FilterButtonProps> = ({ label, value, hasChevron = 
   );
 };
 
-export default function ProjectFilters() {
+interface ProjectFiltersProps {
+  filters: FilterButtonProps[];
+}
+
+const ProjectFilters: React.FC<ProjectFiltersProps> = ({ filters }) => {
   return (
     <div className="flex flex-wrap items-center gap-2 sm:gap-2">
-      <FilterButton label="" value="Plus Récent" isSortButton={true} />
-      <FilterButton label="Technology" value="" />
-      <FilterButton label="Roles" value="" />
-      <FilterButton label="Difficulty" value="" />
+      {filters.map((filter, idx) => (
+        <FilterButton key={idx} {...filter} />
+      ))}
+    </div>
+  );
+};
+
+export default ProjectFilters;
+
+export function SkeletonProjectFilters({ count = 3 }: { count?: number }) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 sm:gap-2 animate-pulse">
+      {[...Array(count)].map((_, i) => (
+        <div key={i} className="h-[35px] w-[110px] bg-gray-200 rounded-[5px]" />
+      ))}
     </div>
   );
 } 

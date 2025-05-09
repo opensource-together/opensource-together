@@ -1,9 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
 import exemplebyronIcon from '../../../shared/icons/exemplebyronIcon.svg';
+import typescriptIcon from '@/shared/icons/typescript (2).svg';
+import reactIcon from '@/shared/icons/react.svg';
+import mongodbIcon from '@/shared/icons/mongodb.svg';
 
 // Type pour les niveaux de contribution
 type ContributionLevel = 0 | 1 | 2 | 3 | 4;
+
+interface Skill {
+  name: string;
+  color: string;
+  bgColor: string;
+}
 
 export default function ProfileCard() {
   // Générer les données du calendrier par semaine
@@ -53,7 +62,11 @@ export default function ProfileCard() {
     }
   };
 
-  const skills = ["UX Designer", "Front-end Developer", "MongoDB"];
+  const skills: Skill[] = [
+    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
+    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
+    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
+  ];
 
   return (
     <div className="bg-white w-full sm:w-[540px] lg:w-[731.96px] h-auto rounded-[25px] border border-[#000000]/10 p-8 font-geist">
@@ -70,10 +83,12 @@ export default function ProfileCard() {
           </div>
           <div>
             <h2 className="text-[24px] font-medium">Byron Love</h2>
-            <p className="text-[11px] text-gray-500">Joined Jan 25, 2022</p>
+            <p className="text-[11px] text-gray-500">Joined April 25, 2025</p>
           </div>
         </div>
-        <button className="h-[35px] w-[100px] text-[13px] border border-[#000000]/10 rounded-[5px] self-center">Edit Profile</button>
+        <button className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[35px] w-[100px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)]">
+          Edit Profile
+        </button>
       </div>
       
       <p className="text-sm text-gray-700 mb-6">
@@ -84,36 +99,17 @@ export default function ProfileCard() {
       <div className="border-t border-dashed border-[black]/10 my-7" />
       
       <div className="mb-6">
-        <h3 className="text-[14px] font-medium mb-4">Skills</h3>
+        <h3 className="text-[15px] font-medium mb-4">Technical Skills</h3>
         <div className="flex flex-wrap gap-2">
-          {skills.map((skill, index) => {
-            // Alternance des couleurs selon l'index
-            let bgColor = "";
-            let textColor = "";
-            
-            if (index % 3 === 0) {
-              // Jaune/Or
-              bgColor = "bg-[#FEF3C6]";
-              textColor = "text-[#FFB900]";
-            } else if (index % 3 === 1) {
-              // Bleu
-              bgColor = "bg-[#DBEAFE]";
-              textColor = "text-[#51A2FF]";
-            } else {
-              // Vert
-              bgColor = "bg-[#DCFCE7]";
-              textColor = "text-[#05DF72]";
-            }
-            
-            return (
-              <span 
-                key={index} 
-                className={`px-2 py-0.5 text-[12px] rounded-[3px] h-[20.34px] flex items-center ${bgColor} ${textColor}`}
-              >
-                {skill}
-              </span>
-            );
-          })}
+          {skills.map((skill, index) => (
+            <div 
+              key={index} 
+              className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
+              style={{ color: skill.color, backgroundColor: skill.bgColor }}
+            >
+              {skill.name}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -122,7 +118,7 @@ export default function ProfileCard() {
       
       <div>
         <div className="flex items-center justify-between mb-7">
-          <h3 className="text-[14px] font-medium">Contribution Activity</h3>
+          <h3 className="text-[15px] font-medium">Contribution Activity</h3>
           <div className="flex items-center gap-2">
             <span className="text-[12px] text-[#000000]/70">2023-2024</span>
             <select className="text-[12px] border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-4">
@@ -133,7 +129,7 @@ export default function ProfileCard() {
           </div>
         </div>
         
-        <div className="w-full overflow-hidden mb-4">
+        <div className="w-full overflow-hidden mb-4 flex justify-center">
           <div className="flex gap-0.5">
             {calendarWeeks.map((week, weekIndex) => (
               <div key={weekIndex} className="flex flex-col gap-0.5">
