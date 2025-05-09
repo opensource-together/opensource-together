@@ -1,7 +1,3 @@
-import { TechStackFactory } from '../techStack/techStack.factory';
-import { TechStack } from '../techStack/techstack.entity';
-import { unwrapResult } from '../../shared/test-utils';
-import { ProjectStatus } from '@prisma/client';
 import { ProjectTestBuilder } from './ProjectTestBuilder';
 
 describe('Project Entity', () => {

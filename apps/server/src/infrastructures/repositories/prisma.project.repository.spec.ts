@@ -4,7 +4,6 @@ import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
 import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { ProjectStatus } from '@prisma/client';
 import { ProjectTestBuilder } from '@/shared/__test__/ProjectTestBuilder';
 import { PrismaMock } from '@/infrastructures/repositories/__tests__/PrismaMock';
 
@@ -38,7 +37,7 @@ describe('PrismaProjectRepository', () => {
       expect(prismaMock.project.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           title: domainProject.getTitle(),
-          status: ProjectStatus.PUBLISHED,
+          status: 'PUBLISHED',
         }),
         include: { techStacks: true },
       });
