@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.5](https://github.com/opensource-together/opensource-together/compare/v0.1.4...v0.1.5) (2025-05-09)
+
+
+### Bug Fixes
+
+* remove package-lock.json file from the web app ([f316640](https://github.com/opensource-together/opensource-together/commit/f316640177f9d30392b04fa9b273d4fa727cc661))
+
+
+### Miscellaneous
+
+* enhance Prettier configuration with additional formatting options ([17d1147](https://github.com/opensource-together/opensource-together/commit/17d1147d00e595753a02c4fe6b68aa696971c094))
+* remove Tailwind CSS configuration and unused directives from globals.css ([022f078](https://github.com/opensource-together/opensource-together/commit/022f078b822c2e2a25d5b48eb018d01e81dd761d))
+
 ## [0.1.4](https://github.com/opensource-together/opensource-together/compare/v0.1.3...v0.1.4) (2025-05-09)
 
 
