@@ -1,14 +1,18 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getProjects, createProject, Project } from "../services/createProjectAPI";
-import { getProjectBySlug } from "../services/projectAPI";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  createProject,
+  getProjects,
+  Project,
+} from "../services/createProjectAPI";
+import { getProjectDetails } from "../services/projectAPI";
 
 /**
  * Hook pour récupérer la liste des projets
  */
 export function useProjects() {
   return useQuery({
-    queryKey: ['projects'],
-    queryFn: getProjects
+    queryKey: ["projects"],
+    queryFn: getProjects,
   });
 }
 
@@ -17,19 +21,19 @@ export function useProjects() {
  */
 export function useCreateProject() {
   return useMutation({
-    mutationFn: (payload: Project) => createProject(payload)
+    mutationFn: (payload: Project) => createProject(payload),
   });
 }
 
 /**
- * Hook to fetch project details by slug
- * @param slug Project slug identifier
+ * Hook to fetch project details by projectId
+ * @param projectId Project id identifier
  */
-export function useProject(slug: string) {
+export function useProject(projectId: string) {
   return useQuery<Project>({
-    queryKey: ['project', slug],
-    queryFn: () => getProjectBySlug(slug),
-    enabled: !!slug,
+    queryKey: ["project", projectId],
+    queryFn: () => getProjectDetails(projectId),
+    enabled: !!projectId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
-} 
+}
