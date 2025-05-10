@@ -53,7 +53,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
             badges.map((badge, idx) => (
               <span
                 key={idx}
-                className="px-3 h-[18px] w-[65px] flex justify-center items-center py-[2px] rounded-full text-[11px] font-geist font-medium"
+                className="px-3 h-[18px] w-auto flex justify-center items-center py-[2px] rounded-full text-[11px] font-geist font-medium"
                 style={{ color: badge.color, backgroundColor: badge.bgColor }}
               >
                 {badge.label}

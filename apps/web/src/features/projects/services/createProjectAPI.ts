@@ -1,4 +1,5 @@
 import { get, post } from "../../../lib/api/fetcher";
+import { ProjectInput } from "../types/ProjectInput";
 
 // Interface TechStack pour les stacks technologiques
 export interface TechStack {
@@ -14,7 +15,7 @@ export interface Badge {
 }
 
 export interface ProjectRole {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   badges: Badge[];
@@ -59,6 +60,9 @@ export const getProjects = async (): Promise<Project[]> => {
 /**
  * Crée un nouveau projet
  */
-export const createProject = async (payload: Project): Promise<Project> => {
-  return post<Project, Project>("/projects", payload);
+export const createProject = async (payload: ProjectInput): Promise<Project> => {
+  console.log("Payload envoyé à l'API:", payload);
+  const result = await post<ProjectInput, Project>("/projects", payload);
+  console.log("Réponse de l'API après création:", result);
+  return result;
 };
