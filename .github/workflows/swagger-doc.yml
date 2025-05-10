@@ -12,21 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Installer pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
       - name: Copier le .env
         run: cp apps/server/.env.example apps/server/.env
-
-      - name: Installer les dépendances
-        run: pnpm install
-        working-directory: apps/server
-
-      - name: Générer le client Prisma (local + docker)
-        run: pnpm run prisma:generate
-        working-directory: apps/server
 
       - name: Lancer docker-compose
         run: docker compose -f apps/docker-compose.dev.yml up --build -d
