@@ -12,6 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Installer pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+  
       - name: Copier le .env
         run: cp apps/server/.env.example apps/server/.env
 
