@@ -122,7 +122,7 @@ export default function ProjectPageCard({
   };
 
   return (
-    <section className="w-[710px] h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
+    <section className="w-[710px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-5">
