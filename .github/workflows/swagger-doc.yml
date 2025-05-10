@@ -24,8 +24,8 @@ jobs:
         run: pnpm install
         working-directory: apps/server
 
-      - name: Générer le client Prisma
-        run: pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma
+      - name: Générer le client Prisma (local + docker)
+        run: pnpm run prisma:generate
         working-directory: apps/server
 
       - name: Lancer docker-compose
