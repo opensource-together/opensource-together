@@ -1,5 +1,5 @@
 export const apiConfig = {
-  baseURL: "http://localhost:3000/api", 
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },

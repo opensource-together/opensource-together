@@ -11,19 +11,30 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   radius?: string; // ex: "7px" ou "rounded-full"
 }
 
-export default function Button({ children, className = "", width, height, minWidth = "160px", radius, ...props }: ButtonProps) {
+export default function Button({
+  children,
+  className = "",
+  width,
+  height,
+  minWidth = "160px",
+  radius,
+  ...props
+}: ButtonProps) {
   // Détection si c'est une classe Tailwind ou une valeur brute
-  const isTailwind = (val?: string) => val && (val.includes("["));
+  const isTailwind = (val?: string) => val && val.includes("[");
 
   const widthClass = isTailwind(width) ? width : "";
   const heightClass = isTailwind(height) ? height : "";
   const radiusClass = isTailwind(radius) ? radius : "";
-  const minWidthClass = typeof minWidth === 'string' ? (isTailwind(minWidth) ? minWidth : "") : "";
+  const minWidthClass =
+    typeof minWidth === "string" ? (isTailwind(minWidth) ? minWidth : "") : "";
   const style: React.CSSProperties = {
     fontWeight: 500,
     ...(width && !isTailwind(width) ? { width } : {}),
     ...(height && !isTailwind(height) ? { height } : {}),
-    ...(typeof minWidth === 'string' && !isTailwind(minWidth) ? { minWidth } : {}),
+    ...(typeof minWidth === "string" && !isTailwind(minWidth)
+      ? { minWidth }
+      : {}),
     ...(radius && !isTailwind(radius) ? { borderRadius: radius } : {}),
   };
 
@@ -37,4 +48,3 @@ export default function Button({ children, className = "", width, height, minWid
     </button>
   );
 }
-

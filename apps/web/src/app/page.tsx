@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import HomepageViews from "@/features/projects/views/HomepageViews";
 
 export default function HomePage() {
@@ -9,4 +8,4 @@ export default function HomePage() {
       <HomepageViews />
     </main>
   );
-} 
+}

@@ -1,8 +1,7 @@
-import React from 'react';
-import { SkeletonProjectPageCard } from './ProjectPageCard';
-import { SkeletonProjectSideBar } from './ProjectSideBar';
-import { SkeletonProjectFilters } from './ProjectFilters';
-import { SkeletonRoleCard } from './RoleCard';
+import { SkeletonProjectFilters } from "./ProjectFilters";
+import { SkeletonProjectPageCard } from "./ProjectPageCard";
+import { SkeletonProjectSideBar } from "./ProjectSideBar";
+import { SkeletonRoleCard } from "./RoleCard";
 
 export default function SkeletonProjectDetail() {
   return (
@@ -24,4 +23,4 @@ export default function SkeletonProjectDetail() {
       </div>
     </div>
   );
-} 
+}

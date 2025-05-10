@@ -1,4 +1,4 @@
-import { post, get } from "../../../lib/api/fetcher";
+import { get, post } from "../../../lib/api/fetcher";
 
 // Interface TechStack pour les stacks technologiques
 export interface TechStack {
@@ -22,7 +22,7 @@ export interface ProjectRole {
 }
 
 export interface SocialLink {
-  type: 'github' | 'website' | 'discord' | 'twitter' | 'other';
+  type: "github" | "website" | "discord" | "twitter" | "other";
   url: string;
 }
 
@@ -61,4 +61,4 @@ export const getProjects = async (): Promise<Project[]> => {
  */
 export const createProject = async (payload: Project): Promise<Project> => {
   return post<Project, Project>("/projects", payload);
-}; 
+};
