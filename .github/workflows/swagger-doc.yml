@@ -30,7 +30,6 @@ jobs:
 
       - name: Lancer docker-compose
         run: docker compose -f apps/docker-compose.dev.yml up --build -d
-        working-directory: apps/
 
       - name: Attendre que le backend soit prêt
         run: npx wait-on http://localhost:3000/api-json
