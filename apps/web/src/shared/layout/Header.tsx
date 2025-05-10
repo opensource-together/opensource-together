@@ -1,7 +1,7 @@
-import { useCreateProject } from "@/features/projects/hooks/useProjects";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useState } from "react";
 import beta from "../icons/beta.svg";
 import crossIcon from "../icons/crossIcon.svg";
 import github from "../icons/github.svg";
@@ -15,20 +15,10 @@ export default function Header({
   onViewChange?: Dispatch<SetStateAction<string>>;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const mutation = useCreateProject();
+  const router = useRouter();
 
   const handleCreate = () => {
-    mutation.mutate({
-      title: "titi3",
-      description: "Recherche de tout ce qui est possible",
-      status: "PUBLISHED",
-      techStacks: [
-        { id: "1", name: "python", iconUrl: "http://python" },
-        { id: "2", name: "typescript", iconUrl: "http://typescript" },
-        { id: "3", name: "java", iconUrl: "http://java" },
-        { id: "7", name: "Docker", iconUrl: "http://Docker" },
-      ],
-    });
+    router.push("/projects/new");
   };
 
   const handleViewChange = (view: string) => {
@@ -144,31 +134,12 @@ export default function Header({
 
         <Button
           onClick={handleCreate}
-          disabled={mutation.isPending}
           className="sm:min-w-[140px] md:min-w-[160px] px-3 sm:px-4"
         >
-          {mutation.isPending ? (
-            "Creating…"
-          ) : (
-            <>
-              <span className="hidden sm:inline">Create new Project</span>
-              <span className="inline sm:hidden">New Project</span>
-              <Image src={crossIcon} alt="crossIcon" width={11} height={11} />
-            </>
-          )}
+          <span className="hidden sm:inline">Create new Project</span>
+          <span className="inline sm:hidden">New Project</span>
+          <Image src={crossIcon} alt="crossIcon" width={11} height={11} className="ml-0 align-middle" />
         </Button>
-
-        {mutation.isError && (
-          <p className="text-red-500 text-xs sm:text-sm">
-            Error: {mutation.error?.message}
-          </p>
-        )}
-
-        {mutation.isSuccess && mutation.data && (
-          <p className="text-green-600 text-xs sm:text-sm">
-            Project "{mutation.data.title}" created!
-          </p>
-        )}
       </section>
 
       {/* Actions mobile affichées dans le menu */}
@@ -176,10 +147,9 @@ export default function Header({
         <div className="flex md:hidden w-full justify-center mt-3">
           <Button
             onClick={handleCreate}
-            disabled={mutation.isPending}
             className="w-full max-w-[220px]"
           >
-            {mutation.isPending ? "Creating…" : "New Project"}
+            New Project <Image src={crossIcon} alt="crossIcon" width={11} height={11} className="ml-0 align-middle" />
           </Button>
         </div>
       )}
