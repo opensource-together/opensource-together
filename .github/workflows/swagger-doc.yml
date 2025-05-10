@@ -8,6 +8,9 @@ on:
 jobs:
   generate-swagger:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/server
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,7 +19,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 8
-  
+
       - name: Copier le .env
         run: cp apps/server/.env.example apps/server/.env
 
