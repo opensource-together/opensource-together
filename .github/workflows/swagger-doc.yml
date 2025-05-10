@@ -8,9 +8,6 @@ on:
 jobs:
   generate-swagger:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/server
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,9 +22,11 @@ jobs:
 
       - name: Générer le client Prisma
         run: pnpm prisma generate
+        working-directory: apps/server
 
       - name: Lancer docker-compose
         run: docker compose -f apps/docker-compose.dev.yml up --build -d
+        working-directory: apps/
 
       - name: Attendre que le backend soit prêt
         run: npx wait-on http://localhost:3000/api-json
