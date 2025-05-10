@@ -1,20 +1,9 @@
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateUserCommand } from '@infrastructures/cqrs/user/use-case-handlers/create-user.command';
 import { Result } from '@shared/result';
-import { User } from '@domain/user/user.entity';
-import { UserExistQuery } from '@infrastructures/cqrs/user/queries/user-exist.query';
-import { FindEmailByUsernameQuery } from '@infrastructures/cqrs/user/queries/find-email-by-username.query';
 import { Email } from '@domain/user/email.vo';
 import { Username } from '@domain/user/username.vo';
 
-export const emailPasswordRecipe = ({
-  commandBus,
-  queryBus,
-}: {
-  commandBus: CommandBus;
-  queryBus: QueryBus;
-}) =>
+export const emailPasswordRecipe = () =>
   EmailPassword.init({
     signUpFeature: {
       formFields: [
@@ -27,6 +16,7 @@ export const emailPasswordRecipe = ({
             // first we check for if it's an email
             const validEmail: Result<Email> = Email.create(value);
             if (!validEmail.success) {
+              console.log({ value });
               const validUsername: Result<Username> = Username.create(value);
               if (validUsername.success) {
                 return undefined;
@@ -56,6 +46,11 @@ export const emailPasswordRecipe = ({
     override: {
       apis: (original) => ({
         ...original,
+        disableSignUpPOST: true,
+        disableSignInPOST: true,
+        signUpPOST: undefined,
+        signInPOST: undefined,
+        /*
         async signUpPOST(input) {
           const actualEmailFromInput = input.formFields.find(
             (f) => f.id === 'actualEmail',
@@ -101,14 +96,22 @@ export const emailPasswordRecipe = ({
               ),
             );
             if (!createUserResult.success) {
-              return {
-                status: 'GENERAL_ERROR',
-                message: createUserResult.error,
-              };
+              const deleteUserResult = await deleteUser(
+                responseSignUpPOSTSupertokens.user.id,
+              );
+              if (deleteUserResult.status === 'OK') {
+                return {
+                  status: 'GENERAL_ERROR',
+                  message: createUserResult.error,
+                };
+              }
             }
           }
           return responseSignUpPOSTSupertokens;
         },
+
+        */
+        /*
         async signInPOST(input) {
           const identifier = input.formFields.find((f) => f.id === 'email')
             ?.value as string;
@@ -150,6 +153,7 @@ export const emailPasswordRecipe = ({
           }
           return responseSignInPOST;
         },
+        */
       }),
     },
   });

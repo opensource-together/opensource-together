@@ -1,0 +1,17 @@
+import { User } from '@domain/user/user.entity';
+import { Result } from '@shared/result';
+export const USER_REPOSITORY_PORT = Symbol('UserRepository');
+export interface UserRepositoryPort {
+  save(
+    user: User,
+  ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  findByUsername(
+    username: string,
+  ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  findByEmail(
+    email: string,
+  ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  findById(
+    id: string,
+  ): Promise<Result<User, { username?: string; email?: string } | string>>;
+}

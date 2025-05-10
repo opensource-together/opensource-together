@@ -102,6 +102,7 @@ services:
       - COOKIE_DOMAIN=${APP_DOMAIN}
       - CONNECTION_URI=${SUPERTOKEN_URI}
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
+      - APP_NAME=${APP_NAME}
     ports:
       - "${API_PORT}:3000"
       - "5555:5555" # Ajoute cette ligne si absente

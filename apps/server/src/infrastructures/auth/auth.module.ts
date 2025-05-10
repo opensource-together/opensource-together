@@ -1,26 +1,20 @@
 import { Module } from '@nestjs/common';
 import { SuperTokensModule } from 'supertokens-nestjs';
-import { createSupertokensConfig } from '@infrastructures/auth/supertokens.config';
-import { SuperTokensModuleOptions } from 'supertokens-nestjs/dist/supertokens.types';
+import { supertokensConfig } from '@infrastructures/auth/supertokens.config';
 import { RepositoryModule } from '@infrastructures/repositories/repository.module';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { AuthController } from '@/presentation/auth/auth.controller';
+import { AUTH_SERVICE_PORT } from '@/application/auth/ports/auth.service.port';
+import { AuthSupertokens } from '@infrastructures/auth/auth.supertokens';
+import { authCommandsContainer } from '@/application/auth/commands/auth.commands';
 @Module({
-  imports: [
-    RepositoryModule,
-    SuperTokensModule.forRootAsync({
-      imports: [AuthModule],
-      inject: [CommandBus, QueryBus],
-      useFactory: (
-        commandBus: CommandBus,
-        queryBus: QueryBus,
-      ): SuperTokensModuleOptions =>
-        createSupertokensConfig({
-          commandBus,
-          queryBus,
-        }),
-    }),
+  imports: [RepositoryModule, SuperTokensModule.forRoot(supertokensConfig)],
+  providers: [
+    {
+      provide: AUTH_SERVICE_PORT,
+      useClass: AuthSupertokens,
+    },
+    ...authCommandsContainer,
   ],
-  providers: [CommandBus, QueryBus],
-  exports: [],
+  controllers: [AuthController],
 })
 export class AuthModule {}
