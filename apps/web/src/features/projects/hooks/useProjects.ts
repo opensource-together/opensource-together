@@ -5,7 +5,7 @@ import {
   Project,
 } from "../services/createProjectAPI";
 import { getProjectDetails } from "../services/projectAPI";
-import { ProjectFormData } from "../types/project.schema";
+import { ProjectFormData } from "../schema/project.schema";
 import { useRouter } from "next/navigation";
 
 /**

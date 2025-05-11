@@ -1,5 +1,5 @@
 import { get, post } from "../../../lib/api/fetcher";
-import { ProjectFormData } from "../types/project.schema";
+import { ProjectFormData } from "../schema/project.schema";
 
 // Interface TechStack pour les stacks technologiques
 export interface TechStack {

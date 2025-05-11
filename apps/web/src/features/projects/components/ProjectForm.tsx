@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@/shared/ui/Button";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { projectSchema, ProjectFormData } from "../types/project.schema";
+import { projectSchema, ProjectFormData } from "../schema/project.schema";
 import { useCreateProject } from "../hooks/useProjects";
 
 // Plus besoin de ces props puisque tout est géré en interne

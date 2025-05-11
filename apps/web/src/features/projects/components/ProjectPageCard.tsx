@@ -335,7 +335,7 @@ export function SkeletonProjectPageCard() {
             <div key={i} className="w-[60px] h-[28px] bg-gray-100 rounded" />
           ))}
         </div>
-      </div>
+    </div>
     </section>
   );
 }
