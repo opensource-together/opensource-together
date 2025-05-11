@@ -1,10 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createProject,
   getProjects,
   Project,
 } from "../services/createProjectAPI";
 import { getProjectDetails } from "../services/projectAPI";
+import { ProjectFormData } from "../schema/project.schema";
+import { useRouter } from "next/navigation";
 
 /**
  * Hook pour récupérer la liste des projets
@@ -17,12 +19,62 @@ export function useProjects() {
 }
 
 /**
- * Hook pour créer un projet
+ * Hook pour créer un projet avec une gestion simplifiée et robuste
+ * @returns Fonctions et états pour gérer la création de projet
  */
 export function useCreateProject() {
-  return useMutation({
-    mutationFn: (payload: Project) => createProject(payload),
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (payload: ProjectFormData) => createProject(payload),
+    onSuccess: (data) => {
+      // Invalider le cache des projets pour forcer un rechargement
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      
+      // On log simplement pour le debug, à retirer en production
+      console.log("Création du projet réussie - ID:", data.id);
+      
+      // Redirection vers la page du projet nouvellement créé
+      if (data.id) {
+        router.replace(`/projects/${data.id}`);
+      } else {
+        console.error("Redirection impossible - ID du projet manquant");
+      }
+    },
+    onError: (error: Error) => {
+      // Ici on pourrait intégrer un toast pour l'UI
+      console.error("Erreur lors de la création du projet:", error);
+    },
   });
+
+  // Wrapper autour de mutate pour permettre des options supplémentaires
+  const handleCreateProject = (
+    data: ProjectFormData, 
+    options?: { onSuccess?: () => void; onError?: (error: Error) => void }
+  ) => {
+    mutation.mutate(data, {
+      onSuccess: (responseData) => {
+        if (options?.onSuccess) {
+          options.onSuccess();
+        }
+      },
+      onError: (error) => {
+        if (options?.onError) {
+          options.onError(error as Error);
+        }
+      }
+    });
+  };
+
+  return {
+    createProject: handleCreateProject,
+    isPending: mutation.isPending,
+    isSuccess: mutation.isSuccess,
+    isError: mutation.isError,
+    error: mutation.error,
+    reset: mutation.reset
+  };
 }
 
 /**

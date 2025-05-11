@@ -1,6 +1,7 @@
 {
   "packages": {
     ".": {
+      "draft-pull-request": true,
       "release-type": "simple",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true,

@@ -1,25 +1,5 @@
 # Changelog
 
-## [0.1.4](https://github.com/opensource-together/opensource-together/compare/v0.1.3...v0.1.4) (2025-05-09)
-
-
-### Features
-
-* display project details using projectId in params ([b56e15e](https://github.com/opensource-together/opensource-together/commit/b56e15ef9f7b56342ef8eaacee48d00ceb91b9ea))
-
-
-### Miscellaneous
-
-* remove unused ProfileLayout and ProjectPage components ([5311dc4](https://github.com/opensource-together/opensource-together/commit/5311dc4930a416913e5b095ccca021be4dc046ea))
-
-## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-05-09)
-
-
-### Bug Fixes
-
-* add PAT to release please ([abd4cf1](https://github.com/opensource-together/opensource-together/commit/abd4cf189aaad96eece97f1629e4e08c7cbff05a))
-* add PAT to release please ([38ab8b4](https://github.com/opensource-together/opensource-together/commit/38ab8b4f9b4cc7bad558737cd3b2f07a23ee2e32))
-
 ## [0.1.2](https://github.com/opensource-together/opensource-together/compare/v0.1.1...v0.1.2) (2025-05-09)
 
 
@@ -57,6 +37,7 @@
 * create ProjectPageCard component for project detail display ([d5f3f96](https://github.com/opensource-together/opensource-together/commit/d5f3f9642d0fe2332d3c54e5c967a5cac147f601))
 * create ProjectPageCard component for project detail display and pull ([ebee90e](https://github.com/opensource-together/opensource-together/commit/ebee90e6526d33dbd7dbfe329eff771f4f42b316))
 * created publishing pipeline ([cf6d060](https://github.com/opensource-together/opensource-together/commit/cf6d06000cd50efdedd9b53f87ae142c1e5a90a2))
+* display project details using projectId in params ([b56e15e](https://github.com/opensource-together/opensource-together/commit/b56e15ef9f7b56342ef8eaacee48d00ceb91b9ea))
 * Documentation de l'Architecture Serveur et Configuration Monorepo ([96e9410](https://github.com/opensource-together/opensource-together/commit/96e9410cdec4224fd1c9f79ecf3362a20e838d3c))
 * Enhance project DTOs with detailed documentation and add logging in ProjectController for better debugging ([24ac2fb](https://github.com/opensource-together/opensource-together/commit/24ac2fb3d51279d8ec0bc96f66823d216a8ccf3d))
 * homepage with projects view + API centralization + test create project ([3427a05](https://github.com/opensource-together/opensource-together/commit/3427a0551c1b0c9f10893c85df2c595f5087628a))
@@ -90,21 +71,37 @@
 
 * add missing release-please permissions ([51bd444](https://github.com/opensource-together/opensource-together/commit/51bd444d5991c7e2837f9cd5ec74febf6b2d4145))
 * add missing release-please permissions ([9f2f05f](https://github.com/opensource-together/opensource-together/commit/9f2f05fadba6ff88a31acbc2366c43aaf9b2b965))
+* add PAT to release please ([abd4cf1](https://github.com/opensource-together/opensource-together/commit/abd4cf189aaad96eece97f1629e4e08c7cbff05a))
+* add PAT to release please ([38ab8b4](https://github.com/opensource-together/opensource-together/commit/38ab8b4f9b4cc7bad558737cd3b2f07a23ee2e32))
 * add release please issue write permission ([bdd1dce](https://github.com/opensource-together/opensource-together/commit/bdd1dce7b4f22a2252a297ef7dde7e9eb372d1f9))
 * add release please issue write permission ([2e10741](https://github.com/opensource-together/opensource-together/commit/2e107413f58227d20556d02a73ae8aab9cb8b6a7))
+* remove package-lock.json file from the web app ([f316640](https://github.com/opensource-together/opensource-together/commit/f316640177f9d30392b04fa9b273d4fa727cc661))
+* using Next.js 15 params in props ([3f7776b](https://github.com/opensource-together/opensource-together/commit/3f7776bfb975735f31dd533958c4ac4aca6b1b84))
 * wrong file name ([7c3bd35](https://github.com/opensource-together/opensource-together/commit/7c3bd35bba89bb6fe556ca631bf0c8cce5f4f518))
 * wrong file name ([8a83444](https://github.com/opensource-together/opensource-together/commit/8a83444a1ae23b0a9a3a33d73df5c39e734acc5c))
 
 
 ### Miscellaneous
 
+* enhance Prettier configuration with additional formatting options ([17d1147](https://github.com/opensource-together/opensource-together/commit/17d1147d00e595753a02c4fe6b68aa696971c094))
 * initialisation d'un dossier frontend & backend ([5f3c372](https://github.com/opensource-together/opensource-together/commit/5f3c372ab73281f0dcfa336376e053c15f34a785))
 * initialisation du projet avec les dépendances de base ([ac01d96](https://github.com/opensource-together/opensource-together/commit/ac01d9600e1d0149c187f9e97927b81de5f2d7f2))
 * initialisation du projet avec les dépendances de base ([27f4686](https://github.com/opensource-together/opensource-together/commit/27f468611c1205a500616710316cba44c149a114))
+* **main:** release 0.1.1 ([9709b0a](https://github.com/opensource-together/opensource-together/commit/9709b0a0bf6153579a1732ccb70290129bec2b5a))
+* **main:** release 0.1.1 ([c790ba1](https://github.com/opensource-together/opensource-together/commit/c790ba139838725ae6d04f010faeb8071adc0d69))
 * **main:** release 0.1.1 ([6974940](https://github.com/opensource-together/opensource-together/commit/697494029faf4591a1d63f768a47fffbd4776cb7))
 * **main:** release 0.1.1 ([58c1746](https://github.com/opensource-together/opensource-together/commit/58c1746b3b4d63db630f4d866d91de5b30173785))
+* **main:** release 0.1.2 ([e67c8bf](https://github.com/opensource-together/opensource-together/commit/e67c8bfe00d673167800fe3aef2ffdfc42a1a79b))
+* **main:** release 0.1.2 ([505b202](https://github.com/opensource-together/opensource-together/commit/505b2029c012d67066f20fbeb7e2913fd2f09d4e))
+* **main:** release 0.1.3 ([1d4db75](https://github.com/opensource-together/opensource-together/commit/1d4db753f51adb06c61468dcf5023f61de581654))
+* **main:** release 0.1.3 ([545b1b7](https://github.com/opensource-together/opensource-together/commit/545b1b76843131d5b0357eb88bdbbb43d96c61b6))
+* **main:** release 0.1.4 ([20df783](https://github.com/opensource-together/opensource-together/commit/20df7838d4e1ef5f5227689ebc30452acefa05f8))
+* **main:** release 0.1.4 ([bf5f22a](https://github.com/opensource-together/opensource-together/commit/bf5f22af5e8402cfe9af4419e9bb43729a4a45d3))
 * remove deprecated Docker Compose configuration for PostgreSQL services ([e11a619](https://github.com/opensource-together/opensource-together/commit/e11a619abb9c869f3fe053f9376d01b2b083eee0))
+* remove Tailwind CSS configuration and unused directives from globals.css ([022f078](https://github.com/opensource-together/opensource-together/commit/022f078b822c2e2a25d5b48eb018d01e81dd761d))
 * remove unused /lib files related to feature modules ([3955e5a](https://github.com/opensource-together/opensource-together/commit/3955e5a9fff6411672cff5a8fb82e7c57b39d514))
+* remove unused ProfileLayout and ProjectPage components ([5311dc4](https://github.com/opensource-together/opensource-together/commit/5311dc4930a416913e5b095ccca021be4dc046ea))
+* remove unused ProfileLayout and ProjectPage components ([d4d4a53](https://github.com/opensource-together/opensource-together/commit/d4d4a5326e450bf764a1ec0661e03d8969830c06))
 
 
 ### Documentation
@@ -150,6 +147,7 @@
 * create ProjectPageCard component for project detail display ([d5f3f96](https://github.com/opensource-together/opensource-together/commit/d5f3f9642d0fe2332d3c54e5c967a5cac147f601))
 * create ProjectPageCard component for project detail display and pull ([ebee90e](https://github.com/opensource-together/opensource-together/commit/ebee90e6526d33dbd7dbfe329eff771f4f42b316))
 * created publishing pipeline ([cf6d060](https://github.com/opensource-together/opensource-together/commit/cf6d06000cd50efdedd9b53f87ae142c1e5a90a2))
+* display project details using projectId in params ([b56e15e](https://github.com/opensource-together/opensource-together/commit/b56e15ef9f7b56342ef8eaacee48d00ceb91b9ea))
 * Documentation de l'Architecture Serveur et Configuration Monorepo ([96e9410](https://github.com/opensource-together/opensource-together/commit/96e9410cdec4224fd1c9f79ecf3362a20e838d3c))
 * Enhance project DTOs with detailed documentation and add logging in ProjectController for better debugging ([24ac2fb](https://github.com/opensource-together/opensource-together/commit/24ac2fb3d51279d8ec0bc96f66823d216a8ccf3d))
 * homepage with projects view + API centralization + test create project ([3427a05](https://github.com/opensource-together/opensource-together/commit/3427a0551c1b0c9f10893c85df2c595f5087628a))
@@ -183,17 +181,35 @@
 
 * add missing release-please permissions ([51bd444](https://github.com/opensource-together/opensource-together/commit/51bd444d5991c7e2837f9cd5ec74febf6b2d4145))
 * add missing release-please permissions ([9f2f05f](https://github.com/opensource-together/opensource-together/commit/9f2f05fadba6ff88a31acbc2366c43aaf9b2b965))
+* add PAT to release please ([abd4cf1](https://github.com/opensource-together/opensource-together/commit/abd4cf189aaad96eece97f1629e4e08c7cbff05a))
+* add PAT to release please ([38ab8b4](https://github.com/opensource-together/opensource-together/commit/38ab8b4f9b4cc7bad558737cd3b2f07a23ee2e32))
+* add release please issue write permission ([bdd1dce](https://github.com/opensource-together/opensource-together/commit/bdd1dce7b4f22a2252a297ef7dde7e9eb372d1f9))
+* add release please issue write permission ([2e10741](https://github.com/opensource-together/opensource-together/commit/2e107413f58227d20556d02a73ae8aab9cb8b6a7))
+* remove package-lock.json file from the web app ([f316640](https://github.com/opensource-together/opensource-together/commit/f316640177f9d30392b04fa9b273d4fa727cc661))
+* using Next.js 15 params in props ([3f7776b](https://github.com/opensource-together/opensource-together/commit/3f7776bfb975735f31dd533958c4ac4aca6b1b84))
 * wrong file name ([7c3bd35](https://github.com/opensource-together/opensource-together/commit/7c3bd35bba89bb6fe556ca631bf0c8cce5f4f518))
 * wrong file name ([8a83444](https://github.com/opensource-together/opensource-together/commit/8a83444a1ae23b0a9a3a33d73df5c39e734acc5c))
 
 
 ### Miscellaneous
 
+* enhance Prettier configuration with additional formatting options ([17d1147](https://github.com/opensource-together/opensource-together/commit/17d1147d00e595753a02c4fe6b68aa696971c094))
 * initialisation d'un dossier frontend & backend ([5f3c372](https://github.com/opensource-together/opensource-together/commit/5f3c372ab73281f0dcfa336376e053c15f34a785))
 * initialisation du projet avec les dépendances de base ([ac01d96](https://github.com/opensource-together/opensource-together/commit/ac01d9600e1d0149c187f9e97927b81de5f2d7f2))
 * initialisation du projet avec les dépendances de base ([27f4686](https://github.com/opensource-together/opensource-together/commit/27f468611c1205a500616710316cba44c149a114))
+* **main:** release 0.1.1 ([6974940](https://github.com/opensource-together/opensource-together/commit/697494029faf4591a1d63f768a47fffbd4776cb7))
+* **main:** release 0.1.1 ([58c1746](https://github.com/opensource-together/opensource-together/commit/58c1746b3b4d63db630f4d866d91de5b30173785))
+* **main:** release 0.1.2 ([e67c8bf](https://github.com/opensource-together/opensource-together/commit/e67c8bfe00d673167800fe3aef2ffdfc42a1a79b))
+* **main:** release 0.1.2 ([505b202](https://github.com/opensource-together/opensource-together/commit/505b2029c012d67066f20fbeb7e2913fd2f09d4e))
+* **main:** release 0.1.3 ([1d4db75](https://github.com/opensource-together/opensource-together/commit/1d4db753f51adb06c61468dcf5023f61de581654))
+* **main:** release 0.1.3 ([545b1b7](https://github.com/opensource-together/opensource-together/commit/545b1b76843131d5b0357eb88bdbbb43d96c61b6))
+* **main:** release 0.1.4 ([20df783](https://github.com/opensource-together/opensource-together/commit/20df7838d4e1ef5f5227689ebc30452acefa05f8))
+* **main:** release 0.1.4 ([bf5f22a](https://github.com/opensource-together/opensource-together/commit/bf5f22af5e8402cfe9af4419e9bb43729a4a45d3))
 * remove deprecated Docker Compose configuration for PostgreSQL services ([e11a619](https://github.com/opensource-together/opensource-together/commit/e11a619abb9c869f3fe053f9376d01b2b083eee0))
+* remove Tailwind CSS configuration and unused directives from globals.css ([022f078](https://github.com/opensource-together/opensource-together/commit/022f078b822c2e2a25d5b48eb018d01e81dd761d))
 * remove unused /lib files related to feature modules ([3955e5a](https://github.com/opensource-together/opensource-together/commit/3955e5a9fff6411672cff5a8fb82e7c57b39d514))
+* remove unused ProfileLayout and ProjectPage components ([5311dc4](https://github.com/opensource-together/opensource-together/commit/5311dc4930a416913e5b095ccca021be4dc046ea))
+* remove unused ProfileLayout and ProjectPage components ([d4d4a53](https://github.com/opensource-together/opensource-together/commit/d4d4a5326e450bf764a1ec0661e03d8969830c06))
 
 
 ### Documentation
