@@ -122,12 +122,12 @@ export default function ProjectPageCard({
   };
 
   return (
-    <section className="w-[710px] min-h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
+    <section className="w-[710px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-5">
           <div className="w-[82px] h-[80px] rounded-[16px] bg-[#F4F4F4] flex items-center justify-center">
-            <Image src={emptyprojecticon} alt={title} width={80} height={80} />
+            <Image src={emptyprojecticon} alt="EcoTrack" width={80} height={80} />
           </div>
           <div className="flex flex-col gap-1">
             <h1 className="text-[24px] font-medium leading-tight font-geist">
@@ -182,7 +182,7 @@ export default function ProjectPageCard({
             </Button>
           </div>
         </div>
-      </div>
+      </div>    
 
       {/* Description */}
       <div className="mt-2">
@@ -190,7 +190,7 @@ export default function ProjectPageCard({
           Project Description
         </h2>
         <p className="text-[13px] font-geist font-normal text-black/70 mb-4">
-          {description}
+          Easily track your carbon footprint from daily activities and consumption. Get smart, actionable insights to live more sustainably and reduce your environmental impact.
         </p>
         <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
@@ -214,7 +214,7 @@ export default function ProjectPageCard({
       </div>
 
       {/* Ligne de séparation */}
-      <div className="border-t border-dashed border-black/10 w-full mt-8 mb-3"></div>
+      <div className="border-t border-dashed border-black/10 w-full mt-12 mb-3"></div>
 
       {/* Technical Stack */}
       <div className=" pt-4 ">
@@ -335,7 +335,7 @@ export function SkeletonProjectPageCard() {
             <div key={i} className="w-[60px] h-[28px] bg-gray-100 rounded" />
           ))}
         </div>
-      </div>
+    </div>
     </section>
   );
 }

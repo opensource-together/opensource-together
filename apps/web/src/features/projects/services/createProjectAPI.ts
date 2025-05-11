@@ -1,10 +1,11 @@
 import { get, post } from "../../../lib/api/fetcher";
+import { ProjectFormData } from "../schema/project.schema";
 
 // Interface TechStack pour les stacks technologiques
 export interface TechStack {
   id: string;
   name: string;
-  iconUrl: string;
+  iconUrl?: string;
 }
 
 export interface Badge {
@@ -14,7 +15,7 @@ export interface Badge {
 }
 
 export interface ProjectRole {
-  id: string;
+  id?: string;
   title: string;
   description: string;
   badges: Badge[];
@@ -59,6 +60,14 @@ export const getProjects = async (): Promise<Project[]> => {
 /**
  * Crée un nouveau projet
  */
-export const createProject = async (payload: Project): Promise<Project> => {
-  return post<Project, Project>("/projects", payload);
+export const createProject = async (payload: ProjectFormData): Promise<Project> => {
+  try {
+    console.log("Payload envoyé à l'API:", payload);
+    const result = await post<ProjectFormData, Project>("/projects", payload);
+    console.log("Réponse de l'API après création:", result);
+    return result;
+  } catch (error) {
+    console.error("Erreur lors de la requête à l'API:", error);
+    throw error; // On relance l'erreur pour que le hook de mutation puisse la traiter
+  }
 };
