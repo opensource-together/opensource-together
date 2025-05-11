@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-05-11)
+
+
+### Features
+
+* implement full project creation form with validation, submission, redirection and debugging ([20a9d55](https://github.com/opensource-together/opensource-together/commit/20a9d55d7de0c9e5b43f35522340e7f1711d0f03))
+* integrate zod schema, mutation handling in useProject hook, and simplify ProjectCreateView with form validation via zodResolver ([811d5c9](https://github.com/opensource-together/opensource-together/commit/811d5c9b9b0dc92c4fc3b62b91c98d3e9fa06647))
+
+
+### Miscellaneous
+
+* move project.schema.ts to schema/ directory ([8327ee5](https://github.com/opensource-together/opensource-together/commit/8327ee5aa63e85302030b421547f39e67e2a7bbf))
+
 ## [0.1.2](https://github.com/opensource-together/opensource-together/compare/v0.1.1...v0.1.2) (2025-05-09)
 
 
