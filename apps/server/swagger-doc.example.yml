@@ -1,0 +1,281 @@
+openapi: 3.0.4
+info:
+  title: OpenSource Together API
+  description: Documentation de l'API pour la plateforme OpenSource Together.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+tags:
+  - name: Projects
+    description: Opérations liées aux projets open source
+  - name: Authentication
+    description: Opérations liées à l'authentification utilisateur
+paths:
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: Récupérer tous les projets
+      operationId: getProjects
+      parameters:
+        - name: title
+          in: query
+          description: Titre du projet pour filtrer
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste de projets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Erreur lors de la récupération des projets
+    post:
+      tags:
+        - Projects
+      summary: Créer un nouveau projet
+      operationId: createProject
+      security:
+        - supertokens_session: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectDtoInput'
+      responses:
+        '200':
+          description: Projet créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Données d'entrée invalides
+        '401':
+          description: Non authentifié
+  /projects/search:
+    get:
+      tags:
+        - Projects
+      summary: Rechercher des projets par titre
+      operationId: getProjectsFiltered
+      parameters:
+        - name: title
+          in: query
+          description: Titre du projet à rechercher
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste de projets filtrés par titre
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Erreur lors de la recherche
+  /projects/{id}:
+    get:
+      tags:
+        - Projects
+      summary: Récupérer un projet par ID
+      operationId: getProjectById
+      parameters:
+        - name: id
+          in: path
+          description: ID du projet à récupérer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Détails du projet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDto'
+        '404':
+          description: Projet non trouvé
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Inscription d'un nouvel utilisateur
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: Inscription réussie
+        '400':
+          description: Erreur d'inscription
+  /auth/signin:
+    post:
+      tags:
+        - Authentication
+      summary: Connexion d'un utilisateur
+      operationId: signin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SigninRequest'
+      responses:
+        '200':
+          description: Connexion réussie
+        '401':
+          description: Identifiants invalides
+  /auth/signout:
+    post:
+      tags:
+        - Authentication
+      summary: Déconnexion de l'utilisateur
+      operationId: signout
+      security:
+        - supertokens_session: []
+      responses:
+        '200':
+          description: Déconnexion réussie
+  /auth/session/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Rafraîchir la session utilisateur
+      operationId: refreshSession
+      security:
+        - supertokens_session: []
+      responses:
+        '200':
+          description: Session rafraîchie avec succès
+        '401':
+          description: Session invalide, nécessite une nouvelle connexion
+components:
+  schemas:
+    TechStackDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la stack technique
+          example: 'typescript'
+        name:
+          type: string
+          description: Nom de la stack technique
+          example: 'TypeScript'
+        iconUrl:
+          type: string
+          description: URL de l'icône de la stack technique
+          example: 'https://cdn.worldvectorlogo.com/logos/typescript.svg'
+      required:
+        - id
+        - name
+        - iconUrl
+    ProjectResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID du projet
+          nullable: true
+        title:
+          type: string
+          description: Titre du projet
+        description:
+          type: string
+          description: Description du projet
+        status:
+          type: string
+          description: Statut du projet
+          nullable: true
+        link:
+          type: string
+          description: Lien vers le projet (repo, site, etc.)
+          nullable: true
+        userId:
+          type: string
+          description: ID de l'utilisateur propriétaire du projet
+        techStacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechStackDto'
+      required:
+        - title
+        - description
+        - userId
+        - techStacks
+    CreateProjectDtoInput:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Titre du projet
+          example: 'Mon Super Projet Open Source'
+        description:
+          type: string
+          description: Description détaillée du projet
+          example: 'Ce projet vise à créer une plateforme pour les développeurs open source.'
+        link:
+          type: string
+          description: Lien vers le dépôt ou le site du projet
+          nullable: true
+          example: 'https://github.com/user/my-project'
+        status:
+          type: string
+          description: Statut actuel du projet (e.g., "In Progress", "Completed")
+          example: 'In Progress'
+        techStacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechStackDto'
+          description: Liste des stacks techniques utilisées dans le projet
+      required:
+        - title
+        - description
+        - status
+        - techStacks
+    SignupRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Adresse email de l'utilisateur
+        password:
+          type: string
+          description: Mot de passe de l'utilisateur
+      required:
+        - email
+        - password
+    SigninRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Adresse email de l'utilisateur
+        password:
+          type: string
+          description: Mot de passe de l'utilisateur
+      required:
+        - email
+        - password
+  securitySchemes:
+    supertokens_session:
+      type: apiKey
+      in: cookie
+      name: sAccessToken
+      description: Jeton de session SuperTokens (stocké dans un cookie sAccessToken)

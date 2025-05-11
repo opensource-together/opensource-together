@@ -41,7 +41,9 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "supertokens-nestjs": "^0.0.2",
-    "supertokens-node": "^22.0.1"
+    "supertokens-node": "^22.0.1",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
