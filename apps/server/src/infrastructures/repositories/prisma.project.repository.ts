@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectRepositoryPort } from '@application/ports/project.repository.port';
+import { ProjectRepositoryPort } from '@/application/project/ports/project.repository.port';
 import { PrismaService } from '../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
 import { Result } from '@/shared/result';
