@@ -23,7 +23,7 @@ export class CreateProjectCommand implements ICommand {
 }
 
 @CommandHandler(CreateProjectCommand)
-export class CreateProjectUseCase
+export class CreateProjectCommandHandler
   implements ICommandHandler<CreateProjectCommand>
 {
   constructor(

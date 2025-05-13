@@ -43,9 +43,10 @@ export class CreateUserCommandHandler
       this.userRepo.findByUsername(command.username),
       this.userRepo.findByEmail(command.email),
     ]);
-    if (userExistsByUsername || userExistsByEmail)
+    if (userExistsByUsername.success || userExistsByEmail.success)
       return Result.fail('Identifiants incorrects.');
 
+    console.log("le use n'existe pas encore");
     const user: Result<User, { username?: string; email?: string } | string> =
       UserFactory.create(command.id, command.username, command.email);
     if (!user.success) return Result.fail(user.error);

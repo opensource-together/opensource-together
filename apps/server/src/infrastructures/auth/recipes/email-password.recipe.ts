@@ -2,8 +2,18 @@ import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import { Result } from '@shared/result';
 import { Email } from '@domain/user/email.vo';
 import { Username } from '@domain/user/username.vo';
+import { UserExistQuery } from '@/application/user/queries/user-exist.query';
+import { CreateUserCommand } from '@/application/user/commands/create-user.command';
+import { User } from '@domain/user/user.entity';
+import { FindUserByUsernameQuery } from '@/application/user/queries/find-user-by-username.query';
+import { deleteUser } from 'supertokens-node';
+import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
 
-export const emailPasswordRecipe = () =>
+export const emailPasswordRecipe = (
+  queryBus: QueryBus,
+  commandBus: CommandBus,
+) =>
   EmailPassword.init({
     signUpFeature: {
       formFields: [
@@ -46,11 +56,6 @@ export const emailPasswordRecipe = () =>
     override: {
       apis: (original) => ({
         ...original,
-        disableSignUpPOST: true,
-        disableSignInPOST: true,
-        signUpPOST: undefined,
-        signInPOST: undefined,
-        /*
         async signUpPOST(input) {
           const actualEmailFromInput = input.formFields.find(
             (f) => f.id === 'actualEmail',
@@ -95,11 +100,18 @@ export const emailPasswordRecipe = () =>
                 emailForCreateUser,
               ),
             );
+            console.log(
+              'je suis dans le createUserResult de signUpPOST',
+              createUserResult,
+            );
             if (!createUserResult.success) {
               const deleteUserResult = await deleteUser(
                 responseSignUpPOSTSupertokens.user.id,
               );
               if (deleteUserResult.status === 'OK') {
+                console.log(
+                  'je suis dans le deleteUserResult.status === OK de signUpPOST',
+                );
                 return {
                   status: 'GENERAL_ERROR',
                   message: createUserResult.error,
@@ -110,8 +122,6 @@ export const emailPasswordRecipe = () =>
           return responseSignUpPOSTSupertokens;
         },
 
-        */
-        /*
         async signInPOST(input) {
           const identifier = input.formFields.find((f) => f.id === 'email')
             ?.value as string;
@@ -120,6 +130,9 @@ export const emailPasswordRecipe = () =>
           if (validEmail.success) {
             const responseSignInPOST = await original.signInPOST!(input);
             if (responseSignInPOST.status === 'WRONG_CREDENTIALS_ERROR') {
+              console.log(
+                'je suis dans le WRONG_CREDENTIALS_ERROR de signInPOST',
+              );
               return {
                 status: 'GENERAL_ERROR',
                 message: 'Identifiants incorrects.',
@@ -129,10 +142,10 @@ export const emailPasswordRecipe = () =>
           }
 
           //si l'identifiant est un username, on cherche l'email associé
-          const email: Result<string> = await queryBus.execute(
-            new FindEmailByUsernameQuery(identifier),
+          const user: Result<User> = await queryBus.execute(
+            new FindUserByUsernameQuery(identifier),
           );
-          if (!email.success) {
+          if (!user.success) {
             return {
               status: 'GENERAL_ERROR',
               message: 'Identifiants incorrects.',
@@ -140,7 +153,7 @@ export const emailPasswordRecipe = () =>
           }
           input.formFields = input.formFields.map((field) => {
             if (field.id === 'email') {
-              return { ...field, value: email.value };
+              return { ...field, value: user.value.getEmail() };
             }
             return field;
           });
@@ -153,7 +166,6 @@ export const emailPasswordRecipe = () =>
           }
           return responseSignInPOST;
         },
-        */
       }),
     },
   });

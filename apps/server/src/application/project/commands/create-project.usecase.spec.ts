@@ -1,10 +1,8 @@
 import { CreateProjectUseCase } from './create-project.usecase';
-import { ProjectRepositoryPort } from './ports/project.repository.port';
+import { ProjectRepositoryPort } from '@/application/project/ports/project.repository.port';
 import { Result } from '@/shared/result';
-import { ProjectFactory } from '@/domain/project/factory/project.factory';
-import { TechStackFactory } from '@/domain/techStack/techStack.factory';
-import { CreateProjectDtoInput } from '../dto/inputs/create-project-inputs.dto';
 import { ProjectTestBuilder } from '@/shared/__test__/ProjectTestBuilder';
+import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-inputs.dto';
 
 describe('CreateProjectUseCase', () => {
   let useCase: CreateProjectUseCase;

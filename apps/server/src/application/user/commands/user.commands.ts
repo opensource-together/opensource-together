@@ -1,2 +1,8 @@
-import { CreateUserCommand } from './create-user.command';
-export const userCommandsContainer = [CreateUserCommand];
+import {
+  CreateUserCommand,
+  CreateUserCommandHandler,
+} from './create-user.command';
+export const userCommandsContainer = [
+  CreateUserCommand,
+  CreateUserCommandHandler,
+];
