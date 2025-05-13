@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Image from "next/image";
 import Button from "@/shared/ui/Button";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,6 +7,12 @@ import { projectSchema, ProjectFormData } from "../schema/project.schema";
 import { useUpdateProject } from "../hooks/useUpdateProject";
 import Breadcrumb from "@/shared/ui/Breadcrumb";
 import Header from "@/shared/layout/Header";
+import emptyProjectIcon from "@/shared/icons/emptyprojectIcon.svg";
+import linkedinIcon from "@/shared/icons/linkedingrisicon.svg";
+import starIcon from "@/shared/icons/blackstaricon.svg";
+import createdIcon from "@/shared/icons/createdprojectsicon.svg";
+import joinedIcon from "@/shared/icons/joinedicon.svg";
+import crossIcon from "@/shared/icons/crossIcon.svg";
 
 interface ProjectEditFormProps {
   projectId: string;
@@ -70,7 +77,11 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
   }, [project, reset]);
 
   // Gestion des champs sous forme de tableau avec useFieldArray
-  const { fields: techStackFields, append: appendTechStack } = useFieldArray({
+  const { 
+    fields: techStackFields, 
+    append: appendTechStack,
+    remove: removeTechStack
+  } = useFieldArray({
     control,
     name: "techStacks",
   });
@@ -140,89 +151,147 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
 
   // Rendu du formulaire avec les données chargées
   return (
-    <form 
-      onSubmit={handleSubmit(handleFormSubmit)} 
-      className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist"
-    >
-      <div className="flex flex-col gap-2">
-        <h2 className="text-[24px] font-medium font-geist tracking-[-0.05em]">Change Name</h2>
-        <div className="flex justify-between items-center">
-          <p className="text-[13px] font-medium font-geist tracking-[-0.05em]">Add Repository</p>
+    <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
+      <form 
+        onSubmit={handleSubmit(handleFormSubmit)} 
+        className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <Image src={emptyProjectIcon} alt="empty" width={80} height={80} />
+              <h2 className="text-[24px] font-medium font-geist tracking-[-0.05em]">{project.title}</h2>
+            </div>
+            <div className="flex items-center gap-1.5 cursor-pointer">
+              <p className="text-[13px] font-medium font-geist tracking-[-0.05em]">Add Repository</p>
+              <span className="text-black font-medium">+</span>
+            </div>
+          </div>
+        </div>
+        
+        <input
+          type="hidden"
+          {...register("title")}
+          value={project.title}
+        />
+        
+        <div className="mt-4">
+          <label className="block text-[15px] font-medium mb-6 font-geist">Project Description</label>
+          <textarea
+            {...register("description")}
+            className="w-[643px] h-[269px] border border-black/10 rounded-[10px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+          />
+          {errors.description && (
+            <p className="text-red-500 text-[13px] mt-1">{errors.description.message}</p>
+          )}
+        </div>
+        
+        {/* Ligne en pointillés */}
+        <div className="w-full border-t border-dashed border-black/10 mt-4 mb-2"></div>
+        
+        <div>
+          <label className="block text-[15px] mb-4 font-medium font-geist tracking-[-0.05em]">Technical Stack</label>
+          {techStackFields.map((field, index) => (
+            <div key={field.id} className="flex items-center gap-2 mb-2">
+              <Controller
+                control={control}
+                name={`techStacks.${index}.name`}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+                    placeholder="e.g. React"
+                  />
+                )}
+              />
+              <button 
+                type="button"
+                onClick={() => removeTechStack(index)}
+                className="border border-black/10 rounded-[7px] p-2 hover:bg-gray-50"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          ))}
+          <button 
+            type="button" 
+            onClick={() => appendTechStack({ 
+              id: String(techStackFields.length + 1), 
+              name: "", 
+              iconUrl: "" 
+            })}
+            className="text-black text-[12px] mt-1 font-normal flex items-center gap-1.5"
+          >
+            <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
+              <Image src={crossIcon} alt="add" width={10} height={10} className="invert" />
+            </div>
+            Add technology
+          </button>
+        </div>
+        
+        <Button
+          type="submit"
+          className="mt-4 self-end"
+          disabled={isUpdating}
+          width="auto"
+          height="43px"
+        >
+          {isUpdating ? "Saving..." : "Save Changes"}
+        </Button>
+        
+        {isSuccess && (
+          <div className="text-green-600 font-medium">Project updated successfully!</div>
+        )}
+        {isUpdateError && (
+          <div className="text-red-600 font-medium">Error updating project. Please try again.</div>
+        )}
+        {updateError && (
+          <div className="text-red-600 font-medium">{updateError?.message}</div>
+        )}
+      </form>
+
+      {/* Sidebar Section */}
+      <div className="w-[270px] font-geist flex flex-col gap-10">
+        {/* Share Section */}
+        <div>
+          <h2 className="text-[18px] font-medium mb-3">Share</h2>
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center gap-3">
+              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
+              <span className="text-[14px] text-black/70">Share on LinkedIn</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
+              <span className="text-[14px] text-black/70">Share on LinkedIn</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
+              <span className="text-[14px] text-black/70">Share on LinkedIn</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Community Stats Section */}
+        <div>
+          <h2 className="text-[18px] font-medium mb-3">Community Stats</h2>
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center gap-3">
+              <Image src={joinedIcon} alt="Joined Projects" width={15} height={13} />
+              <span className="text-[14px] text-black/70">Joined Projects</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Image src={starIcon} alt="Stars" width={15} height={14} />
+              <span className="text-[14px] text-black/70">Stars</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Image src={createdIcon} alt="Members" width={13} height={15} />
+              <span className="text-[14px] text-black/70">Members</span>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div>
-        <input
-          {...register("title")}
-          className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
-        />
-        {errors.title && (
-          <p className="text-red-500 text-[13px] mt-1">{errors.title.message}</p>
-        )}
-      </div>
-      
-      <div className="mt-4">
-        <label className="block text-[15px] font-medium mb-1 font-geist">Project Description</label>
-        <textarea
-          {...register("description")}
-          className="w-[643px] h-[269px] border border-black/10 rounded-[10px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
-        />
-        {errors.description && (
-          <p className="text-red-500 text-[13px] mt-1">{errors.description.message}</p>
-        )}
-      </div>
-      
-      {/* Ligne en pointillés */}
-      <div className="w-full border-t border-dashed border-black/10 my-4"></div>
-      
-      <div>
-        <label className="block text-[15px] font-medium font-geist tracking-[-0.05em]">Technical Stack</label>
-        {techStackFields.map((field, index) => (
-          <Controller
-            key={field.id}
-            control={control}
-            name={`techStacks.${index}.name`}
-            render={({ field }) => (
-              <input
-                {...field}
-                className="w-full border border-black/10 rounded-[7px] px-3 py-2 mb-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
-                placeholder="e.g. React"
-              />
-            )}
-          />
-        ))}
-        <button 
-          type="button" 
-          onClick={() => appendTechStack({ 
-            id: String(techStackFields.length + 1), 
-            name: "", 
-            iconUrl: "" 
-          })}
-          className="text-black/40 text-[10px] mt-1 font-normal"
-        >
-          + Add technology
-        </button>
-      </div>
-      
-      <Button
-        type="submit"
-        className="mt-4 self-end"
-        disabled={isUpdating}
-        width="auto"
-        height="43px"
-      >
-        {isUpdating ? "Saving..." : "Save Changes"}
-      </Button>
-      
-      {isSuccess && (
-        <div className="text-green-600 font-medium">Project updated successfully!</div>
-      )}
-      {isUpdateError && (
-        <div className="text-red-600 font-medium">Error updating project. Please try again.</div>
-      )}
-      {updateError && (
-        <div className="text-red-600 font-medium">{updateError?.message}</div>
-      )}
-    </form>
+    </div>
   );
 } 
