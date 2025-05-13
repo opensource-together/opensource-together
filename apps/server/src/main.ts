@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { RootModule } from './root.module';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(RootModule);
   app.enableCors({
     origin: [process.env.WEBSITE_DOMAIN],
     allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],

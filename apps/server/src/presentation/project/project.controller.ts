@@ -15,10 +15,10 @@ import { toProjectResponseDto } from '@/application/dto/adapters/project-respons
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
 import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-inputs.dto';
-import { CreateProjectCommand } from '@/infrastructures/cqrs/project/commands/create-project/create-project.command';
-import { FindProjectByIdQuery } from '@/infrastructures/cqrs/project/queries/find-by-id/find-project-by-id.query';
-import { FindProjectByTitleQuery } from '@/infrastructures/cqrs/project/queries/find-by-title/find-project-by-title.query';
-import { GetProjectsQuery } from '@/infrastructures/cqrs/project/queries/get-all/get-projects.query';
+import { CreateProjectCommand } from '@/application/project/commands/create-project.usecase';
+import { FindProjectByIdQuery } from '@/application/project/queries/find-by-id/find-project-by-id.handler';
+import { FindProjectByTitleQuery } from '@/application/project/queries/find-by-title/find-project-by-title.handler';
+import { GetProjectsQuery } from '@/application/project/queries/get-all/get-projects.handler';
 
 @Controller('projects')
 export class ProjectController {

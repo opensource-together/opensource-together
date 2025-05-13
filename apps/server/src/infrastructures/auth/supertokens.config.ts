@@ -2,32 +2,30 @@ import Session from 'supertokens-node/recipe/session';
 import { SuperTokensModuleOptions } from 'supertokens-nestjs/dist/supertokens.types';
 import { emailPasswordRecipe } from '@infrastructures/auth/recipes/email-password.recipe';
 import EmailVerification from 'supertokens-node/recipe/emailverification';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus } from '@nestjs/cqrs';
+import { ConfigService } from '@nestjs/config';
 
-export function createSupertokensConfig({
-  commandBus,
-  queryBus,
-}: {
-  commandBus: CommandBus;
-  queryBus: QueryBus;
-}): SuperTokensModuleOptions {
+export function createSupertokensConfig(
+  queryBus: QueryBus,
+  commandBus: CommandBus,
+  configService: ConfigService,
+): SuperTokensModuleOptions {
   return {
     framework: 'express',
     supertokens: {
-      connectionURI: process.env.CONNECTION_URI as string,
+      connectionURI: configService.get('CONNECTION_URI') as string,
+      apiKey: configService.get('SUPERTOKENS_API_KEY') as string,
     },
     appInfo: {
-      appName: 'OpenSource Together',
-      apiDomain: process.env.API_DOMAIN as string,
-      websiteDomain: process.env.WEBSITE_DOMAIN as string,
+      appName: configService.get('APP_NAME') as string,
+      apiDomain: configService.get('API_DOMAIN') as string,
+      websiteDomain: configService.get('WEBSITE_DOMAIN') as string,
       apiBasePath: '/auth',
       websiteBasePath: '/auth',
     },
     recipeList: [
-      emailPasswordRecipe({
-        commandBus,
-        queryBus,
-      }),
+      emailPasswordRecipe(queryBus, commandBus),
       EmailVerification.init({
         mode: 'OPTIONAL',
       }),
@@ -35,10 +33,10 @@ export function createSupertokensConfig({
         getTokenTransferMethod: () => {
           return 'cookie';
         },
-        cookieSecure: process.env.NODE_ENV === 'production',
+        cookieSecure: configService.get('NODE_ENV') === 'production',
         cookieSameSite: 'lax',
         sessionExpiredStatusCode: 401,
-        cookieDomain: process.env.COOKIE_DOMAIN,
+        cookieDomain: configService.get('COOKIE_DOMAIN'),
       }),
     ],
   };
