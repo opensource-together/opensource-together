@@ -100,21 +100,94 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
   // Affichage d'un état de chargement pour les données du projet
   if (isLoadingProject) {
     return (
-      <>
-        <Header />
-        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
-          <Breadcrumb
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Projects", href: "/projects" },
-              { label: "Loading...", href: "#", isActive: true },
-            ]}
-          />
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
+        {/* Formulaire Skeleton - avec dimensions fixes */}
+        <div className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist relative">
+          {/* Effet de vague limité à ce conteneur uniquement */}
+          <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden pointer-events-none rounded-[20px]">
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-gray-100 via-gray-200/70 to-gray-100"></div>
+          </div>
+          
+          {/* Header avec icône et titre */}
+          <div className="flex flex-col gap-2 relative z-10">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-[80px] h-[80px] bg-gray-200 rounded-[15px]">
+                </div>
+                <div className="h-6 w-48 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="h-4 w-28 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
+                <div className="h-5 w-4 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Description - avec largeur fixe précise */}
+          <div className="mt-4 relative z-10">
+            <div className="h-5 w-48 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite] mb-6"></div>
+            <div className=" rounded-[10px] px-3 py-2 w-[643px] h-[269px] bg-gray-200"></div>
+          </div>
+          
+          {/* Ligne en pointillés */}
+          <div className="w-full border-t border-dashed border-black/10 mt-4 mb-2 relative z-10"></div>
+          
+          {/* Technical Stack */}
+          <div className="relative z-10">
+            <div className="h-5 w-36 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite] mb-4"></div>
+            
+            {/* Tech stack inputs */}
+            <div className="flex flex-col gap-2">
+              {[1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-2 mb-2">
+                  <div className="w-full h-[38px] bg-gray-200 rounded-[7px]"></div>
+                  <div className="w-[41px] h-[41px] bg-gray-200 rounded-[7px]"></div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Add technology button */}
+            <div className="flex items-center gap-1.5 mt-1">
+              <div className="w-[20px] h-[20px] bg-gray-200 rounded-[2px]"></div>
+              <div className="h-4 w-28 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
+            </div>
+          </div>
+          
+          {/* Submit button */}
+          <div className="mt-4 self-end relative z-10">
+            <div className="h-[43px] w-[120px] bg-gray-200 rounded-[7px]"></div>
+          </div>
         </div>
-        <div className="flex justify-center items-center py-20">
-          <div className="w-[710px] h-[625px] animate-pulse bg-gray-100 rounded-[20px]"></div>
+        
+        {/* Sidebar Skeleton */}
+        <div className="w-[270px] flex flex-col gap-10">
+          {/* Share Section */}
+          <div>
+            <div className="h-6 w-24 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite] mb-3"></div>
+            <div className="flex flex-col gap-5">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-[15px] h-[15px] bg-gray-200 rounded-sm"></div>
+                  <div className="h-4 w-36 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Community Stats Section */}
+          <div>
+            <div className="h-6 w-40 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite] mb-3"></div>
+            <div className="flex flex-col gap-5">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-[15px] h-[15px] bg-gray-200 rounded-sm"></div>
+                  <div className="h-4 w-36 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 
