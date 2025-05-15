@@ -3,7 +3,7 @@ services:
   business-db:
     image: postgres:16
     env_file:
-      - .env.dev
+      - .env
     environment:
       - POSTGRES_USER=${BUSINESS_DB_USER}
       - POSTGRES_PASSWORD=${BUSINESS_DB_PASSWORD}
@@ -29,7 +29,7 @@ services:
   supertokens-db:
     image: postgres:16
     env_file:
-      - .env.dev
+      - .env
     environment:
       - POSTGRES_USER=${SUPERTOKEN_DB_USER}
       - POSTGRES_PASSWORD=${SUPERTOKEN_DB_PASSWORD}
@@ -55,7 +55,7 @@ services:
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
     env_file:
-      - .env.dev
+      - .env
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKEN_DB_USER}:${SUPERTOKEN_DB_PASSWORD}@supertokens-db:5432/${SUPERTOKEN_DB_NAME}
     ports:
