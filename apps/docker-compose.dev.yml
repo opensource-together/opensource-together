@@ -2,6 +2,8 @@ services:
   # Base de données principale
   business-db:
     image: postgres:16
+    env_file:
+      - .env.dev
     environment:
       - POSTGRES_USER=${BUSINESS_DB_USER}
       - POSTGRES_PASSWORD=${BUSINESS_DB_PASSWORD}
@@ -26,6 +28,8 @@ services:
   # Base de données Supertokens
   supertokens-db:
     image: postgres:16
+    env_file:
+      - .env.dev
     environment:
       - POSTGRES_USER=${SUPERTOKEN_DB_USER}
       - POSTGRES_PASSWORD=${SUPERTOKEN_DB_PASSWORD}
@@ -50,6 +54,8 @@ services:
   # Service d'authentification
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
+    env_file:
+      - .env.dev
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKEN_DB_USER}:${SUPERTOKEN_DB_PASSWORD}@supertokens-db:5432/${SUPERTOKEN_DB_NAME}
     ports:
