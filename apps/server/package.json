@@ -18,10 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "docker:backend:update": "docker compose --project-directory .. exec backend pnpm install",
+		"docker:backend:update": "docker compose --project-directory .. exec backend pnpm install",
     "prisma:generate": "pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma && docker compose --project-directory .. exec backend pnpm prisma generate --schema=/app/src/infrastructures/orm/prisma/schema.prisma",
     "prisma:migrate:dev": "docker compose --project-directory .. exec backend pnpm prisma migrate dev --schema=/app/src/infrastructures/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma",
     "prisma:migrate:deploy": "docker compose --project-directory .. exec backend pnpm prisma migrate deploy --schema=/app/src/infrastructures/orm/prisma/schema.prisma",
+    "prisma:migrate:reset": "docker compose --project-directory .. exec backend pnpm prisma migrate reset --schema=/app/src/infrastructures/orm/prisma/schema.prisma",
     "prisma:studio": "docker compose --project-directory .. exec backend pnpm prisma studio --schema=/app/src/infrastructures/orm/prisma/schema.prisma"
   },
   "dependencies": {
