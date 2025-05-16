@@ -105,6 +105,39 @@ paths:
                 $ref: '#/components/schemas/ProjectResponseDto'
         '404':
           description: Projet non trouvé
+    patch:
+      tags:
+        - Projects
+      summary: Mettre à jour un projet existant
+      operationId: updateProject
+      security:
+        - supertokens_session: []
+      parameters:
+        - name: id
+          in: path
+          description: ID du projet à mettre à jour
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectDtoRequest'
+      responses:
+        '200':
+          description: Projet mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponseDto'
+        '400':
+          description: Données d'entrée invalides ou utilisateur non autorisé
+        '401':
+          description: Non authentifié
+        '404':
+          description: Projet non trouvé
   /auth/signup:
     post:
       tags:
@@ -242,6 +275,36 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Liste des stacks techniques utilisées dans le projet
+      required:
+        - title
+        - description
+        - status
+        - techStacks
+    UpdateProjectDtoRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nouveau titre du projet
+          example: 'Mon Super Projet Open Source (Mis à jour)'
+        description:
+          type: string
+          description: Nouvelle description du projet
+          example: 'Description mise à jour du projet open source.'
+        link:
+          type: string
+          description: Nouveau lien vers le dépôt ou le site du projet
+          nullable: true
+          example: 'https://github.com/user/my-updated-project'
+        status:
+          type: string
+          description: Nouveau statut du projet
+          example: 'Completed'
+        techStacks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechStackDto'
+          description: Liste mise à jour des stacks techniques utilisées dans le projet
       required:
         - title
         - description
