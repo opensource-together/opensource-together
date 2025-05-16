@@ -1,0 +1,468 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+ # Architecture Frontend React - Règles et bonnes pratiques
+
+Ce document détaille les règles et principes d'architecture à respecter rigoureusement lors du développement frontend de notre application Next. Ces principes sont conçus pour maximiser la maintenabilité, la lisibilité et l'efficacité du code.
+
+## 1. Séparation claire des responsabilités
+
+### 1.1. Structure des vues
+
+Les vues (fichiers `*View.tsx`) doivent **exclusivement** servir à :
+- Structurer la page (header, layout, breadcrumb, etc.)
+- Composer des composants ensemble
+- Définir la mise en page générale
+
+```typescript
+// ✅ BON EXEMPLE - Vue simple et claire
+export default function ProjectView({ projectId }: ProjectViewProps) {
+  return (
+    <>
+      <Header />
+      <div className="mx-auto px-4 max-w-[1300px] mt-4">
+        <Breadcrumb items={[...]} />
+      </div>
+      <div className="mx-auto px-4 max-w-[1300px] mt-8">
+        <ProjectDetails projectId={projectId} />
+      </div>
+    </>
+  );
+}
+```
+
+### 1.2. Règles strictes pour les vues
+
+#### ❌ JAMAIS dans une vue :
+- Appels à des hooks métiers (`useProject`, `useUpdateProject`, etc.)
+- État local relatif aux données métier (`useState` pour stocker des données)
+- Logique de chargement/erreur
+- Mutations ou actions sur les données
+- Formulaires et leur validation
+- Logique métier
+
+#### ✅ Exceptions limitées :
+- Préchargement global (SSR/SSG)
+- Providers de contexte qui enveloppent la page
+- Routing/Navigation (next/navigation)
+
+### 1.3. Délégation de la logique métier
+
+Toute la logique métier doit être encapsulée dans des composants dédiés :
+- Chargement de données
+- Mutations
+- Gestion d'état UI
+- Validation
+- Interactions utilisateur
+
+```typescript
+// ✅ BON EXEMPLE - Composant avec sa propre logique
+function ProjectDetails({ projectId }: ProjectDetailsProps) {
+  const { 
+    project, 
+    isLoading, 
+    isError, 
+    error 
+  } = useProject(projectId);
+
+  if (isLoading) return <ProjectSkeleton />;
+  if (isError) return <ErrorDisplay error={error} />;
+  
+  return <div>{/* Render project details */}</div>;
+}
+```
+
+## 2. Hooks personnalisés minimalistes et cohérents
+
+### 2.1. Principes fondamentaux
+
+Un bon hook personnalisé doit :
+- Répondre à un besoin précis et bien défini
+- Être facilement réutilisable
+- Éviter la duplication de code
+- Encapsuler une logique métier complexe
+
+### 2.2. Règles de design pour les hooks
+
+#### Retourner uniquement les données utiles
+Ne retournez que ce dont les composants ont réellement besoin.
+
+```typescript
+// ❌ MAUVAIS - Trop de propriétés retournées
+return {
+  projectData,
+  isLoadingProject,
+  isProjectError,
+  projectError,
+  updateProjectData,
+  isUpdatingProject,
+  isUpdateProjectError,
+  updateProjectError,
+  reset,
+  // ...et bien plus encore
+};
+
+// ✅ BON - Minimaliste et suffisant
+return {
+  project,
+  updateProject,
+  isLoading,
+  isUpdating,
+  isSuccess,
+  isError,
+  error
+};
+```
+
+#### Fusionner les états similaires
+Combinez les états lorsque cela a du sens pour simplifier l'interface.
+
+```typescript
+// ❌ MAUVAIS - États redondants
+const isLoading = isLoadingProject;
+const isError = isErrorProject || isUpdateError;
+const error = projectError || updateError;
+
+// ✅ BON - États fusionnés dans le hook
+return {
+  isLoading: isLoadingData || mutation.isPending,
+  isError: isLoadingError || mutation.isError,
+  error: loadingError || mutation.error
+};
+```
+
+#### Invalider uniquement les queries nécessaires
+N'invalidez que les clés de query strictement affectées par une mutation.
+
+```typescript
+// ❌ MAUVAIS - Invalidation trop large
+queryClient.invalidateQueries({ queryKey: ["projects"] }); 
+
+// ✅ BON - Invalidation ciblée
+queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+```
+
+### 2.3. Structure recommandée pour un hook de mutation
+
+```typescript
+export function useUpdateEntity(id: string) {
+  // 1. Récupération des données initiales si nécessaire
+  const { 
+    data: entity, 
+    isLoading, 
+    isError, 
+    error 
+  } = useGetEntity(id);
+  
+  // 2. Définition de la mutation
+  const mutation = useMutation({
+    mutationFn: (payload) => updateEntityAPI(id, payload),
+    onSuccess: (data) => {
+      // Invalider uniquement l'entité concernée
+      queryClient.invalidateQueries({ queryKey: ["entity", id] });
+      
+      // Actions post-mutation (redirection, etc.)
+      if (data.id) {
+        router.replace(`/entities/${data.id}`);
+      }
+    }
+  });
+
+  // 3. Retourner une interface minimale et claire
+  return {
+    entity,                                    // Les données
+    updateEntity: (data) => mutation.mutate(data), // La fonction d'action
+    isLoading: isLoading || mutation.isPending,    // États fusionnés
+    isUpdating: mutation.isPending,                // États spécifiques  
+    isSuccess: mutation.isSuccess,
+    isError: isError || mutation.isError,
+    error: error || mutation.error
+  };
+}
+```
+
+## 3. Conventions de nommage
+
+### 3.1. Éviter la redondance
+
+Les noms de variables doivent être clairs mais concis, sans redondance inutile.
+
+#### ❌ NOMS À ÉVITER :
+- `isLoadingProject` (contexte déjà défini par le hook `useProject`)
+- `projectError` (préfixe redondant)
+- `isProjectError` (doublement verbeux)
+- `updateProjectError` (trop précis quand un simple `error` suffit dans le contexte)
+
+#### ✅ NOMS RECOMMANDÉS :
+- `project` (simple et clair dans le contexte)
+- `isLoading` (état général de chargement)
+- `isError` (état général d'erreur)
+- `error` (l'erreur elle-même)
+- `isUpdating` (spécifique à la mutation, distinction claire)
+
+### 3.2. Contexte et clarté
+
+Le contexte d'un hook donne déjà beaucoup d'information, exploitez-le :
+
+```typescript
+// ✅ BON EXEMPLE
+// Le contexte "useProject" rend clair qu'on parle du projet
+const { project, isLoading, error } = useProject(id);
+
+// ✅ DISTINCTION QUAND NÉCESSAIRE
+// Lorsque plusieurs états similaires coexistent
+const { 
+  project,
+  isLoading,     // Chargement général
+  isUpdating,    // Spécifique à l'action de mise à jour
+  isSuccess,
+  isError,
+  error
+} = useUpdateProject(id);
+```
+
+## 4. Gestion efficace de TanStack Query
+
+### 4.1. Structure des clés de query
+
+Utilisez des structures cohérentes pour vos clés de query :
+- Entité singulière pour un élément unique: `["project", id]`
+- Entité plurielle pour une collection: `["projects", { filters }]`
+- Clés hiérarchiques pour des données imbriquées: `["project", id, "comments"]`
+
+### 4.2. Invalidation ciblée
+
+Pour une mutation qui modifie une entité spécifique :
+
+```typescript
+// ✅ CORRECT
+queryClient.invalidateQueries({ queryKey: ["project", id] });
+
+// ❌ INUTILE - N'invalidez pas "projects" quand vous modifiez un seul projet
+queryClient.invalidateQueries({ queryKey: ["projects"] });
+
+// ✅ SI NÉCESSAIRE - Seulement si la liste est réellement impactée
+queryClient.invalidateQueries({ 
+  queryKey: ["projects"], 
+  exact: false 
+});
+```
+
+### 4.3. Installation des DevTools pour débogage
+
+TanStack Query DevTools facilitent grandement le débogage et la compréhension :
+
+```bash
+pnpm i @tanstack/react-query-devtools
+```
+
+Intégration dans le provider :
+
+```typescript
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactNode, useState } from "react";
+
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+
+## 5. Gestion des formulaires avec React Hook Form + Zod
+
+### 5.1. Avantages de React Hook Form
+
+- Performances optimisées (pas de re-renders inutiles)
+- Syntaxe concise (moins de boilerplate)
+- Validation intégrée
+- Gestion simplifiée des champs
+
+### 5.2. Utilisation recommandée
+
+```typescript
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// 1. Définir le schéma avec Zod
+const schema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  status: z.enum(["DRAFT", "PUBLISHED"])
+});
+
+// Inférer le type à partir du schéma
+type FormData = z.infer<typeof schema>;
+
+// 2. Utiliser React Hook Form avec le resolver Zod
+function ProjectForm() {
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors } 
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+      description: "",
+      status: "DRAFT"
+    }
+  });
+
+  // 3. Soumettre le formulaire validé
+  const onSubmit = (data: FormData) => {
+    // Les données sont déjà validées ici
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("title")} />
+      {errors.title && <span>{errors.title.message}</span>}
+      
+      <textarea {...register("description")} />
+      {errors.description && <span>{errors.description.message}</span>}
+      
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## 6. Exemples concrets de bonnes pratiques
+
+### 6.1. Vue correctement structurée
+
+```typescript
+// ProjectEditView.tsx
+"use client";
+
+import React from "react";
+import ProjectEditForm from "../components/ProjectEditForm";
+import Header from "@/shared/layout/Header";
+import Breadcrumb from "@/shared/ui/Breadcrumb";
+
+interface ProjectEditViewProps {
+  projectId: string;
+}
+
+export default function ProjectEditView({ projectId }: ProjectEditViewProps) {
+  return (
+    <>
+      <Header />
+      <div className="mx-auto px-4 max-w-[1300px] mt-4">
+        <Breadcrumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Projects", href: "/projects" },
+            { label: "Edit Project", href: "#", isActive: true },
+          ]}
+        />
+      </div>
+      <div className="mx-auto px-4 max-w-[1300px] mt-8">
+        <ProjectEditForm projectId={projectId} />
+      </div>
+    </>
+  );
+}
+```
+
+### 6.2. Hook bien conçu
+
+```typescript
+// useUpdateProject.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProject } from "../services/updateProjectAPI";
+import { ProjectFormData } from "../schema/project.schema";
+import { useRouter } from "next/navigation";
+import { useProject } from "./useProjects";
+
+export function useUpdateProject(projectId: string) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  
+  // Récupération des données du projet
+  const { data: project, isLoading, isError, error } = useProject(projectId);
+  
+  // Mutation pour mettre à jour le projet
+  const mutation = useMutation({
+    mutationFn: (payload: ProjectFormData) => updateProject(projectId, payload),
+    onSuccess: (data) => {
+      // Invalider uniquement la query concernée
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      
+      // Redirection vers la page du projet mis à jour
+      if (data.id) {
+        router.replace(`/projects/${data.id}`);
+      }
+    }
+  });
+
+  return {
+    project,
+    updateProject: (data: ProjectFormData) => mutation.mutate(data),
+    isLoading: isLoading || mutation.isPending,
+    isUpdating: mutation.isPending,
+    isSuccess: mutation.isSuccess,
+    isError: isError || mutation.isError,
+    error: error || mutation.error
+  };
+}
+```
+
+### 6.3. Composant utilisant correctement un hook
+
+```typescript
+// ProjectEditForm.tsx (extrait)
+export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
+  const { 
+    project,
+    updateProject,
+    isLoading,
+    isUpdating,
+    isSuccess,
+    isError,
+    error
+  } = useUpdateProject(projectId);
+
+  // Utilisation de React Hook Form + Zod
+  const { register, handleSubmit, control, formState: { errors } } = useForm<ProjectFormData>({
+    resolver: zodResolver(projectSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      // ...autres valeurs par défaut
+    },
+    // Mise à jour lorsque les données sont chargées
+    values: project || undefined
+  });
+
+  // Affichage selon l'état
+  if (isLoading) return <ProjectSkeleton />;
+  if (isError) return <ErrorDisplay error={error} />;
+
+  // Reste du composant, formulaire, etc.
+}
+```
+
+## Conclusion
+
+Suivre rigoureusement ces principes nous permet de :
+- Maintenir une base de code propre et cohérente
+- Faciliter la collaboration entre développeurs
+- Réduire les bugs et améliorer la maintenabilité
+- Accélérer le développement de nouvelles fonctionnalités
+
+Ces règles doivent être suivies de manière stricte par tous les membres de l'équipe.
+
