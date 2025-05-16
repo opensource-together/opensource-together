@@ -7,6 +7,7 @@ import {
   Query,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { Project } from '@/domain/project/project.entity';
 import { Result } from '@shared/result';
@@ -14,12 +15,13 @@ import { ProjectResponseDto } from '@/application/dto/adapters/project-response.
 import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
-import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-inputs.dto';
-import { CreateProjectCommand } from '@/application/project/commands/create-project.usecase';
+import { CreateProjectCommand } from '@/application/project/commands/create/create-project.usecase';
 import { FindProjectByIdQuery } from '@/application/project/queries/find-by-id/find-project-by-id.handler';
 import { FindProjectByTitleQuery } from '@/application/project/queries/find-by-title/find-project-by-title.handler';
 import { GetProjectsQuery } from '@/application/project/queries/get-all/get-projects.handler';
-
+import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
+import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
+import { UpdateProjectCommand } from '@/application/project/commands/update/update-project.usecase';
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -69,7 +71,7 @@ export class ProjectController {
   @Post()
   async createProject(
     @Session('userId') userId: string,
-    @Body() project: CreateProjectDtoInput,
+    @Body() project: CreateProjectDtoRequest,
   ) {
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand(
@@ -85,6 +87,29 @@ export class ProjectController {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }
     console.log({ projectRes });
+    return toProjectResponseDto(projectRes.value);
+  }
+
+  @Patch(':id')
+  async updateProject(
+    @Session('userId') userId: string,
+    @Param('id') id: string,
+    @Body() project: UpdateProjectDtoRequest,
+  ) {
+    const projectRes: Result<Project> = await this.commandBus.execute(
+      new UpdateProjectCommand(
+        id,
+        project.title,
+        project.description,
+        project.link,
+        project.status,
+        project.techStacks,
+        userId,
+      ),
+    );
+    if (!projectRes.success) {
+      throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
+    }
     return toProjectResponseDto(projectRes.value);
   }
 }
