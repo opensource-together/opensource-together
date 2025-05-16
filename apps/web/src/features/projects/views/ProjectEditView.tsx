@@ -4,8 +4,6 @@ import React from "react";
 import ProjectEditForm from "../components/ProjectEditForm";
 import Header from "@/shared/layout/Header";
 import Breadcrumb from "@/shared/ui/Breadcrumb";
-import { useProject } from "../hooks/useProjects";
-import { useEffect, useState } from "react";
 
 interface ProjectEditViewProps {
   projectId: string;
@@ -16,15 +14,6 @@ interface ProjectEditViewProps {
  * Structure la page et délègue la logique au composant ProjectEditForm
  */
 export default function ProjectEditView({ projectId }: ProjectEditViewProps) {
-  const { data: project, isLoading } = useProject(projectId);
-  const [projectTitle, setProjectTitle] = useState("Loading...");
-
-  useEffect(() => {
-    if (project?.title) {
-      setProjectTitle(project.title);
-    }
-  }, [project]);
-
   return (
     <>
       <Header />
@@ -33,7 +22,7 @@ export default function ProjectEditView({ projectId }: ProjectEditViewProps) {
           items={[
             { label: "Home", href: "/" },
             { label: "Projects", href: "/projects" },
-            { label: projectTitle, href: "#", isActive: true },
+            { label: "Edit Project", href: "#", isActive: true },
           ]}
         />
       </div>

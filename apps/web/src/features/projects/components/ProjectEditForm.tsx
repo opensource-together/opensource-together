@@ -24,13 +24,11 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
   const { 
     project,
     updateProject,
-    isLoadingProject,
+    isLoading,
     isUpdating,
     isSuccess,
-    isErrorProject,
-    isUpdateError,
-    projectError,
-    updateError
+    isError,
+    error
   } = useUpdateProject(projectId);
 
   // Configuration de React Hook Form avec le resolver Zod
@@ -54,7 +52,7 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
       socialLinks: [],
     },
     // On ne veut pas que le formulaire soit validé avant que les données ne soient chargées
-    disabled: isLoadingProject
+    disabled: isLoading
   });
 
   // Mise à jour des valeurs du formulaire lorsque le projet est chargé
@@ -88,31 +86,27 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
 
   // Handler pour soumettre les données validées
   const handleFormSubmit = (data: ProjectFormData) => {
-    updateProject(data, {
-      onSuccess: () => {
-        if (onSuccess) {
-          onSuccess();
-        }
-      }
-    });
+    updateProject(data);
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   // Affichage d'un état de chargement pour les données du projet
-  if (isLoadingProject) {
+  if (isLoading) {
     return (
       <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
         {/* Formulaire Skeleton - avec dimensions fixes */}
-        <div className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist relative">
-          {/* Effet de vague limité à ce conteneur uniquement */}
-          <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden pointer-events-none rounded-[20px]">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-gray-100 via-gray-200/70 to-gray-100"></div>
-          </div>
+        <div className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist relative overflow-hidden">
+          {/* Effet de vague avec animation exactement comme dans SkeletonProjectCard */}
+          <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-gray-100 via-gray-200/70 to-gray-100"></div>
           
           {/* Header avec icône et titre */}
           <div className="flex flex-col gap-2 relative z-10">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-[80px] h-[80px] bg-gray-200 rounded-[15px]">
+                <div className="w-[80px] h-[80px] bg-gray-200 rounded-sm">
+                  {/* Suppression de la div qui cause des problèmes */}
                 </div>
                 <div className="h-6 w-48 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite]"></div>
               </div>
@@ -126,7 +120,7 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
           {/* Description - avec largeur fixe précise */}
           <div className="mt-4 relative z-10">
             <div className="h-5 w-48 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite] mb-6"></div>
-            <div className=" rounded-[10px] px-3 py-2 w-[643px] h-[269px] bg-gray-200"></div>
+            <div className="border border-black/10 rounded-[10px] px-3 py-2 w-[643px] h-[269px] bg-gray-200"></div>
           </div>
           
           {/* Ligne en pointillés */}
@@ -192,33 +186,18 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
   }
 
   // Affichage d'une erreur lors du chargement du projet
-  if (isErrorProject || !project) {
+  if (isError || !project) {
     return (
-      <>
-        <Header />
-        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
-          <Breadcrumb
-            items={[
-              { label: "Home", href: "/" },
-              { label: "Projects", href: "/projects" },
-              { label: "Error", href: "#", isActive: true },
-            ]}
-          />
-        </div>
-        <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
-          <div className="text-red-500 p-4 rounded-md bg-red-50">
-            <h2 className="text-xl font-bold">Error loading project</h2>
-            <p>
-              There was an error loading the project details. Please try again
-              later.
-            </p>
-            {process.env.NODE_ENV !== "production" &&
-              projectError instanceof Error && (
-                <p className="mt-2 text-sm font-mono">{projectError.message}</p>
-              )}
-          </div>
-        </div>
-      </>
+      <div className="text-red-500 p-4 rounded-md bg-red-50">
+        <h2 className="text-xl font-bold">Error loading project</h2>
+        <p>
+          There was an error loading the project details. Please try again
+          later.
+        </p>
+        {process.env.NODE_ENV !== "production" && error instanceof Error && (
+          <p className="mt-2 text-sm font-mono">{error.message}</p>
+        )}
+      </div>
     );
   }
 
@@ -317,11 +296,11 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
         {isSuccess && (
           <div className="text-green-600 font-medium">Project updated successfully!</div>
         )}
-        {isUpdateError && (
+        {isError && (
           <div className="text-red-600 font-medium">Error updating project. Please try again.</div>
         )}
-        {updateError && (
-          <div className="text-red-600 font-medium">{updateError?.message}</div>
+        {error instanceof Error && (
+          <div className="text-red-600 font-medium">{error.message}</div>
         )}
       </form>
 
