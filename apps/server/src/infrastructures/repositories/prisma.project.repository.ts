@@ -5,6 +5,8 @@ import { Project } from '@/domain/project/project.entity';
 import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './project/prisma.project.mapper';
+import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
+import { ProjectStatus } from '@prisma/client';
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -30,6 +32,57 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       } else {
         return Result.fail('Unknown error');
       }
+      return Result.fail('Unknown error');
+    }
+  }
+
+  async updateProjectById(
+    id: string,
+    payload: UpdateProjectInputsDto,
+    userId: string,
+  ): Promise<Result<Project>> {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: { id },
+      });
+      if (!project) return Result.fail('Project not found');
+      if (project.userId !== userId)
+        return Result.fail('You are not allowed to update this project');
+
+      const updatePayload = {
+        title: payload.title?.success
+          ? payload.title.value.getTitle()
+          : undefined,
+        description: payload.description?.success
+          ? payload.description.value.getDescription()
+          : undefined,
+        link: payload.link?.success ? payload.link.value.getLink() : undefined,
+        status: payload.status?.success
+          ? (payload.status.value.getStatus() as ProjectStatus)
+          : undefined,
+        ...(payload.techStacks && {
+          techStacks: {
+            // Déconnecte toutes les techStacks existantes
+            set: [],
+            // Connecte les nouvelles techStacks en utilisant leurs IDs
+            connect: payload.techStacks.map((techStack) => ({
+              id: techStack.id,
+            })),
+          },
+        }),
+      };
+
+      const updatedProject = await this.prisma.project.update({
+        where: { id },
+        data: updatePayload,
+        include: { techStacks: true },
+      });
+
+      const domainProject = PrismaProjectMapper.toDomain(updatedProject);
+      if (!domainProject.success) return Result.fail(domainProject.error);
+
+      return Result.ok(domainProject.value);
+    } catch (error) {
       return Result.fail('Unknown error');
     }
   }
