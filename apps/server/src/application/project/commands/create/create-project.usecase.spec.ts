@@ -1,4 +1,4 @@
-import { CreateProjectUseCase } from './create-project.usecase';
+import { CreateProjectCommand } from './create-project.usecase';
 import { ProjectRepositoryPort } from '@/application/project/ports/project.repository.port';
 import { Result } from '@/shared/result';
 import { ProjectTestBuilder } from '@/shared/__test__/ProjectTestBuilder';
