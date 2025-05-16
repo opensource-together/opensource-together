@@ -120,7 +120,7 @@ export default function ProjectEditForm({ projectId, onSuccess }: ProjectEditFor
           {/* Description - avec largeur fixe précise */}
           <div className="mt-4 relative z-10">
             <div className="h-5 w-48 bg-gray-200 rounded animate-[pulse_0.7s_ease-in-out_infinite] mb-6"></div>
-            <div className="border border-black/10 rounded-[10px] px-3 py-2 w-[643px] h-[269px] bg-gray-200"></div>
+            <div className=" rounded-[10px] px-3 py-2 w-[600px] h-[269px] bg-gray-200"></div>
           </div>
           
           {/* Ligne en pointillés */}

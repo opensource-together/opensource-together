@@ -5,15 +5,11 @@ import ProjectEditForm from "../components/ProjectEditForm";
 import Header from "@/shared/layout/Header";
 import Breadcrumb from "@/shared/ui/Breadcrumb";
 
-interface ProjectEditViewProps {
-  projectId: string;
-}
-
 /**
  * Vue d'édition de projet
  * Structure la page et délègue la logique au composant ProjectEditForm
  */
-export default function ProjectEditView({ projectId }: ProjectEditViewProps) {
+export default function ProjectEditView({ projectId }: { projectId: string }) {
   return (
     <>
       <Header />
