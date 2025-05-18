@@ -68,10 +68,12 @@ export default function HomepageViews() {
             title={project.title}
             description={project.description}
             // Conversion des techStacks du format backend au format attendu par le composant
-            techStack={project.techStacks?.map((tech) => ({
-              icon: tech.iconUrl,
-              alt: tech.name,
-            }))}
+            techStack={project.techStacks
+              ?.filter((tech) => typeof tech.iconUrl === "string")
+              .map((tech) => ({
+                icon: tech.iconUrl as string,
+                alt: tech.name,
+              }))}
           />
         ))}
       </div>

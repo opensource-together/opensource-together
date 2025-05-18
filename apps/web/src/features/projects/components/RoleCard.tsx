@@ -3,7 +3,7 @@ import validationIcon from "@/shared/icons/validation-icon.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Badge } from "../services/createProjectAPI";
+import { Badge } from "../types/ProjectTypes";
 
 interface RoleCardProps {
   title: string;
