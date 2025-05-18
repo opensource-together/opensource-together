@@ -4,38 +4,14 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useCreateProject } from "../hooks/useProjects";
 import { projectSchema, ProjectSchema } from "../schema/project.schema";
 
-// Plus besoin de ces props puisque tout est géré en interne
-interface ProjectFormProps {
-  // Propriétés optionnelles pour des cas spécifiques
-  onSuccess?: () => void;
-}
+export default function ProjectForm() {
+  const { createProject, isCreating, isError } = useCreateProject();
 
-// Liste des technologies par défaut pour référence
-const defaultTechStacks = [
-  { id: "1", name: "React" },
-  { id: "2", name: "Node.js" },
-  { id: "3", name: "MongoDB" },
-  { id: "4", name: "TailwindCSS" },
-];
-
-export default function ProjectForm({ onSuccess }: ProjectFormProps = {}) {
-  // Utilisation du hook directement dans le formulaire
-  const {
-    createProject,
-    isPending: isLoading,
-    isSuccess,
-    isError,
-    error,
-    reset: resetMutation,
-  } = useCreateProject();
-
-  // Configuration de React Hook Form avec le resolver Zod
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-    reset: resetForm,
   } = useForm<ProjectSchema>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -43,7 +19,6 @@ export default function ProjectForm({ onSuccess }: ProjectFormProps = {}) {
       description: "",
       longDescription: "",
       status: "DRAFT",
-      // Initialisation avec un techStack vide par défaut
       techStacks: [{ id: "1", name: "", iconUrl: "" }],
       roles: [],
       keyBenefits: [],
@@ -51,23 +26,13 @@ export default function ProjectForm({ onSuccess }: ProjectFormProps = {}) {
     },
   });
 
-  // Gestion des champs sous forme de tableau avec useFieldArray
   const { fields: techStackFields, append: appendTechStack } = useFieldArray({
     control,
     name: "techStacks",
   });
 
-  // Handler pour soumettre les données validées
   const handleFormSubmit = (data: ProjectSchema) => {
-    createProject(data, {
-      onSuccess: () => {
-        if (onSuccess) {
-          onSuccess();
-        }
-        // Reset form sur succès si nécessaire
-        // resetForm();
-      },
-    });
+    createProject(data);
   };
 
   return (
@@ -176,25 +141,17 @@ export default function ProjectForm({ onSuccess }: ProjectFormProps = {}) {
       <Button
         type="submit"
         className="mt-4"
-        disabled={isLoading}
+        disabled={isCreating}
         width="100%"
         height="43px"
       >
-        {isLoading ? "Creating..." : "Create Project"}
+        {isCreating ? "Creating..." : "Create Project"}
       </Button>
 
-      {isSuccess && (
-        <div className="text-green-600 font-medium">
-          Project created successfully!
-        </div>
-      )}
       {isError && (
         <div className="text-red-600 font-medium">
           Error creating project. Please try again.
         </div>
-      )}
-      {error && (
-        <div className="text-red-600 font-medium">{error?.message}</div>
       )}
     </form>
   );
