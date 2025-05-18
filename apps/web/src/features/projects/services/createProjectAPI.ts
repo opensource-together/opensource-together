@@ -1,5 +1,5 @@
 import { get, post } from "../../../lib/api/fetcher";
-import { ProjectFormData } from "../schema/project.schema";
+import { ProjectSchema } from "../schema/project.schema";
 
 // Interface TechStack pour les stacks technologiques
 export interface TechStack {
@@ -60,10 +60,12 @@ export const getProjects = async (): Promise<Project[]> => {
 /**
  * Crée un nouveau projet
  */
-export const createProject = async (payload: ProjectFormData): Promise<Project> => {
+export const createProject = async (
+  payload: ProjectSchema,
+): Promise<Project> => {
   try {
     console.log("Payload envoyé à l'API:", payload);
-    const result = await post<ProjectFormData, Project>("/projects", payload);
+    const result = await post<ProjectSchema, Project>("/projects", payload);
     console.log("Réponse de l'API après création:", result);
     return result;
   } catch (error) {
