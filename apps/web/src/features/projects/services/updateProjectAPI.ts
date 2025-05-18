@@ -1,5 +1,5 @@
 import { ProjectSchema } from "../schema/project.schema";
-import { Project } from "../types/ProjectTypes";
+import { Project } from "../types/projectTypes";
 import { getProjectDetails } from "./projectAPI";
 
 /**

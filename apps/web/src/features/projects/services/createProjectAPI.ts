@@ -1,6 +1,6 @@
 import { get, post } from "../../../lib/api/fetcher";
 import { ProjectSchema } from "../schema/project.schema";
-import { Project } from "../types/ProjectTypes";
+import { Project } from "../types/projectTypes";
 
 /**
  * Get the list of projects

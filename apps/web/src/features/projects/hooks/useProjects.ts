@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { ProjectSchema } from "../schema/project.schema";
 import { createProject, getProjects } from "../services/createProjectAPI";
 import { getProjectDetails } from "../services/projectAPI";
-import { Project } from "../types/ProjectTypes";
+import { Project } from "../types/projectTypes";
 
 /**
  * Hook to get the list of projects

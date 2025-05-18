@@ -1,5 +1,5 @@
 import { mockProjects } from "../data/mockProjects";
-import { Project } from "../types/ProjectTypes";
+import { Project } from "../types/projectTypes";
 
 /**
  * Get project details by project ID
