@@ -10,7 +10,7 @@ import Button from "@/shared/ui/Button";
 import Image from "next/image";
 import exemplebyronIcon from "../../../shared/icons/exemplebyronIcon.svg";
 import joinedIcon from "../../../shared/icons/joinedicon.svg";
-import { TechStack } from "../services/createProjectAPI";
+import { TechStack } from "../types/projectTypes";
 
 interface ProjectPageCardProps {
   title?: string;
@@ -127,7 +127,12 @@ export default function ProjectPageCard({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-5">
           <div className="w-[82px] h-[80px] rounded-[16px] bg-[#F4F4F4] flex items-center justify-center">
-            <Image src={emptyprojecticon} alt="EcoTrack" width={80} height={80} />
+            <Image
+              src={emptyprojecticon}
+              alt="EcoTrack"
+              width={80}
+              height={80}
+            />
           </div>
           <div className="flex flex-col gap-1">
             <h1 className="text-[24px] font-medium leading-tight font-geist">
@@ -182,7 +187,7 @@ export default function ProjectPageCard({
             </Button>
           </div>
         </div>
-      </div>    
+      </div>
 
       {/* Description */}
       <div className="mt-2">
@@ -190,7 +195,9 @@ export default function ProjectPageCard({
           Project Description
         </h2>
         <p className="text-[13px] font-geist font-normal text-black/70 mb-4">
-          Easily track your carbon footprint from daily activities and consumption. Get smart, actionable insights to live more sustainably and reduce your environmental impact.
+          Easily track your carbon footprint from daily activities and
+          consumption. Get smart, actionable insights to live more sustainably
+          and reduce your environmental impact.
         </p>
         <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
@@ -335,7 +342,7 @@ export function SkeletonProjectPageCard() {
             <div key={i} className="w-[60px] h-[28px] bg-gray-100 rounded" />
           ))}
         </div>
-    </div>
+      </div>
     </section>
   );
 }

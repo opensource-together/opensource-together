@@ -13,7 +13,7 @@ export function useUpdateProject(projectId: string) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async ({
+    mutationFn: ({
       data,
       projectId,
     }: {

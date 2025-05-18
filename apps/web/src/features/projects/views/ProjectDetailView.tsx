@@ -1,7 +1,6 @@
 "use client";
 
 import peopleicon from "@/shared/icons/people.svg";
-import Header from "@/shared/layout/Header";
 import Breadcrumb from "@/shared/ui/Breadcrumb";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -36,7 +35,6 @@ export default function ProjectDetailView({
   if (isError && !showLoading) {
     return (
       <>
-        <Header />
         <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
           <Breadcrumb
             items={[
@@ -67,7 +65,6 @@ export default function ProjectDetailView({
   if (showLoading) {
     return (
       <>
-        <Header />
         <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
           <Breadcrumb
             items={[
@@ -84,7 +81,6 @@ export default function ProjectDetailView({
 
   return (
     <>
-      <Header />
       <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-1">
         <Breadcrumb
           items={[
