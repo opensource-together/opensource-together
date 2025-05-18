@@ -1,5 +1,20 @@
+import { get } from "../../../lib/api/fetcher";
 import { mockProjects } from "../data/mockProjects";
 import { Project } from "../types/projectTypes";
+
+/**
+ * Get the list of projects
+ */
+export const getProjects = async (): Promise<Project[]> => {
+  try {
+    const response = await get<Project[]>("/projects");
+    console.log("Response from the API:", response);
+    return response;
+  } catch (error) {
+    console.error("Error while sending the request to the API:", error);
+    throw error;
+  }
+};
 
 /**
  * Get project details by project ID
@@ -13,15 +28,4 @@ export const getProjectDetails = async (
   return Promise.resolve(
     mockProjects.find((p) => p.id === projectId) || mockProjects[0],
   );
-};
-
-/**
- * Get all projects (for listing)
- */
-export const getAllProjects = async (): Promise<Project[]> => {
-  // In a real scenario, this would call the API
-  // return get<Project[]>('/projects');
-
-  // For now, return mock data
-  return Promise.resolve(mockProjects);
 };

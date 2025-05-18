@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { ProjectSchema } from "../schema/project.schema";
-import { createProject, getProjects } from "../services/createProjectAPI";
-import { getProjectDetails } from "../services/projectAPI";
+import { createProject } from "../services/createProjectAPI";
+import { getProjectDetails, getProjects } from "../services/projectAPI";
 import { Project } from "../types/projectTypes";
 
 /**
@@ -12,7 +11,7 @@ import { Project } from "../types/projectTypes";
 export function useProjects() {
   return useQuery({
     queryKey: ["projects"],
-    queryFn: async () => await getProjects(),
+    queryFn: getProjects,
   });
 }
 
@@ -24,7 +23,7 @@ export function useProjects() {
 export function useProject(projectId: string) {
   return useQuery<Project>({
     queryKey: ["project", projectId],
-    queryFn: async () => await getProjectDetails(projectId),
+    queryFn: () => getProjectDetails(projectId),
     enabled: !!projectId,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -39,7 +38,7 @@ export function useCreateProject() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: ProjectSchema) => await createProject(data),
+    mutationFn: createProject,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       router.push(`/projects/${data.id}`);

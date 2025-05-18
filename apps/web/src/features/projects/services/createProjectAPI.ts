@@ -3,13 +3,6 @@ import { ProjectSchema } from "../schema/project.schema";
 import { Project } from "../types/projectTypes";
 
 /**
- * Get the list of projects
- */
-export const getProjects = async (): Promise<Project[]> => {
-  return get<Project[]>("/projects");
-};
-
-/**
  * Create a new project
  */
 export const createProject = async (data: ProjectSchema): Promise<Project> => {
