@@ -1,5 +1,3 @@
-"use client";
-
 import ProjectCard from "@/features/profile/components/ProjectCard";
 import pinnedIcon from "@/shared/icons/pinned-icon.svg";
 import Image from "next/image";
