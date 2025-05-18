@@ -1,3 +1,4 @@
+"use client";
 import Button from "@/shared/ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";

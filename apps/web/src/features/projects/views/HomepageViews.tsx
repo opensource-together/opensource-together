@@ -1,5 +1,4 @@
 import Footer from "@/shared/layout/Footer";
-import Header from "@/shared/layout/Header";
 import Billboard from "@/shared/ui/Billboard";
 import Pagination from "@/shared/ui/Pagination";
 import ProjectCard from "../components/ProjectCard";
@@ -83,7 +82,6 @@ export default function HomepageViews() {
   return (
     <>
       <div className="space-y-4 md:space-y-5 pb-10">
-        <Header />
         <div className="flex flex-col items-center mx-auto px-4 sm:px-6 md:px-8 lg:px-0 mt-4 md:mt-8">
           <Billboard />
         </div>

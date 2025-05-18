@@ -1,3 +1,4 @@
+"use client";
 import starIcon from "@/shared/icons/blackstaricon.svg";
 import createdIcon from "@/shared/icons/createdprojectsicon.svg";
 import crossIcon from "@/shared/icons/crossIcon.svg";
