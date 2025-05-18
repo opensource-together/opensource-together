@@ -1,47 +1,37 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateProject } from "../services/updateProjectAPI";
-import { ProjectFormData } from "../schema/project.schema";
 import { useRouter } from "next/navigation";
-import { useProject } from "./useProjects";
+import { ProjectSchema } from "../schema/project.schema";
+import { updateProject } from "../services/updateProjectAPI";
 
 /**
- * Hook pour gérer l'édition d'un projet existant
- * @param projectId Identifiant du projet à éditer
- * @returns Fonctions et états pour gérer l'édition
+ * Hook to update a project
+ * @param projectId id of the project to update
+ * @returns updateProject, isUpdating, isError
  */
 export function useUpdateProject(projectId: string) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  
-  // Récupération des données du projet
-  const { data: project, isLoading, isError, error } = useProject(projectId);
-  
-  // Mutation pour mettre à jour le projet
+
   const mutation = useMutation({
-    mutationFn: (payload: ProjectFormData) => updateProject(projectId, payload),
+    mutationFn: async ({
+      data,
+      projectId,
+    }: {
+      data: ProjectSchema;
+      projectId: string;
+    }) => updateProject(data, projectId),
     onSuccess: (data) => {
-      // Invalider uniquement la query concernée
       queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-      
-      // Redirection vers la page du projet mis à jour
-      if (data.id) {
-        router.replace(`/projects/${data.id}`);
-      } else {
-        console.error("Redirection impossible - ID du projet manquant");
-      }
+      router.push(`/projects/${data.id}`);
     },
     onError: (error: Error) => {
-      console.error("Erreur lors de la mise à jour du projet:", error);
+      console.error("Error updating project:", error);
     },
   });
 
   return {
-    project,
-    updateProject: (data: ProjectFormData) => mutation.mutate(data),
-    isLoading: isLoading || mutation.isPending,
+    updateProject: mutation.mutate,
     isUpdating: mutation.isPending,
-    isSuccess: mutation.isSuccess,
-    isError: isError || mutation.isError,
-    error: error || mutation.error
+    isError: mutation.isError,
   };
-} 
+}

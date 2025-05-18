@@ -3,17 +3,17 @@ import { Project } from "./createProjectAPI";
 import { getProjectDetails } from "./projectAPI";
 
 /**
- * Simule la mise à jour d'un projet existant
- * @param data Données mises à jour du projet
- * @param projectId Identifiant du projet à mettre à jour
- * @returns Le projet mis à jour
+ * Update a project
+ * @param data updated project data
+ * @param projectId id of the project to update
+ * @returns the updated project
  */
 export const updateProject = async (
   data: ProjectSchema,
   projectId: string,
 ): Promise<Project> => {
   try {
-    console.log(`Mise à jour du projet ${projectId}:`, data);
+    console.log(`Updating project ${projectId}:`, data);
 
     // Simule un délai réseau
     await new Promise((resolve) => setTimeout(resolve, 800));
@@ -28,10 +28,10 @@ export const updateProject = async (
       updatedAt: new Date().toISOString(),
     };
 
-    console.log("Projet mis à jour avec succès:", updatedProject);
+    console.log("Project updated successfully:", updatedProject);
     return updatedProject;
   } catch (error) {
-    console.error("Erreur lors de la mise à jour du projet:", error);
+    console.error("Error updating project:", error);
     throw error;
   }
 };
