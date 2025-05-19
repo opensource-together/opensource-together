@@ -1,11 +1,11 @@
-import { Project } from "../types/ProjectTypes";
-import gitifyIcon from "../../../shared/icons/gitifyIcon.png";
 import codesnippetIcon from "../../../shared/icons/codesnippet-icon.png";
 import exemplebyronIcon from "../../../shared/icons/exemplebyronIcon.svg";
-import shyybiIcon from "../../../shared/icons/shyybi-icon.png";
-import ppY2 from "../../../shared/icons/pp-y2.jpg";
-import p2acoIcon from "../../../shared/icons/p2aco-icon.png";
+import gitifyIcon from "../../../shared/icons/gitifyIcon.png";
 import killianIcon from "../../../shared/icons/killiancodes-icon.jpg";
+import p2acoIcon from "../../../shared/icons/p2aco-icon.png";
+import ppY2 from "../../../shared/icons/pp-y2.jpg";
+import shyybiIcon from "../../../shared/icons/shyybi-icon.png";
+import { Project } from "../types/ProjectTypes";
 
 export const mockProjects: Project[] = [
   {
@@ -13,18 +13,18 @@ export const mockProjects: Project[] = [
     slug: "leetgrind",
     title: "LeetGrind",
     image: "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
-    authorName: "y2",
+    authorName: "y2_dev",
     authorImage: ppY2.src,
     description: "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
     longDescription: "LeetGrind est un bot Discord qui propose un challenge LeetCode aléatoire chaque jour à une communauté active de développeurs. Avec un système de classement, un canal dédié à l'entraide et une interface ludique, LeetGrind aide les développeurs à coder de façon régulière, à progresser ensemble et à retrouver la motivation au quotidien.",
     status: "PUBLISHED",
     techStacks: [
-      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
       { id: "3", name: "Nest.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg" },
-      { id: "3", name: "Discord API", iconUrl: "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png" },
-      { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
       { id: "5", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
-      { id: "6", name: "Tailwind CSS", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" }
+      { id: "6", name: "Tailwind CSS", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
+      { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
+      { id: "3", name: "Discord API", iconUrl: "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png" },
     ],
     createdAt: "2024-12-01T00:00:00Z",
     updatedAt: "2025-05-15T00:00:00Z",
@@ -65,6 +65,60 @@ export const mockProjects: Project[] = [
     ]
   },
   {
+    id: "7",
+    slug: "gitify",
+    title: "Gitify",
+    image: gitifyIcon.src,
+    authorName: "69Killian",
+    authorImage: killianIcon.src,
+    description: "Contribue, Développe, réalise des challenges et gagne des badges en contribuant à des projets open source. Une plateforme gamifiée pour encourager la participation à l'open source",
+    longDescription: "Gitify est une application pour réaliser des challenges et gagner des badges en contribuant à des projets open source. Elle permet de suivre les notifications, les messages et les demandes de pull request de vos projets GitHub.",
+    status: "PUBLISHED",
+    techStacks: [
+      { id: "2", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
+      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
+      { id: "3", name: "Tailwind CSS", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+      { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" }
+    ],
+    createdAt: "2024-12-01T00:00:00Z",
+    updatedAt: "2025-05-15T00:00:00Z",
+    roles: [
+      {
+        id: "1",
+        title: "Développeur·se Backend",
+        description: "Nous recherchons un·e développeur·se Next.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
+        badges: [
+          { label: "Next.js", color: "#43853D", bgColor: "#E6F4EA" },
+          { label: "PostgreSQL", color: "#336791", bgColor: "#EDF2FA" }
+        ]
+      },
+      {
+        id: "2",
+        title: "Développeur·se Frontend",
+        description: "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
+        badges: [
+          { label: "Next.js", color: "#000000", bgColor: "#F3F3F3" },
+          { label: "React", color: "#61DAFB", bgColor: "#E0F7FA" }
+        ]
+      }
+    ],
+    socialLinks: [
+      { type: "github", url: "https://github.com/69killian/Gitify" },
+      { type: "website", url: "https://warmhearted-imagine-949567.framer.app/" },
+      { type: "twitter", url: "https://x.com/y2_dev" }
+    ],
+    communityStats: {
+      contributors: 4,
+      stars: 52,
+      forks: 0
+    },
+    keyBenefits: [
+      "Progresse en contribuant à des projets open source",
+      "Gagne des badges tout en apprenant et pratiquant sur des projets concrets",
+      "Découvre les coulisses du développement d'un bot Discord communautaire"
+    ]
+  },
+  {
     id: "2",
     slug: "devcord",
     title: "DevCord",
@@ -75,11 +129,11 @@ export const mockProjects: Project[] = [
     longDescription: "DevCord est un bot conçu pour booster la productivité des développeurs grâce à des commandes simples et puissantes intégrées à Discord et Slack. Qu'il s'agisse de formater du code, de générer des tâches cron, de convertir des formats ou de valider des regex, DevCord est votre copilote de développement. 100% gratuit, rapide et pensé pour les équipes modernes, avec une documentation claire et complète.",
     status: "PUBLISHED",
     techStacks: [
-      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
-      { id: "3", name: "Nest.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg" },
-      { id: "3", name: "Discord API", iconUrl: "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png" },
+      { id: "1", name: "Go", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg" },
+      { id: "5", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
       { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
-      { id: "5", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" }
+      { id: "3", name: "Discord API", iconUrl: "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png" },
+      { id: "3", name: "Slack API", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/slack/slack-original.svg" },
     ],
     createdAt: "2025-01-15T00:00:00Z",
     updatedAt: "2025-05-15T00:00:00Z",
@@ -117,6 +171,61 @@ export const mockProjects: Project[] = [
       "Automatisez vos tâches courantes sans quitter Discord ou Slack",
       "Gagnez du temps avec des commandes puissantes prêtes à l'emploi",
       "Contribuez à un outil open-source utilisé par des équipes tech"
+    ]
+  },
+  {
+    id: "6",
+    slug: "codesnippet",
+    title: "CodeSnippet",
+    image: codesnippetIcon.src,
+    authorName: "Spectre",
+    authorImage: "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
+    description: "Transformez votre façon de gérer le code. Stockez, organisez et découvrez des snippets avec facilité.",
+    longDescription: "CodeSnippet révolutionne la gestion du code pour les développeurs. Notre plateforme vous permet de stocker, organiser et découvrir facilement des snippets de code. Le Hub communautaire vous offre la possibilité de partager et d'explorer des snippets créés par d'autres développeurs. Simplifiez votre flux de travail et apprenez des autres—votre code, toujours à portée de main.",
+    status: "PUBLISHED",
+    techStacks: [
+      { id: "2", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
+      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
+      { id: "3", name: "Tailwind CSS", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+      { id: "5", name: "Node.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
+      { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" }
+    ],
+    createdAt: "2024-12-01T00:00:00Z",
+    updatedAt: "2025-05-15T00:00:00Z",
+    roles: [
+      {
+        id: "1",
+        title: "Développeur·se Fullstack",
+        description: "Participe au développement de CodeSnippet : système de gestion des snippets, éditeur de code en temps réel, et intégration avec les éditeurs populaires.",
+        badges: [
+          { label: "Next.js", color: "#000000", bgColor: "#F3F3F3" },
+          { label: "TypeScript", color: "#3178C6", bgColor: "#E6F4FF" }
+        ]
+      },
+      {
+        id: "2",
+        title: "Développeur·se Backend",
+        description: "Développe l'API et le système de stockage des snippets, avec un focus sur la performance et la scalabilité.",
+        badges: [
+          { label: "PostgreSQL", color: "#336791", bgColor: "#EDF2FA" },
+          { label: "API REST", color: "#FF6B6B", bgColor: "#FFF0F0" }
+        ]
+      }
+    ],
+    socialLinks: [
+      { type: "github", url: "https://github.com/codesnippet/codesnippet" },
+      { type: "website", url: "code-snippet-mocha.vercel.app" },
+      { type: "twitter", url: "https://twitter.com/codesnippet" }
+    ],
+    communityStats: {
+      contributors: 5,
+      stars: 42,
+      forks: 8
+    },
+    keyBenefits: [
+      "Gérez vos snippets de code de manière efficace et organisée",
+      "Partagez et découvrez des snippets créés par la communauté",
+      "Intégrez CodeSnippet dans votre workflow de développement"
     ]
   },
   {
@@ -281,121 +390,15 @@ export const mockProjects: Project[] = [
       "Contribue à un outil qui simplifie le développement frontend"
     ]
   },
-  {
-    id: "6",
-    slug: "codesnippet",
-    title: "CodeSnippet",
-    image: codesnippetIcon.src,
-    authorName: "Sophie Bernard",
-    authorImage: exemplebyronIcon.src,
-    description: "Transformez votre façon de gérer le code. Stockez, organisez et découvrez des snippets avec facilité.",
-    longDescription: "CodeSnippet révolutionne la gestion du code pour les développeurs. Notre plateforme vous permet de stocker, organiser et découvrir facilement des snippets de code. Le Hub communautaire vous offre la possibilité de partager et d'explorer des snippets créés par d'autres développeurs. Simplifiez votre flux de travail et apprenez des autres—votre code, toujours à portée de main.",
-    status: "PUBLISHED",
-    techStacks: [
-      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
-      { id: "2", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
-      { id: "3", name: "Tailwind CSS", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-      { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" }
-    ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
-    roles: [
-      {
-        id: "1",
-        title: "Développeur·se Fullstack",
-        description: "Participe au développement de CodeSnippet : système de gestion des snippets, éditeur de code en temps réel, et intégration avec les éditeurs populaires.",
-        badges: [
-          { label: "Next.js", color: "#000000", bgColor: "#F3F3F3" },
-          { label: "TypeScript", color: "#3178C6", bgColor: "#E6F4FF" }
-        ]
-      },
-      {
-        id: "2",
-        title: "Développeur·se Backend",
-        description: "Développe l'API et le système de stockage des snippets, avec un focus sur la performance et la scalabilité.",
-        badges: [
-          { label: "PostgreSQL", color: "#336791", bgColor: "#EDF2FA" },
-          { label: "API REST", color: "#FF6B6B", bgColor: "#FFF0F0" }
-        ]
-      }
-    ],
-    socialLinks: [
-      { type: "github", url: "https://github.com/codesnippet/codesnippet" },
-      { type: "website", url: "code-snippet-mocha.vercel.app" },
-      { type: "twitter", url: "https://twitter.com/codesnippet" }
-    ],
-    communityStats: {
-      contributors: 5,
-      stars: 42,
-      forks: 8
-    },
-    keyBenefits: [
-      "Gérez vos snippets de code de manière efficace et organisée",
-      "Partagez et découvrez des snippets créés par la communauté",
-      "Intégrez CodeSnippet dans votre workflow de développement"
-    ]
-  },
-  {
-    id: "7",
-    slug: "gitify",
-    title: "Gitify",
-    image: gitifyIcon.src,
-    authorName: "69Killian",
-    authorImage: killianIcon.src,
-    description: "Contribue, Développe, réalise des challenges et gagne des badges en contribuant à des projets open source. Une plateforme gamifiée pour encourager la participation à l'open source",
-    longDescription: "Gitify est une application pour réaliser des challenges et gagner des badges en contribuant à des projets open source. Elle permet de suivre les notifications, les messages et les demandes de pull request de vos projets GitHub.",
-    status: "PUBLISHED",
-    techStacks: [
-      { id: "1", name: "TypeScript", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
-      { id: "2", name: "Next.js", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
-      { id: "3", name: "Tailwind CSS", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-      { id: "4", name: "PostgreSQL", iconUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" }
-    ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
-    roles: [
-      {
-        id: "1",
-        title: "Développeur·se Backend",
-        description: "Nous recherchons un·e développeur·se Next.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
-        badges: [
-          { label: "Next.js", color: "#43853D", bgColor: "#E6F4EA" },
-          { label: "PostgreSQL", color: "#336791", bgColor: "#EDF2FA" }
-        ]
-      },
-      {
-        id: "2",
-        title: "Développeur·se Frontend",
-        description: "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        badges: [
-          { label: "Next.js", color: "#000000", bgColor: "#F3F3F3" },
-          { label: "React", color: "#61DAFB", bgColor: "#E0F7FA" }
-        ]
-      }
-    ],
-    socialLinks: [
-      { type: "github", url: "https://github.com/69killian/Gitify" },
-      { type: "website", url: "https://warmhearted-imagine-949567.framer.app/" },
-      { type: "twitter", url: "https://x.com/y2_dev" }
-    ],
-    communityStats: {
-      contributors: 4,
-      stars: 52,
-      forks: 0
-    },
-    keyBenefits: [
-      "Progresse en contribuant à des projets open source",
-      "Gagne des badges tout en apprenant et pratiquant sur des projets concrets",
-      "Découvre les coulisses du développement d'un bot Discord communautaire"
-    ]
-  },
+  
+ 
   {
     id: "8",
     slug: "sherpa",
     title: "Sherpa",
     image: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
     authorName: "Olyxz16",
-    authorImage: exemplebyronIcon.src,
+    authorImage: "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
     description: "Un outil de transfert de variable d'environnement sécurisé et collaboratif, permettant de partager facilement vos configurations entre équipes",
     longDescription: "Sherpa est un outil permettant de transférer ses variables d'environnement de manière sécurisé, pour soi ou pour son équipe. Avec un système de chiffrement zero-trust, on assure la sécurité des données transférées",
     status: "PUBLISHED",

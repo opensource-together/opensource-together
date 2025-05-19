@@ -1,9 +1,9 @@
-import crossIcon from "@/shared/icons/crossIcon.svg";
-import Image from "next/image";
 import difficultyBarGray from "@/shared/icons/Difficulty-bar-gray.svg";
 import difficultyBarLight from "@/shared/icons/Difficulty-bar-light.svg";
 import croixSuppression from "@/shared/icons/croix-suppression.svg";
 import Button from "@/shared/ui/Button";
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
@@ -56,16 +56,18 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
   if (showConfirmation) {
     return (
       <div className="flex flex-col items-center justify-center bg-white p-10 rounded-[20px] font-geist">
-        <h2 className="text-[30px] text-center font-medium tracking-tight font-geist mb-2">Congrats ! Your project has been created</h2>
+        <h2 className="text-[30px] text-center font-medium tracking-tight font-geist mb-2">Félicitations ! Votre projet a été créé</h2>
         <p className="text-[15px] text-center text-black/70 mb-8">
-          You can now find your projects in your "My Projects" dashboard and members will be able to apply to any open roles
+          Vous pouvez maintenant trouver vos projets dans votre tableau de bord "Mes projets" et les membres pourront postuler à n'importe quel rôle ouvert
         </p>
+        <Link href="/">
         <button
-          className="w-[425px] h-[43px] rounded-[5px] border border-black/10 bg-white text-black text-[15px] font-medium"
+          className="w-[425px] cursor-pointer hover:bg-slate-50 transition-colors h-[43px] rounded-[5px] border border-black/10 bg-white text-black text-[15px] font-medium"
           style={{ boxShadow: "0 2px 5px rgba(0,0,0,0.03)" }}
         >
-          View project
+          Voir le projet
         </button>
+        </Link>
       </div>
     );
   }
@@ -148,7 +150,7 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
           className="mb-4 flex items-center justify-center text-[15px] mt-0"
           onClick={() => setShowConfirmation(true)}
         >
-          Create new role
+          Créer un nouveau rôle
         </Button>
         </div>
       </div>
@@ -161,15 +163,15 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
 
       
       <div>
-      <h2 className="text-[30px] text-center font-medium tracking-tight font-geist mb-2">Add project details</h2>
+      <h2 className="text-[30px] text-center font-medium tracking-tight font-geist mb-2">Ajouter les détails du projet</h2>
       <p className="text-[15px] text-center text-black/70 mb-8">
-        Complete very detail regarding your open source project
+        Complétez les informations détaillées de votre projet open source
       </p>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">Add collaborators</label>
+        <label className="block text-black font-geist font-medium text-[18px] mb-2">Ajouter des collaborateurs</label>
         <div className="relative">
           <input
             type="text"
-            placeholder="Search for collaborators"
+            placeholder="Rechercher des collaborateurs"
             className="w-full h-[42px] rounded-[5px] border border-black/5 bg-black/2 px-4 pr-10 text-[15px] font-geist text-black/50 focus:outline-none"
             disabled
           />
@@ -182,7 +184,7 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
 
       {/* Tech Stack */}
       <div>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">Tech Stack</label>
+        <label className="block text-black font-geist font-medium text-[18px] mb-2">Technologies</label>
         <button className="flex items-center gap-2 text-black/70 text-[15px] font-geist">
           <span className="w-7 h-7 flex items-center justify-center border border-black/5 rounded-[2px] bg-white">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -190,31 +192,31 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
               <path d="M6.5 2V11" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </span>
-          Add new technology
+          Ajouter une technologie
         </button>
       </div>
 
       {/* Choose difficulty */}
       <div>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">Choose difficulty</label>
+        <label className="block text-black font-geist font-medium text-[18px] mb-2">Difficulté</label>
         <div className="flex gap-3">
           <button className="w-[120px] h-[25px] rounded-[5px]  bg-black/2 text-black/30 text-[11px] font-geist flex items-center justify-center gap-2">
-            Easy Difficulty <DifficultyBars level="Easy" />
+            Difficulté facile <DifficultyBars level="Easy" />
           </button>
           <button className="w-[120px] h-[25px] rounded-[5px] bg-black/2 text-black/30 text-[11px] font-geist flex items-center justify-center gap-2">
-            Medium Difficulty <DifficultyBars level="Medium" />
+            Difficulté moyenne <DifficultyBars level="Medium" />
           </button>
           <button className="w-[120px] h-[25px] rounded-[5px]  bg-black/2 text-black/30 text-[11px] font-geist flex items-center justify-center gap-2">
-            Hard Difficulty <DifficultyBars level="Hard" />
+            Difficulté difficile <DifficultyBars level="Hard" />
           </button>
         </div>
       </div>
 
       {/* Open Roles */}
       <div>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">Open Roles</label>
+        <label className="block text-black font-geist font-medium text-[18px] mb-2">Rôles disponibles</label>
         <button className="w-full h-[48px] rounded-[10px] border border-black/10 bg-white text-black text-[15px] font-medium flex items-center justify-center gap-2 mb-4" onClick={openRoleModal}>
-          Create New Role <span className="text-[22px]"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          Créer un nouveau rôle <span className="text-[22px]"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 6.5H11" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
               <path d="M6.5 2V11" stroke="black" strokeWidth="1.5" strokeLinecap="round"/>
             </svg></span>
@@ -222,13 +224,13 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
         {/* Example role card */}
         <div className="w-full rounded-[10px] border border-black/10 bg-white px-4 pt-2 pb-3">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-geist font-medium text-[17px] text-black">Back-end Developer</span>
+            <span className="font-geist font-medium text-[17px] text-black">Développeur Back-end</span>
             <button className="text-black/50 text-[10px] font-bold mt-6"><Image src={croixSuppression} alt="croix suppression" width={13} height={13} /></button>
           </div>
           <div className="flex gap-2 flex-wrap">
+            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">Node.js</span>
             <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">MongoDB</span>
-            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">MongoDB</span>
-            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">MongoDB</span>
+            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">Docker</span>
           </div>
         </div>
         {showRoleModal && <RoleModal />}
@@ -239,7 +241,7 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
           className="mb-4 flex items-center justify-center text-[15px] mt-12"
           onClick={() => setShowConfirmation(true)}
         >
-          Create new project
+          Créer un nouveau projet
         </Button>
       </div>
     </div>
