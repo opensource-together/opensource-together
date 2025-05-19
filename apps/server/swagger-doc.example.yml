@@ -238,7 +238,7 @@ components:
           type: string
           description: Lien vers le projet (repo, site, etc.)
           nullable: true
-        userId:
+        ownerId:
           type: string
           description: ID de l'utilisateur propriétaire du projet
         techStacks:
@@ -248,7 +248,7 @@ components:
       required:
         - title
         - description
-        - userId
+        - ownerId
         - techStacks
     CreateProjectDtoInput:
       type: object
