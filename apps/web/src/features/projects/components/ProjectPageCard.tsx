@@ -19,11 +19,12 @@ interface ProjectPageCardProps {
   techStacks?: TechStack[];
   keyBenefits?: string[];
   difficulty?: "Facile" | "Moyenne" | "Difficile";
+  image?: string;
 }
 
 export default function ProjectPageCard({
   title = "EcoTrack",
-  description = "Suivez votre empreinte carbone de vos activités quotidiennes et de votre consommation. Recevez des conseils personnalisés et des suggestions pour vivre de manière plus durable et réduire votre impact sur l'environnement.",
+  description,
   longDescription,
   techStacks = [],
   keyBenefits = [
@@ -36,6 +37,7 @@ export default function ProjectPageCard({
     "Support multi-appareils: Utilisez l'application sans difficulté sur smartphones, tablettes et navigateurs web.",
   ],
   difficulty = "Moyenne",
+  image,
 }: ProjectPageCardProps) {
   // Map of tech stacks to icons - to be replaced with dynamic icon loading
   const techIconMap: Record<string, any> = {
@@ -128,10 +130,11 @@ export default function ProjectPageCard({
         <div className="flex items-center gap-5">
           <div className="w-[82px] h-[80px] rounded-[16px] bg-[#F4F4F4] flex items-center justify-center">
             <Image
-              src={emptyprojecticon}
-              alt="EcoTrack"
+              src={image || emptyprojecticon}
+              alt={title || "Project icon"}
               width={80}
               height={80}
+              className="rounded-lg"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -195,10 +198,7 @@ export default function ProjectPageCard({
           Description du projet
         </h2>
         <p className="text-[13px] font-geist font-normal text-black/70 mb-4">
-          Suivez votre empreinte carbone de vos activités quotidiennes et de
-          votre consommation. Recevez des conseils personnalisés et des
-          suggestions pour vivre de manière plus durable et réduire votre impact
-          sur l'environnement.
+          {description}
         </p>
         <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
@@ -236,7 +236,7 @@ export default function ProjectPageCard({
               <div key={index} className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src={techIconMap[tech.name] || emptyprojecticon}
+                    src={tech.iconUrl || emptyprojecticon}
                     alt={tech.name}
                     width={14}
                     height={14}

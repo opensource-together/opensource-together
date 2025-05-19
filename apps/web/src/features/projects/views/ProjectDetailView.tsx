@@ -9,6 +9,7 @@ import ProjectPageCard from "../components/ProjectPageCard";
 import ProjectSideBar from "../components/ProjectSideBar";
 import RoleCard from "../components/RoleCard";
 import SkeletonProjectDetail from "../components/SkeletonProjectDetail";
+import { mockProjects } from "../data/mockProjects";
 import { useProject } from "../hooks/useProjects";
 
 interface ProjectDetailViewProps {
@@ -22,6 +23,9 @@ export default function ProjectDetailView({
   // Tanstack Query useProject hook to fetch project details by project ID
   const { data: project, isLoading, isError, error } = useProject(projectId);
 
+  // Fallback to mock data if project is not found
+  const projectData = project || mockProjects.find(p => p.id === projectId);
+
   // This simulates loading for skeleton loaders even when data is cached
   useEffect(() => {
     const timer = setTimeout(() => setSimulateLoading(false), 1000);
@@ -32,7 +36,7 @@ export default function ProjectDetailView({
   const showLoading = isLoading || simulateLoading;
 
   // Handle error state
-  if (isError && !showLoading) {
+  if (isError && !showLoading && !projectData) {
     return (
       <>
         <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
@@ -86,7 +90,7 @@ export default function ProjectDetailView({
           items={[
             { label: "Accueil", href: "/" },
             { label: "Projets", href: "/projects" },
-            { label: project?.title || "Projet", href: "#", isActive: true },
+            { label: projectData?.title || "Projet", href: "#", isActive: true },
           ]}
         />
       </div>
@@ -94,21 +98,22 @@ export default function ProjectDetailView({
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
           <div className="lg:max-w-[721.96px] w-full">
             <ProjectPageCard
-              title={project?.title}
-              description={project?.description}
-              longDescription={project?.longDescription}
-              techStacks={project?.techStacks}
-              keyBenefits={project?.keyBenefits}
+              title={projectData?.title}
+              description={projectData?.description}
+              longDescription={projectData?.longDescription}
+              techStacks={projectData?.techStacks}
+              keyBenefits={projectData?.keyBenefits}
+              image={projectData?.image}
             />
           </div>
           <ProjectSideBar
-            socialLinks={project?.socialLinks}
+            socialLinks={projectData?.socialLinks}
             communityStats={{
-              stars: project?.communityStats?.stars || 0,
-              contributors: 0, // Changed from contributors to members
-              forks: 0, // This will not be shown
+              stars: projectData?.communityStats?.stars || 0,
+              contributors: projectData?.communityStats?.contributors || 0,
+              forks: projectData?.communityStats?.forks || 0,
             }}
-            showForks={false}
+            showForks={true}
           />
         </div>
         <div>
@@ -130,8 +135,8 @@ export default function ProjectDetailView({
             />
           </div>
           <div className="flex flex-col gap-3 mt-6 mb-30">
-            {project?.roles && project.roles.length > 0 ? (
-              project.roles.map((role) => (
+            {projectData?.roles && projectData.roles.length > 0 ? (
+              projectData.roles.map((role) => (
                 <RoleCard
                   key={role.id}
                   title={role.title}
