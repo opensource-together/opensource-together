@@ -104,6 +104,8 @@ export default function ProjectDetailView({
               techStacks={projectData?.techStacks}
               keyBenefits={projectData?.keyBenefits}
               image={projectData?.image}
+              authorName={projectData?.authorName}
+              authorImage={projectData?.authorImage}
             />
           </div>
           <ProjectSideBar

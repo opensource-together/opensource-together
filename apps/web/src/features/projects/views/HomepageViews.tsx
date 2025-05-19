@@ -6,10 +6,33 @@ import ProjectCard from "../components/ProjectCard";
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectSearchBar from "../components/ProjectSearchBar";
 import { mockProjects } from "../data/mockProjects";
+import { useState, useEffect } from "react";
+import SkeletonProjectCard from "../components/SkeletonProjectCard";
 
 export default function HomepageViews() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simuler un chargement
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // Fonction pour rendre la grille de projets
   const renderProjectGrid = () => {
+    if (isLoading) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+          {[...Array(6)].map((_, index) => (
+            <SkeletonProjectCard key={index} />
+          ))}
+        </div>
+      );
+    }
+
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
         {mockProjects.map((project) => (

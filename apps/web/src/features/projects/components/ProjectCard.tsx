@@ -4,6 +4,7 @@ import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
 import peopleicon from "@/shared/icons/people.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef, useLayoutEffect, useState } from "react";
 
 interface TechIcon {
   icon: string;
@@ -47,9 +48,82 @@ export default function ProjectCard({
   className = "",
   image,
 }: ProjectCardProps) {
+  const lineRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLAnchorElement>(null);
+  const [maxVisible, setMaxVisible] = useState(roles.length);
+  const [measured, setMeasured] = useState(false);
+
+  useLayoutEffect(() => {
+    function measure() {
+      if (!lineRef.current || !counterRef.current) return;
+      const line = lineRef.current;
+      const counter = counterRef.current;
+      const btn = btnRef.current;
+      // Largeur totale de la ligne
+      const totalWidth = line.offsetWidth;
+      // Largeur du compteur
+      const counterWidth = counter.offsetWidth + 8;
+      // Largeur du bouton
+      const btnWidth = btn ? btn.offsetWidth + 8 : 0;
+      // Largeur du badge +X
+      let plusWidth = 0;
+      if (roles.length > 0) {
+        const temp = document.createElement("span");
+        temp.className = "h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap text-[black]/20";
+        temp.style.visibility = "hidden";
+        temp.innerText = "+" + (roles.length - 1);
+        line.appendChild(temp);
+        plusWidth = temp.offsetWidth + 8;
+        line.removeChild(temp);
+      }
+      // Largeur disponible pour les rôles
+      const available = totalWidth - counterWidth - btnWidth;
+      // On va rendre les rôles un par un
+      let used = 0;
+      let visible = 0;
+      // On crée des spans temporaires pour mesurer chaque rôle
+      for (let i = 0; i < roles.length; i++) {
+        const temp = document.createElement("span");
+        temp.className = "h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap";
+        temp.style.visibility = "hidden";
+        temp.innerText = roles[i].name;
+        line.appendChild(temp);
+        const roleWidth = temp.offsetWidth + 8;
+        line.removeChild(temp);
+        // Si on doit afficher le badge +X, il faut réserver la place
+        const needPlus = i < roles.length - 1;
+        if (used + roleWidth + (needPlus ? plusWidth : 0) > available) {
+          break;
+        }
+        used += roleWidth;
+        visible++;
+      }
+      setMaxVisible(visible);
+      setMeasured(true);
+    }
+    measure();
+    // ResizeObserver pour resize dynamique
+    let ro: ResizeObserver | undefined;
+    if (lineRef.current) {
+      ro = new ResizeObserver(() => {
+        setMeasured(false);
+        setTimeout(measure, 10);
+      });
+      ro.observe(lineRef.current);
+    }
+    return () => {
+      if (ro && lineRef.current) ro.disconnect();
+    };
+    // eslint-disable-next-line
+  }, [roles, showViewProject, title, description]);
+
+  const visibleRoles = measured ? roles.slice(0, maxVisible) : roles;
+  const remainingRoles = measured ? roles.length - maxVisible : 0;
+
   return (
     <section
-      className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1),0_2px_5px_rgba(0,0,0,0.02)] font-geist rounded-[20px] border border[black]/10 w-[540px] h-[207px] py-[25px] px-[30px] ${className}`}
+      className={`shadow-xs font-geist rounded-[20px] border border[black]/10 w-[540px] h-[207px] py-[25px] px-[30px] ${className}`}
     >
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
@@ -114,7 +188,7 @@ export default function ProjectCard({
 
       <article>
         {description && (
-          <div className="text-[black]/50 font-medium text-[12px] leading-[20px] mt-4">
+          <div className="text-[black]/50 font-medium text-[12px] leading-[20px] mt-4 line-clamp-2">
             {description}
           </div>
         )}
@@ -122,30 +196,34 @@ export default function ProjectCard({
         <div className="border-t border-dashed border-[black]/10 my-4" />
 
         {showRoles && (
-          <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <div className="text-[10px] font-medium flex items-center gap-1">
+          <div ref={lineRef} className="flex items-center gap-2 text-[11px] w-full overflow-hidden">
+            <div ref={counterRef} className="flex-shrink-0 text-[10px] font-medium flex items-center gap-1">
               <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
               {roleCount} Open Roles
             </div>
 
-            {roles.map((role, index) => (
+            {/* Rôles dynamiques */}
+            {visibleRoles.map((role, index) => (
               <div
                 key={index}
-                className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
+                className="h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap"
                 style={{ color: role.color, backgroundColor: role.bgColor }}
               >
                 {role.name}
               </div>
             ))}
-
-            {roles.length > 3 && (
-              <span className="text-[black]/20">+{roles.length - 3}</span>
+            {remainingRoles > 0 && (
+              <span className="h-[22px] flex-shrink-0 flex items-center px-1 rounded-full text-[11px] font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
+                +{remainingRoles}
+              </span>
             )}
 
+            {/* Bouton toujours à droite */}
             {showViewProject && (
               <Link
+                ref={btnRef}
                 href={`/projects/${projectId}`}
-                className="text-[12px] font-semibold ml-auto flex items-center gap-1 hover:opacity-80 transition-opacity"
+                className="ml-auto flex-shrink-0 text-[12px] font-semibold flex items-center gap-1 hover:opacity-80 transition-opacity"
               >
                 Voir le projet{" "}
                 <Image

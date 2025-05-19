@@ -35,6 +35,8 @@ export interface Project {
   slug?: string;
   title: string;
   image?: string;
+  authorName?: string;
+  authorImage?: string;
   description: string;
   longDescription?: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";

@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function ProjectSearchBar() {
   return (
-    <div className="relative w-full max-w-[447px] h-[35px]">
+    <div className="relative w-full max-w-[613px] h-[35px]">
       <input
         type="text"
         placeholder="Trouvez votre prochain projet open source"
