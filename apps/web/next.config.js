@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
   images: {
-    domains: ["www.google.com", "media.discordapp.net", "upload.wikimedia.org"],
+    domains: ["www.google.com", "media.discordapp.net", "upload.wikimedia.org", "pbs.twimg.com"],
   },
 };
 

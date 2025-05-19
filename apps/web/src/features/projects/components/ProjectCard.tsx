@@ -4,7 +4,7 @@ import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
 import peopleicon from "@/shared/icons/people.svg";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 interface TechIcon {
   icon: string;
@@ -199,7 +199,7 @@ export default function ProjectCard({
           <div ref={lineRef} className="flex items-center gap-2 text-[11px] w-full overflow-hidden">
             <div ref={counterRef} className="flex-shrink-0 text-[10px] font-medium flex items-center gap-1">
               <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
-              {roleCount} Open Roles
+              {roleCount} Roles Disponibles
             </div>
 
             {/* Rôles dynamiques */}

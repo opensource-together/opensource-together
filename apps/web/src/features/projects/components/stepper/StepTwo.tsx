@@ -63,7 +63,7 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
       <div className="flex flex-col items-center bg-white p-10 rounded-[20px] font-geist">
         <h2 className="text-black font-geist font-medium text-[30px] mb-2">Fill in your information</h2>
         <p className="text-[15px] text-black/70 mb-8 text-center">
-          Fill in the information in regards of your github repository below
+          Remplissez les informations en fonction de votre repository Github ci-dessous
         </p>
         <form className="w-full flex flex-col gap-5" onSubmit={e => { e.preventDefault(); onNext(); }}>
           <div>
@@ -103,7 +103,7 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
         className="flex items-center justify-center text-[15px]"
         onClick={onNext}
       >
-        Confirm Information
+        Confirmer les informations
       </Button>
         </form>
       </div>
@@ -113,9 +113,9 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
   // Mode import (par défaut)
   return (
     <div className="flex flex-col items-center p-10 rounded-[20px] ">
-      <h2 className="text-black font-geist font-medium text-[30px] mb-2">Import Github Repository</h2>
+      <h2 className="text-black font-geist font-medium text-[30px] mb-2">Importer un repository Github</h2>
       <p className="text-[15px] text-black/70 mb-8 text-center">
-        Choose which Github repository you want to import.
+        Choisissez le repository Github que vous souhaitez importer.
       </p>
       <div className="relative flex">
         <div
@@ -140,7 +140,7 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
                     minWidth={false}
                     className="text-[12px] font-geist font-medium"
                   >
-                    Import
+                    Importer
                   </Button>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
           className="flex items-center justify-center text-[15px]"
           onClick={onNext}
         >
-          Next
+          Suivant
         </Button>
       </div>
     </div>
