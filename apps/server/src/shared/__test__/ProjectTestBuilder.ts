@@ -2,7 +2,6 @@ import { CreateProjectDtoInput } from '@/application/dto/inputs/create-project-i
 import { Description } from '@/domain/project/description/description.vo';
 import { Link } from '@/domain/project/link/link.vo';
 import { Project } from '@/domain/project/project.entity';
-import { Status } from '@/domain/project/status/status.vo';
 import { Title } from '@/domain/project/title/title.vo';
 import { TechStack } from '@/domain/techStack/techstack.entity';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
@@ -13,8 +12,7 @@ export class ProjectTestBuilder {
   private title: string = 'Mon projet';
   private description: string = 'Une description';
   private link: string = 'https://github.com/monprojet';
-  private status: string = 'ARCHIVED';
-  private userId: string = 'user1';
+  private ownerId: string = 'user1';
   private techStacks: TechStack[] = [
     unwrapResult(TechStackFactory.create('1', 'React', 'https://react.png')),
   ];
@@ -43,13 +41,8 @@ export class ProjectTestBuilder {
     return this;
   }
 
-  public withStatus(status: string): ProjectTestBuilder {
-    this.status = status;
-    return this;
-  }
-
-  public withUserId(userId: string): ProjectTestBuilder {
-    this.userId = userId;
+  public withOwnerId(ownerId: string): ProjectTestBuilder {
+    this.ownerId = ownerId;
     return this;
   }
 
@@ -64,8 +57,7 @@ export class ProjectTestBuilder {
       getTitle: () => this.title,
       getDescription: () => this.description,
       getLink: () => this.link,
-      getStatus: () => this.status,
-      getUserId: () => this.userId,
+      getOwnerId: () => this.ownerId,
       getTechStacks: () => this.techStacks,
     } as Project;
   }
@@ -76,8 +68,7 @@ export class ProjectTestBuilder {
       title: Title.fromPersistence(this.title),
       description: Description.fromPersistence(this.description),
       link: Link.fromPersistence(this.link),
-      status: Status.fromPersistence(this.status),
-      userId: this.userId,
+      ownerId: this.ownerId,
       techStacks: this.techStacks,
     });
   }
@@ -88,8 +79,7 @@ export class ProjectTestBuilder {
       title: this.title,
       description: this.description,
       link: this.link,
-      status: this.status,
-      userId: this.userId,
+      ownerId: this.ownerId,
       techStacks: this.techStacks.map((ts) => ({
         id: ts.getId(),
         name: ts.getName(),
@@ -103,13 +93,12 @@ export class ProjectTestBuilder {
       title: this.title,
       description: this.description,
       link: this.link,
-      status: this.status,
       techStacks: this.techStacks.map((ts) => ({
         id: ts.getId(),
         name: ts.getName(),
         iconUrl: ts.getIconUrl(),
       })),
-      userId: this.userId,
+      ownerId: this.ownerId,
     };
   }
 }

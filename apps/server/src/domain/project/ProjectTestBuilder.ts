@@ -8,14 +8,13 @@ export class ProjectTestBuilder {
   private title: string = 'Test Project';
   private description: string = 'Test Description';
   private link: string | null = null;
-  private status: string = 'PUBLISHED';
   private techStacks: TechStack[] = [
     unwrapResult(TechStackFactory.create('1', 'React', 'https://react.dev/')),
     unwrapResult(
       TechStackFactory.create('2', 'Node.js', 'https://nodejs.org/en/'),
     ),
   ];
-  private userId: string = '1';
+  private ownerId: string = '1';
 
   withId(id: string | null) {
     this.id = id;
@@ -32,18 +31,13 @@ export class ProjectTestBuilder {
     return this;
   }
 
-  withStatus(status: string) {
-    this.status = status;
-    return this;
-  }
-
   withLink(link: string | null) {
     this.link = link;
     return this;
   }
 
-  withUserId(userId: string) {
-    this.userId = userId;
+  withOwnerId(ownerId: string) {
+    this.ownerId = ownerId;
     return this;
   }
 
@@ -57,8 +51,7 @@ export class ProjectTestBuilder {
       title: this.title,
       description: this.description,
       link: this.link,
-      status: this.status,
-      userId: this.userId,
+      ownerId: this.ownerId,
       techStacks: this.techStacks,
     });
 
