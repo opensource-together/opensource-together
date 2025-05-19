@@ -13,6 +13,11 @@ export class ProjectTestBuilder {
   private description: string = 'Une description';
   private link: string = 'https://github.com/monprojet';
   private ownerId: string = 'user1';
+  private projectRoles: object[] = [
+    { id: '1', name: 'Role 1' },
+    { id: '2', name: 'Role 2' },
+    { id: '3', name: 'Role 3' },
+  ];
   private techStacks: TechStack[] = [
     unwrapResult(TechStackFactory.create('1', 'React', 'https://react.png')),
   ];
@@ -70,6 +75,7 @@ export class ProjectTestBuilder {
       link: Link.fromPersistence(this.link),
       ownerId: this.ownerId,
       techStacks: this.techStacks,
+      projectRoles: this.projectRoles,
     });
   }
 

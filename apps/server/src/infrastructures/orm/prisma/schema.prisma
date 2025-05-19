@@ -24,15 +24,16 @@ model User {
 }
 
 model Project {
-  id          String        	@id @default(uuid())
-  ownerId     String
-  title       String
-  description String
-  link        String?
-	createAt		DateTime				@default(now())
-	updatedAt		DateTime				@updatedAt
+  id          				String        	@id @default(uuid())
+  ownerId     				String
+  title       				String
+  description 				String
+  link        				String?
+	createAt						DateTime				@default(now())
+	updatedAt						DateTime				@updatedAt
 	projectMembers			ProjectTeamMember[]
-  techStacks  TechStack[]
+	projectRoles				String[]
+  techStacks  				TechStack[]
 }
 
 model TechStack {
@@ -48,4 +49,11 @@ model ProjectTeamMember {
 	project_id		String
 	jointed_at		DateTime		@default(now())
 	project				Project			@relation(fields: [project_id], references: [id])
+}
+
+model ProjectRoles {
+	id						String		@id @default(uuid())
+	role					String
+	skill_set			String[]
+	description		String
 }

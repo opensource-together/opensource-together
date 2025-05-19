@@ -15,7 +15,11 @@ export class ProjectTestBuilder {
     ),
   ];
   private ownerId: string = '1';
-
+  private projectRoles: object[] = [
+    { id: '1', name: 'Role 1' },
+    { id: '2', name: 'Role 2' },
+    { id: '3', name: 'Role 3' },
+  ];
   withId(id: string | null) {
     this.id = id;
     return this;
@@ -53,6 +57,7 @@ export class ProjectTestBuilder {
       link: this.link,
       ownerId: this.ownerId,
       techStacks: this.techStacks,
+      projectRoles: this.projectRoles,
     });
 
     if (!result.success) {

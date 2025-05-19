@@ -17,6 +17,7 @@ export class UpdateProjectCommand implements ICommand {
     public readonly title: string | null,
     public readonly description: string | null,
     public readonly link: string | null,
+    public readonly projectRoles: object[],
     public readonly techStacks: TechStackDto[],
     public readonly ownerId: string,
   ) {}

@@ -7,4 +7,5 @@ export class ProjectResponseDto {
   createdAt?: Date;
   updatedAt?: Date;
   techStacks: { id: string; name: string; iconUrl: string }[];
+  projectRoles: object[];
 }

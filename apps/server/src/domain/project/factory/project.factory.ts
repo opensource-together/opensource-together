@@ -23,12 +23,14 @@ export class ProjectFactory {
     title,
     description,
     link,
+    projectRoles,
     ownerId,
     techStacks,
   }: {
     title: string;
     description: string;
     link: string | null;
+    projectRoles: object[];
     ownerId: string;
     techStacks: TechStack[];
   }): Result<Project> {
@@ -56,6 +58,7 @@ export class ProjectFactory {
         link: linkResult.value,
         ownerId,
         techStacks,
+        projectRoles,
       }),
     );
   }
@@ -80,6 +83,7 @@ export class ProjectFactory {
     description,
     link,
     ownerId,
+    projectRoles,
     techStacks,
     createdAt,
     updatedAt,
@@ -89,6 +93,7 @@ export class ProjectFactory {
     description: string;
     link: string | null;
     ownerId: string;
+    projectRoles: String[];
     techStacks: TechStack[];
     createdAt: Date;
     updatedAt: Date;
@@ -117,6 +122,7 @@ export class ProjectFactory {
         link: linkResult.value,
         ownerId,
         techStacks,
+        projectRoles,
         createdAt,
         updatedAt,
       }),

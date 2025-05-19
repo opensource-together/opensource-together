@@ -10,6 +10,7 @@ export class Project {
   private _techStacks: TechStack[];
   private _link: Link | null;
   private _ownerId: string;
+  private _projectRoles: object[];
   private _createdAt?: Date;
   private _updatedAt?: Date;
 
@@ -20,6 +21,7 @@ export class Project {
     techStacks,
     link,
     ownerId,
+    projectRoles,
     createdAt,
     updatedAt,
   }: {
@@ -29,6 +31,7 @@ export class Project {
     techStacks: TechStack[];
     link: Link | null;
     ownerId: string;
+    projectRoles: object[];
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -38,6 +41,7 @@ export class Project {
     this._techStacks = techStacks;
     this._link = link;
     this._ownerId = ownerId;
+    this._projectRoles = projectRoles;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
   }
@@ -64,6 +68,10 @@ export class Project {
 
   public getOwnerId() {
     return this._ownerId;
+  }
+
+  public getProjectRoles() {
+    return this._projectRoles;
   }
 
   public getCreatedAt() {

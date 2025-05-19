@@ -7,6 +7,12 @@ type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
 };
 
+export interface ProjectRole {
+  role: string;
+  skill_set: string[];
+  description: string;
+}
+
 export class PrismaProjectMapper {
   static toRepo(project: DomainProject): Result<Prisma.ProjectCreateInput> {
     return Result.ok({
@@ -19,6 +25,9 @@ export class PrismaProjectMapper {
           id: techStack.getId(),
         })),
       },
+      projectRoles: project
+        .getProjectRoles()
+        .map((role) => JSON.stringify(role)),
     });
   }
 
@@ -38,6 +47,7 @@ export class PrismaProjectMapper {
         techStacks: techStacks.value,
         createdAt: prismaProject.createAt,
         updatedAt: prismaProject.updatedAt,
+        projectRoles: prismaProject.projectRoles,
       },
     );
     if (!projectResult.success) return Result.fail(projectResult.error);

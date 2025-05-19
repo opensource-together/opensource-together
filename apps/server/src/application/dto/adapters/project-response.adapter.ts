@@ -15,5 +15,6 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
       name: ts.getName(),
       iconUrl: ts.getIconUrl(),
     })),
+    projectRoles: project.getProjectRoles(),
   };
 }

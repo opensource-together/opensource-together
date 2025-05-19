@@ -80,6 +80,7 @@ export class ProjectController {
         project.link,
         project.techStacks,
         ownerId,
+        project.projectRoles,
       ),
     );
     if (!projectRes.success) {
@@ -100,6 +101,7 @@ export class ProjectController {
         project.title,
         project.description,
         project.link,
+        project.projectRoles,
         project.techStacks,
         ownerId,
       ),

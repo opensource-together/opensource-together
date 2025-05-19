@@ -14,6 +14,10 @@ export class UpdateProjectDtoRequest {
   @IsOptional()
   link: string;
 
+  @IsArray()
+  @IsOptional()
+  projectRoles: object[];
+
   @IsString()
   @IsOptional()
   status: 'PUBLISHED' | 'DRAFT';

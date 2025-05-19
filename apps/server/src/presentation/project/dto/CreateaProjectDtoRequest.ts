@@ -15,5 +15,9 @@ export class CreateProjectDtoRequest {
 
   @IsArray()
   @IsNotEmpty()
+  projectRoles: object[];
+
+  @IsArray()
+  @IsNotEmpty()
   techStacks: TechStackDto[];
 }
