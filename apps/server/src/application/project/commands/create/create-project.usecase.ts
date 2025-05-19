@@ -16,9 +16,8 @@ export class CreateProjectCommand implements ICommand {
     public readonly title: string,
     public readonly description: string,
     public readonly link: string | null,
-    public readonly status: string,
     public readonly techStacks: TechStackDto[],
-    public readonly userId: string,
+    public readonly ownerId: string,
   ) {}
 }
 

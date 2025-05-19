@@ -2,8 +2,9 @@ export class ProjectResponseDto {
   id: string | null;
   title: string;
   description: string;
-  status: string | null;
   link: string | null;
-  userId: string;
+  ownerId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
   techStacks: { id: string; name: string; iconUrl: string }[];
 }

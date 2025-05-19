@@ -6,7 +6,6 @@ import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './project/prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
-import { ProjectStatus } from '@prisma/client';
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -39,14 +38,14 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
   async updateProjectById(
     id: string,
     payload: UpdateProjectInputsDto,
-    userId: string,
+    ownerId: string,
   ): Promise<Result<Project>> {
     try {
       const project = await this.prisma.project.findUnique({
         where: { id },
       });
       if (!project) return Result.fail('Project not found');
-      if (project.userId !== userId)
+      if (project.ownerId !== ownerId)
         return Result.fail('You are not allowed to update this project');
 
       const updatePayload = {
@@ -57,9 +56,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           ? payload.description.value.getDescription()
           : undefined,
         link: payload.link?.success ? payload.link.value.getLink() : undefined,
-        status: payload.status?.success
-          ? (payload.status.value.getStatus() as ProjectStatus)
-          : undefined,
         ...(payload.techStacks && {
           techStacks: {
             // Déconnecte toutes les techStacks existantes

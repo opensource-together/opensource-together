@@ -13,10 +13,6 @@ export class CreateProjectDtoRequest {
   @IsNotEmpty()
   link: string;
 
-  @IsString()
-  @IsNotEmpty()
-  status: 'PUBLISHED' | 'DRAFT';
-
   @IsArray()
   @IsNotEmpty()
   techStacks: TechStackDto[];

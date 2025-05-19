@@ -6,9 +6,10 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
     id: project.getId(),
     title: project.getTitle(),
     description: project.getDescription(),
-    status: project.getStatus(),
     link: project.getLink(),
-    userId: project.getUserId(),
+    ownerId: project.getOwnerId(),
+    createdAt: project.getCreatedAt(),
+    updatedAt: project.getUpdatedAt(),
     techStacks: project.getTechStacks().map((ts) => ({
       id: ts.getId(),
       name: ts.getName(),

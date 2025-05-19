@@ -70,7 +70,7 @@ export class ProjectController {
 
   @Post()
   async createProject(
-    @Session('userId') userId: string,
+    @Session('userId') ownerId: string,
     @Body() project: CreateProjectDtoRequest,
   ) {
     const projectRes: Result<Project> = await this.commandBus.execute(
@@ -78,21 +78,19 @@ export class ProjectController {
         project.title,
         project.description,
         project.link,
-        project.status,
         project.techStacks,
-        userId,
+        ownerId,
       ),
     );
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }
-    console.log({ projectRes });
     return toProjectResponseDto(projectRes.value);
   }
 
   @Patch(':id')
   async updateProject(
-    @Session('userId') userId: string,
+    @Session('userId') ownerId: string,
     @Param('id') id: string,
     @Body() project: UpdateProjectDtoRequest,
   ) {
@@ -102,9 +100,8 @@ export class ProjectController {
         project.title,
         project.description,
         project.link,
-        project.status,
         project.techStacks,
-        userId,
+        ownerId,
       ),
     );
     if (!projectRes.success) {

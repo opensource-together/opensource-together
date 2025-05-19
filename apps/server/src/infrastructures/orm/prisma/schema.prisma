@@ -23,19 +23,15 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-enum ProjectStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
 model Project {
-  id          String         @id @default(uuid())
+  id          String        	@id @default(uuid())
+  ownerId     String
   title       String
   description String
   link        String?
-  status      ProjectStatus?
-  userId      String
+	createAt		DateTime				@default(now())
+	updatedAt		DateTime				@updatedAt
+	projectMembers			ProjectTeamMember[]
   techStacks  TechStack[]
 }
 
@@ -44,4 +40,12 @@ model TechStack {
   name     String
   iconUrl  String
   projects Project[]
+}
+
+model ProjectTeamMember {
+	id						String			@id @default(uuid())
+	user_id				String
+	project_id		String
+	jointed_at		DateTime		@default(now())
+	project				Project			@relation(fields: [project_id], references: [id])
 }
