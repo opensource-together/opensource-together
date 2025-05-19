@@ -80,9 +80,9 @@ export default function Header({
 
         {/* Navigation pour desktop et tablette */}
         <nav className="hidden md:flex items-center space-x-3 lg:space-x-6">
-          <NavLink href="/">Home</NavLink>
-          <NavLink href="/profile">Profile</NavLink>
-          <NavLink href="/my-projects">My Projects</NavLink>
+          <NavLink href="/">Accueil</NavLink>
+          <NavLink href="/profile">Profil</NavLink>
+          <NavLink href="/my-projects">Mes projets</NavLink>
         </nav>
       </section>
 
@@ -154,8 +154,8 @@ export default function Header({
           onClick={handleCreate}
           className="sm:min-w-[140px] md:min-w-[160px] px-3 sm:px-4"
         >
-          <span className="hidden sm:inline">Create new Project</span>
-          <span className="inline sm:hidden">New Project</span>
+          <span className="hidden sm:inline">Créer un projet</span>
+          <span className="inline sm:hidden">Nouveau projet</span>
           <Image
             src={crossIcon}
             alt="crossIcon"

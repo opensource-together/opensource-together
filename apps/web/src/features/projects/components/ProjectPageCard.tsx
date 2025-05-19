@@ -10,7 +10,7 @@ import Button from "@/shared/ui/Button";
 import Image from "next/image";
 import exemplebyronIcon from "../../../shared/icons/exemplebyronIcon.svg";
 import joinedIcon from "../../../shared/icons/joinedicon.svg";
-import { TechStack } from "../types/projectTypes";
+import { TechStack } from "../types/ProjectTypes";
 
 interface ProjectPageCardProps {
   title?: string;
@@ -18,24 +18,24 @@ interface ProjectPageCardProps {
   longDescription?: string;
   techStacks?: TechStack[];
   keyBenefits?: string[];
-  difficulty?: "Easy" | "Medium" | "Hard";
+  difficulty?: "Facile" | "Moyenne" | "Difficile";
 }
 
 export default function ProjectPageCard({
   title = "EcoTrack",
-  description = "Easily track your carbon footprint from daily activities and consumption. Get smart, actionable insights to live more sustainably and reduce your environmental impact.",
+  description = "Suivez votre empreinte carbone de vos activités quotidiennes et de votre consommation. Recevez des conseils personnalisés et des suggestions pour vivre de manière plus durable et réduire votre impact sur l'environnement.",
   longDescription,
   techStacks = [],
   keyBenefits = [
-    "Effortless tracking: Monitor your carbon footprint from everyday activities like transport, food, and energy use in just a few taps.",
-    "Personalized insights: Receive tailored tips and data-driven suggestions to help you make more sustainable choices.",
-    "Real-time impact visualization: See how your actions affect the environment with dynamic, easy-to-understand visual feedback.",
-    "Goal setting: Set reduction targets and track your progress over time to stay motivated and accountable.",
-    "Smart recommendations: Discover eco-friendly alternatives and habits based on your lifestyle and preferences.",
-    "Data privacy: Your personal information stays secure—data is never shared without your consent.",
-    "Multi-device support: Use the app seamlessly across smartphones, tablets, and web browsers.",
+    "Suivi sans effort: Suivez votre empreinte carbone de vos activités quotidiennes et de votre consommation en quelques clics.",
+    "Insights personnalisés: Recevez des conseils personnalisés et des suggestions basées sur vos choix pour vous aider à faire des choix plus durables.",
+    "Visualisation en temps réel: Voir comment vos actions affectent l'environnement avec des retours visuels dynamiques et faciles à comprendre.",
+    "Objectifs de réduction: Définissez des objectifs de réduction et suivez votre progression dans le temps pour rester motivé et responsable.",
+    "Recommandations intelligentes: Découvrez des alternatives éco-amicales et des habitudes basées sur votre style de vie et vos préférences.",
+    "Confidentialité des données: Vos informations personnelles restent sécurisées—les données ne sont jamais partagées sans votre consentement.",
+    "Support multi-appareils: Utilisez l'application sans difficulté sur smartphones, tablettes et navigateurs web.",
   ],
-  difficulty = "Medium",
+  difficulty = "Moyenne",
 }: ProjectPageCardProps) {
   // Map of tech stacks to icons - to be replaced with dynamic icon loading
   const techIconMap: Record<string, any> = {
@@ -49,7 +49,7 @@ export default function ProjectPageCard({
 
   // Fonction pour rendre les barres de difficulté
   const renderDifficultyBars = () => {
-    if (difficulty === "Easy") {
+    if (difficulty === "Facile") {
       return (
         <div className="flex items-center gap-[2px]">
           <Image
@@ -72,7 +72,7 @@ export default function ProjectPageCard({
           />
         </div>
       );
-    } else if (difficulty === "Medium") {
+    } else if (difficulty === "Moyenne") {
       return (
         <div className="flex items-center gap-[2px]">
           <Image
@@ -154,29 +154,29 @@ export default function ProjectPageCard({
           </div>
         </div>
         <div className="flex flex-col items-end gap-4">
-          <div className="flex items-center h-[20px] w-[118px] bg-black/[0.02] rounded-full px-3">
+          <div className="flex items-center h-[20px] w-32 bg-black/[0.02] rounded-full px-3">
             <span className="font-geist font-normal text-[11px] tracking-[-0.5px] text-black/40 mr-1">
-              {difficulty} Difficulty
+              Difficulté {difficulty}
             </span>
             {renderDifficultyBars()}
           </div>
           <div className="flex gap-3 items-center">
             <a
               href="#"
-              className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[43px] w-[130px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
+              className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-2 text-black/80 h-[43px] w-[130px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)] hover:bg-slate-50 transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
-              View Repository
+              Voir le dépôt
               <Image src={githubIcon} alt="arrowright" width={15} height={15} />
             </a>
             <Button
-              width="120px"
+              width="155px"
               height="43px"
               minWidth={false}
               className="ml-2 text-[13px] font-medium tracking-[-0.5px]"
             >
-              Join Project{" "}
+              Rejoindre le projet
               <Image
                 src={joinedIcon}
                 alt="joined"
@@ -192,18 +192,20 @@ export default function ProjectPageCard({
       {/* Description */}
       <div className="mt-2">
         <h2 className="text-[15px] font-medium font-geist mb-2">
-          Project Description
+          Description du projet
         </h2>
         <p className="text-[13px] font-geist font-normal text-black/70 mb-4">
-          Easily track your carbon footprint from daily activities and
-          consumption. Get smart, actionable insights to live more sustainably
-          and reduce your environmental impact.
+          Suivez votre empreinte carbone de vos activités quotidiennes et de
+          votre consommation. Recevez des conseils personnalisés et des
+          suggestions pour vivre de manière plus durable et réduire votre impact
+          sur l'environnement.
         </p>
         <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
             <>
               <p className="text-[13px] leading-[16px] font-geist font-normal text-black/70">
-                Key benefits of our carbon tracking tool include:
+                Les avantages clés de notre outil de suivi de l'empreinte
+                carbone incluent:
               </p>
               <ul className="text-[13px] leading-[16px] font-geist font-normal text-black/70 list-disc pl-5 space-y-1">
                 {keyBenefits.map((benefit, index) => (
@@ -226,7 +228,7 @@ export default function ProjectPageCard({
       {/* Technical Stack */}
       <div className=" pt-4 ">
         <h3 className="text-[15px] font-medium font-geist mb-3">
-          Technical Stack
+          Stack Technique
         </h3>
         <div className="flex gap-3">
           {techStacks.length > 0 ? (

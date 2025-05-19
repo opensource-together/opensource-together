@@ -3,7 +3,7 @@ import validationIcon from "@/shared/icons/validation-icon.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Badge } from "../types/projectTypes";
+import { Badge } from "../types/ProjectTypes";
 
 interface RoleCardProps {
   title: string;
@@ -18,7 +18,7 @@ const RoleCard: React.FC<RoleCardProps> = ({
   title,
   description,
   badges = [],
-  buttonLabel = "Apply for role",
+  buttonLabel = "Postuler pour le rôle",
   buttonHref = "#",
   experienceBadge,
 }) => {

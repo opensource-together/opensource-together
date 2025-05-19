@@ -1,4 +1,4 @@
-import { Project } from "../types/projectTypes";
+import { Project } from "../types/ProjectTypes";
 
 export const mockProjects: Project[] = [
   {
@@ -6,9 +6,9 @@ export const mockProjects: Project[] = [
     slug: "awesome-open-source",
     title: "Awesome Open Source",
     description:
-      "A collaborative platform for open source enthusiasts to discover and contribute to exciting projects",
+      "Une plateforme collaborative pour les amateurs d'open source pour découvrir et contribuer à des projets excitants",
     longDescription:
-      "Awesome Open Source is a platform designed to connect developers with open source projects. Our mission is to make open source contribution more accessible and enjoyable for everyone, from beginners to experienced developers. We believe in the power of collaboration and community-driven development.",
+      "Awesome Open Source est une plateforme conçue pour connecter les développeurs aux projets open source. Notre mission est de rendre la contribution open source plus accessible et agréable pour tous, des débutants aux développeurs expérimentés. Nous croyons dans la puissance de la collaboration et du développement communautaire.",
     status: "PUBLISHED",
     techStacks: [
       { id: "1", name: "React", iconUrl: "/icons/react.svg" },
@@ -20,27 +20,27 @@ export const mockProjects: Project[] = [
     roles: [
       {
         id: "1",
-        title: "Back-end Developer",
+        title: "Developeur Backend",
         description:
-          "We're hiring a Backend Developer to build robust, scalable server-side systems and APIs. You'll collaborate with cross-functional teams to deliver reliable backend systems using technologies like Node.js, MongoDB, and Express.",
+          "Nous recrutons un Developeur Backend pour construire des systèmes et API robustes et évolutifs côté serveur. Vous collaborerez avec des équipes interfonctionnelles pour livrer des systèmes backends fiables en utilisant des technologies comme Node.js, MongoDB et Express.",
         badges: [{ label: "MongoDB", color: "#00D5BE", bgColor: "#CBFBF1" }],
-        experienceBadge: "3+ Years Experience",
+        experienceBadge: "+3 Ans d'expérience",
       },
       {
         id: "2",
-        title: "UX Designer",
+        title: "Designer UX",
         description:
-          "We're looking for a UX Designer to craft intuitive, user-centered experiences across web and mobile platforms.\nYou'll collaborate with product and dev teams to turn insights into wireframes, prototypes, and seamless user journeys.",
+          "Nous recrutons un Designer UX pour créer des expériences utilisateur intuitives et centrées sur l'utilisateur sur les plateformes web et mobiles. Vous collaborerez avec les équipes de produit et de développement pour transformer les insights en wireframes, prototypes et parcours utilisateur fluides.",
         badges: [{ label: "Design", color: "#FDA5D5", bgColor: "#FDF2F8" }],
-        experienceBadge: "2+ Years Experience",
+        experienceBadge: "+2 Ans d'expérience",
       },
       {
         id: "3",
-        title: "Front-end Developer",
+        title: "Developeur Frontend",
         description:
-          "We're looking for a Frontend Developer to build responsive, high-quality user interfaces using modern web technologies.\nYou'll be responsible for turning design concepts into fast, accessible, and interactive digital experiences.",
+          "Nous recrutons un Developeur Frontend pour construire des interfaces utilisateur réactives et de haute qualité en utilisant les technologies web modernes. Vous serez responsable de la transformation des concepts de design en expériences numériques rapides, accessibles et interactives.",
         badges: [{ label: "React", color: "#00BCFF", bgColor: "#DFF2FE" }],
-        experienceBadge: "1+ Year Experience",
+        experienceBadge: "+1 An d'expérience",
       },
     ],
     socialLinks: [
@@ -54,9 +54,9 @@ export const mockProjects: Project[] = [
       forks: 78,
     },
     keyBenefits: [
-      "Join a vibrant community of passionate developers",
-      "Work on a project that impacts thousands of developers daily",
-      "Opportunity to grow your skills and network",
+      "Rejoignez une communauté active de développeurs passionnés",
+      "Travailler sur un projet qui impacte quotidiennement des milliers de développeurs",
+      "Opportunité de grandir et de se connecter avec des personnes talentueuses",
     ],
   },
   {

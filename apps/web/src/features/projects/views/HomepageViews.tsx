@@ -91,9 +91,9 @@ export default function HomepageViews() {
             <ProjectFilters
               filters={[
                 { label: "", value: "Plus Récent", isSortButton: true },
-                { label: "Technology", value: "" },
-                { label: "Roles", value: "" },
-                { label: "Difficulty", value: "" },
+                { label: "Technologie", value: "" },
+                { label: "Rôle", value: "" },
+                { label: "Difficulté", value: "" },
               ]}
             />
             <ProjectSearchBar />

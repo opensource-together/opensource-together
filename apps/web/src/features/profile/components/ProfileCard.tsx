@@ -65,9 +65,9 @@ export default function ProfileCard() {
   };
 
   const skills: Skill[] = [
-    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
-    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
-    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
+    { name: "Developeur Frontend", color: "#2B7FFF", bgColor: "#EFF6FF" },
+    { name: "Designer UX", color: "#FF8904", bgColor: "#FFFBEB" },
+    { name: "Developeur Backend", color: "#00C950", bgColor: "#F0FDF4" },
   ];
 
   return (
@@ -85,24 +85,26 @@ export default function ProfileCard() {
           </div>
           <div>
             <h2 className="text-[24px] font-medium">Byron Love</h2>
-            <p className="text-[11px] text-gray-500">Joined April 25, 2025</p>
+            <p className="text-[11px] text-gray-500">
+              Rejoint le 25 avril 2025
+            </p>
           </div>
         </div>
-        <button className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[35px] w-[100px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)]">
-          Edit Profile
+        <button className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[35px] px-4 border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)] hover:bg-slate-50 transition-colors">
+          Modifier le profil
         </button>
       </div>
 
       <p className="text-sm text-gray-700 mb-6">
-        Fullstack developer crafting clean, efficient code for modern web
-        experiences
+        Développeur fullstack passionné par la création de code clair et
+        performant pour des expériences web modernes
       </p>
 
       {/* Line */}
       <div className="border-t border-dashed border-[black]/10 my-7" />
 
       <div className="mb-6">
-        <h3 className="text-[15px] font-medium mb-4">Technical Skills</h3>
+        <h3 className="text-[15px] font-medium mb-4">Compétences techniques</h3>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, index) => (
             <div
@@ -121,13 +123,13 @@ export default function ProfileCard() {
 
       <div>
         <div className="flex items-center justify-between mb-7">
-          <h3 className="text-[15px] font-medium">Contribution Activity</h3>
+          <h3 className="text-[15px] font-medium">Activité de contribution</h3>
           <div className="flex items-center gap-2">
-            <span className="text-[12px] text-[#000000]/70">2023-2024</span>
-            <select className="text-[12px] border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-4">
-              <option>Current</option>
-              <option>Last Year</option>
-              <option>All Time</option>
+            <span className="text-[12px] text-[#000000]/70">2024-2025</span>
+            <select className="text-[12px] border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-3">
+              <option>Actuel</option>
+              <option>Année dernière</option>
+              <option>Tout le temps</option>
             </select>
           </div>
         </div>
@@ -148,7 +150,7 @@ export default function ProfileCard() {
         </div>
 
         <p className="text-[12px] text-[#000000]/70">
-          1,268 submissions in the last year
+          1,268 soumissions depuis l'année dernière
         </p>
       </div>
     </div>

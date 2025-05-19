@@ -36,7 +36,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({
   title = "EcoTrack",
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud",
+  description = "Un projet qui aide les utilisateurs à suivre et réduire leur empreinte carbone grâce aux choix quotidiens",
   techStack = [
     { icon: typescriptIcon, alt: "TypeScript" },
     { icon: reactIcon, alt: "React" },
@@ -49,9 +49,9 @@ export default function ProjectCard({
   showCreator = true,
   showStars = true,
   roles = [
-    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
-    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
-    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
+    { name: "Developeur Frontend", color: "#2B7FFF", bgColor: "#EFF6FF" },
+    { name: "Designer UX", color: "#FF8904", bgColor: "#FFFBEB" },
+    { name: "Developeur Backend", color: "#00C950", bgColor: "#F0FDF4" },
   ],
   roleCount = 5,
   showRoles = true,
@@ -125,7 +125,7 @@ export default function ProjectCard({
         <div className="flex flex-wrap items-center gap-2 text-[11px] mt-5">
           <div className="text-[10px] font-medium flex items-center gap-1 mr-2">
             <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
-            {roleCount} Open Roles
+            {roleCount} Rôles disponibles
           </div>
 
           {roles.map((role, index) => (

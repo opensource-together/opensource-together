@@ -41,7 +41,7 @@ interface ProjectCardProps {
 export default function ProjectCard({
   projectId = "1",
   title = "EcoTrack",
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud",
+  description = "Un projet qui aide les utilisateurs à suivre et réduire leur empreinte carbone grâce aux choix quotidiens",
   techStack = [
     { icon: typescriptIcon, alt: "TypeScript" },
     { icon: reactIcon, alt: "React" },
@@ -114,7 +114,7 @@ export default function ProjectCard({
             </span>
           )}
           {showStars && (
-            <span className="flex items-center gap-1 border rounded-[3px] border-[black]/10 flex items-center justify-center gap-1 px-[5px] py-[1px]">
+            <span className="flex items-center gap-1 border rounded-[3px] border-[black]/10 justify-center px-[5px] py-[1px]">
               <span className="inline-flex items-center text-[black]/50">
                 {stars}
               </span>
@@ -165,7 +165,7 @@ export default function ProjectCard({
                 href={`/projects/${projectId}`}
                 className="text-[12px] font-semibold ml-auto flex items-center gap-1 hover:opacity-80 transition-opacity"
               >
-                View Project{" "}
+                Voir le projet{" "}
                 <Image
                   src={arrowupright}
                   alt="arrowupright"

@@ -15,22 +15,22 @@ export default function ProfileSidebar() {
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
             <Image src={githubIcon} alt="GitHub" width={15} height={19} />
-            <span className="text-[14px] text-[#000000]/70">@zinedine4567</span>
+            <span className="text-[14px] text-[#000000]/70">@byronlove111</span>
           </div>
           <div className="flex items-center gap-3">
             <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
-            <span className="text-[14px] text-[#000000]/70">@zinedine4567</span>
+            <span className="text-[14px] text-[#000000]/70">@byronlove111</span>
           </div>
           <div className="flex items-center gap-3">
             <Image src={twitterIcon} alt="X/Twitter" width={15} height={15} />
-            <span className="text-[14px] text-[#000000]/70">@zinedine4567</span>
+            <span className="text-[14px] text-[#000000]/70">@byronlove111</span>
           </div>
         </div>
       </div>
 
       {/* Community Stats Section */}
       <div>
-        <h2 className="text-[18px] font-medium mb-3">Community Stats</h2>
+        <h2 className="text-[18px] font-medium mb-3">Stats OST</h2>
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
             <Image
@@ -39,8 +39,8 @@ export default function ProfileSidebar() {
               width={15}
               height={13}
             />
-            <span className="text-[12px] text-[#000000]/70">
-              Joined Projects{" "}
+            <span className="text-[14px] text-[#000000]/70">
+              Projets rejoins{" "}
               <span className="text-[14px] text-black font-medium">5</span>
             </span>
           </div>
@@ -59,7 +59,7 @@ export default function ProfileSidebar() {
               height={15}
             />
             <span className="text-[14px] text-[#000000]/70">
-              Created Projects{" "}
+              Projets créés{" "}
               <span className="text-[14px] text-black font-medium">3</span>
             </span>
           </div>

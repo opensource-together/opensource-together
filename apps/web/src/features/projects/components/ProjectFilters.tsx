@@ -16,15 +16,15 @@ const FilterButton: React.FC<FilterButtonProps> = ({
   isSortButton = false,
 }) => {
   return (
-    <button className="h-[35px] px-3 flex items-center gap-1 font-geist font-semibold text-[13px] border border-[black]/5 rounded-[5px] bg-white hover:bg-[#F9F9F9] transition-colors whitespace-nowrap">
+    <button className="h-[35px] cursor-pointer px-3 flex items-center gap-1 font-geist font-semibold text-[13px] border border-[black]/5 rounded-[5px] bg-white hover:bg-[#F9F9F9] transition-colors whitespace-nowrap">
       {isSortButton && (
         <span className="font-light text-[black]/50 hidden sm:inline">
-          Sort by:{" "}
+          Trier par:{" "}
         </span>
       )}
       {label && !isSortButton && (
         <span className="font-light text-[black] hidden sm:inline">
-          {label}:{" "}
+          {label}{" "}
         </span>
       )}
       <span className="font-light">{value}</span>

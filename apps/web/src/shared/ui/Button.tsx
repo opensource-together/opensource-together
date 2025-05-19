@@ -40,7 +40,7 @@ export default function Button({
 
   return (
     <button
-      className={`cursor-pointer font-geist font-medium text-[13px] py-2 px-4 text-white flex items-center justify-center gap-2 bg-[#0d0d0d] shadow-inner-dark border-[1px] border-[#000000] hover:shadow-none hover:bg-[#0d0d0d] transition-all duration-200 rounded-[7px] ${widthClass} ${heightClass} ${radiusClass} ${minWidthClass} ${className}`}
+      className={`cursor-pointer font-geist font-medium text-[13px] py-2 px-4 text-white flex items-center justify-center gap-2 bg-[#0d0d0d] shadow-inner-dark border-[1px] border-[#000000] hover:shadow-none hover:bg-[#0d0d0d]/80 transition-all duration-200 rounded-[7px] ${widthClass} ${heightClass} ${radiusClass} ${minWidthClass} ${className}`}
       style={style}
       {...props}
     >
