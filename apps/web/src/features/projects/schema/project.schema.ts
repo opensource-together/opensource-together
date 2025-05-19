@@ -1,20 +1,17 @@
 import { z } from "zod";
 
-// Schéma pour les technologies
 const techStackSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Nom de technologie requis"),
   iconUrl: z.string().optional(),
 });
 
-// Schéma pour les badges
 const badgeSchema = z.object({
   label: z.string(),
   color: z.string(),
   bgColor: z.string(),
 });
 
-// Schéma pour les rôles
 const roleSchema = z.object({
   title: z.string().min(1, "Titre du rôle requis"),
   description: z.string().min(1, "Description du rôle requise"),
@@ -22,7 +19,6 @@ const roleSchema = z.object({
   experienceBadge: z.string().optional(),
 });
 
-// Schéma pour les liens sociaux
 const socialLinkSchema = z.object({
   type: z.enum(["github", "website", "discord", "twitter", "other"], {
     errorMap: () => ({ message: "Type de lien social invalide" }),
@@ -30,7 +26,6 @@ const socialLinkSchema = z.object({
   url: z.string().url("URL invalide"),
 });
 
-// Schéma principal du projet
 export const projectSchema = z.object({
   title: z.string().min(1, "Le titre du projet est requis"),
   description: z.string().min(1, "Une courte description est requise"),
@@ -44,5 +39,4 @@ export const projectSchema = z.object({
   socialLinks: z.array(socialLinkSchema).optional(),
 });
 
-// Type inféré du schéma pour l'utilisation avec React Hook Form
-export type ProjectFormData = z.infer<typeof projectSchema>; 
+export type ProjectSchema = z.infer<typeof projectSchema>;
