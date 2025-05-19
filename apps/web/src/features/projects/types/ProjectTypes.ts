@@ -24,9 +24,9 @@ export interface SocialLink {
 }
 
 export interface CommunityStats {
-  contributors: number;
-  stars: number;
-  forks: number;
+  contributors?: number;
+  stars?: number;
+  forks?: number;
 }
 
 // Interface Project complète
@@ -34,6 +34,7 @@ export interface Project {
   id?: string;
   slug?: string;
   title: string;
+  image?: string;
   description: string;
   longDescription?: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";

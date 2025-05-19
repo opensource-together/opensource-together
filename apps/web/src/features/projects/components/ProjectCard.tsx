@@ -1,12 +1,7 @@
 import arrowupright from "@/shared/icons/arrow-up-right.svg";
 import emptystarIcon from "@/shared/icons/empty-star.svg";
 import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
-import exemplebyronIcon from "@/shared/icons/exemplebyronIcon.svg";
-import mongodbIcon from "@/shared/icons/mongodb.svg";
 import peopleicon from "@/shared/icons/people.svg";
-import reactIcon from "@/shared/icons/react.svg";
-import tailwindIcon from "@/shared/icons/tailwindcss.svg";
-import typescriptIcon from "@/shared/icons/typescript (2).svg";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,41 +22,30 @@ interface ProjectCardProps {
   description?: string;
   techStack?: TechIcon[];
   showTechStack?: boolean;
-  creator?: string;
   stars?: number;
-  showCreator?: boolean;
   showStars?: boolean;
   roles?: Role[];
   roleCount?: number;
   showRoles?: boolean;
   showViewProject?: boolean;
   className?: string;
+  image?: string;
 }
 
 export default function ProjectCard({
   projectId = "1",
-  title = "EcoTrack",
-  description = "Un projet qui aide les utilisateurs à suivre et réduire leur empreinte carbone grâce aux choix quotidiens",
-  techStack = [
-    { icon: typescriptIcon, alt: "TypeScript" },
-    { icon: reactIcon, alt: "React" },
-    { icon: mongodbIcon, alt: "MongoDB" },
-    { icon: tailwindIcon, alt: "TailwindCSS" },
-  ],
+  title = "LeetGrind",
+  description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
+  techStack = [],
   showTechStack = true,
-  creator = "Byron Love",
-  stars = 55,
-  showCreator = true,
+  stars = 0,
   showStars = true,
-  roles = [
-    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
-    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
-    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
-  ],
-  roleCount = 5,
+  roles = [],
+  roleCount = 0,
   showRoles = true,
   showViewProject = true,
   className = "",
+  image,
 }: ProjectCardProps) {
   return (
     <section
@@ -69,12 +53,24 @@ export default function ProjectCard({
     >
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
-          <Image
-            src={emptyprojecticon}
-            alt="emptyprojecticon"
-            width={50}
-            height={50}
-          />
+          <div className="w-[50px] h-[50px] relative">
+            {image ? (
+              <Image
+                src={image}
+                alt={`${title} icon`}
+                width={50}
+                height={50}
+                className="rounded-lg"
+              />
+            ) : (
+              <Image
+                src={emptyprojecticon}
+                alt="emptyprojecticon"
+                width={50}
+                height={50}
+              />
+            )}
+          </div>
 
           <div className="flex flex-col">
             <div className="text-lg font-semibold">{title}</div>
@@ -99,20 +95,6 @@ export default function ProjectCard({
         </div>
 
         <div className="flex gap-1 items-end justify-center text-sm">
-          {showCreator && (
-            <span className="border rounded-[3px] border-[black]/10 flex items-center justify-center gap-1 px-2 py-[2.5px]">
-              <Image
-                className="mb-[0.5px]"
-                src={exemplebyronIcon}
-                alt="Byron Love"
-                width={13}
-                height={13}
-              />
-              <span className="inline-flex items-center text-[12px]">
-                {creator}
-              </span>
-            </span>
-          )}
           {showStars && (
             <span className="flex items-center gap-1 border rounded-[3px] border-[black]/10 justify-center px-[5px] py-[1px]">
               <span className="inline-flex items-center text-[black]/50">

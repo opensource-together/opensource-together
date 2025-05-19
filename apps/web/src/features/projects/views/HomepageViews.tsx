@@ -1,78 +1,37 @@
+"use client";
 import Footer from "@/shared/layout/Footer";
 import Billboard from "@/shared/ui/Billboard";
 import Pagination from "@/shared/ui/Pagination";
 import ProjectCard from "../components/ProjectCard";
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectSearchBar from "../components/ProjectSearchBar";
-import SkeletonProjectCard from "../components/SkeletonProjectCard";
-import { useProjects } from "../hooks/useProjects";
+import { mockProjects } from "../data/mockProjects";
 
 export default function HomepageViews() {
-  // Utilisation du hook TanStack Query pour récupérer les projets
-  const { data: projects, isLoading, isError, error } = useProjects();
-
-  // Fonction pour rendre la grille de projets selon l'état de chargement
+  // Fonction pour rendre la grille de projets
   const renderProjectGrid = () => {
-    if (isLoading) {
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-          {[...Array(6)].map((_, index) => (
-            <SkeletonProjectCard key={`skeleton-${index}`} />
-          ))}
-        </div>
-      );
-    }
-
-    if (isError) {
-      return (
-        <div className="flex flex-col items-center justify-center py-10">
-          <div className="text-red-500 mb-4">
-            Une erreur est survenue:{" "}
-            {error instanceof Error ? error.message : "Erreur inconnue"}
-          </div>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            onClick={() => window.location.reload()}
-          >
-            Réessayer
-          </button>
-        </div>
-      );
-    }
-
-    // Si aucun projet n'est disponible, afficher des cartes statiques au lieu d'un message
-    if (!projects || projects.length === 0) {
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-        </div>
-      );
-    }
-
-    // Affichage des projets avec les données réelles
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-        {projects.map((project) => (
+        {mockProjects.map((project) => (
           <ProjectCard
             key={project.id}
+            projectId={project.id}
             title={project.title}
             description={project.description}
-            // Conversion des techStacks du format backend au format attendu par le composant
+            image={project.image}
             techStack={project.techStacks
               ?.filter((tech) => typeof tech.iconUrl === "string")
               .map((tech) => ({
                 icon: tech.iconUrl as string,
                 alt: tech.name,
               }))}
+            stars={project.communityStats?.stars || 0}
+            roles={project.roles?.map((role) => ({
+              name: role.title,
+              color: role.badges[0]?.color || "#000000",
+              bgColor: role.badges[0]?.bgColor || "#F3F3F3",
+            }))}
+            roleCount={project.roles?.length || 0}
           />
         ))}
       </div>
@@ -99,15 +58,13 @@ export default function HomepageViews() {
             <ProjectSearchBar />
           </div>
 
-          {/* Grille de projets rendue dynamiquement */}
+          {/* Grille de projets */}
           {renderProjectGrid()}
 
-          {/* Pagination toujours affichée sauf en cas de chargement ou d'erreur */}
-          {!isLoading && !isError && (
-            <div className="mt-25">
-              <Pagination />
-            </div>
-          )}
+          {/* Pagination */}
+          <div className="mt-25">
+            <Pagination />
+          </div>
         </div>
 
         <div className="mt-20 px-4 sm:px-6 md:px-8">
