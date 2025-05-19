@@ -13,9 +13,9 @@ export class CreateProjectDtoRequest {
   @IsNotEmpty()
   link: string;
 
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  status: 'PUBLISHED' | 'DRAFT';
+  projectRoles: object[];
 
   @IsArray()
   @IsNotEmpty()
