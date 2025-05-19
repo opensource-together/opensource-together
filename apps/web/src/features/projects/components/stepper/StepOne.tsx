@@ -1,6 +1,64 @@
+import React, { useState } from "react";
 import Button from "@/shared/ui/Button";
 
 export default function StepOne({ onNext }: { onNext: () => void }) {
+  const [showForm, setShowForm] = useState(false);
+  const [projectName, setProjectName] = useState("");
+  const [description, setDescription] = useState("");
+  const [website, setWebsite] = useState("");
+
+  if (showForm) {
+    return (
+      <div className="flex flex-col items-center bg-white p-10 rounded-[20px] font-geist">
+        <h2 className="text-black font-geist font-medium text-[30px] mb-2">Fill in your information</h2>
+        <p className="text-[15px] text-black/70 mb-8 text-center">
+          Fill in the information in regards of your github repository below
+        </p>
+        <form className="w-full flex flex-col gap-5" onSubmit={e => { e.preventDefault(); onNext(); }}>
+          <div>
+            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">Project Name</label>
+            <input
+              className="w-[425px] h-[40px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+              value={projectName}
+              onChange={e => setProjectName(e.target.value)}
+              maxLength={100}
+            />
+          </div>
+          <div>
+            <div className="flex items-center justify-between mr-2 mb-1">
+              <label className="text-black font-geist font-medium text-[18px] tracking-tight">Description</label>
+              <span className="text-[10px] text-black/20 font-normal">{description.length}/250</span>
+            </div>
+            <textarea
+              className="w-[425px] h-[103px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
+              placeholder="Describe your project"
+              value={description}
+              onChange={e => setDescription(e.target.value.slice(0, 250))}
+              maxLength={250}
+            />
+          </div>
+          <div>
+            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">Link to the website</label>
+            <input
+              className="w-[425px] h-[40px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+              value={website}
+              onChange={e => setWebsite(e.target.value)}
+            />
+          </div>
+          <Button
+            width="425px"
+            height="43px"
+            radius="10px"
+            className="mt-6"
+            type="submit"
+          >
+            Confirm information
+          </Button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center bg-white p-10 rounded-[20px]">
       <h2 className="text-[30px] font-medium tracking-tight font-geist text-black mb-2">Choose your Method</h2>
@@ -20,7 +78,7 @@ export default function StepOne({ onNext }: { onNext: () => void }) {
       <button
         className="w-[425px] h-[43px] rounded-[10px] border border-black/10 bg-white text-black text-[15px] font-medium"
         style={{ boxShadow: "0 2px 5px rgba(0,0,0,0.03)" }}
-        onClick={onNext}
+        onClick={() => setShowForm(true)}
       >
         Start from scratch
       </button>
