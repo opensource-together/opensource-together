@@ -11,7 +11,7 @@ export default function Footer() {
         {/* Bouton en bas à gauche avec marge */}
         <div className="absolute bottom-8 left-10">
           <Button className="flex items-center gap-2">
-            Star our GitHub
+            Star notre GitHub
             <Image src={githubWhite} alt="GitHub" width={18} height={18} />
           </Button>
         </div>
@@ -34,13 +34,13 @@ export default function Footer() {
         {/* Center */}
         <div className="flex items-center gap-8 text-[13px] text-black font-geist">
           <a href="#" className="hover:underline">
-            Home
+            Accueil
           </a>
           <a href="#" className="hover:underline">
-            Profile
+            Projets
           </a>
           <a href="#" className="hover:underline">
-            Marketing Website
+            Blog
           </a>
         </div>
         {/* Right */}

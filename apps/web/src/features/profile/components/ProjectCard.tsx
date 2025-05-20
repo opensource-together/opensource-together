@@ -1,11 +1,7 @@
 import emptystarIcon from "@/shared/icons/empty-star.svg";
-import exemplebyronIcon from "@/shared/icons/exemplebyronIcon.svg";
-import mongodbIcon from "@/shared/icons/mongodb.svg";
 import peopleicon from "@/shared/icons/people.svg";
-import reactIcon from "@/shared/icons/react.svg";
-import tailwindIcon from "@/shared/icons/tailwindcss.svg";
-import typescriptIcon from "@/shared/icons/typescript (2).svg";
 import Image from "next/image";
+import { mockProjects } from "../../projects/data/mockProjects";
 
 interface TechIcon {
   icon: string;
@@ -19,44 +15,35 @@ interface Role {
 }
 
 interface ProjectCardProps {
+  projectId?: string;
   title?: string;
   description?: string;
   techStack?: TechIcon[];
   showTechStack?: boolean;
-  creator?: string;
   stars?: number;
-  showCreator?: boolean;
   showStars?: boolean;
   roles?: Role[];
   roleCount?: number;
   showRoles?: boolean;
   showViewProject?: boolean;
   className?: string;
+  image?: string;
 }
 
-export default function ProjectCard({
-  title = "EcoTrack",
-  description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud",
-  techStack = [
-    { icon: typescriptIcon, alt: "TypeScript" },
-    { icon: reactIcon, alt: "React" },
-    { icon: mongodbIcon, alt: "MongoDB" },
-    { icon: tailwindIcon, alt: "TailwindCSS" },
-  ],
+export function ProjectCard({
+  projectId = "1",
+  title = "LeetGrind",
+  description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
+  techStack = [],
   showTechStack = true,
-  creator = "Byron Love",
-  stars = 55,
-  showCreator = true,
+  stars = 0,
   showStars = true,
-  roles = [
-    { name: "Front-end Developer", color: "#2B7FFF", bgColor: "#EFF6FF" },
-    { name: "UX Designer", color: "#FF8904", bgColor: "#FFFBEB" },
-    { name: "MongoDB", color: "#00C950", bgColor: "#F0FDF4" },
-  ],
-  roleCount = 5,
+  roles = [],
+  roleCount = 0,
   showRoles = true,
   showViewProject = true,
   className = "",
+  image,
 }: ProjectCardProps) {
   return (
     <section
@@ -64,7 +51,19 @@ export default function ProjectCard({
     >
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
-          <div className="w-[50px] h-[50px] bg-gray-100 rounded-sm" />
+          <div className="w-[50px] h-[50px] relative">
+            {image ? (
+              <Image
+                src={image}
+                alt={`${title} icon`}
+                width={50}
+                height={50}
+                className="rounded-lg"
+              />
+            ) : (
+              <div className="w-[50px] h-[50px] bg-gray-100 rounded-sm" />
+            )}
+          </div>
 
           <div className="flex flex-col">
             <div className="text-lg font-medium">{title}</div>
@@ -89,20 +88,8 @@ export default function ProjectCard({
         </div>
 
         <div className="flex gap-0 items-center text-sm">
-          {showCreator && (
-            <div className="flex items-center gap-1.5 border border-[black]/10 rounded-[3px] px-1.5 py-1">
-              <Image
-                className="mb-[0.5px]"
-                src={exemplebyronIcon}
-                alt="Byron Love"
-                width={13}
-                height={13}
-              />
-              <span className="text-[12px] text-[black]/80">{creator}</span>
-            </div>
-          )}
           {showStars && (
-            <div className="flex items-center ml-2 border border-[black]/10 rounded-[3px] px-1 py-0.5">
+            <div className="flex items-center border border-[black]/10 rounded-[3px] px-1 py-0.5">
               <span className="text-[14px] text-[black]/50 mr-1">{stars}</span>
               <div className="w-3.5 h-3.5">
                 <Image src={emptystarIcon} alt="stars" width={14} height={14} />
@@ -125,7 +112,7 @@ export default function ProjectCard({
         <div className="flex flex-wrap items-center gap-2 text-[11px] mt-5">
           <div className="text-[10px] font-medium flex items-center gap-1 mr-2">
             <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
-            {roleCount} Open Roles
+            {roleCount} Rôles disponibles
           </div>
 
           {roles.map((role, index) => (
@@ -141,18 +128,37 @@ export default function ProjectCard({
           {roles.length > 3 && (
             <span className="text-[black]/20">+{roles.length - 3}</span>
           )}
-
-          {/* View Project hidden for now
-
-            {showViewProject && (
-              <div className="text-[12px] font-medium ml-auto flex items-center gap-1">
-                View Project <Image src={arrowupright} alt="arrowupright" width={10} height={10} />
-              </div>
-            )}
-
-          */}
         </div>
       </article>
     </section>
   );
 }
+
+export function ProjectList() {
+  return (
+    <div className="flex flex-col gap-4">
+      {mockProjects.slice(0, 3).map((project) => (
+        <ProjectCard
+          key={project.id}
+          projectId={project.id}
+          title={project.title}
+          description={project.description}
+          image={project.image}
+          stars={project.communityStats?.stars ?? 0}
+          roles={project.roles?.map(role => ({
+            name: role.title,
+            color: role.badges[0]?.color ?? "#000000",
+            bgColor: role.badges[0]?.bgColor ?? "#FFFFFF"
+          })) ?? []}
+          roleCount={project.roles?.length ?? 0}
+          techStack={project.techStacks?.map(tech => ({
+            icon: tech.iconUrl ?? "",
+            alt: tech.name
+          })) ?? []}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default ProjectCard;

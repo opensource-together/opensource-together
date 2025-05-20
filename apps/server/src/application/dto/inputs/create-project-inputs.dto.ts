@@ -3,7 +3,6 @@ export class CreateProjectDtoInput {
   title: string;
   description: string;
   link: string | null;
-  status: string;
-  userId: string;
+  ownerId: string;
   techStacks: TechStackDto[];
 }

@@ -19,9 +19,8 @@ export default function Billboard() {
       <div className="absolute bottom-8 left-10 text-left">
         <div className="font-geist text-[40px] font-medium">Change Log #04</div>
         <div className="font-geist text-[14px] text-[#000000]/70 font-light max-w-[500px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam,
+          Version 0.1.2 : nouveau footer, navigation améliorée, et support
+          Docker Compose. Plus d'infos sur GitHub !
         </div>
       </div>
       <div className="absolute bottom-12 right-10 flex items-center gap-2">

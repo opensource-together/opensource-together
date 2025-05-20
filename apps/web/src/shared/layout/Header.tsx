@@ -1,6 +1,8 @@
-import { useCreateProject } from "@/features/projects/hooks/useProjects";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import beta from "../icons/beta.svg";
 import crossIcon from "../icons/crossIcon.svg";
@@ -9,26 +11,40 @@ import openSource from "../icons/opensource.svg";
 import x from "../icons/x.svg";
 import Button from "../ui/Button";
 
+interface NavLinkProps {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+function NavLink({ href, children, className = "" }: NavLinkProps) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <Link
+      href={href}
+      className={`flex items-center justify-center px-[10px] py-[2px] transition-all duration-200 ${
+        isActive
+          ? "bg-[black]/5 rounded-[3px]"
+          : "text-[black]/70 hover:bg-[black]/5 hover:rounded-[3px]"
+      } ${className}`}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function Header({
   onViewChange,
 }: {
   onViewChange?: Dispatch<SetStateAction<string>>;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const mutation = useCreateProject();
+  const router = useRouter();
 
   const handleCreate = () => {
-    mutation.mutate({
-      title: "titi3",
-      description: "Recherche de tout ce qui est possible",
-      status: "PUBLISHED",
-      techStacks: [
-        { id: "1", name: "python", iconUrl: "http://python" },
-        { id: "2", name: "typescript", iconUrl: "http://typescript" },
-        { id: "3", name: "java", iconUrl: "http://java" },
-        { id: "7", name: "Docker", iconUrl: "http://Docker" },
-      ],
-    });
+    router.push("/projects/new");
   };
 
   const handleViewChange = (view: string) => {
@@ -43,32 +59,30 @@ export default function Header({
   return (
     <header className="font-geist text-[13px] font-normal h-auto min-h-[60px] md:min-h-[70px] lg:h-[81px] px-4 sm:px-6 md:px-10 lg:px-[73px] flex flex-wrap items-center justify-between py-3 md:py-0">
       <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
-        <article className="flex items-center gap-2">
-          <Image
-            src={openSource}
-            alt="openSource"
-            width={130}
-            height={26}
-            className="w-auto h-auto max-h-[26px] md:max-h-[30px] lg:max-h-[35px]"
-          />
-          <Image
-            src={beta}
-            alt="beta"
-            width={24}
-            height={10}
-            className="w-auto h-auto max-h-[10px] md:max-h-[11px] lg:max-h-[12px]"
-          />
-        </article>
+        <Link href="/">
+          <article className="flex items-center gap-2">
+            <Image
+              src={openSource}
+              alt="openSource"
+              width={130}
+              height={26}
+              className="w-auto h-auto max-h-[26px] md:max-h-[30px] lg:max-h-[35px]"
+            />
+            <Image
+              src={beta}
+              alt="beta"
+              width={24}
+              height={10}
+              className="w-auto h-auto max-h-[10px] md:max-h-[11px] lg:max-h-[12px]"
+            />
+          </article>
+        </Link>
 
         {/* Navigation pour desktop et tablette */}
         <nav className="hidden md:flex items-center space-x-3 lg:space-x-6">
-          <div className="flex items-center justify-center bg-[black]/5 w-[55px] h-[20px] rounded-[3px] cursor-pointer">
-            <Link href="/">Home</Link>
-          </div>
-          <Link href="/profile" className="text-[black]/70 cursor-pointer">
-            Profile
-          </Link>
-          <div className="text-[black]/70">My Projects</div>
+          <NavLink href="/">Accueil</NavLink>
+          <NavLink href="/profile">Profil</NavLink>
+          <NavLink href="/my-projects">Mes projets</NavLink>
         </nav>
       </section>
 
@@ -92,21 +106,15 @@ export default function Header({
       <nav
         className={`${mobileMenuOpen ? "flex" : "hidden"} md:hidden flex-col w-full py-3 space-y-3`}
       >
-        <div
-          className="flex items-center justify-center bg-[black]/5 w-full py-1.5 rounded-[3px] cursor-pointer"
-          onClick={() => handleViewChange("projects")}
-        >
+        <NavLink href="/" className="w-full py-1.5">
           Home
-        </div>
-        <Link
-          href="/profile"
-          className="flex items-center justify-center w-full py-1.5 text-[black]/70 cursor-pointer"
-        >
+        </NavLink>
+        <NavLink href="/profile" className="w-full py-1.5">
           Profile
-        </Link>
-        <div className="flex items-center justify-center w-full py-1.5 text-[black]/70">
+        </NavLink>
+        <NavLink href="/my-projects" className="w-full py-1.5">
           My Projects
-        </div>
+        </NavLink>
 
         <div className="flex items-center justify-center space-x-6 py-2">
           <Image
@@ -144,42 +152,32 @@ export default function Header({
 
         <Button
           onClick={handleCreate}
-          disabled={mutation.isPending}
           className="sm:min-w-[140px] md:min-w-[160px] px-3 sm:px-4"
         >
-          {mutation.isPending ? (
-            "Creating…"
-          ) : (
-            <>
-              <span className="hidden sm:inline">Create new Project</span>
-              <span className="inline sm:hidden">New Project</span>
-              <Image src={crossIcon} alt="crossIcon" width={11} height={11} />
-            </>
-          )}
+          <span className="hidden sm:inline">Créer un projet</span>
+          <span className="inline sm:hidden">Nouveau projet</span>
+          <Image
+            src={crossIcon}
+            alt="crossIcon"
+            width={11}
+            height={11}
+            className="ml-0 align-middle"
+          />
         </Button>
-
-        {mutation.isError && (
-          <p className="text-red-500 text-xs sm:text-sm">
-            Error: {mutation.error?.message}
-          </p>
-        )}
-
-        {mutation.isSuccess && mutation.data && (
-          <p className="text-green-600 text-xs sm:text-sm">
-            Project "{mutation.data.title}" created!
-          </p>
-        )}
       </section>
 
       {/* Actions mobile affichées dans le menu */}
       {mobileMenuOpen && (
         <div className="flex md:hidden w-full justify-center mt-3">
-          <Button
-            onClick={handleCreate}
-            disabled={mutation.isPending}
-            className="w-full max-w-[220px]"
-          >
-            {mutation.isPending ? "Creating…" : "New Project"}
+          <Button onClick={handleCreate} className="w-full max-w-[220px]">
+            New Project{" "}
+            <Image
+              src={crossIcon}
+              alt="crossIcon"
+              width={11}
+              height={11}
+              className="ml-0 align-middle"
+            />
           </Button>
         </div>
       )}

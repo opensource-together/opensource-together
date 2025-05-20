@@ -3,7 +3,6 @@ import { Project } from '../project.entity';
 import { TechStack } from '../../techStack/techstack.entity';
 import { Title } from '../title/title.vo';
 import { Description } from '../description/description.vo';
-import { Status } from '../status/status.vo';
 import { Link } from '../link/link.vo';
 
 export class ProjectFactory {
@@ -16,8 +15,7 @@ export class ProjectFactory {
    * @param {string} params.title - The title of the project
    * @param {string} params.description - The description of the project
    * @param {string|null} params.link - Optional URL link for the project
-   * @param {string} params.status - The status of the project
-   * @param {string} params.userId - The ID of the user who owns the project
+   * @param {string} params.ownerId - The ID of the user who owns the project
    * @param {TechStack[]} params.techStacks - Array of technology stacks used in the project
    * @returns {Result<Project>} Result containing either the created Project or an error
    */
@@ -25,20 +23,19 @@ export class ProjectFactory {
     title,
     description,
     link,
-    status,
-    userId,
+    projectRoles,
+    ownerId,
     techStacks,
   }: {
     title: string;
     description: string;
     link: string | null;
-    status: string;
-    userId: string;
+    projectRoles: object[];
+    ownerId: string;
     techStacks: TechStack[];
   }): Result<Project> {
     const titleResult = Title.create(title);
     const descriptionResult = Description.create(description);
-    const statusResult = status ? Status.create(status) : Result.ok(null);
     const linkResult = link ? Link.create(link) : Result.ok(null);
 
     if (!titleResult.success) {
@@ -47,10 +44,6 @@ export class ProjectFactory {
 
     if (!descriptionResult.success) {
       return Result.fail(descriptionResult.error);
-    }
-
-    if (!statusResult.success) {
-      return Result.fail(statusResult.error);
     }
 
     if (!linkResult.success) {
@@ -63,9 +56,9 @@ export class ProjectFactory {
         title: titleResult.value,
         description: descriptionResult.value,
         link: linkResult.value,
-        status: statusResult.value,
-        userId,
+        ownerId,
         techStacks,
+        projectRoles,
       }),
     );
   }
@@ -80,8 +73,7 @@ export class ProjectFactory {
    * @param {string} params.title - The title of the project
    * @param {string} params.description - The description of the project
    * @param {string|null} params.link - Optional URL link for the project
-   * @param {string} params.status - The status of the project
-   * @param {string} params.userId - The ID of the user who owns the project
+   * @param {string} params.ownerId - The ID of the user who owns the project
    * @param {TechStack[]} params.techStacks - Array of technology stacks used in the project
    * @returns {Result<Project>} Result containing either the created Project or an error
    */
@@ -90,21 +82,24 @@ export class ProjectFactory {
     title,
     description,
     link,
-    status,
-    userId,
+    ownerId,
+    projectRoles,
     techStacks,
+    createdAt,
+    updatedAt,
   }: {
     id: string;
     title: string;
     description: string;
     link: string | null;
-    status: string;
-    userId: string;
+    ownerId: string;
+    projectRoles: String[];
     techStacks: TechStack[];
+    createdAt: Date;
+    updatedAt: Date;
   }): Result<Project> {
     const titleResult = Title.create(title);
     const descriptionResult = Description.create(description);
-    const statusResult = status ? Status.create(status) : Result.ok(null);
     const linkResult = link ? Link.create(link) : Result.ok(null);
 
     if (!titleResult.success) {
@@ -113,10 +108,6 @@ export class ProjectFactory {
 
     if (!descriptionResult.success) {
       return Result.fail(descriptionResult.error);
-    }
-
-    if (!statusResult.success) {
-      return Result.fail(statusResult.error);
     }
 
     if (!linkResult.success) {
@@ -129,9 +120,11 @@ export class ProjectFactory {
         title: titleResult.value,
         description: descriptionResult.value,
         link: linkResult.value,
-        status: statusResult.value,
-        userId,
+        ownerId,
         techStacks,
+        projectRoles,
+        createdAt,
+        updatedAt,
       }),
     );
   }

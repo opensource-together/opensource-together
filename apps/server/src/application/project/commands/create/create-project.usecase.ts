@@ -16,9 +16,9 @@ export class CreateProjectCommand implements ICommand {
     public readonly title: string,
     public readonly description: string,
     public readonly link: string | null,
-    public readonly status: string,
     public readonly techStacks: TechStackDto[],
-    public readonly userId: string,
+    public readonly ownerId: string,
+    public readonly projectRoles: object[],
   ) {}
 }
 
@@ -45,6 +45,7 @@ export class CreateProjectCommandHandler
     const project = ProjectFactory.create({
       ...createProjectCommand,
       techStacks: techStacks.value,
+      projectRoles: createProjectCommand.projectRoles,
     });
     if (!project.success) {
       return Result.fail(project.error);
