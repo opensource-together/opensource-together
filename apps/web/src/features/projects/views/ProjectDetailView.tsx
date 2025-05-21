@@ -1,6 +1,6 @@
 "use client";
 
-import Breadcrumb from "@/components/shared/ui/Breadcrumb";
+import Breadcrumb from "@/components/shared/Breadcrumb";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProjectFilters from "../components/ProjectFilters";

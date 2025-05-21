@@ -1,4 +1,4 @@
-import Button from "@/components/shared/ui/Button";
+import Button from "@/components/shared/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

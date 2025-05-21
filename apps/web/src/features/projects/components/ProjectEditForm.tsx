@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/shared/ui/Button";
+import Button from "@/components/shared/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";

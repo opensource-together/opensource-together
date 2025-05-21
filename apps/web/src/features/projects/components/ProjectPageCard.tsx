@@ -1,4 +1,4 @@
-import Button from "@/components/shared/ui/Button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { TechStack } from "../types/projectTypes";
 
@@ -158,26 +158,16 @@ export default function ProjectPageCard({
             {renderDifficultyBars()}
           </div>
           <div className="flex gap-3 items-center">
-            <a
-              href="#"
-              className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-2 text-black/80 h-[43px] w-[130px] border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)] hover:bg-slate-50 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Voir le dépôt
+            <Button variant="outline">
+              Voir le Repository
               <Image
                 src="/icons/github.svg"
                 alt="arrowright"
                 width={15}
                 height={15}
               />
-            </a>
-            <Button
-              width="155px"
-              height="43px"
-              minWidth={false}
-              className="ml-2 text-[13px] font-medium tracking-[-0.5px]"
-            >
+            </Button>
+            <Button>
               Rejoindre le projet
               <Image
                 src="/icons/joined.svg"

@@ -1,10 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import Button from "../ui/Button";
 
 interface NavLinkProps {
   href: string;
@@ -134,29 +134,26 @@ export default function Header({
           src="/icons/github.svg"
           alt="github"
           width={16}
-          height={14}
-          className="w-auto h-auto max-h-[14px]"
+          height={16}
+          className="w-auto h-auto max-h-[16px]"
         />
         <Image
           src="/icons/x-logo.svg"
           alt="x"
           width={16}
-          height={14}
-          className="w-auto h-auto max-h-[14px]"
+          height={16}
+          className="w-auto h-auto max-h-[16px]"
         />
 
-        <Button
-          onClick={handleCreate}
-          className="sm:min-w-[140px] md:min-w-[160px] px-3 sm:px-4"
-        >
-          <span className="hidden sm:inline">Créer un projet</span>
+        <Button onClick={handleCreate}>
+          <span className="hidden sm:inline">Créer un Projet</span>
           <span className="inline sm:hidden">Nouveau projet</span>
           <Image
             src="/icons/cross-icon.svg"
             alt="crossIcon"
             width={11}
             height={11}
-            className="ml-0 align-middle"
+            className="ml-1.5"
           />
         </Button>
       </section>

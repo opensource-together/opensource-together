@@ -1,4 +1,4 @@
-import Button from "@/components/shared/ui/Button";
+import Button from "@/components/shared/Button";
 import { useState } from "react";
 
 export default function StepOne({

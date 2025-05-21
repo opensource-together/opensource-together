@@ -1,7 +1,7 @@
 "use client";
+import Billboard from "@/components/shared/Billboard";
 import Footer from "@/components/shared/layout/Footer";
-import Billboard from "@/components/shared/ui/Billboard";
-import Pagination from "@/components/shared/ui/Pagination";
+import Pagination from "@/components/shared/Pagination";
 import { useEffect, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
 import ProjectFilters from "../components/ProjectFilters";

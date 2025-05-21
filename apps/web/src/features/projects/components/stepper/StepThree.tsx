@@ -1,4 +1,4 @@
-import Button from "@/components/shared/ui/Button";
+import Button from "@/components/shared/Button";
 import Image from "next/image";
 
 export default function StepThree({ onNext }: { onNext: () => void }) {
