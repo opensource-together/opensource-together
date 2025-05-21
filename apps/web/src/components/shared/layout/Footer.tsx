@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import GithubLink from "@/components/ui/githubLink";
-import TwitterLink from "@/components/ui/twitterLink";
 import Image from "next/image";
 import Link from "next/link";
+import GithubLink from "../GithubLink";
+import TwitterLink from "../TwitterLink";
 
 export default function Footer() {
   const navItems = ["Accueil", "Projets", "Blog"];

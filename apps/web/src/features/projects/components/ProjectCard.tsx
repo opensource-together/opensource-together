@@ -1,3 +1,4 @@
+import StackIcon from "@/components/shared/StackIcon";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -159,29 +160,9 @@ export default function ProjectCard({
             {showTechStack && techStack.length > 0 && (
               <div className="flex gap-[3px] mt-1">
                 {techStack.map((tech, index) => {
-                  if (!tech.icon || typeof tech.icon !== "string") return null;
-
-                  let iconSrcToUse = tech.icon;
-                  if (
-                    !tech.icon.startsWith("/") &&
-                    !tech.icon.includes("://") &&
-                    !tech.icon.startsWith("data:")
-                  ) {
-                    iconSrcToUse = `/icons/${tech.icon}`;
-                  }
-
+                  if (!tech.icon) return null;
                   return (
-                    <div
-                      key={index}
-                      className="border border-[black]/10 rounded-[2px] w-[20px] h-[20px] flex items-center justify-center"
-                    >
-                      <Image
-                        src={iconSrcToUse}
-                        alt={tech.alt}
-                        width={14.5}
-                        height={10.22}
-                      />
-                    </div>
+                    <StackIcon key={index} icon={tech.icon} alt={tech.alt} />
                   );
                 })}
               </div>
