@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import GithubLink from "@/components/ui/githubLink";
+import TwitterLink from "@/components/ui/twitterLink";
 import Image from "next/image";
 
 export default function Footer() {
@@ -47,23 +49,8 @@ export default function Footer() {
         </div>
         {/* Right */}
         <div className="flex items-center gap-3">
-          <a href="#" aria-label="GitHub">
-            <Image
-              src="/icons/github.svg"
-              alt="Github"
-              width={17}
-              height={18}
-            />
-          </a>
-          <a href="#" aria-label="X">
-            <Image
-              src="/icons/x-logo.svg"
-              alt="X"
-              width={16}
-              height={17}
-              style={{ filter: "brightness(0) saturate(100%)" }}
-            />
-          </a>
+          <GithubLink url="https://github.com/opensource-together/opensource-together" />
+          <TwitterLink url="https://x.com/OpenSTogether" />
         </div>
       </div>
     </>

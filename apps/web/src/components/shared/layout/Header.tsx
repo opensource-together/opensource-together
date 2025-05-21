@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import GithubLink from "@/components/ui/githubLink";
+import TwitterLink from "@/components/ui/twitterLink";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -130,20 +132,8 @@ export default function Header({
       </nav>
 
       <section className="hidden md:flex items-center space-x-2 sm:space-x-3 md:space-x-4">
-        <Image
-          src="/icons/github.svg"
-          alt="github"
-          width={16}
-          height={16}
-          className="w-auto h-auto max-h-[16px]"
-        />
-        <Image
-          src="/icons/x-logo.svg"
-          alt="x"
-          width={16}
-          height={16}
-          className="w-auto h-auto max-h-[16px]"
-        />
+        <GithubLink url="https://github.com/opensource-together/opensource-together" />
+        <TwitterLink url="https://x.com/OpenSTogether" />
 
         <Button onClick={handleCreate}>
           <span className="hidden sm:inline">Créer un Projet</span>
