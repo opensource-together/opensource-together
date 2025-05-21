@@ -114,20 +114,8 @@ export default function Header({
         </NavLink>
 
         <div className="flex items-center justify-center space-x-6 py-2">
-          <Image
-            src="/icons/github.svg"
-            alt="github"
-            width={18}
-            height={16}
-            className="w-auto h-auto max-h-[16px]"
-          />
-          <Image
-            src="/icons/x-logo.svg"
-            alt="x"
-            width={18}
-            height={16}
-            className="w-auto h-auto max-h-[16px]"
-          />
+          <GithubLink url="https://github.com/opensource-together/opensource-together" />
+          <TwitterLink url="https://x.com/OpenSTogether" />
         </div>
       </nav>
 

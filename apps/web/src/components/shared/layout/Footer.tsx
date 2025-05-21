@@ -2,22 +2,31 @@ import { Button } from "@/components/ui/button";
 import GithubLink from "@/components/ui/githubLink";
 import TwitterLink from "@/components/ui/twitterLink";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
+  const navItems = ["Accueil", "Projets", "Blog"];
+
   return (
     <>
       <div className="w-full max-w-[1104px] h-[306px] rounded-[20px] border border-[#000000]/10 mx-auto flex relative bg-white">
         {/* Bouton en bas à gauche avec marge */}
         <div className="absolute bottom-8 left-10">
-          <Button className="flex items-center gap-2">
-            Star notre GitHub
-            <Image
-              src="/icons/github-white.svg"
-              alt="GitHub"
-              width={18}
-              height={18}
-            />
-          </Button>
+          <Link
+            href="https://github.com/opensource-together/opensource-together"
+            target="_blank"
+            aria-label="Star our GitHub"
+          >
+            <Button className="flex items-center gap-2">
+              Star notre GitHub
+              <Image
+                src="/icons/github-white.svg"
+                alt="GitHub"
+                width={18}
+                height={18}
+              />
+            </Button>
+          </Link>
         </div>
         {/* Texte en bas à droite avec marge */}
         <div className="absolute bottom-8 right-10 text-right">
@@ -36,16 +45,18 @@ export default function Footer() {
           <span className="font-medium">Open Source Together</span>
         </div>
         {/* Center */}
-        <div className="flex items-center gap-8 text-[13px] text-black font-geist">
-          <a href="#" className="hover:underline">
-            Accueil
-          </a>
-          <a href="#" className="hover:underline">
-            Projets
-          </a>
-          <a href="#" className="hover:underline">
-            Blog
-          </a>
+        <div className="flex items-center gap-4 text-black font-geist">
+          {navItems.map((item) => (
+            <Link
+              href={`/${item.toLowerCase()}`}
+              key={item}
+              aria-label={`Navigate to ${item}`}
+            >
+              <Button variant="link" size="sm">
+                {item}
+              </Button>
+            </Link>
+          ))}
         </div>
         {/* Right */}
         <div className="flex items-center gap-3">
