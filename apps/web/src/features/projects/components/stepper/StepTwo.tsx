@@ -1,4 +1,4 @@
-import Button from "@/components/shared/Button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 const repositories = [
@@ -132,10 +132,8 @@ export default function StepTwo({
             />
           </div>
           <Button
-            width="425px"
-            height="43px"
-            radius="10px"
-            className="flex items-center justify-center text-[15px]"
+            size="lg"
+            className="flex items-center justify-center"
             onClick={onNext}
           >
             Confirmer les informations
@@ -184,15 +182,7 @@ export default function StepTwo({
                   <span className="font-geist font-normal text-[12px] text-black/20 flex-shrink-0">
                     {repo.date}
                   </span>
-                  <Button
-                    width="73px"
-                    height="28px"
-                    radius="7px"
-                    minWidth={false}
-                    className="text-[12px] font-geist font-medium"
-                  >
-                    Importer
-                  </Button>
+                  <Button size="sm">Importer</Button>
                 </div>
               </div>
             ))}
@@ -231,14 +221,8 @@ export default function StepTwo({
           />
         </div>
       </div>
-      <div className="flex gap-2 mt-6">
-        <Button
-          width="425px"
-          height="43px"
-          radius="10px"
-          className="flex items-center justify-center text-[15px]"
-          onClick={onNext}
-        >
+      <div className="flex gap-2 mt-6 w-full">
+        <Button size="lg" className="w-full" onClick={onNext}>
           Suivant
         </Button>
       </div>

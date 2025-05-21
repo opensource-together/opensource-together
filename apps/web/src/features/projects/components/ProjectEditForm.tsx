@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/shared/Button";
+import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -286,8 +286,6 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           type="submit"
           className="mt-4 self-end"
           disabled={isLoading || isUpdatingProject}
-          width="auto"
-          height="43px"
         >
           {isUpdatingProject ? "Saving..." : "Save Changes"}
         </Button>

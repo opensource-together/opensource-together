@@ -1,4 +1,4 @@
-import Button from "@/components/shared/Button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function StepThree({ onNext }: { onNext: () => void }) {
@@ -87,10 +87,8 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
         </div>
       </div>
       <Button
-        width="425px"
-        height="43px"
-        radius="10px"
-        className="flex items-center justify-center text-[15px]"
+        size="lg"
+        className="flex items-center justify-center"
         onClick={onNext}
       >
         Confirmer les informations

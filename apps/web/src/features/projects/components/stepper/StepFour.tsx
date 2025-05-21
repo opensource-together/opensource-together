@@ -1,4 +1,4 @@
-import Button from "@/components/shared/Button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -108,13 +108,10 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
           "Mes projets" et les membres pourront postuler à n'importe quel rôle
           ouvert
         </p>
-        <Link href="/">
-          <button
-            className="w-[425px] cursor-pointer hover:bg-slate-50 transition-colors h-[43px] rounded-[5px] border border-black/10 bg-white text-black text-[15px] font-medium"
-            style={{ boxShadow: "0 2px 5px rgba(0,0,0,0.03)" }}
-          >
+        <Link href="/" className="w-full">
+          <Button size="lg" variant="outline" className="w-full">
             Voir le projet
-          </button>
+          </Button>
         </Link>
       </div>
     );
@@ -222,10 +219,8 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
             </div>
           </div>
           <Button
-            width="full"
-            height="43px"
-            radius="10px"
-            className="mb-4 flex items-center justify-center text-[15px] mt-0"
+            size="lg"
+            className="mb-4 flex items-center justify-center mt-0"
             onClick={() => setShowConfirmation(true)}
           >
             Créer un nouveau rôle
@@ -389,10 +384,8 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
         </div>
         {showRoleModal && <RoleModal />}
         <Button
-          width="425px"
-          height="43px"
-          radius="10px"
-          className="mb-4 flex items-center justify-center text-[15px] mt-12"
+          size="lg"
+          className="mb-4 w-full mt-12"
           onClick={() => setShowConfirmation(true)}
         >
           Créer un nouveau projet

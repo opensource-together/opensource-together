@@ -1,16 +1,10 @@
-import Button from "@/components/shared/Button";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function StepOne({
   onNext,
 }: {
   onNext: (mode: "import" | "scratch") => void;
 }) {
-  const [showForm, setShowForm] = useState(false);
-  const [projectName, setProjectName] = useState("");
-  const [description, setDescription] = useState("");
-  const [website, setWebsite] = useState("");
-
   return (
     <div className="flex flex-col items-center bg-white p-10 rounded-[20px]">
       <h2 className="text-[30px] font-medium tracking-tight font-geist text-black mb-2">
@@ -20,10 +14,8 @@ export default function StepOne({
         Importez un repository Github ou créez un projet depuis zéro.
       </p>
       <Button
-        width="425px"
-        height="43px"
-        radius="10px"
-        className="mb-4 flex items-center justify-center text-[15px]"
+        size="lg"
+        className="mb-4 flex w-full items-center justify-center"
         onClick={() => onNext("import")}
       >
         Importer depuis Github{" "}
@@ -37,13 +29,14 @@ export default function StepOne({
         </span>
       </Button>
       <div className="text-[15px] text-black/70 mb-2">ou</div>
-      <button
-        className="w-[425px] h-[43px] rounded-[10px] border border-black/10 bg-white text-black text-[15px] font-medium"
-        style={{ boxShadow: "0 2px 5px rgba(0,0,0,0.03)" }}
+      <Button
+        variant="outline"
+        size="lg"
+        className="w-full items-center justify-center"
         onClick={() => onNext("scratch")}
       >
         Créer un projet depuis zéro
-      </button>
+      </Button>
     </div>
   );
 }

@@ -138,7 +138,7 @@ export default function ProjectPageCard({
             <div className="flex items-center gap-1.5 font-normal text-black/80 border border-black/10 rounded-[3px] bg-white px-2 py-1 w-fit">
               <span className="flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-[#F4F4F4] w-[13px] h-[13px]">
                 <Image
-                  src={authorImage || "exemplebyronIcon.svg"}
+                  src={authorImage || "/icons/exemplebyronIcon.svg"}
                   alt={authorName || "Auteur"}
                   width={13}
                   height={13}
@@ -242,7 +242,7 @@ export default function ProjectPageCard({
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src="typescript.svg"
+                    src="/icons/typescript.svg"
                     alt="Typescript"
                     width={14}
                     height={14}
@@ -254,7 +254,12 @@ export default function ProjectPageCard({
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image src="react.svg" alt="React" width={14} height={14} />
+                  <Image
+                    src="/icons/react.svg"
+                    alt="React"
+                    width={14}
+                    height={14}
+                  />
                 </div>
                 <span className="text-[14px] font-normal font-geist">
                   React
@@ -263,7 +268,7 @@ export default function ProjectPageCard({
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src="mongodb.svg"
+                    src="/icons/mongodb.svg"
                     alt="MongoDB"
                     width={14}
                     height={14}
@@ -276,7 +281,7 @@ export default function ProjectPageCard({
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src="tailwindcss.svg"
+                    src="/icons/tailwindcss.svg"
                     alt="TailwindCSS"
                     width={14}
                     height={14}
