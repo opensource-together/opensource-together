@@ -1,4 +1,4 @@
-import pinnedIcon from "@/shared/icons/pinned-icon.svg";
+import pinnedIcon from "@/components/shared/icons/pinned-icon.svg";
 import Image from "next/image";
 import ProfileCard from "../components/ProfileCard";
 import ProfileSidebar from "../components/ProfileSidebar";

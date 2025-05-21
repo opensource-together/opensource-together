@@ -1,9 +1,9 @@
-import arrowupright from "@/shared/icons/arrow-up-right.svg";
-import validationIcon from "@/shared/icons/validation-icon.svg";
+import arrowupright from "@/components/shared/icons/arrow-up-right.svg";
+import validationIcon from "@/components/shared/icons/validation-icon.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Badge } from "../types/ProjectTypes";
+import { Badge } from "../types/projectTypes";
 
 interface RoleCardProps {
   title: string;

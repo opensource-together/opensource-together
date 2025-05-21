@@ -1,4 +1,4 @@
-import chevronDown from "@/shared/icons/chevron-down.svg";
+import chevronDown from "@/components/shared/icons/chevron-down.svg";
 import Image from "next/image";
 import React from "react";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import peopleicon from "@/shared/icons/people.svg";
-import Breadcrumb from "@/shared/ui/Breadcrumb";
+import peopleicon from "@/components/shared/icons/people.svg";
+import Breadcrumb from "@/components/shared/ui/Breadcrumb";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProjectFilters from "../components/ProjectFilters";
@@ -24,7 +24,7 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError, error } = useProject(projectId);
 
   // Fallback to mock data if project is not found
-  const projectData = project || mockProjects.find(p => p.id === projectId);
+  const projectData = project || mockProjects.find((p) => p.id === projectId);
 
   // This simulates loading for skeleton loaders even when data is cached
   useEffect(() => {
@@ -90,7 +90,11 @@ export default function ProjectDetailView({
           items={[
             { label: "Accueil", href: "/" },
             { label: "Projets", href: "/projects" },
-            { label: projectData?.title || "Projet", href: "#", isActive: true },
+            {
+              label: projectData?.title || "Projet",
+              href: "#",
+              isActive: true,
+            },
           ]}
         />
       </div>

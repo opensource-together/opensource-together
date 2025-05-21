@@ -1,10 +1,10 @@
+import starIcon from "@/components/shared/icons/blackstaricon.svg";
+import createdIcon from "@/components/shared/icons/createdprojectsicon.svg";
+import githubIcon from "@/components/shared/icons/githubgrisicon.svg";
+import joinedIcon from "@/components/shared/icons/joinedicon.svg";
+import linkedinIcon from "@/components/shared/icons/linkedingrisicon.svg";
+import twitterIcon from "@/components/shared/icons/twitterxgrisicon.svg";
 import Image from "next/image";
-import starIcon from "../../../shared/icons/blackstaricon.svg";
-import createdIcon from "../../../shared/icons/createdprojectsicon.svg";
-import githubIcon from "../../../shared/icons/githubgrisicon.svg";
-import joinedIcon from "../../../shared/icons/joinedicon.svg";
-import linkedinIcon from "../../../shared/icons/linkedingrisicon.svg";
-import twitterIcon from "../../../shared/icons/twitterxgrisicon.svg";
 
 export default function ProfileSidebar() {
   return (

@@ -1,5 +1,5 @@
+import exemplebyronIcon from "@/components/shared/icons/exemplebyronIcon.svg";
 import Image from "next/image";
-import exemplebyronIcon from "../../../shared/icons/exemplebyronIcon.svg";
 
 // Type pour les niveaux de contribution
 type ContributionLevel = 0 | 1 | 2 | 3 | 4;

@@ -1,4 +1,4 @@
-import searchIcon from "@/shared/icons/search.svg";
+import searchIcon from "@/components/shared/icons/search.svg";
 import Image from "next/image";
 
 export default function ProjectSearchBar() {

@@ -1,5 +1,5 @@
-import leftChevron from "@/shared/icons/chevron-left-small.svg";
-import rightChevron from "@/shared/icons/chevron-right-small.svg";
+import leftChevron from "@/components/shared/icons/chevron-left-small.svg";
+import rightChevron from "@/components/shared/icons/chevron-right-small.svg";
 import Image from "next/image";
 
 export default function Pagination() {

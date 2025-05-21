@@ -1,5 +1,5 @@
-import emptystarIcon from "@/shared/icons/empty-star.svg";
-import peopleicon from "@/shared/icons/people.svg";
+import emptystarIcon from "@/components/shared/icons/empty-star.svg";
+import peopleicon from "@/components/shared/icons/people.svg";
 import Image from "next/image";
 import { mockProjects } from "../../projects/data/mockProjects";
 
@@ -145,16 +145,20 @@ export function ProjectList() {
           description={project.description}
           image={project.image}
           stars={project.communityStats?.stars ?? 0}
-          roles={project.roles?.map(role => ({
-            name: role.title,
-            color: role.badges[0]?.color ?? "#000000",
-            bgColor: role.badges[0]?.bgColor ?? "#FFFFFF"
-          })) ?? []}
+          roles={
+            project.roles?.map((role) => ({
+              name: role.title,
+              color: role.badges[0]?.color ?? "#000000",
+              bgColor: role.badges[0]?.bgColor ?? "#FFFFFF",
+            })) ?? []
+          }
           roleCount={project.roles?.length ?? 0}
-          techStack={project.techStacks?.map(tech => ({
-            icon: tech.iconUrl ?? "",
-            alt: tech.name
-          })) ?? []}
+          techStack={
+            project.techStacks?.map((tech) => ({
+              icon: tech.iconUrl ?? "",
+              alt: tech.name,
+            })) ?? []
+          }
         />
       ))}
     </div>

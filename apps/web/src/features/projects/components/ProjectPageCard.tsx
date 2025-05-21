@@ -1,16 +1,16 @@
-import difficultyBarGray from "@/shared/icons/Difficulty-bar-gray.svg";
-import difficultyBarLight from "@/shared/icons/Difficulty-bar-light.svg";
-import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
-import githubIcon from "@/shared/icons/github.svg";
-import mongodbIcon from "@/shared/icons/mongodb.svg";
-import reactIcon from "@/shared/icons/react.svg";
-import tailwindIcon from "@/shared/icons/tailwindcss.svg";
-import typescriptIcon from "@/shared/icons/typescript (2).svg";
-import Button from "@/shared/ui/Button";
+import difficultyBarGray from "@/components/shared/icons/Difficulty-bar-gray.svg";
+import difficultyBarLight from "@/components/shared/icons/Difficulty-bar-light.svg";
+import emptyprojecticon from "@/components/shared/icons/emptyprojectIcon.svg";
+import exemplebyronIcon from "@/components/shared/icons/exemplebyronIcon.svg";
+import githubIcon from "@/components/shared/icons/github.svg";
+import joinedIcon from "@/components/shared/icons/joinedicon.svg";
+import mongodbIcon from "@/components/shared/icons/mongodb.svg";
+import reactIcon from "@/components/shared/icons/react.svg";
+import tailwindIcon from "@/components/shared/icons/tailwindcss.svg";
+import typescriptIcon from "@/components/shared/icons/typescript (2).svg";
+import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
-import exemplebyronIcon from "../../../shared/icons/exemplebyronIcon.svg";
-import joinedIcon from "../../../shared/icons/joinedicon.svg";
-import { TechStack } from "../types/ProjectTypes";
+import { TechStack } from "../types/projectTypes";
 
 interface ProjectPageCardProps {
   title?: string;

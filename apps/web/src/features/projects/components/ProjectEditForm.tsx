@@ -1,11 +1,11 @@
 "use client";
-import starIcon from "@/shared/icons/blackstaricon.svg";
-import createdIcon from "@/shared/icons/createdprojectsicon.svg";
-import crossIcon from "@/shared/icons/crossIcon.svg";
-import emptyProjectIcon from "@/shared/icons/emptyprojectIcon.svg";
-import joinedIcon from "@/shared/icons/joinedicon.svg";
-import linkedinIcon from "@/shared/icons/linkedingrisicon.svg";
-import Button from "@/shared/ui/Button";
+import starIcon from "@/components/shared/icons/blackstaricon.svg";
+import createdIcon from "@/components/shared/icons/createdprojectsicon.svg";
+import crossIcon from "@/components/shared/icons/crossIcon.svg";
+import emptyProjectIcon from "@/components/shared/icons/emptyprojectIcon.svg";
+import joinedIcon from "@/components/shared/icons/joinedicon.svg";
+import linkedinIcon from "@/components/shared/icons/linkedingrisicon.svg";
+import Button from "@/components/shared/ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";

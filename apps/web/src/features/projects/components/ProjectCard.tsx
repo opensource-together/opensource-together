@@ -1,7 +1,7 @@
-import arrowupright from "@/shared/icons/arrow-up-right.svg";
-import emptystarIcon from "@/shared/icons/empty-star.svg";
-import emptyprojecticon from "@/shared/icons/emptyprojectIcon.svg";
-import peopleicon from "@/shared/icons/people.svg";
+import arrowupright from "@/components/shared/icons/arrow-up-right.svg";
+import emptystarIcon from "@/components/shared/icons/empty-star.svg";
+import emptyprojecticon from "@/components/shared/icons/emptyprojectIcon.svg";
+import peopleicon from "@/components/shared/icons/people.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -70,7 +70,8 @@ export default function ProjectCard({
       let plusWidth = 0;
       if (roles.length > 0) {
         const temp = document.createElement("span");
-        temp.className = "h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap text-[black]/20";
+        temp.className =
+          "h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap text-[black]/20";
         temp.style.visibility = "hidden";
         temp.innerText = "+" + (roles.length - 1);
         line.appendChild(temp);
@@ -85,7 +86,8 @@ export default function ProjectCard({
       // On crée des spans temporaires pour mesurer chaque rôle
       for (let i = 0; i < roles.length; i++) {
         const temp = document.createElement("span");
-        temp.className = "h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap";
+        temp.className =
+          "h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap";
         temp.style.visibility = "hidden";
         temp.innerText = roles[i].name;
         line.appendChild(temp);
@@ -196,8 +198,14 @@ export default function ProjectCard({
         <div className="border-t border-dashed border-[black]/10 my-4" />
 
         {showRoles && (
-          <div ref={lineRef} className="flex items-center gap-2 text-[11px] w-full overflow-hidden">
-            <div ref={counterRef} className="flex-shrink-0 text-[10px] font-medium flex items-center gap-1">
+          <div
+            ref={lineRef}
+            className="flex items-center gap-2 text-[11px] w-full overflow-hidden"
+          >
+            <div
+              ref={counterRef}
+              className="flex-shrink-0 text-[10px] font-medium flex items-center gap-1"
+            >
               <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
               {roleCount} Roles Disponibles
             </div>

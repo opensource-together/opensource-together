@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import Button from "@/shared/ui/Button";
+import lockIcon from "@/components/shared/icons/lock.svg";
+import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
-import lockIcon from "@/shared/icons/lock.svg";
+import React, { useRef, useState } from "react";
 
 const repositories = [
   { name: "Repository 1", date: "10/09/25" },
@@ -16,7 +16,13 @@ const repositories = [
   { name: "Repository 1", date: "10/09/25" },
 ];
 
-export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "import" | "scratch" }) {
+export default function StepTwo({
+  onNext,
+  mode,
+}: {
+  onNext: () => void;
+  mode: "import" | "scratch";
+}) {
   // Form state for scratch mode
   const [projectName, setProjectName] = useState("");
   const [description, setDescription] = useState("");
@@ -32,9 +38,15 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
   const totalCount = repositories.length;
   const totalHeight = itemHeight * totalCount;
   const visibleHeight = 320;
-  const scrollbarHeight = Math.max((visibleHeight / totalHeight) * visibleHeight, 40); // min 40px
+  const scrollbarHeight = Math.max(
+    (visibleHeight / totalHeight) * visibleHeight,
+    40,
+  ); // min 40px
   const maxScrollTop = totalHeight - visibleHeight;
-  const scrollbarTop = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * (visibleHeight - scrollbarHeight) : 0;
+  const scrollbarTop =
+    maxScrollTop > 0
+      ? (scrollTop / maxScrollTop) * (visibleHeight - scrollbarHeight)
+      : 0;
 
   React.useEffect(() => {
     if (!dragging) return;
@@ -42,9 +54,10 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
       const deltaY = e.clientY - dragStartY;
       const newTop = Math.min(
         Math.max(dragStartScroll + deltaY, 0),
-        visibleHeight - scrollbarHeight
+        visibleHeight - scrollbarHeight,
       );
-      const newScrollTop = (newTop / (visibleHeight - scrollbarHeight)) * maxScrollTop;
+      const newScrollTop =
+        (newTop / (visibleHeight - scrollbarHeight)) * maxScrollTop;
       if (scrollRef.current) {
         scrollRef.current.scrollTop = newScrollTop;
       }
@@ -56,55 +69,79 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
-  }, [dragging, dragStartY, dragStartScroll, maxScrollTop, scrollbarHeight, visibleHeight]);
+  }, [
+    dragging,
+    dragStartY,
+    dragStartScroll,
+    maxScrollTop,
+    scrollbarHeight,
+    visibleHeight,
+  ]);
 
   if (mode === "scratch") {
     return (
       <div className="flex flex-col items-center bg-white p-10 rounded-[20px] font-geist">
-        <h2 className="text-black font-geist font-medium text-[30px] mb-2">Fill in your information</h2>
+        <h2 className="text-black font-geist font-medium text-[30px] mb-2">
+          Fill in your information
+        </h2>
         <p className="text-[15px] text-black/70 mb-8 text-center">
-          Remplissez les informations en fonction de votre repository Github ci-dessous
+          Remplissez les informations en fonction de votre repository Github
+          ci-dessous
         </p>
-        <form className="w-full flex flex-col gap-5" onSubmit={e => { e.preventDefault(); onNext(); }}>
+        <form
+          className="w-full flex flex-col gap-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onNext();
+          }}
+        >
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">Project Name</label>
+            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">
+              Project Name
+            </label>
             <input
               className="w-[425px] h-[40px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
               value={projectName}
-              onChange={e => setProjectName(e.target.value)}
+              onChange={(e) => setProjectName(e.target.value)}
               maxLength={100}
             />
           </div>
           <div>
             <div className="flex items-center justify-between mr-2 mb-1">
-              <label className="text-black font-geist font-medium text-[18px] tracking-tight">Description</label>
-              <span className="text-[10px] text-black/20 font-normal">{description.length}/250</span>
+              <label className="text-black font-geist font-medium text-[18px] tracking-tight">
+                Description
+              </label>
+              <span className="text-[10px] text-black/20 font-normal">
+                {description.length}/250
+              </span>
             </div>
             <textarea
               className="w-[425px] h-[103px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
               placeholder="Describe your project"
               value={description}
-              onChange={e => setDescription(e.target.value.slice(0, 250))}
+              onChange={(e) => setDescription(e.target.value.slice(0, 250))}
               maxLength={250}
             />
           </div>
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">Link to the website</label>
+            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">
+              Link to the website
+            </label>
             <input
               className="w-[425px] h-[40px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
               value={website}
-              onChange={e => setWebsite(e.target.value)}
+              onChange={(e) => setWebsite(e.target.value)}
             />
           </div>
           <Button
-        width="425px"
-        height="43px"
-        radius="10px"
-        className="flex items-center justify-center text-[15px]"
-        onClick={onNext}
-      >
-        Confirmer les informations
-      </Button>
+            width="425px"
+            height="43px"
+            radius="10px"
+            className="flex items-center justify-center text-[15px]"
+            onClick={onNext}
+          >
+            Confirmer les informations
+          </Button>
         </form>
       </div>
     );
@@ -113,7 +150,9 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
   // Mode import (par défaut)
   return (
     <div className="flex flex-col items-center p-10 rounded-[20px] ">
-      <h2 className="text-black font-geist font-medium text-[30px] mb-2">Importer un repository Github</h2>
+      <h2 className="text-black font-geist font-medium text-[30px] mb-2">
+        Importer un repository Github
+      </h2>
       <p className="text-[15px] text-black/70 mb-8 text-center">
         Choisissez le repository Github que vous souhaitez importer.
       </p>
@@ -121,18 +160,27 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
         <div
           ref={scrollRef}
           className="bg-black/3 w-[425px] h-[320px] rounded-[10px] border border-black/4 mb-4 overflow-y-auto pr-3"
-          onScroll={e => setScrollTop((e.target as HTMLDivElement).scrollTop)}
+          onScroll={(e) => setScrollTop((e.target as HTMLDivElement).scrollTop)}
           style={{ scrollbarWidth: "none" }}
         >
           <div className="flex flex-col divide-y divide-black/4">
             {repositories.map((repo, idx) => (
-              <div key={idx} className="flex items-center justify-between h-[64px] px-6 bg-transparent">
+              <div
+                key={idx}
+                className="flex items-center justify-between h-[64px] px-6 bg-transparent"
+              >
                 <div className="flex items-center gap-2">
-                  <span className="font-geist font-normal text-[14px] text-black">{repo.name}</span>
-                  <span className="text-black/20 text-[14px] ml-1"><Image src={lockIcon} alt="lock" width={14} height={14} /></span>
+                  <span className="font-geist font-normal text-[14px] text-black">
+                    {repo.name}
+                  </span>
+                  <span className="text-black/20 text-[14px] ml-1">
+                    <Image src={lockIcon} alt="lock" width={14} height={14} />
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-geist font-normal text-[12px] text-black/20 flex-shrink-0">{repo.date}</span>
+                  <span className="font-geist font-normal text-[12px] text-black/20 flex-shrink-0">
+                    {repo.date}
+                  </span>
                   <Button
                     width="73px"
                     height="28px"
@@ -172,7 +220,7 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
               transition: "top 0.1s",
               cursor: "grab",
             }}
-            onMouseDown={e => {
+            onMouseDown={(e) => {
               setDragging(true);
               setDragStartY(e.clientY);
               setDragStartScroll(scrollbarTop);
@@ -193,4 +241,4 @@ export default function StepTwo({ onNext, mode }: { onNext: () => void; mode: "i
       </div>
     </div>
   );
-} 
+}

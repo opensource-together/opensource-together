@@ -1,13 +1,17 @@
-import chevronLeft from "@/shared/icons/chevron-left.svg";
-import chevronRight from "@/shared/icons/chevron-right.svg";
+import chevronLeft from "@/components/shared/icons/chevron-left.svg";
+import chevronRight from "@/components/shared/icons/chevron-right.svg";
 import Image from "next/image";
-import billboard from "../../../public/billboardost.svg";
 
 export default function Billboard() {
   return (
     <div className="border border-[#000000]/10 rounded-[30px] w-[1116px] h-[373px] flex items-center justify-center relative overflow-hidden">
       <div className="relative w-[1076px] h-[330px]">
-        <Image src={billboard} alt="billboard" width={1076} height={330} />
+        <Image
+          src="/billboard-ost.svg"
+          alt="billboard"
+          width={1076}
+          height={330}
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
