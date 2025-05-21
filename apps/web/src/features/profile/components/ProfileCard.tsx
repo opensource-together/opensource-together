@@ -1,4 +1,3 @@
-import exemplebyronIcon from "@/components/shared/icons/exemplebyronIcon.svg";
 import Image from "next/image";
 
 // Type pour les niveaux de contribution
@@ -76,7 +75,7 @@ export default function ProfileCard() {
         <div className="flex items-center">
           <div className="relative mr-4">
             <Image
-              src={exemplebyronIcon}
+              src="https://pbs.twimg.com/profile_images/1813513692471779328/6RxAJKDu_400x400.jpg"
               alt="Profile"
               width={85}
               height={85}

@@ -123,6 +123,25 @@ export default function ProjectCard({
   const visibleRoles = measured ? roles.slice(0, maxVisible) : roles;
   const remainingRoles = measured ? roles.length - maxVisible : 0;
 
+  let processedImageSrc:
+    | string
+    | import("next/dist/shared/lib/get-img-props").StaticImport =
+    emptyprojecticon;
+  if (image && typeof image === "string") {
+    if (
+      !image.startsWith("/") &&
+      !image.includes("://") &&
+      !image.startsWith("data:")
+    ) {
+      processedImageSrc = `/icons/${image}`;
+    } else {
+      processedImageSrc = image;
+    }
+  } else if (image) {
+    // Cas où 'image' est déjà un StaticImport
+    processedImageSrc = image;
+  }
+
   return (
     <section
       className={`shadow-xs font-geist rounded-[20px] border border[black]/10 w-[540px] h-[207px] py-[25px] px-[30px] ${className}`}
@@ -130,41 +149,45 @@ export default function ProjectCard({
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <div className="w-[50px] h-[50px] relative">
-            {image ? (
-              <Image
-                src={image}
-                alt={`${title} icon`}
-                width={50}
-                height={50}
-                className="rounded-lg"
-              />
-            ) : (
-              <Image
-                src={emptyprojecticon}
-                alt="emptyprojecticon"
-                width={50}
-                height={50}
-              />
-            )}
+            <Image
+              src={processedImageSrc}
+              alt={`${title} icon`}
+              width={50}
+              height={50}
+              className="rounded-lg"
+            />
           </div>
 
           <div className="flex flex-col">
             <div className="text-lg font-semibold">{title}</div>
             {showTechStack && techStack.length > 0 && (
               <div className="flex gap-[3px] mt-1">
-                {techStack.map((tech, index) => (
-                  <div
-                    key={index}
-                    className="border border-[black]/10 rounded-[2px] w-[20px] h-[20px] flex items-center justify-center"
-                  >
-                    <Image
-                      src={tech.icon}
-                      alt={tech.alt}
-                      width={14.5}
-                      height={10.22}
-                    />
-                  </div>
-                ))}
+                {techStack.map((tech, index) => {
+                  if (!tech.icon || typeof tech.icon !== "string") return null;
+
+                  let iconSrcToUse = tech.icon;
+                  if (
+                    !tech.icon.startsWith("/") &&
+                    !tech.icon.includes("://") &&
+                    !tech.icon.startsWith("data:")
+                  ) {
+                    iconSrcToUse = `/icons/${tech.icon}`;
+                  }
+
+                  return (
+                    <div
+                      key={index}
+                      className="border border-[black]/10 rounded-[2px] w-[20px] h-[20px] flex items-center justify-center"
+                    >
+                      <Image
+                        src={iconSrcToUse}
+                        alt={tech.alt}
+                        width={14.5}
+                        height={10.22}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

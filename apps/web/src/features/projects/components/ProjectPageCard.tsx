@@ -1,13 +1,7 @@
 import difficultyBarGray from "@/components/shared/icons/Difficulty-bar-gray.svg";
 import difficultyBarLight from "@/components/shared/icons/Difficulty-bar-light.svg";
 import emptyprojecticon from "@/components/shared/icons/emptyprojectIcon.svg";
-import exemplebyronIcon from "@/components/shared/icons/exemplebyronIcon.svg";
-import githubIcon from "@/components/shared/icons/github.svg";
 import joinedIcon from "@/components/shared/icons/joinedicon.svg";
-import mongodbIcon from "@/components/shared/icons/mongodb.svg";
-import reactIcon from "@/components/shared/icons/react.svg";
-import tailwindIcon from "@/components/shared/icons/tailwindcss.svg";
-import typescriptIcon from "@/components/shared/icons/typescript (2).svg";
 import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
 import { TechStack } from "../types/projectTypes";
@@ -45,12 +39,12 @@ export default function ProjectPageCard({
 }: ProjectPageCardProps) {
   // Map of tech stacks to icons - to be replaced with dynamic icon loading
   const techIconMap: Record<string, any> = {
-    TypeScript: typescriptIcon,
-    Typescript: typescriptIcon,
-    React: reactIcon,
-    MongoDB: mongodbIcon,
-    TailwindCSS: tailwindIcon,
-    Tailwind: tailwindIcon,
+    TypeScript: "typescript.svg",
+    Typescript: "typescript.svg",
+    React: "react.svg",
+    MongoDB: "mongodb.svg",
+    TailwindCSS: "tailwindcss.svg",
+    Tailwind: "tailwindcss.svg",
   };
 
   // Fonction pour rendre les barres de difficulté
@@ -148,7 +142,7 @@ export default function ProjectPageCard({
             <div className="flex items-center gap-1.5 font-normal text-black/80 border border-black/10 rounded-[3px] bg-white px-2 py-1 w-fit">
               <span className="flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-[#F4F4F4] w-[13px] h-[13px]">
                 <Image
-                  src={authorImage || exemplebyronIcon.src}
+                  src={authorImage || "exemplebyronIcon.svg"}
                   alt={authorName || "Auteur"}
                   width={13}
                   height={13}
@@ -175,7 +169,12 @@ export default function ProjectPageCard({
               rel="noopener noreferrer"
             >
               Voir le dépôt
-              <Image src={githubIcon} alt="arrowright" width={15} height={15} />
+              <Image
+                src="/icons/github.svg"
+                alt="arrowright"
+                width={15}
+                height={15}
+              />
             </a>
             <Button
               width="155px"
@@ -257,7 +256,7 @@ export default function ProjectPageCard({
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src={typescriptIcon}
+                    src="typescript.svg"
                     alt="Typescript"
                     width={14}
                     height={14}
@@ -269,7 +268,7 @@ export default function ProjectPageCard({
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image src={reactIcon} alt="React" width={14} height={14} />
+                  <Image src="react.svg" alt="React" width={14} height={14} />
                 </div>
                 <span className="text-[14px] font-normal font-geist">
                   React
@@ -278,7 +277,7 @@ export default function ProjectPageCard({
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src={mongodbIcon}
+                    src="mongodb.svg"
                     alt="MongoDB"
                     width={14}
                     height={14}
@@ -291,7 +290,7 @@ export default function ProjectPageCard({
               <div className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src={tailwindIcon}
+                    src="tailwindcss.svg"
                     alt="TailwindCSS"
                     width={14}
                     height={14}

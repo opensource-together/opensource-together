@@ -45,6 +45,17 @@ export function ProjectCard({
   className = "",
   image,
 }: ProjectCardProps) {
+  let processedImageSrc = image;
+  if (
+    image &&
+    typeof image === "string" &&
+    !image.startsWith("/") &&
+    !image.includes("://") &&
+    !image.startsWith("data:")
+  ) {
+    processedImageSrc = `/icons/${image}`;
+  }
+
   return (
     <section
       className={`shadow-[0px_0px_2px_0px_rgba(0,0,0,0.1),0_2px_5px_rgba(0,0,0,0.02)] font-geist bg-white rounded-[20px] border border-[black]/10 w-full max-w-[731px] min-h-[207px] py-5 px-8 ${className}`}
@@ -52,9 +63,9 @@ export function ProjectCard({
       <article className="flex justify-between items-start">
         <div className="flex items-center gap-4">
           <div className="w-[50px] h-[50px] relative">
-            {image ? (
+            {processedImageSrc ? (
               <Image
-                src={image}
+                src={processedImageSrc}
                 alt={`${title} icon`}
                 width={50}
                 height={50}
@@ -69,19 +80,33 @@ export function ProjectCard({
             <div className="text-lg font-medium">{title}</div>
             {showTechStack && techStack.length > 0 && (
               <div className="flex gap-1 mt-1">
-                {techStack.map((tech, index) => (
-                  <div
-                    key={index}
-                    className="border border-[black]/10 rounded-[2px] w-[18px] h-[18px] flex items-center justify-center bg-white"
-                  >
-                    <Image
-                      src={tech.icon}
-                      alt={tech.alt}
-                      width={14.5}
-                      height={10.22}
-                    />
-                  </div>
-                ))}
+                {techStack.map((tech, index) => {
+                  if (!tech.icon) return null; // Ne rien rendre si l'icône d'origine est vide
+
+                  let iconSrcToUse = tech.icon;
+                  if (
+                    typeof tech.icon === "string" &&
+                    !tech.icon.startsWith("/") &&
+                    !tech.icon.includes("://") &&
+                    !tech.icon.startsWith("data:")
+                  ) {
+                    iconSrcToUse = `/icons/${tech.icon}`;
+                  }
+
+                  return (
+                    <div
+                      key={index}
+                      className="border border-[black]/10 rounded-[2px] w-[18px] h-[18px] flex items-center justify-center bg-white"
+                    >
+                      <Image
+                        src={iconSrcToUse}
+                        alt={tech.alt}
+                        width={14.5}
+                        height={10.22}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

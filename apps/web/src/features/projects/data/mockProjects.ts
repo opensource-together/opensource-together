@@ -1,10 +1,3 @@
-import codesnippetIcon from "@/components/shared/icons/codesnippet-icon.png";
-import exemplebyronIcon from "@/components/shared/icons/exemplebyronIcon.svg";
-import gitifyIcon from "@/components/shared/icons/gitifyIcon.png";
-import killianIcon from "@/components/shared/icons/killiancodes-icon.jpg";
-import p2acoIcon from "@/components/shared/icons/p2aco-icon.png";
-import ppY2 from "@/components/shared/icons/pp-y2.jpg";
-import shyybiIcon from "@/components/shared/icons/shyybi-icon.png";
 import { Project } from "../types/projectTypes";
 
 export const mockProjects: Project[] = [
@@ -15,7 +8,8 @@ export const mockProjects: Project[] = [
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
     authorName: "y2_dev",
-    authorImage: ppY2.src,
+    authorImage:
+      "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
     description:
       "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
     longDescription:
@@ -103,9 +97,9 @@ export const mockProjects: Project[] = [
     id: "7",
     slug: "gitify",
     title: "Gitify",
-    image: gitifyIcon.src,
+    image: "gitifyIcon.png",
     authorName: "69Killian",
-    authorImage: killianIcon.src,
+    authorImage: "killiancodes-icon.jpg",
     description:
       "Contribue, Développe, réalise des challenges et gagne des badges en contribuant à des projets open source. Une plateforme gamifiée pour encourager la participation à l'open source",
     longDescription:
@@ -187,7 +181,7 @@ export const mockProjects: Project[] = [
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
     authorName: "p2aco",
-    authorImage: p2acoIcon.src,
+    authorImage: "p2aco-icon.png",
     description:
       "Le bot ultime pour les développeurs, directement intégré à Discord et Slack. Boostez votre productivité avec des commandes intelligentes pour formater du code, générer des tâches cron et plus encore.",
     longDescription:
@@ -273,7 +267,7 @@ export const mockProjects: Project[] = [
     id: "6",
     slug: "codesnippet",
     title: "CodeSnippet",
-    image: codesnippetIcon.src,
+    image: "codesnippet-icon.png",
     authorName: "Spectre",
     authorImage:
       "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
@@ -361,7 +355,7 @@ export const mockProjects: Project[] = [
     image:
       "https://media.discordapp.net/attachments/1313066773083459595/1313066775444983908/Lil_tea_tasse_fond_4x.jpg?ex=682c443a&is=682af2ba&hm=cb84ead9ca01d87a31cb26390a0c239f1c660bbcf0343b5a29f92a4e873ee601&=&format=webp&width=1744&height=1744",
     authorName: "Shyybi",
-    authorImage: shyybiIcon.src,
+    authorImage: "shyybi-icon.png",
     description:
       "Crée ton profil bio stylé, rapide et animé — comme guns.lol, mais avec ta touche. Une plateforme moderne pour centraliser tous tes liens importants sur une page élégante et responsive",
     longDescription:
@@ -440,7 +434,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
     authorName: "p2aco",
-    authorImage: p2acoIcon.src,
+    authorImage: "p2aco-icon.png",
     description:
       "Un outil terminal open source pour monitorer vos serveurs et containers en temps réel, inspiré de k9s avec une interface intuitive et des fonctionnalités avancées",
     longDescription:
@@ -516,7 +510,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
     authorName: "Lucas Martin",
-    authorImage: exemplebyronIcon.src,
+    authorImage: "exemplebyronIcon.svg",
     description:
       "Une alternative légère et intégrée à Storybook, spécialement optimisée pour Next.js, permettant de visualiser, tester et documenter facilement vos composants UI.",
     longDescription:
@@ -677,7 +671,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
     authorName: "Sarah Miller",
-    authorImage: exemplebyronIcon.src,
+    authorImage: "exemplebyronIcon.svg",
     description:
       "Une plateforme de développement cloud qui simplifie la configuration et le partage d'environnements de développement.",
     longDescription:
@@ -750,7 +744,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
     authorName: "Emma Wilson",
-    authorImage: exemplebyronIcon.src,
+    authorImage: "exemplebyronIcon.svg",
     description:
       "Une plateforme de documentation technique collaborative avec support Markdown et intégration Git.",
     longDescription:

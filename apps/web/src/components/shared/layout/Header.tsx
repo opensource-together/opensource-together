@@ -4,11 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import beta from "../icons/beta.svg";
 import crossIcon from "../icons/crossIcon.svg";
-import github from "../icons/github.svg";
-import openSource from "../icons/opensource.svg";
-import x from "../icons/x.svg";
 import Button from "../ui/Button";
 
 interface NavLinkProps {
@@ -62,14 +58,14 @@ export default function Header({
         <Link href="/">
           <article className="flex items-center gap-2">
             <Image
-              src={openSource}
-              alt="openSource"
+              src="ost-logo.svg"
+              alt="ost-logo"
               width={130}
               height={26}
               className="w-auto h-auto max-h-[26px] md:max-h-[30px] lg:max-h-[35px]"
             />
             <Image
-              src={beta}
+              src="beta.svg"
               alt="beta"
               width={24}
               height={10}
@@ -118,14 +114,14 @@ export default function Header({
 
         <div className="flex items-center justify-center space-x-6 py-2">
           <Image
-            src={github}
+            src="/icons/github.svg"
             alt="github"
             width={18}
             height={16}
             className="w-auto h-auto max-h-[16px]"
           />
           <Image
-            src={x}
+            src="/icons/x-logo.svg"
             alt="x"
             width={18}
             height={16}
@@ -136,14 +132,14 @@ export default function Header({
 
       <section className="hidden md:flex items-center space-x-2 sm:space-x-3 md:space-x-4">
         <Image
-          src={github}
+          src="/icons/github.svg"
           alt="github"
           width={16}
           height={14}
           className="w-auto h-auto max-h-[14px]"
         />
         <Image
-          src={x}
+          src="/icons/x-logo.svg"
           alt="x"
           width={16}
           height={14}
