@@ -1,8 +1,3 @@
-import starIcon from "@/components/shared/icons/blackstaricon.svg";
-import createdIcon from "@/components/shared/icons/createdprojectsicon.svg";
-import githubIcon from "@/components/shared/icons/githubgrisicon.svg";
-import linkedinIcon from "@/components/shared/icons/linkedingrisicon.svg";
-import twitterIcon from "@/components/shared/icons/twitterxgrisicon.svg";
 import Image from "next/image";
 import { CommunityStats, SocialLink } from "../types/projectTypes";
 
@@ -24,20 +19,30 @@ export default function ProjectSideBar({
         <h2 className="text-[18px] font-medium mb-3">Partager</h2>
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
+            <Image
+              src="/icons/linkedin.svg"
+              alt="LinkedIn"
+              width={15}
+              height={15}
+            />
             <span className="text-[14px] text-black/70">
               Partager sur Linkedin
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Image src={twitterIcon} alt="X" width={15} height={15} />
+            <Image src="/icons/x-logo.svg" alt="X" width={15} height={15} />
             <span className="text-[14px] text-black/70">Partager sur X</span>
           </div>
           {socialLinks.map((link, index) => {
             if (link.type === "github") {
               return (
                 <div key={index} className="flex items-center gap-3">
-                  <Image src={githubIcon} alt="GitHub" width={15} height={15} />
+                  <Image
+                    src="/icons/github.svg"
+                    alt="GitHub"
+                    width={15}
+                    height={15}
+                  />
                   <a
                     href={link.url}
                     target="_blank"
@@ -59,20 +64,35 @@ export default function ProjectSideBar({
         <h2 className="text-[18px] font-medium mb-3">Statistiques du projet</h2>
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <Image src={starIcon} alt="Stars" width={15} height={14} />
+            <Image
+              src="/icons/black-star.svg"
+              alt="Stars"
+              width={15}
+              height={15}
+            />
             <span className="text-[14px] text-black/70">
               {communityStats?.stars || 0} Stars
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Image src={createdIcon} alt="Members" width={13} height={15} />
+            <Image
+              src="/icons/two-people.svg"
+              alt="Members"
+              width={15}
+              height={15}
+            />
             <span className="text-[14px] text-black/70">
               {communityStats?.contributors || 0} Membres
             </span>
           </div>
           {showForks && (
             <div className="flex items-center gap-3">
-              <Image src={githubIcon} alt="Forks" width={15} height={15} />
+              <Image
+                src="/icons/github.svg"
+                alt="Forks"
+                width={15}
+                height={15}
+              />
               <span className="text-[14px] text-black/70">
                 {communityStats?.forks || 0} Forks
               </span>

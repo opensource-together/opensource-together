@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import crossIcon from "../icons/crossIcon.svg";
 import Button from "../ui/Button";
 
 interface NavLinkProps {
@@ -153,7 +152,7 @@ export default function Header({
           <span className="hidden sm:inline">Créer un projet</span>
           <span className="inline sm:hidden">Nouveau projet</span>
           <Image
-            src={crossIcon}
+            src="/icons/cross-icon.svg"
             alt="crossIcon"
             width={11}
             height={11}
@@ -168,7 +167,7 @@ export default function Header({
           <Button onClick={handleCreate} className="w-full max-w-[220px]">
             New Project{" "}
             <Image
-              src={crossIcon}
+              src="/icons/cross-icon.svg"
               alt="crossIcon"
               width={11}
               height={11}

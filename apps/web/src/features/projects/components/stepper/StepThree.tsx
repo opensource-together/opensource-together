@@ -1,5 +1,3 @@
-import linkIcon from "@/components/shared/icons/link-icon.svg";
-import writingIcon from "@/components/shared/icons/writing-icon.svg";
 import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
 
@@ -21,7 +19,7 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
               Nom
             </span>
             <Image
-              src={writingIcon}
+              src="/icons/writing-icon.svg"
               alt="writing-icon"
               width={13}
               height={13}
@@ -41,7 +39,7 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
                 Description
               </span>
               <Image
-                src={writingIcon}
+                src="/icons/writing-icon.svg"
                 alt="writing-icon"
                 width={13}
                 height={13}
@@ -69,14 +67,19 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
               Lien vers le repository
             </span>
             <Image
-              src={writingIcon}
+              src="/icons/writing-icon.svg"
               alt="writing-icon"
               width={13}
               height={13}
             />
           </div>
           <div className="flex items-center gap-2">
-            <Image src={linkIcon} alt="link-icon" width={15} height={15} />
+            <Image
+              src="/icons/link-icon.svg"
+              alt="link-icon"
+              width={15}
+              height={15}
+            />
             <span className="font-geist font-normal text-[12px] text-black/50 break-all">
               https://github.com/opensource-together/opensource-together
             </span>

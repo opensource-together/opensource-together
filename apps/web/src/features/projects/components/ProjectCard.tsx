@@ -1,7 +1,3 @@
-import arrowupright from "@/components/shared/icons/arrow-up-right.svg";
-import emptystarIcon from "@/components/shared/icons/empty-star.svg";
-import emptyprojecticon from "@/components/shared/icons/emptyprojectIcon.svg";
-import peopleicon from "@/components/shared/icons/people.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -126,7 +122,7 @@ export default function ProjectCard({
   let processedImageSrc:
     | string
     | import("next/dist/shared/lib/get-img-props").StaticImport =
-    emptyprojecticon;
+    "/icons/empty-project.svg";
   if (image && typeof image === "string") {
     if (
       !image.startsWith("/") &&
@@ -200,7 +196,7 @@ export default function ProjectCard({
                 {stars}
               </span>
               <Image
-                src={emptystarIcon}
+                src="/icons/empty-star.svg"
                 alt="emptystarIcon"
                 width={13}
                 height={13}
@@ -229,7 +225,12 @@ export default function ProjectCard({
               ref={counterRef}
               className="flex-shrink-0 text-[10px] font-medium flex items-center gap-1"
             >
-              <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
+              <Image
+                src="/icons/people.svg"
+                alt="peopleicon"
+                width={11}
+                height={11}
+              />{" "}
               {roleCount} Roles Disponibles
             </div>
 
@@ -258,7 +259,7 @@ export default function ProjectCard({
               >
                 Voir le projet{" "}
                 <Image
-                  src={arrowupright}
+                  src="/icons/arrow-up-right.svg"
                   alt="arrowupright"
                   width={10}
                   height={10}

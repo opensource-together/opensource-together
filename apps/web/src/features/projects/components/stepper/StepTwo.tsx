@@ -1,8 +1,6 @@
-import lockIcon from "@/components/shared/icons/lock.svg";
 import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
-
 const repositories = [
   { name: "Repository 1", date: "10/09/25" },
   { name: "Repository 1", date: "10/09/25" },
@@ -174,7 +172,12 @@ export default function StepTwo({
                     {repo.name}
                   </span>
                   <span className="text-black/20 text-[14px] ml-1">
-                    <Image src={lockIcon} alt="lock" width={14} height={14} />
+                    <Image
+                      src="/icons/lock.svg"
+                      alt="lock"
+                      width={14}
+                      height={14}
+                    />
                   </span>
                 </div>
                 <div className="flex items-center gap-3">

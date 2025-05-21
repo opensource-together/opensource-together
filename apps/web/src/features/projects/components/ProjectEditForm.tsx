@@ -1,10 +1,4 @@
 "use client";
-import starIcon from "@/components/shared/icons/blackstaricon.svg";
-import createdIcon from "@/components/shared/icons/createdprojectsicon.svg";
-import crossIcon from "@/components/shared/icons/crossIcon.svg";
-import emptyProjectIcon from "@/components/shared/icons/emptyprojectIcon.svg";
-import joinedIcon from "@/components/shared/icons/joinedicon.svg";
-import linkedinIcon from "@/components/shared/icons/linkedingrisicon.svg";
 import Button from "@/components/shared/ui/Button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -189,7 +183,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <Image
-                src={emptyProjectIcon}
+                src="/icons/empty-project.svg"
                 alt="empty"
                 width={80}
                 height={80}
@@ -277,7 +271,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           >
             <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
               <Image
-                src={crossIcon}
+                src="/icons/cross-icon.svg"
                 alt="add"
                 width={10}
                 height={10}
@@ -312,22 +306,28 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           <h2 className="text-[18px] font-medium mb-3">Share</h2>
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
-              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
+              <Image
+                src="/icons/linkedin.svg"
+                alt="LinkedIn"
+                width={15}
+                height={15}
+              />
               <span className="text-[14px] text-black/70">
-                Share on LinkedIn
+                Partager sur LinkedIn
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
-              <span className="text-[14px] text-black/70">
-                Share on LinkedIn
-              </span>
+              <Image src="/icons/x-logo.svg" alt="X" width={15} height={15} />
+              <span className="text-[14px] text-black/70">Partager sur X</span>
             </div>
             <div className="flex items-center gap-3">
-              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
-              <span className="text-[14px] text-black/70">
-                Share on LinkedIn
-              </span>
+              <Image
+                src="/icons/github.svg"
+                alt="GitHub"
+                width={15}
+                height={15}
+              />
+              <span className="text-[14px] text-black/70">Voir sur Github</span>
             </div>
           </div>
         </div>
@@ -338,20 +338,32 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-3">
               <Image
-                src={joinedIcon}
+                src="/icons/joined.svg"
                 alt="Joined Projects"
                 width={15}
-                height={13}
+                height={15}
               />
-              <span className="text-[14px] text-black/70">Joined Projects</span>
+              <span className="text-[14px] text-black/70">Projets rejoins</span>
             </div>
             <div className="flex items-center gap-3">
-              <Image src={starIcon} alt="Stars" width={15} height={14} />
-              <span className="text-[14px] text-black/70">Stars</span>
+              <Image
+                src="/icons/black-star.svg"
+                alt="Stars"
+                width={15}
+                height={15}
+              />
+              <span className="text-[14px] text-black/70">
+                Stars <span className="text-[14px] text-black/70">127</span>
+              </span>
             </div>
             <div className="flex items-center gap-3">
-              <Image src={createdIcon} alt="Members" width={13} height={15} />
-              <span className="text-[14px] text-black/70">Members</span>
+              <Image
+                src="/icons/two-people.svg"
+                alt="Members"
+                width={15}
+                height={15}
+              />
+              <span className="text-[14px] text-black/70">Membres</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,3 @@
-import arrowupright from "@/components/shared/icons/arrow-up-right.svg";
-import validationIcon from "@/components/shared/icons/validation-icon.svg";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -67,7 +65,11 @@ const RoleCard: React.FC<RoleCardProps> = ({
         >
           {applied ? "Applied to role" : buttonLabel}
           <Image
-            src={applied ? validationIcon : arrowupright}
+            src={
+              applied
+                ? "/icons/validation-icon.svg"
+                : "/icons/arrow-up-right.svg"
+            }
             alt={applied ? "applied" : "arrowupright"}
             width={10}
             height={10}

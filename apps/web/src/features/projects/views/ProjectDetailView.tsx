@@ -1,6 +1,5 @@
 "use client";
 
-import peopleicon from "@/components/shared/icons/people.svg";
 import Breadcrumb from "@/components/shared/ui/Breadcrumb";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -127,7 +126,7 @@ export default function ProjectDetailView({
             <p className="text-[20px] font-medium font-geist flex items-centers gap-1">
               Rôles Disponibles{" "}
               <Image
-                src={peopleicon}
+                src="/icons/people.svg"
                 className="mt-1"
                 alt="peopleicon"
                 width={14}

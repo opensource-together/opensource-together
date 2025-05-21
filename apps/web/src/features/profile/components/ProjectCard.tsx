@@ -1,5 +1,3 @@
-import emptystarIcon from "@/components/shared/icons/empty-star.svg";
-import peopleicon from "@/components/shared/icons/people.svg";
 import Image from "next/image";
 import { mockProjects } from "../../projects/data/mockProjects";
 
@@ -117,7 +115,12 @@ export function ProjectCard({
             <div className="flex items-center border border-[black]/10 rounded-[3px] px-1 py-0.5">
               <span className="text-[14px] text-[black]/50 mr-1">{stars}</span>
               <div className="w-3.5 h-3.5">
-                <Image src={emptystarIcon} alt="stars" width={14} height={14} />
+                <Image
+                  src="/icons/empty-star.svg"
+                  alt="stars"
+                  width={14}
+                  height={14}
+                />
               </div>
             </div>
           )}
@@ -136,7 +139,12 @@ export function ProjectCard({
 
         <div className="flex flex-wrap items-center gap-2 text-[11px] mt-5">
           <div className="text-[10px] font-medium flex items-center gap-1 mr-2">
-            <Image src={peopleicon} alt="peopleicon" width={11} height={11} />{" "}
+            <Image
+              src="/icons/people.svg"
+              alt="peopleicon"
+              width={11}
+              height={11}
+            />{" "}
             {roleCount} Rôles disponibles
           </div>
 

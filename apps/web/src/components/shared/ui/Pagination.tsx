@@ -1,12 +1,15 @@
-import leftChevron from "@/components/shared/icons/chevron-left-small.svg";
-import rightChevron from "@/components/shared/icons/chevron-right-small.svg";
 import Image from "next/image";
 
 export default function Pagination() {
   return (
     <div className="flex items-center justify-center gap-3">
       <button className="flex items-center gap-1 px-2 py-1 font-geist font-medium text-[14px] text-[black]">
-        <Image src={leftChevron} alt="Précédent" width={5} height={10} />
+        <Image
+          src="/icons/chevron-left-small.svg"
+          alt="Précédent"
+          width={5}
+          height={10}
+        />
         <span>Précédent</span>
       </button>
 
@@ -28,7 +31,12 @@ export default function Pagination() {
 
       <button className="flex items-center gap-1 px-2 py-1 font-geist font-medium text-[14px] text-[black]">
         <span>Suivant</span>
-        <Image src={rightChevron} alt="Suivant" width={5} height={10} />
+        <Image
+          src="/icons/chevron-right-small.svg"
+          alt="Suivant"
+          width={5}
+          height={10}
+        />
       </button>
     </div>
   );

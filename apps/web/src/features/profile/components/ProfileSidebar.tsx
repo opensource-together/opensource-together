@@ -1,9 +1,3 @@
-import starIcon from "@/components/shared/icons/blackstaricon.svg";
-import createdIcon from "@/components/shared/icons/createdprojectsicon.svg";
-import githubIcon from "@/components/shared/icons/githubgrisicon.svg";
-import joinedIcon from "@/components/shared/icons/joinedicon.svg";
-import linkedinIcon from "@/components/shared/icons/linkedingrisicon.svg";
-import twitterIcon from "@/components/shared/icons/twitterxgrisicon.svg";
 import Image from "next/image";
 
 export default function ProfileSidebar() {
@@ -14,15 +8,30 @@ export default function ProfileSidebar() {
         <h2 className="text-[18px] font-medium mb-3">Socials</h2>
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <Image src={githubIcon} alt="GitHub" width={15} height={19} />
+            <Image
+              src="/icons/github.svg"
+              alt="GitHub"
+              width={15}
+              height={19}
+            />
             <span className="text-[14px] text-[#000000]/70">@byronlove111</span>
           </div>
           <div className="flex items-center gap-3">
-            <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
+            <Image
+              src="/icons/linkedin.svg"
+              alt="LinkedIn"
+              width={15}
+              height={15}
+            />
             <span className="text-[14px] text-[#000000]/70">@byronlove111</span>
           </div>
           <div className="flex items-center gap-3">
-            <Image src={twitterIcon} alt="X/Twitter" width={15} height={15} />
+            <Image
+              src="/icons/x-logo.svg"
+              alt="X/Twitter"
+              width={15}
+              height={15}
+            />
             <span className="text-[14px] text-[#000000]/70">@byronlove111</span>
           </div>
         </div>
@@ -34,10 +43,10 @@ export default function ProfileSidebar() {
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
             <Image
-              src={joinedIcon}
+              src="/icons/joined.svg"
               alt="Joined Projects"
               width={15}
-              height={13}
+              height={15}
             />
             <span className="text-[14px] text-[#000000]/70">
               Projets rejoins{" "}
@@ -45,7 +54,12 @@ export default function ProfileSidebar() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Image src={starIcon} alt="Stars" width={15} height={14} />
+            <Image
+              src="/icons/black-star.svg"
+              alt="Stars"
+              width={15}
+              height={15}
+            />
             <span className="text-[14px] text-[#000000]/70">
               Stars{" "}
               <span className="text-[14px] text-black font-medium">127</span>
@@ -53,9 +67,9 @@ export default function ProfileSidebar() {
           </div>
           <div className="flex items-center gap-3">
             <Image
-              src={createdIcon}
+              src="/icons/created-projects-icon.svg"
               alt="Created Projects"
-              width={13}
+              width={15}
               height={15}
             />
             <span className="text-[14px] text-[#000000]/70">

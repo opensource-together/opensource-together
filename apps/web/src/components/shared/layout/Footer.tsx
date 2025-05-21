@@ -1,5 +1,4 @@
 import Image from "next/image";
-import githubWhite from "../icons/github-white.svg";
 import Button from "../ui/Button";
 
 export default function Footer() {
@@ -10,7 +9,12 @@ export default function Footer() {
         <div className="absolute bottom-8 left-10">
           <Button className="flex items-center gap-2">
             Star notre GitHub
-            <Image src={githubWhite} alt="GitHub" width={18} height={18} />
+            <Image
+              src="/icons/github-white.svg"
+              alt="GitHub"
+              width={18}
+              height={18}
+            />
           </Button>
         </div>
         {/* Texte en bas à droite avec marge */}

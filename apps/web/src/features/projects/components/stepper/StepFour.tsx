@@ -1,6 +1,3 @@
-import difficultyBarGray from "@/components/shared/icons/Difficulty-bar-gray.svg";
-import difficultyBarLight from "@/components/shared/icons/Difficulty-bar-light.svg";
-import croixSuppression from "@/components/shared/icons/croix-suppression.svg";
 import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,19 +8,19 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
     return (
       <span className="flex items-center gap-[2px] ml-2">
         <Image
-          src={difficultyBarGray}
+          src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
           width={2}
           height={8}
         />
         <Image
-          src={difficultyBarLight}
+          src="/icons/difficulty-bar-light.svg"
           alt="Difficulty level"
           width={2}
           height={8}
         />
         <Image
-          src={difficultyBarLight}
+          src="/icons/difficulty-bar-light.svg"
           alt="Difficulty level"
           width={2}
           height={8}
@@ -34,19 +31,19 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
     return (
       <span className="flex items-center gap-[2px] ml-2">
         <Image
-          src={difficultyBarGray}
+          src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
           width={2}
           height={8}
         />
         <Image
-          src={difficultyBarGray}
+          src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
           width={2}
           height={8}
         />
         <Image
-          src={difficultyBarLight}
+          src="/icons/difficulty-bar-light.svg"
           alt="Difficulty level"
           width={2}
           height={8}
@@ -57,19 +54,19 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
     return (
       <span className="flex items-center gap-[2px] ml-2">
         <Image
-          src={difficultyBarGray}
+          src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
           width={2}
           height={8}
         />
         <Image
-          src={difficultyBarGray}
+          src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
           width={2}
           height={8}
         />
         <Image
-          src={difficultyBarGray}
+          src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
           width={2}
           height={8}
@@ -144,7 +141,12 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
             style={{ width: "32px", height: "32px" }}
             onClick={closeRoleModal}
           >
-            <Image src={croixSuppression} alt="close" width={12} height={12} />
+            <Image
+              src="/icons/croix-suppression.svg"
+              alt="close"
+              width={12}
+              height={12}
+            />
           </button>
         </div>
         <div className="w-full flex flex-col gap-8">
@@ -366,7 +368,7 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
             </span>
             <button className="text-black/50 text-[10px] font-bold mt-6">
               <Image
-                src={croixSuppression}
+                src="/icons/croix-suppression.svg"
                 alt="croix suppression"
                 width={13}
                 height={13}

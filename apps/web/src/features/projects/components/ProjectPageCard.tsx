@@ -1,7 +1,3 @@
-import difficultyBarGray from "@/components/shared/icons/Difficulty-bar-gray.svg";
-import difficultyBarLight from "@/components/shared/icons/Difficulty-bar-light.svg";
-import emptyprojecticon from "@/components/shared/icons/emptyprojectIcon.svg";
-import joinedIcon from "@/components/shared/icons/joinedicon.svg";
 import Button from "@/components/shared/ui/Button";
 import Image from "next/image";
 import { TechStack } from "../types/projectTypes";
@@ -53,19 +49,19 @@ export default function ProjectPageCard({
       return (
         <div className="flex items-center gap-[2px]">
           <Image
-            src={difficultyBarGray}
+            src="/icons/difficulty-bar-gray.svg"
             alt="Difficulty level"
             width={2}
             height={8}
           />
           <Image
-            src={difficultyBarLight}
+            src="/icons/difficulty-bar-light.svg"
             alt="Difficulty level"
             width={2}
             height={8}
           />
           <Image
-            src={difficultyBarLight}
+            src="/icons/difficulty-bar-light.svg"
             alt="Difficulty level"
             width={2}
             height={8}
@@ -76,19 +72,19 @@ export default function ProjectPageCard({
       return (
         <div className="flex items-center gap-[2px]">
           <Image
-            src={difficultyBarGray}
+            src="/icons/difficulty-bar-gray.svg"
             alt="Difficulty level"
             width={2}
             height={8}
           />
           <Image
-            src={difficultyBarGray}
+            src="/icons/difficulty-bar-gray.svg"
             alt="Difficulty level"
             width={2}
             height={8}
           />
           <Image
-            src={difficultyBarLight}
+            src="/icons/difficulty-bar-light.svg"
             alt="Difficulty level"
             width={2}
             height={8}
@@ -99,19 +95,19 @@ export default function ProjectPageCard({
       return (
         <div className="flex items-center gap-[2px]">
           <Image
-            src={difficultyBarGray}
+            src="/icons/difficulty-bar-gray.svg"
             alt="Difficulty level"
             width={2}
             height={8}
           />
           <Image
-            src={difficultyBarGray}
+            src="/icons/difficulty-bar-gray.svg"
             alt="Difficulty level"
             width={2}
             height={8}
           />
           <Image
-            src={difficultyBarGray}
+            src="/icons/difficulty-bar-gray.svg"
             alt="Difficulty level"
             width={2}
             height={8}
@@ -128,7 +124,7 @@ export default function ProjectPageCard({
         <div className="flex items-center gap-5">
           <div className="w-[82px] h-[80px] rounded-[16px] bg-[#F4F4F4] flex items-center justify-center">
             <Image
-              src={image || emptyprojecticon}
+              src={image || "/icons/empty-project.svg"}
               alt={title || "Project icon"}
               width={80}
               height={80}
@@ -184,7 +180,7 @@ export default function ProjectPageCard({
             >
               Rejoindre le projet
               <Image
-                src={joinedIcon}
+                src="/icons/joined.svg"
                 alt="joined"
                 width={10}
                 height={10}
@@ -239,7 +235,7 @@ export default function ProjectPageCard({
               <div key={index} className="flex items-center gap-2">
                 <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
                   <Image
-                    src={tech.iconUrl || emptyprojecticon}
+                    src={tech.iconUrl || "/icons/empty-project.svg"}
                     alt={tech.name}
                     width={14}
                     height={14}

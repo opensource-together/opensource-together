@@ -1,4 +1,3 @@
-import chevronDown from "@/components/shared/icons/chevron-down.svg";
 import Image from "next/image";
 import React from "react";
 
@@ -29,7 +28,12 @@ const FilterButton: React.FC<FilterButtonProps> = ({
       )}
       <span className="font-light">{value}</span>
       {hasChevron && (
-        <Image src={chevronDown} alt="Expand" width={10} height={6} />
+        <Image
+          src="/icons/chevron-down.svg"
+          alt="Expand"
+          width={10}
+          height={6}
+        />
       )}
     </button>
   );

@@ -1,5 +1,3 @@
-import chevronLeft from "@/components/shared/icons/chevron-left.svg";
-import chevronRight from "@/components/shared/icons/chevron-right.svg";
 import Image from "next/image";
 
 export default function Billboard() {
@@ -29,10 +27,20 @@ export default function Billboard() {
       </div>
       <div className="absolute bottom-12 right-10 flex items-center gap-2">
         <div className="flex items-center pr-[1px] justify-center bg-white border border-[#000000]/10 rounded-[30px] w-[40px] h-[40px]">
-          <Image src={chevronLeft} alt="chevron-left" width={8} height={24} />
+          <Image
+            src="/icons/chevron-left.svg"
+            alt="chevron-left"
+            width={8}
+            height={24}
+          />
         </div>
         <div className="flex items-center pl-[2px] justify-center bg-white border border-[#000000]/10 rounded-[30px] w-[40px] h-[40px]">
-          <Image src={chevronRight} alt="chevron-right" width={8} height={24} />
+          <Image
+            src="/icons/chevron-right.svg"
+            alt="chevron-right"
+            width={8}
+            height={24}
+          />
         </div>
       </div>
       <div className="absolute bottom-7 right-10 flex items-center justify-center w-[90px] gap-1">

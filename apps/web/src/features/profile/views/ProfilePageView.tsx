@@ -1,4 +1,3 @@
-import pinnedIcon from "@/components/shared/icons/pinned-icon.svg";
 import Image from "next/image";
 import ProfileCard from "../components/ProfileCard";
 import ProfileSidebar from "../components/ProfileSidebar";
@@ -19,7 +18,12 @@ export default function ProfilePageView() {
         <div className="w-full lg:pl-0 mt-2 mb-30">
           <h2 className="text-[20px] font-medium mb-10 font-geist flex items-center gap-1">
             Pinned Projects{" "}
-            <Image src={pinnedIcon} alt="pinnedicon" width={18} height={17} />
+            <Image
+              src="/icons/pinned-icon.svg"
+              alt="pinnedicon"
+              width={18}
+              height={17}
+            />
           </h2>
           <div className="flex flex-col gap-6 lg:max-w-[731px]">
             <ProjectList />
