@@ -1,4 +1,6 @@
 import { StackIcon } from "@/components/shared/StackIcon";
+import { Badge } from "@/components/ui/badge";
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
 import Image from "next/image";
 import { mockProjects } from "../../projects/data/mockProjects";
 
@@ -129,13 +131,9 @@ export function ProjectCard({
           </div>
 
           {roles.map((role, index) => (
-            <div
-              key={index}
-              className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
-              style={{ color: role.color, backgroundColor: role.bgColor }}
-            >
+            <Badge key={index} variant={getRoleBadgeVariant(role.name)}>
               {role.name}
-            </div>
+            </Badge>
           ))}
 
           {roles.length > 3 && (

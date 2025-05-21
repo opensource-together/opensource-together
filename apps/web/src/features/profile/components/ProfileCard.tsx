@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
 import Image from "next/image";
 
 // Type pour les niveaux de contribution
@@ -5,8 +7,6 @@ type ContributionLevel = 0 | 1 | 2 | 3 | 4;
 
 interface Skill {
   name: string;
-  color: string;
-  bgColor: string;
 }
 
 export default function ProfileCard() {
@@ -64,9 +64,9 @@ export default function ProfileCard() {
   };
 
   const skills: Skill[] = [
-    { name: "Developeur Frontend", color: "#2B7FFF", bgColor: "#EFF6FF" },
-    { name: "Designer UX", color: "#FF8904", bgColor: "#FFFBEB" },
-    { name: "Developeur Backend", color: "#00C950", bgColor: "#F0FDF4" },
+    { name: "Developeur Frontend" },
+    { name: "Designer UX" },
+    { name: "Developeur Backend" },
   ];
 
   return (
@@ -106,13 +106,9 @@ export default function ProfileCard() {
         <h3 className="text-[15px] font-medium mb-4">Compétences techniques</h3>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, index) => (
-            <div
-              key={index}
-              className="h-[18px] flex items-center px-2 rounded-full text-[10px]"
-              style={{ color: skill.color, backgroundColor: skill.bgColor }}
-            >
+            <Badge key={index} variant={getRoleBadgeVariant(skill.name)}>
               {skill.name}
-            </div>
+            </Badge>
           ))}
         </div>
       </div>

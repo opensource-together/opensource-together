@@ -1,4 +1,6 @@
 import StackIcon from "@/components/shared/StackIcon";
+import { Badge } from "@/components/ui/badge";
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -217,13 +219,9 @@ export default function ProjectCard({
 
             {/* Rôles dynamiques */}
             {visibleRoles.map((role, index) => (
-              <div
-                key={index}
-                className="h-[18px] flex-shrink-0 flex items-center px-2 rounded-full text-[10px] whitespace-nowrap"
-                style={{ color: role.color, backgroundColor: role.bgColor }}
-              >
+              <Badge key={index} variant={getRoleBadgeVariant(role.name)}>
                 {role.name}
-              </div>
+              </Badge>
             ))}
             {remainingRoles > 0 && (
               <span className="h-[22px] flex-shrink-0 flex items-center px-1 rounded-full text-[11px] font-semibold whitespace-nowrap text-[black]/20 bg-transparent">

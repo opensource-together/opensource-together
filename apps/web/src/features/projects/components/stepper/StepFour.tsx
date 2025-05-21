@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -173,32 +174,23 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
               {Array(4)
                 .fill("Front-end Developer")
                 .map((skill, i) => (
-                  <span
-                    key={i}
-                    className="font-geist font-normal text-[12px] text-[#2B7FFF] bg-[#EFF6FF] rounded-full px-2 py-0.5"
-                  >
+                  <Badge key={i} variant="info">
                     {skill}
-                  </span>
+                  </Badge>
                 ))}
               {Array(4)
                 .fill("UX Designer")
                 .map((skill, i) => (
-                  <span
-                    key={i}
-                    className="font-geist font-normal text-[12px] text-[#FF8904] bg-[#FFFBEB] rounded-full px-2 py-0.5"
-                  >
+                  <Badge key={i} variant="danger">
                     {skill}
-                  </span>
+                  </Badge>
                 ))}
               {Array(4)
                 .fill("MongoDB")
                 .map((skill, i) => (
-                  <span
-                    key={i}
-                    className="font-geist font-normal text-[12px] text-[#00C950] bg-[#F0FDF4] rounded-full px-2 py-0.5"
-                  >
+                  <Badge key={i} variant="success">
                     {skill}
-                  </span>
+                  </Badge>
                 ))}
             </div>
           </div>
@@ -371,15 +363,11 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
             </button>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">
-              Node.js
-            </span>
-            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">
-              MongoDB
-            </span>
-            <span className="w-[60px] h-[20px] flex items-center justify-center rounded-full bg-[#F0FDF4] text-[#00C950] text-[11px] font-geist">
-              Docker
-            </span>
+            {["Node.js", "MongoDB", "Docker"].map((tech, index) => (
+              <Badge key={index} variant="success">
+                {tech}
+              </Badge>
+            ))}
           </div>
         </div>
         {showRoleModal && <RoleModal />}

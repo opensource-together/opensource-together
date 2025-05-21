@@ -1,23 +1,24 @@
-import Image from "next/image";
-import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
 import React, { useState } from "react";
-import { Badge } from "../types/projectTypes";
+
+interface Badge {
+  label: string;
+  color: string;
+  bgColor: string;
+}
 
 interface RoleCardProps {
   title: string;
   description: string;
-  badges?: Badge[];
-  buttonLabel?: string;
-  buttonHref?: string;
+  badges: Badge[];
   experienceBadge?: string;
 }
 
 const RoleCard: React.FC<RoleCardProps> = ({
   title,
   description,
-  badges = [],
-  buttonLabel = "Postuler pour le rôle",
-  buttonHref = "#",
+  badges,
   experienceBadge,
 }) => {
   const [applied, setApplied] = useState(false);
@@ -28,53 +29,26 @@ const RoleCard: React.FC<RoleCardProps> = ({
   };
 
   return (
-    <div className="w-[717px] min-h-[174px] bg-white rounded-[16px] border border-black/10 shadow-[0_2px_5px_rgba(0,0,0,0.02)] px-8 py-6 flex flex-col mb-6">
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="font-geist font-medium text-[18px] text-black">
-          {title}
-        </h3>
-        {experienceBadge && (
-          <div className="flex items-center h-[20px] bg-black/[0.02] rounded-full px-3">
-            <span className="font-geist font-normal text-[11px] tracking-[-0.5px] text-black/40">
+    <div className="lg:max-w-[721.96px] w-full border border-[black]/10 rounded-[20px] p-6">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[16px] font-medium">{title}</h3>
+          {experienceBadge && (
+            <span className="text-[10px] text-[black]/50 border border-[black]/10 rounded-full px-2 py-0.5">
               {experienceBadge}
             </span>
-          </div>
-        )}
-      </div>
-      <p className="font-geist font-normal text-[12px] leading-[20px] text-black/70 mb-4">
-        {description}
-      </p>
-      <div className="border-t-[0.5px] border-dashed border-black/10 w-full"></div>
-      <div className="flex items-end justify-between mt-auto">
-        <div className="flex gap-2">
-          {badges.length > 0 &&
-            badges.map((badge, idx) => (
-              <span
-                key={idx}
-                className="px-3 h-[18px] w-auto flex justify-center items-center py-[2px] rounded-full text-[11px] font-geist font-medium"
-                style={{ color: badge.color, backgroundColor: badge.bgColor }}
-              >
-                {badge.label}
-              </span>
-            ))}
+          )}
         </div>
-        <Link
-          href={buttonHref}
-          onClick={handleApply}
-          className="text-[14px] font-semibold ml-auto flex font-geist items-center gap-1 hover:opacity-80 transition-opacity"
-        >
-          {applied ? "Applied to role" : buttonLabel}
-          <Image
-            src={
-              applied
-                ? "/icons/validation-icon.svg"
-                : "/icons/arrow-up-right.svg"
-            }
-            alt={applied ? "applied" : "arrowupright"}
-            width={10}
-            height={10}
-          />
-        </Link>
+        <p className="text-[12px] text-[black]/50 leading-[20px]">
+          {description}
+        </p>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {badges.map((badge, index) => (
+            <Badge key={index} variant={getRoleBadgeVariant(title)}>
+              {badge.label}
+            </Badge>
+          ))}
+        </div>
       </div>
     </div>
   );
