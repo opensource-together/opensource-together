@@ -10,15 +10,22 @@ import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
 import { Inject } from '@nestjs/common';
 import { ICommandHandler } from '@nestjs/cqrs';
+import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
+import { CreateProjectRoleCommand } from '@/application/projectRole/commands/create/create-role.command';
+import { CreateTeamMemberCommand } from '@/application/teamMember/commands/create/create-team-member.command';
+import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
+    public readonly ownerId: string,
     public readonly title: string,
     public readonly description: string,
+    public readonly difficulty: 'easy' | 'medium' | 'hard',
     public readonly link: string | null,
+    public readonly githubLink: string,
     public readonly techStacks: TechStackDto[],
-    public readonly ownerId: string,
-    public readonly projectRoles: object[],
+    public readonly projectRoles: CreateProjectRoleCommand[],
+    public readonly projectMembers: CreateTeamMemberCommand[],
   ) {}
 }
 
@@ -37,15 +44,29 @@ export class CreateProjectCommandHandler
     const techStacks = TechStackFactory.createMany(
       createProjectCommand.techStacks,
     );
-
     if (!techStacks.success) {
       return Result.fail(techStacks.error);
+    }
+
+    const projectRoles = ProjectRoleFactory.createMany(
+      createProjectCommand.projectRoles,
+    );
+    if (!projectRoles.success) {
+      return Result.fail(projectRoles.error);
+    }
+
+    const projectMembers = TeamMemberFactory.createMany(
+      createProjectCommand.projectMembers,
+    );
+    if (!projectMembers.success) {
+      return Result.fail(projectMembers.error);
     }
 
     const project = ProjectFactory.create({
       ...createProjectCommand,
       techStacks: techStacks.value,
-      projectRoles: createProjectCommand.projectRoles,
+      projectRoles: projectRoles.value,
+      teamMembers: projectMembers.value,
     });
     if (!project.success) {
       return Result.fail(project.error);

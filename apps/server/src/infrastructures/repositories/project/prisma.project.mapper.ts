@@ -2,7 +2,13 @@ import { Project as DomainProject } from '@/domain/project/project.entity';
 import { ProjectFactory } from '@/domain/project/factory/project.factory';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
 import { Result } from '@/shared/result';
-import { Project as PrismaProject, TechStack, Prisma } from '@prisma/client';
+import {
+  Project as PrismaProject,
+  TechStack,
+  Prisma,
+  Difficulty,
+} from '@prisma/client';
+
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
 };
@@ -18,16 +24,30 @@ export class PrismaProjectMapper {
     return Result.ok({
       title: project.getTitle(),
       description: project.getDescription(),
+      difficulty: PrismaProjectMapper.toPrismaDifficulty(
+        project.getDifficulty(),
+      ),
       link: project.getLink(),
+      github: project.getGithubLink() || '',
       ownerId: project.getOwnerId(),
       techStacks: {
         connect: project.getTechStacks().map((techStack) => ({
           id: techStack.getId(),
         })),
       },
-      projectRoles: project
-        .getProjectRoles()
-        .map((role) => JSON.stringify(role)),
+      projectRoles: {
+        create: project.getProjectRoles().map((role) => ({
+          role_title: role.getRoleTitle(),
+          skill_set: role.getSkillSet().map((tech) => tech.getName()),
+          description: role.getDescription(),
+          is_filled: role.getIsFilled(),
+        })),
+      },
+      teamMembers: {
+        create: project.getTeamMembers().map((member) => ({
+          user_id: member.getUserId(),
+        })),
+      },
     });
   }
 
@@ -45,13 +65,48 @@ export class PrismaProjectMapper {
         link: prismaProject.link,
         ownerId: prismaProject.ownerId,
         techStacks: techStacks.value,
+        difficulty: PrismaProjectMapper.fromPrismaDifficulty(
+          prismaProject.difficulty,
+        ),
+        githubLink: prismaProject.github,
         createdAt: prismaProject.createAt,
         updatedAt: prismaProject.updatedAt,
-        projectRoles: prismaProject.projectRoles,
+        projectRoles: [],
+        teamMembers: [],
       },
     );
     if (!projectResult.success) return Result.fail(projectResult.error);
 
     return Result.ok(projectResult.value);
+  }
+
+  public static toPrismaDifficulty(
+    difficulty: 'easy' | 'medium' | 'hard',
+  ): Difficulty {
+    switch (difficulty) {
+      case 'easy':
+        return Difficulty.EASY;
+      case 'medium':
+        return Difficulty.MEDIUM;
+      case 'hard':
+        return Difficulty.HARD;
+      default:
+        throw new Error(`Invalid difficulty: ${difficulty}`);
+    }
+  }
+
+  public static fromPrismaDifficulty(
+    difficulty: Difficulty,
+  ): 'easy' | 'medium' | 'hard' {
+    switch (difficulty) {
+      case Difficulty.EASY:
+        return 'easy';
+      case Difficulty.MEDIUM:
+        return 'medium';
+      case Difficulty.HARD:
+        return 'hard';
+      default:
+        throw new Error(`Invalid difficulty: ${difficulty}`);
+    }
   }
 }
