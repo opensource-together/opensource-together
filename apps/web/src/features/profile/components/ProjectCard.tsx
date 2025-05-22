@@ -1,11 +1,11 @@
 "use client";
 import ProjectCardComponent from "@/components/shared/ProjectCard";
-import { Role, TechIcon } from "@/components/ui/project-card";
 import { mockProjects } from "../../projects/data/mockProjects";
 
-
 // Redéfinition simplifiée pour maintenir la compatibilité avec le profil
-export function ProjectCard(props: React.ComponentProps<typeof ProjectCardComponent>) {
+export function ProjectCard(
+  props: React.ComponentProps<typeof ProjectCardComponent>,
+) {
   return <ProjectCardComponent {...props} />;
 }
 

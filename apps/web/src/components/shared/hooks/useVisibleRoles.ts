@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, RefObject } from "react";
+import { RefObject, useLayoutEffect, useRef, useState } from "react";
 
 interface Role {
   name: string;
@@ -25,7 +25,10 @@ interface UseVisibleRolesResult {
  * Hook personnalisé pour calculer dynamiquement le nombre de badges de rôles visibles
  * en fonction de l'espace disponible
  */
-export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOptions): UseVisibleRolesResult {
+export function useVisibleRoles({
+  roles,
+  dependencies = [],
+}: UseVisibleRolesOptions): UseVisibleRolesResult {
   const containerRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLDivElement>(null);
   const actionRef = useRef<HTMLAnchorElement>(null);
@@ -38,16 +41,16 @@ export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOpt
       const container = containerRef.current;
       const counter = counterRef.current;
       const action = actionRef.current;
-      
+
       // Largeur totale du conteneur
       const totalWidth = container.offsetWidth;
-      
+
       // Largeur du compteur
       const counterWidth = counter.offsetWidth + 8;
-      
+
       // Largeur du bouton d'action
       const actionWidth = action ? action.offsetWidth + 8 : 0;
-      
+
       // Largeur du badge +X
       let plusWidth = 0;
       if (roles.length > 0) {
@@ -60,14 +63,14 @@ export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOpt
         plusWidth = temp.offsetWidth + 8;
         container.removeChild(temp);
       }
-      
+
       // Largeur disponible pour les rôles
       const available = totalWidth - counterWidth - actionWidth;
-      
+
       // On va rendre les rôles un par un
       let used = 0;
       let visible = 0;
-      
+
       // On crée des spans temporaires pour mesurer chaque rôle
       for (let i = 0; i < roles.length; i++) {
         const temp = document.createElement("span");
@@ -78,7 +81,7 @@ export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOpt
         container.appendChild(temp);
         const roleWidth = temp.offsetWidth + 8;
         container.removeChild(temp);
-        
+
         // Si on doit afficher le badge +X, il faut réserver la place
         const needPlus = i < roles.length - 1;
         if (used + roleWidth + (needPlus ? plusWidth : 0) > available) {
@@ -87,13 +90,13 @@ export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOpt
         used += roleWidth;
         visible++;
       }
-      
+
       setMaxVisible(visible);
       setMeasured(true);
     }
-    
+
     measure();
-    
+
     // ResizeObserver pour recalculer si la taille change
     let ro: ResizeObserver | undefined;
     if (containerRef.current) {
@@ -103,7 +106,7 @@ export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOpt
       });
       ro.observe(containerRef.current);
     }
-    
+
     return () => {
       if (ro && containerRef.current) ro.disconnect();
     };
@@ -119,6 +122,6 @@ export function useVisibleRoles({ roles, dependencies = [] }: UseVisibleRolesOpt
     maxVisible,
     visibleRoles,
     remainingRoles,
-    measured
+    measured,
   };
-} 
+}

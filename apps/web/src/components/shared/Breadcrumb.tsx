@@ -19,7 +19,10 @@ interface BreadcrumbProps {
   className?: string;
 }
 
-export default function BreadcrumbComponent({ items, className = "" }: BreadcrumbProps) {
+export default function BreadcrumbComponent({
+  items,
+  className = "",
+}: BreadcrumbProps) {
   return (
     <Breadcrumb className={`font-geist ${className}`}>
       <BreadcrumbList className="mx-2">

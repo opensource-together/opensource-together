@@ -1,5 +1,5 @@
 "use client";
-import Button from "@/components/shared/Button";
+import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useCreateProject } from "../hooks/useProjects";
@@ -139,13 +139,7 @@ export default function ProjectForm() {
         </button>
       </div>
 
-      <Button
-        type="submit"
-        className="mt-4"
-        disabled={isCreating}
-        width="100%"
-        height="43px"
-      >
+      <Button type="submit" className="mt-4" disabled={isCreating}>
         {isCreating ? "Creating..." : "Create Project"}
       </Button>
 
