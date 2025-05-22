@@ -11,7 +11,7 @@ export const mockProjects: Project[] = [
     authorImage:
       "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
     description:
-      "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
+      "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante et collaborative, avec des défis quotidiens et un système de classement pour suivre votre évolution",
     longDescription:
       "LeetGrind est un bot Discord qui propose un challenge LeetCode aléatoire chaque jour à une communauté active de développeurs. Avec un système de classement, un canal dédié à l'entraide et une interface ludique, LeetGrind aide les développeurs à coder de façon régulière, à progresser ensemble et à retrouver la motivation au quotidien.",
     status: "PUBLISHED",
