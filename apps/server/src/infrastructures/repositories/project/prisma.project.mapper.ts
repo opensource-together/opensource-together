@@ -37,10 +37,10 @@ export class PrismaProjectMapper {
       },
       projectRoles: {
         create: project.getProjectRoles().map((role) => ({
-          role_title: role.getRoleTitle(),
-          skill_set: role.getSkillSet().map((tech) => tech.getName()),
+          roleTitle: role.getRoleTitle(),
+          skillSet: role.getSkillSet().map((tech) => tech.getName()),
           description: role.getDescription(),
-          is_filled: role.getIsFilled(),
+          isFilled: role.getIsFilled(),
         })),
       },
       teamMembers: {
