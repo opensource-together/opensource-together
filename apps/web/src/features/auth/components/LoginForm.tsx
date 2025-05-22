@@ -1,3 +1,11 @@
+"use client";
+import useAuth from "@/features/auth/hooks/useAuth";
+
 export default function LoginForm() {
-  return <div>LoginForm</div>;
+  const { signInWithGitHub } = useAuth();
+  return (
+    <div>
+      <button onClick={signInWithGitHub}>Login with GitHub</button>
+    </div>
+  );
 }
