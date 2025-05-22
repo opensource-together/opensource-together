@@ -1,107 +1,61 @@
-import Image from "next/image";
+import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
 import { CommunityStats, SocialLink } from "../types/projectTypes";
 
 interface ProjectSideBarProps {
   socialLinks?: SocialLink[];
   communityStats?: CommunityStats;
-  showForks?: boolean;
 }
 
 export default function ProjectSideBar({
   socialLinks = [],
   communityStats,
-  showForks = true,
 }: ProjectSideBarProps) {
-  return (
-    <div className="w-[270px] font-geist flex flex-col gap-10 ">
-      {/* Share Section */}
-      <div>
-        <h2 className="text-[18px] font-medium mb-3">Partager</h2>
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/icons/linkedin.svg"
-              alt="LinkedIn"
-              width={15}
-              height={15}
-            />
-            <span className="text-[14px] text-black/70">
-              Partager sur Linkedin
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Image src="/icons/x-logo.svg" alt="X" width={15} height={15} />
-            <span className="text-[14px] text-black/70">Partager sur X</span>
-          </div>
-          {socialLinks.map((link, index) => {
-            if (link.type === "github") {
-              return (
-                <div key={index} className="flex items-center gap-3">
-                  <Image
-                    src="/icons/github.svg"
-                    alt="GitHub"
-                    width={15}
-                    height={15}
-                  />
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[14px] text-black/70 hover:underline"
-                  >
-                    Voir sur GitHub
-                  </a>
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-      </div>
+  const sections = [
+    {
+      title: "Partager",
+      links: [
+        {
+          icon: "/icons/linkedin.svg",
+          label: "Partager sur Linkedin",
+          url: "https://linkedin.com/share",
+        },
+        {
+          icon: "/icons/x-logo.svg",
+          label: "Partager sur X",
+          url: "https://x.com/share",
+        },
+        ...socialLinks
+          .filter((link) => link.type === "github")
+          .map((link) => ({
+            icon: "/icons/github.svg",
+            label: "Voir sur GitHub",
+            url: link.url,
+          })),
+      ],
+    },
+    {
+      title: "Statistiques du projet",
+      links: [
+        {
+          icon: "/icons/black-star.svg",
+          label: "Stars",
+          value: communityStats?.stars || 0,
+        },
+        {
+          icon: "/icons/two-people.svg",
+          label: "Membres",
+          value: communityStats?.contributors || 0,
+        },
+        {
+          icon: "/icons/github.svg",
+          label: "Forks",
+          value: communityStats?.forks || 0,
+        },
+      ],
+    },
+  ];
 
-      {/* Community Stats Section */}
-      <div>
-        <h2 className="text-[18px] font-medium mb-3">Statistiques du projet</h2>
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/icons/black-star.svg"
-              alt="Stars"
-              width={15}
-              height={15}
-            />
-            <span className="text-[14px] text-black/70">
-              {communityStats?.stars || 0} Stars
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Image
-              src="/icons/two-people.svg"
-              alt="Members"
-              width={15}
-              height={15}
-            />
-            <span className="text-[14px] text-black/70">
-              {communityStats?.contributors || 0} Membres
-            </span>
-          </div>
-          {showForks && (
-            <div className="flex items-center gap-3">
-              <Image
-                src="/icons/github.svg"
-                alt="Forks"
-                width={15}
-                height={15}
-              />
-              <span className="text-[14px] text-black/70">
-                {communityStats?.forks || 0} Forks
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <RightSidebar sections={sections} />;
 }
 
 export function SkeletonProjectSideBar() {

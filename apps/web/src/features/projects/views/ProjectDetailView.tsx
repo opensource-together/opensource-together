@@ -118,7 +118,6 @@ export default function ProjectDetailView({
               contributors: projectData?.communityStats?.contributors || 0,
               forks: projectData?.communityStats?.forks || 0,
             }}
-            showForks={true}
           />
         </div>
         <div>
