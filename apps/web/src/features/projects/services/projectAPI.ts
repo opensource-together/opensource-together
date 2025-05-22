@@ -1,6 +1,6 @@
 import { get } from "../../../lib/api/fetcher";
 import { mockProjects } from "../data/mockProjects";
-import { Project } from "../types/ProjectTypes";
+import { Project } from "../types/projectTypes";
 
 /**
  * Get the list of projects

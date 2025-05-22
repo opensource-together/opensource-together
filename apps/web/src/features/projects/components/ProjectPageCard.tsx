@@ -10,7 +10,7 @@ import Button from "@/shared/ui/Button";
 import Image from "next/image";
 import exemplebyronIcon from "../../../shared/icons/exemplebyronIcon.svg";
 import joinedIcon from "../../../shared/icons/joinedicon.svg";
-import { TechStack } from "../types/ProjectTypes";
+import { TechStack } from "../types/projectTypes";
 
 interface ProjectPageCardProps {
   title?: string;

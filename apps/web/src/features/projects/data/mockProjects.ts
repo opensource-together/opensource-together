@@ -5,7 +5,7 @@ import killianIcon from "../../../shared/icons/killiancodes-icon.jpg";
 import p2acoIcon from "../../../shared/icons/p2aco-icon.png";
 import ppY2 from "../../../shared/icons/pp-y2.jpg";
 import shyybiIcon from "../../../shared/icons/shyybi-icon.png";
-import { Project } from "../types/ProjectTypes";
+import { Project } from "../types/projectTypes";
 
 export const mockProjects: Project[] = [
   {
