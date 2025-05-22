@@ -6,10 +6,12 @@ import * as swaggerUi from 'swagger-ui-express';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
-  const document = YAML.load('swagger-doc.example.yml');
-
   app.useGlobalFilters(new SuperTokensExceptionFilter());
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(document));
+
+  if(process.env.NODE_ENV !== 'PRODUCTION') {
+    const document = YAML.load('swagger-doc.example.yml');
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(document));
+  }
 
   await app.listen(process.env.PORT ?? 3000);
 }
