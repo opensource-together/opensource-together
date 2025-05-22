@@ -3,7 +3,7 @@ import Billboard from "@/components/shared/Billboard";
 import Footer from "@/components/shared/layout/Footer";
 import Pagination from "@/components/shared/Pagination";
 import { useEffect, useState } from "react";
-import ProjectCard from "../components/ProjectCard";
+import ProjectCard from "@/components/shared/ProjectCard";
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectSearchBar from "../components/ProjectSearchBar";
 import SkeletonProjectCard from "../components/SkeletonProjectCard";
