@@ -563,7 +563,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
-        title: "Développeur·se UI/UX",
+        title: "Designer UI/UX",
         description:
           "Conçois l'interface utilisateur de NextSandbox et améliore l'expérience de développement des composants.",
         badges: [

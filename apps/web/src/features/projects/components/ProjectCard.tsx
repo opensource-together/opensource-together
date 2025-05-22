@@ -1,20 +1,25 @@
 import StackIcon from "@/components/shared/StackIcon";
 import { Badge } from "@/components/ui/badge";
 import { getRoleBadgeVariant } from "@/lib/utils/badges";
-import Image from "next/image";
-import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
-
-interface TechIcon {
-  icon: string;
-  alt: string;
-}
-
-interface Role {
-  name: string;
-  color: string;
-  bgColor: string;
-}
+import {
+  ProjectCard,
+  ProjectCardContent,
+  ProjectCardDescription,
+  ProjectCardDivider,
+  ProjectCardFooter,
+  ProjectCardHeader,
+  ProjectCardImage,
+  ProjectCardInfo,
+  ProjectCardLeftGroup,
+  ProjectCardRolesCount,
+  ProjectCardRolesList,
+  ProjectCardStars,
+  ProjectCardTitle,
+  ProjectCardViewLink,
+  Role,
+  TechIcon,
+} from "@/components/ui/project-card";
 
 interface ProjectCardProps {
   projectId?: string;
@@ -32,7 +37,7 @@ interface ProjectCardProps {
   image?: string;
 }
 
-export default function ProjectCard({
+export default function ProjectCardComponent({
   projectId = "1",
   title = "LeetGrind",
   description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
@@ -122,43 +127,13 @@ export default function ProjectCard({
   const visibleRoles = measured ? roles.slice(0, maxVisible) : roles;
   const remainingRoles = measured ? roles.length - maxVisible : 0;
 
-  let processedImageSrc:
-    | string
-    | import("next/dist/shared/lib/get-img-props").StaticImport =
-    "/icons/empty-project.svg";
-  if (image && typeof image === "string") {
-    if (
-      !image.startsWith("/") &&
-      !image.includes("://") &&
-      !image.startsWith("data:")
-    ) {
-      processedImageSrc = `/icons/${image}`;
-    } else {
-      processedImageSrc = image;
-    }
-  } else if (image) {
-    // Cas où 'image' est déjà un StaticImport
-    processedImageSrc = image;
-  }
-
   return (
-    <section
-      className={`shadow-xs font-geist rounded-[20px] border border[black]/10 w-[540px] h-[207px] py-[25px] px-[30px] ${className}`}
-    >
-      <article className="flex justify-between items-start">
-        <div className="flex items-center gap-4">
-          <div className="w-[50px] h-[50px] relative">
-            <Image
-              src={processedImageSrc}
-              alt={`${title} icon`}
-              width={50}
-              height={50}
-              className="rounded-lg"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <div className="text-lg font-semibold">{title}</div>
+    <ProjectCard className={className}>
+      <ProjectCardHeader>
+        <ProjectCardLeftGroup>
+          <ProjectCardImage src={image || ""} alt={`${title} icon`} />
+          <ProjectCardInfo>
+            <ProjectCardTitle>{title}</ProjectCardTitle>
             {showTechStack && techStack.length > 0 && (
               <div className="flex gap-[3px] mt-1">
                 {techStack.map((tech, index) => {
@@ -169,85 +144,55 @@ export default function ProjectCard({
                 })}
               </div>
             )}
-          </div>
-        </div>
+          </ProjectCardInfo>
+        </ProjectCardLeftGroup>
 
-        <div className="flex gap-1 items-end justify-center text-sm">
-          {showStars && (
-            <span className="flex items-center gap-1 border rounded-[3px] border-[black]/10 justify-center px-[5px] py-[1px]">
-              <span className="inline-flex items-center text-[black]/50">
-                {stars}
-              </span>
-              <Image
-                src="/icons/empty-star.svg"
-                alt="emptystarIcon"
-                width={13}
-                height={13}
-                className="inline-block"
-              />
-            </span>
-          )}
-        </div>
-      </article>
+        {showStars && <ProjectCardStars count={stars} />}
+      </ProjectCardHeader>
 
-      <article>
+      <ProjectCardContent>
         {description && (
-          <div className="text-[black]/50 font-medium text-[12px] leading-[20px] mt-4 line-clamp-2">
-            {description}
-          </div>
+          <ProjectCardDescription>{description}</ProjectCardDescription>
         )}
-        {/* Line */}
-        <div className="border-t border-dashed border-[black]/10 my-4" />
+        
+        <ProjectCardDivider />
 
         {showRoles && (
-          <div
-            ref={lineRef}
-            className="flex items-center gap-2 text-[11px] w-full overflow-hidden"
-          >
-            <div
-              ref={counterRef}
-              className="flex-shrink-0 text-[10px] font-medium flex items-center gap-1"
-            >
-              <Image
-                src="/icons/people.svg"
-                alt="peopleicon"
-                width={11}
-                height={11}
-              />{" "}
-              {roleCount} Roles Disponibles
-            </div>
+          <ProjectCardFooter ref={lineRef as React.RefObject<HTMLDivElement>}>
+            <ProjectCardRolesCount 
+              count={roleCount} 
+              counterRef={counterRef as React.RefObject<HTMLDivElement>}
+            />
 
-            {/* Rôles dynamiques */}
-            {visibleRoles.map((role, index) => (
-              <Badge key={index} variant={getRoleBadgeVariant(role.name)}>
-                {role.name}
-              </Badge>
-            ))}
-            {remainingRoles > 0 && (
-              <span className="h-[22px] flex-shrink-0 flex items-center px-1 rounded-full text-[11px] font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
-                +{remainingRoles}
-              </span>
+            {measured && (
+              <>
+                {roles.map((role, index) => {
+                  if (index < maxVisible) {
+                    return (
+                      <Badge key={index} variant={getRoleBadgeVariant(role.name)}>
+                        {role.name}
+                      </Badge>
+                    );
+                  }
+                  return null;
+                })}
+                {remainingRoles > 0 && (
+                  <span className="h-[22px] flex-shrink-0 flex items-center px-1 rounded-full text-[11px] font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
+                    +{remainingRoles}
+                  </span>
+                )}
+              </>
             )}
 
-            {/* Bouton toujours à droite */}
             {showViewProject && (
-              <Link
-                ref={btnRef}
-                href={`/projects/${projectId}`}
-                className="ml-auto flex-shrink-0 text-[12px] font-semibold flex items-center gap-1 hover:opacity-80 transition-opacity"
-              >
-                Voir le projet{" "}
-                <Image
-                  src="/icons/arrow-up-right.svg"
-                  alt="arrowupright"
-                  width={10}
-                  height={10}
-                />
-              </Link>
+              <ProjectCardViewLink 
+                projectId={projectId} 
+                linkRef={btnRef as React.Ref<HTMLAnchorElement>}
+              />
             )}
-          </div>
+          </ProjectCardFooter>
         )}
-      </article>
-    </section>
+      </ProjectCardContent>
+    </ProjectCard>
   );
 }
