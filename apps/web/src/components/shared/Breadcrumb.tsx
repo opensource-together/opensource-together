@@ -1,40 +1,42 @@
-import Link from "next/link";
 import React from "react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../ui/breadcrumb";
 
-interface BreadcrumbItem {
+interface BreadcrumbItemProps {
   label: string;
   href: string;
   isActive?: boolean;
 }
 
 interface BreadcrumbProps {
-  items: BreadcrumbItem[];
+  items: BreadcrumbItemProps[];
   className?: string;
 }
 
-export default function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
+export default function BreadcrumbComponent({ items, className = "" }: BreadcrumbProps) {
   return (
-    <nav className={`font-geist text-[12px] font-normal ${className}`}>
-      <ol className="flex items-center">
+    <Breadcrumb className={`font-geist ${className}`}>
+      <BreadcrumbList className="mx-2">
         {items.map((item, index) => (
           <React.Fragment key={index}>
-            {index > 0 && <li className="mx-2 text-black/20">/</li>}
-            <li>
+            {index > 0 && <BreadcrumbSeparator className="mx-1" />}
+            <BreadcrumbItem>
               {item.isActive ? (
-                <span className="text-black">{item.label}</span>
+                <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
-                <Link
-                  href={item.href}
-                  className="text-black/20 hover:text-black/40 transition-colors"
-                >
-                  {item.label}
-                </Link>
+                <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
               )}
-            </li>
+            </BreadcrumbItem>
           </React.Fragment>
         ))}
-      </ol>
-    </nav>
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }
 
