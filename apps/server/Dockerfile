@@ -26,7 +26,7 @@ WORKDIR /app
 
 LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
 
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache postgresql-client curl
 
 ENV NODE_ENV=production
 
