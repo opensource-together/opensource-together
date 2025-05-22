@@ -155,3 +155,23 @@
 .shadow-inner-dark:hover {
   box-shadow: inset 0px 3px 4px #0d0d0d;
 }
+
+/* Modal blur transition */
+.modal-blur-enter {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  transition: opacity 0.3s, backdrop-filter 0.3s;
+}
+.modal-blur-enter-active {
+  opacity: 1;
+  backdrop-filter: blur(10px);
+}
+.modal-blur-exit {
+  opacity: 1;
+  backdrop-filter: blur(10px);
+  transition: opacity 0.3s, backdrop-filter 0.3s;
+}
+.modal-blur-exit-active {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+}
