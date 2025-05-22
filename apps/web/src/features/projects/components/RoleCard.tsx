@@ -1,6 +1,17 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
-import { getRoleBadgeVariant } from "@/lib/utils/badges";
-import React, { useState } from "react";
+import {
+  ProjectCard,
+  ProjectCardContent,
+  ProjectCardDescription,
+  ProjectCardFooter,
+  ProjectCardHeader,
+  ProjectCardInfo,
+  ProjectCardLeftGroup,
+  ProjectCardTitle,
+} from "@/components/ui/project-card";
+import { cn } from "@/lib/utils";
+import { getTechBadgeVariant } from "@/lib/utils/badges";
 
 interface Badge {
   label: string;
@@ -9,52 +20,49 @@ interface Badge {
 }
 
 interface RoleCardProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   badges: Badge[];
-  experienceBadge?: string;
+  className?: string;
 }
 
-const RoleCard: React.FC<RoleCardProps> = ({
-  title,
-  description,
-  badges,
-  experienceBadge,
-}) => {
-  const [applied, setApplied] = useState(false);
-
-  const handleApply = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setApplied(true);
-  };
-
+export default function RoleCard({
+  title = "LeetGrind",
+  description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
+  badges = [],
+  className = "",
+}: RoleCardProps) {
   return (
-    <div className="lg:max-w-[721.96px] w-full border border-[black]/10 rounded-[20px] p-6">
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <h3 className="text-[16px] font-medium">{title}</h3>
-          {experienceBadge && (
-            <span className="text-[10px] text-[black]/50 border border-[black]/10 rounded-full px-2 py-0.5">
-              {experienceBadge}
-            </span>
-          )}
-        </div>
-        <p className="text-[12px] text-[black]/50 leading-[20px]">
-          {description}
-        </p>
-        <div className="flex flex-wrap gap-2 mt-2">
+    <ProjectCard className={className}>
+      <ProjectCardHeader>
+        <ProjectCardLeftGroup>
+          <ProjectCardInfo>
+            <ProjectCardTitle className="text-[16px] font-medium">
+              {title}
+            </ProjectCardTitle>
+          </ProjectCardInfo>
+        </ProjectCardLeftGroup>
+      </ProjectCardHeader>
+
+      <ProjectCardContent className="-mt-2">
+        {description && (
+          <ProjectCardDescription>{description}</ProjectCardDescription>
+        )}
+        <ProjectCardFooter className="flex flex-wrap gap-2 mt-4">
           {badges.map((badge, index) => (
-            <Badge key={index} variant={getRoleBadgeVariant(title)}>
+            <Badge
+              key={index}
+              variant={getTechBadgeVariant(badge.label)}
+              className={cn(badge.color, badge.bgColor)}
+            >
               {badge.label}
             </Badge>
           ))}
-        </div>
-      </div>
-    </div>
+        </ProjectCardFooter>
+      </ProjectCardContent>
+    </ProjectCard>
   );
-};
-
-export default RoleCard;
+}
 
 export function SkeletonRoleCard() {
   return (

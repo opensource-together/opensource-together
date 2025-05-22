@@ -139,47 +139,17 @@ export default function ProjectDetailView({
             />
           </div>
           <div className="flex flex-col gap-3 mt-6 mb-30">
-            {projectData?.roles && projectData.roles.length > 0 ? (
+            {projectData?.roles &&
+              projectData.roles.length > 0 &&
               projectData.roles.map((role) => (
                 <RoleCard
                   key={role.id}
                   title={role.title}
                   description={role.description}
                   badges={role.badges}
-                  experienceBadge={role.experienceBadge}
+                  className="mb-3 lg:max-w-[721.96px]"
                 />
-              ))
-            ) : (
-              // Default role cards if none are provided
-              <>
-                <RoleCard
-                  title="Developeur Backend"
-                  description="Nous recrutons un Developeur Backend pour construire des systèmes et API robustes et évolutifs côté serveur. Vous collaborerez avec des équipes interfonctionnelles pour livrer des systèmes backends fiables en utilisant des technologies comme [ Node.js, Python, SQL, etc.]."
-                  badges={[
-                    { label: "MongoDB", color: "#00D5BE", bgColor: "#CBFBF1" },
-                    { label: "MongoDB", color: "#00D5BE", bgColor: "#CBFBF1" },
-                    { label: "MongoDB", color: "#00D5BE", bgColor: "#CBFBF1" },
-                  ]}
-                  experienceBadge="+3 Ans d'expérience"
-                />
-                <RoleCard
-                  title="Designer UX"
-                  description="Nous recrutons un Designer UX pour créer des expériences utilisateur intuitives et centrées sur l'utilisateur sur les plateformes web et mobiles. Vous collaborerez avec les équipes de produit et de développement pour transformer les insights en wireframes, prototypes et parcours utilisateur fluides."
-                  badges={[
-                    { label: "Design", color: "#FDA5D5", bgColor: "#FDF2F8" },
-                  ]}
-                  experienceBadge="+2 Ans d'expérience"
-                />
-                <RoleCard
-                  title="Developeur Frontend"
-                  description="Nous recrutons un Developeur Frontend pour construire des interfaces utilisateur réactives et de haute qualité en utilisant les technologies web modernes. Vous serez responsable de la transformation des concepts de design en expériences numériques rapides, accessibles et interactives."
-                  badges={[
-                    { label: "React", color: "#00BCFF", bgColor: "#DFF2FE" },
-                  ]}
-                  experienceBadge="+1 An d'expérience"
-                />
-              </>
-            )}
+              ))}
           </div>
         </div>
       </div>
