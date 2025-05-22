@@ -1,7 +1,6 @@
+import { useVisibleRoles } from "@/components/shared/hooks/useVisibleRoles";
 import StackIcon from "@/components/shared/StackIcon";
 import { Badge } from "@/components/ui/badge";
-import { getRoleBadgeVariant } from "@/lib/utils/badges";
-import { useVisibleRoles } from "@/components/shared/hooks/useVisibleRoles";
 import {
   ProjectCard,
   ProjectCardContent,
@@ -19,6 +18,7 @@ import {
   Role,
   TechIcon,
 } from "@/components/ui/project-card";
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
 
 interface ProjectCardProps {
   projectId?: string;
@@ -58,21 +58,21 @@ export default function ProjectCardComponent({
     actionRef,
     visibleRoles,
     remainingRoles,
-    measured
+    measured,
   } = useVisibleRoles({
     roles,
-    dependencies: [showViewProject, title, description]
+    dependencies: [showViewProject, title, description],
   });
 
   return (
     <ProjectCard className={className}>
       <ProjectCardHeader>
         <ProjectCardLeftGroup>
-          <ProjectCardImage src={image || ""} alt={`${title} icon`} />
+          {image && <ProjectCardImage src={image} alt={`${title} icon`} />}
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
             {showTechStack && techStack.length > 0 && (
-              <div className="flex gap-[3px] mt-1">
+              <div className="flex gap-1 mt-1">
                 {techStack.map((tech, index) => {
                   if (!tech.icon) return null;
                   return (
@@ -83,24 +83,16 @@ export default function ProjectCardComponent({
             )}
           </ProjectCardInfo>
         </ProjectCardLeftGroup>
-
         {showStars && <ProjectCardStars count={stars} />}
       </ProjectCardHeader>
-
       <ProjectCardContent>
         {description && (
           <ProjectCardDescription>{description}</ProjectCardDescription>
         )}
-        
         <ProjectCardDivider />
-
         {showRoles && (
           <ProjectCardFooter ref={containerRef}>
-            <ProjectCardRolesCount 
-              count={roleCount} 
-              counterRef={counterRef}
-            />
-
+            <ProjectCardRolesCount count={roleCount} counterRef={counterRef} />
             {measured && (
               <>
                 {visibleRoles.map((role, index) => (
@@ -109,7 +101,7 @@ export default function ProjectCardComponent({
                   </Badge>
                 ))}
                 {remainingRoles > 0 && (
-                  <span className="h-[22px] flex-shrink-0 flex items-center px-1 rounded-full text-[11px] font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
+                  <span className="h-5.5 flex-shrink-0 flex items-center px-1 rounded-full text-xs font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
                     +{remainingRoles}
                   </span>
                 )}
@@ -117,10 +109,7 @@ export default function ProjectCardComponent({
             )}
 
             {showViewProject && (
-              <ProjectCardViewLink 
-                projectId={projectId} 
-                linkRef={actionRef}
-              />
+              <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
             )}
           </ProjectCardFooter>
         )}
