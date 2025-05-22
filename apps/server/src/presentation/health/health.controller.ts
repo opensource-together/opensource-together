@@ -1,21 +1,27 @@
 import { Controller, Get } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { HealthCheckService, HttpHealthIndicator, HealthCheck } from '@nestjs/terminus';
+import { PublicAccess } from 'supertokens-nestjs';
 
 @Controller('health')
 export class HealthController {
   constructor(
     private health: HealthCheckService,
     private http: HttpHealthIndicator,
+    private config: ConfigService,
   ) {}
 
+  @PublicAccess()
   @Get()
   @HealthCheck()
   check() {
     return this.health.check([
       () => this.http.responseCheck(
-        'main-page',
-        process.env.API_DOMAIN || "",
-        (res) => res.status === 200,
+        'server',
+        this.config.get("API_DOMAIN") || "",
+        (res) => {
+          return res.status === 404;
+        },
       ),
     ]);
   }
