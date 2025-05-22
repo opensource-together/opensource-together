@@ -4,11 +4,18 @@ import { Email } from '@domain/user/email.vo';
 import { Result } from '@shared/result';
 
 export class UserFactory {
-  static create(id: string, username: string, email: string): Result<User> {
+  static create(
+    id: string,
+    username: string,
+    email: string,
+  ): Result<User, { username?: string; email?: string } | string> {
     const usernameVo = Username.create(username);
     const emailVo = Email.create(email);
-    if (!usernameVo.success) return Result.fail(usernameVo.error);
-    if (!emailVo.success) return Result.fail(emailVo.error);
+    const error: { username?: string; email?: string } = {};
+    if (!emailVo.success) error.email = emailVo.error;
+    if (!usernameVo.success) error.username = usernameVo.error;
+    if (!usernameVo.success || !emailVo.success) return Result.fail(error);
+
     return Result.ok(
       new User({
         id,

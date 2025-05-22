@@ -2,6 +2,7 @@ import Header from "@/shared/layout/Header";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SuperTokensInitializer } from "@/features/auth/components/SuperTokensInitializer";
 import { Providers } from "./providers";
 
 const geistSans = Geist({
@@ -35,6 +36,7 @@ export default function RootLayout({
     >
       <body>
         <Header />
+        <SuperTokensInitializer />
         <Providers>{children}</Providers>
       </body>
     </html>

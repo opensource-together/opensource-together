@@ -123,6 +123,8 @@ services:
       - APP_NAME=${APP_NAME}
       - NODE_ENV=${NODE_ENV}
       - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     ports:
       - "${API_PORT}:3000"
       - "5555:5555" # Ajoute cette ligne si absente

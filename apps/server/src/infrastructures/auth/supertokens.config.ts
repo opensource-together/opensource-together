@@ -5,7 +5,7 @@ import EmailVerification from 'supertokens-node/recipe/emailverification';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 import { ConfigService } from '@nestjs/config';
-
+import { thirdPartyRecipe } from '@infrastructures/auth/recipes/third-party.recipe';
 export function createSupertokensConfig(
   queryBus: QueryBus,
   commandBus: CommandBus,
@@ -29,6 +29,7 @@ export function createSupertokensConfig(
       EmailVerification.init({
         mode: 'OPTIONAL',
       }),
+      thirdPartyRecipe({ configService, commandBus, queryBus }),
       Session.init({
         getTokenTransferMethod: () => {
           return 'cookie';
