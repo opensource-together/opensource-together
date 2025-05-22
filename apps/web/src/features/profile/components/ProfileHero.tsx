@@ -9,7 +9,7 @@ interface Skill {
   name: string;
 }
 
-export default function ProfileCard() {
+export default function ProfileHero() {
   // Générer les données du calendrier par semaine
   const generateCalendarData = (): ContributionLevel[][] => {
     const weeks: ContributionLevel[][] = [];
@@ -64,9 +64,9 @@ export default function ProfileCard() {
   };
 
   const skills: Skill[] = [
-    { name: "Developeur Frontend" },
+    { name: "Developpeur Frontend" },
     { name: "Designer UX" },
-    { name: "Developeur Backend" },
+    { name: "Developpeur Backend" },
   ];
 
   return (

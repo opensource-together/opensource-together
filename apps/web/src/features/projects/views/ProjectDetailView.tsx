@@ -4,7 +4,7 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProjectFilters from "../components/ProjectFilters";
-import ProjectPageCard from "../components/ProjectPageCard";
+import ProjectHero from "../components/ProjectHero";
 import ProjectSideBar from "../components/ProjectSideBar";
 import RoleCard from "../components/RoleCard";
 import SkeletonProjectDetail from "../components/SkeletonProjectDetail";
@@ -100,7 +100,7 @@ export default function ProjectDetailView({
       <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-2 md:mt-4 gap-8">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
           <div className="lg:max-w-[721.96px] w-full">
-            <ProjectPageCard
+            <ProjectHero
               title={projectData?.title}
               description={projectData?.description}
               longDescription={projectData?.longDescription}

@@ -1,7 +1,8 @@
 import Image from "next/image";
-import ProfileCard from "../components/ProfileCard";
+import PinnedProjects from "../components/PinnedProjects";
+import ProfileHero from "../components/ProfileHero";
 import ProfileSidebar from "../components/ProfileSidebar";
-import { ProjectList } from "../components/ProjectCard";
+
 export default function ProfilePageView() {
   return (
     <>
@@ -9,7 +10,7 @@ export default function ProfilePageView() {
         {/* Section du haut avec le profil et la sidebar */}
         <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
           <div className="lg:max-w-[721.96px] w-full">
-            <ProfileCard />
+            <ProfileHero />
           </div>
           <ProfileSidebar />
         </div>
@@ -26,7 +27,7 @@ export default function ProfilePageView() {
             />
           </h2>
           <div className="flex flex-col gap-6 lg:max-w-[731px]">
-            <ProjectList />
+            <PinnedProjects />
           </div>
         </div>
       </div>

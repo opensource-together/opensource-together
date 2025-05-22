@@ -2,14 +2,7 @@
 import ProjectCardComponent from "@/components/shared/ProjectCard";
 import { mockProjects } from "../../projects/data/mockProjects";
 
-// Redéfinition simplifiée pour maintenir la compatibilité avec le profil
-export function ProjectCard(
-  props: React.ComponentProps<typeof ProjectCardComponent>,
-) {
-  return <ProjectCardComponent {...props} />;
-}
-
-export function ProjectList() {
+export default function PinnedProjects() {
   return (
     <div className="flex flex-col gap-4">
       {mockProjects.slice(0, 3).map((project) => (
@@ -42,5 +35,3 @@ export function ProjectList() {
     </div>
   );
 }
-
-export default ProjectCard;

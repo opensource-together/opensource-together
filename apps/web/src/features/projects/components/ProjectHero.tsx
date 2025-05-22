@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { TechStack } from "../types/projectTypes";
 
-interface ProjectPageCardProps {
+interface ProjectHeroProps {
   title?: string;
   description?: string;
   longDescription?: string;
@@ -14,7 +14,7 @@ interface ProjectPageCardProps {
   authorImage?: string;
 }
 
-export default function ProjectPageCard({
+export default function ProjectHero({
   title = "EcoTrack",
   description,
   longDescription,
@@ -32,7 +32,7 @@ export default function ProjectPageCard({
   image,
   authorName,
   authorImage,
-}: ProjectPageCardProps) {
+}: ProjectHeroProps) {
   // Map of tech stacks to icons - to be replaced with dynamic icon loading
   const techIconMap: Record<string, any> = {
     TypeScript: "typescript.svg",
@@ -299,7 +299,7 @@ export default function ProjectPageCard({
   );
 }
 
-export function SkeletonProjectPageCard() {
+export function SkeletonProjectHero() {
   return (
     <section className="w-[710px] min-h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist animate-pulse">
       {/* Header */}
