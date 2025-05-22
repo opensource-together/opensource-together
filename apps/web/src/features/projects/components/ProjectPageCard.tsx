@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { TechStack } from "../types/projectTypes";
+import { TechStack } from "../types/ProjectTypes";
 
 interface ProjectPageCardProps {
   title?: string;

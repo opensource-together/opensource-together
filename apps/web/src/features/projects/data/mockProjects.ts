@@ -1,4 +1,4 @@
-import { Project } from "../types/projectTypes";
+import { Project } from "../types/ProjectTypes";
 
 export const mockProjects: Project[] = [
   {
@@ -97,9 +97,9 @@ export const mockProjects: Project[] = [
     id: "7",
     slug: "gitify",
     title: "Gitify",
-    image: "gitifyIcon.png",
+    image: "/icons/gitifyIcon.png",
     authorName: "69Killian",
-    authorImage: "killiancodes-icon.jpg",
+    authorImage: "/icons/killiancodes-icon.jpg",
     description:
       "Contribue, Développe, réalise des challenges et gagne des badges en contribuant à des projets open source. Une plateforme gamifiée pour encourager la participation à l'open source",
     longDescription:
@@ -181,7 +181,7 @@ export const mockProjects: Project[] = [
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
     authorName: "p2aco",
-    authorImage: "p2aco-icon.png",
+    authorImage: "/icons/p2aco-icon.png",
     description:
       "Le bot ultime pour les développeurs, directement intégré à Discord et Slack. Boostez votre productivité avec des commandes intelligentes pour formater du code, générer des tâches cron et plus encore.",
     longDescription:
@@ -267,7 +267,7 @@ export const mockProjects: Project[] = [
     id: "6",
     slug: "codesnippet",
     title: "CodeSnippet",
-    image: "codesnippet-icon.png",
+    image: "/icons/codesnippet-icon.png",
     authorName: "Spectre",
     authorImage:
       "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
@@ -355,7 +355,7 @@ export const mockProjects: Project[] = [
     image:
       "https://media.discordapp.net/attachments/1313066773083459595/1313066775444983908/Lil_tea_tasse_fond_4x.jpg?ex=682c443a&is=682af2ba&hm=cb84ead9ca01d87a31cb26390a0c239f1c660bbcf0343b5a29f92a4e873ee601&=&format=webp&width=1744&height=1744",
     authorName: "Shyybi",
-    authorImage: "shyybi-icon.png",
+    authorImage: "/icons/shyybi-icon.png",
     description:
       "Crée ton profil bio stylé, rapide et animé — comme guns.lol, mais avec ta touche. Une plateforme moderne pour centraliser tous tes liens importants sur une page élégante et responsive",
     longDescription:
@@ -434,7 +434,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
     authorName: "p2aco",
-    authorImage: "p2aco-icon.png",
+    authorImage: "/icons/p2aco-icon.png",
     description:
       "Un outil terminal open source pour monitorer vos serveurs et containers en temps réel, inspiré de k9s avec une interface intuitive et des fonctionnalités avancées",
     longDescription:
