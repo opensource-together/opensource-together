@@ -1,4 +1,5 @@
 "use client";
+import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
@@ -46,6 +47,50 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     },
     disabled: isLoading || isUpdatingProject,
   });
+
+  const sidebarSections = [
+    {
+      title: "Share",
+      links: [
+        {
+          icon: "/icons/linkedin.svg",
+          label: "Partager sur LinkedIn",
+          url: "https://linkedin.com/share",
+        },
+        {
+          icon: "/icons/x-logo.svg",
+          label: "Partager sur X",
+          url: "https://twitter.com/intent/tweet",
+        },
+        {
+          icon: "/icons/github.svg",
+          label: "Voir sur Github",
+          url: project?.socialLinks?.find((link) => link.type === "github")
+            ?.url,
+        },
+      ],
+    },
+    {
+      title: "Community Stats",
+      links: [
+        {
+          icon: "/icons/joined.svg",
+          label: "Projets rejoins",
+          value: project?.communityStats?.contributors || 0,
+        },
+        {
+          icon: "/icons/black-star.svg",
+          label: "Stars",
+          value: project?.communityStats?.stars || 0,
+        },
+        {
+          icon: "/icons/two-people.svg",
+          label: "Membres",
+          value: project?.communityStats?.forks || 0,
+        },
+      ],
+    },
+  ];
 
   useEffect(() => {
     if (project) {
@@ -294,76 +339,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           </div>
         )}
       </form>
-
-      {/* Sidebar Section */}
-      <div className="w-[270px] flex flex-col gap-10">
-        {/* Share Section */}
-        <div>
-          <h2 className="text-[18px] font-medium mb-3">Share</h2>
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/icons/linkedin.svg"
-                alt="LinkedIn"
-                width={15}
-                height={15}
-              />
-              <span className="text-[14px] text-black/70">
-                Partager sur LinkedIn
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image src="/icons/x-logo.svg" alt="X" width={15} height={15} />
-              <span className="text-[14px] text-black/70">Partager sur X</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image
-                src="/icons/github.svg"
-                alt="GitHub"
-                width={15}
-                height={15}
-              />
-              <span className="text-[14px] text-black/70">Voir sur Github</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Community Stats Section */}
-        <div>
-          <h2 className="text-[18px] font-medium mb-3">Community Stats</h2>
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/icons/joined.svg"
-                alt="Joined Projects"
-                width={15}
-                height={15}
-              />
-              <span className="text-[14px] text-black/70">Projets rejoins</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image
-                src="/icons/black-star.svg"
-                alt="Stars"
-                width={15}
-                height={15}
-              />
-              <span className="text-[14px] text-black/70">
-                Stars <span className="text-[14px] text-black/70">127</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image
-                src="/icons/two-people.svg"
-                alt="Members"
-                width={15}
-                height={15}
-              />
-              <span className="text-[14px] text-black/70">Membres</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <RightSidebar sections={sidebarSections} />
     </div>
   );
 }
