@@ -1,4 +1,4 @@
-"use client";
+
 import ProjectDetailContent from "../components/ProjectDetailContent";
 
 

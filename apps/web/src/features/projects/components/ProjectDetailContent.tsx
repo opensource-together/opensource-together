@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import Image from "next/image";
@@ -16,7 +17,7 @@ interface ProjectDetailContentProps {
 export default function ProjectDetailContent({ projectId }: ProjectDetailContentProps) {
   const [simulateLoading, setSimulateLoading] = useState(true);
   // Tanstack Query useProject hook to fetch project details by project ID
-  const { data: project, isLoading, isError, error } = useProject(projectId);
+  const { data: project, isLoading, isError } = useProject(projectId);
 
   // Fallback to mock data if project is not found
   const projectData = project || mockProjects.find((p) => p.id === projectId);
@@ -50,10 +51,6 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
               There was an error loading the project details. Please try again
               later.
             </p>
-            {process.env.NODE_ENV !== "production" &&
-              error instanceof Error && (
-                <p className="mt-2 text-sm font-mono">{error.message}</p>
-              )}
           </div>
         </div>
       </>

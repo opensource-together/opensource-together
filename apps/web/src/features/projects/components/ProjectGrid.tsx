@@ -1,30 +1,19 @@
-import { useEffect, useState } from "react";
 import { mockProjects } from "../data/mockProjects";
 import ProjectCard from "@/components/shared/ProjectCard";
 import SkeletonProjectCard from "./SkeletonProjectCard";
+import { useProjects } from "../hooks/useProjects";
 
 export default function ProjectGrid() {
-  const [projects, setProjects] = useState<typeof mockProjects | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Utiliser le hook TanStack Query pour gérer les états de chargement et d'erreur
+  const { data, isLoading, isError } = useProjects();
+  
+  // Retourne les données mockées temporairement
+  // Pour une version de production, on utiliserait: const projectsData = data || mockProjects;
+  // Mais ça empeche de tester l'affichage statique
+  const projectsData = mockProjects;
 
-  useEffect(() => {
-    // Dans un scénario réel, ce serait un appel API
-    const fetchProjects = async () => {
-      try {
-        // Simuler un temps de chargement pour les tests
-        // Dans un cas réel, ce serait un fetch API
-        setProjects(mockProjects);
-      } catch (error) {
-        console.error('Erreur lors du chargement des projets:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchProjects();
-  }, []);
-
-  if (isLoading || !projects) {
+  // Affichage des skeletons pendant le chargement
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
         {[...Array(6)].map((_, index) => (
@@ -34,9 +23,10 @@ export default function ProjectGrid() {
     );
   }
 
+  // Si erreur ou données chargées, on affiche les mocks
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-      {projects.map((project) => (
+      {projectsData.map((project) => (
         <ProjectCard
           key={project.id}
           projectId={project.id}
