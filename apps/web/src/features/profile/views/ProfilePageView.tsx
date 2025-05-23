@@ -18,7 +18,7 @@ export default function ProfilePageView() {
         {/* Section des projets pinnés en dessous */}
         <div className="w-full lg:pl-0 mt-2 mb-30">
           <h2 className="text-[20px] font-medium mb-10 font-geist flex items-center gap-1">
-            Pinned Projects{" "}
+            Projets Épinglés{" "}
             <Image
               src="/icons/pinned-icon.svg"
               alt="pinnedicon"

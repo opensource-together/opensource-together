@@ -64,9 +64,9 @@ export default function ProfileHero() {
   };
 
   const skills: Skill[] = [
-    { name: "Developpeur Frontend" },
+    { name: "Développeur Frontend" },
     { name: "Designer UX" },
-    { name: "Developpeur Backend" },
+    { name: "Développeur Backend" },
   ];
 
   return (
