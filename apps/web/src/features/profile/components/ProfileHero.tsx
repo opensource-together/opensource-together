@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getRoleBadgeVariant } from "@/lib/utils/badges";
 import Image from "next/image";
 
@@ -70,7 +71,7 @@ export default function ProfileHero() {
   ];
 
   return (
-    <div className="bg-white w-full sm:w-[540px] lg:w-[731.96px] h-auto rounded-[25px] border border-[#000000]/10 p-8 font-geist">
+    <div className="bg-white w-full sm:w-[540px] lg:w-[731.96px] h-auto rounded-3xl border border-[#000000]/10 p-8">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <div className="relative mr-4">
@@ -83,15 +84,13 @@ export default function ProfileHero() {
             />
           </div>
           <div>
-            <h2 className="text-[24px] font-medium">Byron Love</h2>
-            <p className="text-[11px] text-gray-500">
-              Rejoint le 25 avril 2025
-            </p>
+            <h2 className="text-2xl font-medium">Byron Love</h2>
+            <p className="text-xs text-gray-500">Rejoint le 25 avril 2025</p>
           </div>
         </div>
-        <button className="text-[13px] tracking-[-0.5px] font-medium font-geist flex items-center justify-center gap-1 text-black/80 h-[35px] px-4 border border-black/5 rounded-[7px] bg-white py-2 shadow-[0_2px_5px_rgba(0,0,0,0.03)] hover:bg-slate-50 transition-colors">
+        <Button variant="outline" className="font-medium">
           Modifier le profil
-        </button>
+        </Button>
       </div>
 
       <p className="text-sm text-gray-700 mb-6">
@@ -103,7 +102,7 @@ export default function ProfileHero() {
       <div className="border-t border-dashed border-[black]/10 my-7" />
 
       <div className="mb-6">
-        <h3 className="text-[15px] font-medium mb-4">Compétences techniques</h3>
+        <h3 className="font-medium mb-4">Compétences techniques</h3>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, index) => (
             <Badge key={index} variant={getRoleBadgeVariant(skill.name)}>
@@ -118,10 +117,10 @@ export default function ProfileHero() {
 
       <div>
         <div className="flex items-center justify-between mb-7">
-          <h3 className="text-[15px] font-medium">Activité de contribution</h3>
+          <h3 className="font-medium">Activité de contribution</h3>
           <div className="flex items-center gap-2">
-            <span className="text-[12px] text-[#000000]/70">2024-2025</span>
-            <select className="text-[12px] border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-3">
+            <span className="text-xs text-[#000000]/70">2024-2025</span>
+            <select className="text-xs border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-3">
               <option>Actuel</option>
               <option>Année dernière</option>
               <option>Tout le temps</option>
@@ -136,7 +135,7 @@ export default function ProfileHero() {
                 {week.map((day, dayIndex) => (
                   <div
                     key={dayIndex}
-                    className={`w-3 h-3 rounded-[5px] ${getSquareColor(day)}`}
+                    className={`size-3 rounded-xs ${getSquareColor(day)}`}
                   />
                 ))}
               </div>
@@ -144,7 +143,7 @@ export default function ProfileHero() {
           </div>
         </div>
 
-        <p className="text-[12px] text-[#000000]/70">
+        <p className="text-xs text-[#000000]/70">
           1,268 soumissions depuis l'année dernière
         </p>
       </div>
