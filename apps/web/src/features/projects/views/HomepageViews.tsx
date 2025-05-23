@@ -2,65 +2,11 @@
 import Billboard from "@/components/shared/Billboard";
 import Footer from "@/components/shared/layout/Footer";
 import Pagination from "@/components/shared/Pagination";
-import ProjectCard from "@/components/shared/ProjectCard";
-import { useEffect, useState } from "react";
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectSearchBar from "../components/ProjectSearchBar";
-import SkeletonProjectCard from "../components/SkeletonProjectCard";
-import { mockProjects } from "../data/mockProjects";
+import ProjectGrid from "../components/ProjectGrid";
 
 export default function HomepageViews() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simuler un chargement
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Fonction pour rendre la grille de projets
-  const renderProjectGrid = () => {
-    if (isLoading) {
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-          {[...Array(6)].map((_, index) => (
-            <SkeletonProjectCard key={index} />
-          ))}
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-        {mockProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            projectId={project.id}
-            title={project.title}
-            description={project.description}
-            image={project.image}
-            techStack={project.techStacks
-              ?.filter((tech) => typeof tech.iconUrl === "string")
-              .map((tech) => ({
-                icon: tech.iconUrl as string,
-                alt: tech.name,
-              }))}
-            stars={project.communityStats?.stars || 0}
-            roles={project.roles?.map((role) => ({
-              name: role.title,
-              color: role.badges[0]?.color || "#000000",
-              bgColor: role.badges[0]?.bgColor || "#F3F3F3",
-            }))}
-            roleCount={project.roles?.length || 0}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <>
       <div className="space-y-4 md:space-y-5 pb-10">
@@ -82,7 +28,7 @@ export default function HomepageViews() {
           </div>
 
           {/* Grille de projets */}
-          {renderProjectGrid()}
+          <ProjectGrid />
 
           {/* Pagination */}
           <div className="mt-25">
