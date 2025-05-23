@@ -28,9 +28,10 @@ function SelectValue({
 function SelectTrigger({
   className,
   children,
+  label,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
-  size?: "sm" | "default";
+  label?: React.ReactNode;
 }) {
   return (
     <SelectPrimitive.Trigger
@@ -48,7 +49,10 @@ function SelectTrigger({
       )}
       {...props}
     >
-      <div className="flex items-baseline gap-x-1 min-w-0">{children}</div>
+      <div className="flex items-baseline gap-x-1 min-w-0">
+        {label && <span className="text-[black]/50 font-light">{label}</span>}
+        {children}
+      </div>
       <SelectPrimitive.Icon asChild>
         <Image
           src="/icons/chevron-down.svg"
