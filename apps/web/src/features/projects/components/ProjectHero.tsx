@@ -1,3 +1,4 @@
+import { StackIcon } from "@/components/shared/StackIcon";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { TechStack } from "../types/projectTypes";
@@ -222,75 +223,28 @@ export default function ProjectHero({
         <div className="flex gap-3">
           {techStacks.length > 0 ? (
             techStacks.map((tech, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image
-                    src={tech.iconUrl || "/icons/empty-project.svg"}
-                    alt={tech.name}
-                    width={14}
-                    height={14}
-                  />
-                </div>
-                <span className="text-[14px] font-normal font-geist">
-                  {tech.name}
-                </span>
-              </div>
+              <StackIcon
+                key={index}
+                name={tech.name}
+                icon={tech.iconUrl || "/icons/empty-project.svg"}
+                alt={tech.name}
+              />
             ))
           ) : (
             // Default tech stacks if none provided
             <>
-              <div className="flex items-center gap-2">
-                <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image
-                    src="/icons/typescript.svg"
-                    alt="Typescript"
-                    width={14}
-                    height={14}
-                  />
-                </div>
-                <span className="text-[14px] font-normal font-geist">
-                  Typescript
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image
-                    src="/icons/react.svg"
-                    alt="React"
-                    width={14}
-                    height={14}
-                  />
-                </div>
-                <span className="text-[14px] font-normal font-geist">
-                  React
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image
-                    src="/icons/mongodb.svg"
-                    alt="MongoDB"
-                    width={14}
-                    height={14}
-                  />
-                </div>
-                <span className="text-[14px] font-normal font-geist">
-                  MongoDB
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
-                  <Image
-                    src="/icons/tailwindcss.svg"
-                    alt="TailwindCSS"
-                    width={14}
-                    height={14}
-                  />
-                </div>
-                <span className="text-[14px] font-normal font-geist">
-                  TailwindCSS
-                </span>
-              </div>
+              <StackIcon
+                name="Typescript"
+                icon="typescript.svg"
+                alt="Typescript"
+              />
+              <StackIcon name="React" icon="react.svg" alt="React" />
+              <StackIcon name="MongoDB" icon="mongodb.svg" alt="MongoDB" />
+              <StackIcon
+                name="TailwindCSS"
+                icon="tailwindcss.svg"
+                alt="TailwindCSS"
+              />
             </>
           )}
         </div>

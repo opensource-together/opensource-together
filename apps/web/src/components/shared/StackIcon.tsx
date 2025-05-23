@@ -3,6 +3,7 @@ import Image from "next/image";
 interface StackIconProps {
   icon: string;
   alt: string;
+  name?: string;
   width?: number;
   height?: number;
   className?: string;
@@ -11,6 +12,7 @@ interface StackIconProps {
 export function StackIcon({
   icon,
   alt,
+  name,
   width = 14.5,
   height = 10.22,
   className = "",
@@ -27,10 +29,11 @@ export function StackIcon({
   }
 
   return (
-    <div
-      className={`border border-[black]/10 rounded-xs size-4.5 flex items-center justify-center ${className}`}
-    >
-      <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
+    <div className="flex items-center gap-2">
+      <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
+        <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
+      </div>
+      {name && <span className="text-sm">{name}</span>}
     </div>
   );
 }
