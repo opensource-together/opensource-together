@@ -1,3 +1,4 @@
+import { AuthorTag } from "@/components/shared/AuthorTag";
 import { StackIcon } from "@/components/shared/StackIcon";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -136,19 +137,7 @@ export default function ProjectHero({
             <h1 className="text-[24px] font-medium leading-tight font-geist">
               {title}
             </h1>
-            <div className="flex items-center gap-1.5 font-normal text-black/80 border border-black/10 rounded-[3px] bg-white px-2 py-1 w-fit">
-              <span className="flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-[#F4F4F4] w-[13px] h-[13px]">
-                <Image
-                  src={authorImage || "/icons/exemplebyronIcon.svg"}
-                  alt={authorName || "Auteur"}
-                  width={13}
-                  height={13}
-                />
-              </span>
-              <span className="font-geist font-medium text-[12px]">
-                {authorName || "Auteur"}
-              </span>
-            </div>
+            <AuthorTag name={authorName} image={authorImage} />
           </div>
         </div>
         <div className="flex flex-col items-end gap-4">
