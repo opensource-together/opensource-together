@@ -1,13 +1,13 @@
 "use client";
-import Footer from "@/shared/layout/Footer";
-import Billboard from "@/shared/ui/Billboard";
-import Pagination from "@/shared/ui/Pagination";
-import ProjectCard from "../components/ProjectCard";
+import Billboard from "@/components/shared/Billboard";
+import Footer from "@/components/shared/layout/Footer";
+import Pagination from "@/components/shared/Pagination";
+import ProjectCard from "@/components/shared/ProjectCard";
+import { useEffect, useState } from "react";
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectSearchBar from "../components/ProjectSearchBar";
-import { mockProjects } from "../data/mockProjects";
-import { useState, useEffect } from "react";
 import SkeletonProjectCard from "../components/SkeletonProjectCard";
+import { mockProjects } from "../data/mockProjects";
 
 export default function HomepageViews() {
   const [isLoading, setIsLoading] = useState(true);

@@ -1,11 +1,6 @@
 "use client";
-import starIcon from "@/shared/icons/blackstaricon.svg";
-import createdIcon from "@/shared/icons/createdprojectsicon.svg";
-import crossIcon from "@/shared/icons/crossIcon.svg";
-import emptyProjectIcon from "@/shared/icons/emptyprojectIcon.svg";
-import joinedIcon from "@/shared/icons/joinedicon.svg";
-import linkedinIcon from "@/shared/icons/linkedingrisicon.svg";
-import Button from "@/shared/ui/Button";
+import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
+import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -53,6 +48,50 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     disabled: isLoading || isUpdatingProject,
   });
 
+  const sidebarSections = [
+    {
+      title: "Share",
+      links: [
+        {
+          icon: "/icons/linkedin.svg",
+          label: "Partager sur LinkedIn",
+          url: "https://linkedin.com/share",
+        },
+        {
+          icon: "/icons/x-logo.svg",
+          label: "Partager sur X",
+          url: "https://twitter.com/intent/tweet",
+        },
+        {
+          icon: "/icons/github.svg",
+          label: "Voir sur Github",
+          url: project?.socialLinks?.find((link) => link.type === "github")
+            ?.url,
+        },
+      ],
+    },
+    {
+      title: "Community Stats",
+      links: [
+        {
+          icon: "/icons/joined.svg",
+          label: "Projets rejoins",
+          value: project?.communityStats?.contributors || 0,
+        },
+        {
+          icon: "/icons/black-star.svg",
+          label: "Stars",
+          value: project?.communityStats?.stars || 0,
+        },
+        {
+          icon: "/icons/two-people.svg",
+          label: "Membres",
+          value: project?.communityStats?.forks || 0,
+        },
+      ],
+    },
+  ];
+
   useEffect(() => {
     if (project) {
       console.log("Projet chargé, mise à jour du formulaire:", project);
@@ -77,7 +116,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     return (
       <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
         {/* Formulaire Skeleton - avec dimensions fixes */}
-        <div className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist relative overflow-hidden">
+        <div className="w-[710px] bg-white p-10 rounded-3xl shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 relative overflow-hidden">
           {/* Effet de vague avec animation exactement comme dans SkeletonProjectCard */}
           <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-gray-100 via-gray-200/70 to-gray-100"></div>
 
@@ -183,23 +222,23 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
     <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[710px] bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4 font-geist"
+        className="w-[710px] bg-white p-10 rounded-3xl shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/5 flex flex-col gap-4"
       >
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <Image
-                src={emptyProjectIcon}
+                src="/icons/empty-project.svg"
                 alt="empty"
                 width={80}
                 height={80}
               />
-              <h2 className="text-[24px] font-medium font-geist tracking-[-0.05em]">
+              <h2 className="text-2xl font-medium tracking-tighter">
                 {project?.title || projectId}
               </h2>
             </div>
             <div className="flex items-center gap-1.5 cursor-pointer">
-              <p className="text-[13px] font-medium font-geist tracking-[-0.05em]">
+              <p className="text-sm font-medium tracking-tighter">
                 Add Repository
               </p>
               <span className="text-black font-medium">+</span>
@@ -210,12 +249,10 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         <input type="hidden" {...register("title")} />
 
         <div className="mt-4">
-          <label className="block text-[15px] font-medium mb-6 font-geist">
-            Project Description
-          </label>
+          <label className="block font-medium mb-6">Project Description</label>
           <textarea
             {...register("description")}
-            className="w-[643px] h-[269px] border border-black/10 rounded-[10px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+            className="w-[643px] h-[269px] border border-black/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
           />
           {errors.description && (
             <p className="text-red-500 text-[13px] mt-1">
@@ -228,7 +265,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
         <div className="w-full border-t border-dashed border-black/10 mt-4 mb-2"></div>
 
         <div>
-          <label className="block text-[15px] mb-4 font-medium font-geist tracking-[-0.05em]">
+          <label className="block mb-4 font-medium tracking-tighter">
             Technical Stack
           </label>
           {techStackFields.map((field, index) => (
@@ -239,7 +276,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
                 render={({ field }) => (
                   <input
                     {...field}
-                    className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+                    className="w-full border border-black/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
                     placeholder="e.g. React"
                   />
                 )}
@@ -247,7 +284,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
               <button
                 type="button"
                 onClick={() => removeTechStack(index)}
-                className="border border-black/10 rounded-[7px] p-2 hover:bg-gray-50"
+                className="border border-black/10 rounded-sm p-2 hover:bg-gray-50"
               >
                 <svg
                   width="16"
@@ -273,11 +310,11 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
                 iconUrl: "",
               })
             }
-            className="text-black text-[12px] mt-1 font-normal flex items-center gap-1.5"
+            className="text-black text-sm mt-1 font-normal flex items-center gap-1.5"
           >
-            <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
+            <div className="size-6 border border-black/10 rounded-xs flex items-center justify-center">
               <Image
-                src={crossIcon}
+                src="/icons/cross-icon.svg"
                 alt="add"
                 width={10}
                 height={10}
@@ -292,8 +329,6 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           type="submit"
           className="mt-4 self-end"
           disabled={isLoading || isUpdatingProject}
-          width="auto"
-          height="43px"
         >
           {isUpdatingProject ? "Saving..." : "Save Changes"}
         </Button>
@@ -304,58 +339,7 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           </div>
         )}
       </form>
-
-      {/* Sidebar Section */}
-      <div className="w-[270px] font-geist flex flex-col gap-10">
-        {/* Share Section */}
-        <div>
-          <h2 className="text-[18px] font-medium mb-3">Share</h2>
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
-              <span className="text-[14px] text-black/70">
-                Share on LinkedIn
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
-              <span className="text-[14px] text-black/70">
-                Share on LinkedIn
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image src={linkedinIcon} alt="LinkedIn" width={15} height={15} />
-              <span className="text-[14px] text-black/70">
-                Share on LinkedIn
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Community Stats Section */}
-        <div>
-          <h2 className="text-[18px] font-medium mb-3">Community Stats</h2>
-          <div className="flex flex-col gap-5">
-            <div className="flex items-center gap-3">
-              <Image
-                src={joinedIcon}
-                alt="Joined Projects"
-                width={15}
-                height={13}
-              />
-              <span className="text-[14px] text-black/70">Joined Projects</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image src={starIcon} alt="Stars" width={15} height={14} />
-              <span className="text-[14px] text-black/70">Stars</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Image src={createdIcon} alt="Members" width={13} height={15} />
-              <span className="text-[14px] text-black/70">Members</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <RightSidebar sections={sidebarSections} />
     </div>
   );
 }

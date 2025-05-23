@@ -1,10 +1,8 @@
 "use client";
 
-import { cn } from "../../../../lib/utils";
-import { LoaderCircle } from "lucide-react";
 import * as React from "react";
 import { createContext, useContext } from "react";
-import { CheckIcon } from "lucide-react";
+import { cn } from "../../../../lib/utils";
 
 // Types
 type StepperContextValue = {
@@ -23,8 +21,12 @@ type StepItemContextValue = {
 type StepState = "active" | "completed" | "inactive" | "loading";
 
 // Contexts
-const StepperContext = createContext<StepperContextValue | undefined>(undefined);
-const StepItemContext = createContext<StepItemContextValue | undefined>(undefined);
+const StepperContext = createContext<StepperContextValue | undefined>(
+  undefined,
+);
+const StepItemContext = createContext<StepItemContextValue | undefined>(
+  undefined,
+);
 
 const useStepper = () => {
   const context = useContext(StepperContext);
@@ -52,7 +54,14 @@ interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
   (
-    { defaultValue = 0, value, onValueChange, orientation = "horizontal", className, ...props },
+    {
+      defaultValue = 0,
+      value,
+      onValueChange,
+      orientation = "horizontal",
+      className,
+      ...props
+    },
     ref,
   ) => {
     const [activeStep, setInternalStep] = React.useState(defaultValue);
@@ -102,18 +111,32 @@ interface StepperItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
   (
-    { step, completed = false, disabled = false, loading = false, className, children, ...props },
+    {
+      step,
+      completed = false,
+      disabled = false,
+      loading = false,
+      className,
+      children,
+      ...props
+    },
     ref,
   ) => {
     const { activeStep } = useStepper();
 
     const state: StepState =
-      completed || step < activeStep ? "completed" : activeStep === step ? "active" : "inactive";
+      completed || step < activeStep
+        ? "completed"
+        : activeStep === step
+          ? "active"
+          : "inactive";
 
     const isLoading = loading && step === activeStep;
 
     return (
-      <StepItemContext.Provider value={{ step, state, isDisabled: disabled, isLoading }}>
+      <StepItemContext.Provider
+        value={{ step, state, isDisabled: disabled, isLoading }}
+      >
         <div
           ref={ref}
           className={cn(
@@ -133,7 +156,8 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
 StepperItem.displayName = "StepperItem";
 
 // StepperTrigger
-interface StepperTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface StepperTriggerProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
 }
 
@@ -169,40 +193,42 @@ interface StepperIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   asChild?: boolean;
 }
 
-const StepperIndicator = React.forwardRef<HTMLDivElement, StepperIndicatorProps>(
-  ({ asChild = false, className, children, ...props }, ref) => {
-    const { state, step } = useStepItem();
-    // Style selon l'état
-    const isActive = state === "active";
-    const isCompleted = state === "completed";
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          "flex items-center justify-center rounded-full font-geist font-medium",
-          isActive || isCompleted
-            ? "bg-black text-white"
-            : "bg-black/5 text-black",
-          "transition-colors duration-200",
-          "w-[28px] h-[28px] text-[15px]",
-          className
-        )}
-        data-state={state}
-        {...props}
-      >
-        {step + 1}
-      </div>
-    );
-  }
-);
+const StepperIndicator = React.forwardRef<
+  HTMLDivElement,
+  StepperIndicatorProps
+>(({ asChild = false, className, children, ...props }, ref) => {
+  const { state, step } = useStepItem();
+  // Style selon l'état
+  const isActive = state === "active";
+  const isCompleted = state === "completed";
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "flex items-center justify-center rounded-full font-geist font-medium",
+        isActive || isCompleted
+          ? "bg-black text-white"
+          : "bg-black/5 text-black",
+        "transition-colors duration-200",
+        "w-[28px] h-[28px] text-[15px]",
+        className,
+      )}
+      data-state={state}
+      {...props}
+    >
+      {step + 1}
+    </div>
+  );
+});
 StepperIndicator.displayName = "StepperIndicator";
 
 // StepperTitle
-const StepperTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("text-sm font-medium", className)} {...props} />
-  ),
-);
+const StepperTitle = React.forwardRef<
+  HTMLHeadingElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3 ref={ref} className={cn("text-sm font-medium", className)} {...props} />
+));
 StepperTitle.displayName = "StepperTitle";
 
 // StepperDescription
@@ -210,33 +236,38 @@ const StepperDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  <p
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
 ));
 StepperDescription.displayName = "StepperDescription";
 
 // StepperSeparator
-const StepperSeparator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
-    // On récupère le contexte du parent pour savoir si le step précédent est complété
-    const { activeStep } = useStepper();
-    // On récupère le step courant via le parent direct (StepperItem)
-    // On suppose que le séparateur est entre step N et N+1, donc il doit être noir si N est complété
-    // On utilise une prop data-prev-completed passée par le parent
-    // Pour simplifier, on laisse la couleur par défaut et on override dans le parent
-    return (
-      <div
-        ref={ref}
-        className={cn(
-          // On override la couleur via une prop data-completed
-          "h-[2px] w-[90px] mx-2 transition-colors duration-200",
-          className
-        )}
-        data-step-separator
-        {...props}
-      />
-    );
-  }
-);
+const StepperSeparator = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  // On récupère le contexte du parent pour savoir si le step précédent est complété
+  const { activeStep } = useStepper();
+  // On récupère le step courant via le parent direct (StepperItem)
+  // On suppose que le séparateur est entre step N et N+1, donc il doit être noir si N est complété
+  // On utilise une prop data-prev-completed passée par le parent
+  // Pour simplifier, on laisse la couleur par défaut et on override dans le parent
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        // On override la couleur via une prop data-completed
+        "h-[2px] w-[90px] mx-2 transition-colors duration-200",
+        className,
+      )}
+      data-step-separator
+      {...props}
+    />
+  );
+});
 StepperSeparator.displayName = "StepperSeparator";
 
 export {
@@ -247,4 +278,4 @@ export {
   StepperSeparator,
   StepperTitle,
   StepperTrigger,
-}; 
+};

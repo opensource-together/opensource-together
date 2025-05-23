@@ -1,15 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import beta from "../icons/beta.svg";
-import crossIcon from "../icons/crossIcon.svg";
-import github from "../icons/github.svg";
-import openSource from "../icons/opensource.svg";
-import x from "../icons/x.svg";
-import Button from "../ui/Button";
+import GithubLink from "../GithubLink";
+import TwitterLink from "../TwitterLink";
 
 interface NavLinkProps {
   href: string;
@@ -62,14 +59,14 @@ export default function Header({
         <Link href="/">
           <article className="flex items-center gap-2">
             <Image
-              src={openSource}
-              alt="openSource"
+              src="ost-logo.svg"
+              alt="ost-logo"
               width={130}
               height={26}
               className="w-auto h-auto max-h-[26px] md:max-h-[30px] lg:max-h-[35px]"
             />
             <Image
-              src={beta}
+              src="beta.svg"
               alt="beta"
               width={24}
               height={10}
@@ -117,51 +114,24 @@ export default function Header({
         </NavLink>
 
         <div className="flex items-center justify-center space-x-6 py-2">
-          <Image
-            src={github}
-            alt="github"
-            width={18}
-            height={16}
-            className="w-auto h-auto max-h-[16px]"
-          />
-          <Image
-            src={x}
-            alt="x"
-            width={18}
-            height={16}
-            className="w-auto h-auto max-h-[16px]"
-          />
+          <GithubLink url="https://github.com/opensource-together/opensource-together" />
+          <TwitterLink url="https://x.com/OpenSTogether" />
         </div>
       </nav>
 
       <section className="hidden md:flex items-center space-x-2 sm:space-x-3 md:space-x-4">
-        <Image
-          src={github}
-          alt="github"
-          width={16}
-          height={14}
-          className="w-auto h-auto max-h-[14px]"
-        />
-        <Image
-          src={x}
-          alt="x"
-          width={16}
-          height={14}
-          className="w-auto h-auto max-h-[14px]"
-        />
+        <GithubLink url="https://github.com/opensource-together/opensource-together" />
+        <TwitterLink url="https://x.com/OpenSTogether" />
 
-        <Button
-          onClick={handleCreate}
-          className="sm:min-w-[140px] md:min-w-[160px] px-3 sm:px-4"
-        >
-          <span className="hidden sm:inline">Créer un projet</span>
+        <Button onClick={handleCreate}>
+          <span className="hidden sm:inline">Créer un Projet</span>
           <span className="inline sm:hidden">Nouveau projet</span>
           <Image
-            src={crossIcon}
+            src="/icons/cross-icon.svg"
             alt="crossIcon"
             width={11}
             height={11}
-            className="ml-0 align-middle"
+            className="ml-1.5"
           />
         </Button>
       </section>
@@ -172,7 +142,7 @@ export default function Header({
           <Button onClick={handleCreate} className="w-full max-w-[220px]">
             New Project{" "}
             <Image
-              src={crossIcon}
+              src="/icons/cross-icon.svg"
               alt="crossIcon"
               width={11}
               height={11}

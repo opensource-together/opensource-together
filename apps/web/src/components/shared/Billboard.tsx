@@ -1,13 +1,15 @@
-import chevronLeft from "@/shared/icons/chevron-left.svg";
-import chevronRight from "@/shared/icons/chevron-right.svg";
 import Image from "next/image";
-import billboard from "../../../public/billboardost.svg";
 
 export default function Billboard() {
   return (
     <div className="border border-[#000000]/10 rounded-[30px] w-[1116px] h-[373px] flex items-center justify-center relative overflow-hidden">
       <div className="relative w-[1076px] h-[330px]">
-        <Image src={billboard} alt="billboard" width={1076} height={330} />
+        <Image
+          src="/billboard-ost.svg"
+          alt="billboard"
+          width={1076}
+          height={330}
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -25,10 +27,20 @@ export default function Billboard() {
       </div>
       <div className="absolute bottom-12 right-10 flex items-center gap-2">
         <div className="flex items-center pr-[1px] justify-center bg-white border border-[#000000]/10 rounded-[30px] w-[40px] h-[40px]">
-          <Image src={chevronLeft} alt="chevron-left" width={8} height={24} />
+          <Image
+            src="/icons/chevron-left.svg"
+            alt="chevron-left"
+            width={8}
+            height={24}
+          />
         </div>
         <div className="flex items-center pl-[2px] justify-center bg-white border border-[#000000]/10 rounded-[30px] w-[40px] h-[40px]">
-          <Image src={chevronRight} alt="chevron-right" width={8} height={24} />
+          <Image
+            src="/icons/chevron-right.svg"
+            alt="chevron-right"
+            width={8}
+            height={24}
+          />
         </div>
       </div>
       <div className="absolute bottom-7 right-10 flex items-center justify-center w-[90px] gap-1">

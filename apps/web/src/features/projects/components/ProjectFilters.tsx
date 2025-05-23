@@ -1,4 +1,3 @@
-import chevronDown from "@/shared/icons/chevron-down.svg";
 import Image from "next/image";
 import React from "react";
 
@@ -16,7 +15,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({
   isSortButton = false,
 }) => {
   return (
-    <button className="h-[35px] cursor-pointer px-3 flex items-center gap-1 font-geist font-semibold text-[13px] border border-[black]/5 rounded-[5px] bg-white hover:bg-[#F9F9F9] transition-colors whitespace-nowrap">
+    <button className="h-[35px] cursor-pointer px-3 flex items-center gap-1 font-semibold text-[13px] border border-[black]/5 rounded-[5px] bg-white hover:bg-[#F9F9F9] transition-colors whitespace-nowrap">
       {isSortButton && (
         <span className="font-light text-[black]/50 hidden sm:inline">
           Trier par:{" "}
@@ -29,7 +28,12 @@ const FilterButton: React.FC<FilterButtonProps> = ({
       )}
       <span className="font-light">{value}</span>
       {hasChevron && (
-        <Image src={chevronDown} alt="Expand" width={10} height={6} />
+        <Image
+          src="/icons/chevron-down.svg"
+          alt="Expand"
+          width={10}
+          height={6}
+        />
       )}
     </button>
   );
