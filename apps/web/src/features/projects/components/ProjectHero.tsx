@@ -120,7 +120,7 @@ export default function ProjectHero({
   };
 
   return (
-    <section className="w-[710px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist">
+    <section className="w-[710px] bg-white rounded-3xl shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-5">
@@ -134,15 +134,13 @@ export default function ProjectHero({
             />
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="text-[24px] font-medium leading-tight font-geist">
-              {title}
-            </h1>
+            <h1 className="text-2xl font-medium leading-tight">{title}</h1>
             <AuthorTag name={authorName} image={authorImage} />
           </div>
         </div>
         <div className="flex flex-col items-end gap-4">
           <div className="flex items-center h-[20px] w-32 bg-black/[0.02] rounded-full px-3">
-            <span className="font-geist font-normal text-[11px] tracking-[-0.5px] text-black/40 mr-1">
+            <span className="font-normal text-[11px] tracking-[-0.5px] text-black/40 mr-1">
               Difficulté {difficulty}
             </span>
             {renderDifficultyBars()}
@@ -173,20 +171,16 @@ export default function ProjectHero({
 
       {/* Description */}
       <div className="mt-2">
-        <h2 className="text-[15px] font-medium font-geist mb-2">
-          Description du projet
-        </h2>
-        <p className="text-[13px] font-geist font-normal text-black/70 mb-4">
-          {description}
-        </p>
+        <h2 className="font-medium mb-2">Description du projet</h2>
+        <p className="text-sm font-normal text-black/70 mb-4">{description}</p>
         <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
             <>
-              <p className="text-[13px] leading-[16px] font-geist font-normal text-black/70">
+              <p className="text-sm leading-[16px] font-normal text-black/70">
                 Les avantages clés de notre outil de suivi de l'empreinte
                 carbone incluent:
               </p>
-              <ul className="text-[13px] leading-[16px] font-geist font-normal text-black/70 list-disc pl-5 space-y-1">
+              <ul className="text-sm mt-2 leading-[16px] font-normal text-black/70 list-disc pl-5 space-y-1">
                 {keyBenefits.map((benefit, index) => (
                   <li key={index}>{benefit}</li>
                 ))}
@@ -194,7 +188,7 @@ export default function ProjectHero({
             </>
           )}
           {(!keyBenefits || keyBenefits.length === 0) && longDescription && (
-            <p className="text-[13px] leading-[16px] font-geist font-normal text-black/70">
+            <p className="text-sm font-normal text-black/70">
               {longDescription}
             </p>
           )}
@@ -205,10 +199,8 @@ export default function ProjectHero({
       <div className="border-t border-dashed border-black/10 w-full mt-12 mb-3"></div>
 
       {/* Technical Stack */}
-      <div className=" pt-4 ">
-        <h3 className="text-[15px] font-medium font-geist mb-3">
-          Stack Technique
-        </h3>
+      <div className="pt-4">
+        <h3 className="text-sm font-medium mb-3">Stack Technique</h3>
         <div className="flex gap-3">
           {techStacks.length > 0 ? (
             techStacks.map((tech, index) => (
@@ -244,7 +236,7 @@ export default function ProjectHero({
 
 export function SkeletonProjectHero() {
   return (
-    <section className="w-[710px] min-h-[634px] bg-white rounded-[24px] shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col font-geist animate-pulse">
+    <section className="w-[710px] min-h-[634px] bg-white rounded-3xl shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col animate-pulse">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-5">

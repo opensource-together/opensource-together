@@ -122,7 +122,7 @@ export default function ProjectDetailView({
         </div>
         <div>
           <div className="flex justify-between items-center mb-3 lg:max-w-[721.96px]">
-            <p className="text-[20px] font-medium font-geist flex items-centers gap-1">
+            <p className="text-xl font-medium flex items-centers gap-1">
               Rôles Disponibles{" "}
               <Image
                 src="/icons/people.svg"

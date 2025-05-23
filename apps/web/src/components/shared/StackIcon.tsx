@@ -30,7 +30,7 @@ export function StackIcon({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="w-[20px] h-[20px] border border-black/10 rounded-[2px] flex items-center justify-center">
+      <div className="size-5 border border-black/10 rounded-xs flex items-center justify-center">
         <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
       </div>
       {name && <span className="text-sm">{name}</span>}

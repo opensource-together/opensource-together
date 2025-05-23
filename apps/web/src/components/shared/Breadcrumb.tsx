@@ -51,9 +51,7 @@ export function SkeletonBreadcrumb({
   className?: string;
 }) {
   return (
-    <nav
-      className={`font-geist text-[12px] font-normal animate-pulse ${className}`}
-    >
+    <nav className={`text-xs font-normal animate-pulse ${className}`}>
       <ol className="flex items-center">
         {Array.from({ length: itemCount }).map((_, index) => (
           <React.Fragment key={index}>

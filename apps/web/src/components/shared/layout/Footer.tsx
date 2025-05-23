@@ -9,7 +9,7 @@ export default function Footer() {
 
   return (
     <>
-      <div className="w-full max-w-[1104px] h-[306px] rounded-[20px] border border-[#000000]/10 mx-auto flex relative bg-white">
+      <div className="w-full max-w-[1104px] h-[306px] rounded-3xl border border-[#000000]/10 mx-auto flex relative bg-white">
         {/* Bouton en bas à gauche avec marge */}
         <div className="absolute bottom-8 left-10">
           <Link
@@ -30,7 +30,7 @@ export default function Footer() {
         </div>
         {/* Texte en bas à droite avec marge */}
         <div className="absolute bottom-8 right-10 text-right">
-          <h2 className="font-geist font-medium text-[32px] leading-[1.2] text-black">
+          <h2 className="font-medium text-3xl text-black">
             L'avenir du développement collaboratif.
             <br />
             Par la communauté, pour la communauté.
@@ -40,12 +40,12 @@ export default function Footer() {
       {/* Ligne de détails sous le footer */}
       <div className="w-full max-w-[1104px] mx-auto flex items-center justify-between mt-40 px-2">
         {/* Left */}
-        <div className="flex items-center gap-2 text-[14px] text-black/80 font-geist">
+        <div className="flex items-center gap-2 text-sm text-black/80">
           <span>©2025</span>
           <span className="font-medium">Open Source Together</span>
         </div>
         {/* Center */}
-        <div className="flex items-center gap-4 text-black font-geist">
+        <div className="flex items-center gap-4 text-black">
           {navItems.map((item) => (
             <Link
               href={`/${item.toLowerCase()}`}
