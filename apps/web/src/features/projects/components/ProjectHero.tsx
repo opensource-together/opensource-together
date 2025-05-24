@@ -1,7 +1,9 @@
+import Image from "next/image";
+
 import { AuthorTag } from "@/components/shared/AuthorTag";
 import { StackIcon } from "@/components/shared/StackIcon";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+
 import { TechStack } from "../types/projectTypes";
 
 interface ProjectHeroProps {
@@ -35,16 +37,6 @@ export default function ProjectHero({
   authorName,
   authorImage,
 }: ProjectHeroProps) {
-  // Map of tech stacks to icons - to be replaced with dynamic icon loading
-  const techIconMap: Record<string, any> = {
-    TypeScript: "typescript.svg",
-    Typescript: "typescript.svg",
-    React: "react.svg",
-    MongoDB: "mongodb.svg",
-    TailwindCSS: "tailwindcss.svg",
-    Tailwind: "tailwindcss.svg",
-  };
-
   // Fonction pour rendre les barres de difficulté
   const renderDifficultyBars = () => {
     if (difficulty === "Facile") {
@@ -120,11 +112,11 @@ export default function ProjectHero({
   };
 
   return (
-    <section className="w-[710px] bg-white rounded-3xl shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col">
+    <section className="flex w-[710px] flex-col rounded-3xl border border-[black]/10 bg-white p-10 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <div className="w-[82px] h-[80px] rounded-[16px] bg-[#F4F4F4] flex items-center justify-center">
+          <div className="flex h-[80px] w-[82px] items-center justify-center rounded-[16px] bg-[#F4F4F4]">
             <Image
               src={image || "/icons/empty-project.svg"}
               alt={title || "Project icon"}
@@ -134,18 +126,18 @@ export default function ProjectHero({
             />
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-medium leading-tight">{title}</h1>
+            <h1 className="text-2xl leading-tight font-medium">{title}</h1>
             <AuthorTag name={authorName} image={authorImage} />
           </div>
         </div>
         <div className="flex flex-col items-end gap-4">
-          <div className="flex items-center h-[20px] w-32 bg-black/[0.02] rounded-full px-3">
-            <span className="font-normal text-[11px] tracking-[-0.5px] text-black/40 mr-1">
+          <div className="flex h-[20px] w-32 items-center rounded-full bg-black/[0.02] px-3">
+            <span className="mr-1 text-[11px] font-normal tracking-[-0.5px] text-black/40">
               Difficulté {difficulty}
             </span>
             {renderDifficultyBars()}
           </div>
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <Button variant="outline">
               Voir le Repository
               <Image
@@ -171,8 +163,8 @@ export default function ProjectHero({
 
       {/* Description */}
       <div className="mt-2">
-        <h2 className="font-medium mb-2">Description du projet</h2>
-        <p className="text-sm font-normal text-black/70 mb-4">{description}</p>
+        <h2 className="mb-2 font-medium">Description du projet</h2>
+        <p className="mb-4 text-sm font-normal text-black/70">{description}</p>
         <div className="w-[629px]">
           {keyBenefits && keyBenefits.length > 0 && (
             <>
@@ -180,7 +172,7 @@ export default function ProjectHero({
                 Les avantages clés de notre outil de suivi de l'empreinte
                 carbone incluent:
               </p>
-              <ul className="text-sm mt-2 leading-[16px] font-normal text-black/70 list-disc pl-5 space-y-1">
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black/70">
                 {keyBenefits.map((benefit, index) => (
                   <li key={index}>{benefit}</li>
                 ))}
@@ -196,11 +188,11 @@ export default function ProjectHero({
       </div>
 
       {/* Ligne de séparation */}
-      <div className="border-t border-dashed border-black/10 w-full mt-12 mb-3"></div>
+      <div className="mt-12 mb-3 w-full border-t border-dashed border-black/10"></div>
 
       {/* Technical Stack */}
       <div className="pt-4">
-        <h3 className="text-sm font-medium mb-3">Stack Technique</h3>
+        <h3 className="mb-3 text-sm font-medium">Stack Technique</h3>
         <div className="flex gap-3">
           {techStacks.length > 0 ? (
             techStacks.map((tech, index) => (
@@ -236,41 +228,41 @@ export default function ProjectHero({
 
 export function SkeletonProjectHero() {
   return (
-    <section className="w-[710px] min-h-[634px] bg-white rounded-3xl shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)] border border-[black]/10 p-10 flex flex-col animate-pulse">
+    <section className="flex min-h-[634px] w-[710px] animate-pulse flex-col rounded-3xl border border-[black]/10 bg-white p-10 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <div className="w-[82px] h-[80px] rounded-[16px] bg-gray-200" />
-          <div className="flex flex-col gap-2 flex-1">
-            <div className="h-6 w-40 bg-gray-200 rounded" />
-            <div className="h-5 w-24 bg-gray-100 rounded" />
+          <div className="h-[80px] w-[82px] rounded-[16px] bg-gray-200" />
+          <div className="flex flex-1 flex-col gap-2">
+            <div className="h-6 w-40 rounded bg-gray-200" />
+            <div className="h-5 w-24 rounded bg-gray-100" />
           </div>
         </div>
         <div className="flex flex-col items-end gap-4">
-          <div className="h-[20px] w-[118px] bg-gray-100 rounded-full" />
-          <div className="flex gap-3 items-center">
-            <div className="h-[43px] w-[130px] bg-gray-200 rounded" />
-            <div className="h-[43px] w-[120px] bg-gray-200 rounded ml-2" />
+          <div className="h-[20px] w-[118px] rounded-full bg-gray-100" />
+          <div className="flex items-center gap-3">
+            <div className="h-[43px] w-[130px] rounded bg-gray-200" />
+            <div className="ml-2 h-[43px] w-[120px] rounded bg-gray-200" />
           </div>
         </div>
       </div>
       {/* Description */}
       <div className="mt-2">
-        <div className="h-5 w-40 bg-gray-200 rounded mb-2" />
-        <div className="h-4 w-3/4 bg-gray-100 rounded mb-2" />
-        <div className="w-[629px] flex flex-col gap-2 mt-2">
+        <div className="mb-2 h-5 w-40 rounded bg-gray-200" />
+        <div className="mb-2 h-4 w-3/4 rounded bg-gray-100" />
+        <div className="mt-2 flex w-[629px] flex-col gap-2">
           {[...Array(7)].map((_, i) => (
-            <div key={i} className="h-4 w-full bg-gray-100 rounded" />
+            <div key={i} className="h-4 w-full rounded bg-gray-100" />
           ))}
         </div>
       </div>
-      <div className="border-t border-dashed border-black/10 w-full mt-8 mb-3"></div>
+      <div className="mt-8 mb-3 w-full border-t border-dashed border-black/10"></div>
       {/* Technical Stack */}
       <div className="mt-2">
-        <div className="h-5 w-32 bg-gray-200 rounded mb-3" />
+        <div className="mb-3 h-5 w-32 rounded bg-gray-200" />
         <div className="flex gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="w-[60px] h-[28px] bg-gray-100 rounded" />
+            <div key={i} className="h-[28px] w-[60px] rounded bg-gray-100" />
           ))}
         </div>
       </div>

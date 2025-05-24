@@ -1,5 +1,7 @@
 "use client";
+
 import ProjectCardComponent from "@/components/shared/ProjectCard";
+
 import { mockProjects } from "../../projects/data/mockProjects";
 
 export default function PinnedProjects() {
@@ -29,7 +31,7 @@ export default function PinnedProjects() {
               alt: tech.name,
             })) ?? []
           }
-          className="bg-white w-full max-w-[731px]"
+          className="w-full max-w-[731px] bg-white"
         />
       ))}
     </div>

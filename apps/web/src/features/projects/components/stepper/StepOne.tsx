@@ -6,11 +6,11 @@ export default function StepOne({
   onNext: (mode: "import" | "scratch") => void;
 }) {
   return (
-    <div className="flex flex-col items-center bg-white p-10 rounded-[20px]">
-      <h2 className="text-[30px] font-medium tracking-tight font-geist text-black mb-2">
+    <div className="flex flex-col items-center rounded-[20px] bg-white p-10">
+      <h2 className="font-geist mb-2 text-[30px] font-medium tracking-tight text-black">
         Choisissez votre méthode
       </h2>
-      <p className="text-[15px] text-black/70 mb-8 text-center">
+      <p className="mb-8 text-center text-[15px] text-black/70">
         Importez un repository Github ou créez un projet depuis zéro.
       </p>
       <Button
@@ -28,7 +28,7 @@ export default function StepOne({
           </svg>
         </span>
       </Button>
-      <div className="text-[15px] text-black/70 mb-2">ou</div>
+      <div className="mb-2 text-[15px] text-black/70">ou</div>
       <Button
         variant="outline"
         size="lg"

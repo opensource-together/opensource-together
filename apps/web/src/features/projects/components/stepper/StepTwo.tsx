@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+
 const repositories = [
   { name: "Repository 1", date: "10/09/25" },
   { name: "Repository 1", date: "10/09/25" },
@@ -38,7 +40,7 @@ export default function StepTwo({
   const visibleHeight = 320;
   const scrollbarHeight = Math.max(
     (visibleHeight / totalHeight) * visibleHeight,
-    40,
+    40
   ); // min 40px
   const maxScrollTop = totalHeight - visibleHeight;
   const scrollbarTop =
@@ -52,7 +54,7 @@ export default function StepTwo({
       const deltaY = e.clientY - dragStartY;
       const newTop = Math.min(
         Math.max(dragStartScroll + deltaY, 0),
-        visibleHeight - scrollbarHeight,
+        visibleHeight - scrollbarHeight
       );
       const newScrollTop =
         (newTop / (visibleHeight - scrollbarHeight)) * maxScrollTop;
@@ -78,43 +80,43 @@ export default function StepTwo({
 
   if (mode === "scratch") {
     return (
-      <div className="flex flex-col items-center bg-white p-10 rounded-[20px] font-geist">
-        <h2 className="text-black font-geist font-medium text-[30px] mb-2">
+      <div className="font-geist flex flex-col items-center rounded-[20px] bg-white p-10">
+        <h2 className="font-geist mb-2 text-[30px] font-medium text-black">
           Fill in your information
         </h2>
-        <p className="text-[15px] text-black/70 mb-8 text-center">
+        <p className="mb-8 text-center text-[15px] text-black/70">
           Remplissez les informations en fonction de votre repository Github
           ci-dessous
         </p>
         <form
-          className="w-full flex flex-col gap-5"
+          className="flex w-full flex-col gap-5"
           onSubmit={(e) => {
             e.preventDefault();
             onNext();
           }}
         >
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">
+            <label className="font-geist mb-1 block text-[18px] font-medium tracking-tight text-black">
               Project Name
             </label>
             <input
-              className="w-[425px] h-[40px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+              className="font-geist h-[40px] w-[425px] rounded-[7px] border border-black/10 px-3 py-2 text-[15px] focus:ring-2 focus:ring-black/10 focus:outline-none"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               maxLength={100}
             />
           </div>
           <div>
-            <div className="flex items-center justify-between mr-2 mb-1">
-              <label className="text-black font-geist font-medium text-[18px] tracking-tight">
+            <div className="mr-2 mb-1 flex items-center justify-between">
+              <label className="font-geist text-[18px] font-medium tracking-tight text-black">
                 Description
               </label>
-              <span className="text-[10px] text-black/20 font-normal">
+              <span className="text-[10px] font-normal text-black/20">
                 {description.length}/250
               </span>
             </div>
             <textarea
-              className="w-[425px] h-[103px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
+              className="font-geist h-[103px] w-[425px] resize-none rounded-[7px] border border-black/10 px-3 py-2 text-[15px] focus:ring-2 focus:ring-black/10 focus:outline-none"
               placeholder="Describe your project"
               value={description}
               onChange={(e) => setDescription(e.target.value.slice(0, 250))}
@@ -122,11 +124,11 @@ export default function StepTwo({
             />
           </div>
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] tracking-tight mb-1">
+            <label className="font-geist mb-1 block text-[18px] font-medium tracking-tight text-black">
               Link to the website
             </label>
             <input
-              className="w-[425px] h-[40px] border border-black/10 rounded-[7px] px-3 py-2 text-[15px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+              className="font-geist h-[40px] w-[425px] rounded-[7px] border border-black/10 px-3 py-2 text-[15px] focus:ring-2 focus:ring-black/10 focus:outline-none"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
             />
@@ -145,17 +147,17 @@ export default function StepTwo({
 
   // Mode import (par défaut)
   return (
-    <div className="flex flex-col items-center p-10 rounded-[20px] ">
-      <h2 className="text-black font-geist font-medium text-[30px] mb-2">
+    <div className="flex flex-col items-center rounded-[20px] p-10">
+      <h2 className="font-geist mb-2 text-[30px] font-medium text-black">
         Importer un repository Github
       </h2>
-      <p className="text-[15px] text-black/70 mb-8 text-center">
+      <p className="mb-8 text-center text-[15px] text-black/70">
         Choisissez le repository Github que vous souhaitez importer.
       </p>
       <div className="relative flex">
         <div
           ref={scrollRef}
-          className="bg-black/3 w-[425px] h-[320px] rounded-[10px] border border-black/4 mb-4 overflow-y-auto pr-3"
+          className="mb-4 h-[320px] w-[425px] overflow-y-auto rounded-[10px] border border-black/4 bg-black/3 pr-3"
           onScroll={(e) => setScrollTop((e.target as HTMLDivElement).scrollTop)}
           style={{ scrollbarWidth: "none" }}
         >
@@ -163,13 +165,13 @@ export default function StepTwo({
             {repositories.map((repo, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between h-[64px] px-6 bg-transparent"
+                className="flex h-[64px] items-center justify-between bg-transparent px-6"
               >
                 <div className="flex items-center gap-2">
-                  <span className="font-geist font-normal text-[14px] text-black">
+                  <span className="font-geist text-[14px] font-normal text-black">
                     {repo.name}
                   </span>
-                  <span className="text-black/20 text-[14px] ml-1">
+                  <span className="ml-1 text-[14px] text-black/20">
                     <Image
                       src="/icons/lock.svg"
                       alt="lock"
@@ -179,7 +181,7 @@ export default function StepTwo({
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-geist font-normal text-[12px] text-black/20 flex-shrink-0">
+                  <span className="font-geist flex-shrink-0 text-[12px] font-normal text-black/20">
                     {repo.date}
                   </span>
                   <Button size="sm">Importer</Button>
@@ -221,7 +223,7 @@ export default function StepTwo({
           />
         </div>
       </div>
-      <div className="flex gap-2 mt-6 w-full">
+      <div className="mt-6 flex w-full gap-2">
         <Button size="lg" className="w-full" onClick={onNext}>
           Suivant
         </Button>

@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+
 import GithubLink from "../GithubLink";
 import TwitterLink from "../TwitterLink";
 
@@ -9,7 +11,7 @@ export default function Footer() {
 
   return (
     <>
-      <div className="w-full max-w-[1104px] h-[306px] rounded-3xl border border-[#000000]/10 mx-auto flex relative bg-white">
+      <div className="relative mx-auto flex h-[306px] w-full max-w-[1104px] rounded-3xl border border-[#000000]/10 bg-white">
         {/* Bouton en bas à gauche avec marge */}
         <div className="absolute bottom-8 left-10">
           <Link
@@ -29,16 +31,16 @@ export default function Footer() {
           </Link>
         </div>
         {/* Texte en bas à droite avec marge */}
-        <div className="absolute bottom-8 right-10 text-right">
-          <h2 className="font-medium text-3xl text-black">
-            L'avenir du développement collaboratif.
+        <div className="absolute right-10 bottom-8 text-right">
+          <h2 className="text-3xl font-medium text-black">
+            L&apos;avenir du développement collaboratif.
             <br />
             Par la communauté, pour la communauté.
           </h2>
         </div>
       </div>
       {/* Ligne de détails sous le footer */}
-      <div className="w-full max-w-[1104px] mx-auto flex items-center justify-between mt-40 px-2">
+      <div className="mx-auto mt-40 flex w-full max-w-[1104px] items-center justify-between px-2">
         {/* Left */}
         <div className="flex items-center gap-2 text-sm text-black/80">
           <span>©2025</span>

@@ -5,17 +5,17 @@ import { SkeletonRoleCard } from "./RoleCard";
 
 export default function SkeletonProjectDetail() {
   return (
-    <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
-      <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
-        <div className="lg:max-w-[721.96px] w-full">
+    <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
+      <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
+        <div className="w-full lg:max-w-[721.96px]">
           <SkeletonProjectHero />
         </div>
         <SkeletonProjectSideBar />
       </div>
       <div>
-        <div className="h-5 w-40 bg-gray-200 rounded mb-3"></div>
+        <div className="mb-3 h-5 w-40 rounded bg-gray-200"></div>
         <SkeletonProjectFilters count={1} />
-        <div className="flex flex-col gap-3 mt-6 mb-30">
+        <div className="mt-6 mb-30 flex flex-col gap-3">
           <SkeletonRoleCard />
           <SkeletonRoleCard />
           <SkeletonRoleCard />

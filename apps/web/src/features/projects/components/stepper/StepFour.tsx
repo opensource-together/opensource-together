@@ -1,13 +1,14 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   if (level === "Easy") {
     return (
-      <span className="flex items-center gap-[2px] ml-2">
+      <span className="ml-2 flex items-center gap-[2px]">
         <Image
           src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
@@ -30,7 +31,7 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
     );
   } else if (level === "Medium") {
     return (
-      <span className="flex items-center gap-[2px] ml-2">
+      <span className="ml-2 flex items-center gap-[2px]">
         <Image
           src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
@@ -53,7 +54,7 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
     );
   } else {
     return (
-      <span className="flex items-center gap-[2px] ml-2">
+      <span className="ml-2 flex items-center gap-[2px]">
         <Image
           src="/icons/difficulty-bar-gray.svg"
           alt="Difficulty level"
@@ -77,7 +78,7 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   }
 }
 
-export default function StepFour({ onBack }: { onBack: () => void }) {
+export default function StepFour() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [modalBlurState, setModalBlurState] = useState<
@@ -100,11 +101,11 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
 
   if (showConfirmation) {
     return (
-      <div className="flex flex-col items-center justify-center bg-white p-10 rounded-[20px] font-geist">
-        <h2 className="text-[30px] text-center font-medium tracking-tight font-geist mb-2">
+      <div className="font-geist flex flex-col items-center justify-center rounded-[20px] bg-white p-10">
+        <h2 className="font-geist mb-2 text-center text-[30px] font-medium tracking-tight">
           Félicitations ! Votre projet a été créé
         </h2>
-        <p className="text-[15px] text-center text-black/70 mb-8">
+        <p className="mb-8 text-center text-[15px] text-black/70">
           Vous pouvez maintenant trouver vos projets dans votre tableau de bord
           "Mes projets" et les membres pourront postuler à n'importe quel rôle
           ouvert
@@ -124,18 +125,18 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
       className={`fixed inset-0 z-50 flex items-center justify-center modal-blur-${modalBlurState || "enter"}`}
       style={{ background: "rgba(0,0,0,0.10)" }}
     >
-      <div className="relative bg-white w-[603px] min-h-[400px] max-h-[90vh] rounded-[20px] border border-black/5 flex flex-col items-center px-6 py-6 shadow-xl font-geist overflow-y-auto">
+      <div className="font-geist relative flex max-h-[90vh] min-h-[400px] w-[603px] flex-col items-center overflow-y-auto rounded-[20px] border border-black/5 bg-white px-6 py-6 shadow-xl">
         {/* Header: Title centered, close cross right */}
         <div
-          className="w-full flex items-center justify-center relative mb-8"
+          className="relative mb-8 flex w-full items-center justify-center"
           style={{ height: "32px" }}
         >
           <span className="absolute left-0" style={{ width: "32px" }}></span>
-          <span className="text-black/20 text-[12px] font-geist font-medium ">
+          <span className="font-geist text-[12px] font-medium text-black/20">
             Create New Role
           </span>
           <button
-            className="absolute right-0 flex items-center justify-center text-black hover:text-black transition"
+            className="absolute right-0 flex items-center justify-center text-black transition hover:text-black"
             style={{ width: "32px", height: "32px" }}
             onClick={closeRoleModal}
           >
@@ -147,27 +148,27 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
             />
           </button>
         </div>
-        <div className="w-full flex flex-col gap-8">
+        <div className="flex w-full flex-col gap-8">
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] mb-5">
+            <label className="font-geist mb-5 block text-[18px] font-medium text-black">
               Choose Role Title
             </label>
-            <div className="grid grid-cols-3 gap-3 ">
+            <div className="grid grid-cols-3 gap-3">
               {Array(6)
                 .fill("Back-end Developer")
                 .map((role, i) => (
                   <button
                     key={i}
-                    className="w-[144px] h-[30px] rounded-[5px] border border-black/5 bg-white text-black text-[12px] font-medium flex items-center justify-center"
+                    className="flex h-[30px] w-[144px] items-center justify-center rounded-[5px] border border-black/5 bg-white text-[12px] font-medium text-black"
                   >
                     {role}
                   </button>
                 ))}
             </div>
           </div>
-          <div className="border-t border-dashed border-black/10 my-2"></div>
+          <div className="my-2 border-t border-dashed border-black/10"></div>
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] mb-5">
+            <label className="font-geist mb-5 block text-[18px] font-medium text-black">
               Add skill set
             </label>
             <div className="flex flex-wrap gap-2">
@@ -194,25 +195,25 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
                 ))}
             </div>
           </div>
-          <div className="border-t border-dashed border-black/10 my-2"></div>
+          <div className="my-2 border-t border-dashed border-black/10"></div>
           <div>
-            <label className="block text-black font-geist font-medium text-[18px] mb-5">
+            <label className="font-geist mb-5 block text-[18px] font-medium text-black">
               Add Description
             </label>
             <div className="relative mb-3">
               <textarea
-                className="w-full h-[153px] rounded-[10px] border border-black/10 bg-white px-4 py-3 text-[15px] font-geist text-black/70 focus:outline-none resize-none"
+                className="font-geist h-[153px] w-full resize-none rounded-[10px] border border-black/10 bg-white px-4 py-3 text-[15px] text-black/70 focus:outline-none"
                 maxLength={250}
                 placeholder="Describe new role"
               />
-              <span className="absolute bottom-3 right-4 text-[13px] text-black/20">
+              <span className="absolute right-4 bottom-3 text-[13px] text-black/20">
                 250/250
               </span>
             </div>
           </div>
           <Button
             size="lg"
-            className="mb-4 flex items-center justify-center mt-0"
+            className="mt-0 mb-4 flex items-center justify-center"
             onClick={() => setShowConfirmation(true)}
           >
             Créer un nouveau rôle
@@ -223,27 +224,27 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
   );
 
   return (
-    <div className="flex flex-col gap-8 w-[500px] bg-white p-10 rounded-[20px] font-geist">
+    <div className="font-geist flex w-[500px] flex-col gap-8 rounded-[20px] bg-white p-10">
       {/* Add collaborators */}
 
       <div>
-        <h2 className="text-[30px] text-center font-medium tracking-tight font-geist mb-2">
+        <h2 className="font-geist mb-2 text-center text-[30px] font-medium tracking-tight">
           Ajouter les détails du projet
         </h2>
-        <p className="text-[15px] text-center text-black/70 mb-8">
+        <p className="mb-8 text-center text-[15px] text-black/70">
           Complétez les informations détaillées de votre projet open source
         </p>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">
+        <label className="font-geist mb-2 block text-[18px] font-medium text-black">
           Ajouter des collaborateurs
         </label>
         <div className="relative">
           <input
             type="text"
             placeholder="Rechercher des collaborateurs"
-            className="w-full h-[42px] rounded-[5px] border border-black/5 bg-black/2 px-4 pr-10 text-[15px] font-geist text-black/50 focus:outline-none"
+            className="font-geist h-[42px] w-full rounded-[5px] border border-black/5 bg-black/2 px-4 pr-10 text-[15px] text-black/50 focus:outline-none"
             disabled
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-black/20">
+          <span className="absolute top-1/2 right-4 -translate-y-1/2 text-black/20">
             {/* Icone de loupe */}
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
               <circle
@@ -266,11 +267,11 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
 
       {/* Tech Stack */}
       <div>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">
+        <label className="font-geist mb-2 block text-[18px] font-medium text-black">
           Technologies
         </label>
-        <button className="flex items-center gap-2 text-black/70 text-[15px] font-geist">
-          <span className="w-7 h-7 flex items-center justify-center border border-black/5 rounded-[2px] bg-white">
+        <button className="font-geist flex items-center gap-2 text-[15px] text-black/70">
+          <span className="flex h-7 w-7 items-center justify-center rounded-[2px] border border-black/5 bg-white">
             <svg
               width="13"
               height="13"
@@ -298,17 +299,17 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
 
       {/* Choose difficulty */}
       <div>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">
+        <label className="font-geist mb-2 block text-[18px] font-medium text-black">
           Difficulté
         </label>
         <div className="flex gap-3">
-          <button className="w-[120px] h-[25px] rounded-[5px]  bg-black/2 text-black/30 text-[11px] font-geist flex items-center justify-center gap-2">
+          <button className="font-geist flex h-[25px] w-[120px] items-center justify-center gap-2 rounded-[5px] bg-black/2 text-[11px] text-black/30">
             Difficulté facile <DifficultyBars level="Easy" />
           </button>
-          <button className="w-[120px] h-[25px] rounded-[5px] bg-black/2 text-black/30 text-[11px] font-geist flex items-center justify-center gap-2">
+          <button className="font-geist flex h-[25px] w-[120px] items-center justify-center gap-2 rounded-[5px] bg-black/2 text-[11px] text-black/30">
             Difficulté moyenne <DifficultyBars level="Medium" />
           </button>
-          <button className="w-[120px] h-[25px] rounded-[5px]  bg-black/2 text-black/30 text-[11px] font-geist flex items-center justify-center gap-2">
+          <button className="font-geist flex h-[25px] w-[120px] items-center justify-center gap-2 rounded-[5px] bg-black/2 text-[11px] text-black/30">
             Difficulté difficile <DifficultyBars level="Hard" />
           </button>
         </div>
@@ -316,11 +317,11 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
 
       {/* Open Roles */}
       <div>
-        <label className="block text-black font-geist font-medium text-[18px] mb-2">
+        <label className="font-geist mb-2 block text-[18px] font-medium text-black">
           Rôles disponibles
         </label>
         <button
-          className="w-full h-[48px] rounded-[10px] border border-black/10 bg-white text-black text-[15px] font-medium flex items-center justify-center gap-2 mb-4"
+          className="mb-4 flex h-[48px] w-full items-center justify-center gap-2 rounded-[10px] border border-black/10 bg-white text-[15px] font-medium text-black"
           onClick={openRoleModal}
         >
           Créer un nouveau rôle{" "}
@@ -349,11 +350,11 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
         </button>
         {/* Example role card */}
         <div className="w-full rounded-[10px] border border-black/10 bg-white px-4 pt-2 pb-3">
-          <div className="flex items-center justify-between mb-1">
-            <span className="font-geist font-medium text-[17px] text-black">
+          <div className="mb-1 flex items-center justify-between">
+            <span className="font-geist text-[17px] font-medium text-black">
               Développeur Back-end
             </span>
-            <button className="text-black/50 text-[10px] font-bold mt-6">
+            <button className="mt-6 text-[10px] font-bold text-black/50">
               <Image
                 src="/icons/croix-suppression.svg"
                 alt="croix suppression"
@@ -362,7 +363,7 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
               />
             </button>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-wrap gap-2">
             {["Node.js", "MongoDB", "Docker"].map((tech, index) => (
               <Badge key={index} variant="success">
                 {tech}
@@ -373,7 +374,7 @@ export default function StepFour({ onBack }: { onBack: () => void }) {
         {showRoleModal && <RoleModal />}
         <Button
           size="lg"
-          className="mb-4 w-full mt-12"
+          className="mt-12 mb-4 w-full"
           onClick={() => setShowConfirmation(true)}
         >
           Créer un nouveau projet

@@ -15,7 +15,6 @@ export function StackIcon({
   name,
   width = 14.5,
   height = 10.22,
-  className = "",
 }: StackIconProps) {
   // TODO: remove this once we have the icons from the backend
   let iconSrcToUse = icon;
@@ -30,7 +29,7 @@ export function StackIcon({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="size-5 border border-black/10 rounded-xs flex items-center justify-center">
+      <div className="flex size-5 items-center justify-center rounded-xs border border-black/10">
         <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
       </div>
       {name && <span className="text-sm">{name}</span>}

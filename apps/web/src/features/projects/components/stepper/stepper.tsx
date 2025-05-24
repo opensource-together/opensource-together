@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { createContext, useContext } from "react";
-import { cn } from "../../../../lib/utils";
+
+import { cn } from "@/lib/utils";
 
 // Types
 type StepperContextValue = {
@@ -22,10 +23,10 @@ type StepState = "active" | "completed" | "inactive" | "loading";
 
 // Contexts
 const StepperContext = createContext<StepperContextValue | undefined>(
-  undefined,
+  undefined
 );
 const StepItemContext = createContext<StepItemContextValue | undefined>(
-  undefined,
+  undefined
 );
 
 const useStepper = () => {
@@ -62,7 +63,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
       className,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [activeStep, setInternalStep] = React.useState(defaultValue);
 
@@ -73,7 +74,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
         }
         onValueChange?.(step);
       },
-      [value, onValueChange],
+      [value, onValueChange]
     );
 
     const currentStep = value ?? activeStep;
@@ -90,14 +91,14 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
           ref={ref}
           className={cn(
             "group/stepper inline-flex items-center justify-center data-[orientation=horizontal]:flex-row data-[orientation=vertical]:flex-col",
-            className,
+            className
           )}
           data-orientation={orientation}
           {...props}
         />
       </StepperContext.Provider>
     );
-  },
+  }
 );
 Stepper.displayName = "Stepper";
 
@@ -120,7 +121,7 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     const { activeStep } = useStepper();
 
@@ -141,7 +142,7 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
           ref={ref}
           className={cn(
             "group/step flex items-center group-data-[orientation=horizontal]/stepper:flex-row group-data-[orientation=vertical]/stepper:flex-col",
-            className,
+            className
           )}
           data-state={state}
           {...(isLoading ? { "data-loading": true } : {})}
@@ -151,7 +152,7 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
         </div>
       </StepItemContext.Provider>
     );
-  },
+  }
 );
 StepperItem.displayName = "StepperItem";
 
@@ -166,16 +167,14 @@ const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
     const { setActiveStep } = useStepper();
     const { step, isDisabled } = useStepItem();
 
-    if (asChild) {
-      return <div className={className}>{children}</div>;
-    }
-
-    return (
+    const content = asChild ? (
+      <div className={className}>{children}</div>
+    ) : (
       <button
         ref={ref}
         className={cn(
           "inline-flex items-center gap-3 disabled:pointer-events-none disabled:opacity-50",
-          className,
+          className
         )}
         onClick={() => setActiveStep(step)}
         disabled={isDisabled}
@@ -184,7 +183,9 @@ const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
         {children}
       </button>
     );
-  },
+
+    return content;
+  }
 );
 StepperTrigger.displayName = "StepperTrigger";
 
@@ -196,7 +197,7 @@ interface StepperIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
 const StepperIndicator = React.forwardRef<
   HTMLDivElement,
   StepperIndicatorProps
->(({ asChild = false, className, children, ...props }, ref) => {
+>(({ className, ...props }, ref) => {
   const { state, step } = useStepItem();
   // Style selon l'état
   const isActive = state === "active";
@@ -205,13 +206,13 @@ const StepperIndicator = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-center rounded-full font-geist font-medium",
+        "font-geist flex items-center justify-center rounded-full font-medium",
         isActive || isCompleted
           ? "bg-black text-white"
           : "bg-black/5 text-black",
         "transition-colors duration-200",
-        "w-[28px] h-[28px] text-[15px]",
-        className,
+        "h-[28px] w-[28px] text-[15px]",
+        className
       )}
       data-state={state}
       {...props}
@@ -238,7 +239,7 @@ const StepperDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-muted-foreground text-sm", className)}
     {...props}
   />
 ));
@@ -249,19 +250,16 @@ const StepperSeparator = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  // On récupère le contexte du parent pour savoir si le step précédent est complété
-  const { activeStep } = useStepper();
-  // On récupère le step courant via le parent direct (StepperItem)
-  // On suppose que le séparateur est entre step N et N+1, donc il doit être noir si N est complété
-  // On utilise une prop data-prev-completed passée par le parent
-  // Pour simplifier, on laisse la couleur par défaut et on override dans le parent
+  const { orientation } = useStepper();
   return (
     <div
       ref={ref}
       className={cn(
-        // On override la couleur via une prop data-completed
-        "h-[2px] w-[90px] mx-2 transition-colors duration-200",
-        className,
+        "transition-colors duration-200",
+        orientation === "horizontal"
+          ? "mx-2 h-[2px] w-[90px]"
+          : "my-2 h-[90px] w-[2px]",
+        className
       )}
       data-step-separator
       {...props}

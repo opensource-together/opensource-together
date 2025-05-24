@@ -1,4 +1,8 @@
 "use client";
+
+import { cn } from "@/lib/utils";
+import { getTechBadgeVariant } from "@/lib/utils/badges";
+
 import { Badge } from "@/components/ui/badge";
 import {
   ProjectCard,
@@ -10,8 +14,6 @@ import {
   ProjectCardLeftGroup,
   ProjectCardTitle,
 } from "@/components/ui/project-card";
-import { cn } from "@/lib/utils";
-import { getTechBadgeVariant } from "@/lib/utils/badges";
 
 interface Badge {
   label: string;
@@ -48,7 +50,7 @@ export default function RoleCard({
         {description && (
           <ProjectCardDescription>{description}</ProjectCardDescription>
         )}
-        <ProjectCardFooter className="flex flex-wrap gap-2 mt-4">
+        <ProjectCardFooter className="mt-4 flex flex-wrap gap-2">
           {badges.map((badge, index) => (
             <Badge
               key={index}
@@ -66,20 +68,20 @@ export default function RoleCard({
 
 export function SkeletonRoleCard() {
   return (
-    <div className="w-[717px] min-h-[174px] bg-white rounded-[16px] border border-black/10 shadow-[0_2px_5px_rgba(0,0,0,0.02)] px-8 py-6 flex flex-col mb-6 animate-pulse">
-      <div className="flex justify-between items-start mb-2">
-        <div className="h-5 w-40 bg-gray-200 rounded" />
-        <div className="h-[20px] w-[118px] bg-gray-100 rounded-full" />
+    <div className="mb-6 flex min-h-[174px] w-[717px] animate-pulse flex-col rounded-[16px] border border-black/10 bg-white px-8 py-6 shadow-[0_2px_5px_rgba(0,0,0,0.02)]">
+      <div className="mb-2 flex items-start justify-between">
+        <div className="h-5 w-40 rounded bg-gray-200" />
+        <div className="h-[20px] w-[118px] rounded-full bg-gray-100" />
       </div>
-      <div className="h-4 w-3/4 bg-gray-100 rounded mb-4" />
-      <div className="border-t border-dashed border-black/10 w-full my-3"></div>
-      <div className="flex items-end justify-between mt-auto">
+      <div className="mb-4 h-4 w-3/4 rounded bg-gray-100" />
+      <div className="my-3 w-full border-t border-dashed border-black/10"></div>
+      <div className="mt-auto flex items-end justify-between">
         <div className="flex gap-2">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="w-[60px] h-[24px] bg-gray-100 rounded" />
+            <div key={i} className="h-[24px] w-[60px] rounded bg-gray-100" />
           ))}
         </div>
-        <div className="h-8 w-32 bg-gray-200 rounded ml-auto" />
+        <div className="ml-auto h-8 w-32 rounded bg-gray-200" />
       </div>
     </div>
   );

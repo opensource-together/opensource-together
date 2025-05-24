@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
+
+import { cn } from "@/lib/utils";
 
 /* ---------------------------------- Types --------------------------------- */
 export interface TechIcon {
@@ -23,8 +24,8 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "shadow-xs font-geist rounded-3xl border border[black]/10 py-6 px-7.5",
-      className,
+      "font-geist border-[black]/10 rounded-3xl border px-7.5 py-6 shadow-xs",
+      className
     )}
     {...props}
   />
@@ -38,7 +39,7 @@ const ProjectCardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <article
     ref={ref}
-    className={cn("flex justify-between items-start", className)}
+    className={cn("flex items-start justify-between", className)}
     {...props}
   />
 ));
@@ -129,7 +130,7 @@ const ProjectCardTechStack = React.forwardRef<
   HTMLDivElement,
   ProjectCardTechStackProps
 >(({ className, techStack, ...props }, ref) => (
-  <div ref={ref} className={cn("flex gap-1 mt-1", className)} {...props}>
+  <div ref={ref} className={cn("mt-1 flex gap-1", className)} {...props}>
     {techStack.map((tech, index) => {
       if (!tech.icon) return null;
       return (
@@ -153,10 +154,10 @@ const ProjectCardStars = React.forwardRef<
 >(({ className, count, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex gap-1 items-end justify-center text-sm", className)}
+    className={cn("flex items-end justify-center gap-1 text-sm", className)}
     {...props}
   >
-    <span className="flex items-center gap-1 border rounded-[3px] border-[black]/10 justify-center px-1.5 py-px">
+    <span className="flex items-center justify-center gap-1 rounded-[3px] border border-[black]/10 px-1.5 py-px">
       <span className="inline-flex items-center text-[black]/50">{count}</span>
       <Image
         src="/icons/empty-star.svg"
@@ -187,8 +188,8 @@ const ProjectCardDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-[black]/50 font-medium text-xs leading-5 mt-4 line-clamp-2",
-      className,
+      "mt-4 line-clamp-2 text-xs leading-5 font-medium text-[black]/50",
+      className
     )}
     {...props}
   />
@@ -202,7 +203,7 @@ const ProjectCardDivider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("border-t border-dashed border-[black]/10 my-4", className)}
+    className={cn("my-4 border-t border-dashed border-[black]/10", className)}
     {...props}
   />
 ));
@@ -212,14 +213,14 @@ ProjectCardDivider.displayName = "ProjectCardDivider";
 const ProjectCardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    rolesMeasurementRef?: React.Ref<HTMLDivElement>;
+    _rolesMeasurementRef?: React.Ref<HTMLDivElement>;
   }
->(({ className, rolesMeasurementRef, ...props }, ref) => (
+>(({ className, _rolesMeasurementRef, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "flex items-center gap-2 text-xs w-full overflow-hidden",
-      className,
+      "flex w-full items-center gap-2 overflow-hidden text-xs",
+      className
     )}
     {...props}
   />
@@ -240,8 +241,8 @@ const ProjectCardRolesCount = React.forwardRef<
   <div
     ref={counterRef || ref}
     className={cn(
-      "flex-shrink-0 text-[10px] font-medium flex items-center gap-1",
-      className,
+      "flex flex-shrink-0 items-center gap-1 text-[10px] font-medium",
+      className
     )}
     {...props}
   >
@@ -274,13 +275,13 @@ const ProjectCardRolesList = React.forwardRef<
       {visibleRoles.map((role, index) => (
         <span
           key={index}
-          className="h-5 flex-shrink-0 flex items-center px-1 rounded-full text-xs font-semibold whitespace-nowrap bg-[#1E1E1E]/[0.1] text-[#1E1E1E]/[0.8]"
+          className="flex h-5 flex-shrink-0 items-center rounded-full bg-[#1E1E1E]/[0.1] px-1 text-xs font-semibold whitespace-nowrap text-[#1E1E1E]/[0.8]"
         >
           {role.name}
         </span>
       ))}
       {remainingRoles > 0 && (
-        <span className="h-5 flex-shrink-0 flex items-center px-1 rounded-full text-xs font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
+        <span className="flex h-5 flex-shrink-0 items-center rounded-full bg-transparent px-1 text-xs font-semibold whitespace-nowrap text-[black]/20">
           +{remainingRoles}
         </span>
       )}
@@ -304,8 +305,8 @@ const ProjectCardViewLink = React.forwardRef<
     ref={linkRef || ref}
     href={`/projects/${projectId}`}
     className={cn(
-      "ml-auto flex-shrink-0 text-xs font-semibold flex items-center gap-1 hover:opacity-80 transition-opacity",
-      className,
+      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-80",
+      className
     )}
     {...props}
   >

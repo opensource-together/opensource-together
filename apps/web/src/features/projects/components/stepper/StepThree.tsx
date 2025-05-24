@@ -1,21 +1,22 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+
+import { Button } from "@/components/ui/button";
 
 export default function StepThree({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex flex-col items-center bg-white p-10 rounded-[20px]">
-      <h2 className="text-black font-geist font-medium text-[30px] mb-2">
+    <div className="flex flex-col items-center rounded-[20px] bg-white p-10">
+      <h2 className="font-geist mb-2 text-[30px] font-medium text-black">
         Confirmer vos informations Github
       </h2>
-      <p className="text-[15px] text-black/70 mb-8 text-center">
+      <p className="mb-8 text-center text-[15px] text-black/70">
         Choisissez si vous souhaitez importer un repository Github ou créer un
         projet depuis zéro
       </p>
-      <div className="w-[425px] h-full rounded-[10px] border border-black/10 bg-black/3 p-5 mb-9">
+      <div className="mb-9 h-full w-[425px] rounded-[10px] border border-black/10 bg-black/3 p-5">
         {/* Name */}
         <div className="mb-4">
-          <div className="flex items-center gap-1 mb-1">
-            <span className="font-geist font-medium text-[16px] text-black/70">
+          <div className="mb-1 flex items-center gap-1">
+            <span className="font-geist text-[16px] font-medium text-black/70">
               Nom
             </span>
             <Image
@@ -25,17 +26,17 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
               height={13}
             />
           </div>
-          <div className="font-geist font-normal text-[12px] text-black/50 mb-3">
+          <div className="font-geist mb-3 text-[12px] font-normal text-black/50">
             OpenSource Together
           </div>
         </div>
         {/* Dotted border */}
-        <div className="border-t-2 border-dashed border-black/5 my-4" />
+        <div className="my-4 border-t-2 border-dashed border-black/5" />
         {/* Description */}
         <div className="mb-4">
-          <div className="flex items-center justify-between mb-1">
+          <div className="mb-1 flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <span className="font-geist font-medium text-[16px] text-black/70">
+              <span className="font-geist text-[16px] font-medium text-black/70">
                 Description
               </span>
               <Image
@@ -45,11 +46,11 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
                 height={13}
               />
             </div>
-            <span className="text-[10px] text-black/10 font-normal">
+            <span className="text-[10px] font-normal text-black/10">
               250/250
             </span>
           </div>
-          <div className="font-geist font-normal text-[12px] text-black/50 mb-3">
+          <div className="font-geist mb-3 text-[12px] font-normal text-black/50">
             Nous, membres, contributeurs et leaders, nous nous engageons à faire
             de la participation à notre communauté une expérience sans
             harcèlement pour tous, quelle que soit l'âge, la taille, le handicap
@@ -59,11 +60,11 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
           </div>
         </div>
         {/* Dotted border */}
-        <div className="border-t-2 border-dashed border-black/5 my-4" />
+        <div className="my-4 border-t-2 border-dashed border-black/5" />
         {/* Link to repository */}
         <div>
-          <div className="flex items-center gap-1 mb-1">
-            <span className="font-geist font-medium text-[16px] text-black/70">
+          <div className="mb-1 flex items-center gap-1">
+            <span className="font-geist text-[16px] font-medium text-black/70">
               Lien vers le repository
             </span>
             <Image
@@ -80,7 +81,7 @@ export default function StepThree({ onNext }: { onNext: () => void }) {
               width={15}
               height={15}
             />
-            <span className="font-geist font-normal text-[12px] text-black/50 break-all">
+            <span className="font-geist text-[12px] font-normal break-all text-black/50">
               https://github.com/opensource-together/opensource-together
             </span>
           </div>

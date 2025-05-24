@@ -13,12 +13,12 @@ export function AuthorTag({
 }: AuthorTagProps) {
   return (
     <div
-      className={`flex items-center gap-1.5 font-normal text-black/80 border border-black/10 rounded-[3px] bg-white px-2 py-1 w-fit ${className}`}
+      className={`flex w-fit items-center gap-1.5 rounded-[3px] border border-black/10 bg-white px-2 py-1 font-normal text-black/80 ${className}`}
     >
-      <span className="flex-shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-[#F4F4F4]">
+      <span className="flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#F4F4F4]">
         <Image src={image} alt={name || "Auteur"} width={14} height={14} />
       </span>
-      <span className="font-medium text-xs">{name}</span>
+      <span className="text-xs font-medium">{name}</span>
     </div>
   );
 }

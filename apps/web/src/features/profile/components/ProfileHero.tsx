@@ -1,7 +1,9 @@
+import Image from "next/image";
+
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getRoleBadgeVariant } from "@/lib/utils/badges";
-import Image from "next/image";
 
 // Type pour les niveaux de contribution
 type ContributionLevel = 0 | 1 | 2 | 3 | 4;
@@ -71,8 +73,8 @@ export default function ProfileHero() {
   ];
 
   return (
-    <div className="bg-white w-full sm:w-[540px] lg:w-[731.96px] h-auto rounded-3xl border border-[#000000]/10 p-8">
-      <div className="flex items-center justify-between mb-4">
+    <div className="h-auto w-full rounded-3xl border border-[#000000]/10 bg-white p-8 sm:w-[540px] lg:w-[731.96px]">
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center">
           <div className="relative mr-4">
             <Image
@@ -93,16 +95,16 @@ export default function ProfileHero() {
         </Button>
       </div>
 
-      <p className="text-sm text-gray-700 mb-6">
+      <p className="mb-6 text-sm text-gray-700">
         Développeur fullstack passionné par la création de code clair et
         performant pour des expériences web modernes
       </p>
 
       {/* Line */}
-      <div className="border-t border-dashed border-[black]/10 my-7" />
+      <div className="my-7 border-t border-dashed border-[black]/10" />
 
       <div className="mb-6">
-        <h3 className="font-medium mb-4">Compétences techniques</h3>
+        <h3 className="mb-4 font-medium">Compétences techniques</h3>
         <div className="flex flex-wrap gap-2">
           {skills.map((skill, index) => (
             <Badge key={index} variant={getRoleBadgeVariant(skill.name)}>
@@ -113,14 +115,14 @@ export default function ProfileHero() {
       </div>
 
       {/* Line */}
-      <div className="border-t border-dashed border-[black]/10 my-7" />
+      <div className="my-7 border-t border-dashed border-[black]/10" />
 
       <div>
-        <div className="flex items-center justify-between mb-7">
+        <div className="mb-7 flex items-center justify-between">
           <h3 className="font-medium">Activité de contribution</h3>
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#000000]/70">2024-2025</span>
-            <select className="text-xs border border-[#000000]/10 rounded-[5px] h-[30px] w-[86px] px-3">
+            <select className="h-[30px] w-[86px] rounded-[5px] border border-[#000000]/10 px-3 text-xs">
               <option>Actuel</option>
               <option>Année dernière</option>
               <option>Tout le temps</option>
@@ -128,7 +130,7 @@ export default function ProfileHero() {
           </div>
         </div>
 
-        <div className="w-full overflow-hidden mb-4 flex justify-center">
+        <div className="mb-4 flex w-full justify-center overflow-hidden">
           <div className="flex gap-0.5">
             {calendarWeeks.map((week, weekIndex) => (
               <div key={weekIndex} className="flex flex-col gap-0.5">

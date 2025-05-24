@@ -1,9 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+
 import { useCreateProject } from "../hooks/useProjects";
-import { projectSchema, ProjectSchema } from "../schema/project.schema";
+import { ProjectSchema, projectSchema } from "../schema/project.schema";
 
 export default function ProjectForm() {
   const { createProject, isCreating, isError } = useCreateProject();
@@ -39,77 +42,77 @@ export default function ProjectForm() {
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
-      className="max-w-xl mx-auto bg-white p-10 rounded-[20px] shadow-[0_2px_5px_rgba(0,0,0,0.03)] border border-black/10 flex flex-col gap-4 font-geist"
+      className="font-geist mx-auto flex max-w-xl flex-col gap-4 rounded-[20px] border border-black/10 bg-white p-10 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
     >
-      <h2 className="text-[22px] font-medium mb-2 font-geist">
+      <h2 className="font-geist mb-2 text-[22px] font-medium">
         Create a New Project
       </h2>
 
       <div>
-        <label className="block text-[15px] font-medium mb-1">
+        <label className="mb-1 block text-[15px] font-medium">
           Project Title
         </label>
         <input
           {...register("title")}
-          className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+          className="font-geist w-full rounded-[7px] border border-black/10 px-3 py-2 text-[14px] focus:ring-2 focus:ring-black/10 focus:outline-none"
         />
         {errors.title && (
-          <p className="text-red-500 text-[13px] mt-1">
+          <p className="mt-1 text-[13px] text-red-500">
             {errors.title.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="block text-[15px] font-medium mb-1">
+        <label className="mb-1 block text-[15px] font-medium">
           Short Description
         </label>
         <input
           {...register("description")}
-          className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+          className="font-geist w-full rounded-[7px] border border-black/10 px-3 py-2 text-[14px] focus:ring-2 focus:ring-black/10 focus:outline-none"
         />
         {errors.description && (
-          <p className="text-red-500 text-[13px] mt-1">
+          <p className="mt-1 text-[13px] text-red-500">
             {errors.description.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="block text-[15px] font-medium mb-1">
+        <label className="mb-1 block text-[15px] font-medium">
           Long Description
         </label>
         <textarea
           {...register("longDescription")}
-          className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+          className="font-geist w-full rounded-[7px] border border-black/10 px-3 py-2 text-[14px] focus:ring-2 focus:ring-black/10 focus:outline-none"
           rows={4}
         />
         {errors.longDescription && (
-          <p className="text-red-500 text-[13px] mt-1">
+          <p className="mt-1 text-[13px] text-red-500">
             {errors.longDescription.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="block text-[15px] font-medium mb-1">Status</label>
+        <label className="mb-1 block text-[15px] font-medium">Status</label>
         <select
           {...register("status")}
-          className="w-full border border-black/10 rounded-[7px] px-3 py-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+          className="font-geist w-full rounded-[7px] border border-black/10 px-3 py-2 text-[14px] focus:ring-2 focus:ring-black/10 focus:outline-none"
         >
           <option value="DRAFT">Draft</option>
           <option value="PUBLISHED">Published</option>
           <option value="ARCHIVED">Archived</option>
         </select>
         {errors.status && (
-          <p className="text-red-500 text-[13px] mt-1">
+          <p className="mt-1 text-[13px] text-red-500">
             {errors.status.message}
           </p>
         )}
       </div>
 
       <div>
-        <label className="block text-[15px] font-medium mb-1">Tech Stack</label>
+        <label className="mb-1 block text-[15px] font-medium">Tech Stack</label>
         {techStackFields.map((field, index) => (
           <Controller
             key={field.id}
@@ -118,7 +121,7 @@ export default function ProjectForm() {
             render={({ field }) => (
               <input
                 {...field}
-                className="w-full border border-black/10 rounded-[7px] px-3 py-2 mb-2 text-[14px] font-geist focus:outline-none focus:ring-2 focus:ring-black/10"
+                className="font-geist mb-2 w-full rounded-[7px] border border-black/10 px-3 py-2 text-[14px] focus:ring-2 focus:ring-black/10 focus:outline-none"
                 placeholder="e.g. React"
               />
             )}
@@ -133,7 +136,7 @@ export default function ProjectForm() {
               iconUrl: "",
             })
           }
-          className="text-blue-600 text-[13px] mt-1 font-medium"
+          className="mt-1 text-[13px] font-medium text-blue-600"
         >
           + Add Tech
         </button>
@@ -144,7 +147,7 @@ export default function ProjectForm() {
       </Button>
 
       {isError && (
-        <div className="text-red-600 font-medium">
+        <div className="font-medium text-red-600">
           Error creating project. Please try again.
         </div>
       )}

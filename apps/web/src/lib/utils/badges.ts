@@ -1,5 +1,5 @@
 export const getRoleBadgeVariant = (
-  roleName: string,
+  roleName: string
 ): "info" | "danger" | "success" => {
   const lowerRole = roleName.toLowerCase();
   if (lowerRole.includes("frontend") || lowerRole.includes("fullstack")) {
@@ -19,7 +19,7 @@ export const getRoleBadgeVariant = (
 };
 
 export const getTechBadgeVariant = (
-  techName: string,
+  techName: string
 ): "info" | "danger" | "success" => {
   const lowerTech = techName.toLowerCase();
   if (
