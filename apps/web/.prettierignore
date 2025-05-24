@@ -1,0 +1,14 @@
+# Ignore artifacts:
+build
+coverage
+
+# Directories
+**/node_modules
+**/__generated
+.idea
+.next
+
+# Files
+*.env
+*.log
+npm-debug.log*
