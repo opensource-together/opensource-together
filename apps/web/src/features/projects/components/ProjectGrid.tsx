@@ -1,33 +1,18 @@
 import ProjectCard from "@/components/shared/ProjectCard";
 
-import { mockProjects } from "../data/mockProjects";
 import { useProjects } from "../hooks/useProjects";
-import SkeletonProjectCard from "./SkeletonProjectCard";
+import ProjectGridError from "./error-ui/ProjectGridError";
+import SkeletonProjectGrid from "./skeletons/SkeletonProjectGrid";
 
 export default function ProjectGrid() {
-  // Utiliser le hook TanStack Query pour gérer les états de chargement et d'erreur
-  const { isLoading } = useProjects();
+  const { data, isLoading, isError } = useProjects();
 
-  // Retourne les données mockées temporairement
-  // Pour une version de production, on utiliserait: const projectsData = data || mockProjects;
-  // Mais ça empeche de tester l'affichage statique
-  const projectsData = mockProjects;
+  if (isLoading) return <SkeletonProjectGrid />;
+  if (isError) return <ProjectGridError />;
 
-  // Affichage des skeletons pendant le chargement
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6">
-        {[...Array(6)].map((_, index) => (
-          <SkeletonProjectCard key={index} />
-        ))}
-      </div>
-    );
-  }
-
-  // Si erreur ou données chargées, on affiche les mocks
   return (
     <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6">
-      {projectsData.map((project) => (
+      {data?.map((project) => (
         <ProjectCard
           key={project.id}
           projectId={project.id}
