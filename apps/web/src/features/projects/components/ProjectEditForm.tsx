@@ -1,10 +1,5 @@
 "use client";
 
-import { useProject } from "../hooks/useProjects";
-import { useUpdateProject } from "../hooks/useUpdateProject";
-import { ProjectSchema, projectSchema } from "../schema/project.schema";
-import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
-import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -14,6 +9,13 @@ import {
   useFieldArray,
   useForm,
 } from "react-hook-form";
+
+import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
+import { Button } from "@/components/ui/button";
+
+import { useProject } from "../hooks/useProjects";
+import { useUpdateProject } from "../hooks/useUpdateProject";
+import { ProjectSchema, projectSchema } from "../schema/project.schema";
 
 interface ProjectEditFormProps {
   projectId: string;

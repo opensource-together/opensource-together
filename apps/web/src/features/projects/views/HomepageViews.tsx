@@ -1,11 +1,12 @@
 "use client";
 
-import ProjectFilters from "../components/ProjectFilters";
-import ProjectGrid from "../components/ProjectGrid";
-import ProjectSearchBar from "../components/ProjectSearchBar";
 import Billboard from "@/components/shared/Billboard";
 import Pagination from "@/components/shared/Pagination";
 import Footer from "@/components/shared/layout/Footer";
+
+import ProjectFilters from "../components/ProjectFilters";
+import ProjectGrid from "../components/ProjectGrid";
+import ProjectSearchBar from "../components/ProjectSearchBar";
 
 export default function HomepageViews() {
   return (

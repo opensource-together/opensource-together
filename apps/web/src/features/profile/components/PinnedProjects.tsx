@@ -1,7 +1,8 @@
 "use client";
 
-import { mockProjects } from "../../projects/data/mockProjects";
 import ProjectCardComponent from "@/components/shared/ProjectCard";
+
+import { mockProjects } from "../../projects/data/mockProjects";
 
 export default function PinnedProjects() {
   return (

@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,7 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import React from "react";
 
 interface BreadcrumbItemProps {
   label: string;

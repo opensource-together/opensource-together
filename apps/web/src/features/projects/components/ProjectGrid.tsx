@@ -1,7 +1,8 @@
+import ProjectCard from "@/components/shared/ProjectCard";
+
 import { mockProjects } from "../data/mockProjects";
 import { useProjects } from "../hooks/useProjects";
 import SkeletonProjectCard from "./SkeletonProjectCard";
-import ProjectCard from "@/components/shared/ProjectCard";
 
 export default function ProjectGrid() {
   // Utiliser le hook TanStack Query pour gérer les états de chargement et d'erreur

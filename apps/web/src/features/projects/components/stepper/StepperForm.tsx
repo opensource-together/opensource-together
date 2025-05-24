@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import StepFour from "./StepFour";
 import StepOne from "./StepOne";
 import StepThree from "./StepThree";
@@ -8,7 +10,6 @@ import {
   StepperItem,
   StepperSeparator,
 } from "./stepper";
-import React, { useState } from "react";
 
 const steps = [
   { label: "Choose your Method" },

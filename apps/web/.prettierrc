@@ -9,5 +9,18 @@
     "prettier-plugin-tailwindcss"
   ],
   "trailingComma": "all",
-  "jsxSingleQuote": false
+  "jsxSingleQuote": false,
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^@/config/(.*)$",
+    "^@/lib/(.*)$",
+    "^@/stores/(.*)$",
+    "^@/hooks/(.*)$",
+    "^@/features/(.*)$",
+    "^@/components/(.*)$",
+    "^@/app/(.*)$",
+    "^[./]"
+  ]
 }

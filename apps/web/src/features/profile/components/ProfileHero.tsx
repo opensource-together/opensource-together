@@ -1,7 +1,9 @@
+import Image from "next/image";
+
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getRoleBadgeVariant } from "@/lib/utils/badges";
-import Image from "next/image";
 
 // Type pour les niveaux de contribution
 type ContributionLevel = 0 | 1 | 2 | 3 | 4;

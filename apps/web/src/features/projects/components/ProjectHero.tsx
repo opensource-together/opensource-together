@@ -1,8 +1,10 @@
-import { TechStack } from "../types/projectTypes";
+import Image from "next/image";
+
 import { AuthorTag } from "@/components/shared/AuthorTag";
 import { StackIcon } from "@/components/shared/StackIcon";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+
+import { TechStack } from "../types/projectTypes";
 
 interface ProjectHeroProps {
   title?: string;

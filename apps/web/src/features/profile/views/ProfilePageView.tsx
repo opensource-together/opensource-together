@@ -1,7 +1,8 @@
+import Image from "next/image";
+
 import PinnedProjects from "../components/PinnedProjects";
 import ProfileHero from "../components/ProfileHero";
 import ProfileSidebar from "../components/ProfileSidebar";
-import Image from "next/image";
 
 export default function ProfilePageView() {
   return (

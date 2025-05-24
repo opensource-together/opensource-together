@@ -1,5 +1,6 @@
-import { CommunityStats, SocialLink } from "../types/projectTypes";
 import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
+
+import { CommunityStats, SocialLink } from "../types/projectTypes";
 
 interface ProjectSideBarProps {
   socialLinks?: SocialLink[];

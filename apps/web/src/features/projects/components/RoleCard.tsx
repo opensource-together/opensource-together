@@ -1,5 +1,8 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { getTechBadgeVariant } from "@/lib/utils/badges";
+
 import { Badge } from "@/components/ui/badge";
 import {
   ProjectCard,
@@ -11,8 +14,6 @@ import {
   ProjectCardLeftGroup,
   ProjectCardTitle,
 } from "@/components/ui/project-card";
-import { cn } from "@/lib/utils";
-import { getTechBadgeVariant } from "@/lib/utils/badges";
 
 interface Badge {
   label: string;

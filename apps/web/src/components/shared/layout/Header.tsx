@@ -1,12 +1,14 @@
 "use client";
 
-import GithubLink from "../GithubLink";
-import TwitterLink from "../TwitterLink";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+
+import GithubLink from "../GithubLink";
+import TwitterLink from "../TwitterLink";
 
 interface NavLinkProps {
   href: string;

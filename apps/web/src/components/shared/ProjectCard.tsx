@@ -1,3 +1,5 @@
+import { getRoleBadgeVariant } from "@/lib/utils/badges";
+
 import StackIcon from "@/components/shared/StackIcon";
 import { useVisibleRoles } from "@/components/shared/hooks/useVisibleRoles";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +20,6 @@ import {
   Role,
   TechIcon,
 } from "@/components/ui/project-card";
-import { getRoleBadgeVariant } from "@/lib/utils/badges";
 
 interface ProjectCardProps {
   projectId?: string;

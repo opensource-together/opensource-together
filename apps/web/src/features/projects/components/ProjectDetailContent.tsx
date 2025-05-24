@@ -1,5 +1,10 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+import Breadcrumb from "@/components/shared/Breadcrumb";
+
 import { mockProjects } from "../data/mockProjects";
 import { useProject } from "../hooks/useProjects";
 import ProjectFilters from "./ProjectFilters";
@@ -7,9 +12,6 @@ import ProjectHero from "./ProjectHero";
 import ProjectSideBar from "./ProjectSideBar";
 import RoleCard from "./RoleCard";
 import SkeletonProjectDetail from "./SkeletonProjectDetail";
-import Breadcrumb from "@/components/shared/Breadcrumb";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 
 interface ProjectDetailContentProps {
   projectId: string;
