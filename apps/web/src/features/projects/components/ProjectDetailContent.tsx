@@ -1,17 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 import Breadcrumb from "@/components/shared/Breadcrumb";
 
-import { mockProjects } from "../data/mockProjects";
 import { useProject } from "../hooks/useProjects";
 import ProjectFilters from "./ProjectFilters";
 import ProjectHero from "./ProjectHero";
 import ProjectSideBar from "./ProjectSideBar";
 import RoleCard from "./RoleCard";
-import SkeletonProjectDetail from "./SkeletonProjectDetail";
+import ProjectDetailContentError from "./error-ui/ProjectDetailContentError";
+import SkeletonProjectDetailContent from "./skeletons/SkeletonProjectDetailContent";
 
 interface ProjectDetailContentProps {
   projectId: string;
@@ -20,65 +19,10 @@ interface ProjectDetailContentProps {
 export default function ProjectDetailContent({
   projectId,
 }: ProjectDetailContentProps) {
-  const [simulateLoading, setSimulateLoading] = useState(true);
-  // Tanstack Query useProject hook to fetch project details by project ID
   const { data: project, isLoading, isError } = useProject(projectId);
 
-  // Fallback to mock data if project is not found
-  const projectData = project || mockProjects.find((p) => p.id === projectId);
-
-  // This simulates loading for skeleton loaders even when data is cached
-  useEffect(() => {
-    const timer = setTimeout(() => setSimulateLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Determine if we show loading state (either real API loading or simulated loading)
-  const showLoading = isLoading || simulateLoading;
-
-  // Handle error state
-  if (isError && !showLoading && !projectData) {
-    return (
-      <>
-        <div className="mx-auto mt-4 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
-          <Breadcrumb
-            items={[
-              { label: "Accueil", href: "/" },
-              { label: "Projets", href: "/projects" },
-              { label: "Erreur", href: "#", isActive: true },
-            ]}
-          />
-        </div>
-        <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
-          <div className="rounded-md bg-red-50 p-4 text-red-500">
-            <h2 className="text-xl font-bold">Error loading project</h2>
-            <p>
-              There was an error loading the project details. Please try again
-              later.
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  // Show skeleton loader while loading
-  if (showLoading) {
-    return (
-      <>
-        <div className="mx-auto mt-4 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
-          <Breadcrumb
-            items={[
-              { label: "Accueil", href: "/" },
-              { label: "Projets", href: "/projects" },
-              { label: "Chargement...", href: "#", isActive: true },
-            ]}
-          />
-        </div>
-        <SkeletonProjectDetail />
-      </>
-    );
-  }
+  if (isError) return <ProjectDetailContentError />;
+  if (isLoading) return <SkeletonProjectDetailContent />;
 
   return (
     <>
@@ -88,7 +32,7 @@ export default function ProjectDetailContent({
             { label: "Accueil", href: "/" },
             { label: "Projets", href: "/projects" },
             {
-              label: projectData?.title || "Projet",
+              label: project?.title || "Projet",
               href: "#",
               isActive: true,
             },
@@ -99,22 +43,22 @@ export default function ProjectDetailContent({
         <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
           <div className="w-full lg:max-w-[721.96px]">
             <ProjectHero
-              title={projectData?.title}
-              description={projectData?.description}
-              longDescription={projectData?.longDescription}
-              techStacks={projectData?.techStacks}
-              keyBenefits={projectData?.keyBenefits}
-              image={projectData?.image}
-              authorName={projectData?.authorName}
-              authorImage={projectData?.authorImage}
+              title={project?.title}
+              description={project?.description}
+              longDescription={project?.longDescription}
+              techStacks={project?.techStacks}
+              keyBenefits={project?.keyBenefits}
+              image={project?.image}
+              authorName={project?.authorName}
+              authorImage={project?.authorImage}
             />
           </div>
           <ProjectSideBar
-            socialLinks={projectData?.socialLinks}
+            socialLinks={project?.socialLinks}
             communityStats={{
-              stars: projectData?.communityStats?.stars || 0,
-              contributors: projectData?.communityStats?.contributors || 0,
-              forks: projectData?.communityStats?.forks || 0,
+              stars: project?.communityStats?.stars || 0,
+              contributors: project?.communityStats?.contributors || 0,
+              forks: project?.communityStats?.forks || 0,
             }}
           />
         </div>
@@ -137,9 +81,9 @@ export default function ProjectDetailContent({
             />
           </div>
           <div className="mt-6 mb-30 flex flex-col gap-3">
-            {projectData?.roles &&
-              projectData.roles.length > 0 &&
-              projectData.roles.map((role) => (
+            {project?.roles &&
+              project.roles.length > 0 &&
+              project.roles.map((role) => (
                 <RoleCard
                   key={role.id}
                   title={role.title}

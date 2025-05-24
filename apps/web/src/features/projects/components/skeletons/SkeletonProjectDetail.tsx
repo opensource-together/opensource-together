@@ -1,7 +1,7 @@
-import { SkeletonProjectFilters } from "./ProjectFilters";
-import { SkeletonProjectHero } from "./ProjectHero";
-import { SkeletonProjectSideBar } from "./ProjectSideBar";
-import { SkeletonRoleCard } from "./RoleCard";
+import { SkeletonProjectFilters } from "../ProjectFilters";
+import { SkeletonProjectHero } from "../ProjectHero";
+import { SkeletonProjectSideBar } from "../ProjectSideBar";
+import { SkeletonRoleCard } from "../RoleCard";
 
 export default function SkeletonProjectDetail() {
   return (

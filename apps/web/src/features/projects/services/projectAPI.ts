@@ -1,4 +1,3 @@
-import { get } from "../../../lib/api/fetcher";
 import { mockProjects } from "../data/mockProjects";
 import { Project } from "../types/projectTypes";
 
@@ -7,9 +6,7 @@ import { Project } from "../types/projectTypes";
  */
 export const getProjects = async (): Promise<Project[]> => {
   try {
-    const response = await get<Project[]>("/projects");
-    console.log("Response from the API:", response);
-    return response;
+    return Promise.resolve(mockProjects);
   } catch (error) {
     console.error("Error while sending the request to the API:", error);
     throw error;
