@@ -1,5 +1,94 @@
 # Changelog
 
+## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-05-24)
+
+
+### Features
+
+* add AuthorTag component for consistent author display ([e98f4ee](https://github.com/opensource-together/opensource-together/commit/e98f4eeed639186ba5fe0886b6156f84fefb1b1b))
+* add customizable Button component with TailwindCSS styling ([0c00c6a](https://github.com/opensource-together/opensource-together/commit/0c00c6ae5317a9e352818742b3e90b00a5ab2a1c))
+* add getTechBadgeVariant utility function for tech badge styling ([23b4fd0](https://github.com/opensource-together/opensource-together/commit/23b4fd0ac8efab804b5d0a72691cd7c560159017))
+* add GitHub and Twitter link components to Header and Footer ([9083627](https://github.com/opensource-together/opensource-together/commit/9083627a04d810b793f323965e331f5a4d028bba))
+* add health controller ([a69a020](https://github.com/opensource-together/opensource-together/commit/a69a0209ca4efd86301860e70260d8ca01e3cd1a))
+* add mock data and adapt UI elements accordingly ([1c923ad](https://github.com/opensource-together/opensource-together/commit/1c923adc97812d2dceced7f1ed862a8cf2761088))
+* add PinnedProjects and ProfileHero components to enhance profile page ([46f1d79](https://github.com/opensource-together/opensource-together/commit/46f1d793ae39cca8efd4f0fb363428d4ff7aa60c))
+* add query client for managing data fetching and caching ([8b9d53a](https://github.com/opensource-together/opensource-together/commit/8b9d53abfa1564e417ab92af0fbd5932a3c9d047))
+* add RightSidebar component to ProjectEditForm for enhanced sharing and community stats ([0cefcf5](https://github.com/opensource-together/opensource-together/commit/0cefcf553b205b0ca2dd9e644a2832ba685cc37d))
+* add skeleton loaders to ProjectEditForm ([651376f](https://github.com/opensource-together/opensource-together/commit/651376f828a2a9b0eba3188ab7560048548fba6b))
+* ajout d'un workflow GitHub pour générer et télécharger la documentation Swagger de l'API ([00cee9e](https://github.com/opensource-together/opensource-together/commit/00cee9ed428d10a884db27beb2e3ae8fa5a1c6d4))
+* ajout de la documentation Swagger pour la mise à jour des projets ([56927c1](https://github.com/opensource-together/opensource-together/commit/56927c175e0bf41250dd14fc26c69511777198c5))
+* ajout de la fonctionnalité de création de projet ([60f865f](https://github.com/opensource-together/opensource-together/commit/60f865ffdc28c6f190c93e1af44a246294af46a7))
+* ajout du support pour les rôles de projet dans les entités et DTO ([6a9c0f2](https://github.com/opensource-together/opensource-together/commit/6a9c0f2f4545e1dc768ceb466ed31315c0f926de))
+* create initial stepper form with completed StepOne ([d08a558](https://github.com/opensource-together/opensource-together/commit/d08a55817c05f08fef6c14481762fbee139219ae))
+* create ProjectForm with react-hook-form, zodResolver and custom updateProjectAPI hook; static EditProjectView ([d18465e](https://github.com/opensource-together/opensource-together/commit/d18465e592ab71188dd85985797c9e90cb904a54))
+* enable React Query Devtools for improved debugging ([597293f](https://github.com/opensource-together/opensource-together/commit/597293f6be16ffd8394c48a871c5f52d40e5e26f))
+* enable React Query Devtools for improved debugging ([ee0134f](https://github.com/opensource-together/opensource-together/commit/ee0134fd5196b04baaef56e9368363fc11ac85db))
+* enhance ProfileHero component with updated styling and button integration ([2d79e3c](https://github.com/opensource-together/opensource-together/commit/2d79e3c57bca0e2e88b22620b069929bd2788a3a))
+* enhance project and user command handling ([9b71fbe](https://github.com/opensource-together/opensource-together/commit/9b71fbea82e5a56caf848ba721e0fc31e90a7910))
+* enhance project detail and edit forms with error handling and loading states ([5847093](https://github.com/opensource-together/opensource-together/commit/5847093251262788a83e8915cf8dc391ff8792eb))
+* enhance SelectTrigger component with optional label display ([9c73cd8](https://github.com/opensource-together/opensource-together/commit/9c73cd8d0272e98d25cd1995bddc2d0cdc1ff9ba))
+* **images:** add image domains for external sources and standardize ProjectTypes import paths ([aca49b4](https://github.com/opensource-together/opensource-together/commit/aca49b42ccf55372ef6e67f7344443928891daaf))
+* implement full project creation form with validation, submission, redirection and debugging ([20a9d55](https://github.com/opensource-together/opensource-together/commit/20a9d55d7de0c9e5b43f35522340e7f1711d0f03))
+* implement Sidebar and RightSidebar components for improved navigation ([d823c0e](https://github.com/opensource-together/opensource-together/commit/d823c0e9c465842be502b99c9c1f8b8a0c0f7b20))
+* implement step four and modal for creating new roles ([121f551](https://github.com/opensource-together/opensource-together/commit/121f551d424c7ec1334c816645feb9539830586c))
+* implement StepThree in stepper form for project creation ([d4adaed](https://github.com/opensource-together/opensource-together/commit/d4adaed987c689e30df94d37e95a4ed29d868f60))
+* implement StepTwo in stepper form for project creation ([4c695d5](https://github.com/opensource-together/opensource-together/commit/4c695d5afc26063ee20640443fbadb5753869dbe))
+* integrate experimental hydration for React Query ([022b787](https://github.com/opensource-together/opensource-together/commit/022b787b9b0f2c4f33fd73bfbb4793cd2319555e))
+* integrate Radix UI Select component for enhanced dropdown functionality ([24fe8a0](https://github.com/opensource-together/opensource-together/commit/24fe8a0d69b9cc66428a38ce254339e4e41e6a88))
+* integrate zod schema, mutation handling in useProject hook, and simplify ProjectCreateView with form validation via zodResolver ([811d5c9](https://github.com/opensource-together/opensource-together/commit/811d5c9b9b0dc92c4fc3b62b91c98d3e9fa06647))
+* introduce Badge component and refactor ProfileCard, ProjectCard, and RoleCard to utilize it ([b867c7c](https://github.com/opensource-together/opensource-together/commit/b867c7c08afde1a932aad12a062e5aba93acfb38))
+* mise à jour de la configuration Docker et ajout de la documentation Swagger pour l'API ([fdd3c3d](https://github.com/opensource-together/opensource-together/commit/fdd3c3dba314b3e738581a893b60b2a312e5770e))
+* mise à jour des types dans UpdateProjectInputsDto ([c7e0a94](https://github.com/opensource-together/opensource-together/commit/c7e0a94de2c199fd2e41d2e4349a2e93b67bcf98))
+* **projects:** enhance ProjectPageCard and ProjectDetailView to support dynamic image loading and fallback data handling ([2ede925](https://github.com/opensource-together/opensource-together/commit/2ede925043695894bdb16ac0bb555d61e5d0ea35))
+* **projects:** update ProjectCard and mockProjects to support new project structure with images and enhanced descriptions ([361cd4d](https://github.com/opensource-together/opensource-together/commit/361cd4dfbb51b2534a33e9135e961bb835280853))
+* refactorisation des DTO et des entités de projet ([9de5009](https://github.com/opensource-together/opensource-together/commit/9de50099c2f69250107c8ad39e485774ae100e8c))
+* update ProjectCard and ProjectList components to enhance projec… ([c7d8b3b](https://github.com/opensource-together/opensource-together/commit/c7d8b3b2566287d6025d91a9438d630aa418bf42))
+* update ProjectCard and ProjectList components to enhance project display and support dynamic image loading ([59c21cf](https://github.com/opensource-together/opensource-together/commit/59c21cf96844539586ae42bcf735e137fcc05788))
+* update ProjectHero to utilize StackIcon component for tech stack display ([87325c5](https://github.com/opensource-together/opensource-together/commit/87325c531f490142d216f65701a073873fef8b70))
+
+
+### Bug Fixes
+
+* correct French translations in ProfileHero and ProfilePageView components ([1770b25](https://github.com/opensource-together/opensource-together/commit/1770b257ced3105ca1ff602a730edede611dad4d))
+* correct minor issues and improve overall code consistency ([992f084](https://github.com/opensource-together/opensource-together/commit/992f084b7250198531e37d438fbf0e46c1dd5057))
+* health module ([e9c9fb2](https://github.com/opensource-together/opensource-together/commit/e9c9fb2f92d589339022b5ad0f45563b46d7af8a))
+* healthcheck command issue + env var ([c1eb944](https://github.com/opensource-together/opensource-together/commit/c1eb944ee13bdc19aad233201b2e1eae08fbbd13))
+* impost path issue ([38f414a](https://github.com/opensource-together/opensource-together/commit/38f414a6ad68a348592ad836f11c5d2252d32826))
+* mise à jour de la documentation Swagger pour refléter le changement de `userId` à `ownerId` ([e678ed0](https://github.com/opensource-together/opensource-together/commit/e678ed06cf2f559be8ca46b12bffcee1ce178bc4))
+* test project API and fix issues in StepTwo of stepper form ([4e38d13](https://github.com/opensource-together/opensource-together/commit/4e38d13f4c0fc9a2f0ce26a4a1a87edb5e4f0322))
+* update project icon handling in ProjectEditForm ([24a32d5](https://github.com/opensource-together/opensource-together/commit/24a32d58f2ddc7dfd269b753a548851e61dc9a26))
+* wrong health check command ([a8768dc](https://github.com/opensource-together/opensource-together/commit/a8768dc4f4653c9078e57f8c81e8ece284163734))
+
+
+### Miscellaneous
+
+* add .prettierignore and update Prettier configuration ([9d045b2](https://github.com/opensource-together/opensource-together/commit/9d045b2c2ea0efb2dfa3110e8b27a4d44f6aa74c))
+* add ESLint configuration and update dependencies ([38f1dd3](https://github.com/opensource-together/opensource-together/commit/38f1dd317aa44ccf0476f7eb7577182ee7fecc55))
+* ajout d'un répertoire de travail pour le job de génération de la documentation Swagger ([1f2cad3](https://github.com/opensource-together/opensource-together/commit/1f2cad30b21c844e93857c979c302cb3dc58166b))
+* ajout de l'installation des dépendances dans le workflow Swagger avant la génération du client Prisma ([1c15890](https://github.com/opensource-together/opensource-together/commit/1c1589015989d4b6f953c159de4a7f5a29602be5))
+* **dependencies:** add @tanstack/react-query-devtools for enhanced debugging capabilities and update pnpm-lock.yaml ([0dbc87f](https://github.com/opensource-together/opensource-together/commit/0dbc87f6244ba8ea23cff80c6537df690529ee66))
+* **dependencies:** remove package-lock.json, update pnpm-lock.yaml and package.json for improved dependency management and add type-check script ([6abd579](https://github.com/opensource-together/opensource-together/commit/6abd5799b7d6ffc7dbed91bd9bfd042fb8c6b8e6))
+* mise à jour de la commande de génération du client Prisma pour inclure l'exécution locale et Docker ([78a612b](https://github.com/opensource-together/opensource-together/commit/78a612b067480786c745a90f572bd4f086da4459))
+* mise à jour de la commande de génération du client Prisma pour spécifier le schéma utilisé ([4de3924](https://github.com/opensource-together/opensource-together/commit/4de39243ce66d5158b28c41a5edf2d8c00642e23))
+* mise à jour de la version de @prisma/client de 6.5.0 à 6.8.2 dans package.json et pnpm-lock.yaml ([e5b10d2](https://github.com/opensource-together/opensource-together/commit/e5b10d2a0fd2696cb143405689f39d5499af9f0e))
+* mise à jour des fichiers d'environnement dans docker-compose pour utiliser .env au lieu de .env.dev ([1d387f7](https://github.com/opensource-together/opensource-together/commit/1d387f7b06a43e42a95c28b1f72fc8ff73bcfcdb))
+* mise à jour du workflow Swagger pour définir les répertoires de travail des étapes de génération et de lancement de Docker ([04d9af1](https://github.com/opensource-together/opensource-together/commit/04d9af13684a7374878bc1c0dae36e16922a8c68))
+* move project.schema.ts to schema/ directory ([8327ee5](https://github.com/opensource-together/opensource-together/commit/8327ee5aa63e85302030b421547f39e67e2a7bbf))
+* remove swagger from production ([e3278e5](https://github.com/opensource-together/opensource-together/commit/e3278e5ad7cd93ce8999f2f8db5a0a95e85abc39))
+* remove unused Prettier plugin from package.json ([68e848b](https://github.com/opensource-together/opensource-together/commit/68e848b7a3cab350f9b2ac4bea9e41b3847fe92b))
+* **rename:** fix casing of ProjectTypes file for case-sensitive systems ([f8d6e80](https://github.com/opensource-together/opensource-together/commit/f8d6e80d3e14bc1c7863160858539b1d463b31b1))
+* suppression des étapes d'installation de pnpm et de génération du client Prisma dans le workflow Swagger ([20b2edf](https://github.com/opensource-together/opensource-together/commit/20b2edfb5952041eafba08ce362c85eea8fd9fcf))
+* suppression du répertoire de travail pour le job de lancement de Docker dans le workflow Swagger ([d20d555](https://github.com/opensource-together/opensource-together/commit/d20d5550a3426b421bb80f316d73a6840b4c3ef6))
+* supprimer le fichier .env.example et améliorer la configuration de docker-compose pour les vérifications de santé et les migrations Prisma ([149135b](https://github.com/opensource-together/opensource-together/commit/149135b1ba6a5aac6f466006b7fadb1450326abd))
+* update ESLint rules for improved code quality ([#183](https://github.com/opensource-together/opensource-together/issues/183)) ([e10d149](https://github.com/opensource-together/opensource-together/commit/e10d149cae0b45a14d386449090d5846faa3012d))
+* update gitignore ([896644f](https://github.com/opensource-together/opensource-together/commit/896644f93971a1edb7a778662f9f82839f210c3e))
+
+
+### Documentation
+
+* add frontend architecture rules and best practices ([6eca414](https://github.com/opensource-together/opensource-together/commit/6eca41480840acc8399aa869eb31d03f75cce757))
+* add frontend architecture rules and best practices ([b038ef0](https://github.com/opensource-together/opensource-together/commit/b038ef0379a4722b9116ba43a1ef826789af6753))
+
 ## [0.1.2](https://github.com/opensource-together/opensource-together/compare/v0.1.1...v0.1.2) (2025-05-09)
 
 
