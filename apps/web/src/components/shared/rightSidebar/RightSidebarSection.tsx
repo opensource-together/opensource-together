@@ -19,7 +19,7 @@ export function RightSidebarSection({
 }: RightSidebarSectionProps) {
   return (
     <div>
-      <h2 className="text-lg font-medium mb-3">{title}</h2>
+      <h2 className="mb-3 text-lg font-medium">{title}</h2>
       <div className="flex flex-col gap-5">
         {links.map((link, index) => (
           <div key={index} className="flex items-center gap-3">

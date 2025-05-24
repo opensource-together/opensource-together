@@ -1,5 +1,5 @@
-import { useVisibleRoles } from "@/components/shared/hooks/useVisibleRoles";
 import StackIcon from "@/components/shared/StackIcon";
+import { useVisibleRoles } from "@/components/shared/hooks/useVisibleRoles";
 import { Badge } from "@/components/ui/badge";
 import {
   ProjectCard,
@@ -72,7 +72,7 @@ export default function ProjectCardComponent({
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
             {showTechStack && techStack.length > 0 && (
-              <div className="flex gap-1 mt-1">
+              <div className="mt-1 flex gap-1">
                 {techStack.map((tech, index) => {
                   if (!tech.icon) return null;
                   return (
@@ -101,7 +101,7 @@ export default function ProjectCardComponent({
                   </Badge>
                 ))}
                 {remainingRoles > 0 && (
-                  <span className="h-5.5 flex-shrink-0 flex items-center px-1 rounded-full text-xs font-semibold whitespace-nowrap text-[black]/20 bg-transparent">
+                  <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent px-1 text-xs font-semibold whitespace-nowrap text-[black]/20">
                     +{remainingRoles}
                   </span>
                 )}

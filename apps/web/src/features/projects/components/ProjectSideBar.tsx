@@ -1,5 +1,5 @@
-import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
 import { CommunityStats, SocialLink } from "../types/projectTypes";
+import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
 
 interface ProjectSideBarProps {
   socialLinks?: SocialLink[];
@@ -60,34 +60,34 @@ export default function ProjectSideBar({
 
 export function SkeletonProjectSideBar() {
   return (
-    <div className="w-[270px] flex flex-col gap-10 animate-pulse">
+    <div className="flex w-[270px] animate-pulse flex-col gap-10">
       <div>
-        <div className="h-5 w-24 bg-gray-200 rounded mb-3" />
+        <div className="mb-3 h-5 w-24 rounded bg-gray-200" />
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <div className="w-[15px] h-[15px] bg-gray-200 rounded" />
-            <div className="h-4 w-32 bg-gray-100 rounded" />
+            <div className="h-[15px] w-[15px] rounded bg-gray-200" />
+            <div className="h-4 w-32 rounded bg-gray-100" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-[15px] h-[15px] bg-gray-200 rounded" />
-            <div className="h-4 w-28 bg-gray-100 rounded" />
+            <div className="h-[15px] w-[15px] rounded bg-gray-200" />
+            <div className="h-4 w-28 rounded bg-gray-100" />
           </div>
         </div>
       </div>
       <div>
-        <div className="h-5 w-32 bg-gray-200 rounded mb-3" />
+        <div className="mb-3 h-5 w-32 rounded bg-gray-200" />
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <div className="w-[15px] h-[14px] bg-gray-200 rounded" />
-            <div className="h-4 w-20 bg-gray-100 rounded" />
+            <div className="h-[14px] w-[15px] rounded bg-gray-200" />
+            <div className="h-4 w-20 rounded bg-gray-100" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-[13px] h-[15px] bg-gray-200 rounded" />
-            <div className="h-4 w-24 bg-gray-100 rounded" />
+            <div className="h-[15px] w-[13px] rounded bg-gray-200" />
+            <div className="h-4 w-24 rounded bg-gray-100" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-[15px] h-[15px] bg-gray-200 rounded" />
-            <div className="h-4 w-20 bg-gray-100 rounded" />
+            <div className="h-[15px] w-[15px] rounded bg-gray-200" />
+            <div className="h-4 w-20 rounded bg-gray-100" />
           </div>
         </div>
       </div>

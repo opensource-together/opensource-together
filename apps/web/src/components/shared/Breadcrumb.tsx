@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,6 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
+import React from "react";
 
 interface BreadcrumbItemProps {
   label: string;
@@ -51,7 +51,7 @@ export function SkeletonBreadcrumb({
   className?: string;
 }) {
   return (
-    <nav className={`text-xs font-normal animate-pulse ${className}`}>
+    <nav className={`animate-pulse text-xs font-normal ${className}`}>
       <ol className="flex items-center">
         {Array.from({ length: itemCount }).map((_, index) => (
           <React.Fragment key={index}>

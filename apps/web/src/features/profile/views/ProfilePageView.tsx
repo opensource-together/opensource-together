@@ -1,23 +1,23 @@
-import Image from "next/image";
 import PinnedProjects from "../components/PinnedProjects";
 import ProfileHero from "../components/ProfileHero";
 import ProfileSidebar from "../components/ProfileSidebar";
+import Image from "next/image";
 
 export default function ProfilePageView() {
   return (
     <>
-      <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
+      <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
         {/* Section du haut avec le profil et la sidebar */}
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
-          <div className="lg:max-w-[721.96px] w-full">
+        <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
+          <div className="w-full lg:max-w-[721.96px]">
             <ProfileHero />
           </div>
           <ProfileSidebar />
         </div>
 
         {/* Section des projets pinnés en dessous */}
-        <div className="w-full lg:pl-0 mt-2 mb-30">
-          <h2 className="text-xl font-medium mb-10 flex items-center gap-1">
+        <div className="mt-2 mb-30 w-full lg:pl-0">
+          <h2 className="mb-10 flex items-center gap-1 text-xl font-medium">
             Projets Épinglés{" "}
             <Image
               src="/icons/pinned-icon.svg"

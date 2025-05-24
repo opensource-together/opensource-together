@@ -10,7 +10,7 @@ interface RightSidebarProps {
 
 export function RightSidebar({ sections, className = "" }: RightSidebarProps) {
   return (
-    <div className={`w-[270px] font-geist flex flex-col gap-10 ${className}`}>
+    <div className={`font-geist flex w-[270px] flex-col gap-10 ${className}`}>
       {sections.map((section, index) => (
         <RightSidebarSection
           key={index}

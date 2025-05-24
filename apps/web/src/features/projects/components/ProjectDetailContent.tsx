@@ -1,20 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
-import Breadcrumb from "@/components/shared/Breadcrumb";
-import Image from "next/image";
+
+import { mockProjects } from "../data/mockProjects";
+import { useProject } from "../hooks/useProjects";
 import ProjectFilters from "./ProjectFilters";
 import ProjectHero from "./ProjectHero";
 import ProjectSideBar from "./ProjectSideBar";
 import RoleCard from "./RoleCard";
 import SkeletonProjectDetail from "./SkeletonProjectDetail";
-import { mockProjects } from "../data/mockProjects";
-import { useProject } from "../hooks/useProjects";
+import Breadcrumb from "@/components/shared/Breadcrumb";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface ProjectDetailContentProps {
   projectId: string;
 }
 
-export default function ProjectDetailContent({ projectId }: ProjectDetailContentProps) {
+export default function ProjectDetailContent({
+  projectId,
+}: ProjectDetailContentProps) {
   const [simulateLoading, setSimulateLoading] = useState(true);
   // Tanstack Query useProject hook to fetch project details by project ID
   const { data: project, isLoading, isError } = useProject(projectId);
@@ -35,7 +38,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   if (isError && !showLoading && !projectData) {
     return (
       <>
-        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
+        <div className="mx-auto mt-4 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
           <Breadcrumb
             items={[
               { label: "Accueil", href: "/" },
@@ -44,8 +47,8 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
             ]}
           />
         </div>
-        <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4 md:mt-8 gap-8">
-          <div className="text-red-500 p-4 rounded-md bg-red-50">
+        <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
+          <div className="rounded-md bg-red-50 p-4 text-red-500">
             <h2 className="text-xl font-bold">Error loading project</h2>
             <p>
               There was an error loading the project details. Please try again
@@ -61,7 +64,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   if (showLoading) {
     return (
       <>
-        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-4">
+        <div className="mx-auto mt-4 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
           <Breadcrumb
             items={[
               { label: "Accueil", href: "/" },
@@ -77,7 +80,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
   return (
     <>
-      <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-1">
+      <div className="mx-auto mt-1 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
         <Breadcrumb
           items={[
             { label: "Accueil", href: "/" },
@@ -90,9 +93,9 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           ]}
         />
       </div>
-      <div className="flex flex-col mx-auto px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40 max-w-[1300px] mt-2 md:mt-4 gap-8">
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-4 lg:gap-16">
-          <div className="lg:max-w-[721.96px] w-full">
+      <div className="mx-auto mt-2 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-4 md:px-8 lg:px-24 xl:px-40">
+        <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
+          <div className="w-full lg:max-w-[721.96px]">
             <ProjectHero
               title={projectData?.title}
               description={projectData?.description}
@@ -114,8 +117,8 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           />
         </div>
         <div>
-          <div className="flex justify-between items-center mb-3 lg:max-w-[721.96px]">
-            <p className="text-xl font-medium flex items-centers gap-1">
+          <div className="mb-3 flex items-center justify-between lg:max-w-[721.96px]">
+            <p className="items-centers flex gap-1 text-xl font-medium">
               Rôles Disponibles{" "}
               <Image
                 src="/icons/people.svg"
@@ -131,7 +134,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
               ]}
             />
           </div>
-          <div className="flex flex-col gap-3 mt-6 mb-30">
+          <div className="mt-6 mb-30 flex flex-col gap-3">
             {projectData?.roles &&
               projectData.roles.length > 0 &&
               projectData.roles.map((role) => (
@@ -148,4 +151,4 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
       </div>
     </>
   );
-} 
+}

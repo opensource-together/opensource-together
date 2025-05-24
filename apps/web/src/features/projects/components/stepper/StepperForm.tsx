@@ -1,14 +1,14 @@
-import React, { useState } from "react";
 import StepFour from "./StepFour";
 import StepOne from "./StepOne";
+import StepThree from "./StepThree";
+import StepTwo from "./StepTwo";
 import {
   Stepper,
   StepperIndicator,
   StepperItem,
   StepperSeparator,
 } from "./stepper";
-import StepThree from "./StepThree";
-import StepTwo from "./StepTwo";
+import React, { useState } from "react";
 
 const steps = [
   { label: "Choose your Method" },
@@ -46,7 +46,7 @@ export default function StepperForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-[100px]">
+    <div className="mt-[100px] flex flex-col items-center justify-center">
       {/* Nouveau Stepper shadcn */}
       <Stepper
         value={currentStep}

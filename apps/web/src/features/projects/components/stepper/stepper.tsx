@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "../../../../lib/utils";
 import * as React from "react";
 import { createContext, useContext } from "react";
-import { cn } from "../../../../lib/utils";
 
 // Types
 type StepperContextValue = {
@@ -205,12 +205,12 @@ const StepperIndicator = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex items-center justify-center rounded-full font-geist font-medium",
+        "font-geist flex items-center justify-center rounded-full font-medium",
         isActive || isCompleted
           ? "bg-black text-white"
           : "bg-black/5 text-black",
         "transition-colors duration-200",
-        "w-[28px] h-[28px] text-[15px]",
+        "h-[28px] w-[28px] text-[15px]",
         className,
       )}
       data-state={state}
@@ -238,7 +238,7 @@ const StepperDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-muted-foreground text-sm", className)}
     {...props}
   />
 ));
@@ -260,7 +260,7 @@ const StepperSeparator = React.forwardRef<
       ref={ref}
       className={cn(
         // On override la couleur via une prop data-completed
-        "h-[2px] w-[90px] mx-2 transition-colors duration-200",
+        "mx-2 h-[2px] w-[90px] transition-colors duration-200",
         className,
       )}
       data-step-separator

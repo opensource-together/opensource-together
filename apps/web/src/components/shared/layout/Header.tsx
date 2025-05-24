@@ -1,12 +1,12 @@
 "use client";
 
+import GithubLink from "../GithubLink";
+import TwitterLink from "../TwitterLink";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import GithubLink from "../GithubLink";
-import TwitterLink from "../TwitterLink";
 
 interface NavLinkProps {
   href: string;
@@ -23,8 +23,8 @@ function NavLink({ href, children, className = "" }: NavLinkProps) {
       href={href}
       className={`flex items-center justify-center px-[10px] py-[2px] transition-all duration-200 ${
         isActive
-          ? "bg-[black]/5 rounded-[3px]"
-          : "text-[black]/70 hover:bg-[black]/5 hover:rounded-[3px]"
+          ? "rounded-[3px] bg-[black]/5"
+          : "text-[black]/70 hover:rounded-[3px] hover:bg-[black]/5"
       } ${className}`}
     >
       {children}
@@ -54,7 +54,7 @@ export default function Header({
   };
 
   return (
-    <header className="font-geist text-[13px] font-normal h-auto min-h-[60px] md:min-h-[70px] lg:h-[81px] px-4 sm:px-6 md:px-10 lg:px-[73px] flex flex-wrap items-center justify-between py-3 md:py-0">
+    <header className="font-geist flex h-auto min-h-[60px] flex-wrap items-center justify-between px-4 py-3 text-[13px] font-normal sm:px-6 md:min-h-[70px] md:px-10 md:py-0 lg:h-[81px] lg:px-[73px]">
       <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
         <Link href="/">
           <article className="flex items-center gap-2">
@@ -63,20 +63,20 @@ export default function Header({
               alt="ost-logo"
               width={130}
               height={26}
-              className="w-auto h-auto max-h-[26px] md:max-h-[30px] lg:max-h-[35px]"
+              className="h-auto max-h-[26px] w-auto md:max-h-[30px] lg:max-h-[35px]"
             />
             <Image
               src="beta.svg"
               alt="beta"
               width={24}
               height={10}
-              className="w-auto h-auto max-h-[10px] md:max-h-[11px] lg:max-h-[12px]"
+              className="h-auto max-h-[10px] w-auto md:max-h-[11px] lg:max-h-[12px]"
             />
           </article>
         </Link>
 
         {/* Navigation pour desktop et tablette */}
-        <nav className="hidden md:flex items-center space-x-3 lg:space-x-6">
+        <nav className="hidden items-center space-x-3 md:flex lg:space-x-6">
           <NavLink href="/">Accueil</NavLink>
           <NavLink href="/profile">Profil</NavLink>
           <NavLink href="/my-projects">Mes projets</NavLink>
@@ -85,23 +85,23 @@ export default function Header({
 
       {/* Bouton menu mobile */}
       <button
-        className="md:hidden flex flex-col justify-center items-center w-8 h-8"
+        className="flex h-8 w-8 flex-col items-center justify-center md:hidden"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
         <span
-          className={`block w-5 h-0.5 bg-black mb-1 transition-transform ${mobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}
+          className={`mb-1 block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "translate-y-1.5 rotate-45" : ""}`}
         ></span>
         <span
-          className={`block w-5 h-0.5 bg-black mb-1 transition-opacity ${mobileMenuOpen ? "opacity-0" : ""}`}
+          className={`mb-1 block h-0.5 w-5 bg-black transition-opacity ${mobileMenuOpen ? "opacity-0" : ""}`}
         ></span>
         <span
-          className={`block w-5 h-0.5 bg-black transition-transform ${mobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}
+          className={`block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
         ></span>
       </button>
 
       {/* Menu mobile */}
       <nav
-        className={`${mobileMenuOpen ? "flex" : "hidden"} md:hidden flex-col w-full py-3 space-y-3`}
+        className={`${mobileMenuOpen ? "flex" : "hidden"} w-full flex-col space-y-3 py-3 md:hidden`}
       >
         <NavLink href="/" className="w-full py-1.5">
           Home
@@ -119,7 +119,7 @@ export default function Header({
         </div>
       </nav>
 
-      <section className="hidden md:flex items-center space-x-2 sm:space-x-3 md:space-x-4">
+      <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
         <GithubLink url="https://github.com/opensource-together/opensource-together" />
         <TwitterLink url="https://x.com/OpenSTogether" />
 
@@ -138,7 +138,7 @@ export default function Header({
 
       {/* Actions mobile affichées dans le menu */}
       {mobileMenuOpen && (
-        <div className="flex md:hidden w-full justify-center mt-3">
+        <div className="mt-3 flex w-full justify-center md:hidden">
           <Button onClick={handleCreate} className="w-full max-w-[220px]">
             New Project{" "}
             <Image
