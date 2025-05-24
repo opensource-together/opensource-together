@@ -1,0 +1,39 @@
+import ProjectCard from "@/components/shared/ProjectCard";
+
+import { useProjects } from "../hooks/useProjects";
+import ProjectGridError from "./error-ui/ProjectGridError";
+import SkeletonProjectGrid from "./skeletons/SkeletonProjectGrid";
+
+export default function ProjectGrid() {
+  const { data, isLoading, isError } = useProjects();
+
+  if (isLoading) return <SkeletonProjectGrid />;
+  if (isError) return <ProjectGridError />;
+
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6">
+      {data?.map((project) => (
+        <ProjectCard
+          key={project.id}
+          projectId={project.id}
+          title={project.title}
+          description={project.description}
+          image={project.image}
+          techStack={project.techStacks
+            ?.filter((tech) => typeof tech.iconUrl === "string")
+            .map((tech) => ({
+              icon: tech.iconUrl as string,
+              alt: tech.name,
+            }))}
+          stars={project.communityStats?.stars || 0}
+          roles={project.roles?.map((role) => ({
+            name: role.title,
+            color: role.badges[0]?.color || "#000000",
+            bgColor: role.badges[0]?.bgColor || "#F3F3F3",
+          }))}
+          roleCount={project.roles?.length || 0}
+        />
+      ))}
+    </div>
+  );
+}

@@ -1,5 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+
+import { getQueryClient } from "@/lib/queryClient";
+
 import { createProject } from "../services/createProjectAPI";
 import { getProjectDetails, getProjects } from "../services/projectAPI";
 import { Project } from "../types/projectTypes";
@@ -9,7 +12,7 @@ import { Project } from "../types/projectTypes";
  * @returns projects
  */
 export function useProjects() {
-  return useQuery({
+  return useQuery<Project[]>({
     queryKey: ["projects"],
     queryFn: getProjects,
   });
@@ -25,7 +28,6 @@ export function useProject(projectId: string) {
     queryKey: ["project", projectId],
     queryFn: () => getProjectDetails(projectId),
     enabled: !!projectId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }
 
@@ -35,8 +37,7 @@ export function useProject(projectId: string) {
  */
 export function useCreateProject() {
   const router = useRouter();
-  const queryClient = useQueryClient();
-
+  const queryClient = getQueryClient();
   const mutation = useMutation({
     mutationFn: createProject,
     onSuccess: (data) => {

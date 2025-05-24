@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import StepOne from "./StepOne";
-import StepTwo from "./StepTwo";
-import StepThree from "./StepThree";
+
 import StepFour from "./StepFour";
+import StepOne from "./StepOne";
+import StepThree from "./StepThree";
+import StepTwo from "./StepTwo";
 import {
   Stepper,
-  StepperItem,
   StepperIndicator,
+  StepperItem,
   StepperSeparator,
 } from "./stepper";
 
@@ -19,12 +20,21 @@ const steps = [
 
 export default function StepperForm() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [stepTwoMode, setStepTwoMode] = useState<"import" | "scratch">("import");
+  const [stepTwoMode, setStepTwoMode] = useState<"import" | "scratch">(
+    "import"
+  );
 
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <StepOne onNext={(mode) => { setStepTwoMode(mode); setCurrentStep(1); }} />;
+        return (
+          <StepOne
+            onNext={(mode) => {
+              setStepTwoMode(mode);
+              setCurrentStep(1);
+            }}
+          />
+        );
       case 1:
         return <StepTwo onNext={() => setCurrentStep(2)} mode={stepTwoMode} />;
       case 2:
@@ -37,16 +47,23 @@ export default function StepperForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-[100px]">
+    <div className="mt-[100px] flex flex-col items-center justify-center">
       {/* Nouveau Stepper shadcn */}
-      <Stepper value={currentStep} onValueChange={setCurrentStep} orientation="horizontal" className="mb-10 w-fit">
+      <Stepper
+        value={currentStep}
+        onValueChange={setCurrentStep}
+        orientation="horizontal"
+        className="mb-10 w-fit"
+      >
         {steps.map((step, idx) => (
           <React.Fragment key={idx}>
             <StepperItem step={idx}>
               <StepperIndicator />
             </StepperItem>
             {idx < steps.length - 1 && (
-              <StepperSeparator className={currentStep > idx ? "bg-black" : "bg-black/5"} />
+              <StepperSeparator
+                className={currentStep > idx ? "bg-black" : "bg-black/5"}
+              />
             )}
           </React.Fragment>
         ))}
@@ -55,4 +72,4 @@ export default function StepperForm() {
       {renderStep()}
     </div>
   );
-} 
+}
