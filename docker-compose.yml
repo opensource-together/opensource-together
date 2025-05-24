@@ -15,7 +15,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "curl -f http//localhost:3000/"
+        "curl -f http//localhost:3000/ || exit 1"
       ]
       interval: 5s
       timeout: 5s
@@ -49,7 +49,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f http://localhost:3000/health"
+        "curl -f http://localhost:3000/health || exit 1"
       ]
       interval: 5s
       timeout: 5s

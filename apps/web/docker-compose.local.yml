@@ -17,7 +17,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "curl -f http://localhost:3000/"
+      "curl -f http://localhost:3000/ || exit 1"
       ]
       interval: 5s
       timeout: 5s
@@ -33,9 +33,9 @@ services:
       - CONNECTION_URI=http://supertokens:3567
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
       - APP_NAME=${APP_NAME}
-      - WEBSITE_DOMAIN=${APP_DOMAIN}
-      - API_DOMAIN=${APP_DOMAIN}
-      - COOKIE_DOMAIN=${APP_DOMAIN}
+      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
+      - API_DOMAIN=${API_DOMAIN}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
       - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
     ports:
       - "${API_PORT}:3000"
@@ -51,7 +51,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f http://localhost:3000/health"
+        "curl -f http://localhost:3000/health || exit 1"
       ]
       interval: 5s
       timeout: 5s
