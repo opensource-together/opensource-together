@@ -1,5 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+
+import { getQueryClient } from "@/lib/queryClient";
 
 import { ProjectSchema } from "../schema/project.schema";
 import { updateProject } from "../services/updateProjectAPI";
@@ -11,7 +13,7 @@ import { updateProject } from "../services/updateProjectAPI";
  */
 export function useUpdateProject(projectId: string) {
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const queryClient = getQueryClient();
 
   const mutation = useMutation({
     mutationFn: ({
