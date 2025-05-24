@@ -1,26 +1,17 @@
 services:
 
-  frontend:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    ports:
-      - "${FRONT_PORT}:3000"
-    networks:
-      - app_network
-    depends_on:
-      - backend
-
-  backend:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+  server:
+    image: ghcr.io/opensource-together/server:latest
+    restart: unless-stopped
     environment:
-      - WEBSITE_DOMAIN=http://${APP_DOMAIN}:{FRONT_PORT}
-      - API_DOMAIN=http://${APP_DOMAIN}:${API_PORT}
-      - COOKIE_DOMAIN=${APP_DOMAIN}
-      - CONNECTION_URI=${SUPERTOKEN_URI}
+      - NODE_ENV=PRODUCTION
+      - CONNECTION_URI=http://supertokens:3567
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
+      - APP_NAME=${APP_NAME}
+      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
+      - API_DOMAIN=${API_DOMAIN}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+      - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
     ports:
       - "${API_PORT}:3000"
     networks:
@@ -32,10 +23,18 @@ services:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
-    restart: unless-stopped
+    healthcheck:
+      test: [
+        "CMD-SHELL", 
+        "curl -f https//localhost:3000/health || exit 1"
+      ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   business-db:
-    image: postgres:16
+    image: postgres:17
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=${BUSINESS_DB_USER}
       - POSTGRES_PASSWORD=${BUSINESS_DB_PASSWORD}
@@ -44,25 +43,26 @@ services:
       - "${BUSINESS_DB_PORT}:5432"
     volumes:
       - business_db_data:/var/lib/postgresql/data
-    #  - ./server/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - app_network
-    restart: unless-stopped
     healthcheck:
-      test: pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}
+      test: [
+        "CMD-SHELL",
+        "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}"
+      ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
+    restart: unless-stopped
     environment:
-      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKEN_DB_USER}:${SUPERTOKEN_DB_PASSWORD}@supertokens-db:5432/${SUPERTOKEN_DB_NAME}
+      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@supertokens-db:5432/${SUPERTOKENS_DB_NAME}
     ports:
       - "3567:3567"
     networks:
       - app_network
-    restart: unless-stopped
     depends_on:
       supertokens-db:
         condition: service_healthy
@@ -74,39 +74,44 @@ services:
       retries: 5
 
   supertokens-db:
-    image: postgres:16
+    image: postgres:17
+    restart: unless-stopped
     environment:
-      - POSTGRES_USER=${SUPERTOKEN_DB_USER}
-      - POSTGRES_PASSWORD=${SUPERTOKEN_DB_PASSWORD}
-      - POSTGRES_DB=${SUPERTOKEN_DB_NAME}
+      - POSTGRES_USER=${SUPERTOKENS_DB_USER}
+      - POSTGRES_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
+      - POSTGRES_DB=${SUPERTOKENS_DB_NAME}
     ports:
-      - "${SUPERTOKEN_DB_PORT}:5432"
+      - "${SUPERTOKENS_DB_PORT}:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - supertokens_db_data:/var/lib/postgresql/data
     networks:
       - app_network
-    restart: unless-stopped
     healthcheck:
-      test: pg_isready -U ${SUPERTOKEN_DB_USER} -d ${SUPERTOKEN_DB_NAME}
+      test: [
+        "CMD-SHELL",
+        "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}"
+      ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   migrate:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    command: ["npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"]
+    image: ghcr.io/opensource-together/server:latest
+    command: [
+      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
+    ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
     depends_on:
-      - business-db
+      business-db:
+        condition: service_healthy
+          
     networks:
       - app_network
 
 volumes:
   business_db_data:
-  db_data:
+  supertokens_db_data:
 
 networks:
   app_network:
