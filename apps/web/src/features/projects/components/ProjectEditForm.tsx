@@ -231,10 +231,11 @@ export default function ProjectEditForm({ projectId }: ProjectEditFormProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Image
-                src="/icons/empty-project.svg"
-                alt="empty"
+                src={project?.image || "/icons/empty-project.svg"}
+                alt={project?.title || "project icon"}
                 width={80}
                 height={80}
+                className="rounded-sm"
               />
               <h2 className="text-2xl font-medium tracking-tighter">
                 {project?.title || projectId}
