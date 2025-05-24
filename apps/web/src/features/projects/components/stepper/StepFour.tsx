@@ -78,7 +78,7 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   }
 }
 
-export default function StepFour({ onBack }: { onBack: () => void }) {
+export default function StepFour() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [modalBlurState, setModalBlurState] = useState<

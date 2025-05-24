@@ -15,7 +15,6 @@ export function StackIcon({
   name,
   width = 14.5,
   height = 10.22,
-  className = "",
 }: StackIconProps) {
   // TODO: remove this once we have the icons from the backend
   let iconSrcToUse = icon;

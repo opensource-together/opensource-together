@@ -25,7 +25,7 @@ const ProjectCard = React.forwardRef<
     ref={ref}
     className={cn(
       "font-geist border[black]/10 rounded-3xl border px-7.5 py-6 shadow-xs",
-      className,
+      className
     )}
     {...props}
   />
@@ -189,7 +189,7 @@ const ProjectCardDescription = React.forwardRef<
     ref={ref}
     className={cn(
       "mt-4 line-clamp-2 text-xs leading-5 font-medium text-[black]/50",
-      className,
+      className
     )}
     {...props}
   />
@@ -213,14 +213,14 @@ ProjectCardDivider.displayName = "ProjectCardDivider";
 const ProjectCardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
-    rolesMeasurementRef?: React.Ref<HTMLDivElement>;
+    _rolesMeasurementRef?: React.Ref<HTMLDivElement>;
   }
->(({ className, rolesMeasurementRef, ...props }, ref) => (
+>(({ className, _rolesMeasurementRef, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
       "flex w-full items-center gap-2 overflow-hidden text-xs",
-      className,
+      className
     )}
     {...props}
   />
@@ -242,7 +242,7 @@ const ProjectCardRolesCount = React.forwardRef<
     ref={counterRef || ref}
     className={cn(
       "flex flex-shrink-0 items-center gap-1 text-[10px] font-medium",
-      className,
+      className
     )}
     {...props}
   >
@@ -306,7 +306,7 @@ const ProjectCardViewLink = React.forwardRef<
     href={`/projects/${projectId}`}
     className={cn(
       "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-80",
-      className,
+      className
     )}
     {...props}
   >

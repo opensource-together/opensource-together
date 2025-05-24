@@ -37,16 +37,6 @@ export default function ProjectHero({
   authorName,
   authorImage,
 }: ProjectHeroProps) {
-  // Map of tech stacks to icons - to be replaced with dynamic icon loading
-  const techIconMap: Record<string, any> = {
-    TypeScript: "typescript.svg",
-    Typescript: "typescript.svg",
-    React: "react.svg",
-    MongoDB: "mongodb.svg",
-    TailwindCSS: "tailwindcss.svg",
-    Tailwind: "tailwindcss.svg",
-  };
-
   // Fonction pour rendre les barres de difficulté
   const renderDifficultyBars = () => {
     if (difficulty === "Facile") {

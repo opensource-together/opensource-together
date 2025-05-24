@@ -40,7 +40,7 @@ export default function StepTwo({
   const visibleHeight = 320;
   const scrollbarHeight = Math.max(
     (visibleHeight / totalHeight) * visibleHeight,
-    40,
+    40
   ); // min 40px
   const maxScrollTop = totalHeight - visibleHeight;
   const scrollbarTop =
@@ -54,7 +54,7 @@ export default function StepTwo({
       const deltaY = e.clientY - dragStartY;
       const newTop = Math.min(
         Math.max(dragStartScroll + deltaY, 0),
-        visibleHeight - scrollbarHeight,
+        visibleHeight - scrollbarHeight
       );
       const newScrollTop =
         (newTop / (visibleHeight - scrollbarHeight)) * maxScrollTop;

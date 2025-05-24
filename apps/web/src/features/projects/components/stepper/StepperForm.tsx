@@ -21,7 +21,7 @@ const steps = [
 export default function StepperForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [stepTwoMode, setStepTwoMode] = useState<"import" | "scratch">(
-    "import",
+    "import"
   );
 
   const renderStep = () => {

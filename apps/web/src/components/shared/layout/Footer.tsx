@@ -33,7 +33,7 @@ export default function Footer() {
         {/* Texte en bas à droite avec marge */}
         <div className="absolute right-10 bottom-8 text-right">
           <h2 className="text-3xl font-medium text-black">
-            L'avenir du développement collaboratif.
+            L&apos;avenir du développement collaboratif.
             <br />
             Par la communauté, pour la communauté.
           </h2>

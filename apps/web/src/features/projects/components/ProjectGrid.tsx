@@ -6,7 +6,7 @@ import SkeletonProjectCard from "./SkeletonProjectCard";
 
 export default function ProjectGrid() {
   // Utiliser le hook TanStack Query pour gérer les états de chargement et d'erreur
-  const { data, isLoading, isError } = useProjects();
+  const { isLoading } = useProjects();
 
   // Retourne les données mockées temporairement
   // Pour une version de production, on utiliserait: const projectsData = data || mockProjects;

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -34,25 +34,12 @@ function NavLink({ href, children, className = "" }: NavLinkProps) {
   );
 }
 
-export default function Header({
-  onViewChange,
-}: {
-  onViewChange?: Dispatch<SetStateAction<string>>;
-}) {
+export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   const handleCreate = () => {
     router.push("/projects/new");
-  };
-
-  const handleViewChange = (view: string) => {
-    if (onViewChange) {
-      onViewChange(view);
-      if (mobileMenuOpen) {
-        setMobileMenuOpen(false);
-      }
-    }
   };
 
   return (
