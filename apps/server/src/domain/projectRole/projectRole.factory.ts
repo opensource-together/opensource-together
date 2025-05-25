@@ -2,7 +2,6 @@ import { TechStack } from '@prisma/client';
 import { ProjectRole } from './projectRole.entity';
 import { Result } from '@/shared/result';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
-import { CreateProjectRoleCommand } from '@/application/projectRole/commands/create/create-role.command';
 
 export class ProjectRoleFactory {
   static create({
@@ -34,7 +33,13 @@ export class ProjectRoleFactory {
   }
 
   static createMany(
-    projectRoles: CreateProjectRoleCommand[],
+    projectRoles: Array<{
+      projectId: string;
+      roleTitle: string;
+      skillSet: TechStack[];
+      description: string;
+      isFilled: boolean;
+    }>,
   ): Result<ProjectRole[]> {
     const results: ProjectRole[] = [];
     const errors: string[] = [];
@@ -62,5 +67,27 @@ export class ProjectRoleFactory {
     }
 
     return Result.ok(results);
+  }
+
+  static fromPersistence(prismaProjectRole: {
+    projectId: string;
+    roleTitle: string;
+    teamMembersIds: string[];
+    description: string;
+    isFilled: boolean;
+  }): Result<{
+    projectId: string;
+    roleTitle: string;
+    teamMembersIds: string[];
+    description: string;
+    isFilled: boolean;
+  }> {
+    return Result.ok({
+      projectId: projectRole.getProjectId(),
+      roleTitle: projectRole.getRoleTitle(),
+      teamMembersIds: projectRole.getTeamMembersIds(),
+      description: projectRole.getDescription(),
+      isFilled: projectRole.getIsFilled(),
+    });
   }
 }

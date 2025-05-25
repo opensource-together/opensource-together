@@ -15,76 +15,41 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       const repoProject = PrismaProjectMapper.toRepo(project);
       if (!repoProject.success) return Result.fail(repoProject.error);
 
+      console.log(repoProject.value);
       const savedProject = await this.prisma.project.create({
-        data: {
-          ...repoProject.value,
-          projectRoles: {
-            create: project.getProjectRoles().map((role) => ({
-              role_title: role.getRoleTitle(),
-              skill_set: role.getSkillSet().map((tech) => tech.getName()),
-              description: role.getDescription(),
-              is_filled: role.getIsFilled(),
-            })),
-          },
-        },
-        include: {
-          techStacks: true,
-          projectRoles: true,
-        },
-      });
-
-      // Créer les teamMembers après la création du projet et des rôles
-      const teamMembers = project.getTeamMembers();
-      if (teamMembers.length > 0) {
-        await this.prisma.teamMember.createMany({
-          data: teamMembers.map((member) => ({
-            user_id: member.getUserId(),
-            project_id: savedProject.id,
-            project_roles_id: [
-              savedProject.projectRoles.find(
-                (role) =>
-                  role.role_title ===
-                  project
-                    .getProjectRoles()
-                    .find((r) => r.getId() === member.getProjectRoleId())
-                    ?.getRoleTitle(),
-              )?.id,
-            ].filter(Boolean) as string[],
-          })),
-        });
-      }
-
-      // Récupérer le projet complet avec toutes les relations
-      const completeProject = await this.prisma.project.findUnique({
-        where: { id: savedProject.id },
+        data: repoProject.value,
         include: {
           techStacks: true,
           projectRoles: {
             include: {
+              skillSet: true,
               teamMember: true,
             },
           },
-          projectMembers: true,
         },
       });
-
-      if (!completeProject) {
-        return Result.fail('Project not found after creation');
-      }
-
-      const domainProject = PrismaProjectMapper.toDomain(completeProject);
+      const domainProject = PrismaProjectMapper.toDomain(savedProject);
       if (!domainProject.success) return Result.fail(domainProject.error);
       return Result.ok(domainProject.value);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002')
+        if (error.code === 'P2002') {
           return Result.fail('Project already exists');
-        else if (error.code === 'P2025')
-          return Result.fail('TechStack not found');
-      } else {
-        return Result.fail('Unknown error');
+        } else if (error.code === 'P2003') {
+          // P2003 indicates a foreign key constraint violation
+          return Result.fail(
+            'Related record not found (e.g., invalid user or tech stack)',
+          );
+        }
+        // P2025 can indicate a required record was not found
+        else if (error.code === 'P2025') {
+          return Result.fail(
+            'Required record not found during creation (e.g., TechStack)',
+          );
+        }
       }
-      return Result.fail('Unknown error');
+      // Catch any other errors that are not PrismaClientKnownRequestError
+      return Result.fail(`Unknown error during project creation: ${error}`);
     }
   }
 

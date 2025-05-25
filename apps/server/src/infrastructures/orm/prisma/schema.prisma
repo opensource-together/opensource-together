@@ -49,6 +49,7 @@ model TechStack {
   name     						String
   iconUrl  						String
   projects 						Project[]
+	projectRoles				ProjectRole[]
 }
 
 model teamMember {
@@ -66,7 +67,7 @@ model ProjectRole {
 	projectId						String
 	teamMembersId				String[]
 	roleTitle						String
-	skillSet						String[]
+	skillSet						TechStack[]
 	description					String
 	isFilled						Boolean
 	teamMember					teamMember[]
