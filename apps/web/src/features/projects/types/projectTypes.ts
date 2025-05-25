@@ -15,7 +15,6 @@ export interface ProjectRole {
   title: string;
   description: string;
   badges: Badge[];
-  experienceBadge?: string;
 }
 
 export interface SocialLink {
@@ -40,6 +39,7 @@ export interface Project {
   description: string;
   longDescription?: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  difficulty?: "Facile" | "Moyenne" | "Difficile";
   techStacks: TechStack[];
   roles?: ProjectRole[];
   socialLinks?: SocialLink[];

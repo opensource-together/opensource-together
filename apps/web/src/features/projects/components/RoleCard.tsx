@@ -14,26 +14,18 @@ import {
   ProjectCardLeftGroup,
   ProjectCardTitle,
 } from "@/components/ui/project-card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface Badge {
-  label: string;
-  color: string;
-  bgColor: string;
-}
+import { ProjectRole } from "../types/projectTypes";
 
 interface RoleCardProps {
-  title?: string;
-  description?: string;
-  badges: Badge[];
+  role: ProjectRole;
   className?: string;
 }
 
-export default function RoleCard({
-  title = "LeetGrind",
-  description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
-  badges = [],
-  className = "",
-}: RoleCardProps) {
+export default function RoleCard({ role, className }: RoleCardProps) {
+  const { title = "", description = "", badges = [] } = role;
+
   return (
     <ProjectCard className={className}>
       <ProjectCardHeader>
@@ -50,17 +42,19 @@ export default function RoleCard({
         {description && (
           <ProjectCardDescription>{description}</ProjectCardDescription>
         )}
-        <ProjectCardFooter className="mt-4 flex flex-wrap gap-2">
-          {badges.map((badge, index) => (
-            <Badge
-              key={index}
-              variant={getTechBadgeVariant(badge.label)}
-              className={cn(badge.color, badge.bgColor)}
-            >
-              {badge.label}
-            </Badge>
-          ))}
-        </ProjectCardFooter>
+        {badges.length > 0 && (
+          <ProjectCardFooter className="mt-4 flex flex-wrap gap-2">
+            {badges.map((badge) => (
+              <Badge
+                key={`${badge.label}-${badge.color}`}
+                variant={getTechBadgeVariant(badge.label)}
+                className={cn(badge.color, badge.bgColor)}
+              >
+                {badge.label}
+              </Badge>
+            ))}
+          </ProjectCardFooter>
+        )}
       </ProjectCardContent>
     </ProjectCard>
   );
@@ -68,20 +62,20 @@ export default function RoleCard({
 
 export function SkeletonRoleCard() {
   return (
-    <div className="mb-6 flex min-h-[174px] w-[717px] animate-pulse flex-col rounded-[16px] border border-black/10 bg-white px-8 py-6 shadow-[0_2px_5px_rgba(0,0,0,0.02)]">
+    <div className="mb-6 flex min-h-[174px] w-[717px] flex-col rounded-[16px] border border-black/10 bg-white px-8 py-6 shadow-[0_2px_5px_rgba(0,0,0,0.02)]">
       <div className="mb-2 flex items-start justify-between">
-        <div className="h-5 w-40 rounded bg-gray-200" />
-        <div className="h-[20px] w-[118px] rounded-full bg-gray-100" />
+        <Skeleton className="h-5 w-40" />
+        <Skeleton className="h-[20px] w-[118px] rounded-full" />
       </div>
-      <div className="mb-4 h-4 w-3/4 rounded bg-gray-100" />
-      <div className="my-3 w-full border-t border-dashed border-black/10"></div>
+      <Skeleton className="mb-4 h-4 w-3/4" />
+      <div className="my-3 w-full border-t border-dashed border-black/10" />
       <div className="mt-auto flex items-end justify-between">
         <div className="flex gap-2">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="h-[24px] w-[60px] rounded bg-gray-100" />
+          {Array.from({ length: 2 }).map((_, i) => (
+            <Skeleton key={i} className="h-[24px] w-[60px]" />
           ))}
         </div>
-        <div className="ml-auto h-8 w-32 rounded bg-gray-200" />
+        <Skeleton className="ml-auto h-8 w-32" />
       </div>
     </div>
   );
