@@ -14,7 +14,7 @@ import { useProjects } from "../hooks/useProjects";
 export default function HomepageViews() {
   const { data: projects, isLoading, isError } = useProjects();
 
-  if (isLoading) return <SkeletonHomepageViews />;
+  if (isLoading || !projects) return <SkeletonHomepageViews />;
   if (isError) return <HomepageError />;
 
   return (
@@ -36,7 +36,7 @@ export default function HomepageViews() {
           <ProjectSearchBar />
         </div>
 
-        <ProjectGrid projects={projects || []} />
+        <ProjectGrid projects={projects} />
 
         <div className="mt-25">
           <Pagination />
