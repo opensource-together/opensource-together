@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Project" ALTER COLUMN "difficulty" DROP DEFAULT,
+ALTER COLUMN "github" DROP DEFAULT;

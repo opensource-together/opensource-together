@@ -4,6 +4,10 @@ import { TechStack } from '../../techStack/techstack.entity';
 import { Title } from '../title/title.vo';
 import { Description } from '../description/description.vo';
 import { Link } from '../link/link.vo';
+import { TeamMember } from '@/domain/teamMember/teamMember.entity';
+import { ProjectRole } from '@/domain/projectRole/projectRole.entity';
+import { CreateProjectRoleCommand } from '@/application/projectRole/commands/create/create-role.command';
+import { CreateTeamMemberCommand } from '@/application/teamMember/commands/create/create-team-member.command';
 
 export class ProjectFactory {
   /**
@@ -20,19 +24,25 @@ export class ProjectFactory {
    * @returns {Result<Project>} Result containing either the created Project or an error
    */
   static create({
+    ownerId,
     title,
     description,
+    difficulty,
     link,
-    projectRoles,
-    ownerId,
+    githubLink,
     techStacks,
+    projectRoles,
+    teamMembers,
   }: {
+    ownerId: string;
     title: string;
     description: string;
+    difficulty: 'easy' | 'medium' | 'hard';
     link: string | null;
-    projectRoles: object[];
-    ownerId: string;
+    githubLink: string;
     techStacks: TechStack[];
+    projectRoles: ProjectRole[];
+    teamMembers: TeamMember[];
   }): Result<Project> {
     const titleResult = Title.create(title);
     const descriptionResult = Description.create(description);
@@ -58,7 +68,10 @@ export class ProjectFactory {
         link: linkResult.value,
         ownerId,
         techStacks,
+        difficulty,
+        githubLink,
         projectRoles,
+        teamMembers,
       }),
     );
   }
@@ -79,24 +92,30 @@ export class ProjectFactory {
    */
   static fromPersistence({
     id,
+    ownerId,
     title,
     description,
-    link,
-    ownerId,
-    projectRoles,
     techStacks,
+    difficulty,
+    link,
+    githubLink,
     createdAt,
     updatedAt,
+    teamMembers,
+    projectRoles,
   }: {
     id: string;
+    ownerId: string;
     title: string;
     description: string;
-    link: string | null;
-    ownerId: string;
-    projectRoles: String[];
     techStacks: TechStack[];
+    difficulty: 'easy' | 'medium' | 'hard';
+    link: string | null;
+    githubLink: string;
     createdAt: Date;
     updatedAt: Date;
+    teamMembers: TeamMember[];
+    projectRoles: ProjectRole[];
   }): Result<Project> {
     const titleResult = Title.create(title);
     const descriptionResult = Description.create(description);
@@ -117,14 +136,17 @@ export class ProjectFactory {
     return Result.ok(
       new Project({
         id,
+        ownerId,
         title: titleResult.value,
         description: descriptionResult.value,
-        link: linkResult.value,
-        ownerId,
         techStacks,
-        projectRoles,
+        difficulty,
+        link: linkResult.value,
+        githubLink,
         createdAt,
         updatedAt,
+        teamMembers,
+        projectRoles,
       }),
     );
   }

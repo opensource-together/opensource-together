@@ -1,7 +1,7 @@
 import {
   CreateProjectCommand,
   CreateProjectCommandHandler,
-} from './create/create-project.usecase';
+} from './create/create-project.command';
 import {
   UpdateProjectCommand,
   UpdateProjectCommandHandler,

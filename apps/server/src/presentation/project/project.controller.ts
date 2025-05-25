@@ -15,7 +15,7 @@ import { ProjectResponseDto } from '@/application/dto/adapters/project-response.
 import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
-import { CreateProjectCommand } from '@/application/project/commands/create/create-project.usecase';
+import { CreateProjectCommand } from '@/application/project/commands/create/create-project.command';
 import { FindProjectByIdQuery } from '@/application/project/queries/find-by-id/find-project-by-id.handler';
 import { FindProjectByTitleQuery } from '@/application/project/queries/find-by-title/find-project-by-title.handler';
 import { GetProjectsQuery } from '@/application/project/queries/get-all/get-projects.handler';
@@ -73,14 +73,34 @@ export class ProjectController {
     @Session('userId') ownerId: string,
     @Body() project: CreateProjectDtoRequest,
   ) {
+    // Convertir les DTOs en commandes
+    const projectRolesCommands =
+      project.projectRoles?.map((role) => ({
+        projectId: '', // Sera défini après la création du projet
+        roleTitle: role.roleTitle,
+        skillSet: role.skillSet,
+        description: role.description,
+        isFilled: role.isFilled,
+      })) || [];
+
+    const projectMembersCommands =
+      project.projectMembers?.map((member) => ({
+        projectId: '', // Sera défini après la création du projet
+        userId: member.userId,
+        projectRoleId: '', // Sera défini après la création des rôles
+      })) || [];
+
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand(
+        ownerId,
         project.title,
         project.description,
+        project.difficulty,
         project.link,
+        project.githubLink,
         project.techStacks,
-        ownerId,
-        project.projectRoles,
+        projectRolesCommands,
+        projectMembersCommands,
       ),
     );
     if (!projectRes.success) {

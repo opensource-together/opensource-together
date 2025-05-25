@@ -16,10 +16,63 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       if (!repoProject.success) return Result.fail(repoProject.error);
 
       const savedProject = await this.prisma.project.create({
-        data: repoProject.value,
-        include: { techStacks: true },
+        data: {
+          ...repoProject.value,
+          projectRoles: {
+            create: project.getProjectRoles().map((role) => ({
+              role_title: role.getRoleTitle(),
+              skill_set: role.getSkillSet().map((tech) => tech.getName()),
+              description: role.getDescription(),
+              is_filled: role.getIsFilled(),
+            })),
+          },
+        },
+        include: {
+          techStacks: true,
+          projectRoles: true,
+        },
       });
-      const domainProject = PrismaProjectMapper.toDomain(savedProject);
+
+      // Créer les teamMembers après la création du projet et des rôles
+      const teamMembers = project.getTeamMembers();
+      if (teamMembers.length > 0) {
+        await this.prisma.teamMember.createMany({
+          data: teamMembers.map((member) => ({
+            user_id: member.getUserId(),
+            project_id: savedProject.id,
+            project_roles_id: [
+              savedProject.projectRoles.find(
+                (role) =>
+                  role.role_title ===
+                  project
+                    .getProjectRoles()
+                    .find((r) => r.getId() === member.getProjectRoleId())
+                    ?.getRoleTitle(),
+              )?.id,
+            ].filter(Boolean) as string[],
+          })),
+        });
+      }
+
+      // Récupérer le projet complet avec toutes les relations
+      const completeProject = await this.prisma.project.findUnique({
+        where: { id: savedProject.id },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: {
+              teamMember: true,
+            },
+          },
+          projectMembers: true,
+        },
+      });
+
+      if (!completeProject) {
+        return Result.fail('Project not found after creation');
+      }
+
+      const domainProject = PrismaProjectMapper.toDomain(completeProject);
       if (!domainProject.success) return Result.fail(domainProject.error);
       return Result.ok(domainProject.value);
     } catch (error) {
