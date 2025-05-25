@@ -40,7 +40,7 @@ export default function StepperForm() {
       case 2:
         return <StepThree onNext={() => setCurrentStep(3)} />;
       case 3:
-        return <StepFour onBack={() => setCurrentStep(2)} />;
+        return <StepFour />;
       default:
         return null;
     }
