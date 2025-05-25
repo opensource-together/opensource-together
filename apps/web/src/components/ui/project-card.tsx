@@ -60,7 +60,7 @@ ProjectCardLeftGroup.displayName = "ProjectCardLeftGroup";
 
 /* ---------------------------------- Image --------------------------------- */
 interface ProjectCardImageProps extends React.HTMLAttributes<HTMLDivElement> {
-  src: string | any;
+  src: string | null;
   alt: string;
 }
 
