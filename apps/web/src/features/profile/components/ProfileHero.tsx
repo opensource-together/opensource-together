@@ -15,6 +15,9 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
+  const { avatar_url, name, created_at, bio, skills, contributions_count } =
+    profile;
+
   // Générer les données du calendrier par semaine
   const generateCalendarData = (): ContributionLevel[][] => {
     const weeks: ContributionLevel[][] = [];
@@ -74,7 +77,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
         <div className="flex items-center">
           <div className="relative mr-4">
             <Image
-              src={profile.avatar_url}
+              src={avatar_url}
               alt="Profile"
               width={85}
               height={85}
@@ -82,11 +85,11 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-medium">{profile.name}</h2>
+            <h2 className="text-2xl font-medium">{name}</h2>
             <p className="text-xs text-gray-500">
               Rejoint le{" "}
-              {profile.created_at
-                ? new Date(profile.created_at).toLocaleDateString("fr-FR", {
+              {created_at
+                ? new Date(created_at).toLocaleDateString("fr-FR", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
@@ -100,7 +103,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
         </Button>
       </div>
 
-      <p className="mb-6 text-sm text-gray-700">{profile.bio}</p>
+      <p className="mb-6 text-sm text-gray-700">{bio}</p>
 
       {/* Line */}
       <div className="my-7 border-t border-dashed border-[black]/10" />
@@ -108,7 +111,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       <div className="mb-6">
         <h3 className="mb-4 font-medium">Compétences techniques</h3>
         <div className="flex flex-wrap gap-2">
-          {profile.skills?.map((skill, index) => (
+          {skills?.map((skill, index) => (
             <Badge key={index} variant={getRoleBadgeVariant(skill.name)}>
               {skill.name}
             </Badge>
@@ -148,7 +151,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
         </div>
 
         <p className="text-xs text-[#000000]/70">
-          {profile.contributions_count} soumissions depuis l'année dernière
+          {contributions_count} soumissions depuis l'année dernière
         </p>
       </div>
     </div>

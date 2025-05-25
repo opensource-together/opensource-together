@@ -7,13 +7,11 @@ interface PinnedProjectsProps {
 }
 
 export default function PinnedProjects({ profile }: PinnedProjectsProps) {
-  if (!profile?.projects) {
-    return null;
-  }
+  const { projects } = profile;
 
   return (
     <div className="flex flex-col gap-4">
-      {profile.projects.slice(0, 3).map((project) => (
+      {projects?.slice(0, 3).map((project) => (
         <ProjectCardComponent
           key={project.id}
           projectId={project.id}
