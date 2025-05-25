@@ -1,6 +1,8 @@
 import Image from "next/image";
 import React from "react";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 interface FilterButtonProps {
   label: string;
   value: string;
@@ -57,9 +59,9 @@ export default ProjectFilters;
 
 export function SkeletonProjectFilters({ count = 3 }: { count?: number }) {
   return (
-    <div className="flex animate-pulse flex-wrap items-center gap-2 sm:gap-2">
-      {[...Array(count)].map((_, i) => (
-        <div key={i} className="h-[35px] w-[110px] rounded-[5px] bg-gray-200" />
+    <div className="flex flex-wrap items-center gap-2 sm:gap-2">
+      {Array.from({ length: count }).map((_, i) => (
+        <Skeleton key={i} className="h-[35px] w-[110px] rounded-[5px]" />
       ))}
     </div>
   );
