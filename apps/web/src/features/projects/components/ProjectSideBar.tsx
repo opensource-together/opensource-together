@@ -1,15 +1,18 @@
 import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
-import { CommunityStats, SocialLink } from "../types/projectTypes";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { Project } from "../types/projectTypes";
 
 interface ProjectSideBarProps {
-  socialLinks?: SocialLink[];
-  communityStats?: CommunityStats;
+  project: Project;
 }
 
-export default function ProjectSideBar({
-  socialLinks = [],
-  communityStats,
-}: ProjectSideBarProps) {
+export default function ProjectSideBar({ project }: ProjectSideBarProps) {
+  const {
+    socialLinks = [],
+    communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
+  } = project;
+
   const sections = [
     {
       title: "Partager",
@@ -39,17 +42,17 @@ export default function ProjectSideBar({
         {
           icon: "/icons/black-star.svg",
           label: "Stars",
-          value: communityStats?.stars || 0,
+          value: stars,
         },
         {
           icon: "/icons/two-people.svg",
           label: "Membres",
-          value: communityStats?.contributors || 0,
+          value: contributors,
         },
         {
           icon: "/icons/github.svg",
           label: "Forks",
-          value: communityStats?.forks || 0,
+          value: forks,
         },
       ],
     },
@@ -60,34 +63,34 @@ export default function ProjectSideBar({
 
 export function SkeletonProjectSideBar() {
   return (
-    <div className="flex w-[270px] animate-pulse flex-col gap-10">
+    <div className="flex w-[270px] flex-col gap-10">
       <div>
-        <div className="mb-3 h-5 w-24 rounded bg-gray-200" />
+        <Skeleton className="mb-3 h-5 w-24" />
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <div className="h-[15px] w-[15px] rounded bg-gray-200" />
-            <div className="h-4 w-32 rounded bg-gray-100" />
+            <Skeleton className="h-[15px] w-[15px]" />
+            <Skeleton className="h-4 w-32" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-[15px] w-[15px] rounded bg-gray-200" />
-            <div className="h-4 w-28 rounded bg-gray-100" />
+            <Skeleton className="h-[15px] w-[15px]" />
+            <Skeleton className="h-4 w-28" />
           </div>
         </div>
       </div>
       <div>
-        <div className="mb-3 h-5 w-32 rounded bg-gray-200" />
+        <Skeleton className="mb-3 h-5 w-32" />
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <div className="h-[14px] w-[15px] rounded bg-gray-200" />
-            <div className="h-4 w-20 rounded bg-gray-100" />
+            <Skeleton className="h-[14px] w-[15px]" />
+            <Skeleton className="h-4 w-20" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-[15px] w-[13px] rounded bg-gray-200" />
-            <div className="h-4 w-24 rounded bg-gray-100" />
+            <Skeleton className="h-[15px] w-[13px]" />
+            <Skeleton className="h-4 w-24" />
           </div>
           <div className="flex items-center gap-3">
-            <div className="h-[15px] w-[15px] rounded bg-gray-200" />
-            <div className="h-4 w-20 rounded bg-gray-100" />
+            <Skeleton className="h-[15px] w-[15px]" />
+            <Skeleton className="h-4 w-20" />
           </div>
         </div>
       </div>
