@@ -5,14 +5,16 @@ import { getRoleBadgeVariant } from "@/lib/utils/badges";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+import { Profile } from "../types/profileTypes";
+
 // Type pour les niveaux de contribution
 type ContributionLevel = 0 | 1 | 2 | 3 | 4;
 
-interface Skill {
-  name: string;
+interface ProfileHeroProps {
+  profile: Profile;
 }
 
-export default function ProfileHero() {
+export default function ProfileHero({ profile }: ProfileHeroProps) {
   // Générer les données du calendrier par semaine
   const generateCalendarData = (): ContributionLevel[][] => {
     const weeks: ContributionLevel[][] = [];
@@ -66,19 +68,13 @@ export default function ProfileHero() {
     }
   };
 
-  const skills: Skill[] = [
-    { name: "Développeur Frontend" },
-    { name: "Designer UX" },
-    { name: "Développeur Backend" },
-  ];
-
   return (
     <div className="h-auto w-full rounded-3xl border border-[#000000]/10 bg-white p-8 sm:w-[540px] lg:w-[731.96px]">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center">
           <div className="relative mr-4">
             <Image
-              src="https://pbs.twimg.com/profile_images/1813513692471779328/6RxAJKDu_400x400.jpg"
+              src={profile.avatar_url}
               alt="Profile"
               width={85}
               height={85}
@@ -86,8 +82,17 @@ export default function ProfileHero() {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-medium">Byron Love</h2>
-            <p className="text-xs text-gray-500">Rejoint le 25 avril 2025</p>
+            <h2 className="text-2xl font-medium">{profile.name}</h2>
+            <p className="text-xs text-gray-500">
+              Rejoint le{" "}
+              {profile.created_at
+                ? new Date(profile.created_at).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })
+                : ""}
+            </p>
           </div>
         </div>
         <Button variant="outline" className="font-medium">
@@ -95,10 +100,7 @@ export default function ProfileHero() {
         </Button>
       </div>
 
-      <p className="mb-6 text-sm text-gray-700">
-        Développeur fullstack passionné par la création de code clair et
-        performant pour des expériences web modernes
-      </p>
+      <p className="mb-6 text-sm text-gray-700">{profile.bio}</p>
 
       {/* Line */}
       <div className="my-7 border-t border-dashed border-[black]/10" />
@@ -106,7 +108,7 @@ export default function ProfileHero() {
       <div className="mb-6">
         <h3 className="mb-4 font-medium">Compétences techniques</h3>
         <div className="flex flex-wrap gap-2">
-          {skills.map((skill, index) => (
+          {profile.skills?.map((skill, index) => (
             <Badge key={index} variant={getRoleBadgeVariant(skill.name)}>
               {skill.name}
             </Badge>
@@ -146,7 +148,7 @@ export default function ProfileHero() {
         </div>
 
         <p className="text-xs text-[#000000]/70">
-          1,268 soumissions depuis l'année dernière
+          {profile.contributions_count} soumissions depuis l'année dernière
         </p>
       </div>
     </div>

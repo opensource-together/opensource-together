@@ -1,33 +1,38 @@
-"use client";
-
 import ProjectCardComponent from "@/components/shared/ProjectCard";
 
-import { mockProjects } from "../../projects/data/mockProjects";
+import { Profile } from "../types/profileTypes";
 
-export default function PinnedProjects() {
+interface PinnedProjectsProps {
+  profile: Profile;
+}
+
+export default function PinnedProjects({ profile }: PinnedProjectsProps) {
+  if (!profile?.projects) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      {mockProjects.slice(0, 3).map((project) => (
+      {profile.projects.slice(0, 3).map((project) => (
         <ProjectCardComponent
           key={project.id}
           projectId={project.id}
-          title={project.title}
-          description={project.description}
-          image={project.image}
-          stars={project.communityStats?.stars ?? 0}
+          title={project.name}
+          description={project.description || ""}
+          image={project.image || ""}
+          stars={project.stargazers_count || 0}
           showViewProject={false}
           roles={
-            project.roles?.map((role) => ({
-              name: role.title,
-              // Conversion des badges vers le format attendu par le composant
-              color: role.badges[0]?.color ?? "#000000",
-              bgColor: role.badges[0]?.bgColor ?? "#FFFFFF",
+            project.techStacks?.map((tech) => ({
+              name: tech.name,
+              color: "#000000",
+              bgColor: "#FFFFFF",
             })) ?? []
           }
-          roleCount={project.roles?.length ?? 0}
+          roleCount={project.techStacks?.length ?? 0}
           techStack={
             project.techStacks?.map((tech) => ({
-              icon: tech.iconUrl ?? "",
+              icon: tech.iconUrl,
               alt: tech.name,
             })) ?? []
           }
