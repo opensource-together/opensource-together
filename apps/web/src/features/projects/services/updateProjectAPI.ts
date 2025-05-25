@@ -10,7 +10,7 @@ import { getProjectDetails } from "./projectAPI";
  */
 export const updateProject = async (
   data: ProjectSchema,
-  projectId: string,
+  projectId: string
 ): Promise<Project> => {
   try {
     console.log(`Updating project ${projectId}:`, data);

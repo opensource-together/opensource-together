@@ -1,4 +1,4 @@
-import { get, post } from "../../../lib/api/fetcher";
+import { post } from "../../../lib/api/fetcher";
 import { ProjectSchema } from "../schema/project.schema";
 import { Project } from "../types/projectTypes";
 

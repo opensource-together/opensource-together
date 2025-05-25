@@ -26,6 +26,7 @@
     "prisma:studio": "docker compose --project-directory .. exec backend pnpm prisma studio --schema=/app/src/infrastructures/orm/prisma/schema.prisma"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.1",
     "@nestjs/core": "^11.0.1",
@@ -33,6 +34,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.1.0",
+    "@nestjs/terminus": "^11.0.0",
     "@prisma/client": "6.8.2",
     "@sentry/nestjs": "^9.12.0",
     "@sentry/profiling-node": "^9.12.0",
