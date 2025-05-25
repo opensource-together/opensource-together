@@ -1,18 +1,15 @@
 import ProjectCard from "@/components/shared/ProjectCard";
 
-import { useProjects } from "../hooks/useProjects";
-import ProjectGridError from "./error-ui/ProjectGridError";
-import SkeletonProjectGrid from "./skeletons/SkeletonProjectGrid";
+import { Project } from "../types/projectTypes";
 
-export default function ProjectGrid() {
-  const { data, isLoading, isError } = useProjects();
+interface ProjectGridProps {
+  projects: Project[];
+}
 
-  if (isLoading) return <SkeletonProjectGrid />;
-  if (isError) return <ProjectGridError />;
-
+export default function ProjectGrid({ projects }: ProjectGridProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6">
-      {data?.map((project) => (
+      {projects?.map((project) => (
         <ProjectCard
           key={project.id}
           projectId={project.id}
