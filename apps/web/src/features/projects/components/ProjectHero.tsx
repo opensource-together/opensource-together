@@ -103,32 +103,15 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       <div className="pt-4">
         <h3 className="mb-3 text-sm font-medium">Stack Technique</h3>
         <div className="flex gap-3">
-          {techStacks.length > 0 ? (
-            techStacks.map((tech) => (
+          {techStacks.length > 0 &&
+            techStacks.map((tech, index) => (
               <StackIcon
-                key={tech.id}
+                key={index}
                 name={tech.name}
                 icon={tech.iconUrl || "/icons/empty-project.svg"}
                 alt={tech.name}
               />
-            ))
-          ) : (
-            // Default tech stacks if none provided
-            <>
-              <StackIcon
-                name="Typescript"
-                icon="typescript.svg"
-                alt="Typescript"
-              />
-              <StackIcon name="React" icon="react.svg" alt="React" />
-              <StackIcon name="MongoDB" icon="mongodb.svg" alt="MongoDB" />
-              <StackIcon
-                name="TailwindCSS"
-                icon="tailwindcss.svg"
-                alt="TailwindCSS"
-              />
-            </>
-          )}
+            ))}
         </div>
       </div>
     </section>
