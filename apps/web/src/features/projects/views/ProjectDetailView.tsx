@@ -21,8 +21,8 @@ export default function ProjectDetailView({
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
 
-  if (isError) return <ProjectDetailError />;
-  if (isLoading || !project) return <SkeletonProjectDetailView />;
+  if (isLoading) return <SkeletonProjectDetailView />;
+  if (isError || !project) return <ProjectDetailError />;
 
   return (
     <>

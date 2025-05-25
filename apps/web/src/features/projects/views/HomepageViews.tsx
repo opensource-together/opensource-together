@@ -14,8 +14,8 @@ import { useProjects } from "../hooks/useProjects";
 export default function HomepageViews() {
   const { data: projects, isLoading, isError } = useProjects();
 
-  if (isLoading || !projects) return <SkeletonHomepageViews />;
-  if (isError) return <HomepageError />;
+  if (isLoading) return <SkeletonHomepageViews />;
+  if (isError || !projects) return <HomepageError />;
 
   return (
     <div className="space-y-4 pb-10 md:space-y-5">
