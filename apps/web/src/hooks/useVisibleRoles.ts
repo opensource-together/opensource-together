@@ -8,7 +8,7 @@ interface Role {
 
 interface UseVisibleRolesOptions {
   roles: Role[];
-  dependencies?: any[];
+  dependencies?: unknown[];
 }
 
 interface UseVisibleRolesResult {
@@ -99,18 +99,20 @@ export function useVisibleRoles({
 
     // ResizeObserver pour recalculer si la taille change
     let ro: ResizeObserver | undefined;
-    if (containerRef.current) {
+    const currentContainer = containerRef.current;
+
+    if (currentContainer) {
       ro = new ResizeObserver(() => {
         setMeasured(false);
         setTimeout(measure, 10);
       });
-      ro.observe(containerRef.current);
+      ro.observe(currentContainer);
     }
 
     return () => {
-      if (ro && containerRef.current) ro.disconnect();
+      if (ro && currentContainer) ro.disconnect();
     };
-  }, [roles, ...dependencies]);
+  }, [roles, dependencies]);
 
   const visibleRoles = measured ? roles.slice(0, maxVisible) : roles;
   const remainingRoles = measured ? roles.length - maxVisible : 0;

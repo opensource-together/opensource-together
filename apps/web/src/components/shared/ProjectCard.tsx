@@ -1,7 +1,8 @@
 import { getRoleBadgeVariant } from "@/lib/utils/badges";
 
+import { useVisibleRoles } from "@/hooks/useVisibleRoles";
+
 import StackIcon from "@/components/shared/StackIcon";
-import { useVisibleRoles } from "@/components/shared/hooks/useVisibleRoles";
 import { Badge } from "@/components/ui/badge";
 import {
   ProjectCard,

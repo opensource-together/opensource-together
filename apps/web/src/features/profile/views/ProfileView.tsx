@@ -12,8 +12,8 @@ import { useCurrentUserProfile } from "../hooks/useProfile";
 export default function ProfileView() {
   const { data: profile, isLoading, isError } = useCurrentUserProfile();
 
-  if (isLoading || !profile) return <SkeletonProfilePageView />;
-  if (isError) return <ProfileError />;
+  if (isLoading) return <SkeletonProfilePageView />;
+  if (isError || !profile) return <ProfileError />;
 
   return (
     <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">

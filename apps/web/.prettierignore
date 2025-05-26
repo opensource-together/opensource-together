@@ -12,3 +12,7 @@ coverage
 *.env
 *.log
 npm-debug.log*
+pnpm-lock.yaml
+
+docker-compose.local.yml
+docker-compose.dev.yml

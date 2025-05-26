@@ -8,8 +8,16 @@ interface ProfileSidebarProps {
 }
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
+  const {
+    login,
+    html_url,
+    socialLinks: profileSocialLinks,
+    public_repos,
+    projects,
+  } = profile;
+
   const socialLinks: RightSidebarLink[] =
-    profile.socialLinks?.reduce<RightSidebarLink[]>((acc, social) => {
+    profileSocialLinks?.reduce<RightSidebarLink[]>((acc, social) => {
       switch (social.type) {
         case "linkedin":
           acc.push({
@@ -35,8 +43,8 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       links: [
         {
           icon: "/icons/github.svg",
-          label: `@${profile.login}`,
-          url: profile.html_url,
+          label: `@${login}`,
+          url: html_url,
         },
         ...socialLinks,
       ],
@@ -47,13 +55,13 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         {
           icon: "/icons/joined.svg",
           label: "Projets rejoins",
-          value: profile.public_repos || 0,
+          value: public_repos || 0,
         },
         {
           icon: "/icons/black-star.svg",
           label: "Stars",
           value:
-            profile.projects?.reduce(
+            projects?.reduce(
               (acc, project) => acc + (project.stargazers_count || 0),
               0
             ) || 0,
@@ -61,7 +69,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         {
           icon: "/icons/created-projects-icon.svg",
           label: "Projets créés",
-          value: profile.projects?.length || 0,
+          value: projects?.length || 0,
         },
       ],
     },
