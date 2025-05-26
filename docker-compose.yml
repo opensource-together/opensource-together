@@ -1,3 +1,5 @@
+name: ost
+
 services:
 
   web:
