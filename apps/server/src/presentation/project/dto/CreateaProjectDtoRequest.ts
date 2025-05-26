@@ -1,5 +1,7 @@
 import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 import { TechStackDto } from './TechStackDto.request';
+import { CreateProjectRoleDto } from './ProjectRoleDto.request';
+import { TeamMemberDto } from './TeamMemberDto.request';
 export class CreateProjectDtoRequest {
   @IsString()
   @IsNotEmpty()
@@ -11,13 +13,23 @@ export class CreateProjectDtoRequest {
 
   @IsString()
   @IsNotEmpty()
+  difficulty: 'easy' | 'medium' | 'hard';
+
+  @IsString()
+  @IsNotEmpty()
   link: string;
 
-  @IsArray()
+  @IsString()
   @IsNotEmpty()
-  projectRoles: object[];
+  githubLink: string;
 
   @IsArray()
   @IsNotEmpty()
   techStacks: TechStackDto[];
+
+  @IsArray()
+  projectMembers: TeamMemberDto[];
+
+  @IsArray()
+  projectRoles: CreateProjectRoleDto[];
 }

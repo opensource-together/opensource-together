@@ -1,0 +1,60 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+🎯 Objectif Principal
+
+Offrir la possibilité aux utilisateurs authentifiés, disposant des droits adéquats, de mettre à jour les informations d’un projet (titre, description, stack technique, rôles recherchés, niveau de difficulté, etc.) depuis l’application, tout en garantissant la sécurité, la validation des données et la cohérence métier.
+
+🔎 Contexte et Utilité 
+
+Contexte métier 
+
+Dans la plateforme OpenSource Together, il est essentiel que les porteurs de projets puissent ajuster les informations de leurs projets pour refléter l’évolution des besoins, corriger des erreurs ou enrichir la présentation. Cette capacité favorise la pertinence des projets proposés et améliore l’expérience utilisateur.
+
+Utilité stratégique 
+
+Cette fonctionnalité s’inscrit dans la logique de gestion dynamique des projets et prépare l’intégration de workflows avancés (modération, historique des modifications, notifications). Elle s’appuie sur la Clean Architecture et le pattern CQRS pour garantir la maintenabilité, la séparation des responsabilités et la sécurité des opérations de modification.
+
+✅ Critères d’Acceptation Globaux
+
+Endpoint API REST ou GraphQL exposé (PUT/PATCH /projects/:id).
+
+Authentification obligatoire (SuperTokens).
+
+Autorisation : seul le propriétaire ou un membre autorisé peut éditer le projet.
+
+Validation stricte des données (DTO côté backend, Zod côté frontend).
+
+Gestion des erreurs : 404 si projet inexistant, 403 si non autorisé, 400 si données invalides.
+
+Respect de la Clean Architecture (découplage domaine/application/infrastructure/interface).
+
+Utilisation du pattern CQRS (Command pour l’édition).
+
+Tests unitaires et d’intégration couvrant les cas d’usage et d’erreur.
+
+Respect du schéma de données défini dans Prisma.
+
+🧩 Découpage en Sous‑issues
+
+Créer le DTO UpdateProjectDto (backend)
+
+Définir le port ProjectCommandPort pour l’édition
+
+Créer la Command UpdateProjectCommand
+
+Créer le Handler UpdateProjectHandler
+
+Implémenter ProjectCommandAdapter avec Prisma
+
+Ajouter la route d’édition dans ProjectController
+
+Configurer project-cqrs.module.ts pour l’édition
+
+Sécuriser l’accès via SuperTokens (frontend & backend)
+
+Écrire les tests unitaires et d’intégration
+
+Mettre à jour la documentation Swagger

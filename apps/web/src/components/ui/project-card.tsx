@@ -24,7 +24,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist border-[black]/10 rounded-3xl border px-7.5 py-6 shadow-xs",
+      "font-geist rounded-3xl border border-[black]/10 px-7.5 py-6 shadow-xs",
       className
     )}
     {...props}
