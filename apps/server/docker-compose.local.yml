@@ -1,27 +1,27 @@
 services:
 
-  web:
-    build:
-      context: ../web
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      - NEXT_PUBLIC_API_URL=localhost:${API_PORT}
-    ports:
-      - "${FRONT_PORT}:3000"
-    networks:
-      - app_network
-    depends_on:
-      server: 
-        condition: service_healthy
-    healthcheck:
-      test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:3000/ || exit 1"
-      ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # web:
+  #   build:
+  #     context: ../web
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=localhost:${API_PORT}
+  #   ports:
+  #     - "${FRONT_PORT}:3000"
+  #   networks:
+  #     - app_network
+  #   depends_on:
+  #     server: 
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: [
+  #       "CMD-SHELL",
+  #       "curl -f http://localhost:3000/ || exit 1"
+  #     ]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
   server:
     build:
@@ -37,6 +37,8 @@ services:
       - API_DOMAIN=${API_DOMAIN}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN}
       - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     ports:
       - "${API_PORT}:3000"
     networks:
