@@ -1,3 +1,5 @@
-export default function RegisterPage() {
-  return <div>Register</div>;
+import SignUpView from "@/features/auth/views/SignUpView";
+
+export default function SignUpPage() {
+  return <SignUpView />;
 }
