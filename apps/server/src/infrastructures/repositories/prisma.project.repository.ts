@@ -20,10 +20,10 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           ...repoProject.value,
           projectRoles: {
             create: project.getProjectRoles().map((role) => ({
-              role_title: role.getRoleTitle(),
-              skill_set: role.getSkillSet().map((tech) => tech.getName()),
+              roleTitle: role.getRoleTitle(),
+              skillSet: role.getSkillSet().map((tech) => tech.getName()),
               description: role.getDescription(),
-              is_filled: role.getIsFilled(),
+              isFilled: role.getIsFilled(),
             })),
           },
         },
@@ -38,12 +38,12 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       if (teamMembers.length > 0) {
         await this.prisma.teamMember.createMany({
           data: teamMembers.map((member) => ({
-            user_id: member.getUserId(),
-            project_id: savedProject.id,
-            project_roles_id: [
+            userId: member.getUserId(),
+            projectId: savedProject.id,
+            projectRolesId: [
               savedProject.projectRoles.find(
                 (role) =>
-                  role.role_title ===
+                  role.roleTitle ===
                   project
                     .getProjectRoles()
                     .find((r) => r.getId() === member.getProjectRoleId())
