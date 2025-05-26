@@ -2,6 +2,9 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">= 20.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,8 +15,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.74.11",
     "@tanstack/react-query-devtools": "^5.76.1",
+    "@tanstack/react-query-next-experimental": "^5.77.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.484.0",
@@ -29,11 +36,20 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.74.7",
     "@types/node": "^20",
     "@types/react": "19.0.12",
     "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "^15.1.8",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "^3.5.3",
-    "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
     "typescript": "^5"

@@ -26,7 +26,7 @@ WORKDIR /app
 
 LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
 
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache postgresql-client curl
 
 ENV NODE_ENV=production
 
@@ -42,7 +42,6 @@ USER nestjs
 EXPOSE 3000
 
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 WORKDIR /app/dist
 CMD ["node", "main"]

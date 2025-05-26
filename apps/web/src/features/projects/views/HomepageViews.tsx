@@ -1,75 +1,23 @@
 "use client";
-import Footer from "@/shared/layout/Footer";
-import Billboard from "@/shared/ui/Billboard";
-import Pagination from "@/shared/ui/Pagination";
-import ProjectCard from "../components/ProjectCard";
+
+import Billboard from "@/components/shared/Billboard";
+import Pagination from "@/components/shared/Pagination";
+import Footer from "@/components/shared/layout/Footer";
+
 import ProjectFilters from "../components/ProjectFilters";
+import ProjectGrid from "../components/ProjectGrid";
 import ProjectSearchBar from "../components/ProjectSearchBar";
-import { mockProjects } from "../data/mockProjects";
-import { useState, useEffect } from "react";
-import SkeletonProjectCard from "../components/SkeletonProjectCard";
 
 export default function HomepageViews() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simuler un chargement
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Fonction pour rendre la grille de projets
-  const renderProjectGrid = () => {
-    if (isLoading) {
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-          {[...Array(6)].map((_, index) => (
-            <SkeletonProjectCard key={index} />
-          ))}
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-        {mockProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            projectId={project.id}
-            title={project.title}
-            description={project.description}
-            image={project.image}
-            techStack={project.techStacks
-              ?.filter((tech) => typeof tech.iconUrl === "string")
-              .map((tech) => ({
-                icon: tech.iconUrl as string,
-                alt: tech.name,
-              }))}
-            stars={project.communityStats?.stars || 0}
-            roles={project.roles?.map((role) => ({
-              name: role.title,
-              color: role.badges[0]?.color || "#000000",
-              bgColor: role.badges[0]?.bgColor || "#F3F3F3",
-            }))}
-            roleCount={project.roles?.length || 0}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <>
-      <div className="space-y-4 md:space-y-5 pb-10">
-        <div className="flex flex-col items-center mx-auto px-4 sm:px-6 md:px-8 lg:px-0 mt-4 md:mt-8">
+      <div className="space-y-4 pb-10 md:space-y-5">
+        <div className="mx-auto mt-4 flex flex-col items-center px-4 sm:px-6 md:mt-8 md:px-8 lg:px-0">
           <Billboard />
         </div>
 
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 mx-auto max-w-[1200px] py-4 md:py-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
+        <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 md:px-8 md:py-8 lg:px-12">
+          <div className="mb-12 flex flex-col items-center justify-between gap-4 sm:flex-row">
             <ProjectFilters
               filters={[
                 { label: "", value: "Plus Récent", isSortButton: true },
@@ -82,7 +30,7 @@ export default function HomepageViews() {
           </div>
 
           {/* Grille de projets */}
-          {renderProjectGrid()}
+          <ProjectGrid />
 
           {/* Pagination */}
           <div className="mt-25">
