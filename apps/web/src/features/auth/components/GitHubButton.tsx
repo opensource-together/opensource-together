@@ -7,9 +7,9 @@ interface GitHubButtonProps {
   isLoading?: boolean;
 }
 
-export default function GitHubButton({ 
-  text = "Continuer avec GitHub", 
-  isLoading = false 
+export default function GitHubButton({
+  text = "Continuer avec GitHub",
+  isLoading = false,
 }: GitHubButtonProps) {
   const { signInWithGitHub } = useAuth();
 
@@ -17,13 +17,13 @@ export default function GitHubButton({
     <button
       onClick={signInWithGitHub}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+      className="flex w-full items-center justify-center gap-3 rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none disabled:bg-gray-400"
     >
       {isLoading ? (
-        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
       ) : (
         <svg
-          className="w-5 h-5"
+          className="h-5 w-5"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -38,4 +38,4 @@ export default function GitHubButton({
       <span>{text}</span>
     </button>
   );
-} 
+}

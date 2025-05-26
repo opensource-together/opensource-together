@@ -4,6 +4,7 @@ import {
   getAuthorisationURLWithQueryParamsAndSetState,
   signInAndUp,
 } from "supertokens-web-js/recipe/thirdparty";
+
 export default function useAuth() {
   async function signUp(data: {
     email: string;
@@ -78,7 +79,7 @@ export default function useAuth() {
         }
       } else if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
         window.alert(
-          "GitHub n'a pas fourni d'adresse email. Veuillez réessayer ou utiliser une autre méthode.",
+          "GitHub n'a pas fourni d'adresse email. Veuillez réessayer ou utiliser une autre méthode."
         );
         window.location.href = "/auth/signin";
       } else {
@@ -86,7 +87,7 @@ export default function useAuth() {
         console.error("SuperTokens signInAndUp status not OK:", response);
         window.alert(
           "Une erreur est survenue lors de la connexion avec GitHub. Statut: " +
-            response.status,
+            response.status
         );
         window.location.href = "/auth/signin";
       }
@@ -95,7 +96,7 @@ export default function useAuth() {
       console.error("Error in GithubCallbackComponent (useAuth.ts):");
       console.error("Type of error:", typeof err);
       console.error("Error object itself:", err);
-      if (err && typeof err === 'object') {
+      if (err && typeof err === "object") {
         console.error("Error keys:", Object.keys(err));
         if (err.message) {
           console.error("Error message:", err.message);
@@ -103,19 +104,26 @@ export default function useAuth() {
         if (err.stack) {
           console.error("Error stack:", err.stack);
         }
-        if (err.response) { // Si c'est une erreur de type fetch avec une réponse
+        if (err.response) {
+          // Si c'est une erreur de type fetch avec une réponse
           console.error("Error response (if any):", err.response);
-          err.response.text().then((text: string) => console.error("Error response text:", text)).catch(() => {});
+          err.response
+            .text()
+            .then((text: string) => console.error("Error response text:", text))
+            .catch(() => {});
         }
       }
-      console.error("Full error stringified (fallback):", JSON.stringify(err, Object.getOwnPropertyNames(err), 2));
+      console.error(
+        "Full error stringified (fallback):",
+        JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
+      );
       console.error("----------------------------------------------------");
 
       if (err.isSuperTokensGeneralError === true) {
         window.alert(err.message);
       } else {
         window.alert(
-          "Oops! Quelque chose s'est mal passé lors du callback GitHub. (Plus de détails en console)",
+          "Oops! Quelque chose s'est mal passé lors du callback GitHub. (Plus de détails en console)"
         );
       }
       window.location.href = "/auth/signin";
