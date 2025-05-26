@@ -6,17 +6,17 @@ import {
   Project as PrismaProject,
   TechStack,
   Prisma,
-  teamMember,
   Difficulty,
   ProjectRole,
+  teamMember,
 } from '@prisma/client';
 import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
 import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
+  projectMembers: teamMember[];
   projectRoles: ProjectRole[];
-  teamMembers: teamMember[];
 };
 
 export class PrismaProjectMapper {
@@ -67,15 +67,15 @@ export class PrismaProjectMapper {
     // Transformer les projectRoles
     const projectRolesResult =
       prismaProject.projectRoles.length > 0
-        ? ProjectRoleFactory.createMany(prismaProject.projectRoles)
+        ? ProjectRoleFactory.fromPersistence(prismaProject.projectRoles)
         : Result.ok([]);
     if (!projectRolesResult.success)
       return Result.fail(projectRolesResult.error);
 
     // Transformer les teamMembers (en supposant qu'il existe un TeamMemberFactory)
     const teamMembersResult =
-      prismaProject.teamMembers.length > 0
-        ? TeamMemberFactory.createMany(prismaProject.teamMembers)
+      prismaProject.projectMembers.length > 0
+        ? TeamMemberFactory.fromPersistence(prismaProject.projectMembers)
         : Result.ok([]);
     if (!teamMembersResult.success) return Result.fail(teamMembersResult.error);
 
@@ -94,7 +94,7 @@ export class PrismaProjectMapper {
       createdAt: prismaProject.createAt,
       updatedAt: prismaProject.updatedAt,
       projectRoles: projectRolesResult.value,
-      teamMembers: teamMembersResult.value,
+      projectMembers: teamMembersResult.value,
     });
   }
 

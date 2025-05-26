@@ -23,9 +23,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           projectRoles: {
             include: {
               skillSet: true,
-              teamMember: true,
             },
           },
+          projectMembers: true,
         },
       });
       const domainProject = PrismaProjectMapper.toDomain(savedProject);
@@ -89,7 +89,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       const updatedProject = await this.prisma.project.update({
         where: { id },
         data: updatePayload,
-        include: { techStacks: true },
+        include: { techStacks: true, projectRoles: true, projectMembers: true },
       });
 
       const domainProject = PrismaProjectMapper.toDomain(updatedProject);
@@ -113,7 +113,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             startsWith: title,
           },
         },
-        include: { techStacks: true },
+        include: { techStacks: true, projectRoles: true, projectMembers: true },
       });
 
       if (prismaProjects.length === 0) return Result.ok([]);
@@ -136,7 +136,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     try {
       const projectPrisma = await this.prisma.project.findUnique({
         where: { id },
-        include: { techStacks: true },
+        include: { techStacks: true, projectRoles: true, projectMembers: true },
       });
 
       if (!projectPrisma) return Result.fail('Project not found');
@@ -153,7 +153,11 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
   async getAllProjects(): Promise<Result<Project[]>> {
     try {
       const projectsPrisma = await this.prisma.project.findMany({
-        include: { techStacks: true },
+        include: {
+          techStacks: true,
+          projectRoles: true,
+          projectMembers: true,
+        },
       });
 
       if (!projectsPrisma) return Result.ok([]);

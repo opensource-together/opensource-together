@@ -35,4 +35,29 @@ export default class TeamMemberFactory {
 
     return Result.ok(teamMembersResult);
   }
+
+  static fromPersistence(
+    teamMembers: {
+      id: string;
+      projectId: string;
+      userId: string;
+      joinedAt: Date;
+    }[],
+  ): Result<
+    {
+      id: string;
+      projectId: string;
+      userId: string;
+      joinedAt: Date;
+    }[]
+  > {
+    return Result.ok(
+      teamMembers.map((teamMember) => ({
+        id: teamMember.id,
+        projectId: teamMember.projectId,
+        userId: teamMember.userId,
+        joinedAt: teamMember.joinedAt,
+      })),
+    );
+  }
 }
