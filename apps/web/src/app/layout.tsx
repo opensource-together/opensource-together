@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/shared/layout/Header";
 
 import "./globals.css";
+import { SuperTokensInitializer } from "@/features/auth/components/SuperTokensInitializer";
 import { Providers } from "./providers";
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
+        <SuperTokensInitializer />
         <Header />
         <Providers>{children}</Providers>
       </body>

@@ -1,5 +1,4 @@
 services:
-
   web:
     build:
       context: .
@@ -12,13 +11,10 @@ services:
     networks:
       - app_network
     depends_on:
-      server: 
+      server:
         condition: service_healthy
     healthcheck:
-      test: [
-        "CMD-SHELL",
-      "curl -f http://localhost:3000/ || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -48,10 +44,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: [
-        "CMD-SHELL", 
-        "curl -f http://localhost:3000/health || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -70,10 +63,11 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}"
-      ]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -111,25 +105,34 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}"
-      ]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   migrate:
-    image: ghcr.io/opensource-together/server:latest
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
+    build:
+      context: ../server/
+      dockerfile: Dockerfile
+    command:
+      [
+        "npx",
+        "prisma",
+        "db",
+        "push",
+        "--schema=/app/schema/schema.prisma",
+        "--skip-generate",
+      ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
     depends_on:
       business-db:
         condition: service_healthy
-          
+
     networks:
       - app_network
 

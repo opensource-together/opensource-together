@@ -65,18 +65,18 @@ services:
       timeout: 5s
       retries: 5
 
-  migrate:
-    image: ghcr.io/opensource-together/server:latest
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
-    environment:
-      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
-    depends_on:
-      business-db:
-        condition: service_healthy
-    networks:
-      - app_network
+  # migrate:
+  #   image: ghcr.io/opensource-together/server:latest
+  #   command: [
+  #     "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
+  #   ]
+  #   environment:
+  #     - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
+  #   depends_on:
+  #     business-db:
+  #       condition: service_healthy
+  #   networks:
+  #     - app_network
 
 volumes:
   business_db_data:
