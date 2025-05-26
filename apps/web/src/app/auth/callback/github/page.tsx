@@ -1,6 +1,8 @@
 "use client";
-import useAuth from "@/features/auth/hooks/useAuth";
+
 import { useEffect } from "react";
+
+import useAuth from "@/features/auth/hooks/useAuth";
 
 export default function GithubCallback() {
   const { redirect } = useAuth();
