@@ -2,22 +2,22 @@
 
 import GitHubButton from "./GitHubButton";
 
-export default function LoginForm() {
+export default function SignUpForm() {
   return (
     <div className="space-y-6">
-      <GitHubButton text="Se connecter avec GitHub" />
+      <GitHubButton text="S'inscrire avec GitHub" />
       
       <div className="text-center">
         <p className="text-sm text-gray-600">
-          Pas encore de compte ?{" "}
+          Déjà un compte ?{" "}
           <a 
-            href="/auth/signup" 
+            href="/auth/signin" 
             className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
           >
-            Créer un compte
+            Se connecter
           </a>
         </p>
       </div>
     </div>
   );
-}
+} 
