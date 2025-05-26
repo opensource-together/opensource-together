@@ -29,7 +29,6 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      - NODE_ENV=PRODUCTION
       - CONNECTION_URI=http://supertokens:3567
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
       - APP_NAME=${APP_NAME}
