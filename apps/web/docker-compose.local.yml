@@ -1,27 +1,23 @@
 services:
-
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      - NEXT_PUBLIC_API_URL=localhost:${API_PORT}
-    ports:
-      - "${FRONT_PORT}:3000"
-    networks:
-      - app_network
-    depends_on:
-      server: 
-        condition: service_healthy
-    healthcheck:
-      test: [
-        "CMD-SHELL",
-      "curl -f http://localhost:3000/ || exit 1"
-      ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=localhost:${API_PORT}
+  #   ports:
+  #     - "${FRONT_PORT}:3000"
+  #   networks:
+  #     - app_network
+  #   depends_on:
+  #     server:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
   server:
     build:
@@ -29,7 +25,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      - NODE_ENV=PRODUCTION
+      - NODE_ENV=DEVELOPMENT
       - CONNECTION_URI=http://supertokens:3567
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
       - APP_NAME=${APP_NAME}
@@ -49,10 +45,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: [
-        "CMD-SHELL", 
-        "curl -f http://localhost:3000/health || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -71,10 +64,11 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}"
-      ]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -112,10 +106,11 @@ services:
     networks:
       - app_network
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}"
-      ]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -124,15 +119,21 @@ services:
     build:
       context: ../server/
       dockerfile: Dockerfile
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
+    command:
+      [
+        "npx",
+        "prisma",
+        "db",
+        "push",
+        "--schema=/app/schema/schema.prisma",
+        "--skip-generate",
+      ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
     depends_on:
       business-db:
         condition: service_healthy
-          
+
     networks:
       - app_network
 
