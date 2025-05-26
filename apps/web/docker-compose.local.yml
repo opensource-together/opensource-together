@@ -1,3 +1,5 @@
+name: ost
+
 services:
   web:
     build:
@@ -32,6 +34,8 @@ services:
       - API_DOMAIN=${API_DOMAIN}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN}
       - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     ports:
       - "${API_PORT}:3000"
     networks:
