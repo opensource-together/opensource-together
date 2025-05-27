@@ -16,7 +16,7 @@ import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
   projectMembers: teamMember[];
-  projectRoles: ProjectRole[];
+  projectRoles: (ProjectRole & { skillSet: TechStack[] })[];
 };
 
 export class PrismaProjectMapper {
@@ -94,7 +94,7 @@ export class PrismaProjectMapper {
       createdAt: prismaProject.createAt,
       updatedAt: prismaProject.updatedAt,
       projectRoles: projectRolesResult.value,
-      projectMembers: teamMembersResult.value,
+      teamMembers: teamMembersResult.value,
     });
   }
 

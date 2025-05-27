@@ -20,7 +20,6 @@ export class TeamMember {
     id?: string;
     userId: string;
     projectId: string;
-    projectRoleId: string;
     joinedAt?: Date;
     projectRole?: ProjectRole;
     project?: Project;

@@ -1,38 +1,33 @@
-import { CreateTeamMemberCommand } from '@/application/teamMember/commands/create/create-team-member.command';
 import { TeamMember } from './teamMember.entity';
 import { Result } from '@/shared/result';
 
 export default class TeamMemberFactory {
-  static create(
-    createTeamMemberCommand: CreateTeamMemberCommand,
-  ): Result<TeamMember> {
+  static create(createTeamMemberCommand: {
+    userId: string;
+  }): Result<TeamMember> {
     const teamMember = new TeamMember({
-      projectId: createTeamMemberCommand.projectId,
+      projectId: '',
       userId: createTeamMemberCommand.userId,
-      projectRoleId: createTeamMemberCommand.projectRoleId,
     });
     return Result.ok(teamMember);
   }
 
   static createMany(
-    teamMembers: CreateTeamMemberCommand[],
+    teamMembers: {
+      userId: string;
+    }[],
   ): Result<TeamMember[]> {
     const teamMembersResult: TeamMember[] = [];
-    const errors: string[] = [];
 
     for (const teamMember of teamMembers) {
-      const teamMemberResult = this.create(teamMember);
+      const teamMemberResult = this.create({
+        userId: teamMember.userId,
+      });
       if (!teamMemberResult.success) {
-        errors.push(teamMemberResult.error);
-      } else {
-        teamMembersResult.push(teamMemberResult.value);
+        return Result.fail(teamMemberResult.error);
       }
+      teamMembersResult.push(teamMemberResult.value);
     }
-
-    if (errors.length > 0) {
-      return Result.fail('Erreur lors de la création des membres du projet');
-    }
-
     return Result.ok(teamMembersResult);
   }
 
@@ -43,21 +38,30 @@ export default class TeamMemberFactory {
       userId: string;
       joinedAt: Date;
     }[],
-  ): Result<
-    {
-      id: string;
-      projectId: string;
-      userId: string;
-      joinedAt: Date;
-    }[]
-  > {
-    return Result.ok(
-      teamMembers.map((teamMember) => ({
-        id: teamMember.id,
-        projectId: teamMember.projectId,
-        userId: teamMember.userId,
-        joinedAt: teamMember.joinedAt,
-      })),
-    );
+  ): Result<TeamMember[]> {
+    const teamMembersResult: TeamMember[] = [];
+    const errors: string[] = [];
+
+    for (const teamMember of teamMembers) {
+      try {
+        const teamMemberResult = new TeamMember({
+          id: teamMember.id,
+          projectId: teamMember.projectId,
+          userId: teamMember.userId,
+          joinedAt: teamMember.joinedAt,
+        });
+        teamMembersResult.push(teamMemberResult);
+      } catch (error) {
+        errors.push(error);
+      }
+    }
+
+    if (errors.length > 0) {
+      return Result.fail(
+        `Erreur lors de la création des membres du projet: ${errors.join(', ')}`,
+      );
+    }
+
+    return Result.ok(teamMembersResult);
   }
 }

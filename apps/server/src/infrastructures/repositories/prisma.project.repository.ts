@@ -15,7 +15,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       const repoProject = PrismaProjectMapper.toRepo(project);
       if (!repoProject.success) return Result.fail(repoProject.error);
 
-      console.log(repoProject.value);
       const savedProject = await this.prisma.project.create({
         data: repoProject.value,
         include: {
@@ -89,7 +88,13 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       const updatedProject = await this.prisma.project.update({
         where: { id },
         data: updatePayload,
-        include: { techStacks: true, projectRoles: true, projectMembers: true },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
+          projectMembers: true,
+        },
       });
 
       const domainProject = PrismaProjectMapper.toDomain(updatedProject);
@@ -113,7 +118,13 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             startsWith: title,
           },
         },
-        include: { techStacks: true, projectRoles: true, projectMembers: true },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
+          projectMembers: true,
+        },
       });
 
       if (prismaProjects.length === 0) return Result.ok([]);
@@ -136,7 +147,13 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     try {
       const projectPrisma = await this.prisma.project.findUnique({
         where: { id },
-        include: { techStacks: true, projectRoles: true, projectMembers: true },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
+          projectMembers: true,
+        },
       });
 
       if (!projectPrisma) return Result.fail('Project not found');
@@ -155,7 +172,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       const projectsPrisma = await this.prisma.project.findMany({
         include: {
           techStacks: true,
-          projectRoles: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
           projectMembers: true,
         },
       });

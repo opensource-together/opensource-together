@@ -15,6 +15,10 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
       name: ts.getName(),
       iconUrl: ts.getIconUrl(),
     })),
+    projectMembers: project.getTeamMembers().map((tm) => ({
+      userId: tm.getUserId(),
+      roleTitle: tm.getProjectRole()?.getRoleTitle(),
+    })),
     projectRoles: project.getProjectRoles(),
   };
 }

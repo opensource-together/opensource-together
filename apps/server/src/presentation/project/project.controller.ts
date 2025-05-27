@@ -75,7 +75,7 @@ export class ProjectController {
   ) {
     // Convertir les DTOs en commandes
     const projectRolesCommands =
-      project.projectRoles?.map((role) => ({
+      project.projectRoles.map((role) => ({
         projectId: '', // Sera défini après la création du projet
         roleTitle: role.roleTitle,
         skillSet: role.skillSet,
@@ -84,10 +84,9 @@ export class ProjectController {
       })) || [];
 
     const projectMembersCommands =
-      project.projectMembers?.map((member) => ({
-        projectId: '', // Sera défini après la création du projet
+      project.projectMembers.map((member) => ({
+        projectId: '',
         userId: member.userId,
-        projectRoleId: '', // Sera défini après la création des rôles
       })) || [];
 
     const projectRes: Result<Project> = await this.commandBus.execute(
