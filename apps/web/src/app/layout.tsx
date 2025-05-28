@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { SuperTokensInitializer } from "@/features/auth/components/SuperTokensInitializer";
+import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
 
 import Header from "@/components/shared/layout/Header";
 
