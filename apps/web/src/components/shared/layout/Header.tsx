@@ -35,6 +35,12 @@ function NavLink({ href, children, className = "" }: NavLinkProps) {
 }
 
 export default function Header() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/auth")) {
+    return null;
+  }
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
