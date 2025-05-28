@@ -1,5 +1,6 @@
+"use client";
 import LoginView from "@/features/auth/views/LoginView";
 
-export default function SignInPage() {
+export default function SignInPage() {  
   return <LoginView />;
 }
