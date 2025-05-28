@@ -3,33 +3,29 @@
 import { Button } from "@/components/ui/button";
 import useAuth from "@/features/auth/hooks/useAuth";
 
-interface GitHubButtonProps {
+interface WhiteGitHubButtonProps {
   text?: string;
   isLoading?: boolean;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-  size?: "default" | "sm" | "lg" | "icon";
 }
 
-export default function GitHubButton({
-  text = "Continuer avec GitHub",
+export default function WhiteGitHubButton({
+  text = "S'inscrire avec GitHub",
   isLoading = false,
-  variant = "default",
-  size = "default",
-}: GitHubButtonProps) {
+}: WhiteGitHubButtonProps) {
   const { signInWithGitHub } = useAuth();
 
   return (
     <Button
       onClick={signInWithGitHub}
       disabled={isLoading}
-      variant="outline" 
+      variant="outline"
       size="lg"
-      className="w-[420px]  rounded-full bg-black px-4 py-5 text-[16px] text-white"
+      className="w-[420px] p-2 rounded-full bg-white text-black px-4 py-5 text-[16px] hover:bg-gray-100"
     >
       <span>{text}</span>
 
       {isLoading ? (
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        <div className="h-5 w-5 animate-spin rounded-full border-1 border-black/10" />
       ) : (
         <svg
           className="h-5 w-5"
@@ -46,4 +42,4 @@ export default function GitHubButton({
       )}
     </Button>
   );
-}
+} 
