@@ -29,7 +29,7 @@ export default function GithubCallbackView() {
           <div className="flex flex-col items-center space-y-3 text-center">
             <Loader2 className="h-12 w-12 animate-spin" />
             <h1 className="text-2xl font-medium">Connexion en cours...</h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Nous vérifions vos informations Github. Vous serez redirigé vers{" "}
               <span className="font-medium">OpenSource Together</span> dans
               quelques instants.

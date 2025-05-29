@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { getTechBadgeVariant } from "@/lib/utils/badges";
 
 import { Badge } from "@/components/ui/badge";
@@ -46,9 +45,8 @@ export default function RoleCard({ role, className }: RoleCardProps) {
           <ProjectCardFooter className="mt-4 flex flex-wrap gap-2">
             {badges.map((badge) => (
               <Badge
-                key={`${badge.label}-${badge.color}`}
+                key={`${badge.label}`}
                 variant={getTechBadgeVariant(badge.label)}
-                className={cn(badge.color, badge.bgColor)}
               >
                 {badge.label}
               </Badge>

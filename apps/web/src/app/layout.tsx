@@ -6,6 +6,7 @@ import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitial
 import Header from "@/components/shared/layout/Header";
 import { Toaster } from "@/components/ui/sonner";
 
+import "../../public/fonts/font-face.css";
 import "./globals.css";
 import { Providers } from "./providers";
 

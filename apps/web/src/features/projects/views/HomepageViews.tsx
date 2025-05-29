@@ -18,7 +18,7 @@ export default function HomepageViews() {
 
   return (
     <div className="space-y-4 md:space-y-5">
-      <div className="mx-auto mt-4 flex flex-col items-center px-4 sm:px-6 md:mt-8 md:px-8 lg:px-0">
+      <div className="mx-auto mt-8 flex flex-col items-center px-4 sm:px-6 md:px-8 lg:px-0">
         <ProjectDiscoveryHero />
       </div>
 

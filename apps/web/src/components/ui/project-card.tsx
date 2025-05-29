@@ -24,7 +24,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-5",
+      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-5 shadow-xs",
       className
     )}
     {...props}
@@ -200,7 +200,7 @@ const ProjectCardDivider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("my-4 border-t border-dashed border-[black]/10", className)}
+    className={cn("my-4 border-t border-black/3", className)}
     {...props}
   />
 ));
@@ -238,13 +238,12 @@ const ProjectCardRolesCount = React.forwardRef<
   <div
     ref={counterRef || ref}
     className={cn(
-      "flex flex-shrink-0 items-center gap-1 text-xs font-medium",
+      "flex flex-shrink-0 items-center gap-1 text-[10px] tracking-tighter",
       className
     )}
     {...props}
   >
-    <Image src="/icons/people.svg" alt="peopleicon" width={11} height={11} />{" "}
-    {count} Rôles Disponibles
+    <span className="font-semibold">{count}</span> Rôles Disponibles
   </div>
 ));
 ProjectCardRolesCount.displayName = "ProjectCardRolesCount";
@@ -272,13 +271,13 @@ const ProjectCardRolesList = React.forwardRef<
       {visibleRoles.map((role, index) => (
         <span
           key={index}
-          className="flex h-5 flex-shrink-0 items-center rounded-full bg-[#1E1E1E]/[0.1] px-1 text-xs font-semibold whitespace-nowrap text-[#1E1E1E]/[0.8]"
+          className="flex h-5 flex-shrink-0 items-center rounded-full bg-[#1E1E1E]/[0.1] px-1 text-xs font-semibold tracking-tighter whitespace-nowrap text-[#1E1E1E]/[0.8]"
         >
           {role.name}
         </span>
       ))}
       {remainingRoles > 0 && (
-        <span className="flex h-5 flex-shrink-0 items-center rounded-full bg-transparent px-1 text-xs font-semibold whitespace-nowrap text-[black]/20">
+        <span className="flex h-5 flex-shrink-0 items-center rounded-full bg-transparent px-1 text-xs font-semibold tracking-tighter whitespace-nowrap text-[black]/20">
           +{remainingRoles}
         </span>
       )}

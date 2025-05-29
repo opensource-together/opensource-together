@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-full border px-2 h-4.5 text-[10px] w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  "inline-flex items-center justify-center font-medium tracking-tighter rounded-full border px-1 h-4.5 text-[10px] w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
   {
     variants: {
       variant: {
@@ -17,11 +17,11 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        info: "border-transparent text-[#2B7FFF] bg-[#EFF6FF] [a&]:hover:bg-[#EFF6FF]/90",
+        info: "border-transparent text-[#7C86FF] bg-[#EFF6FF80] [a&]:hover:bg-[#EFF6FF80]/90",
         danger:
-          "border-transparent text-[#FF8904] bg-[#FFFBEB] [a&]:hover:bg-[#FFFBEB]/90",
+          "border-transparent text-[#FDC700] bg-[#FEF9C280] [a&]:hover:bg-[#FEF9C280]/90",
         success:
-          "border-transparent text-[#00C950] bg-[#F0FDF4] [a&]:hover:bg-[#F0FDF4]/90",
+          "border-transparent text-[#00D492] bg-[#D0FAE580] [a&]:hover:bg-[#D0FAE580]/90",
       },
     },
     defaultVariants: {

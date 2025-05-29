@@ -6,8 +6,6 @@ export interface TechStack {
 
 export interface Badge {
   label: string;
-  color: string;
-  bgColor: string;
 }
 
 export interface ProjectRole {

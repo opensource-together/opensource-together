@@ -13,7 +13,12 @@ export default function GithubLink({
   className,
 }: GithubLinkProps) {
   return (
-    <Link href={url} className={className} target="_blank" aria-label="GitHub">
+    <Link
+      href={url}
+      className={`flex items-center gap-1 text-sm tracking-tighter ${className}`}
+      target="_blank"
+      aria-label="GitHub"
+    >
       Star Us
       <Image src="/icons/github.svg" alt="github" width={size} height={size} />
     </Link>

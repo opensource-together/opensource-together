@@ -25,8 +25,6 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           stars={project.communityStats?.stars || 0}
           roles={project.roles?.map((role) => ({
             name: role.title,
-            color: role.badges[0]?.color || "#000000",
-            bgColor: role.badges[0]?.bgColor || "#F3F3F3",
           }))}
           roleCount={project.roles?.length || 0}
           authorName={project.authorName}
