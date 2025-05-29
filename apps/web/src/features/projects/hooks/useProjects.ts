@@ -1,10 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { getQueryClient } from "@/lib/queryClient";
 
+import { ProjectSchema } from "../schema/project.schema";
 import { createProject } from "../services/createProjectAPI";
 import { getProjectDetails, getProjects } from "../services/projectAPI";
+import { updateProject } from "../services/updateProjectAPI";
 import { Project } from "../types/projectTypes";
 
 /**
@@ -52,6 +55,46 @@ export function useCreateProject() {
   return {
     createProject: mutation.mutate,
     isCreating: mutation.isPending,
+    isError: mutation.isError,
+  };
+}
+
+/**
+ * Hook to update a project
+ * @param projectId id of the project to update
+ * @returns updateProject, isUpdating, isError
+ */
+export function useUpdateProject(projectId: string) {
+  const router = useRouter();
+  const queryClient = getQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({
+      data,
+      projectId,
+    }: {
+      data: ProjectSchema;
+      projectId: string;
+    }) => {
+      toast.loading("Mise à jour du projet en cours...");
+      return updateProject(data, projectId);
+    },
+    onSuccess: (data) => {
+      toast.dismiss();
+      toast.success("Projet mis à jour avec succès");
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      router.push(`/projects/${data.id}`);
+    },
+    onError: (error: Error) => {
+      toast.dismiss();
+      toast.error(`Erreur lors de la mise à jour du projet`);
+      console.error("Error updating project:", error);
+    },
+  });
+
+  return {
+    updateProject: mutation.mutate,
+    isUpdating: mutation.isPending,
     isError: mutation.isError,
   };
 }
