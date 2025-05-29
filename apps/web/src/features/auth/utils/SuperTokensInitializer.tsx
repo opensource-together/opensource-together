@@ -7,7 +7,6 @@ import ThirdParty from "supertokens-web-js/recipe/thirdparty";
 
 export function SuperTokensInitializer() {
   useEffect(() => {
-    console.log("SuperTokensInitializer");
     SuperTokens.init({
       appInfo: {
         appName: "OST",
