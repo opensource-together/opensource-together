@@ -11,7 +11,7 @@ function FilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="flex cursor-pointer flex-col rounded-full px-4 py-1 transition-colors hover:bg-gray-50">
       <span className="text-[11px] font-normal text-black/50">{label}</span>
-      <span className="text-sm font-medium tracking-tight">{value}</span>
+      <span className="text-xs font-medium tracking-tight">{value}</span>
     </div>
   );
 }
@@ -48,7 +48,7 @@ export default function FilterSearchBar() {
           </div>
         </div>
 
-        <Button>Chercher un Projet</Button>
+        <Button className="px-4">Chercher un Projet</Button>
       </div>
     </div>
   );

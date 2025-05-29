@@ -16,7 +16,7 @@ export default function ProjectDiscoveryHero() {
           />
           10 Projets ajoutés cette semaine !
         </p>
-        <p className="mt-3 text-center text-5xl leading-none font-medium tracking-tight">
+        <p className="mt-3 text-center text-5xl leading-none font-medium tracking-tighter">
           Grandir ensemble <br />
           grâce à l'open source
         </p>
