@@ -52,7 +52,7 @@ export default function Header() {
         <Link href="/">
           <article className="flex items-center gap-2">
             <Image
-              src="ost-logo.svg"
+              src="/ost-logo.svg"
               alt="ost-logo"
               width={130}
               height={26}
@@ -62,10 +62,10 @@ export default function Header() {
         </Link>
 
         {/* Navigation pour desktop et tablette */}
-        <nav className="hidden items-center space-x-3 md:flex lg:space-x-6">
+        <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
           <NavLink href="/">Accueil</NavLink>
           <NavLink href="/profile">Profil</NavLink>
-          <NavLink href="/my-projects">Mes projets</NavLink>
+          <NavLink href="/my-projects">Gestion projet</NavLink>
         </nav>
       </section>
 
