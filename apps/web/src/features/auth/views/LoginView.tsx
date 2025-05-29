@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import AuthCard from "../components/AuthCard";
 import AuthIllustration from "../components/AuthIllustration";
 import LoginForm from "../components/LoginForm";
 
@@ -20,16 +19,11 @@ export default function LoginView() {
         </Link>
 
         <div className="mx-8 flex flex-col items-center md:mx-28">
-          <AuthCard
-            title="Bienvenue sur OpenSource Together"
-            subtitle="Trouvez des projets, postulez à des rôles, collaborez — construissons, partageons et grandissons ensemble grâce à l'open source"
-          >
-            <LoginForm />
-          </AuthCard>
+          <LoginForm />
         </div>
 
         <Link href="/" className="absolute bottom-8 left-8 font-medium">
-          Contact Us
+          Contactez-nous
         </Link>
       </div>
 
