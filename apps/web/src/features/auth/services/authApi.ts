@@ -38,14 +38,17 @@ export function useRedirectAfterGitHub() {
         toast.error(
           "GitHub n'a pas fourni d'adresse email. Veuillez réessayer ou utiliser une autre méthode."
         );
+        router.push("/auth/login");
       } else {
         toast.dismiss();
         toast.error("Une erreur est survenue lors de la connexion");
+        router.push("/auth/login");
       }
     } catch (error) {
       toast.dismiss();
       toast.error("Une erreur est survenue lors de la connexion");
       console.error(error);
+      router.push("/auth/login");
     }
   };
 
