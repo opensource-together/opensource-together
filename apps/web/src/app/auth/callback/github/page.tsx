@@ -1,13 +1,5 @@
-"use client";
+import GithubCallbackView from "@/features/auth/views/GithubCallbackView";
 
-import { useEffect } from "react";
-
-import useAuth from "@/features/auth/hooks/useAuth";
-
-export default function GithubCallback() {
-  const { redirect } = useAuth();
-
-  useEffect(() => {
-    redirect();
-  }, [redirect]);
+export default function GithubCallbackPage() {
+  return <GithubCallbackView />;
 }
