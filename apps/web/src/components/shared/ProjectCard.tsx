@@ -22,6 +22,8 @@ import {
   TechIcon,
 } from "@/components/ui/project-card";
 
+import Image from "next/image";
+
 interface ProjectCardProps {
   projectId?: string;
   title?: string;
@@ -36,6 +38,12 @@ interface ProjectCardProps {
   showViewProject?: boolean;
   className?: string;
   image?: string;
+  authorName?: string;
+  communityStats?: {
+    forks?: number;
+    contributors?: number;
+    stars?: number;
+  };
 }
 
 export default function ProjectCardComponent({
@@ -52,6 +60,8 @@ export default function ProjectCardComponent({
   showViewProject = true,
   className = "",
   image,
+  authorName,
+  communityStats,
 }: ProjectCardProps) {
   // Utilisation du hook personnalisé
   const {
@@ -73,19 +83,12 @@ export default function ProjectCardComponent({
           {image && <ProjectCardImage src={image} alt={`${title} icon`} />}
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
-            {showTechStack && techStack.length > 0 && (
-              <div className="mt-1 flex gap-1">
-                {techStack.map((tech, index) => {
-                  if (!tech.icon) return null;
-                  return (
-                    <StackIcon key={index} icon={tech.icon} alt={tech.alt} />
-                  );
-                })}
-              </div>
-            )}
+            <p className="text-sm text-gray-500">by {authorName}</p>
           </ProjectCardInfo>
         </ProjectCardLeftGroup>
-        {showStars && <ProjectCardStars count={stars} />}
+            {showViewProject && (
+              <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
+            )}
       </ProjectCardHeader>
       <ProjectCardContent>
         {description && (
@@ -109,10 +112,35 @@ export default function ProjectCardComponent({
                 )}
               </>
             )}
-
-            {showViewProject && (
-              <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
-            )}
+            <div className="flex items-center justify-between space-x-2 ml-auto">
+              <div className="flex items-center justify-center gap-1 text-[10px]">
+                <Image
+                  src="/icons/branch-git-fork.svg"
+                  alt="Branch"
+                  width={10}
+                  height={10}
+                />
+                {communityStats?.forks || 0}
+              </div>
+              <div className="flex items-center justify-center gap-1 text-[10px]">
+                <Image
+                  src="/icons/people-filled-in-black.svg"
+                  alt="People"
+                  width={10}
+                  height={10}
+                />
+                {communityStats?.contributors || 0}
+              </div>
+              <div className="flex items-center justify-center gap-1 text-[10px]">
+                <Image
+                  src="/icons/star-filled-in-black.svg"
+                  alt="Star"
+                  width={10}
+                  height={10}
+                />
+                {communityStats?.stars || 0}
+              </div>
+            </div>
           </ProjectCardFooter>
         )}
       </ProjectCardContent>

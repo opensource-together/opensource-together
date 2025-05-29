@@ -24,7 +24,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist rounded-3xl border border-[black]/10 px-7.5 py-6 shadow-xs",
+      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-5",
       className
     )}
     {...props}
@@ -91,7 +91,7 @@ const ProjectCardImage = React.forwardRef<
         alt={alt}
         width={50}
         height={50}
-        className="rounded-lg"
+        className="rounded-full"
       />
     </div>
   );
@@ -188,7 +188,7 @@ const ProjectCardDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "mt-4 line-clamp-2 text-xs leading-5 font-medium text-[black]/50",
+      "mt-4 line-clamp-2 text-[13px] leading-5 font-medium text-[black] line-clamp-1",
       className
     )}
     {...props}
@@ -305,13 +305,14 @@ const ProjectCardViewLink = React.forwardRef<
     ref={linkRef || ref}
     href={`/projects/${projectId}`}
     className={cn(
-      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-80",
+      "ml-auto flex flex-shrink-0 items-center gap-1 text-[12px] font-normal text-black/20 transition-opacity hover:opacity-80",
       className
     )}
     {...props}
   >
     Voir le projet{" "}
     <Image
+      className="opacity-20"
       src="/icons/arrow-up-right.svg"
       alt="arrowupright"
       width={10}
