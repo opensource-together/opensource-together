@@ -1,3 +1,8 @@
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+
+import { getQueryClient } from "@/lib/queryClient";
+
+import { getProjectDetails } from "@/features/projects/services/projectAPI";
 import ProjectDetailView from "@/features/projects/views/ProjectDetailView";
 
 export default async function ProjectPage({
@@ -9,5 +14,18 @@ export default async function ProjectPage({
 }) {
   const { projectId } = await params;
 
-  return <ProjectDetailView projectId={projectId} />;
+  const queryClient = getQueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["project", projectId],
+    queryFn: () => getProjectDetails(projectId),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <ProjectDetailView projectId={projectId} />
+    </HydrationBoundary>
+  );
 }
