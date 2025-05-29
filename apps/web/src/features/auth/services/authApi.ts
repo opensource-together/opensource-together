@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Session from "supertokens-web-js/recipe/session";
 import {
   getAuthorisationURLWithQueryParamsAndSetState,
@@ -6,6 +8,7 @@ import {
 
 export async function signInWithGitHub(): Promise<void> {
   try {
+    toast.loading("Redirection vers GitHub...");
     const authUrl = await getAuthorisationURLWithQueryParamsAndSetState({
       thirdPartyId: "github",
       frontendRedirectURI: "http://localhost:3000/auth/callback/github",
@@ -13,25 +16,38 @@ export async function signInWithGitHub(): Promise<void> {
 
     window.location.assign(authUrl);
   } catch (error) {
+    toast.dismiss();
+    toast.error("Erreur lors de la redirection vers GitHub");
     console.error(error);
   }
 }
 
-export async function redirectAfterGitHub(): Promise<void> {
-  try {
-    const response = await signInAndUp();
-    if (response.status === "OK" && (await Session.doesSessionExist())) {
-      window.location.href = "/";
-    } else if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
-      window.alert(
-        "GitHub n'a pas fourni d'adresse email. Veuillez réessayer ou utiliser une autre méthode."
-      );
-      window.location.href = "/auth/login";
-    } else {
-      window.alert("Oops! Something went wrong.");
-      window.location.href = "/auth/login";
+export function useRedirectAfterGitHub() {
+  const router = useRouter();
+
+  const redirect = async (): Promise<void> => {
+    try {
+      toast.loading("Vérification de vos informations GitHub...");
+      const response = await signInAndUp();
+      if (response.status === "OK" && (await Session.doesSessionExist())) {
+        toast.dismiss();
+        toast.success("Connexion réussie !");
+        router.push("/");
+      } else if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
+        toast.dismiss();
+        toast.error(
+          "GitHub n'a pas fourni d'adresse email. Veuillez réessayer ou utiliser une autre méthode."
+        );
+      } else {
+        toast.dismiss();
+        toast.error("Une erreur est survenue lors de la connexion");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Une erreur est survenue lors de la connexion");
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
+  };
+
+  return redirect;
 }
