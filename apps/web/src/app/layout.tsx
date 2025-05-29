@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
 
 import Header from "@/components/shared/layout/Header";
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 import { Providers } from "./providers";
@@ -40,7 +41,10 @@ export default function RootLayout({
       <body>
         <SuperTokensInitializer />
         <Header />
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
