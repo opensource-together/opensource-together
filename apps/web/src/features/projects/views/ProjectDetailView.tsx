@@ -49,7 +49,7 @@ export default function ProjectDetailView({
         <div>
           <div className="mb-3 flex items-center justify-between lg:max-w-[721.96px]">
             <p className="items-centers flex gap-1 text-xl font-medium">
-              Rôles Disponibles{" "}
+              Rôles Disponib les{" "}
               <Image
                 src="/icons/people.svg"
                 className="mt-1"

@@ -19,12 +19,17 @@ import {
   ProjectCardTitle,
   ProjectCardViewLink,
   Role,
+  TechIcon,
 } from "@/components/ui/project-card";
 
 interface ProjectCardProps {
   projectId?: string;
   title?: string;
   description?: string;
+  techStack?: TechIcon[];
+  showTechStack?: boolean;
+  stars?: number;
+  showStars?: boolean;
   roles?: Role[];
   roleCount?: number;
   showRoles?: boolean;

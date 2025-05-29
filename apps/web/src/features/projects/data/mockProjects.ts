@@ -353,7 +353,7 @@ export const mockProjects: Project[] = [
     slug: "liltea",
     title: "Liltea.me",
     image:
-      "https://media.discordapp.net/attachments/1313066773083459595/1313066775444983908/Lil_tea_tasse_fond_4x.jpg?ex=682c443a&is=682af2ba&hm=cb84ead9ca01d87a31cb26390a0c239f1c660bbcf0343b5a29f92a4e873ee601&=&format=webp&width=1744&height=1744",
+      "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
     authorName: "Shyybi",
     authorImage: "/icons/shyybi-icon.png",
     description:
