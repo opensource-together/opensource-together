@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function FilterSearchBar() {
   return (
-    <div className="flex items-center bg-white justify-between w-[653px] h-[50px] p-2 rounded-full border border-black/5 shadow-md shadow-black/5 backdrop-blur-sm">
+    <div className="flex items-center bg-white justify-between w-[653px] h-[50px] p-2 rounded-full border border-black/5 shadow-xs shadow-black/3 backdrop-blur-lg">
       <div className="flex items-center gap-6">
       <Image src="/icons/search-icon-filter.svg" alt="filter-search-bar" width={25} height={25} />
         <div className="flex flex-col border-r border-black/5 pr-12">

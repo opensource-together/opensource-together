@@ -24,17 +24,6 @@ export default function HomepageViews() {
       </div>
 
       <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 md:px-8 md:py-8 lg:px-12">
-        <div className="mb-12 flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <ProjectFilters
-            filters={[
-              { label: "", value: "Plus Récent", isSortButton: true },
-              { label: "Technologie", value: "" },
-              { label: "Rôle", value: "" },
-              { label: "Difficulté", value: "" },
-            ]}
-          />
-          <ProjectSearchBar />
-        </div>
 
         <ProjectGrid projects={projects} />
 

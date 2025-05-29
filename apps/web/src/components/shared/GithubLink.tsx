@@ -14,6 +14,7 @@ export default function GithubLink({
 }: GithubLinkProps) {
   return (
     <Link href={url} className={className} target="_blank" aria-label="GitHub">
+      Star  Us
       <Image src="/icons/github.svg" alt="github" width={size} height={size} />
     </Link>
   );
