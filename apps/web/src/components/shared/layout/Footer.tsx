@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="flex h-[100px] w-full items-center justify-center bg-[#FAFAFA]">
         <div className="mx-auto flex w-full max-w-[1104px] items-center justify-between px-2">
           {/* Left */}
-          <div className="flex items-center gap-2 text-sm text-black/80">
+          <div className="flex items-center gap-2 text-sm tracking-tighter text-black/80">
             <span>©2025</span>
             <span className="font-medium">Open Source Together</span>
           </div>
