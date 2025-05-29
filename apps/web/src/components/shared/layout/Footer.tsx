@@ -1,9 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-import GithubLink from "../GithubLink";
 import TwitterLink from "../TwitterLink";
 
 export default function Footer() {
@@ -11,7 +9,7 @@ export default function Footer() {
 
   return (
     <>
-      <div className="w-full h-[100px] bg-[#FAFAFA] flex items-center justify-center">
+      <div className="flex h-[100px] w-full items-center justify-center bg-[#FAFAFA]">
         <div className="mx-auto flex w-full max-w-[1104px] items-center justify-between px-2">
           {/* Left */}
           <div className="flex items-center gap-2 text-sm text-black/80">

@@ -19,17 +19,12 @@ import {
   ProjectCardTitle,
   ProjectCardViewLink,
   Role,
-  TechIcon,
 } from "@/components/ui/project-card";
 
 interface ProjectCardProps {
   projectId?: string;
   title?: string;
   description?: string;
-  techStack?: TechIcon[];
-  showTechStack?: boolean;
-  stars?: number;
-  showStars?: boolean;
   roles?: Role[];
   roleCount?: number;
   showRoles?: boolean;
@@ -48,10 +43,6 @@ export default function ProjectCardComponent({
   projectId = "1",
   title = "LeetGrind",
   description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
-  techStack = [],
-  showTechStack = true,
-  stars = 0,
-  showStars = true,
   roles = [],
   roleCount = 0,
   showRoles = true,
