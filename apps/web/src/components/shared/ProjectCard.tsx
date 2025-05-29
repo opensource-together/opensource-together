@@ -1,8 +1,9 @@
+import Image from "next/image";
+
 import { getRoleBadgeVariant } from "@/lib/utils/badges";
 
 import { useVisibleRoles } from "@/hooks/useVisibleRoles";
 
-import StackIcon from "@/components/shared/StackIcon";
 import { Badge } from "@/components/ui/badge";
 import {
   ProjectCard,
@@ -15,14 +16,11 @@ import {
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardRolesCount,
-  ProjectCardStars,
   ProjectCardTitle,
   ProjectCardViewLink,
   Role,
   TechIcon,
 } from "@/components/ui/project-card";
-
-import Image from "next/image";
 
 interface ProjectCardProps {
   projectId?: string;
@@ -83,12 +81,14 @@ export default function ProjectCardComponent({
           {image && <ProjectCardImage src={image} alt={`${title} icon`} />}
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
-            <p className="text-sm text-gray-500">by {authorName}</p>
+            <p className="text-muted-foreground text-sm tracking-tighter">
+              by {authorName}
+            </p>
           </ProjectCardInfo>
         </ProjectCardLeftGroup>
-            {showViewProject && (
-              <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
-            )}
+        {showViewProject && (
+          <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
+        )}
       </ProjectCardHeader>
       <ProjectCardContent>
         {description && (
@@ -112,8 +112,8 @@ export default function ProjectCardComponent({
                 )}
               </>
             )}
-            <div className="flex items-center justify-between space-x-2 ml-auto">
-              <div className="flex items-center justify-center gap-1 text-[10px]">
+            <div className="ml-auto flex items-center justify-between space-x-2">
+              <div className="flex items-center justify-center gap-1 text-xs">
                 <Image
                   src="/icons/branch-git-fork.svg"
                   alt="Branch"
@@ -122,7 +122,7 @@ export default function ProjectCardComponent({
                 />
                 {communityStats?.forks || 0}
               </div>
-              <div className="flex items-center justify-center gap-1 text-[10px]">
+              <div className="flex items-center justify-center gap-1 text-xs">
                 <Image
                   src="/icons/people-filled-in-black.svg"
                   alt="People"
@@ -131,7 +131,7 @@ export default function ProjectCardComponent({
                 />
                 {communityStats?.contributors || 0}
               </div>
-              <div className="flex items-center justify-center gap-1 text-[10px]">
+              <div className="flex items-center justify-center gap-1 text-xs">
                 <Image
                   src="/icons/star-filled-in-black.svg"
                   alt="Star"
