@@ -29,6 +29,8 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
             bgColor: role.badges[0]?.bgColor || "#F3F3F3",
           }))}
           roleCount={project.roles?.length || 0}
+          authorName={project.authorName}
+          communityStats={project.communityStats}
         />
       ))}
     </div>

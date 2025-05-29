@@ -24,7 +24,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist rounded-3xl border border-[black]/10 px-7.5 py-6 shadow-xs",
+      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-5",
       className
     )}
     {...props}
@@ -91,7 +91,7 @@ const ProjectCardImage = React.forwardRef<
         alt={alt}
         width={50}
         height={50}
-        className="rounded-lg"
+        className="rounded-full"
       />
     </div>
   );
@@ -187,10 +187,7 @@ const ProjectCardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "mt-4 line-clamp-2 text-xs leading-5 font-medium text-[black]/50",
-      className
-    )}
+    className={cn("mt-4 line-clamp-1 text-xs leading-5 font-medium", className)}
     {...props}
   />
 ));
@@ -241,13 +238,13 @@ const ProjectCardRolesCount = React.forwardRef<
   <div
     ref={counterRef || ref}
     className={cn(
-      "flex flex-shrink-0 items-center gap-1 text-[10px] font-medium",
+      "flex flex-shrink-0 items-center gap-1 text-xs font-medium",
       className
     )}
     {...props}
   >
     <Image src="/icons/people.svg" alt="peopleicon" width={11} height={11} />{" "}
-    {count} Roles Disponibles
+    {count} Rôles Disponibles
   </div>
 ));
 ProjectCardRolesCount.displayName = "ProjectCardRolesCount";
@@ -305,13 +302,14 @@ const ProjectCardViewLink = React.forwardRef<
     ref={linkRef || ref}
     href={`/projects/${projectId}`}
     className={cn(
-      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-80",
+      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-normal tracking-tighter text-black/30 transition-opacity hover:opacity-80",
       className
     )}
     {...props}
   >
     Voir le projet{" "}
     <Image
+      className="opacity-20"
       src="/icons/arrow-up-right.svg"
       alt="arrowupright"
       width={10}

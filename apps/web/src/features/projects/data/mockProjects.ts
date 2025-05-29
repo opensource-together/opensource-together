@@ -11,7 +11,7 @@ export const mockProjects: Project[] = [
     authorImage:
       "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
     description:
-      "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante et collaborative, avec des défis quotidiens et un système de classement pour suivre votre évolution",
+      "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algo.",
     longDescription:
       "LeetGrind est un bot Discord qui propose un challenge LeetCode aléatoire chaque jour à une communauté active de développeurs. Avec un système de classement, un canal dédié à l'entraide et une interface ludique, LeetGrind aide les développeurs à coder de façon régulière, à progresser ensemble et à retrouver la motivation au quotidien.",
     status: "PUBLISHED",
@@ -101,7 +101,7 @@ export const mockProjects: Project[] = [
     authorName: "69Killian",
     authorImage: "/icons/killiancodes-icon.jpg",
     description:
-      "Contribue, Développe, réalise des challenges et gagne des badges en contribuant à des projets open source. Une plateforme gamifiée pour encourager la participation à l'open source",
+      "Réalise des challenges en contribuant à des projets open source.",
     longDescription:
       "Gitify est une application pour réaliser des challenges et gagner des badges en contribuant à des projets open source. Elle permet de suivre les notifications, les messages et les demandes de pull request de vos projets GitHub.",
     status: "PUBLISHED",
@@ -183,7 +183,7 @@ export const mockProjects: Project[] = [
     authorName: "p2aco",
     authorImage: "/icons/p2aco-icon.png",
     description:
-      "Le bot ultime pour les développeurs, directement intégré à Discord et Slack. Boostez votre productivité avec des commandes intelligentes pour formater du code, générer des tâches cron et plus encore.",
+      "Le bot ultime pour les développeurs, directement intégré à Discord et Slack.",
     longDescription:
       "DevCord est un bot conçu pour booster la productivité des développeurs grâce à des commandes simples et puissantes intégrées à Discord et Slack. Qu'il s'agisse de formater du code, de générer des tâches cron, de convertir des formats ou de valider des regex, DevCord est votre copilote de développement. 100% gratuit, rapide et pensé pour les équipes modernes, avec une documentation claire et complète.",
     status: "PUBLISHED",
@@ -272,7 +272,7 @@ export const mockProjects: Project[] = [
     authorImage:
       "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
     description:
-      "Transformez votre façon de gérer le code. Stockez, organisez et découvrez des snippets avec facilité.",
+      "Stockez, organisez et découvrez des snippets de code avec facilité.",
     longDescription:
       "CodeSnippet révolutionne la gestion du code pour les développeurs. Notre plateforme vous permet de stocker, organiser et découvrir facilement des snippets de code. Le Hub communautaire vous offre la possibilité de partager et d'explorer des snippets créés par d'autres développeurs. Simplifiez votre flux de travail et apprenez des autres—votre code, toujours à portée de main.",
     status: "PUBLISHED",
@@ -353,7 +353,7 @@ export const mockProjects: Project[] = [
     slug: "liltea",
     title: "Liltea.me",
     image:
-      "https://media.discordapp.net/attachments/1313066773083459595/1313066775444983908/Lil_tea_tasse_fond_4x.jpg?ex=682c443a&is=682af2ba&hm=cb84ead9ca01d87a31cb26390a0c239f1c660bbcf0343b5a29f92a4e873ee601&=&format=webp&width=1744&height=1744",
+      "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
     authorName: "Shyybi",
     authorImage: "/icons/shyybi-icon.png",
     description:

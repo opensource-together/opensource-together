@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import GithubLink from "../GithubLink";
-import TwitterLink from "../TwitterLink";
 
 interface NavLinkProps {
   href: string;
@@ -59,13 +58,6 @@ export default function Header() {
               height={26}
               className="h-auto max-h-[26px] w-auto md:max-h-[30px] lg:max-h-[35px]"
             />
-            <Image
-              src="beta.svg"
-              alt="beta"
-              width={24}
-              height={10}
-              className="h-auto max-h-[10px] w-auto md:max-h-[11px] lg:max-h-[12px]"
-            />
           </article>
         </Link>
 
@@ -109,13 +101,14 @@ export default function Header() {
 
         <div className="flex items-center justify-center space-x-6 py-2">
           <GithubLink url="https://github.com/opensource-together/opensource-together" />
-          <TwitterLink url="https://x.com/OpenSTogether" />
         </div>
       </nav>
 
       <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
-        <GithubLink url="https://github.com/opensource-together/opensource-together" />
-        <TwitterLink url="https://x.com/OpenSTogether" />
+        <GithubLink
+          className="flex items-center gap-2 font-medium"
+          url="https://github.com/opensource-together/opensource-together"
+        />
 
         <Button onClick={handleCreate}>
           <span className="hidden sm:inline">Créer un Projet</span>

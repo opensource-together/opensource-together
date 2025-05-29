@@ -1,8 +1,9 @@
+import Image from "next/image";
+
 import { getRoleBadgeVariant } from "@/lib/utils/badges";
 
 import { useVisibleRoles } from "@/hooks/useVisibleRoles";
 
-import StackIcon from "@/components/shared/StackIcon";
 import { Badge } from "@/components/ui/badge";
 import {
   ProjectCard,
@@ -15,7 +16,6 @@ import {
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardRolesCount,
-  ProjectCardStars,
   ProjectCardTitle,
   ProjectCardViewLink,
   Role,
@@ -36,22 +36,26 @@ interface ProjectCardProps {
   showViewProject?: boolean;
   className?: string;
   image?: string;
+  authorName?: string;
+  communityStats?: {
+    forks?: number;
+    contributors?: number;
+    stars?: number;
+  };
 }
 
 export default function ProjectCardComponent({
   projectId = "1",
   title = "LeetGrind",
   description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
-  techStack = [],
-  showTechStack = true,
-  stars = 0,
-  showStars = true,
   roles = [],
   roleCount = 0,
   showRoles = true,
   showViewProject = true,
   className = "",
   image,
+  authorName,
+  communityStats,
 }: ProjectCardProps) {
   // Utilisation du hook personnalisé
   const {
@@ -73,19 +77,14 @@ export default function ProjectCardComponent({
           {image && <ProjectCardImage src={image} alt={`${title} icon`} />}
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
-            {showTechStack && techStack.length > 0 && (
-              <div className="mt-1 flex gap-1">
-                {techStack.map((tech, index) => {
-                  if (!tech.icon) return null;
-                  return (
-                    <StackIcon key={index} icon={tech.icon} alt={tech.alt} />
-                  );
-                })}
-              </div>
-            )}
+            <p className="text-muted-foreground text-sm tracking-tighter">
+              by {authorName}
+            </p>
           </ProjectCardInfo>
         </ProjectCardLeftGroup>
-        {showStars && <ProjectCardStars count={stars} />}
+        {showViewProject && (
+          <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
+        )}
       </ProjectCardHeader>
       <ProjectCardContent>
         {description && (
@@ -109,10 +108,35 @@ export default function ProjectCardComponent({
                 )}
               </>
             )}
-
-            {showViewProject && (
-              <ProjectCardViewLink projectId={projectId} linkRef={actionRef} />
-            )}
+            <div className="ml-auto flex items-center justify-between space-x-2">
+              <div className="flex items-center justify-center gap-1 text-xs">
+                <Image
+                  src="/icons/branch-git-fork.svg"
+                  alt="Branch"
+                  width={10}
+                  height={10}
+                />
+                {communityStats?.forks || 0}
+              </div>
+              <div className="flex items-center justify-center gap-1 text-xs">
+                <Image
+                  src="/icons/people-filled-in-black.svg"
+                  alt="People"
+                  width={10}
+                  height={10}
+                />
+                {communityStats?.contributors || 0}
+              </div>
+              <div className="flex items-center justify-center gap-1 text-xs">
+                <Image
+                  src="/icons/star-filled-in-black.svg"
+                  alt="Star"
+                  width={10}
+                  height={10}
+                />
+                {communityStats?.stars || 0}
+              </div>
+            </div>
           </ProjectCardFooter>
         )}
       </ProjectCardContent>
