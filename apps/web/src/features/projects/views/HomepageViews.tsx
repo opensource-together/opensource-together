@@ -18,7 +18,7 @@ export default function HomepageViews() {
   if (isError || !projects) return <HomepageError />;
 
   return (
-    <div className="space-y-4 pb-10 md:space-y-5">
+    <div className="space-y-4 md:space-y-5">
       <div className="mx-auto mt-4 flex flex-col items-center px-4 sm:px-6 md:mt-8 md:px-8 lg:px-0">
         <Billboard />
       </div>
@@ -27,11 +27,11 @@ export default function HomepageViews() {
 
         <ProjectGrid projects={projects} />
 
-        <div className="mt-25">
+        <div className="mt-25 mb-50">
           <Pagination />
         </div>
       </div>
-      <div className="mt-20 px-4 sm:px-6 md:px-8">
+      <div>
         <Footer />
       </div>
     </div>
