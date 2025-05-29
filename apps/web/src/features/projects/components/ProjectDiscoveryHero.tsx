@@ -1,8 +1,8 @@
 import Image from "next/image";
 
-import FilterSearchBar from "../ui/filterSearchBar";
+import FilterSearchBar from "./FilterSearchBar";
 
-export default function Billboard() {
+export default function ProjectDiscoveryHero() {
   return (
     <div className="relative mx-auto rounded-4xl border border-black/5">
       <div className="absolute inset-0 flex flex-col items-center justify-center">

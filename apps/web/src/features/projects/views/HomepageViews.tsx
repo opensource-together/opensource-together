@@ -1,12 +1,11 @@
 "use client";
 
-import Billboard from "@/components/shared/Billboard";
+import ProjectDiscoveryHero from "@/features/projects/components/ProjectDiscoveryHero";
+
 import Pagination from "@/components/shared/Pagination";
 import Footer from "@/components/shared/layout/Footer";
 
-import ProjectFilters from "../components/ProjectFilters";
 import ProjectGrid from "../components/ProjectGrid";
-import ProjectSearchBar from "../components/ProjectSearchBar";
 import HomepageError from "../components/error-ui/HomepageError";
 import SkeletonHomepageViews from "../components/skeletons/SkeletonHomepageViews";
 import { useProjects } from "../hooks/useProjects";
@@ -20,11 +19,10 @@ export default function HomepageViews() {
   return (
     <div className="space-y-4 md:space-y-5">
       <div className="mx-auto mt-4 flex flex-col items-center px-4 sm:px-6 md:mt-8 md:px-8 lg:px-0">
-        <Billboard />
+        <ProjectDiscoveryHero />
       </div>
 
       <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 md:px-8 md:py-8 lg:px-12">
-
         <ProjectGrid projects={projects} />
 
         <div className="mt-25 mb-50">
