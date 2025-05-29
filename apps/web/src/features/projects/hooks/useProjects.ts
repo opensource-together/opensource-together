@@ -87,7 +87,7 @@ export function useUpdateProject(projectId: string) {
     },
     onError: (error: Error) => {
       toast.dismiss();
-      toast.error(`Erreur lors de la mise à jour du projet`);
+      toast.error("Erreur lors de la mise à jour du projet");
       console.error("Error updating project:", error);
     },
   });
