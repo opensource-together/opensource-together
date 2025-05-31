@@ -42,15 +42,15 @@ function FilterItem({
             {value || defaultValue}
           </span>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-2">
+        <PopoverContent className="max-h-[300px] overflow-y-auto p-2">
           {options.map((option) => (
-            <button
+            <Button
               key={option}
-              className="w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100"
+              variant="ghost"
               onClick={() => onSelect(option)}
             >
               {option}
-            </button>
+            </Button>
           ))}
         </PopoverContent>
       </Popover>
