@@ -11,8 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { useUpdateProject } from "../hooks/useProjects";
-import { ProjectSchema, projectSchema } from "../schema/project.schema";
 import { Project } from "../types/projectTypes";
+import {
+  ProjectSchema,
+  projectSchema,
+} from "../validations/project.form.schema";
 
 interface ProjectEditFormProps {
   project: Project;
@@ -21,11 +24,7 @@ interface ProjectEditFormProps {
 export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   const { image, title, description } = project;
 
-  const {
-    updateProject,
-    isUpdating: isUpdatingProject,
-    isError: isUpdateError,
-  } = useUpdateProject(project.id || "");
+  const { updateProject, isUpdating, isUpdateError } = useUpdateProject();
 
   const {
     register,
@@ -39,7 +38,13 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
       title: title || "Sans titre",
       description: description || "",
       longDescription: project.longDescription || "",
-      techStacks: project.techStacks || [],
+      status: project.status || "DRAFT",
+      techStacks:
+        project.techStacks?.map((tech) => ({
+          id: tech.id || String(Math.random()),
+          name: tech.name || "",
+          iconUrl: tech.iconUrl || "",
+        })) || [],
       roles: project.roles || [],
       keyBenefits: project.keyBenefits || [],
       socialLinks: project.socialLinks || [],
@@ -64,6 +69,8 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   const onSubmit: SubmitHandler<ProjectSchema> = (data) => {
     updateProject({ data, projectId: project.id! });
   };
+
+  console.log("Current form values:", control._formValues);
 
   return (
     <form
@@ -108,7 +115,22 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
 
       {/* Ligne en pointillés */}
       <div className="mt-4 mb-2 w-full border-t border-dashed border-black/10"></div>
-
+      <div>
+        <label className="mb-1 block text-[15px] font-medium">Status</label>
+        <select
+          {...register("status")}
+          className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
+        >
+          <option value="DRAFT">Draft</option>
+          <option value="PUBLISHED">Published</option>
+          <option value="ARCHIVED">Archived</option>
+        </select>
+        {errors.status && (
+          <p className="mt-1 text-[13px] text-red-500">
+            {errors.status.message}
+          </p>
+        )}
+      </div>
       <div>
         <label className="mb-4 block font-medium tracking-tighter">
           Technical Stack
@@ -170,12 +192,8 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
         </button>
       </div>
 
-      <Button
-        type="submit"
-        className="mt-4 self-end"
-        disabled={isUpdatingProject}
-      >
-        {isUpdatingProject ? "En cours..." : "Enregistrer"}
+      <Button type="submit" className="mt-4 self-end" disabled={isUpdating}>
+        {isUpdating ? "En cours..." : "Enregistrer"}
       </Button>
 
       {isUpdateError && (
