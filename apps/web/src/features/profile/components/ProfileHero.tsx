@@ -7,80 +7,24 @@ import { Button } from "@/components/ui/button";
 
 import { Profile } from "../types/profileTypes";
 
-// Type pour les niveaux de contribution
-type ContributionLevel = 0 | 1 | 2 | 3 | 4;
 
 interface ProfileHeroProps {
   profile: Profile;
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatar_url, name, created_at, bio, skills, contributions_count } =
+  const { avatar_url, name, created_at, bio, skills, experiences, links} =
     profile;
-
-  // Générer les données du calendrier par semaine
-  const generateCalendarData = (): ContributionLevel[][] => {
-    const weeks: ContributionLevel[][] = [];
-
-    // Créer 37 semaines
-    for (let week = 0; week < 46; week++) {
-      const days: ContributionLevel[] = [];
-
-      // Chaque semaine a 7 jours
-      for (let day = 0; day < 7; day++) {
-        // Distribuer les niveaux pour reproduire un motif similaire à l'image
-        const rand = Math.random();
-        let level: ContributionLevel;
-
-        if (rand < 0.45) {
-          level = 0; // Plus de cases vides (gris clair)
-        } else if (rand < 0.75) {
-          level = 1; // Beaucoup de vert très clair
-        } else if (rand < 0.9) {
-          level = 2; // Moyennement de vert moyen
-        } else if (rand < 0.97) {
-          level = 3; // Peu de vert foncé
-        } else {
-          level = 4; // Très peu de vert très foncé
-        }
-        days.push(level);
-      }
-
-      weeks.push(days);
-    }
-
-    return weeks;
-  };
-
-  const calendarWeeks = generateCalendarData();
-
-  const getSquareColor = (level: ContributionLevel): string => {
-    switch (level) {
-      case 0:
-        return "bg-[#ebedf0]";
-      case 1:
-        return "bg-[#9be9a8]";
-      case 2:
-        return "bg-[#40c463]";
-      case 3:
-        return "bg-[#30a14e]";
-      case 4:
-        return "bg-[#216e39]";
-      default:
-        return "bg-[#ebedf0]";
-    }
-  };
-
   return (
-    <div className="h-auto w-full rounded-3xl border border-[#000000]/10 bg-white p-8 sm:w-[540px] lg:w-[731.96px]">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="h-auto w-full my-10 rounded-3xl shadow-xs border border-black/5 bg-white px-8 pb-10 sm:w-[488px] lg:w-[711.96px]">
+      <div className=" relative top-[-15px] flex items-center justify-between">
         <div className="flex items-center">
-          <div className="relative mr-4">
+          <div className="relative top-[-20px] mr-4">
             <Image
               src={avatar_url}
               alt="Profile"
-              width={85}
-              height={85}
+              width={120}
+              height={120}
               className="rounded-full"
             />
           </div>
@@ -98,62 +42,67 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             </p>
           </div>
         </div>
-        <Button variant="outline" className="font-medium">
-          Modifier le profil
-        </Button>
+        <div className="flex items-center justify-end space-x-3">
+          <div className="flex items-center space-x-3">
+            <button>
+              <a href={links?.find(link => link.type === 'x')?.url} target="_blank" rel="noopener noreferrer">
+                <Image src="/icons/x.svg" alt="x" width={19} height={19} />
+              </a>
+            </button>
+            <button>
+              <a href={links?.find(link => link.type === 'linkedin')?.url} target="_blank" rel="noopener noreferrer">
+                <Image src="/icons/linkedin.svg" alt="linkedin" width={17} height={19} />
+              </a>
+            </button>
+            <button>
+              <a href={links?.find(link => link.type === 'github')?.url} target="_blank" rel="noopener noreferrer">
+                <Image src="/icons/github.svg" alt="github" width={19} height={19} />
+              </a>
+            </button>
+          </div>
+          <Button className="font-normal">
+            Contact <Image src="/icons/discord-icon.svg" alt="arrow-right" width={15} height={15} />
+          </Button>
+        </div>
       </div>
 
-      <p className="mb-6 text-sm text-gray-700">{bio}</p>
+      
 
-      {/* Line */}
-      <div className="my-7 border-t border-dashed border-[black]/10" />
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="font-medium text-sm text-black/30">A propos</h3>
+          <div className="flex-grow border-t border-dashed border-[black]/10 ml-4" />
+        </div>
+        <p className="mb-6 text-sm text-black font-medium">{bio}</p>
 
-      <div className="mb-6">
-        <h3 className="mb-4 font-medium">Compétences techniques</h3>
+        <div className="flex items-center justify-between my-5">
+          <h3 className="font-medium text-sm text-black/30">Experiences</h3>
+          <div className="flex-grow border-t border-dashed border-[black]/10 ml-4" />
+        </div>
+        <div>
+          {experiences?.map((experience) => (
+            <div key={experience.id} className="flex text-sm mb-2 font-normal">
+              <p className="text-black/50 mr-5">{experience.startDate.slice(0, 4)} - {experience.endDate.slice(0, 4)}</p>
+              <p className="mr-1">{experience.position}</p>
+              <h4 className="font-medium">@{experience.company}</h4>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between my-5">
+          <h3 className="font-medium text-sm text-black/30">Compétences techniques</h3>
+          <div className="flex-grow border-t border-dashed border-[black]/10 ml-4" />
+        </div>
         <div className="flex flex-wrap gap-2">
           {skills?.map((skill, index) => (
-            <Badge key={index} variant={getRoleBadgeVariant(skill.name)}>
+            <Badge
+              key={index}
+              style={{ color: skill.badges[0].color, backgroundColor: skill.badges[0].bgColor }}
+              variant={getRoleBadgeVariant(skill.name)}
+            >
               {skill.name}
             </Badge>
           ))}
         </div>
-      </div>
-
-      {/* Line */}
-      <div className="my-7 border-t border-dashed border-[black]/10" />
-
-      <div>
-        <div className="mb-7 flex items-center justify-between">
-          <h3 className="font-medium">Activité de contribution</h3>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-[#000000]/70">2024-2025</span>
-            <select className="h-[30px] w-[86px] rounded-[5px] border border-[#000000]/10 px-3 text-xs">
-              <option>Actuel</option>
-              <option>Année dernière</option>
-              <option>Tout le temps</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="mb-4 flex w-full justify-center overflow-hidden">
-          <div className="flex gap-0.5">
-            {calendarWeeks.map((week, weekIndex) => (
-              <div key={weekIndex} className="flex flex-col gap-0.5">
-                {week.map((day, dayIndex) => (
-                  <div
-                    key={dayIndex}
-                    className={`size-3 rounded-xs ${getSquareColor(day)}`}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <p className="text-xs text-[#000000]/70">
-          {contributions_count} soumissions depuis l'année dernière
-        </p>
-      </div>
     </div>
   );
 }

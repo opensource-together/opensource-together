@@ -29,6 +29,11 @@ export type ProfileExperience = {
   endDate: string;
 };
 
+export interface ProfileLink {
+  type: string;
+  url: string;
+}
+
 // Correspond to GitHub Repository format
 export type ProfileProject = {
   id: string;
@@ -77,4 +82,5 @@ export type Profile = {
   socialLinks?: ProfileSocialLink[];
   contributions_count?: number;
   experiences?: ProfileExperience[];
+  links?: ProfileLink[];
 };

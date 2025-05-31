@@ -6,17 +6,35 @@ export const mockProfiles: Profile[] = [
     login: "byronlove111",
     avatar_url:
       "https://pbs.twimg.com/profile_images/1813513692471779328/6RxAJKDu_400x400.jpg",
-    html_url: "https://github.com/byronlove111", // sert de github url aussi
+    html_url: "https://github.com/byronlove111", 
     type: "User",
     site_admin: false,
     name: "Byron Love",
-    bio: "Développeur fullstack passionné par la création de code clair et performant pour des expériences web modernes",
+    bio: "Développeur fullstack créant du code propre et efficace pour des expériences web modernes.",
     location: "Paris, France",
     blog: "https://byronlove111.dev",
-    x_page: "https://x.com/byronlove111",
-    linkedin_page: "https://www.linkedin.com/in/byronlove111/",
-    github_page: "https://github.com/byronlove111",
-    website_page: "https://byronlove111.dev", // optionnel
+    links: [
+      {
+        type: "github",
+        url: "https://github.com/byronlove111",
+      },
+      {
+        type: "blog",
+        url: "https://byronlove111.dev",
+      },
+      {
+        type: "x",
+        url: "https://x.com/byronlove111",
+      },
+      {
+        type: "linkedin",
+        url: "https://www.linkedin.com/in/byronlove111/",
+      },
+      {
+        type: "discord",
+        url: "https://discord.com/byronlove111",
+      },
+    ],
     company: "Freelance",
     public_repos: 32,
     followers: 412,
@@ -26,31 +44,31 @@ export const mockProfiles: Profile[] = [
     contributions_count: 1268,
     skills: [
       {
-        name: "Développeur Frontend",
+        name: "React",
         level: "EXPERT",
         badges: [
           {
-            label: "Développeur Frontend",
-            color: "#000000",
-            bgColor: "#F3F3F3",
+            label: "React",
+            color: "#7C86FF",
+            bgColor: "#E0E7FF50",
           },
         ],
       },
       {
-        name: "Designer UX",
+        name: "Figma",
         level: "ADVANCED",
         badges: [
-          { label: "Designer UX", color: "#F24E1E", bgColor: "#FFF0ED" },
+          { label: "Figma", color: "#FDC700", bgColor: "#FEF9C280" },
         ],
       },
       {
-        name: "Développeur Backend",
+        name: "MongoDB",
         level: "ADVANCED",
         badges: [
           {
-            label: "Développeur Backend",
-            color: "#339933",
-            bgColor: "#E6F4EA",
+            label: "MongoDB",
+            color: "#00D492",
+            bgColor: "#D0FAE550",
           },
         ],
       },
@@ -120,9 +138,23 @@ export const mockProfiles: Profile[] = [
       {
         id: "1",
         company: "OpenSource Together",
-        position: "Développeur Fullstack",
+        position: "Lead Developer",
         startDate: "2024-01-01",
+        endDate: "2025",
+      },
+      {
+        id: "2",
+        company: "LeetGrind",
+        position: "Lead Developer",
+        startDate: "2023-01-01",
         endDate: "2024-03-19",
+      },
+      {
+        id: "3",
+        company: "Project",
+        position: "Intern",
+        startDate: "2021-01-01",
+        endDate: "2023-01-01",
       },
     ],
   },
