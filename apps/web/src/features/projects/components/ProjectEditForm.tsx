@@ -11,8 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { useUpdateProject } from "../hooks/useProjects";
-import { ProjectSchema, projectSchema } from "../schema/project.schema";
 import { Project } from "../types/projectTypes";
+import { ProjectSchema, projectSchema } from "../validations/project.schema";
 
 interface ProjectEditFormProps {
   project: Project;

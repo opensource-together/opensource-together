@@ -4,11 +4,11 @@ import { toast } from "sonner";
 
 import { getQueryClient } from "@/lib/queryClient";
 
-import { ProjectSchema } from "../schema/project.schema";
 import { createProject } from "../services/createProjectAPI";
 import { getProjectDetails, getProjects } from "../services/projectAPI";
 import { updateProject } from "../services/updateProjectAPI";
 import { Project } from "../types/projectTypes";
+import { ProjectSchema } from "../validations/project.schema";
 
 /**
  * Hook to get the list of projects

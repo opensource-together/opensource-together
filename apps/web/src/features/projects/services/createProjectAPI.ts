@@ -1,6 +1,6 @@
 import { post } from "../../../lib/api/fetcher";
-import { ProjectSchema } from "../schema/project.schema";
 import { Project } from "../types/projectTypes";
+import { ProjectSchema } from "../validations/project.schema";
 
 /**
  * Create a new project
