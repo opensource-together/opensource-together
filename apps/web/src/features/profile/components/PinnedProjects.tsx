@@ -11,6 +11,9 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
 
   return (
     <div className="flex flex-col gap-4">
+      <h2 className="mb-5 text-left gap-1 text-xl font-medium">
+        Projets Rejoints
+        </h2>
       {projects?.slice(0, 3).map((project) => (
         <ProjectCardComponent
           key={project.id}
@@ -19,7 +22,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
           description={project.description || ""}
           image={project.image || ""}
           stars={project.stargazers_count || 0}
-          showViewProject={false}
+          showViewProject={true}
           roles={
             project.techStacks?.map((tech) => ({
               name: tech.name,
@@ -34,6 +37,12 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
               alt: tech.name,
             })) ?? []
           }
+          communityStats={{
+            forks: project.forks_count || 0,
+            contributors: project.watchers_count || 0,
+            stars: project.stargazers_count || 0,
+          }}
+          authorName={project.full_name.split('/')[0] || 'Unknown'}
           className="w-full max-w-[731px] bg-white"
         />
       ))}
