@@ -12,7 +12,6 @@ import {
   updateProject,
 } from "../services/projectAPI";
 import { Project } from "../types/projectTypes";
-import { UpdateProjectData } from "../validations/project.api.schema";
 
 /**
  * Hook to get the list of projects
@@ -78,7 +77,7 @@ export function useUpdateProject() {
     loadingMessage: "Mise à jour du projet en cours...",
     successMessage: "Projet mis à jour avec succès",
     errorMessage: "Erreur lors de la mise à jour du projet",
-    mutationFn: (params: UpdateProjectData) => updateProject(params),
+    mutationFn: updateProject,
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
