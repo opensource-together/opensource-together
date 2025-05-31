@@ -6,13 +6,17 @@ export const mockProfiles: Profile[] = [
     login: "byronlove111",
     avatar_url:
       "https://pbs.twimg.com/profile_images/1813513692471779328/6RxAJKDu_400x400.jpg",
-    html_url: "https://github.com/byronlove111",
+    html_url: "https://github.com/byronlove111", // sert de github url aussi
     type: "User",
     site_admin: false,
     name: "Byron Love",
     bio: "Développeur fullstack passionné par la création de code clair et performant pour des expériences web modernes",
     location: "Paris, France",
     blog: "https://byronlove111.dev",
+    x_page: "https://x.com/byronlove111",
+    linkedin_page: "https://www.linkedin.com/in/byronlove111/",
+    github_page: "https://github.com/byronlove111",
+    website_page: "https://byronlove111.dev", // optionnel
     company: "Freelance",
     public_repos: 32,
     followers: 412,
@@ -111,6 +115,15 @@ export const mockProfiles: Profile[] = [
       { type: "github", url: "https://github.com/byronlove111" },
       { type: "twitter", url: "https://twitter.com/byronlove111" },
       { type: "website", url: "https://byronlove111.dev" },
+    ],
+    experiences: [
+      {
+        id: "1",
+        company: "OpenSource Together",
+        position: "Développeur Fullstack",
+        startDate: "2024-01-01",
+        endDate: "2024-03-19",
+      },
     ],
   },
 ];

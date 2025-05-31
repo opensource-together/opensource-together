@@ -21,6 +21,14 @@ export type ProfileSkill = {
   badges: ProfileBadge[];
 };
 
+export type ProfileExperience = {
+  id: string;
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+};
+
 // Correspond to GitHub Repository format
 export type ProfileProject = {
   id: string;
@@ -47,6 +55,10 @@ export type Profile = {
   login: string;
   avatar_url: string;
   html_url: string;
+  x_page?: string;
+  linkedin_page?: string;
+  github_page?: string;
+  website_page?: string;
   type: string;
   site_admin: boolean;
   name?: string;
@@ -64,4 +76,5 @@ export type Profile = {
   projects?: ProfileProject[];
   socialLinks?: ProfileSocialLink[];
   contributions_count?: number;
+  experiences?: ProfileExperience[];
 };
