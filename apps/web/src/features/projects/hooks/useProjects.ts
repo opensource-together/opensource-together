@@ -1,14 +1,18 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import { getQueryClient } from "@/lib/queryClient";
 
-import { ProjectSchema } from "../schema/project.schema";
-import { createProject } from "../services/createProjectAPI";
-import { getProjectDetails, getProjects } from "../services/projectAPI";
-import { updateProject } from "../services/updateProjectAPI";
+import { useToastMutation } from "@/hooks/useToastMutation";
+
+import {
+  createProject,
+  getProjectDetails,
+  getProjects,
+  updateProject,
+} from "../services/projectAPI";
 import { Project } from "../types/projectTypes";
+import { UpdateProjectData } from "../validations/project.api.schema";
 
 /**
  * Hook to get the list of projects
@@ -36,65 +40,56 @@ export function useProject(projectId: string) {
 
 /**
  * Hook to create a project
- * @returns createProject, isPending, isSuccess, isError, error, reset
+ * @returns createProject, isCreating, isCreateError
  */
 export function useCreateProject() {
   const router = useRouter();
   const queryClient = getQueryClient();
-  const mutation = useMutation({
+  const mutation = useToastMutation({
     mutationFn: createProject,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      router.push(`/projects/${data.id}`);
-    },
-    onError: (error: Error) => {
-      console.error("Error while creating the project:", error);
+    loadingMessage: "Création du projet en cours...",
+    successMessage: "Projet créé avec succès",
+    errorMessage: "Erreur lors de la création du projet",
+    options: {
+      onSuccess: (project) => {
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+        router.push(`/projects/${project.id}`);
+      },
     },
   });
 
   return {
     createProject: mutation.mutate,
     isCreating: mutation.isPending,
-    isError: mutation.isError,
+    isCreateError: mutation.isError,
   };
 }
 
 /**
  * Hook to update a project
  * @param projectId id of the project to update
- * @returns updateProject, isUpdating, isError
+ * @returns updateProject, isUpdating, isUpdateError
  */
-export function useUpdateProject(projectId: string) {
+export function useUpdateProject() {
   const router = useRouter();
   const queryClient = getQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: ({
-      data,
-      projectId,
-    }: {
-      data: ProjectSchema;
-      projectId: string;
-    }) => {
-      toast.loading("Mise à jour du projet en cours...");
-      return updateProject(data, projectId);
-    },
-    onSuccess: (data) => {
-      toast.dismiss();
-      toast.success("Projet mis à jour avec succès");
-      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-      router.push(`/projects/${data.id}`);
-    },
-    onError: (error: Error) => {
-      toast.dismiss();
-      toast.error("Erreur lors de la mise à jour du projet");
-      console.error("Error updating project:", error);
+  const mutation = useToastMutation({
+    loadingMessage: "Mise à jour du projet en cours...",
+    successMessage: "Projet mis à jour avec succès",
+    errorMessage: "Erreur lors de la mise à jour du projet",
+    mutationFn: (params: UpdateProjectData) => updateProject(params),
+    options: {
+      onSuccess: (project) => {
+        queryClient.invalidateQueries({ queryKey: ["project", project.id] });
+        router.push(`/projects/${project.id}`);
+      },
     },
   });
 
   return {
     updateProject: mutation.mutate,
     isUpdating: mutation.isPending,
-    isError: mutation.isError,
+    isUpdateError: mutation.isError,
   };
 }
