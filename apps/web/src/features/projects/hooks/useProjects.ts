@@ -74,10 +74,10 @@ export function useUpdateProject() {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
+    mutationFn: updateProject,
     loadingMessage: "Mise à jour du projet en cours...",
     successMessage: "Projet mis à jour avec succès",
     errorMessage: "Erreur lors de la mise à jour du projet",
-    mutationFn: updateProject,
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
