@@ -74,35 +74,9 @@ export const mockProfiles: Profile[] = [
       },
     ],
     projects: [
+      
       {
         id: "1",
-        name: "devcord",
-        full_name: "devcord-bot/devcord",
-        description:
-          "Bot Discord pour les développeurs avec des commandes intelligentes",
-        html_url: "https://github.com/devcord-bot/devcord",
-        homepage: "https://docs.devcord.app/introduction",
-        stargazers_count: 156,
-        watchers_count: 156,
-        forks_count: 23,
-        language: "Go",
-        topics: ["discord-bot", "golang", "developer-tools"],
-        created_at: "2024-01-01T00:00:00Z",
-        updated_at: "2024-03-19T00:00:00Z",
-        pushed_at: "2024-03-19T00:00:00Z",
-        image:
-          "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
-        techStacks: [
-          {
-            id: "1",
-            name: "Go",
-            iconUrl:
-              "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
-          },
-        ],
-      },
-      {
-        id: "2",
         name: "LeetGrind",
         full_name: "LeetGrind/LeetGrind",
         description:
@@ -125,6 +99,33 @@ export const mockProfiles: Profile[] = [
             name: "TypeScript",
             iconUrl:
               "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+          },
+        ],
+      },
+      {
+        id: "2",
+        name: "devcord",
+        full_name: "devcord-bot/devcord",
+        description:
+          "Bot Discord pour les développeurs avec des commandes intelligentes",
+        html_url: "https://github.com/devcord-bot/devcord",
+        homepage: "https://docs.devcord.app/introduction",
+        stargazers_count: 156,
+        watchers_count: 156,
+        forks_count: 23,
+        language: "Go",
+        topics: ["discord-bot", "golang", "developer-tools"],
+        created_at: "2024-01-01T00:00:00Z",
+        updated_at: "2024-03-19T00:00:00Z",
+        pushed_at: "2024-03-19T00:00:00Z",
+        image:
+          "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
+        techStacks: [
+          {
+            id: "1",
+            name: "Go",
+            iconUrl:
+              "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
           },
         ],
       },

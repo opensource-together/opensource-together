@@ -30,7 +30,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
           <div>
             <h2 className="text-2xl font-medium">{name}</h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-[11px] text-black/50">
               Rejoint le{" "}
               {created_at
                 ? new Date(created_at).toLocaleDateString("fr-FR", {
@@ -80,7 +80,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
         </div>
         <div>
           {experiences?.map((experience) => (
-            <div key={experience.id} className="flex text-sm mb-2 font-normal">
+            <div key={experience.id} className="flex text-sm mb-4 font-normal">
               <p className="text-black/50 mr-5">{experience.startDate.slice(0, 4)} - {experience.endDate.slice(0, 4)}</p>
               <p className="mr-1">{experience.position}</p>
               <h4 className="font-medium">@{experience.company}</h4>
