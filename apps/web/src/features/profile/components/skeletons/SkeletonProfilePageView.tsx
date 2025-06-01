@@ -13,7 +13,6 @@ export default function SkeletonProfilePageView() {
 
       {/* Section des projets pinnés en dessous */}
       <div className="mt-2 mb-30 w-full  lg:pl-0">
-        
         <div className="flex justify-center items-center flex-col gap-6  w-full">
           <SkeletonPinnedProjects />
         </div>
