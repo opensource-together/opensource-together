@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SkeletonProfileHero() {
   return (
-    <div className="h-auto w-full my-10 rounded-3xl shadow-xs border border-black/5 bg-white px-8 pb-10 sm:w-[488px] lg:w-[711.96px]">
+    <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">
       <div className="relative top-[-15px] flex items-center justify-between">
         <div className="flex items-center">
           <div className="relative top-[-20px] mr-4">
@@ -18,15 +18,15 @@ export default function SkeletonProfileHero() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-5">
+      <div className="mb-5 flex items-center justify-between">
         <Skeleton className="h-6 w-40" />
-        <div className="flex-grow border-t border-dashed border-[black]/10 ml-4" />
+        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
       </div>
       <Skeleton className="mb-6 h-16 w-full" />
 
-      <div className="flex items-center justify-between my-5">
+      <div className="my-5 flex items-center justify-between">
         <Skeleton className="h-6 w-40" />
-        <div className="flex-grow border-t border-dashed border-[black]/10 ml-4" />
+        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
       </div>
       <div className="flex flex-wrap gap-2">
         {[...Array(3)].map((_, index) => (
@@ -34,9 +34,9 @@ export default function SkeletonProfileHero() {
         ))}
       </div>
 
-      <div className="flex items-center justify-between my-5">
+      <div className="my-5 flex items-center justify-between">
         <Skeleton className="h-6 w-40" />
-        <div className="flex-grow border-t border-dashed border-[black]/10 ml-4" />
+        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
       </div>
       <div className="flex flex-wrap gap-2">
         {[...Array(5)].map((_, index) => (

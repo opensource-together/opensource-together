@@ -11,9 +11,9 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="mb-5 text-left gap-1 text-xl font-medium">
+      <h2 className="mb-5 gap-1 text-left text-xl font-medium">
         Projets Rejoints
-        </h2>
+      </h2>
       {projects?.slice(0, 3).map((project) => (
         <ProjectCardComponent
           key={project.id}
@@ -42,7 +42,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             contributors: project.watchers_count || 0,
             stars: project.stargazers_count || 0,
           }}
-          authorName={project.full_name.split('/')[0] || 'Unknown'}
+          authorName={project.full_name.split("/")[0] || "Unknown"}
           className="w-full max-w-[731px] bg-white"
         />
       ))}

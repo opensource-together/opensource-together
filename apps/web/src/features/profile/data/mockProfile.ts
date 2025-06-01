@@ -6,7 +6,7 @@ export const mockProfiles: Profile[] = [
     login: "byronlove111",
     avatar_url:
       "https://pbs.twimg.com/profile_images/1813513692471779328/6RxAJKDu_400x400.jpg",
-    html_url: "https://github.com/byronlove111", 
+    html_url: "https://github.com/byronlove111",
     type: "User",
     site_admin: false,
     name: "Byron Love",
@@ -57,9 +57,7 @@ export const mockProfiles: Profile[] = [
       {
         name: "Figma",
         level: "ADVANCED",
-        badges: [
-          { label: "Figma", color: "#FDC700", bgColor: "#FEF9C280" },
-        ],
+        badges: [{ label: "Figma", color: "#FDC700", bgColor: "#FEF9C280" }],
       },
       {
         name: "MongoDB",
@@ -74,7 +72,6 @@ export const mockProfiles: Profile[] = [
       },
     ],
     projects: [
-      
       {
         id: "1",
         name: "LeetGrind",
