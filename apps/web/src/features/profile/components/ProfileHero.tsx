@@ -98,6 +98,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               key={index}
               style={{ color: skill.badges[0].color, backgroundColor: skill.badges[0].bgColor }}
               variant={getRoleBadgeVariant(skill.name)}
+              className="text-xs"
             >
               {skill.name}
             </Badge>
