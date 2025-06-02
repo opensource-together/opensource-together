@@ -2,9 +2,8 @@ import { GithubRepositoryDto } from "@/application/dto/adapters/github/github-re
 import { toGithubRepositoryDto } from "@/application/dto/adapters/github/github-repository.adapter";
 import { GithubRepositoryPort } from "@/application/github/ports/github-repository.port";
 import { Result } from "@/shared/result";
-import { Inject, Injectable } from "@nestjs/common";
-import { OCTOKIT_PROVIDER } from "../providers/octokit.provider";
-import { App } from "octokit";
+import { Injectable } from "@nestjs/common";
+import { Octokit } from "octokit";
 import { CreateGithubRepositoryInput } from "@/application/dto/inputs/create-github-repository-inputs.dto";
 import { GithubInvitationDto } from "@/application/dto/adapters/github/github-invitation.dto";
 import { InviteUserToRepoInput } from "@/application/dto/inputs/invite-user-to-repo.inputs.dto";
@@ -13,14 +12,10 @@ import { toGithubInvitationDto } from "@/application/dto/adapters/github/github-
 
 @Injectable()
 export class GithubRepositoryAdapter implements GithubRepositoryPort {
-  constructor(
-    @Inject(OCTOKIT_PROVIDER)
-    private readonly app: App,
-  ) {}
+  constructor() {}
 
-  async createGithubRepository(input: CreateGithubRepositoryInput): Promise<Result<GithubRepositoryDto>> {
+  async createGithubRepository(input: CreateGithubRepositoryInput, octokit: Octokit): Promise<Result<GithubRepositoryDto>> {
     try {
-      const octokit = await this.app.getInstallationOctokit(input.installationId); 
       const response = await octokit.rest.repos.createForAuthenticatedUser({
         name: input.name,
         description: input.description,
@@ -35,9 +30,8 @@ export class GithubRepositoryAdapter implements GithubRepositoryPort {
     }
   }
 
-  async inviteUserToRepository(input: InviteUserToRepoInput): Promise<Result<GithubInvitationDto>> {
+  async inviteUserToRepository(input: InviteUserToRepoInput, octokit: Octokit): Promise<Result<GithubInvitationDto>> {
     try {
-      const octokit = await this.app.getInstallationOctokit(input.installationId);
       const response = await octokit.rest.repos.addCollaborator({
         owner: input.owner,
         repo: input.repo,

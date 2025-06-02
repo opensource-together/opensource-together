@@ -1,18 +1,18 @@
 import { Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { App } from 'octokit';
+import { OAuthApp } from 'octokit';
 
-export const OCTOKIT_PROVIDER = 'OCTOKIT_PROVIDER';
+export const OCTOKIT_OAUTH_PROVIDER = 'OCTOKIT_OAUTH_PROVIDER';
 
-export const OctokitProvider: Provider = {
-  provide: OCTOKIT_PROVIDER,
+export const OctokitProvider: Provider<OAuthApp> = {
+  provide: OCTOKIT_OAUTH_PROVIDER,
   useFactory: (configService: ConfigService) => {
-    const appId = configService.getOrThrow<string>('GITHUB_APP_ID');
-    const privateKey = configService.getOrThrow<string>('GITHUB_PRIVATE_KEY');
+    const clientId = configService.getOrThrow<string>('GITHUB_CLIENT_ID');
+    const clientSecret = configService.getOrThrow<string>('GITHUB_CLIENT_SECRET');
 
-    return new App({
-      appId: appId,
-      privateKey: privateKey
+    return new OAuthApp({
+      clientId: clientId,
+      clientSecret: clientSecret,
     });
   },
   inject: [ConfigService],
