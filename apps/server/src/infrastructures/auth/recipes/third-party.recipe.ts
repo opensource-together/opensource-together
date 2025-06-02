@@ -8,7 +8,6 @@ import { User } from '@/domain/user/user.entity';
 export const thirdPartyRecipe = ({
   configService,
   commandBus,
-  queryBus,
 }: {
   configService: ConfigService;
   commandBus: CommandBus;
@@ -22,7 +21,7 @@ export const thirdPartyRecipe = ({
             thirdPartyId: 'github',
             clients: [
               {
-                // scope: ['user:email', 'read:user'],
+                scope: ['repo', 'user:email', 'read:user'],
                 clientId: configService.get('GITHUB_CLIENT_ID') as string,
                 clientSecret: configService.get(
                   'GITHUB_CLIENT_SECRET',
