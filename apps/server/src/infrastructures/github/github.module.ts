@@ -5,7 +5,7 @@ import { GithubRepositoryAdapter } from './adapters/github-repository.adapter';
 
 @Module({
   imports: [ConfigModule],
-  providers: [OctokitProvider],
+  providers: [OctokitProvider, GithubRepositoryAdapter],
   exports: [GithubRepositoryAdapter],
 })
 export class GithubModule {}
