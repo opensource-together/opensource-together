@@ -12,11 +12,10 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
     updatedAt: project.getUpdatedAt(),
     techStacks: project.getTechStacks().map((ts) => ({
       id: ts.getId(),
-      name: ts.getName(),
-      iconUrl: ts.getIconUrl(),
     })),
     projectMembers: project.getTeamMembers().map((tm) => ({
       userId: tm.getUserId(),
+      projectRoleId: tm.getProjectRole()?.getId(),
       roleTitle: tm.getProjectRole()?.getRoleTitle(),
     })),
     projectRoles: project.getProjectRoles(),
