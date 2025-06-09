@@ -6,6 +6,7 @@ import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './project/prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
+import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -106,18 +107,61 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
-  async findProjectByTitle(title: string): Promise<Result<Project[]>> {
+  async findProjectByFilters(
+    filters: ProjectFilterInputsDto,
+  ): Promise<Result<Project[] | null>> {
     try {
-      if (!title || typeof title !== 'string' || title.trim() === '')
-        return Result.ok([]);
+      // Construction dynamique du where clause
+      const where: any = {};
+
+      // Filtre par titre (utilise idx_title_search)
+      if (filters.title && filters.title.trim() !== '') {
+        where.title = {
+          contains: filters.title,
+          mode: 'insensitive',
+        };
+      }
+
+      // Filtre par difficulté (utilise idx_difficulty_date)
+      if (filters.difficulty) {
+        where.difficulty = filters.difficulty.toUpperCase();
+      }
+
+      // Filtre par rôles (utilise idx_project_roles)
+      if (filters.roles && filters.roles.length > 0) {
+        where.projectRoles = {
+          some: {
+            roleTitle: {
+              in: filters.roles,
+              mode: 'insensitive',
+            },
+          },
+        };
+      }
+
+      // Filtre par technologies (utilise les index sur _ProjectToTechStack)
+      if (filters.techStacks && filters.techStacks.length > 0) {
+        where.techStacks = {
+          some: {
+            name: {
+              in: filters.techStacks,
+              mode: 'insensitive',
+            },
+          },
+        };
+      }
+
+      // Configuration du tri (utilise idx_difficulty_date si difficulté présente)
+      const orderBy: any = [];
+      if (filters.sortOrder === 'asc') {
+        orderBy.push({ createAt: 'asc' });
+      } else {
+        orderBy.push({ createAt: 'desc' }); // Défaut descendant
+      }
 
       const prismaProjects = await this.prisma.project.findMany({
-        where: {
-          title: {
-            mode: 'insensitive',
-            startsWith: title,
-          },
-        },
+        where,
+        orderBy,
         include: {
           techStacks: true,
           projectRoles: {
@@ -127,7 +171,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         },
       });
 
-      if (prismaProjects.length === 0) return Result.ok([]);
+      if (prismaProjects.length === 0) return Result.ok(null);
 
       const domainProjects: Project[] = [];
 
