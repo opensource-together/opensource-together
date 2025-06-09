@@ -22,7 +22,13 @@ export const thirdPartyRecipe = ({
             thirdPartyId: 'github',
             clients: [
               {
-                // scope: ['user:email', 'read:user'],
+                scope: [
+                  'read:user',
+                  'user:email',
+                  'repo',
+                  'write:repo_hook',
+                  'admin:repo_hook',
+                ],
                 clientId: configService.get('GITHUB_CLIENT_ID') as string,
                 clientSecret: configService.get(
                   'GITHUB_CLIENT_SECRET',
