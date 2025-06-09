@@ -5,6 +5,10 @@ import { Transform, Type } from 'class-transformer';
 import { Difficulty } from '@prisma/client';
 
 export class FilterProjectsDto {
+  @IsString()
+  @IsOptional()
+  title?: string;
+
   @IsEnum(Difficulty, {
     message: 'difficulty must be a valid difficulty : EASY, MEDIUM, HARD',
   })
@@ -15,7 +19,8 @@ export class FilterProjectsDto {
   @IsString({ each: true })
   @IsOptional()
   @Transform(({ value }) => {
-    // Transforme "frontend,backend" en ["frontend", "backend"]
+    // Supporte à la fois les tableaux natifs et les chaînes avec virgules
+    if (Array.isArray(value)) return value;
     return value ? value.split(',') : undefined;
   })
   roles?: string[];
@@ -24,6 +29,8 @@ export class FilterProjectsDto {
   @IsString({ each: true })
   @IsOptional()
   @Transform(({ value }) => {
+    // Supporte à la fois les tableaux natifs et les chaînes avec virgules
+    if (Array.isArray(value)) return value;
     return value ? value.split(',') : undefined;
   })
   techStacks?: string[];
