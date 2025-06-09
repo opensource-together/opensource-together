@@ -63,26 +63,96 @@ paths:
     get:
       tags:
         - Projects
-      summary: Rechercher des projets par titre
+      summary: Rechercher des projets avec filtres multiples
       operationId: getProjectsFiltered
+      description: |
+        Recherche de projets avec filtres optionnels combinables :
+        - Par titre (recherche insensible à la casse)
+        - Par difficulté (EASY, MEDIUM, HARD)
+        - Par rôles recherchés (frontend, backend, designer, etc.)
+        - Par technologies utilisées (React, Vue, TypeScript, etc.)
+        - Tri par date de création
       parameters:
         - name: title
           in: query
-          description: Titre du projet à rechercher
-          required: true
+          description: Titre du projet à rechercher (recherche partielle)
+          required: false
           schema:
             type: string
+          example: 'React'
+        - name: difficulty
+          in: query
+          description: Niveau de difficulté du projet
+          required: false
+          schema:
+            type: string
+            enum: [EASY, MEDIUM, HARD]
+          example: 'EASY'
+        - name: roles
+          in: query
+          description: Rôles recherchés dans le projet (séparés par des virgules)
+          required: false
+          schema:
+            type: string
+          example: 'frontend,backend'
+        - name: techStacks
+          in: query
+          description: Technologies utilisées dans le projet (séparées par des virgules)
+          required: false
+          schema:
+            type: string
+          example: 'react,typescript,nodejs'
+        - name: sortOrder
+          in: query
+          description: Ordre de tri par date de création
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          example: 'desc'
       responses:
         '200':
-          description: Liste de projets filtrés par titre
+          description: Liste de projets correspondant aux critères de filtrage
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectResponseDto'
+              examples:
+                with_results:
+                  summary: Résultats trouvés
+                  value:
+                    - id: '123e4567-e89b-12d3-a456-426614174000'
+                      title: 'Plateforme React E-commerce'
+                      description: 'Application e-commerce moderne avec React et TypeScript'
+                      difficulty: 'MEDIUM'
+                      link: 'https://github.com/user/react-ecommerce'
+                      ownerId: 'user123'
+                      techStacks:
+                        - id: 'react'
+                          name: 'React'
+                          iconUrl: 'https://reactjs.org/logo.svg'
+                        - id: 'typescript'
+                          name: 'TypeScript'
+                          iconUrl: 'https://www.typescriptlang.org/logo.png'
+                empty_results:
+                  summary: Aucun résultat
+                  value: []
         '400':
-          description: Erreur lors de la recherche
+          description: Erreur de validation des paramètres de recherche
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'difficulty must be a valid difficulty : EASY, MEDIUM, HARD'
+                  statusCode:
+                    type: integer
+                    example: 400
   /projects/{id}:
     get:
       tags:
