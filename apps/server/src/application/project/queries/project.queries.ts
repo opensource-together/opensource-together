@@ -1,7 +1,7 @@
 import {
   FindProjectByTitleHandler,
   FindProjectByTitleQuery,
-} from './find-by-title/find-project-by-title.handler';
+} from './find-by-filters/find-project-by-filters.handler';
 import {
   FindProjectByIdHandler,
   FindProjectByIdQuery,

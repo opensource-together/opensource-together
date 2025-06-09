@@ -17,7 +17,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
 import { CreateProjectCommand } from '@/application/project/commands/create/create-project.command';
 import { FindProjectByIdQuery } from '@/application/project/queries/find-by-id/find-project-by-id.handler';
-import { FindProjectByTitleQuery } from '@/application/project/queries/find-by-title/find-project-by-title.handler';
+import { FindProjectByTitleQuery } from '@/application/project/queries/find-by-filters/find-project-by-filters.handler';
 import { GetProjectsQuery } from '@/application/project/queries/get-all/get-projects.handler';
 import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
 import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
