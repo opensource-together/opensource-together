@@ -18,7 +18,7 @@ export class PrismaUserMapper {
         githubUserId: user.getGithubUserId(),
         githubAccessToken: user.getGithubAccessToken(),
         createdAt: user.getCreatedAt(),
-        updatedAt: user.getUpdatedAt()
+        updatedAt: user.getUpdatedAt(),
       };
       return Result.ok(toRepo);
     } catch (error) {
