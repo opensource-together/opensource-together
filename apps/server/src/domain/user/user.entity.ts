@@ -4,24 +4,44 @@ export class User {
   private readonly id: string;
   private username: Username;
   private email: Email;
+  private avatarUrl: string;
+  private bio: string;
+  private githubUrl: string;
+  private githubUserId: string;
+  private githubAccessToken: string;
   private readonly createdAt: Date;
   private readonly updatedAt: Date;
   constructor({
     id,
     username,
     email,
+    avatarUrl,
+    bio,
+    githubUrl,
+    githubUserId,
+    githubAccessToken,
     createdAt,
     updatedAt,
   }: {
     id: string;
     username: Username;
     email: Email;
+    avatarUrl: string;
+    bio: string;
+    githubUrl: string;
+    githubUserId: string;
+    githubAccessToken: string;
     createdAt: Date;
     updatedAt: Date;
   }) {
     this.id = id;
     this.username = username;
     this.email = email;
+    this.avatarUrl = avatarUrl;
+    this.bio = bio;
+    this.githubUrl = githubUrl;
+    this.githubUserId = githubUserId;
+    this.githubAccessToken = githubAccessToken;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -44,5 +64,25 @@ export class User {
 
   public getUpdatedAt() {
     return this.updatedAt;
+  }
+
+  public getAvatarUrl() {
+    return this.avatarUrl;
+  }
+
+  public getBio() {
+    return this.bio;
+  }
+
+  public getGithubUrl() {
+    return this.githubUrl;
+  }
+
+  public getGithubUserId() {
+    return this.githubUserId;
+  }
+
+  public getGithubAccessToken() {
+    return this.githubAccessToken;
   }
 }

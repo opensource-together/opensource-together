@@ -13,6 +13,11 @@ export class CreateUserCommand implements ICommand {
     public readonly id: string,
     public readonly username: string,
     public readonly email: string,
+    public readonly avatarUrl: string,
+    public readonly bio: string,
+    public readonly githubUrl: string,
+    public readonly githubUserId: string,
+    public readonly githubAccessToken: string,
   ) {}
 }
 
@@ -31,7 +36,7 @@ export class CreateUserCommandHandler
 
   /**
    * Creates a new user in the system.
-   * @param createUserDtoInput - The data transfer object containing user creation details
+   * @param command - The command containing user creation details
    * @returns A Result object containing either the created User entity or error details
    *          Error can be either validation errors for username/email or a general error message
    * @throws Never - All errors are handled and returned in the Result object
@@ -48,7 +53,16 @@ export class CreateUserCommandHandler
 
     console.log("le use n'existe pas encore");
     const user: Result<User, { username?: string; email?: string } | string> =
-      UserFactory.create(command.id, command.username, command.email);
+      UserFactory.create({
+        id: command.id,
+        username: command.username,
+        email: command.email,
+        avatarUrl: command.avatarUrl,
+        bio: command.bio,
+        githubUrl: command.githubUrl,
+        githubUserId: command.githubUserId,
+        githubAccessToken: command.githubAccessToken,
+      });
     if (!user.success) return Result.fail(user.error);
     const savedUser: Result<
       User,
