@@ -5,7 +5,7 @@ import {
 import {
   UpdateGithubTokenUserCommand,
   UpdateGithubTokenUserCommandHandler,
-} from './update-user.command';
+} from './update-user-gh-token.command';
 
 export const userCommandsContainer = [
   CreateUserCommand,

@@ -5,7 +5,7 @@ import { CreateUserCommand } from '@/application/user/commands/create-user.comma
 import { deleteUser } from 'supertokens-node';
 import { Result } from '@/shared/result';
 import { User } from '@/domain/user/user.entity';
-import { UpdateGithubTokenUserCommand } from '@/application/user/commands/update-user.command';
+import { UpdateGithubTokenUserCommand } from '@/application/user/commands/update-user-gh-token.command';
 export const thirdPartyRecipe = ({
   configService,
   commandBus,
