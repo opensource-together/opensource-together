@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@domain/user/user.entity';
 import { PrismaService } from '@infrastructures/orm/prisma/prisma.service';
-import { UserFactory } from '@domain/user/user.factory';
 import { Result } from '@/shared/result';
 import { UserRepositoryPort } from '@/application/user/ports/user.repository.port';
+import { PrismaUserMapper } from './prisma.user.mapper';
+import { Prisma, User as PrismaUser } from '@prisma/client';
 @Injectable()
 export class PrismaUserRepository implements UserRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -16,11 +17,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
         where: { id },
       });
       if (!userResult) return Result.fail('User not found');
-      const user = UserFactory.create(
-        userResult.id,
-        userResult.username,
-        userResult.email,
-      );
+      const user = PrismaUserMapper.toDomain(userResult);
       if (!user.success) return Result.fail(user.error);
       return Result.ok(user.value);
     } catch (error) {
@@ -36,24 +33,18 @@ export class PrismaUserRepository implements UserRepositoryPort {
     user: User,
   ): Promise<Result<User, { username?: string; email?: string } | string>> {
     try {
-      console.log('save');
-      //throw new Error('test');
-      const id = user.getId();
-      const username = user.getUsername();
-      const email = user.getEmail();
+      const userData: Result<
+        Prisma.UserCreateInput,
+        { username?: string; email?: string } | string
+      > = PrismaUserMapper.toRepo(user);
+      if (!userData.success) return Result.fail(userData.error);
       const savedUser = await this.prisma.user.create({
-        data: {
-          id,
-          username,
-          email,
-        },
+        data: userData.value,
       });
       if (!savedUser)
         return Result.fail("Erreur lors de la création de l'utilisateur.");
-      const userResult: Result<
-        User,
-        { username?: string; email?: string } | string
-      > = UserFactory.create(savedUser.id, savedUser.username, savedUser.email);
+      const userResult: Result<User, string> =
+        PrismaUserMapper.toDomain(savedUser);
       if (!userResult.success) return Result.fail(userResult.error);
       return Result.ok(userResult.value);
     } catch (error) {
@@ -72,11 +63,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
       where: { email },
     });
     if (!userResult) return Result.fail('User not found');
-    const user = UserFactory.create(
-      userResult.id,
-      userResult.username,
-      userResult.email,
-    );
+    const user = PrismaUserMapper.toDomain(userResult);
     if (!user.success) return Result.fail(user.error);
     return Result.ok(user.value);
   }
@@ -88,12 +75,27 @@ export class PrismaUserRepository implements UserRepositoryPort {
       where: { username },
     });
     if (!userResult) return Result.fail('User not found');
-    const user = UserFactory.create(
-      userResult.id,
-      userResult.username,
-      userResult.email,
-    );
+    const user = PrismaUserMapper.toDomain(userResult);
     if (!user.success) return Result.fail(user.error);
     return Result.ok(user.value);
+  }
+
+  async update(
+    user: User,
+  ): Promise<Result<User, { username?: string; email?: string } | string>> {
+    const userData: Result<
+      PrismaUser,
+      { username?: string; email?: string } | string
+    > = PrismaUserMapper.toRepo(user);
+    if (!userData.success) return Result.fail(userData.error);
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userData.value.id },
+      data: userData.value,
+    });
+    if (!updatedUser) return Result.fail('User not updated');
+    const userResult: Result<User, string> =
+      PrismaUserMapper.toDomain(updatedUser);
+    if (!userResult.success) return Result.fail(userResult.error);
+    return Result.ok(userResult.value);
   }
 }

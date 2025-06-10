@@ -1,17 +1,16 @@
-import { RepositoryModule } from '@/infrastructures/repositories/repository.module';
 import { Module } from '@nestjs/common';
-import { userApplicationContainer } from '@/application/user/user.application';
+import { ConfigModule } from '@nestjs/config';
 import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
 import { EncryptionService } from '@/infrastructures/encryption/encryption.service';
+
 @Module({
-  imports: [RepositoryModule],
+  imports: [ConfigModule],
   providers: [
-    ...userApplicationContainer,
     {
       provide: ENCRYPTION_SERVICE_PORT,
       useClass: EncryptionService,
     },
   ],
-  exports: [...userApplicationContainer],
+  exports: [ENCRYPTION_SERVICE_PORT],
 })
-export class UserWiringModule {}
+export class EncryptionWiringModule {}

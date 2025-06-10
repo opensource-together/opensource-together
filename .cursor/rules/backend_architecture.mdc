@@ -12,36 +12,41 @@ Le projet est structuré en monorepo pour faciliter la gestion des différentes 
 ## Services Principaux
 
 ### Base de Données Métier (PostgreSQL)
-- **Port** : 5433  
+
+- **Port** : 5433
 - **Objectif** : Stockage des données principales de l'application
 
 ### Base de Données SuperTokens (PostgreSQL)
-- **Port** : 5432  
+
+- **Port** : 5432
 - **Objectif** : Stockage des données d'authentification
 
 ### SuperTokens Core
-- **Port** : 3567  
+
+- **Port** : 3567
 - **Objectif** : Service d'authentification
 
 ### Backend (NestJS)
-- **Port** : 4000  
+
+- **Port** : 4000
 - **Objectif** : Serveur API
 
 ### Frontend (Next.js)
-- **Port** : 3000  
+
+- **Port** : 3000
 - **Objectif** : Application web
 
 ## Configuration Docker Compose
 
-- **Isolation des Services** : Chaque service est conteneurisé, assurant une isolation complète et une communication via un réseau Docker personnalisé.  
-- **Volumes** : Utilisation de volumes pour la persistance des données et le rechargement à chaud des applications.  
-- **Vérifications de Santé** : Implémentation de vérifications de santé pour garantir le bon démarrage et la disponibilité des services.  
+- **Isolation des Services** : Chaque service est conteneurisé, assurant une isolation complète et une communication via un réseau Docker personnalisé.
+- **Volumes** : Utilisation de volumes pour la persistance des données et le rechargement à chaud des applications.
+- **Vérifications de Santé** : Implémentation de vérifications de santé pour garantir le bon démarrage et la disponibilité des services.
 - **Dépendances** : Utilisation de `depends_on` pour assurer l'ordre de démarrage correct des services.
 
 ## Avantages de cette Configuration
 
-- **Développement Simplifié** : Hot reload et gestion centralisée des dépendances.  
-- **Scalabilité** : Facilité d'ajout de nouveaux services ou de mise à jour des existants.  
+- **Développement Simplifié** : Hot reload et gestion centralisée des dépendances.
+- **Scalabilité** : Facilité d'ajout de nouveaux services ou de mise à jour des existants.
 - **Maintenance** : Structure claire et modulaire facilitant la maintenance et l'évolution du projet.
 
 ---
@@ -52,28 +57,17 @@ Le projet est structuré en monorepo pour faciliter la gestion des différentes 
 
 Le projet suit les principes de **Clean Architecture**, en séparant clairement les responsabilités entre les couches :
 
-- **Présentation (Interface)** : gère les entrées HTTP (contrôleurs)  
-- **Infrastructure** : fait le lien entre NestJS et l'application (via CQRS, ORM, etc.)  
-- **Application** : contient la logique métier sous forme de Use Cases, Ports et DTOs  
-- **Domaine** : le cœur métier pur, indépendant de toute technologie
+- **Présentation (Interface)** : gère les entrées HTTP (contrôleurs)
+- **Infrastructure** : Contient tout ce qui est librairie externe, implémentation concrete des ports/interface (ORM, API tiers, services etc)
+- **Application** : contient la logique métier sous forme de Use Cases suivant le patern CQRS, Ports, Command/CommandHanlder et Querry/QuerryHandler (utilisation pragmatique de nestjs/cqrs)
+- **Domaine** : le cœur métier pur contenant les invariants métier (entity, value object, factory etc)
 
 Le pattern **CQRS (Command Query Responsibility Segregation)** est utilisé pour séparer clairement :
 
-- les **commands** (écriture)  
-- les **queries** (lecture)  
+- les **commands** (écriture)
+- les **queries** (lecture)
 
 Chaque action utilisateur transite par cette structure, facilitant le découplage, le test et l'évolution.
-
-## 🛡️ Utilisation du pattern CQRS dans ce projet
-
-Le pattern CQRS est utilisé ici comme un outil de routage intelligent entre l’infrastructure (NestJS) et la logique métier (use cases). Il sert à :
-
-- Faciliter l’injection de dépendances grâce aux `CommandBus` et `QueryBus` de NestJS  
-- Centraliser le wiring via des modules dédiés (`user-cqrs.module.ts`, `cqrs-wiring.module.ts`)  
-- Garantir une séparation stricte entre les couches **domain/application** et **infrastructure**  
-- Maintenir les use cases indépendants du framework NestJS pour une **portabilité, testabilité et découplage complet**
-
-Cette approche assure que l’application respecte les principes de Clean Architecture tout en bénéficiant des fonctionnalités avancées de NestJS (injection, modules, décorateurs), sans en dépendre directement dans la logique métier.
 
 ---
 
@@ -81,44 +75,183 @@ Cette approche assure que l’application respecte les principes de Clean Archit
 
 ### `src/application`
 
-Contient la logique métier applicative (use cases) et les abstractions nécessaires pour exécuter ces cas d’usage.
+Contient la logique métier applicative (use cases qui est sois query, sois command) et les abstractions nécessaires pour exécuter ces cas d’usage (ports).
 
-- `dto/` : Data Transfer Objects pour la couche application (`XxxDtoInput`, `XxxDtoOutput`)  
-- `ports/` : Interfaces (ex: `UserRepositoryPort`) que l’infra doit implémenter  
-- `use-cases/` : Les cas d’usage (ex: `create-user.usecase.ts`)  
+Les dossier suivent l'imbrication suivantes :
+
+- `<business_entity_name>/commands/` :
+
+  - Dossier contient toutes les use case commands, les fichier se présente ainsi :
+
+    - `<business_intention>.command.ts` : Le nom du fichier commence par le nom du use case pour exprimer correctement l'intention métier de la feature.
+
+      - exemple type d'un fichier `.command.ts` :
+
+      ````typescript
+            import { Result } from '@shared/result';
+            import { UserFactory } from '@/domain/user/user.factory';
+            import { User } from '@domain/user/user.entity';
+            import {
+            USER_REPOSITORY_PORT,
+            UserRepositoryPort,
+            } from '../ports/user.repository.port';
+            import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+            import { Inject } from '@nestjs/common';
+
+            export class CreateUserCommand implements ICommand {
+                constructor(
+                public readonly id: string,
+                public readonly username: string,
+                public readonly email: string,
+                public readonly avatarUrl: string,
+                public readonly bio: string,
+                public readonly githubUrl: string,
+                public readonly githubUserId: string,
+                public readonly githubAccessToken: string,
+                ) {}
+            }
+
+            @CommandHandler(CreateUserCommand)
+            export class CreateUserCommandHandler implements ICommandHandler<CreateUserCommand>
+            {
+                constructor(
+                    @Inject(USER_REPOSITORY_PORT)
+                    private readonly userRepo: UserRepositoryPort,
+                ) {}
+                //business logic
+            }
+            ```
+        - `<business_entity_name>.commands.ts`: Fichier servant de container pour regrouper tout les use case commands d'une entité métier.
+            - exemple type d'un fichier `.commands.ts` :
+            ```typescript
+            import {
+                CreateUserCommand,
+                CreateUserCommandHandler,
+            } from './create-user.command';
+            export const userCommandsContainer = [
+                CreateUserCommand,
+                CreateUserCommandHandler,
+            ];
+            ```
+      ````
+
+* `<business_entity_name>/query/` : Suit exactement le même patern que ce qui est cité pour `<business_entity_name>/commands/`, a l'exception qu'ici ce sera en utilisant les query.
+
+  - exemple de `<business_intention.query.ts>`:
+
+    ```typescript
+    import { IQuery, IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+    import { UserRepositoryPort } from "../ports/user.repository.port";
+    import { USER_REPOSITORY_PORT } from "../ports/user.repository.port";
+    import { Inject } from "@nestjs/common";
+
+    export class UserExistQuery implements IQuery {
+      constructor(
+        public readonly username: string,
+        public readonly email: string
+      ) {}
+    }
+
+    @QueryHandler(UserExistQuery)
+    export class UserExistHandler implements IQueryHandler<UserExistQuery> {
+      constructor(
+        @Inject(USER_REPOSITORY_PORT)
+        private readonly userRepo: UserRepositoryPort
+      ) {}
+
+      async execute(query: UserExistQuery): Promise<boolean> {
+        const userExistsByUsername = await this.userRepo.findByUsername(
+          query.username
+        );
+        const userExistsByEmail = await this.userRepo.findByEmail(query.email);
+
+        if (userExistsByUsername.success || userExistsByEmail.success) {
+          return true;
+        }
+        return false;
+      }
+    }
+    ```
+
+    - exemple de `<business_entity_name.queries.ts>`:
+
+    ```typescript
+    import { FindUserByEmailQueryHandler } from "./find-user-by-email.query";
+    import { FindUserByIdQueryHandler } from "./find-user-by-id.query";
+    import { UserExistHandler } from "./user-exist.query";
+    import { FindUserByUsernameQueryHandler } from "./find-user-by-username.query";
+    export const userQueriesContainer = [
+      FindUserByEmailQueryHandler,
+      FindUserByIdQueryHandler,
+      UserExistHandler,
+      FindUserByUsernameQueryHandler,
+    ];
+    ```
+
+* `<business_entity_name>/ports/` : Contient les fichier qui définissent les ports, le contrat que doit respecter en input et output celui ci, afin de découpler le technique du métier. Il doit exprimer correctement l'intention et l'utilité, comme un service par exemple, ou un repository pour accéder au données. Par exemple un repository ressemblera a ceci :
+  - exemple de `<business_entity_name>.repository.port.ts` :
+  ```typescript
+  import { User } from "@domain/user/user.entity";
+  import { Result } from "@shared/result";
+  export const USER_REPOSITORY_PORT = Symbol("UserRepository");
+  export interface UserRepositoryPort {
+    save(
+      user: User
+    ): Promise<Result<User, { username?: string; email?: string } | string>>;
+    findByUsername(
+      username: string
+    ): Promise<Result<User, { username?: string; email?: string } | string>>;
+    findByEmail(
+      email: string
+    ): Promise<Result<User, { username?: string; email?: string } | string>>;
+    findById(
+      id: string
+    ): Promise<Result<User, { username?: string; email?: string } | string>>;
+    update(
+      user: User
+    ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  }
+  ```
+
+- Le tout est ensuite rassembler et exporter via le fichier a la racine du dossier dans `src/application/<business_entity_name>/` contenant `commands/`, `queries/`, et `ports/` nommer `<business_entity_name>.application.ts` qui ressemble a ceci :
+  ```typescript
+  import { userQueriesContainer } from "./queries/user.queries";
+  import { userCommandsContainer } from "./commands/user.commands";
+  export const userApplicationContainer = [
+    ...userQueriesContainer,
+    ...userCommandsContainer,
+  ];
+  ```
 
 ### `src/domain`
 
 Contient la représentation métier pure, indépendante de NestJS ou de toute autre lib/framework. Organisé par entité.
 
-- `email.vo.ts`, `username.vo.ts` → Value Objects (`Email`, `Username`, etc.)  
-- `user.entity.ts` → Entité  
-- `user.factory.ts` → Fabrique pour créer l’entité à partir d'objets primitifs  
+- `email.vo.ts`, `username.vo.ts` → Value Objects (`Email`, `Username`, etc.)
+- `user.entity.ts` → Entité
+- `user.factory.ts` → Fabrique pour créer l’entité à partir d'objets primitifs
 
-**✳️ Convention de nommage VO :**  
-- Fichier : `xxx.vo.ts`  
+**✳️ Convention de nommage VO :**
+
+- Fichier : `xxx.vo.ts`
 - Classe : `Email`, `Username`, etc. (pas besoin d’ajouter "Vo" dans le nom de la classe)
 
 ### `src/infrastructures`
 
-Cette couche contient les éléments techniques concrets :
+Couche technique contenant toutes les implémentations concrètes des abstractions définies dans la couche Application. Elle gère les détails techniques et les intégrations avec les systèmes externes.
 
-- `auth/` : Intégration de l’authentification (ex: Supertokens)  
-- `cqrs/user/` :  
-  - `commands/` et `queries/` : fichiers déclarant les objets `Command` / `Query`  
-  - `use-case-handlers/` : Handlers qui interceptent les commandes et appellent le bon Use Case  
-  - `user-cqrs.module.ts` : regroupe les handlers CQRS utilisateur  
-- `repositories/` : Implémentations concrètes des ports (ex: Prisma)  
-- `orm/` : Configuration ORM  
-
-Un module central `cqrs-wiring.module.ts` permet de rassembler tous les handlers et de les injecter dans l’app principale.
+- `auth/` : Intégration de l’authentification (ex: Supertokens)
+- `wiring` : : Couche de configuration et d'injection de dépendances qui fait le lien entre les couches Infrastructure et Application. Elle configure le container IoC de NestJS pour résoudre les dépendances.
+- `repositories/` : Implémentations concrètes des ports (ex: Prisma)
+- `orm/` : Configuration ORM
+  Cette séparation respecte le principe d'inversion de dépendance : l'Application définit les contrats (ports), l'Infrastructure les implémente, et le Wiring fait le lien
 
 ### `src/presentation`
 
 Contient les contrôleurs NestJS, responsables de recevoir les requêtes HTTP et d’appeler les `CommandBus` / `QueryBus`.
 
-- `user.controller.ts` : appel des Command ou Query selon la logique  
-- `dto/` : DTO de requête/réponse (ex: `XxxDtoRequest`, `XxxDtoResponse`)  
+- `user.controller.ts` : appel des Command ou Query selon la logique
+- `dto/` : DTO de requête/réponse (ex: `XxxDtoRequest`, `XxxDtoResponse`)
 
 > Les contrôleurs ne contiennent **aucune logique métier**, seulement l’appel du bon use case et le formatage de la réponse HTTP.
 
@@ -132,9 +265,9 @@ Contient tout ce qui est réutilisable globalement :
 
 ## 🔁 Flux de traitement typique (commandes)
 
-1. Le contrôleur reçoit une requête HTTP  
-2. Il utilise le `CommandBus` ou `QueryBus` pour déclencher l’action  
-3. Le handler CQRS intercepte la commande et appelle le Use Case  
-4. Le Use Case applique la logique métier et utilise les ports  
-5. L’implémentation concrète du port (infra) exécute l’action (ex: via Prisma)  
+1. Le contrôleur reçoit une requête HTTP
+2. Il utilise le `CommandBus` ou `QueryBus` pour déclencher l’action
+3. Le handler CQRS intercepte la commande et appelle le Use Case
+4. Le Use Case applique la logique métier et utilise les ports
+5. L’implémentation concrète du port (infra) exécute l’action (ex: via Prisma)
 6. Un objet `Result` est retourné au contrôleur, qui le transforme en réponse HTTP
