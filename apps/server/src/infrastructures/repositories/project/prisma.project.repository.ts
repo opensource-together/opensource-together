@@ -132,7 +132,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProject.value);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 
@@ -163,7 +163,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProjects);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 
@@ -181,7 +181,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProject.value);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 
@@ -203,7 +203,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProjects);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 }
