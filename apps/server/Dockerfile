@@ -26,7 +26,7 @@ WORKDIR /app
 
 LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
 
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache postgresql-client curl
 
 ENV NODE_ENV=production
 
@@ -36,13 +36,13 @@ RUN adduser --system --uid 1001 nestjs
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/src/infrastructures/orm/prisma ./schema
+COPY --from=builder --chown=nestjs:nodejs /app/swagger-doc.example.yml ./dist/swagger-doc.example.yml
 
 USER nestjs
 
 EXPOSE 3000
 
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 WORKDIR /app/dist
 CMD ["node", "main"]

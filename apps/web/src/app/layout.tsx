@@ -1,6 +1,12 @@
-import Header from "@/shared/layout/Header";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
+
+import Header from "@/components/shared/layout/Header";
+import { Toaster } from "@/components/ui/sonner";
+
+import "../../public/fonts/font-face.css";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -34,8 +40,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
+        <SuperTokensInitializer />
         <Header />
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

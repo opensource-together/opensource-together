@@ -10,4 +10,4 @@ export default async function ProjectEditPage({
   const { projectId } = await params;
 
   return <ProjectEditView projectId={projectId} />;
-} 
+}

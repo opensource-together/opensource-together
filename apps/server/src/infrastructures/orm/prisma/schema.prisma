@@ -25,6 +25,11 @@ model User {
   id        					String   @id @default(uuid())
   username  					String   @unique
   email     					String   @unique
+  avatarUrl					  String?
+  bio							    String?
+  githubUrl					  String?
+  githubUserId				String?
+  githubAccessToken		String?
   createdAt 					DateTime @default(now())
   updatedAt 					DateTime @updatedAt
 }

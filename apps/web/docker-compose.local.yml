@@ -1,0 +1,149 @@
+name: ost
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=localhost:${API_PORT}
+    ports:
+      - "${FRONT_PORT}:3000"
+    networks:
+      - app_network
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ../server/
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - CONNECTION_URI=http://supertokens:3567
+      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
+      - APP_NAME=${APP_NAME}
+      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
+      - API_DOMAIN=${API_DOMAIN}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+      - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+    ports:
+      - "${API_PORT}:3000"
+    networks:
+      - app_network
+    depends_on:
+      business-db:
+        condition: service_healthy
+      supertokens:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  business-db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${BUSINESS_DB_USER}
+      - POSTGRES_PASSWORD=${BUSINESS_DB_PASSWORD}
+      - POSTGRES_DB=${BUSINESS_DB_NAME}
+    ports:
+      - "${BUSINESS_DB_PORT}:5432"
+    volumes:
+      - business_db_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  supertokens:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
+    restart: unless-stopped
+    environment:
+      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@supertokens-db:5432/${SUPERTOKENS_DB_NAME}
+    ports:
+      - "3567:3567"
+    networks:
+      - app_network
+    depends_on:
+      supertokens-db:
+        condition: service_healthy
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  supertokens-db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${SUPERTOKENS_DB_USER}
+      - POSTGRES_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
+      - POSTGRES_DB=${SUPERTOKENS_DB_NAME}
+    ports:
+      - "${SUPERTOKENS_DB_PORT}:5432"
+    volumes:
+      - supertokens_db_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    build:
+      context: ../server/
+      dockerfile: Dockerfile
+    command:
+      [
+        "npx",
+        "prisma",
+        "db",
+        "push",
+        "--schema=/app/schema/schema.prisma",
+        "--skip-generate",
+      ]
+    environment:
+      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
+    depends_on:
+      business-db:
+        condition: service_healthy
+
+    networks:
+      - app_network
+
+volumes:
+  business_db_data:
+  supertokens_db_data:
+
+networks:
+  app_network:
+    driver: bridge

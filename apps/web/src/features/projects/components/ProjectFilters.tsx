@@ -1,6 +1,7 @@
-import chevronDown from "@/shared/icons/chevron-down.svg";
 import Image from "next/image";
 import React from "react";
+
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FilterButtonProps {
   label: string;
@@ -16,20 +17,25 @@ const FilterButton: React.FC<FilterButtonProps> = ({
   isSortButton = false,
 }) => {
   return (
-    <button className="h-[35px] cursor-pointer px-3 flex items-center gap-1 font-geist font-semibold text-[13px] border border-[black]/5 rounded-[5px] bg-white hover:bg-[#F9F9F9] transition-colors whitespace-nowrap">
+    <button className="flex h-[35px] cursor-pointer items-center gap-1 rounded-[5px] border border-[black]/5 bg-white px-3 text-[13px] font-semibold whitespace-nowrap transition-colors hover:bg-[#F9F9F9]">
       {isSortButton && (
-        <span className="font-light text-[black]/50 hidden sm:inline">
+        <span className="hidden font-light text-[black]/50 sm:inline">
           Trier par:{" "}
         </span>
       )}
       {label && !isSortButton && (
-        <span className="font-light text-[black] hidden sm:inline">
+        <span className="hidden font-light text-[black] sm:inline">
           {label}{" "}
         </span>
       )}
       <span className="font-light">{value}</span>
       {hasChevron && (
-        <Image src={chevronDown} alt="Expand" width={10} height={6} />
+        <Image
+          src="/icons/chevron-down.svg"
+          alt="Expand"
+          width={10}
+          height={6}
+        />
       )}
     </button>
   );
@@ -53,9 +59,9 @@ export default ProjectFilters;
 
 export function SkeletonProjectFilters({ count = 3 }: { count?: number }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:gap-2 animate-pulse">
-      {[...Array(count)].map((_, i) => (
-        <div key={i} className="h-[35px] w-[110px] bg-gray-200 rounded-[5px]" />
+    <div className="flex flex-wrap items-center gap-2 sm:gap-2">
+      {Array.from({ length: count }).map((_, i) => (
+        <Skeleton key={i} className="h-[35px] w-[110px] rounded-[5px]" />
       ))}
     </div>
   );
