@@ -11,9 +11,10 @@ import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
 import { Inject } from '@nestjs/common';
 import { ICommandHandler } from '@nestjs/cqrs';
 import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
-import { CreateProjectRoleCommand } from '@/application/projectRole/commands/create/create-role.command';
-import { CreateTeamMemberCommand } from '@/application/teamMember/commands/create/create-team-member.command';
 import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
+import { CreateProjectRoleDto } from '@/presentation/project/dto/ProjectRoleDto.request';
+import { TeamMemberDto } from '@/presentation/project/dto/TeamMemberDto.request';
+import { TechStack } from '@/domain/techStack/techstack.entity';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -24,8 +25,8 @@ export class CreateProjectCommand implements ICommand {
     public readonly link: string | null,
     public readonly githubLink: string,
     public readonly techStacks: TechStackDto[],
-    public readonly projectRoles: CreateProjectRoleCommand[],
-    public readonly projectMembers: CreateTeamMemberCommand[],
+    public readonly projectRoles: CreateProjectRoleDto[],
+    public readonly projectMembers: TeamMemberDto[],
   ) {}
 }
 

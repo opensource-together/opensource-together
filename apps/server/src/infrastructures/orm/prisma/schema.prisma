@@ -47,6 +47,11 @@ model Project {
   techStacks  				TechStack[]
 	projectMembers			teamMember[]
 	projectRoles				ProjectRole[]
+
+  // Index composite pour recherche par difficulté + tri par date
+  @@index([difficulty, createAt(sort: Desc)], name: "idx_difficulty_date")
+  // Index pour recherche textuelle sur le titre
+  @@index([title], name: "idx_title_search")
 }
 
 model TechStack {
@@ -54,14 +59,14 @@ model TechStack {
   name     						String
   iconUrl  						String
   projects 						Project[]
+	projectRoles				ProjectRole[]
 }
 
 model teamMember {
 	id								String				@id @default(uuid())
 	userId						String
 	projectId					String
-	projectRolesId		String[]
-	jointedAt					DateTime			@default(now())
+	joinedAt					DateTime			@default(now())
 	projectRole				ProjectRole[]
 	project						Project				@relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
@@ -69,11 +74,13 @@ model teamMember {
 model ProjectRole {
 	id									String		@id @default(uuid())
 	projectId						String
-	teamMembersId				String[]
 	roleTitle						String
-	skillSet						String[]
+	skillSet						TechStack[]
 	description					String
 	isFilled						Boolean
 	teamMember					teamMember[]
 	project							Project			@relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Index pour recherche par projet et rôle
+  @@index([projectId, roleTitle], name: "idx_project_roles")
 }

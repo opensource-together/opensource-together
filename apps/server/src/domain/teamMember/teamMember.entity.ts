@@ -5,7 +5,6 @@ export class TeamMember {
   private _id?: string;
   private _userId: string;
   private _projectId: string;
-  private _projectRoleId: string;
   private _joinedAt?: Date;
   private _projectRole?: ProjectRole;
   private _project?: Project;
@@ -14,7 +13,6 @@ export class TeamMember {
     id,
     userId,
     projectId,
-    projectRoleId,
     joinedAt,
     projectRole,
     project,
@@ -22,7 +20,6 @@ export class TeamMember {
     id?: string;
     userId: string;
     projectId: string;
-    projectRoleId: string;
     joinedAt?: Date;
     projectRole?: ProjectRole;
     project?: Project;
@@ -30,7 +27,6 @@ export class TeamMember {
     this._id = id;
     this._userId = userId;
     this._projectId = projectId;
-    this._projectRoleId = projectRoleId;
     this._joinedAt = joinedAt;
     this._projectRole = projectRole;
     this._project = project;
@@ -46,10 +42,6 @@ export class TeamMember {
 
   getProjectId() {
     return this._projectId;
-  }
-
-  getProjectRoleId() {
-    return this._projectRoleId;
   }
 
   getJoinedAt() {

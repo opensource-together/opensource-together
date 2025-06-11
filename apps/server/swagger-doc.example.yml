@@ -1,10 +1,34 @@
 openapi: 3.0.4
 info:
   title: OpenSource Together API
-  description: Documentation de l'API pour la plateforme OpenSource Together.
+  description: |
+    Documentation de l'API pour la plateforme OpenSource Together.
+    
+    ## Authentification
+    
+    L'API utilise SuperTokens avec l'authentification GitHub OAuth.
+    
+    ### Pour les développeurs Frontend
+    
+    **Processus de connexion :**
+    1. Rediriger vers `/auth/authorize/github` pour initier la connexion
+    2. L'utilisateur est redirigé vers GitHub pour autoriser l'application
+    3. GitHub redirige vers `/auth/callback/github` avec le code d'autorisation
+    4. Les cookies de session sont automatiquement définis
+    5. Utiliser `/auth/session` pour récupérer les infos utilisateur (équivalent `/me`)
+    
+    **Cookies de session :**
+    - `sAccessToken` : Token d'accès principal
+    - `sRefreshToken` : Token de rafraîchissement
+    - Ces cookies sont automatiquement gérés par le navigateur
+    
+    **Routes protégées :**
+    Les routes nécessitant une authentification sont marquées avec le symbole 🔒.
+    
+    **Base URL :** `http://localhost:4000`
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api
+  - url: http://localhost:4000
 tags:
   - name: Projects
     description: Opérations liées aux projets open source
@@ -17,29 +41,42 @@ paths:
         - Projects
       summary: Récupérer tous les projets
       operationId: getProjects
-      parameters:
-        - name: title
-          in: query
-          description: Titre du projet pour filtrer
-          required: false
-          schema:
-            type: string
+      description: |
+        Récupère la liste complète de tous les projets disponibles sur la plateforme.
+        Aucune authentification requise - endpoint public.
       responses:
         '200':
-          description: Liste de projets
+          description: Liste de tous les projets
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectResponseDto'
-        '400':
-          description: Erreur lors de la récupération des projets
+              example:
+                - id: '123e4567-e89b-12d3-a456-426614174000'
+                  title: 'Plateforme E-commerce React'
+                  description: 'Une application e-commerce moderne construite avec React et Node.js'
+                  link: 'https://github.com/user/ecommerce-platform'
+                  ownerId: 'github_user123'
+                  techStacks:
+                    - id: 'react'
+                      name: 'React'
+                      iconUrl: 'https://reactjs.org/logo.svg'
+                    - id: 'nodejs'
+                      name: 'Node.js'
+                      iconUrl: 'https://nodejs.org/logo.svg'
+        '500':
+          description: Erreur serveur lors de la récupération des projets
     post:
       tags:
         - Projects
       summary: Créer un nouveau projet
       operationId: createProject
+      description: |
+        Crée un nouveau projet sur la plateforme.
+        Nécessite une authentification GitHub valide.
+        L'utilisateur connecté devient automatiquement le propriétaire du projet.
       security:
         - supertokens_session: []
       requestBody:
@@ -48,6 +85,29 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateProjectDtoInput'
+            example:
+              title: 'Mon Nouveau Projet Open Source'
+              description: 'Description détaillée de mon projet innovant'
+              difficulty: 'MEDIUM'
+              link: 'https://example.com/my-project'
+              githubLink: 'https://github.com/user/my-project'
+              techStacks:
+                - id: 'react'
+                - id: 'typescript'
+              projectRoles:
+                - roleTitle: 'Frontend Developer'
+                  description: 'Développeur React expérimenté'
+                  skillSet:
+                    - id: 'react'
+                  isFilled: false
+              projectMembers: [
+                {
+                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
+                },
+                {
+                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
+                }
+              ]
       responses:
         '200':
           description: Projet créé avec succès
@@ -56,33 +116,136 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDto'
         '400':
-          description: Données d'entrée invalides
+          description: Données d'entrée invalides ou erreur de validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Title is required'
+                  statusCode:
+                    type: integer
+                    example: 400
         '401':
-          description: Non authentifié
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
   /projects/search:
     get:
       tags:
         - Projects
-      summary: Rechercher des projets par titre
+      summary: Rechercher des projets avec filtres multiples
       operationId: getProjectsFiltered
+      description: |
+        Recherche de projets avec filtres optionnels combinables :
+        - Par titre (recherche insensible à la casse)
+        - Par difficulté (EASY, MEDIUM, HARD)
+        - Par rôles recherchés (frontend, backend, designer, etc.)
+        - Par technologies utilisées (React, Vue, TypeScript, etc.)
+        - Tri par date de création
       parameters:
         - name: title
           in: query
-          description: Titre du projet à rechercher
-          required: true
+          description: Titre du projet à rechercher (recherche partielle)
+          required: false
           schema:
             type: string
+          example: 'React'
+        - name: difficulty
+          in: query
+          description: Niveau de difficulté du projet
+          required: false
+          schema:
+            type: string
+            enum: [EASY, MEDIUM, HARD]
+          example: 'EASY'
+        - name: roles
+          in: query
+          description: Rôles recherchés dans le projet (séparés par des virgules)
+          required: false
+          schema:
+            type: string
+          example: 'frontend,backend'
+        - name: techStacks
+          in: query
+          description: Technologies utilisées dans le projet (séparées par des virgules)
+          required: false
+          schema:
+            type: string
+          example: 'react,typescript,nodejs'
+        - name: sortOrder
+          in: query
+          description: Ordre de tri par date de création
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          example: 'desc'
       responses:
         '200':
-          description: Liste de projets filtrés par titre
+          description: Liste de projets correspondant aux critères de filtrage
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectResponseDto'
+              examples:
+                with_results:
+                  summary: Résultats trouvés
+                  value:
+                    - id: '123e4567-e89b-12d3-a456-426614174000'
+                      title: 'Plateforme React E-commerce'
+                      description: 'Application e-commerce moderne avec React et TypeScript'
+                      difficulty: 'MEDIUM'
+                      link: 'https://github.com/user/react-ecommerce'
+                      ownerId: 'user123'
+                      techStacks:
+                        - id: 'react'
+                          name: 'React'
+                          iconUrl: 'https://reactjs.org/logo.svg'
+                        - id: 'typescript'
+                          name: 'TypeScript'
+                          iconUrl: 'https://www.typescriptlang.org/logo.png'
+                empty_results:
+                  summary: Aucun résultat
+                  value: []
         '400':
-          description: Erreur lors de la recherche
+          description: Erreur de validation des paramètres de recherche
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    oneOf:
+                      - type: string
+                        example: 'difficulty must be a valid difficulty : EASY, MEDIUM, HARD'
+                      - type: string
+                        example: 'sortOrder must be either asc or desc'
+                      - type: string
+                        example: 'roles must be valid role names'
+                  statusCode:
+                    type: integer
+                    example: 400
+        '500':
+          description: Erreur serveur lors de la recherche
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Internal Server Error'
+                  statusCode:
+                    type: integer
+                    example: 500
   /projects/{id}:
     get:
       tags:
@@ -138,64 +301,151 @@ paths:
           description: Non authentifié
         '404':
           description: Projet non trouvé
-  /auth/signup:
-    post:
+  /auth/authorize/github:
+    get:
       tags:
         - Authentication
-      summary: Inscription d'un nouvel utilisateur
-      operationId: signup
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignupRequest'
+      summary: Initier l'authentification GitHub
+      operationId: authorizeGithub
+      description: |
+        Redirige vers GitHub pour l'authentification OAuth.
+        Cette route est utilisée pour commencer le processus d'authentification GitHub.
+        L'utilisateur sera redirigé vers GitHub, puis de retour vers la callback URL après autorisation.
       responses:
-        '200':
-          description: Inscription réussie
+        '302':
+          description: Redirection vers GitHub pour l'authentification
+        '500':
+          description: Erreur serveur lors de l'initialisation de l'authentification
+  /auth/callback/github:
+    get:
+      tags:
+        - Authentication
+      summary: Callback GitHub après authentification
+      operationId: callbackGithub
+      description: |
+        URL de callback utilisée par GitHub après l'authentification.
+        Cette route est automatiquement appelée par GitHub et gère :
+        - L'échange du code d'autorisation contre un token d'accès
+        - La création/mise à jour de l'utilisateur en base
+        - L'établissement de la session utilisateur
+      parameters:
+        - name: code
+          in: query
+          description: Code d'autorisation fourni par GitHub
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: Paramètre d'état pour la sécurité
+          required: false
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirection vers l'application après connexion réussie
         '400':
-          description: Erreur d'inscription
-  /auth/signin:
-    post:
+          description: Code d'autorisation invalide ou manquant
+        '500':
+          description: Erreur lors de l'authentification
+  /auth/session:
+    get:
       tags:
         - Authentication
-      summary: Connexion d'un utilisateur
-      operationId: signin
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SigninRequest'
+      summary: Récupérer les informations de session (équivalent /me)
+      operationId: getSession
+      description: |
+        Retourne les informations de l'utilisateur connecté.
+        Fonctionne comme un endpoint /me dans d'autres APIs.
+        Utilise les cookies de session pour l'authentification.
+      security:
+        - supertokens_session: []
       responses:
         '200':
-          description: Connexion réussie
+          description: Informations de session et utilisateur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
+                  session:
+                    type: object
+                    properties:
+                      handle:
+                        type: string
+                        description: Identifiant unique de la session
+                      userId:
+                        type: string
+                        description: ID utilisateur
+                      accessTokenPayload:
+                        type: object
+                        description: Payload du token d'accès
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID utilisateur
+                        example: 'github_123456789'
+                      email:
+                        type: string
+                        description: Email GitHub de l'utilisateur
+                        example: 'user@example.com'
+                      github:
+                        type: object
+                        properties:
+                          login:
+                            type: string
+                            description: Nom d'utilisateur GitHub
+                            example: 'johndoe'
+                          name:
+                            type: string
+                            description: Nom complet
+                            example: 'John Doe'
+                          avatar_url:
+                            type: string
+                            description: URL de l'avatar GitHub
+                            example: 'https://avatars.githubusercontent.com/u/123456789'
+                          html_url:
+                            type: string
+                            description: URL du profil GitHub
+                            example: 'https://github.com/johndoe'
         '401':
-          description: Identifiants invalides
+          description: Non authentifié - session invalide ou expirée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
   /auth/signout:
     post:
       tags:
         - Authentication
       summary: Déconnexion de l'utilisateur
       operationId: signout
+      description: |
+        Termine la session utilisateur et supprime les cookies d'authentification.
       security:
         - supertokens_session: []
       responses:
         '200':
           description: Déconnexion réussie
-  /auth/session/refresh:
-    post:
-      tags:
-        - Authentication
-      summary: Rafraîchir la session utilisateur
-      operationId: refreshSession
-      security:
-        - supertokens_session: []
-      responses:
-        '200':
-          description: Session rafraîchie avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
         '401':
-          description: Session invalide, nécessite une nouvelle connexion
+          description: Utilisateur non connecté
 components:
   schemas:
     TechStackDto:
@@ -222,64 +472,131 @@ components:
       properties:
         id:
           type: string
-          description: ID du projet
-          nullable: true
+          description: ID unique du projet
+          example: "123e4567-e89b-12d3-a456-426614174000"
         title:
           type: string
           description: Titre du projet
+          example: "Plateforme E-commerce React"
         description:
           type: string
-          description: Description du projet
-        status:
+          description: Description détaillée du projet
+          example: "Application e-commerce moderne avec React et Node.js"
+        difficulty:
           type: string
-          description: Statut du projet
-          nullable: true
+          enum: [EASY, MEDIUM, HARD]
+          description: Niveau de difficulté du projet
+          example: "MEDIUM"
         link:
           type: string
-          description: Lien vers le projet (repo, site, etc.)
+          description: Lien vers le site web ou démo du projet
           nullable: true
+          example: "https://my-ecommerce-demo.com"
+        githubLink:
+          type: string
+          description: Lien vers le dépôt GitHub du projet
+          nullable: true
+          example: "https://github.com/user/ecommerce-platform"
         ownerId:
           type: string
           description: ID de l'utilisateur propriétaire du projet
+          example: "github_user123"
+        createdAt:
+          type: string
+          format: date-time
+          description: Date de création du projet
+          example: "2024-01-15T10:30:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date de dernière modification
+          example: "2024-01-20T14:45:00.000Z"
         techStacks:
           type: array
           items:
             $ref: '#/components/schemas/TechStackDto'
+          description: Technologies utilisées dans le projet
+        projectRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectRoleDto'
+          description: Rôles recherchés pour le projet
+        projectMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectMemberDto'
+          description: Membres actuels du projet
+        owner:
+          $ref: '#/components/schemas/GitHubUser'
+          description: Informations du propriétaire du projet
       required:
+        - id
         - title
         - description
+        - difficulty
         - ownerId
+        - createdAt
+        - updatedAt
         - techStacks
+        - projectRoles
+        - projectMembers
     CreateProjectDtoInput:
       type: object
       properties:
         title:
           type: string
           description: Titre du projet
+          minLength: 1
+          maxLength: 100
           example: 'Mon Super Projet Open Source'
         description:
           type: string
           description: Description détaillée du projet
+          minLength: 10
+          maxLength: 1000
           example: 'Ce projet vise à créer une plateforme pour les développeurs open source.'
+        difficulty:
+          type: string
+          enum: [EASY, MEDIUM, HARD]
+          description: Niveau de difficulté du projet
+          example: 'MEDIUM'
         link:
           type: string
-          description: Lien vers le dépôt ou le site du projet
+          description: Lien vers le site web ou démo du projet
           nullable: true
-          example: 'https://github.com/user/my-project'
-        status:
+          example: 'https://my-project-demo.com'
+        githubLink:
           type: string
-          description: Statut actuel du projet (e.g., "In Progress", "Completed")
-          example: 'In Progress'
+          description: Lien vers le dépôt GitHub du projet
+          nullable: true
+          pattern: '^https://github\.com/.+/.+$'
+          example: 'https://github.com/user/my-project'
         techStacks:
           type: array
           items:
             $ref: '#/components/schemas/TechStackDto'
-          description: Liste des stacks techniques utilisées dans le projet
+          description: Liste des technologies utilisées dans le projet
+          minItems: 1
+          maxItems: 10
+        projectRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectRoleDto'
+          description: Rôles recherchés pour le projet
+          minItems: 1
+          maxItems: 5
+        projectMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectMemberDto'
+          description: Membres actuels du projet (généralement vide à la création)
+          default: []
       required:
         - title
         - description
-        - status
+        - difficulty
         - techStacks
+        - projectRoles
     UpdateProjectDtoRequest:
       type: object
       properties:
@@ -310,32 +627,130 @@ components:
         - description
         - status
         - techStacks
-    SignupRequest:
+    AuthError:
       type: object
       properties:
-        email:
+        message:
           type: string
-          format: email
-          description: Adresse email de l'utilisateur
-        password:
-          type: string
-          description: Mot de passe de l'utilisateur
-      required:
-        - email
-        - password
-    SigninRequest:
+          description: Message d'erreur d'authentification
+          example: 'unauthorised'
+        statusCode:
+          type: integer
+          description: Code de statut HTTP
+          example: 401
+    SessionInfo:
       type: object
       properties:
+        status:
+          type: string
+          example: 'OK'
+        session:
+          type: object
+          properties:
+            handle:
+              type: string
+              description: Identifiant unique de la session
+            userId:
+              type: string
+              description: ID utilisateur
+            accessTokenPayload:
+              type: object
+              description: Payload du token d'accès
+        user:
+          $ref: '#/components/schemas/GitHubUser'
+    GitHubUser:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID utilisateur unique
+          example: 'github_123456789'
         email:
           type: string
-          format: email
-          description: Adresse email de l'utilisateur
-        password:
+          description: Email de l'utilisateur GitHub
+          example: 'developer@example.com'
+        github:
+          type: object
+          properties:
+            login:
+              type: string
+              description: Nom d'utilisateur GitHub
+              example: 'johndoe'
+            name:
+              type: string
+              description: Nom complet de l'utilisateur
+              example: 'John Doe'
+            avatar_url:
+              type: string
+              description: URL de l'avatar GitHub
+              example: 'https://avatars.githubusercontent.com/u/123456789'
+            html_url:
+              type: string
+              description: URL du profil GitHub public
+              example: 'https://github.com/johndoe'
+            bio:
+              type: string
+              description: Biographie GitHub de l'utilisateur
+              example: 'Full-stack developer passionate about open source'
+            public_repos:
+              type: integer
+              description: Nombre de repositories publics
+              example: 42
+            followers:
+              type: integer
+              description: Nombre d'abonnés
+              example: 150
+                           following:
+                 type: integer
+                 description: Nombre de personnes suivies
+                 example: 75
+    ProjectRoleDto:
+      type: object
+      properties:
+        roleTitle:
           type: string
-          description: Mot de passe de l'utilisateur
+          description: Titre du rôle recherché
+          example: "Frontend Developer"
+        description:
+          type: string
+          description: Description détaillée du rôle
+          example: "Développeur React expérimenté pour l'interface utilisateur"
+        skillSet:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechStackDto'
+          description: Compétences techniques requises pour ce rôle
+        isFilled:
+          type: boolean
+          description: Indique si le rôle est déjà pourvu
+          default: false
       required:
-        - email
-        - password
+        - roleTitle
+        - description
+        - skillSet
+        - isFilled
+    ProjectMemberDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: ID de l'utilisateur membre du projet
+          example: "github_123456789"
+        role:
+          type: string
+          description: Rôle de l'utilisateur dans le projet
+          example: "Frontend Developer"
+        joinedAt:
+          type: string
+          format: date-time
+          description: Date d'ajout au projet
+          example: "2024-01-15T10:30:00.000Z"
+        user:
+          $ref: '#/components/schemas/GitHubUser'
+      required:
+        - userId
+        - role
+        - joinedAt
   securitySchemes:
     supertokens_session:
       type: apiKey

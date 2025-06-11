@@ -4,6 +4,7 @@ import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
 import * as YAML from 'yamljs';
 import * as swaggerUi from 'swagger-ui-express';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
