@@ -7,17 +7,17 @@ import {
   TechStack,
   Prisma,
   Difficulty,
+  ProjectRole,
+  teamMember,
 } from '@prisma/client';
+import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
+import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
+  projectMembers: teamMember[];
+  projectRoles: (ProjectRole & { skillSet: TechStack[] })[];
 };
-
-export interface ProjectRole {
-  role: string;
-  skill_set: string[];
-  description: string;
-}
 
 export class PrismaProjectMapper {
   static toRepo(project: DomainProject): Result<Prisma.ProjectCreateInput> {
@@ -38,14 +38,18 @@ export class PrismaProjectMapper {
       projectRoles: {
         create: project.getProjectRoles().map((role) => ({
           roleTitle: role.getRoleTitle(),
-          skillSet: role.getSkillSet().map((tech) => tech.getName()),
+          skillSet: {
+            connect: role.getSkillSet().map((tech) => ({
+              id: tech.getId(),
+            })),
+          },
           description: role.getDescription(),
           isFilled: role.getIsFilled(),
         })),
       },
-      teamMembers: {
+      projectMembers: {
         create: project.getTeamMembers().map((member) => ({
-          user_id: member.getUserId(),
+          userId: member.getUserId(),
         })),
       },
     });
@@ -54,30 +58,44 @@ export class PrismaProjectMapper {
   static toDomain(
     prismaProject: PrismaProjectWithIncludes,
   ): Result<DomainProject> {
-    const techStacks = TechStackFactory.createMany(prismaProject.techStacks);
-    if (!techStacks.success) return Result.fail(techStacks.error);
-
-    const projectResult: Result<DomainProject> = ProjectFactory.fromPersistence(
-      {
-        id: prismaProject.id,
-        title: prismaProject.title,
-        description: prismaProject.description,
-        link: prismaProject.link,
-        ownerId: prismaProject.ownerId,
-        techStacks: techStacks.value,
-        difficulty: PrismaProjectMapper.fromPrismaDifficulty(
-          prismaProject.difficulty,
-        ),
-        githubLink: prismaProject.github,
-        createdAt: prismaProject.createAt,
-        updatedAt: prismaProject.updatedAt,
-        projectRoles: [],
-        teamMembers: [],
-      },
+    // Transformer les techStacks (relation existante)
+    const techStacksResult = TechStackFactory.createMany(
+      prismaProject.techStacks,
     );
-    if (!projectResult.success) return Result.fail(projectResult.error);
+    if (!techStacksResult.success) return Result.fail(techStacksResult.error);
 
-    return Result.ok(projectResult.value);
+    // Transformer les projectRoles
+    const projectRolesResult =
+      prismaProject.projectRoles.length > 0
+        ? ProjectRoleFactory.fromPersistence(prismaProject.projectRoles)
+        : Result.ok([]);
+    if (!projectRolesResult.success)
+      return Result.fail(projectRolesResult.error);
+
+    // Transformer les teamMembers (en supposant qu'il existe un TeamMemberFactory)
+    const teamMembersResult =
+      prismaProject.projectMembers.length > 0
+        ? TeamMemberFactory.fromPersistence(prismaProject.projectMembers)
+        : Result.ok([]);
+    if (!teamMembersResult.success) return Result.fail(teamMembersResult.error);
+
+    // Créer l'entité de domaine avec toutes les relations
+    return ProjectFactory.fromPersistence({
+      id: prismaProject.id,
+      title: prismaProject.title,
+      description: prismaProject.description,
+      link: prismaProject.link,
+      ownerId: prismaProject.ownerId,
+      techStacks: techStacksResult.value,
+      difficulty: PrismaProjectMapper.fromPrismaDifficulty(
+        prismaProject.difficulty,
+      ),
+      githubLink: prismaProject.github,
+      createdAt: prismaProject.createAt,
+      updatedAt: prismaProject.updatedAt,
+      projectRoles: projectRolesResult.value,
+      teamMembers: teamMembersResult.value,
+    });
   }
 
   public static toPrismaDifficulty(

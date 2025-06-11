@@ -6,6 +6,9 @@ export class CreateProjectRoleDto {
   @IsNotEmpty()
   roleTitle: string;
 
+  @IsString()
+  projectId: string;
+
   @IsArray()
   @IsNotEmpty()
   skillSet: TechStackDto[];

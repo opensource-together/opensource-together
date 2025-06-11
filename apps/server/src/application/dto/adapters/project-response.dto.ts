@@ -6,6 +6,7 @@ export class ProjectResponseDto {
   ownerId: string;
   createdAt?: Date;
   updatedAt?: Date;
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  techStacks: { id: string }[];
+  projectMembers: { userId: string }[];
   projectRoles: object[];
 }
