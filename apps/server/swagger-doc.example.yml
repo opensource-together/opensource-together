@@ -93,20 +93,21 @@ paths:
               githubLink: 'https://github.com/user/my-project'
               techStacks:
                 - id: 'react'
-                  name: 'React'
-                  iconUrl: 'https://reactjs.org/logo.svg'
                 - id: 'typescript'
-                  name: 'TypeScript'
-                  iconUrl: 'https://www.typescriptlang.org/logo.png'
               projectRoles:
                 - roleTitle: 'Frontend Developer'
                   description: 'Développeur React expérimenté'
                   skillSet:
                     - id: 'react'
-                      name: 'React'
-                      iconUrl: 'https://reactjs.org/logo.svg'
                   isFilled: false
-              projectMembers: []
+              projectMembers: [
+                {
+                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
+                },
+                {
+                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
+                }
+              ]
       responses:
         '200':
           description: Projet créé avec succès
