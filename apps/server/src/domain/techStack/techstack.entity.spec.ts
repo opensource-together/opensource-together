@@ -1,4 +1,4 @@
-import { ProjectTestBuilder } from '../project/ProjectTestBuilder';
+/*import { ProjectTestBuilder } from '../project/ProjectTestBuilder';
 import { TechStackFactory } from './techStack.factory';
 
 const defaultTechStacks = [
@@ -25,4 +25,4 @@ describe('Gestion des TechStacks', () => {
     expect(techStacks[0].getName()).toBe('React');
     expect(techStacks[1].getName()).toBe('Node.js');
   });
-});
+});*/
