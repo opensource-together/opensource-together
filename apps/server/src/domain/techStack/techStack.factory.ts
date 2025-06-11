@@ -3,11 +3,7 @@ import { TechStack } from './techstack.entity';
 
 export class TechStackFactory {
   static create(id: string, name: string, iconUrl: string): Result<TechStack> {
-    const techStack = new TechStack({
-      id,
-      name,
-      iconUrl,
-    });
+    const techStack = new TechStack(id, name, iconUrl);
     return Result.ok(techStack);
   }
 
