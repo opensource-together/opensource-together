@@ -5,6 +5,7 @@ import { CreateUserCommand } from '@/application/user/commands/create-user.comma
 import { deleteUser } from 'supertokens-node';
 import { Result } from '@/shared/result';
 import { User } from '@/domain/user/user.entity';
+import { UpdateGithubTokenUserCommand } from '@/application/user/commands/update-user-gh-token.command';
 export const thirdPartyRecipe = ({
   configService,
   commandBus,
@@ -21,7 +22,13 @@ export const thirdPartyRecipe = ({
             thirdPartyId: 'github',
             clients: [
               {
-                scope: ['repo', 'user:email', 'read:user'],
+                scope: [
+                  'read:user',
+                  'user:email',
+                  'repo',
+                  'write:repo_hook',
+                  'admin:repo_hook',
+                ],
                 clientId: configService.get('GITHUB_CLIENT_ID') as string,
                 clientSecret: configService.get(
                   'GITHUB_CLIENT_SECRET',
@@ -39,71 +46,41 @@ export const thirdPartyRecipe = ({
           signInUp: async (input) => {
             // First we call the original implementation of signInUp.
             const response = await originalImplementation.signInUp(input);
-            // Post sign up response, we check if it was successful
+
             if (response.status === 'OK') {
               const githubUserInfo =
                 response.rawUserInfoFromProvider.fromUserInfoAPI;
+              console.log({ githubUserInfo });
               const { id, emails } = response.user;
               if (response.createdNewRecipeUser) {
-                console.log('create new user');
-                console.log({ id });
-                console.log({ response });
                 const createUserCommand = new CreateUserCommand(
                   id,
                   githubUserInfo?.user.login,
                   emails[0],
+                  githubUserInfo?.user.avatar_url,
+                  githubUserInfo?.user.bio,
+                  githubUserInfo?.user.html_url,
+                  String(githubUserInfo?.user.id),
+                  response?.oAuthTokens.access_token,
                 );
                 const newUser: Result<
                   User,
                   { username?: string; email?: string } | string
                 > = await commandBus.execute(createUserCommand);
-                console.log({ newUser });
-                if (newUser.success) {
+                if (!newUser.success) {
                   console.log({ newUser });
-                } else {
-                  console.log('Je rentre dans le else');
                   await deleteUser(id);
                 }
-                return response;
-
-                // try {
-                //   const createUserCommand = new CreateUserCommand(
-                //     id,
-                //     githubUserInfo?.user.login,
-                //     emails[0],
-                //   );
-                //   const newUser: Result<
-                //     User,
-                //     { username?: string; email?: string } | string
-                //   > = await commandBus.execute(createUserCommand);
-                //   if (newUser.success) {
-                //     console.log({ newUser });
-                //   } else {
-                //     await deleteUser(id);
-                //   }
-                //   return response;
-                // } catch (err) {
-                //   console.log('Je rentre dans catch');
-                //   console.log({ err });
-                //   await deleteUser(id);
-                // }
+              } else {
+                console.log('update user');
+                const updateUserCommand = new UpdateGithubTokenUserCommand(
+                  id,
+                  String(githubUserInfo?.user.id),
+                  response?.oAuthTokens.access_token,
+                );
+                const updatedUser: Result<User, string> =
+                  await commandBus.execute(updateUserCommand);
               }
-
-              // This is the response from the OAuth 2 provider that contains their tokens or user info.
-              //   const providerAccessToken = response.oAuthTokens['access_token'];
-              //   const firstName =
-              //     response.rawUserInfoFromProvider.fromUserInfoAPI!['first_name'];
-
-              //   if (input.session === undefined) {
-              //     if (
-              //       response.createdNewRecipeUser &&
-              //       response.user.loginMethods.length === 1
-              //     ) {
-              //       // TODO: Post sign up logic
-              //     } else {
-              //       // TODO: Post sign in logic
-              //     }
-              //   }
             }
             return response;
           },

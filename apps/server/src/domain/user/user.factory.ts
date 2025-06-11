@@ -4,11 +4,25 @@ import { Email } from '@domain/user/email.vo';
 import { Result } from '@shared/result';
 
 export class UserFactory {
-  static create(
-    id: string,
-    username: string,
-    email: string,
-  ): Result<User, { username?: string; email?: string } | string> {
+  static create({
+    id,
+    username,
+    email,
+    avatarUrl,
+    bio,
+    githubUrl,
+    githubUserId,
+    githubAccessToken,
+  }: {
+    id: string;
+    username: string;
+    email: string;
+    avatarUrl: string;
+    bio: string;
+    githubUrl: string;
+    githubUserId: string;
+    githubAccessToken: string;
+  }): Result<User, { username?: string; email?: string } | string> {
     const usernameVo = Username.create(username);
     const emailVo = Email.create(email);
     const error: { username?: string; email?: string } = {};
@@ -21,6 +35,11 @@ export class UserFactory {
         id,
         username: usernameVo.value,
         email: emailVo.value,
+        avatarUrl,
+        bio,
+        githubUrl,
+        githubUserId,
+        githubAccessToken,
         createdAt: new Date(),
         updatedAt: new Date(),
       }),

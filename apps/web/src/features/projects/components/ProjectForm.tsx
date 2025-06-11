@@ -6,10 +6,13 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 
 import { useCreateProject } from "../hooks/useProjects";
-import { ProjectSchema, projectSchema } from "../schema/project.schema";
+import {
+  ProjectSchema,
+  projectSchema,
+} from "../validations/project.form.schema";
 
 export default function ProjectForm() {
-  const { createProject, isCreating, isError } = useCreateProject();
+  const { createProject, isCreating, isCreateError } = useCreateProject();
 
   const {
     register,
@@ -36,7 +39,7 @@ export default function ProjectForm() {
   });
 
   const handleFormSubmit = (data: ProjectSchema) => {
-    createProject(data);
+    createProject({ projectId: "", data });
   };
 
   return (
@@ -146,7 +149,7 @@ export default function ProjectForm() {
         {isCreating ? "Creating..." : "Create Project"}
       </Button>
 
-      {isError && (
+      {isCreateError && (
         <div className="font-medium text-red-600">
           Error creating project. Please try again.
         </div>

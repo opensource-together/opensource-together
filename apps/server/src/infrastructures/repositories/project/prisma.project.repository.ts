@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectRepositoryPort } from '@/application/project/ports/project.repository.port';
-import { PrismaService } from '../orm/prisma/prisma.service';
+import { PrismaService } from '../../orm/prisma/prisma.service';
 import { Project } from '@/domain/project/project.entity';
 import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { PrismaProjectMapper } from './project/prisma.project.mapper';
+import { PrismaProjectMapper } from './prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {

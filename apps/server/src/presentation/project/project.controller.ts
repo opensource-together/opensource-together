@@ -22,6 +22,7 @@ import { GetProjectsQuery } from '@/application/project/queries/get-all/get-proj
 import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
 import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
 import { UpdateProjectCommand } from '@/application/project/commands/update/update-project.usecase';
+import { CreateGitHubRepositoryCommand } from '@/application/github/commands/create-github-repository.command';
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -130,5 +131,25 @@ export class ProjectController {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }
     return toProjectResponseDto(projectRes.value);
+  }
+  //endpoint pour tester la création d'un repository GitHub
+  @Post('github')
+  async createGitHubRepository(
+    @Session('userId') ownerId: string,
+    @Body()
+    project: { name: string; description?: string; isPrivate?: boolean },
+  ) {
+    const projectRes: Result<Project> = await this.commandBus.execute(
+      new CreateGitHubRepositoryCommand(
+        ownerId,
+        project.name,
+        project.description,
+        project.isPrivate,
+      ),
+    );
+    if (!projectRes.success) {
+      throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
+    }
+    return projectRes.value;
   }
 }

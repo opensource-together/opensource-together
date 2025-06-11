@@ -98,6 +98,11 @@ export const emailPasswordRecipe = (
                 responseSignUpPOSTSupertokens.user.id,
                 usernameForCreateUser,
                 emailForCreateUser,
+                '',
+                '',
+                '',
+                '',
+                '',
               ),
             );
             console.log(
@@ -145,6 +150,7 @@ export const emailPasswordRecipe = (
           const user: Result<User> = await queryBus.execute(
             new FindUserByUsernameQuery(identifier),
           );
+          console.log({ user });
           if (!user.success) {
             return {
               status: 'GENERAL_ERROR',

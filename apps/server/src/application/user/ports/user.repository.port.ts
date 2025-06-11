@@ -14,4 +14,7 @@ export interface UserRepositoryPort {
   findById(
     id: string,
   ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  update(
+    user: User,
+  ): Promise<Result<User, { username?: string; email?: string } | string>>;
 }
