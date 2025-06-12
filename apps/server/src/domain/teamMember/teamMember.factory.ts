@@ -52,7 +52,7 @@ export default class TeamMemberFactory {
         });
         teamMembersResult.push(teamMemberResult);
       } catch (error) {
-        errors.push(error);
+        errors.push(`${error}`);
       }
     }
 

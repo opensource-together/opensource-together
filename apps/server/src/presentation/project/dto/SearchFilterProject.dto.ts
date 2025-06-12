@@ -1,7 +1,7 @@
 // apps/server/src/presentation/project/dto/filter-projects.dto.ts
 
 import { IsEnum, IsOptional, IsArray, IsString, IsIn } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { Difficulty } from '@prisma/client';
 
 export class FilterProjectsDto {
@@ -20,8 +20,9 @@ export class FilterProjectsDto {
   @IsOptional()
   @Transform(({ value }) => {
     // Supporte à la fois les tableaux natifs et les chaînes avec virgules
-    if (Array.isArray(value)) return value;
-    return value ? value.split(',') : undefined;
+    if (Array.isArray(value)) return value as string[];
+    else if (typeof value === 'string') return value.split(',');
+    return undefined;
   })
   roles?: string[];
 
@@ -30,8 +31,9 @@ export class FilterProjectsDto {
   @IsOptional()
   @Transform(({ value }) => {
     // Supporte à la fois les tableaux natifs et les chaînes avec virgules
-    if (Array.isArray(value)) return value;
-    return value ? value.split(',') : undefined;
+    if (Array.isArray(value)) return value as string[];
+    else if (typeof value == 'string') return value.split(',');
+    return undefined;
   })
   techStacks?: string[];
 
