@@ -7,6 +7,8 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
+import { Prisma } from '@prisma/client';
+
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -112,7 +114,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
   ): Promise<Result<Project[] | null>> {
     try {
       // Construction dynamique du where clause
-      const where: any = {};
+      const where: Prisma.ProjectWhereInput = {};
 
       // Filtre par titre (utilise idx_title_search)
       if (filters.title && filters.title.trim() !== '') {
@@ -124,7 +126,10 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       // Filtre par difficulté (utilise idx_difficulty_date)
       if (filters.difficulty) {
-        where.difficulty = filters.difficulty.toUpperCase();
+        const difficulty = PrismaProjectMapper.toPrismaDifficulty(
+          filters.difficulty,
+        );
+        where.difficulty = difficulty;
       }
 
       // Filtre par rôles (utilise idx_project_roles)
@@ -152,12 +157,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       }
 
       // Configuration du tri (utilise idx_difficulty_date si difficulté présente)
-      const orderBy: any = [];
-      if (filters.sortOrder === 'asc') {
-        orderBy.push({ createAt: 'asc' });
-      } else {
-        orderBy.push({ createAt: 'desc' }); // Défaut descendant
-      }
+      const orderBy: Prisma.ProjectOrderByWithRelationInput = {};
+      orderBy.createAt = filters.sortOrder;
 
       const prismaProjects = await this.prisma.project.findMany({
         where,

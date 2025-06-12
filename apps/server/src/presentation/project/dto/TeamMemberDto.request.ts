@@ -1,5 +1,4 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsString } from 'class-validator';
-import { TechStackDto } from './TechStackDto.request';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class TeamMemberDto {
   @IsString()
