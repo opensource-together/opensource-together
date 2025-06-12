@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
-import YAML from 'yamljs';
+import * as YAML from 'yamljs';
 import * as swaggerUi from 'swagger-ui-express';
 
 async function bootstrap() {
