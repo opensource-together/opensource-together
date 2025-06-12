@@ -13,14 +13,11 @@ export class ProjectRole {
   private _project?: Project;
 
   constructor({
-    id,
     projectId,
     roleTitle,
     skillSet,
     description,
     isFilled,
-    teamMembers,
-    project,
   }: {
     id?: string;
     projectId: string;

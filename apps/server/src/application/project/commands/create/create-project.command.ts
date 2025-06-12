@@ -14,7 +14,6 @@ import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
 import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
 import { CreateProjectRoleDto } from '@/presentation/project/dto/ProjectRoleDto.request';
 import { TeamMemberDto } from '@/presentation/project/dto/TeamMemberDto.request';
-import { TechStack } from '@/domain/techStack/techstack.entity';
 
 export class CreateProjectCommand implements ICommand {
   constructor(

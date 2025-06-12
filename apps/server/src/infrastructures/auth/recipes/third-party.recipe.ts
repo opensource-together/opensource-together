@@ -6,10 +6,10 @@ import { deleteUser } from 'supertokens-node';
 import { Result } from '@/shared/result';
 import { User } from '@/domain/user/user.entity';
 import { UpdateGithubTokenUserCommand } from '@/application/user/commands/update-user-gh-token.command';
+import { GithubUserInfoDto } from './dto/github-user-info.dto';
 export const thirdPartyRecipe = ({
   configService,
   commandBus,
-  queryBus,
 }: {
   configService: ConfigService;
   commandBus: CommandBus;
@@ -49,20 +49,25 @@ export const thirdPartyRecipe = ({
             const response = await originalImplementation.signInUp(input);
 
             if (response.status === 'OK') {
-              const githubUserInfo =
-                response.rawUserInfoFromProvider.fromUserInfoAPI;
+              const githubUserInfo = response.rawUserInfoFromProvider
+                .fromUserInfoAPI as GithubUserInfoDto | undefined;
+              if (!githubUserInfo) {
+                // TODO handle missing user info
+                throw Error(`Missing user info during authentication`);
+              }
               console.log({ githubUserInfo });
               const { id, emails } = response.user;
+              const accessToken = response.oAuthTokens.access_token as string;
               if (response.createdNewRecipeUser) {
                 const createUserCommand = new CreateUserCommand(
                   id,
-                  githubUserInfo?.user.login,
+                  githubUserInfo.login,
                   emails[0],
-                  githubUserInfo?.user.avatar_url,
-                  githubUserInfo?.user.bio,
-                  githubUserInfo?.user.html_url,
-                  String(githubUserInfo?.user.id),
-                  response?.oAuthTokens.access_token,
+                  githubUserInfo.avatar_url,
+                  githubUserInfo.bio,
+                  githubUserInfo.html_url,
+                  String(githubUserInfo.id),
+                  accessToken,
                 );
                 const newUser: Result<
                   User,
@@ -76,11 +81,10 @@ export const thirdPartyRecipe = ({
                 console.log('update user');
                 const updateUserCommand = new UpdateGithubTokenUserCommand(
                   id,
-                  String(githubUserInfo?.user.id),
-                  response?.oAuthTokens.access_token,
+                  String(githubUserInfo.id),
+                  accessToken,
                 );
-                const updatedUser: Result<User, string> =
-                  await commandBus.execute(updateUserCommand);
+                await commandBus.execute(updateUserCommand);
               }
             }
             return response;

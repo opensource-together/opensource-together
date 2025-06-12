@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [TerminusModule, HttpModule, ConfigModule],
-  controllers: [HealthController]
+  controllers: [HealthController],
 })
-
 export class HealthModule {}

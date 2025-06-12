@@ -33,16 +33,17 @@ export class GitHubApiService implements GitHubApiServicePort {
       );
       return Result.ok(response.data);
     } catch (error: any) {
-        // TODO Gestion d'erreur  a améliorée
-      const statusCode = error.response?.status;
-      const errorMessage = error.response?.data?.message || 'Erreur inconnue';
+      if (typeof error === 'string') {
+        return Result.fail(`Erreur API Github : ${error}.`);
+      } else if (error instanceof Error) {
+        console.error('Erreur GitHub API:', {
+          message: error.message,
+        });
 
-      console.error('Erreur GitHub API:', {
-        status: statusCode,
-        message: errorMessage,
-      });
-
-      return Result.fail(`Erreur API GitHub (${statusCode}): ${errorMessage}`);
+        return Result.fail(`Erreur API GitHub (${error.message}`);
+      } else {
+        return Result.fail(`Erreur API Github inconnnue.`);
+      }
     }
   }
 }

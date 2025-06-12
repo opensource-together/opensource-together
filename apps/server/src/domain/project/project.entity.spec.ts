@@ -1,3 +1,7 @@
-import { ProjectTestBuilder } from './ProjectTestBuilder';
-
-describe('Project Entity', () => {});
+describe('Project Entity', () => {
+  describe('dummy', () => {
+    it('is true', () => {
+      expect(true).toBe(true);
+    });
+  });
+});

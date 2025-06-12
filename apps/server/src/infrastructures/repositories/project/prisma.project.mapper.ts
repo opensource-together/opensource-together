@@ -108,8 +108,6 @@ export class PrismaProjectMapper {
         return Difficulty.MEDIUM;
       case 'hard':
         return Difficulty.HARD;
-      default:
-        throw new Error(`Invalid difficulty: ${difficulty}`);
     }
   }
 
@@ -123,8 +121,6 @@ export class PrismaProjectMapper {
         return 'medium';
       case Difficulty.HARD:
         return 'hard';
-      default:
-        throw new Error(`Invalid difficulty: ${difficulty}`);
     }
   }
 }
