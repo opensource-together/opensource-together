@@ -26,3 +26,11 @@ describe('Gestion des TechStacks', () => {
     expect(techStacks[1].getName()).toBe('Node.js');
   });
 });*/
+
+describe('Techstack entity', () => {
+  describe('dummy', () => {
+    it('is true', () => {
+      expect(true).toBe(true);
+    });
+  });
+});

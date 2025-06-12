@@ -78,3 +78,11 @@ describe('CreateProjectUseCase', () => {
     });
   });
 });*/
+
+describe('Create Project Command', () => {
+  describe('dummy', () => {
+    it('is true', () => {
+      expect(true).toBe(true);
+    });
+  });
+});

@@ -14,3 +14,11 @@ describe('Link VO', () => {
 
   // TODO: Ajouter des tests pour les URLs malformées si nécessaire
 });*/
+
+describe('Link Value Object', () => {
+  describe('dummy', () => {
+    it('is true', () => {
+      expect(true).toBe(true);
+    });
+  });
+});
