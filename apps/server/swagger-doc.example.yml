@@ -702,10 +702,10 @@ components:
               type: integer
               description: Nombre d'abonnés
               example: 150
-                           following:
-                 type: integer
-                 description: Nombre de personnes suivies
-                 example: 75
+              following:
+              type: integer
+              description: Nombre de personnes suivies
+              example: 75
     ProjectRoleDto:
       type: object
       properties:
