@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -9,6 +11,8 @@ interface ProjectSideBarProps {
 
 export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const {
+    title = "",
+    image = "/icons/empty-project.svg",
     socialLinks = [],
     communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
   } = project;
@@ -58,12 +62,31 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
     },
   ];
 
-  return <RightSidebar sections={sections} />;
+  return (
+    <div className="font-geist flex w-[270px] flex-col gap-10">
+      {/* Project Image */}
+      <div className="flex h-[252px] w-[252px] items-center justify-center rounded-4xl bg-[#F4F4F4]">
+        <Image
+          src={image}
+          alt={title}
+          width={252}
+          height={252}
+          className="rounded-4xl"
+        />
+      </div>
+
+      {/* Existing Sidebar Sections */}
+      <RightSidebar sections={sections} />
+    </div>
+  );
 }
 
 export function SkeletonProjectSideBar() {
   return (
     <div className="flex w-[270px] flex-col gap-10">
+      {/* Project Image Skeleton */}
+      <Skeleton className="h-[252px] w-[252px] rounded-[16px]" />
+
       <div>
         <Skeleton className="mb-3 h-5 w-24" />
         <div className="flex flex-col gap-5">

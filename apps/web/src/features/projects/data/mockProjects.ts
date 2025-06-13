@@ -7,6 +7,12 @@ export const mockProjects: Project[] = [
     title: "LeetGrind",
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "y2_dev",
     authorImage:
       "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
@@ -99,6 +105,12 @@ export const mockProjects: Project[] = [
     slug: "gitify",
     title: "Gitify",
     image: "/icons/gitifyIcon.png",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "69Killian",
     authorImage: "/icons/killiancodes-icon.jpg",
     description:
@@ -175,6 +187,12 @@ export const mockProjects: Project[] = [
     title: "DevCord",
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "p2aco",
     authorImage: "/icons/p2aco-icon.png",
     description:
@@ -253,6 +271,12 @@ export const mockProjects: Project[] = [
     slug: "codesnippet",
     title: "CodeSnippet",
     image: "/icons/codesnippet-icon.png",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "Spectre",
     authorImage:
       "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
@@ -333,6 +357,12 @@ export const mockProjects: Project[] = [
     title: "NextSandbox",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "Byron Love",
     authorImage: "exemplebyronIcon.svg",
     description:
@@ -413,6 +443,12 @@ export const mockProjects: Project[] = [
     title: "g9s",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "p2aco",
     authorImage: "/icons/p2aco-icon.png",
     description:
@@ -483,6 +519,12 @@ export const mockProjects: Project[] = [
     title: "Sherpa",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "Olyxz16",
     authorImage:
       "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
@@ -559,6 +601,12 @@ export const mockProjects: Project[] = [
     title: "Liltea.me",
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "Shyybi",
     authorImage: "/icons/shyybi-icon.png",
     description:
@@ -632,6 +680,12 @@ export const mockProjects: Project[] = [
     title: "DevSpace",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "Sarah Miller",
     authorImage: "exemplebyronIcon.svg",
     description:
@@ -699,6 +753,12 @@ export const mockProjects: Project[] = [
     title: "TechDocs",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
+    projectImages: [
+      "/images/gitify-1.png",
+      "/images/gitify-2.png",
+      "/images/gitify-3.png",
+      "/images/gitify-4.png",
+    ],
     authorName: "Emma Wilson",
     authorImage: "exemplebyronIcon.svg",
     description:

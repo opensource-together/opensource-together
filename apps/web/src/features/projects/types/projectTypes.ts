@@ -32,6 +32,7 @@ export interface Project {
   slug?: string;
   title: string;
   image?: string;
+  projectImages?: string[];
   authorName?: string;
   authorImage?: string;
   description: string;

@@ -19,30 +19,64 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     longDescription,
     keyBenefits = [],
     difficulty = "",
-    image = "/icons/empty-project.svg",
     authorName = "",
     authorImage = "/icons/empty-project.svg",
     techStacks = [],
+    projectImages = [],
   } = project;
 
+  // Images par défaut si projectImages est vide
+  const defaultImages = [
+    "/images/gitify-1.png",
+    "/images/gitify-2.png",
+    "/images/gitify-3.png",
+    "/images/gitify-4.png",
+  ];
+
+  // Utiliser les images du projet ou les images par défaut
+  const imagesToDisplay =
+    projectImages.length > 0 ? projectImages : defaultImages;
+
   return (
-    <section className="flex w-[710px] flex-col rounded-3xl border border-[black]/10 bg-white p-10 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
+    <section className="flex flex-col bg-white">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-5">
-          <div className="flex h-[80px] w-[82px] items-center justify-center rounded-[16px] bg-[#F4F4F4]">
-            <Image
-              src={image}
-              alt={title}
-              width={80}
-              height={80}
-              className="rounded-lg"
-            />
+      <div className="mb-6 flex items-start justify-between">
+        <div className="flex gap-5">
+          {/* Project Images */}
+          <div className="flex gap-3">
+            {/* Main large image */}
+            {imagesToDisplay[0] && (
+              <Image
+                src={imagesToDisplay[0]}
+                alt={title}
+                width={520}
+                height={255}
+                className="h-[255px] w-[520px] flex-shrink-0 rounded-lg object-cover"
+              />
+            )}
+
+            {/* Three stacked smaller images */}
+            <div className="flex flex-shrink-0 flex-col gap-2">
+              {imagesToDisplay.slice(1, 4).map((imageUrl, index) => (
+                <Image
+                  key={index}
+                  src={imageUrl}
+                  alt={`${title} - Image ${index + 2}`}
+                  width={141}
+                  height={79}
+                  className="h-[79px] w-[141px] flex-shrink-0 rounded-lg object-cover"
+                />
+              ))}
+            </div>
           </div>
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl leading-tight font-medium">{title}</h1>
-            <AuthorTag name={authorName} image={authorImage} />
-          </div>
+        </div>
+      </div>
+
+      {/* Project Title and Author */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl leading-tight font-medium">{title}</h1>
+          <AuthorTag name={authorName} image={authorImage} />
         </div>
         <div className="flex flex-col items-end gap-4">
           <DifficultyBars difficulty={difficulty} />
