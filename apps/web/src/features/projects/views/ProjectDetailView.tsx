@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import ProjectFilters from "../components/ProjectFilters";
 import ProjectHero from "../components/ProjectHero";
+import ProjectLatestUpdate from "../components/ProjectLatestUpdate";
 import ProjectReadMe from "../components/ProjectReadMe";
 import ProjectSideBar from "../components/ProjectSideBar";
 import RoleCard from "../components/RoleCard";
@@ -34,6 +35,7 @@ export default function ProjectDetailView({
           </div>
         </div>
         <ProjectReadMe />
+        <ProjectLatestUpdate />
         <div>
           <div className="mb-3 flex items-center justify-between lg:max-w-[721.96px]">
             <p className="items-centers flex gap-1 text-xl font-medium">
