@@ -11,8 +11,6 @@ export class UserFactory {
     avatarUrl,
     bio,
     githubUrl,
-    githubUserId,
-    githubAccessToken,
   }: {
     id: string;
     username: string;
@@ -20,8 +18,6 @@ export class UserFactory {
     avatarUrl: string;
     bio: string;
     githubUrl: string;
-    githubUserId: string;
-    githubAccessToken: string;
   }): Result<User, { username?: string; email?: string } | string> {
     const usernameVo = Username.create(username);
     const emailVo = Email.create(email);
@@ -38,8 +34,6 @@ export class UserFactory {
         avatarUrl,
         bio,
         githubUrl,
-        githubUserId,
-        githubAccessToken,
         createdAt: new Date(),
         updatedAt: new Date(),
       }),

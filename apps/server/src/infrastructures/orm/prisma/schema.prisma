@@ -28,12 +28,21 @@ model User {
   avatarUrl					  String?
   bio							    String?
   githubUrl					  String?
-  githubUserId				String?
+  // githubUserId				String?
+  // githubAccessToken		String?
+  createdAt 					DateTime @default(now())
+  updatedAt 					DateTime @updatedAt
+  githubCredentials			UserGitHubCredentials? 
+}
+
+model UserGitHubCredentials {
+  user							User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     					String   @unique @id
   githubAccessToken		String?
+  githubUserId				String?
   createdAt 					DateTime @default(now())
   updatedAt 					DateTime @updatedAt
 }
-
 model Project {
   id          				String        	@id @default(uuid())
   ownerId     				String
