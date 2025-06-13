@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { StackIcon } from "@/components/shared/StackIcon";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Project } from "../types/projectTypes";
@@ -12,59 +14,18 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const {
     title = "",
     image = "/icons/empty-project.svg",
+    techStacks = [],
     socialLinks = [],
     communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
   } = project;
 
-  const sections = [
-    {
-      title: "Partager",
-      links: [
-        {
-          icon: "/icons/linkedin.svg",
-          label: "Partager sur Linkedin",
-          url: "https://linkedin.com/share",
-        },
-        {
-          icon: "/icons/x-logo.svg",
-          label: "Partager sur X",
-          url: "https://x.com/share",
-        },
-        ...socialLinks
-          .filter((link) => link.type === "github")
-          .map((link) => ({
-            icon: "/icons/github.svg",
-            label: "Voir sur GitHub",
-            url: link.url,
-          })),
-      ],
-    },
-    {
-      title: "Statistiques du projet",
-      links: [
-        {
-          icon: "/icons/black-star.svg",
-          label: "Stars",
-          value: stars,
-        },
-        {
-          icon: "/icons/two-people.svg",
-          label: "Membres",
-          value: contributors,
-        },
-        {
-          icon: "/icons/github.svg",
-          label: "Forks",
-          value: forks,
-        },
-      ],
-    },
-  ];
+  // Récupérer le lien GitHub
+  const githubLink = socialLinks.find((link) => link.type === "github")?.url;
 
   return (
-    <div className="font-geist flex w-[270px] flex-col gap-10">
-      {/* Project Image */}
-      <div className="flex h-[252px] w-[252px] items-center justify-center rounded-4xl bg-[#F4F4F4]">
+    <div className="flex flex-col gap-5 bg-white">
+      {/* Project Icon */}
+      <div className="flex h-[252px] w-[252px] items-center justify-center self-center rounded-4xl bg-[#F4F4F4]">
         <Image
           src={image}
           alt={title}
@@ -74,46 +35,83 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         />
       </div>
 
-      {/* HIDDEN FOR NOW Existing Sidebar Sections
-      <RightSidebar sections={sections} />
-
-      {/* Project Title and Author
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl leading-tight font-medium">{title}</h1>
-          <AuthorTag name={authorName} image={authorImage} />
+      {/* Stats */}
+      <div className="flex items-center justify-start gap-2 px-2 text-sm text-black/70">
+        {/* Project Title */}
+        <h1
+          className="text-start text-3xl font-medium text-black"
+          style={{ letterSpacing: "-2px" }}
+        >
+          {title}
+        </h1>
+        <div className="flex items-center gap-1">
+          <Image
+            src="/icons/branch-git-fork.svg"
+            alt="forks"
+            width={11}
+            height={11}
+          />
+          <span className="text-xs text-black">{forks}</span>
         </div>
-        <div className="flex flex-col items-end gap-4">
-          <DifficultyBars difficulty={difficulty} />
-          <div className="flex items-center gap-3">
-            <Button variant="outline">
-              Voir le Repository
-              <Image
-                src="/icons/github.svg"
-                alt="arrowright"
-                width={15}
-                height={15}
-              />
-            </Button>
-            <Button>
-              Rejoindre le projet
-              <Image
-                src="/icons/joined.svg"
-                alt="joined"
-                width={10}
-                height={10}
-                style={{ filter: "invert(1)" }}
-              />
-            </Button>
-          </div>
+        <div className="flex items-center gap-1">
+          <Image
+            src="/icons/people-filled-in-black.svg"
+            alt="contributors"
+            width={12}
+            height={11}
+          />
+          <span className="text-xs text-black">{contributors}</span>
+        </div>
+        <div className="mt-[1px] flex items-center gap-1">
+          <Image
+            src="/icons/star-filled-in-black.svg"
+            alt="stars"
+            width={11}
+            height={11}
+            className="mb-[2px]"
+          />
+          <span className="text-xs text-black">{stars}</span>
         </div>
       </div>
-       {/* Technical Stack
-      <div className="pt-4">
-        <h3 className="mb-3 text-sm font-medium">Stack Technique</h3>
-        <div className="flex gap-3">
-          {techStacks.length > 0 &&
-            techStacks.map((tech, index) => (
+
+      {/* Action Buttons */}
+      <div className="flex gap-2">
+        <Button className="flex flex-1 items-center justify-center gap-0">
+          Rejoindre le projet
+          <Image
+            src="/icons/chevron-right.svg"
+            alt="chevron right"
+            width={7}
+            height={8}
+            className="ml-2"
+            style={{ filter: "invert(1)", marginTop: "1px" }}
+          />
+        </Button>
+        {githubLink && (
+          <Button variant="outline" className="flex-1" asChild>
+            <a href={githubLink} target="_blank" rel="noopener noreferrer">
+              Voir le Repo
+              <Image
+                src="/icons/github.svg"
+                alt="github"
+                width={16}
+                height={16}
+              />
+            </a>
+          </Button>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs font-normal text-black/30">Stack Technique</h3>
+        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
+      </div>
+
+      {/* Tech Stack */}
+      {techStacks.length > 0 && (
+        <div>
+          <div className="flex flex-wrap gap-2">
+            {techStacks.map((tech, index) => (
               <StackIcon
                 key={index}
                 name={tech.name}
@@ -121,47 +119,76 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
                 alt={tech.name}
               />
             ))}
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs font-normal text-black/30">
+          Contributeurs Principaux
+        </h3>
+        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
+      </div>
+
+      {/* Contributors Avatars */}
+      <div>
+        <div className="flex gap-2">
+          {Array.from({ length: Math.min(contributors, 4) }).map((_, index) => (
+            <div
+              key={index}
+              className="h-8 w-8 overflow-hidden rounded-full bg-gray-300"
+            >
+              <Image
+                src="/icons/empty-project.svg"
+                alt={`Contributor ${index + 1}`}
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            </div>
+          ))}
         </div>
       </div>
-    */}
     </div>
   );
 }
 
 export function SkeletonProjectSideBar() {
   return (
-    <div className="flex w-[270px] flex-col gap-10">
+    <div className="flex w-[270px] flex-col gap-6 rounded-2xl border border-[black]/10 bg-white p-6 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
       {/* Project Image Skeleton */}
-      <Skeleton className="h-[252px] w-[252px] rounded-[16px]" />
+      <Skeleton className="h-[252px] w-[252px] self-center rounded-[16px]" />
 
-      <div>
-        <Skeleton className="mb-3 h-5 w-24" />
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-[15px] w-[15px]" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-[15px] w-[15px]" />
-            <Skeleton className="h-4 w-28" />
-          </div>
-        </div>
+      {/* Title Skeleton */}
+      <Skeleton className="h-8 w-32 self-center" />
+
+      {/* Stats Skeleton */}
+      <div className="flex items-center justify-center gap-4">
+        <Skeleton className="h-4 w-8" />
+        <Skeleton className="h-4 w-8" />
+        <Skeleton className="h-4 w-8" />
       </div>
+
+      {/* Buttons Skeleton */}
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+
+      {/* Tech Stack Skeleton */}
+      <div className="flex flex-wrap gap-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-[28px] w-[60px]" />
+        ))}
+      </div>
+
+      {/* Contributors Skeleton */}
       <div>
-        <Skeleton className="mb-3 h-5 w-32" />
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-[14px] w-[15px]" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-[15px] w-[13px]" />
-            <Skeleton className="h-4 w-24" />
-          </div>
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-[15px] w-[15px]" />
-            <Skeleton className="h-4 w-20" />
-          </div>
+        <Skeleton className="mb-2 h-4 w-24" />
+        <div className="flex gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-8 w-8 rounded-full" />
+          ))}
         </div>
       </div>
     </div>
