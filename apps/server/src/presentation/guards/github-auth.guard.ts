@@ -9,15 +9,17 @@ import {
 } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { OAuthApp } from 'octokit';
+import { Request } from 'express';
 import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
+import { GithubAuthRequest } from '../types/github-auth-request.interface';
 
 export const GithubUserOctokit = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
+    const request = ctx.switchToHttp().getRequest<GithubAuthRequest>();
     const octokit = request.octokit as Octokit;
     if (!octokit) {
-      throw 'Octokit in not defined in context';
+      throw new Error('Octokit in not defined in context');
     }
     return octokit;
   },
@@ -43,7 +45,7 @@ export class GithubAuthGuard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest();
+    const req = context.switchToHttp().getRequest<GithubAuthRequest>();
 
     const userId = req.session!.getUserId();
     const userInfo = await supertokens.getUser(userId, context);

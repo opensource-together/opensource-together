@@ -3,7 +3,7 @@ import { toGithubRepositoryDto } from '@/application/dto/adapters/github/github-
 import { GithubRepositoryPort } from '@/application/github/ports/github-repository.port';
 import { Result } from '@/shared/result';
 import { Injectable } from '@nestjs/common';
-import { Octokit } from 'octokit';
+import { Octokit } from '@octokit/rest';
 import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
 import { GithubInvitationDto } from '@/application/dto/adapters/github/github-invitation.dto';
 import { InviteUserToRepoInput } from '@/application/dto/inputs/invite-user-to-repo.inputs.dto';
