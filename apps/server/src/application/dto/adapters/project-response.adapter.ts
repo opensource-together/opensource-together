@@ -19,6 +19,15 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
       projectRoleId: tm.getProjectRole()?.getId(),
       roleTitle: tm.getProjectRole()?.getRoleTitle(),
     })),
-    projectRoles: project.getProjectRoles(),
+    projectRoles: project.getProjectRoles().map((pr) => ({
+      id: pr.getId(),
+      roleTitle: pr.getRoleTitle(),
+      description: pr.getDescription(),
+      isFilled: pr.getIsFilled(),
+      skillSet: pr.getSkillSet().map((ts) => ({
+        id: ts.getId(),
+        name: ts.getName(),
+      })),
+    })),
   };
 }

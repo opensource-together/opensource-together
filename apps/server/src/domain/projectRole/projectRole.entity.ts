@@ -13,6 +13,7 @@ export class ProjectRole {
   private _project?: Project;
 
   constructor({
+    id,
     projectId,
     roleTitle,
     skillSet,
@@ -28,6 +29,7 @@ export class ProjectRole {
     teamMembers?: TeamMember[];
     project?: Project;
   }) {
+    this._id = id;
     this._projectId = projectId;
     this._roleTitle = roleTitle;
     this._skillSet = skillSet;
