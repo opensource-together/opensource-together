@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { RightSidebar } from "@/components/shared/rightSidebar/RightSidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Project } from "../types/projectTypes";
@@ -75,8 +74,56 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         />
       </div>
 
-      {/* Existing Sidebar Sections */}
+      {/* HIDDEN FOR NOW Existing Sidebar Sections
       <RightSidebar sections={sections} />
+
+      {/* Project Title and Author
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl leading-tight font-medium">{title}</h1>
+          <AuthorTag name={authorName} image={authorImage} />
+        </div>
+        <div className="flex flex-col items-end gap-4">
+          <DifficultyBars difficulty={difficulty} />
+          <div className="flex items-center gap-3">
+            <Button variant="outline">
+              Voir le Repository
+              <Image
+                src="/icons/github.svg"
+                alt="arrowright"
+                width={15}
+                height={15}
+              />
+            </Button>
+            <Button>
+              Rejoindre le projet
+              <Image
+                src="/icons/joined.svg"
+                alt="joined"
+                width={10}
+                height={10}
+                style={{ filter: "invert(1)" }}
+              />
+            </Button>
+          </div>
+        </div>
+      </div>
+       {/* Technical Stack
+      <div className="pt-4">
+        <h3 className="mb-3 text-sm font-medium">Stack Technique</h3>
+        <div className="flex gap-3">
+          {techStacks.length > 0 &&
+            techStacks.map((tech, index) => (
+              <StackIcon
+                key={index}
+                name={tech.name}
+                icon={tech.iconUrl || "/icons/empty-project.svg"}
+                alt={tech.name}
+              />
+            ))}
+        </div>
+      </div>
+    */}
     </div>
   );
 }

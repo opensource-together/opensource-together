@@ -1,9 +1,5 @@
 import Image from "next/image";
 
-import { AuthorTag } from "@/components/shared/AuthorTag";
-import DifficultyBars from "@/components/shared/DifficultyBars";
-import { StackIcon } from "@/components/shared/StackIcon";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Project } from "../types/projectTypes";
@@ -72,41 +68,9 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         </div>
       </div>
 
-      {/* Project Title and Author */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl leading-tight font-medium">{title}</h1>
-          <AuthorTag name={authorName} image={authorImage} />
-        </div>
-        <div className="flex flex-col items-end gap-4">
-          <DifficultyBars difficulty={difficulty} />
-          <div className="flex items-center gap-3">
-            <Button variant="outline">
-              Voir le Repository
-              <Image
-                src="/icons/github.svg"
-                alt="arrowright"
-                width={15}
-                height={15}
-              />
-            </Button>
-            <Button>
-              Rejoindre le projet
-              <Image
-                src="/icons/joined.svg"
-                alt="joined"
-                width={10}
-                height={10}
-                style={{ filter: "invert(1)" }}
-              />
-            </Button>
-          </div>
-        </div>
-      </div>
-
       {/* Description */}
       <div className="mt-2">
-        <h2 className="mb-2 font-medium">Description du projet</h2>
+        <h2 className="mb-5 text-lg font-medium">Description</h2>
         <p className="mb-4 text-sm font-normal text-black/70">{description}</p>
         <div className="w-[629px]">
           {keyBenefits.length > 0 && (
@@ -132,22 +96,6 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
       {/* Ligne de séparation */}
       <div className="mt-12 mb-3 w-full border-t border-dashed border-black/10"></div>
-
-      {/* Technical Stack */}
-      <div className="pt-4">
-        <h3 className="mb-3 text-sm font-medium">Stack Technique</h3>
-        <div className="flex gap-3">
-          {techStacks.length > 0 &&
-            techStacks.map((tech, index) => (
-              <StackIcon
-                key={index}
-                name={tech.name}
-                icon={tech.iconUrl || "/icons/empty-project.svg"}
-                alt={tech.name}
-              />
-            ))}
-        </div>
-      </div>
     </section>
   );
 }
