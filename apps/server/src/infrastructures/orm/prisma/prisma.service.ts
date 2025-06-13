@@ -9,7 +9,7 @@ export class PrismaService
   async onModuleInit(): Promise<void> {
     await this.$connect();
 
-    this.seedInitialData();
+    await this.seedInitialData();
   }
 
   async seedInitialData() {

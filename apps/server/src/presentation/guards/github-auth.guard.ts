@@ -1,20 +1,26 @@
-import { OCTOKIT_OAUTH_PROVIDER } from "@/infrastructures/github/providers/octokit.provider";
-import { Result } from "@/shared/result";
-import { CanActivate, createParamDecorator, ExecutionContext, Inject, Injectable } from "@nestjs/common";
-import { Octokit } from "@octokit/rest";
-import { OAuthApp } from "octokit";
-import supertokens from "supertokens-node"
-import Session from "supertokens-node/recipe/session";
+import { OCTOKIT_OAUTH_PROVIDER } from '@/infrastructures/github/providers/octokit.provider';
+import { Result } from '@/shared/result';
+import {
+  CanActivate,
+  createParamDecorator,
+  ExecutionContext,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+import { Octokit } from '@octokit/rest';
+import { OAuthApp } from 'octokit';
+import supertokens from 'supertokens-node';
+import Session from 'supertokens-node/recipe/session';
 
 export const GithubUserOctokit = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const octokit = request.octokit as Octokit;
-    if(!octokit) {
-      throw "Octokit in not defined in context";
+    if (!octokit) {
+      throw 'Octokit in not defined in context';
     }
     return octokit;
-  }
+  },
 );
 
 @Injectable()
@@ -23,7 +29,10 @@ export class GithubAuthGuard implements CanActivate {
     @Inject(OCTOKIT_OAUTH_PROVIDER) private readonly octokitProvider: OAuthApp,
   ) {}
 
-  async authTokenFromSession(request: Request, response: Response): Promise<Result<string>> {
+  async authTokenFromSession(
+    request: Request,
+    response: Response,
+  ): Promise<Result<string>> {
     const session = await Session.getSession(request, response);
     if (!session) {
       return Result.fail('No valid session found');
@@ -38,8 +47,8 @@ export class GithubAuthGuard implements CanActivate {
 
     const userId = req.session!.getUserId();
     const userInfo = await supertokens.getUser(userId, context);
-    const token = userInfo?.thirdParty.find((v) => v.id == "github");
-    if(!token) {
+    const token = userInfo?.thirdParty.find((v) => v.id == 'github');
+    if (!token) {
       return false;
     }
 

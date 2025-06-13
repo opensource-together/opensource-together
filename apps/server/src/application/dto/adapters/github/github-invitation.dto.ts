@@ -1,6 +1,6 @@
-import { GithubRepositoryPermissionsDto } from "./github-permissions.dto";
-import { GithubRepositoryDto } from "./github-repository.dto"
-import { GithubUserDto } from "./github-user.dto";
+import { GithubRepositoryPermissionsDto } from './github-permissions.dto';
+import { GithubRepositoryDto } from './github-repository.dto';
+import { GithubUserDto } from './github-user.dto';
 
 export class GithubInvitationDto {
   id: number;

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsOptional } from 'class-validator';
 import { TechStackDto } from './TechStackDto.request';
 
 export class UpdateProjectDtoRequest {

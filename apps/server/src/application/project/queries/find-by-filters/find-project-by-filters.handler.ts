@@ -7,14 +7,15 @@ import {
 } from '@/application/project/ports/project.repository.port';
 import { Result } from '@/shared/result';
 import { IQuery } from '@nestjs/cqrs';
+import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 
-export class FindProjectByTitleQuery implements IQuery {
-  constructor(public readonly title: string) {}
+export class FindProjectByFiltersQuery implements IQuery {
+  constructor(public readonly filters: ProjectFilterInputsDto) {}
 }
 
-@QueryHandler(FindProjectByTitleQuery)
-export class FindProjectByTitleHandler
-  implements IQueryHandler<FindProjectByTitleQuery>
+@QueryHandler(FindProjectByFiltersQuery)
+export class FindProjectByFiltersHandler
+  implements IQueryHandler<FindProjectByFiltersQuery>
 {
   constructor(
     @Inject(PROJECT_REPOSITORY_PORT)
@@ -22,9 +23,9 @@ export class FindProjectByTitleHandler
   ) {}
 
   async execute(
-    query: FindProjectByTitleQuery,
+    query: FindProjectByFiltersQuery,
   ): Promise<Result<Project[] | null>> {
-    const projects = await this.projectRepo.findProjectByTitle(query.title);
+    const projects = await this.projectRepo.findProjectByFilters(query.filters);
     if (projects.success) {
       return Result.ok(projects.value);
     }

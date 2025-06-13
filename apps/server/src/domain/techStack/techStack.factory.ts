@@ -3,11 +3,7 @@ import { TechStack } from './techstack.entity';
 
 export class TechStackFactory {
   static create(id: string, name: string, iconUrl: string): Result<TechStack> {
-    const techStack = new TechStack({
-      id,
-      name,
-      iconUrl,
-    });
+    const techStack = new TechStack(id, name, iconUrl);
     return Result.ok(techStack);
   }
 
@@ -15,6 +11,7 @@ export class TechStackFactory {
     techStacksData: Array<{ id: string; name: string; iconUrl: string }>,
   ): Result<TechStack[]> {
     const techStacks: TechStack[] = [];
+    const errors: string[] = [];
 
     techStacksData.map((techStack) => {
       const result = this.create(
@@ -24,11 +21,15 @@ export class TechStackFactory {
       );
       if (result.success) {
         techStacks.push(result.value);
+      } else {
+        errors.push(result.error);
       }
     });
 
-    if (techStacks.length === 0) {
-      return Result.fail("Aucune techStack n'ont été selectionnées");
+    if (errors.length > 0) {
+      return Result.fail(
+        `Erreur lors de la création des techStacks : ${errors.join(', ')}`,
+      );
     }
 
     return Result.ok(techStacks);

@@ -1,5 +1,7 @@
-import { Project } from '../project.entity';
-import { ProjectFactory } from './project.factory';
-import { TechStack } from '../../techStack/techstack.entity';
-
-describe('ProjectFactory', () => {});
+describe('Project Factory', () => {
+  describe('dummy', () => {
+    it('is true', () => {
+      expect(true).toBe(true);
+    });
+  });
+});

@@ -1,4 +1,4 @@
-import { GithubUserDto } from "./github-user.dto";
+import { GithubUserDto } from './github-user.dto';
 
 export class GithubRepositoryDto {
   id: number;

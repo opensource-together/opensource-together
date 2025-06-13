@@ -23,7 +23,7 @@ export default function GitHubButton({
 
   return (
     <Button
-      onClick={signInWithGitHub}
+      onClick={() => signInWithGitHub()}
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"

@@ -6,6 +6,9 @@ import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
+import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
+import { Prisma } from '@prisma/client';
+
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -16,75 +19,39 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       if (!repoProject.success) return Result.fail(repoProject.error);
 
       const savedProject = await this.prisma.project.create({
-        data: {
-          ...repoProject.value,
-          projectRoles: {
-            create: project.getProjectRoles().map((role) => ({
-              roleTitle: role.getRoleTitle(),
-              skillSet: role.getSkillSet().map((tech) => tech.getName()),
-              description: role.getDescription(),
-              isFilled: role.getIsFilled(),
-            })),
-          },
-        },
-        include: {
-          techStacks: true,
-          projectRoles: true,
-        },
-      });
-
-      // Créer les teamMembers après la création du projet et des rôles
-      const teamMembers = project.getTeamMembers();
-      if (teamMembers.length > 0) {
-        await this.prisma.teamMember.createMany({
-          data: teamMembers.map((member) => ({
-            userId: member.getUserId(),
-            projectId: savedProject.id,
-            projectRolesId: [
-              savedProject.projectRoles.find(
-                (role) =>
-                  role.roleTitle ===
-                  project
-                    .getProjectRoles()
-                    .find((r) => r.getId() === member.getProjectRoleId())
-                    ?.getRoleTitle(),
-              )?.id,
-            ].filter(Boolean) as string[],
-          })),
-        });
-      }
-
-      // Récupérer le projet complet avec toutes les relations
-      const completeProject = await this.prisma.project.findUnique({
-        where: { id: savedProject.id },
+        data: repoProject.value,
         include: {
           techStacks: true,
           projectRoles: {
             include: {
-              teamMember: true,
+              skillSet: true,
             },
           },
           projectMembers: true,
         },
       });
-
-      if (!completeProject) {
-        return Result.fail('Project not found after creation');
-      }
-
-      const domainProject = PrismaProjectMapper.toDomain(completeProject);
+      const domainProject = PrismaProjectMapper.toDomain(savedProject);
       if (!domainProject.success) return Result.fail(domainProject.error);
       return Result.ok(domainProject.value);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002')
+        if (error.code === 'P2002') {
           return Result.fail('Project already exists');
-        else if (error.code === 'P2025')
-          return Result.fail('TechStack not found');
-      } else {
-        return Result.fail('Unknown error');
+        } else if (error.code === 'P2003') {
+          // P2003 indicates a foreign key constraint violation
+          return Result.fail(
+            'Related record not found (e.g., invalid user or tech stack)',
+          );
+        }
+        // P2025 can indicate a required record was not found
+        else if (error.code === 'P2025') {
+          return Result.fail(
+            'Required record not found during creation (e.g., TechStack)',
+          );
+        }
       }
-      return Result.fail('Unknown error');
+      // Catch any other errors that are not PrismaClientKnownRequestError
+      return Result.fail(`Unknown error during project creation: ${error}`);
     }
   }
 
@@ -124,7 +91,13 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       const updatedProject = await this.prisma.project.update({
         where: { id },
         data: updatePayload,
-        include: { techStacks: true },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
+          projectMembers: true,
+        },
       });
 
       const domainProject = PrismaProjectMapper.toDomain(updatedProject);
@@ -132,26 +105,74 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProject.value);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 
-  async findProjectByTitle(title: string): Promise<Result<Project[]>> {
+  async findProjectByFilters(
+    filters: ProjectFilterInputsDto,
+  ): Promise<Result<Project[] | null>> {
     try {
-      if (!title || typeof title !== 'string' || title.trim() === '')
-        return Result.ok([]);
+      // Construction dynamique du where clause
+      const where: Prisma.ProjectWhereInput = {};
+
+      // Filtre par titre (utilise idx_title_search)
+      if (filters.title && filters.title.trim() !== '') {
+        where.title = {
+          contains: filters.title,
+          mode: 'insensitive',
+        };
+      }
+
+      // Filtre par difficulté (utilise idx_difficulty_date)
+      if (filters.difficulty) {
+        const difficulty = PrismaProjectMapper.toPrismaDifficulty(
+          filters.difficulty,
+        );
+        where.difficulty = difficulty;
+      }
+
+      // Filtre par rôles (utilise idx_project_roles)
+      if (filters.roles && filters.roles.length > 0) {
+        where.projectRoles = {
+          some: {
+            roleTitle: {
+              in: filters.roles,
+              mode: 'insensitive',
+            },
+          },
+        };
+      }
+
+      // Filtre par technologies (utilise les index sur _ProjectToTechStack)
+      if (filters.techStacks && filters.techStacks.length > 0) {
+        where.techStacks = {
+          some: {
+            name: {
+              in: filters.techStacks,
+              mode: 'insensitive',
+            },
+          },
+        };
+      }
+
+      // Configuration du tri (utilise idx_difficulty_date si difficulté présente)
+      const orderBy: Prisma.ProjectOrderByWithRelationInput = {};
+      orderBy.createAt = filters.sortOrder;
 
       const prismaProjects = await this.prisma.project.findMany({
-        where: {
-          title: {
-            mode: 'insensitive',
-            startsWith: title,
+        where,
+        orderBy,
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
           },
+          projectMembers: true,
         },
-        include: { techStacks: true },
       });
 
-      if (prismaProjects.length === 0) return Result.ok([]);
+      if (prismaProjects.length === 0) return Result.ok(null);
 
       const domainProjects: Project[] = [];
 
@@ -163,7 +184,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProjects);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 
@@ -171,7 +192,13 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     try {
       const projectPrisma = await this.prisma.project.findUnique({
         where: { id },
-        include: { techStacks: true },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
+          projectMembers: true,
+        },
       });
 
       if (!projectPrisma) return Result.fail('Project not found');
@@ -181,14 +208,20 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProject.value);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 
   async getAllProjects(): Promise<Result<Project[]>> {
     try {
       const projectsPrisma = await this.prisma.project.findMany({
-        include: { techStacks: true },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { skillSet: true },
+          },
+          projectMembers: true,
+        },
       });
 
       if (!projectsPrisma) return Result.ok([]);
@@ -203,7 +236,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProjects);
     } catch (error) {
-      return Result.fail('Unknown error');
+      return Result.fail(`Unknown error : ${error}`);
     }
   }
 }

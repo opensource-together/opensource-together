@@ -22,7 +22,7 @@ export class PrismaUserMapper {
       };
       return Result.ok(toRepo);
     } catch (error) {
-      return Result.fail('Error mapping user to repository format');
+      return Result.fail(`Error mapping user to repository format : ${error}`);
     }
   }
 

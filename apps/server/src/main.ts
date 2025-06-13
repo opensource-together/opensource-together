@@ -18,10 +18,16 @@ async function bootstrap() {
   app.useGlobalFilters(new SuperTokensExceptionFilter());
 
   if (process.env.NODE_ENV !== 'PRODUCTION') {
-    const document = YAML.load('swagger-doc.example.yml');
+    const document: object = YAML.load('swagger-doc.example.yml') as object;
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(document));
   }
 
   await app.listen(process.env.PORT ?? 4000);
 }
-bootstrap();
+bootstrap()
+  .then(() => {
+    console.log(`Shutting down.`);
+  })
+  .catch((e) => {
+    console.log(`Server crashed : ${e}`);
+  });

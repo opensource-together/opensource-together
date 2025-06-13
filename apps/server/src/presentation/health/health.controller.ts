@@ -4,9 +4,7 @@ import { PublicAccess } from 'supertokens-nestjs';
 
 @Controller('health')
 export class HealthController {
-  constructor(
-    private health: HealthCheckService,
-  ) {}
+  constructor(private health: HealthCheckService) {}
 
   @PublicAccess()
   @Get()
@@ -14,6 +12,4 @@ export class HealthController {
   check() {
     return this.health.check([]);
   }
-
 }
-

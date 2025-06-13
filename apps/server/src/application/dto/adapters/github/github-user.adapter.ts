@@ -1,5 +1,5 @@
-import { Result } from "@/shared/result";
-import { GithubUserDto } from "./github-user.dto";
+import { Result } from '@/shared/result';
+import { GithubUserDto } from './github-user.dto';
 
 export function toGithubUserDto(data: any): Result<GithubUserDto> {
   try {
@@ -11,7 +11,7 @@ export function toGithubUserDto(data: any): Result<GithubUserDto> {
       html_url: data.html_url,
     };
     return Result.ok(user);
-  } catch(e) {
-    return Result.fail(e); 
-  } 
+  } catch (e) {
+    return Result.fail(e);
+  }
 }

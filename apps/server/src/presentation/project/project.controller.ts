@@ -17,11 +17,12 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
 import { CreateProjectCommand } from '@/application/project/commands/create/create-project.command';
 import { FindProjectByIdQuery } from '@/application/project/queries/find-by-id/find-project-by-id.handler';
-import { FindProjectByTitleQuery } from '@/application/project/queries/find-by-title/find-project-by-title.handler';
+import { FindProjectByFiltersQuery } from '@/application/project/queries/find-by-filters/find-project-by-filters.handler';
 import { GetProjectsQuery } from '@/application/project/queries/get-all/get-projects.handler';
 import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
 import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
 import { UpdateProjectCommand } from '@/application/project/commands/update/update-project.usecase';
+import { FilterProjectsDto } from '@/presentation/project/dto/SearchFilterProject.dto';
 import { CreateGitHubRepositoryCommand } from '@/application/github/commands/create-github-repository.command';
 @Controller('projects')
 export class ProjectController {
@@ -45,14 +46,32 @@ export class ProjectController {
 
   @Get('search')
   async getProjectsFiltered(
-    @Query('title') title: string,
+    @Query() filters: FilterProjectsDto,
   ): Promise<ProjectResponseDto[]> {
-    const projectsFiltered: Result<Project[]> = await this.queryBus.execute(
-      new FindProjectByTitleQuery(title),
-    );
+    // Construction de l'objet de filtres pour la Query interne
+    const filterInputs = {
+      title: filters.title,
+      difficulty: filters.difficulty?.toLowerCase() as
+        | 'easy'
+        | 'medium'
+        | 'hard',
+      sortOrder: filters.sortOrder || 'desc',
+      roles: filters.roles || [],
+      techStacks: filters.techStacks || [],
+    };
+
+    const projectsFiltered: Result<Project[] | null> =
+      await this.queryBus.execute(new FindProjectByFiltersQuery(filterInputs));
+
     if (!projectsFiltered.success) {
       throw new HttpException(projectsFiltered.error, HttpStatus.BAD_REQUEST);
     }
+
+    // Gestion du cas où aucun projet n'est trouvé
+    if (!projectsFiltered.value) {
+      return [];
+    }
+
     return projectsFiltered.value.map((project: Project) =>
       toProjectResponseDto(project),
     );
@@ -76,7 +95,7 @@ export class ProjectController {
   ) {
     // Convertir les DTOs en commandes
     const projectRolesCommands =
-      project.projectRoles?.map((role) => ({
+      project.projectRoles.map((role) => ({
         projectId: '', // Sera défini après la création du projet
         roleTitle: role.roleTitle,
         skillSet: role.skillSet,
@@ -85,10 +104,9 @@ export class ProjectController {
       })) || [];
 
     const projectMembersCommands =
-      project.projectMembers?.map((member) => ({
-        projectId: '', // Sera défini après la création du projet
+      project.projectMembers.map((member) => ({
+        projectId: '',
         userId: member.userId,
-        projectRoleId: '', // Sera défini après la création des rôles
       })) || [];
 
     const projectRes: Result<Project> = await this.commandBus.execute(

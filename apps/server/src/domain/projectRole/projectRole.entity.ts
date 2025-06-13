@@ -19,11 +19,14 @@ export class ProjectRole {
     description,
     isFilled,
   }: {
+    id?: string;
     projectId: string;
     roleTitle: string;
     skillSet: TechStack[];
     description: string;
     isFilled: boolean;
+    teamMembers?: TeamMember[];
+    project?: Project;
   }) {
     this._projectId = projectId;
     this._roleTitle = roleTitle;

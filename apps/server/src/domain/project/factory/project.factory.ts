@@ -6,8 +6,6 @@ import { Description } from '../description/description.vo';
 import { Link } from '../link/link.vo';
 import { TeamMember } from '@/domain/teamMember/teamMember.entity';
 import { ProjectRole } from '@/domain/projectRole/projectRole.entity';
-import { CreateProjectRoleCommand } from '@/application/projectRole/commands/create/create-role.command';
-import { CreateTeamMemberCommand } from '@/application/teamMember/commands/create/create-team-member.command';
 
 export class ProjectFactory {
   /**
