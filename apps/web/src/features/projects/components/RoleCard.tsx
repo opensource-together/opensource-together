@@ -6,15 +6,55 @@ import { StackIcon } from "@/components/shared/StackIcon";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { ProjectRole } from "../types/projectTypes";
+import { ProjectRole, TechStack } from "../types/projectTypes";
 
 interface RoleCardProps {
   role: ProjectRole;
+  techStacks?: TechStack[];
   className?: string;
 }
 
-export default function RoleCard({ role, className }: RoleCardProps) {
+export default function RoleCard({
+  role,
+  techStacks = [],
+  className,
+}: RoleCardProps) {
   const { title = "", description = "", badges = [] } = role;
+
+  // Fonction pour trouver l'iconUrl correspondant au badge
+  const getTechIcon = (badgeLabel: string): string => {
+    // Correspondances spéciales pour les badges qui n'ont pas de techStack direct
+    const specialMappings: Record<string, string> = {
+      React:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+      Tailwind:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+      JavaScript:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+      Figma:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+      Docker:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
+      Git: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
+      Markdown:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
+    };
+
+    // Vérifier d'abord les correspondances spéciales
+    if (specialMappings[badgeLabel]) {
+      return specialMappings[badgeLabel];
+    }
+
+    // Ensuite chercher dans les techStacks du projet
+    const techStack = techStacks.find(
+      (tech) =>
+        tech.name.toLowerCase() === badgeLabel.toLowerCase() ||
+        tech.name.toLowerCase().includes(badgeLabel.toLowerCase()) ||
+        badgeLabel.toLowerCase().includes(tech.name.toLowerCase())
+    );
+
+    return techStack?.iconUrl || "/icons/mongodb.svg"; // Fallback
+  };
 
   return (
     <div
@@ -74,7 +114,7 @@ export default function RoleCard({ role, className }: RoleCardProps) {
               <StackIcon
                 key={`${badge.label}`}
                 name={badge.label}
-                icon={`/icons/mongodb.svg`}
+                icon={getTechIcon(badge.label)}
                 alt={badge.label}
               />
             ))

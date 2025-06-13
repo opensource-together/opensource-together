@@ -133,20 +133,31 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       {/* Contributors Avatars */}
       <div>
         <div className="flex gap-2">
-          {Array.from({ length: Math.min(contributors, 4) }).map((_, index) => (
-            <div
-              key={index}
-              className="h-8 w-8 overflow-hidden rounded-full bg-gray-300"
-            >
-              <Image
-                src="/icons/exemplebyronIcon.svg"
-                alt={`Contributor ${index + 1}`}
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-            </div>
-          ))}
+          {Array.from({ length: Math.min(contributors, 3) }).map((_, index) => {
+            // Alterner entre les différentes icônes de contributeurs
+            const contributorIcons = [
+              "/icons/exemplebyronIcon.svg",
+              "/icons/killiancodes-icon.jpg",
+              "/icons/p2aco-icon.png",
+              "/icons/empty-project.svg",
+            ];
+            const iconSrc = contributorIcons[index % contributorIcons.length];
+
+            return (
+              <div
+                key={index}
+                className="h-8 w-8 overflow-hidden rounded-full bg-gray-300"
+              >
+                <Image
+                  src={iconSrc}
+                  alt={`Contributor ${index + 1}`}
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
