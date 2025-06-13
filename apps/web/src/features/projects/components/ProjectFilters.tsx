@@ -17,7 +17,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({
   isSortButton = false,
 }) => {
   return (
-    <button className="flex h-[35px] cursor-pointer items-center gap-1 rounded-[5px] border border-[black]/5 bg-white px-3 text-[13px] font-semibold whitespace-nowrap transition-colors hover:bg-[#F9F9F9]">
+    <button className="flex h-[35px] cursor-pointer items-center gap-1 rounded-full border border-[black]/5 bg-white px-3 text-[13px] font-semibold whitespace-nowrap transition-colors hover:bg-[#F9F9F9]">
       {isSortButton && (
         <span className="hidden font-light text-[black]/50 sm:inline">
           Trier par:{" "}

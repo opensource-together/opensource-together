@@ -1,7 +1,7 @@
 export default function ProjectLatestUpdate() {
   return (
     <>
-      <h2 className="text-md mb-[-10px] font-medium text-black">
+      <h2 className="mb-[-10px] text-lg font-medium text-black">
         Dernière mise à jour
       </h2>
       <div

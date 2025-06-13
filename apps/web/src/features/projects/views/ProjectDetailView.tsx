@@ -37,7 +37,7 @@ export default function ProjectDetailView({
         <ProjectReadMe />
         <ProjectLatestUpdate />
         <div>
-          <div className="mb-3 flex items-center justify-between lg:max-w-[721.96px]">
+          <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
             <p className="items-centers flex gap-1 text-xl font-medium">
               Rôles Disponibles{" "}
               <Image

@@ -93,9 +93,6 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
           )}
         </div>
       </div>
-
-      {/* Ligne de séparation */}
-      <div className="mt-12 mb-3 w-full border-t border-dashed border-black/10"></div>
     </section>
   );
 }
