@@ -139,7 +139,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
               className="h-8 w-8 overflow-hidden rounded-full bg-gray-300"
             >
               <Image
-                src="/icons/empty-project.svg"
+                src="/icons/exemplebyronIcon.svg"
                 alt={`Contributor ${index + 1}`}
                 width={32}
                 height={32}
