@@ -26,7 +26,7 @@ async function bootstrap() {
 }
 bootstrap()
   .then(() => {
-    console.log(`Shutting down.`);
+    console.log(`Server started !`);
   })
   .catch((e) => {
     console.log(`Server crashed : ${e}`);

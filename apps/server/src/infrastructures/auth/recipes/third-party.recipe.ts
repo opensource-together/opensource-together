@@ -61,12 +61,12 @@ export const thirdPartyRecipe = ({
               if (response.createdNewRecipeUser) {
                 const createUserCommand = new CreateUserCommand(
                   id,
-                  githubUserInfo.login,
+                  githubUserInfo.user.login,
                   emails[0],
-                  githubUserInfo.avatar_url,
-                  githubUserInfo.bio,
-                  githubUserInfo.html_url,
-                  String(githubUserInfo.id),
+                  githubUserInfo.user.avatar_url,
+                  githubUserInfo.user.bio,
+                  githubUserInfo.user.html_url,
+                  String(githubUserInfo.user.id),
                   accessToken,
                 );
                 const newUser: Result<
@@ -81,7 +81,7 @@ export const thirdPartyRecipe = ({
                 console.log('update user');
                 const updateUserCommand = new UpdateGithubTokenUserCommand(
                   id,
-                  String(githubUserInfo.id),
+                  String(githubUserInfo.user.id),
                   accessToken,
                 );
                 await commandBus.execute(updateUserCommand);
