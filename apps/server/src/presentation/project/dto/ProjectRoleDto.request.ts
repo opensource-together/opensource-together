@@ -1,4 +1,11 @@
-import { IsString, IsNotEmpty, IsArray, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  IsBoolean,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 import { TechStackDto } from './TechStackDto.request';
 
 export class CreateProjectRoleDto {
@@ -6,11 +13,12 @@ export class CreateProjectRoleDto {
   @IsNotEmpty()
   roleTitle: string;
 
-  @IsString()
-  projectId: string;
+  // @IsString()
+  // projectId: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => TechStackDto)
   skillSet: TechStackDto[];
 
   @IsString()

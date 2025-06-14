@@ -13,6 +13,7 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
     techStacks: project.getTechStacks().map((ts) => ({
       id: ts.getId(),
       name: ts.getName(),
+      iconUrl: ts.getIconUrl(),
     })),
     projectMembers: project.getTeamMembers().map((tm) => ({
       userId: tm.getUserId(),
@@ -27,6 +28,7 @@ export function toProjectResponseDto(project: Project): ProjectResponseDto {
       skillSet: pr.getSkillSet().map((ts) => ({
         id: ts.getId(),
         name: ts.getName(),
+        iconUrl: ts.getIconUrl(),
       })),
     })),
   };

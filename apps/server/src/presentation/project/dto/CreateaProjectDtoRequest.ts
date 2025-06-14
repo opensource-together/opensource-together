@@ -1,7 +1,9 @@
-import { IsString, IsNotEmpty, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { TechStackDto } from './TechStackDto.request';
 import { CreateProjectRoleDto } from './ProjectRoleDto.request';
 import { TeamMemberDto } from './TeamMemberDto.request';
+
 export class CreateProjectDtoRequest {
   @IsString()
   @IsNotEmpty()
@@ -24,12 +26,17 @@ export class CreateProjectDtoRequest {
   githubLink: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => TechStackDto)
   techStacks: TechStackDto[];
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TeamMemberDto)
   projectMembers: TeamMemberDto[];
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProjectRoleDto)
   projectRoles: CreateProjectRoleDto[];
 }

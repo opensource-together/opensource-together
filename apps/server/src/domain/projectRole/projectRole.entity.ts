@@ -4,7 +4,7 @@ import { Project } from '@prisma/client';
 
 export class ProjectRole {
   private _id?: string;
-  private _projectId: string;
+  private _projectId?: string;
   private _roleTitle: string;
   private _skillSet: TechStack[];
   private _description: string;
@@ -21,7 +21,7 @@ export class ProjectRole {
     isFilled,
   }: {
     id?: string;
-    projectId: string;
+    projectId?: string;
     roleTitle: string;
     skillSet: TechStack[];
     description: string;

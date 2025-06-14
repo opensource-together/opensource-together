@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
@@ -15,6 +16,17 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // Activation de la validation automatique des DTOs
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Supprime les propriétés non décorées
+      forbidNonWhitelisted: true, // Lance une erreur si des propriétés non autorisées sont présentes
+      transform: true, // Transforme automatiquement les types (ex: string vers number)
+    }),
+  );
+
+  console.log('Test');
+
   app.useGlobalFilters(new SuperTokensExceptionFilter());
 
   if (process.env.NODE_ENV !== 'PRODUCTION') {
@@ -24,10 +36,6 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 4000);
 }
-bootstrap()
-  .then(() => {
-    console.log(`Shutting down.`);
-  })
-  .catch((e) => {
-    console.log(`Server crashed : ${e}`);
-  });
+bootstrap().catch((e) => {
+  console.log(`Server crashed : ${e}`);
+});

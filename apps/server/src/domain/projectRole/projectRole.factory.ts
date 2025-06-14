@@ -1,19 +1,17 @@
-import { TechStack } from '@prisma/client';
+import { TechStack } from '@/domain/techStack/techstack.entity';
 import { ProjectRole } from './projectRole.entity';
 import { Result } from '@/shared/result';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
 
 export class ProjectRoleFactory {
   static create({
-    projectId,
     roleTitle,
     skillSet,
     description,
     isFilled,
   }: {
-    projectId: string;
     roleTitle: string;
-    skillSet: TechStack[];
+    skillSet: Array<{ id: string }>;
     description: string;
     isFilled: boolean;
   }): Result<ProjectRole> {
@@ -23,7 +21,6 @@ export class ProjectRoleFactory {
     }
     return Result.ok(
       new ProjectRole({
-        projectId,
         roleTitle,
         skillSet: techStackResult.value,
         description,
@@ -34,9 +31,8 @@ export class ProjectRoleFactory {
 
   static createMany(
     projectRoles: Array<{
-      projectId: string;
       roleTitle: string;
-      skillSet: TechStack[];
+      skillSet: Array<{ id: string }>;
       description: string;
       isFilled: boolean;
     }>,
@@ -46,7 +42,6 @@ export class ProjectRoleFactory {
 
     for (const projectRole of projectRoles) {
       const projectRoleResult = this.create({
-        projectId: projectRole.projectId,
         roleTitle: projectRole.roleTitle,
         skillSet: projectRole.skillSet,
         description: projectRole.description,
@@ -88,7 +83,7 @@ export class ProjectRoleFactory {
 
     for (const prismaRole of prismaProjectRoles) {
       // Transformer le skillSet pour ce rôle
-      const skillSetResult = TechStackFactory.createMany(
+      const skillSetResult = TechStackFactory.fromPersistence(
         prismaRole.skillSet || [],
       );
 
