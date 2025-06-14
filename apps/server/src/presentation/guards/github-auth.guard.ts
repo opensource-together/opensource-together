@@ -1,34 +1,24 @@
-import { OCTOKIT_OAUTH_PROVIDER } from '@/infrastructures/github/providers/octokit.provider';
 import { Result } from '@/shared/result';
 import {
   CanActivate,
-  createParamDecorator,
   ExecutionContext,
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { Octokit } from '@octokit/rest';
-import { OAuthApp } from 'octokit';
 import { Request } from 'express';
-import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import { GithubAuthRequest } from '../types/github-auth-request.interface';
-
-export const GithubUserOctokit = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest<GithubAuthRequest>();
-    const octokit = request.octokit as Octokit;
-    if (!octokit) {
-      throw new Error('Octokit in not defined in context');
-    }
-    return octokit;
-  },
-);
+import { PrismaUserRepository } from '@/infrastructures/repositories/user/prisma.user.repository';
+import { USER_REPOSITORY_PORT } from '@/application/user/ports/user.repository.port';
+import { EncryptionService } from '@/infrastructures/encryption/encryption.service';
+import { Octokit } from '@octokit/rest';
 
 @Injectable()
 export class GithubAuthGuard implements CanActivate {
   constructor(
-    @Inject(OCTOKIT_OAUTH_PROVIDER) private readonly octokitProvider: OAuthApp,
+    @Inject(USER_REPOSITORY_PORT)
+    private readonly userRepository: PrismaUserRepository,
+    private readonly encryptionService: EncryptionService,
   ) {}
 
   async authTokenFromSession(
@@ -48,18 +38,24 @@ export class GithubAuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest<GithubAuthRequest>();
 
     const userId = req.session!.getUserId();
-    const userInfo = await supertokens.getUser(userId, context);
-    const token = userInfo?.thirdParty.find((v) => v.id == 'github');
-    if (!token) {
+    const user = await this.userRepository.findById(userId);
+    if (!user.success) {
       return false;
     }
 
-    const userOctokit = this.octokitProvider.getUserOctokit({
-      token: token.userId,
-      scopes: ['repo', 'user:email', 'read:user'],
+    const encryptedGithubAccessToken = user.value.getGithubAccessToken();
+    const githubAccessToken = this.encryptionService.decrypt(
+      encryptedGithubAccessToken,
+    );
+    if (!githubAccessToken.success) {
+      return false;
+    }
+
+    const octokit = new Octokit({
+      auth: githubAccessToken.value,
     });
 
-    req.octokit = userOctokit;
+    req.octokit = octokit;
     return true;
   }
 }

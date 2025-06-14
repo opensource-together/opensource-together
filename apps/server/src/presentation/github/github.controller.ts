@@ -1,9 +1,6 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import {
-  GithubAuthGuard,
-  GithubUserOctokit,
-} from '../guards/github-auth.guard';
-import { Octokit } from '@octokit/rest';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { GithubAuthGuard } from '../guards/github-auth.guard';
+import { GithubAuthRequest } from '../types/github-auth-request.interface';
 
 @Controller('github')
 export class GithubController {
@@ -11,8 +8,8 @@ export class GithubController {
 
   @Get('user')
   @UseGuards(GithubAuthGuard)
-  async getUser(@GithubUserOctokit() octokit: Octokit): Promise<void> {
-    const user = await octokit.rest.users.getAuthenticated();
+  async getUser(@Req() req: GithubAuthRequest): Promise<void> {
+    const user = await req.octokit.rest.users.getAuthenticated();
     console.log(user);
   }
 }

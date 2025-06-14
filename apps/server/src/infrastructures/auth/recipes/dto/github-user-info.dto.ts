@@ -5,5 +5,5 @@ export class GithubUserInfoDto {
     avatar_url: string;
     bio: string;
     html_url: string;
-  }
+  };
 }
