@@ -33,7 +33,10 @@ export class PrismaUserMapper {
       bio: prismaUser.bio ?? '',
       githubUrl: prismaUser.githubUrl ?? '',
     });
-    if (!userResult.success) return Result.fail('Invalid user data');
+    if (!userResult.success)
+      return Result.fail(
+        "Une erreur est survenue lors de la récupération des données de l'utilisateur",
+      );
 
     return Result.ok(userResult.value);
   }
