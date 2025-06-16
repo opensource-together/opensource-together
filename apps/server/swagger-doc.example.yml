@@ -37,6 +37,50 @@ tags:
   - name: Authentication
     description: Opérations liées à l'authentification utilisateur
 paths:
+  /user/me:
+    get:
+      tags:
+        - User
+      summary: Récupérer le profil utilisateur courant
+      description: Retourne le profil de l'utilisateur actuellement authentifié.
+      security:
+        - supertokens_session: []
+      responses:
+        '200':
+          description: Profil utilisateur retourné avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+              example:
+                id: "43a39f90-1718-470d-bcef-c7ebeb972c0d"
+                username: "Jhondoe"
+                email: "jhondoe@gmail.com"
+                avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4"
+                bio: "Fullstack Developer | \r\nExpress & React | \r\nBuilding @jhongo-project "
+                githubUrl: "https://github.com/Jhondoe"
+                createdAt: "2025-04-16T15:47:31.633Z"
+                updatedAt: "2025-06-16T19:57:31.633Z"
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+                  error:
+                    type: string
+                    example: Not Found
+                  statusCode:
+                    type: integer
+                    example: 404
+              example:
+                message: "User not found"
+                error: "Not Found"
+                statusCode: 404
   /projects:
     get:
       tags:
@@ -753,6 +797,52 @@ components:
         - userId
         - role
         - joinedAt
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID utilisateur unique
+          example: "43a39f90-1718-470d-bcef-c7ebeb972c0d"
+        username:
+          type: string
+          description: Nom d'utilisateur
+          example: "Lhourquin"
+        email:
+          type: string
+          description: Email de l'utilisateur
+          example: "lhourquin@gmail.com"
+        avatarUrl:
+          type: string
+          description: URL de l'avatar utilisateur
+          example: "https://avatars.githubusercontent.com/u/45101981?v=4"
+        bio:
+          type: string
+          description: Biographie de l'utilisateur
+          example: "Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together "
+        githubUrl:
+          type: string
+          description: URL du profil GitHub
+          example: "https://github.com/Lhourquin"
+        createdAt:
+          type: string
+          format: date-time
+          description: Date de création du compte
+          example: "2025-06-16T19:57:31.633Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date de dernière modification
+          example: "2025-06-16T19:57:31.633Z"
+      required:
+        - id
+        - username
+        - email
+        - avatarUrl
+        - bio
+        - githubUrl
+        - createdAt
+        - updatedAt
   securitySchemes:
     supertokens_session:
       type: apiKey
