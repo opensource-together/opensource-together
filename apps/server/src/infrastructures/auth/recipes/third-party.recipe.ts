@@ -5,7 +5,7 @@ import { CreateUserCommand } from '@/application/user/commands/create-user.comma
 import { deleteUser } from 'supertokens-node';
 import { Result } from '@/shared/result';
 import { User } from '@/domain/user/user.entity';
-import { UpdateGithubTokenUserCommand } from '@/application/user/commands/update-user-gh-token.command';
+import { UpdateUserGhTokenCommand } from '@/application/user/commands/update-user-gh-token.command';
 export const thirdPartyRecipe = ({
   configService,
   commandBus,
@@ -49,38 +49,43 @@ export const thirdPartyRecipe = ({
             const response = await originalImplementation.signInUp(input);
 
             if (response.status === 'OK') {
+              //
+              // await deleteUser(response.user.id);
               const githubUserInfo =
                 response.rawUserInfoFromProvider.fromUserInfoAPI;
               console.log({ githubUserInfo });
               const { id, emails } = response.user;
               if (response.createdNewRecipeUser) {
-                const createUserCommand = new CreateUserCommand(
-                  id,
-                  githubUserInfo?.user.login,
-                  emails[0],
-                  githubUserInfo?.user.avatar_url,
-                  githubUserInfo?.user.bio,
-                  githubUserInfo?.user.html_url,
-                  String(githubUserInfo?.user.id),
-                  response?.oAuthTokens.access_token,
-                );
-                const newUser: Result<
-                  User,
-                  { username?: string; email?: string } | string
-                > = await commandBus.execute(createUserCommand);
-                if (!newUser.success) {
-                  console.log({ newUser });
+                try {
+                  const createUserCommand = new CreateUserCommand(
+                    id,
+                    githubUserInfo?.user.login,
+                    emails[0],
+                    githubUserInfo?.user.avatar_url,
+                    githubUserInfo?.user.bio,
+                    githubUserInfo?.user.html_url,
+                    String(githubUserInfo?.user.id),
+                    response?.oAuthTokens.access_token,
+                  );
+                  const newUser: Result<
+                    User,
+                    { username?: string; email?: string } | string
+                  > = await commandBus.execute(createUserCommand);
+                  if (!newUser.success) {
+                    await deleteUser(id);
+                  }
+                } catch (error) {
+                  console.log({ error });
                   await deleteUser(id);
                 }
               } else {
-                console.log('update user');
-                const updateUserCommand = new UpdateGithubTokenUserCommand(
+                const saveUserGhTokenCommand = new UpdateUserGhTokenCommand(
                   id,
                   String(githubUserInfo?.user.id),
                   response?.oAuthTokens.access_token,
                 );
-                const updatedUser: Result<User, string> =
-                  await commandBus.execute(updateUserCommand);
+
+                await commandBus.execute(saveUserGhTokenCommand);
               }
             }
             return response;

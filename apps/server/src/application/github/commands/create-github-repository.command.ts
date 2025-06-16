@@ -1,16 +1,12 @@
 /**
- * 
- * 
- * 
+ *
+ *
+ *
  * Use case pour tester la création d'un repository GitHub
  */
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { Result } from '@/shared/result';
-import {
-  USER_REPOSITORY_PORT,
-  UserRepositoryPort,
-} from '@/application/user/ports/user.repository.port';
 import {
   GITHUB_API_SERVICE_PORT,
   GitHubApiServicePort,
@@ -19,6 +15,8 @@ import {
   ENCRYPTION_SERVICE_PORT,
   EncryptionServicePort,
 } from '@/application/encryption/ports/encryption.service.port';
+import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/application/user/ports/user-github-credentials.repository';
+import { UserGitHubCredentialsRepositoryPort } from '@/application/user/ports/user-github-credentials.repository';
 
 export class CreateGitHubRepositoryCommand implements ICommand {
   constructor(
@@ -34,8 +32,8 @@ export class CreateGitHubRepositoryCommandHandler
   implements ICommandHandler<CreateGitHubRepositoryCommand>
 {
   constructor(
-    @Inject(USER_REPOSITORY_PORT)
-    private readonly userRepo: UserRepositoryPort,
+    @Inject(USER_GITHUB_CREDENTIALS_REPOSITORY_PORT)
+    private readonly userGitHubCredentialsRepo: UserGitHubCredentialsRepositoryPort,
     @Inject(GITHUB_API_SERVICE_PORT)
     private readonly githubApiService: GitHubApiServicePort,
     @Inject(ENCRYPTION_SERVICE_PORT)
@@ -46,38 +44,29 @@ export class CreateGitHubRepositoryCommandHandler
     command: CreateGitHubRepositoryCommand,
   ): Promise<Result<any, string>> {
     // 1. Récupérer l'utilisateur avec son token GitHub
-    const userResult = await this.userRepo.findById(command.userId);
-    if (!userResult.success) {
+    const userGhToken =
+      await this.userGitHubCredentialsRepo.findGhTokenByUserId(command.userId);
+    if (!userGhToken.success) {
       return Result.fail('Utilisateur non trouvé');
     }
 
-    const user = userResult.value;
-    const githubToken = user.getGithubAccessToken();
-    console.log({ githubToken });
-    const decryptedGithubToken = this.encryptionService.decrypt(githubToken);
-    console.log({ githubToken });
-    console.log({ decryptedGithubToken });
-
-    if (!githubToken) {
-      return Result.fail('Token GitHub non disponible pour cet utilisateur');
-    }
+    const decryptedGhToken = this.encryptionService.decrypt(userGhToken.value);
 
     // 2. Créer le repository GitHub
-    if (!decryptedGithubToken.success) {
+    if (!decryptedGhToken.success) {
       return Result.fail(
-        `Erreur lors du déchiffrement du token GitHub: ${decryptedGithubToken.error}`,
+        `Erreur lors du déchiffrement du token GitHub: ${decryptedGhToken.error}`,
       );
     }
     console.log({ command });
     const createRepoResult = await this.githubApiService.createRepository(
-      decryptedGithubToken.value,
+      decryptedGhToken.value,
       {
         name: command.repoName,
         description: command.description,
         isPrivate: command.isPrivate,
       },
     );
-    console.log({ createRepoResult });
 
     if (!createRepoResult.success) {
       return Result.fail(

@@ -3,13 +3,13 @@ import {
   CreateUserCommandHandler,
 } from './create-user.command';
 import {
-  UpdateGithubTokenUserCommand,
-  UpdateGithubTokenUserCommandHandler,
+  UpdateUserGhTokenCommand,
+  UpdateUserGhTokenCommandHandler,
 } from './update-user-gh-token.command';
 
 export const userCommandsContainer = [
   CreateUserCommand,
   CreateUserCommandHandler,
-  UpdateGithubTokenUserCommand,
-  UpdateGithubTokenUserCommandHandler,
+  UpdateUserGhTokenCommand,
+  UpdateUserGhTokenCommandHandler,
 ];

@@ -1,18 +1,18 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { Result } from '@shared/result';
-import { UserFactory } from '@/domain/user/user.factory';
-import { User } from '@domain/user/user.entity';
-import {
-  USER_REPOSITORY_PORT,
-  UserRepositoryPort,
-} from '../ports/user.repository.port';
 import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
 import { EncryptionServicePort } from '@/application/encryption/ports/encryption.service.port';
+import {
+  USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
+  UserGitHubCredentialsRepositoryPort,
+} from '../ports/user-github-credentials.repository';
+import { UserGitHubCredentials } from '@/domain/user/user-github-credentials.entity';
+import { UserGitHubCredentialsFactory } from '@/domain/user/user-github-credentials.factory';
 
-export class UpdateGithubTokenUserCommand implements ICommand {
+export class UpdateUserGhTokenCommand implements ICommand {
   constructor(
-    public readonly id: string,
+    public readonly userId: string,
     public readonly githubUserId: string,
     public readonly githubAccessToken: string,
   ) {}
@@ -22,13 +22,13 @@ export class UpdateGithubTokenUserCommand implements ICommand {
  * Use case responsible for updating users in the system.
  * Handles validation of unique username/email and user creation through the repository.
  */
-@CommandHandler(UpdateGithubTokenUserCommand)
-export class UpdateGithubTokenUserCommandHandler
-  implements ICommandHandler<UpdateGithubTokenUserCommand>
+@CommandHandler(UpdateUserGhTokenCommand)
+export class UpdateUserGhTokenCommandHandler
+  implements ICommandHandler<UpdateUserGhTokenCommand>
 {
   constructor(
-    @Inject(USER_REPOSITORY_PORT)
-    private readonly userRepo: UserRepositoryPort,
+    @Inject(USER_GITHUB_CREDENTIALS_REPOSITORY_PORT)
+    private readonly userGitHubCredentialsRepo: UserGitHubCredentialsRepositoryPort,
     @Inject(ENCRYPTION_SERVICE_PORT)
     private readonly encryptionService: EncryptionServicePort,
   ) {}
@@ -41,38 +41,30 @@ export class UpdateGithubTokenUserCommandHandler
    * @throws Never - All errors are handled and returned in the Result object
    */
   async execute(
-    command: UpdateGithubTokenUserCommand,
-  ): Promise<Result<User, { username?: string; email?: string } | string>> {
+    command: UpdateUserGhTokenCommand,
+  ): Promise<Result<UserGitHubCredentials, string>> {
     const encryptedGithubAccessToken = this.encryptionService.encrypt(
       command.githubAccessToken,
     );
     if (!encryptedGithubAccessToken.success)
       return Result.fail(encryptedGithubAccessToken.error);
-    const user: Result<User, string | { username?: string; email?: string }> =
-      await this.userRepo.findById(command.id);
-    if (!user.success) return Result.fail(user.error);
+    const ghToken: Result<string, string> =
+      await this.userGitHubCredentialsRepo.findGhTokenByUserId(command.userId);
+    if (!ghToken.success) return Result.fail(ghToken.error);
 
-    const userToUpdate = UserFactory.create({
-      id: user.value.getId(),
-      username: user.value.getUsername(),
-      email: user.value.getEmail(),
-      avatarUrl: user.value.getAvatarUrl(),
-      bio: user.value.getBio(),
-      githubUrl: user.value.getGithubUrl(),
-      githubUserId: user.value.getGithubUserId(),
-      githubAccessToken: encryptedGithubAccessToken.value,
-    });
-    if (!userToUpdate.success) return Result.fail(userToUpdate.error);
-    const updatedUser: Result<
-      User,
-      { username?: string; email?: string } | string
-    > = await this.userRepo.update(userToUpdate.value);
-    if (!updatedUser.success)
-      //TODO: faire un mapping des erreurs ?
-      return Result.fail(
-        "Erreur technique lors de la mise à jour de l'utilisateur.",
+    const userGitHubCredentialsToUpdate =
+      UserGitHubCredentialsFactory.reconstitute({
+        userId: command.userId,
+        githubUserId: command.githubUserId,
+        githubAccessToken: encryptedGithubAccessToken.value,
+      });
+    const updatedUserGitHubCredentials =
+      await this.userGitHubCredentialsRepo.update(
+        userGitHubCredentialsToUpdate,
       );
+    if (!updatedUserGitHubCredentials.success)
+      return Result.fail(updatedUserGitHubCredentials.error);
 
-    return Result.ok(updatedUser.value);
+    return Result.ok(updatedUserGitHubCredentials.value);
   }
 }
