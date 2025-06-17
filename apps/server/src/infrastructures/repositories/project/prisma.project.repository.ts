@@ -86,6 +86,14 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             })),
           },
         }),
+        ...(payload.projectRoles && {
+          projectRoles: {
+            set: [],
+            connect: payload.projectRoles.map((projectRole) => ({
+              id: projectRole.id,
+            })),
+          },
+        }),
       };
 
       const updatedProject = await this.prisma.project.update({
@@ -106,6 +114,36 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       return Result.ok(domainProject.value);
     } catch (error) {
       return Result.fail(`Unknown error : ${error}`);
+    }
+  }
+
+  async deleteProjectById(
+    id: string,
+    ownerId: string,
+  ): Promise<Result<boolean>> {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: { id },
+      });
+
+      if (!project) return Result.fail('Project not found');
+
+      if (project.ownerId !== ownerId) {
+        return Result.fail('You are not allowed to delete this project');
+      }
+
+      await this.prisma.project.delete({
+        where: { id },
+      });
+
+      return Result.ok(true);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          return Result.fail('Project not found');
+        }
+      }
+      return Result.fail(`Unknown error during project deletion: ${error}`);
     }
   }
 

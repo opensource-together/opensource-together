@@ -8,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { Project } from '@/domain/project/project.entity';
 import { Result } from '@shared/result';
@@ -22,6 +23,7 @@ import { GetProjectsQuery } from '@/application/project/queries/get-all/get-proj
 import { CreateProjectDtoRequest } from '@/presentation/project/dto/CreateaProjectDtoRequest';
 import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
 import { UpdateProjectCommand } from '@/application/project/commands/update/update-project.usecase';
+import { DeleteProjectCommand } from '@/application/project/commands/delete/delete-project.command';
 import { FilterProjectsDto } from '@/presentation/project/dto/SearchFilterProject.dto';
 import { CreateGitHubRepositoryCommand } from '@/application/github/commands/create-github-repository.command';
 @Controller('projects')
@@ -150,6 +152,29 @@ export class ProjectController {
     }
     return toProjectResponseDto(projectRes.value);
   }
+
+  @Delete(':id')
+  async deleteProject(
+    @Session('userId') ownerId: string,
+    @Param('id') id: string,
+  ) {
+    const result: Result<boolean> = await this.commandBus.execute(
+      new DeleteProjectCommand(id, ownerId),
+    );
+
+    if (!result.success) {
+      if (result.error === 'Project not found') {
+        throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+      }
+      if (result.error === 'You are not allowed to delete this project') {
+        throw new HttpException(result.error, HttpStatus.FORBIDDEN);
+      }
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+
+    return { message: 'Project deleted successfully' };
+  }
+
   //endpoint pour tester la création d'un repository GitHub
   @Post('github')
   async createGitHubRepository(
