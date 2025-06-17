@@ -1,11 +1,11 @@
 export const apiConfig = {
-  baseURL: "http://localhost:3000/api",
+  baseURL: "http://localhost:4000",
   headers: {
     "Content-Type": "application/json",
   },
+  credentials: "include" as RequestCredentials, // Important pour les cookies SuperTokens
   getAuthHeader: (): Record<string, string> => {
-    if (typeof window === "undefined") return {};
-    const token = localStorage.getItem("token");
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    // SuperTokens gère l'authentification via cookies, pas besoin de headers manuels
+    return {};
   },
 };

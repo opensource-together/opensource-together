@@ -8,6 +8,7 @@ const nextConfig = {
       "media.discordapp.net",
       "upload.wikimedia.org",
       "pbs.twimg.com",
+      "avatars.githubusercontent.com"
     ],
   },
 };
