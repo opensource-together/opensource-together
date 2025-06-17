@@ -15,8 +15,6 @@ export class PrismaUserMapper {
         avatarUrl: user.getAvatarUrl(),
         bio: user.getBio(),
         githubUrl: user.getGithubUrl(),
-        githubUserId: user.getGithubUserId(),
-        githubAccessToken: user.getGithubAccessToken(),
         createdAt: user.getCreatedAt(),
         updatedAt: user.getUpdatedAt(),
       };
@@ -34,10 +32,11 @@ export class PrismaUserMapper {
       avatarUrl: prismaUser.avatarUrl ?? '',
       bio: prismaUser.bio ?? '',
       githubUrl: prismaUser.githubUrl ?? '',
-      githubUserId: prismaUser.githubUserId ?? '',
-      githubAccessToken: prismaUser.githubAccessToken ?? '',
     });
-    if (!userResult.success) return Result.fail('Invalid user data');
+    if (!userResult.success)
+      return Result.fail(
+        "Une erreur est survenue lors de la récupération des données de l'utilisateur",
+      );
 
     return Result.ok(userResult.value);
   }

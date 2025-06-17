@@ -9,6 +9,10 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
 import { EncryptionServicePort } from '@/application/encryption/ports/encryption.service.port';
+import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '../ports/user-github-credentials.repository';
+import { UserGitHubCredentialsRepositoryPort } from '../ports/user-github-credentials.repository';
+import { UserGitHubCredentials } from '@/domain/user/user-github-credentials.entity';
+import { UserGitHubCredentialsFactory } from '@/domain/user/user-github-credentials.factory';
 
 export class CreateUserCommand implements ICommand {
   constructor(
@@ -34,6 +38,8 @@ export class CreateUserCommandHandler
   constructor(
     @Inject(USER_REPOSITORY_PORT)
     private readonly userRepo: UserRepositoryPort,
+    @Inject(USER_GITHUB_CREDENTIALS_REPOSITORY_PORT)
+    private readonly userGitHubCredentialsRepo: UserGitHubCredentialsRepositoryPort,
     @Inject(ENCRYPTION_SERVICE_PORT)
     private readonly encryptionService: EncryptionServicePort,
   ) {}
@@ -48,14 +54,6 @@ export class CreateUserCommandHandler
   async execute(
     command: CreateUserCommand,
   ): Promise<Result<User, { username?: string; email?: string } | string>> {
-    const encryptedGithubAccessToken = this.encryptionService.encrypt(
-      command.githubAccessToken,
-    );
-    if (!encryptedGithubAccessToken.success)
-      return Result.fail(
-        "Erreur technique lors de la création de l'utilisateur.",
-      );
-
     const [userExistsByUsername, userExistsByEmail] = await Promise.all([
       this.userRepo.findByUsername(command.username),
       this.userRepo.findByEmail(command.email),
@@ -71,8 +69,6 @@ export class CreateUserCommandHandler
         avatarUrl: command.avatarUrl,
         bio: command.bio,
         githubUrl: command.githubUrl,
-        githubUserId: command.githubUserId,
-        githubAccessToken: encryptedGithubAccessToken.value,
       });
     if (!user.success) return Result.fail(user.error);
     const savedUser: Result<
@@ -84,7 +80,16 @@ export class CreateUserCommandHandler
       return Result.fail(
         "Erreur technique lors de la création de l'utilisateur.",
       );
-
+    const userGitHubCredentials: UserGitHubCredentials =
+      UserGitHubCredentialsFactory.create({
+        userId: savedUser.value.getId(),
+        githubUserId: command.githubUserId,
+        githubAccessToken: command.githubAccessToken,
+      });
+    const savedUserGitHubCredentials: Result<UserGitHubCredentials, string> =
+      await this.userGitHubCredentialsRepo.save(userGitHubCredentials);
+    if (!savedUserGitHubCredentials.success)
+      return Result.fail(savedUserGitHubCredentials.error);
     return Result.ok(savedUser.value);
   }
 }

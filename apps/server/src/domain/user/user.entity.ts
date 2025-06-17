@@ -8,7 +8,6 @@ export class User {
   private bio: string;
   private githubUrl: string;
   private githubUserId: string;
-  private githubAccessToken: string;
   private readonly createdAt: Date;
   private readonly updatedAt: Date;
   constructor({
@@ -18,8 +17,6 @@ export class User {
     avatarUrl,
     bio,
     githubUrl,
-    githubUserId,
-    githubAccessToken,
     createdAt,
     updatedAt,
   }: {
@@ -29,8 +26,6 @@ export class User {
     avatarUrl: string;
     bio: string;
     githubUrl: string;
-    githubUserId: string;
-    githubAccessToken: string;
     createdAt: Date;
     updatedAt: Date;
   }) {
@@ -40,8 +35,6 @@ export class User {
     this.avatarUrl = avatarUrl;
     this.bio = bio;
     this.githubUrl = githubUrl;
-    this.githubUserId = githubUserId;
-    this.githubAccessToken = githubAccessToken;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -76,13 +69,5 @@ export class User {
 
   public getGithubUrl() {
     return this.githubUrl;
-  }
-
-  public getGithubUserId() {
-    return this.githubUserId;
-  }
-
-  public getGithubAccessToken() {
-    return this.githubAccessToken;
   }
 }
