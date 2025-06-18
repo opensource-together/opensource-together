@@ -2,32 +2,103 @@ openapi: 3.0.4
 info:
   title: OpenSource Together API
   description: |
-    Documentation de l'API pour la plateforme OpenSource Together.
+    Documentation complète de l'API pour la plateforme OpenSource Together.
     
-    ## Authentification
+    ## 🔐 Système d'Authentification
     
-    L'API utilise SuperTokens avec l'authentification GitHub OAuth.
+    OpenSource Together utilise **SuperTokens** avec un système dual d'authentification :
     
-
-    TEST TEST TEST
-    ### Pour les développeurs Frontend
+    ### 🎯 Méthodes d'Authentification Disponibles
     
-    **Processus de connexion :**
-    1. Rediriger vers `/auth/authorize/github` pour initier la connexion
-    2. L'utilisateur est redirigé vers GitHub pour autoriser l'application
-    3. GitHub redirige vers `/auth/callback/github` avec le code d'autorisation
-    4. Les cookies de session sont automatiquement définis
-    5. Utiliser `/auth/session` pour récupérer les infos utilisateur (équivalent `/me`)
+    **1. GitHub OAuth (Recommandé) 🐙**
+    - Connexion/inscription avec GitHub en un clic
+    - Synchronisation automatique des données de profil
+    - Accès sécurisé aux repositories (permissions : `read:user`, `user:email`, `repo`, `admin:repo_hook`)
     
-    **Cookies de session :**
-    - `sAccessToken` : Token d'accès principal
-    - `sRefreshToken` : Token de rafraîchissement
-    - Ces cookies sont automatiquement gérés par le navigateur
+    **2. Email/Password Traditionnel 📧**
+    - Inscription avec email + username personnalisé
+    - Système de réinitialisation de mot de passe
+    - Flexibilité : connexion avec email OU username
     
-    **Routes protégées :**
-    Les routes nécessitant une authentification sont marquées avec le symbole 🔒.
+    ### 🔄 Flow d'Authentification GitHub (Principal)
     
-    **Base URL :** `http://localhost:4000`
+    ```mermaid
+    sequenceDiagram
+        participant F as Frontend
+        participant A as API (/auth)
+        participant G as GitHub
+        participant D as Database
+        
+        F->>A: GET /auth/authorize/github
+        A->>G: Redirect to GitHub OAuth
+        G->>F: Redirect to /auth/callback/github?code=...
+        F->>A: GET /auth/callback/github?code=...
+        A->>G: Exchange code for access_token
+        G->>A: Return user data + access_token
+        A->>D: Create/Update user
+        A->>F: Set session cookies + redirect
+        F->>A: GET /auth/session (get user info)
+    ```
+    
+    ### 🍪 Gestion des Sessions
+    
+    **Cookies automatiques (HttpOnly, Secure, SameSite) :**
+    - `sAccessToken` : Token d'accès principal (courte durée)
+    - `sRefreshToken` : Token de rafraîchissement (longue durée)
+    - `sIdRefreshToken` : Token de rafraîchissement ID (anti-CSRF)
+    
+    **Renouvellement automatique :**
+    - Le SDK SuperTokens gère automatiquement le renouvellement
+    - Appel transparent à `/auth/session/refresh` quand nécessaire
+    
+    ### 🛡️ Routes Protégées
+    
+    Les routes nécessitant une authentification sont marquées avec 🔒 et utilisent :
+    ```yaml
+    security:
+      - supertokens_session: []
+    ```
+    
+    ### 🚀 Guide d'Intégration Frontend
+    
+    **Initialisation (Next.js) :**
+    ```typescript
+    // app/layout.tsx
+    import SuperTokens from "supertokens-web-js";
+    
+    SuperTokens.init({
+      appInfo: {
+        appName: "OST",
+        apiDomain: "http://localhost:4000",
+        apiBasePath: "/auth",
+      },
+      recipeList: [Session.init(), ThirdParty.init()],
+    });
+    ```
+    
+    **Connexion GitHub :**
+    ```typescript
+    import { getAuthorisationURLWithQueryParamsAndSetState } from "supertokens-web-js/recipe/thirdparty";
+    
+    const authUrl = await getAuthorisationURLWithQueryParamsAndSetState({
+      thirdPartyId: "github",
+      frontendRedirectURI: "http://localhost:3000/auth/callback/github"
+    });
+    window.location.assign(authUrl);
+    ```
+    
+    **Vérification de session :**
+    ```typescript
+    import Session from "supertokens-web-js/recipe/session";
+    
+    const sessionExists = await Session.doesSessionExist();
+    if (sessionExists) {
+      // User is logged in
+      const userInfo = await fetch('/auth/session');
+    }
+    ```
+    
+    **Base URL de développement :** `http://localhost:4000`
   version: 1.0.0
 servers:
   - url: http://localhost:4000
@@ -118,7 +189,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDto'
         '400':
-          description: Données d'entrée invalides ou erreur de validation
+          description: Erreur lors de la création du projet
           content:
             application/json:
               schema:
@@ -126,7 +197,13 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 'Title is required'
+                    description: Message d'erreur du système de validation ou de création
+                    oneOf:
+                      - example: 'Le titre du projet est requis'
+                      - example: 'La description du projet doit comporter au minimum 10 caracteres'
+                      - example: 'Project already exists'
+                      - example: 'Related record not found (e.g., invalid user or tech stack)'
+                      - example: 'Required record not found during creation (e.g., TechStack)'
                   statusCode:
                     type: integer
                     example: 400
@@ -135,7 +212,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthError'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
   /projects/search:
     get:
       tags:
@@ -218,25 +302,7 @@ paths:
                   summary: Aucun résultat
                   value: []
         '400':
-          description: Erreur de validation des paramètres de recherche
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    oneOf:
-                      - type: string
-                        example: 'difficulty must be a valid difficulty : EASY, MEDIUM, HARD'
-                      - type: string
-                        example: 'sortOrder must be either asc or desc'
-                      - type: string
-                        example: 'roles must be valid role names'
-                  statusCode:
-                    type: integer
-                    example: 400
-        '500':
-          description: Erreur serveur lors de la recherche
+          description: Erreur lors de la recherche de projets
           content:
             application/json:
               schema:
@@ -244,10 +310,11 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 'Internal Server Error'
+                    description: Message d'erreur du système (provient du repository ou des handlers)
+                    example: 'Unknown error : Database connection failed'
                   statusCode:
                     type: integer
-                    example: 500
+                    example: 400
   /projects/{id}:
     get:
       tags:
@@ -270,6 +337,17 @@ paths:
                 $ref: '#/components/schemas/ProjectResponseDto'
         '404':
           description: Projet non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 404
     patch:
       tags:
         - Projects
@@ -298,58 +376,382 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectResponseDto'
         '400':
-          description: Données d'entrée invalides ou utilisateur non autorisé
+          description: Erreur lors de la mise à jour du projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message d'erreur spécifique (validation, autorisation, etc.)
+                    oneOf:
+                      - example: 'Le titre du projet est requis'
+                      - example: 'La description du projet doit comporter au minimum 10 caracteres'
+                      - example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 400
         '401':
-          description: Non authentifié
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
         '404':
           description: Projet non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 404
+    delete:
+      tags:
+        - Projects
+      summary: 🗑️ Supprimer un projet par ID
+      operationId: deleteProject
+      description: |
+        Supprime définitivement un projet de la plateforme.
+        
+        **🔒 Restriction de sécurité :**
+        - Seul le propriétaire (créateur) du projet peut le supprimer
+        - Vérification automatique de propriété côté serveur
+        
+        **⚠️ Action irréversible :**
+        Cette action supprime définitivement le projet et toutes ses données associées.
+      security:
+        - supertokens_session: []
+      parameters:
+        - name: id
+          in: path
+          description: ID unique du projet à supprimer
+          required: true
+          schema:
+            type: string
+            example: '123e4567-e89b-12d3-a456-426614174000'
+      responses:
+        '200':
+          description: Projet supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project deleted successfully'
+        '401':
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
+        '403':
+          description: Accès interdit - vous n'êtes pas le propriétaire de ce projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not allowed to delete this project'
+                  statusCode:
+                    type: integer
+                    example: 403
+        '404':
+          description: Projet non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 404
+        '400':
+          description: Erreur lors de la suppression du projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message d'erreur technique lors de la suppression
+                    example: 'Unknown error during project deletion: Database constraint violation'
+                  statusCode:
+                    type: integer
+                    example: 400
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Inscription avec email/mot de passe
+      operationId: signupEmailPassword
+      description: |
+        Inscription traditionnelle avec email, username et mot de passe.
+        Accepte à la fois un email ET un username pour une flexibilité maximale.
+        
+        **Validation :**
+        - Le champ "email" accepte un username OU un email valide
+        - Le champ "actualEmail" doit être un email valide
+        - Le mot de passe suit les règles de sécurité standard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formFields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        enum: [email, actualEmail, password]
+                      value:
+                        type: string
+                  example:
+                    - id: email
+                      value: johndoe
+                    - id: actualEmail  
+                      value: john@example.com
+                    - id: password
+                      value: mySecurePassword123
+              required:
+                - formFields
+      responses:
+        '200':
+          description: Inscription réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+        '400':
+          description: Erreur de validation ou utilisateur existant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: GENERAL_ERROR
+                  message:
+                    type: string
+                    description: Message d'erreur spécifique de SuperTokens
+                    oneOf:
+                      - example: 'La création du compte a échoué. Veuillez réessayer.'
+                      - example: 'Please provide a string input.'
+  /auth/signin:
+    post:
+      tags:
+        - Authentication
+      summary: Connexion avec email/mot de passe
+      operationId: signinEmailPassword
+      description: |
+        Connexion avec email/username et mot de passe.
+        Accepte à la fois l'email ET le username comme identifiant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formFields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        enum: [email, password]
+                      value:
+                        type: string
+                  example:
+                    - id: email
+                      value: john@example.com
+                    - id: password
+                      value: myPassword123
+              required:
+                - formFields
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+        '400':
+          description: Identifiants incorrects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: GENERAL_ERROR
+                  message:
+                    type: string
+                    example: Identifiants incorrects.
   /auth/authorize/github:
     get:
       tags:
         - Authentication
-      summary: Initier l'authentification GitHub
+      summary: Initier l'authentification GitHub OAuth
       operationId: authorizeGithub
       description: |
-        Redirige vers GitHub pour l'authentification OAuth.
-        Cette route est utilisée pour commencer le processus d'authentification GitHub.
-        L'utilisateur sera redirigé vers GitHub, puis de retour vers la callback URL après autorisation.
+        🔗 **Route principale pour démarrer l'authentification GitHub**
+        
+        Redirige automatiquement vers GitHub pour l'authentification OAuth.
+        Cette route est utilisée par le frontend pour commencer le processus d'authentification.
+        
+        **Permissions GitHub demandées :**
+        - `read:user` : Lire les informations de profil
+        - `user:email` : Accéder à l'email
+        - `repo` : Accès aux repositories (pour les futures fonctionnalités)
+        - `write:repo_hook` & `admin:repo_hook` : Gestion des webhooks
+        
+        **Flow automatique :**
+        1. L'utilisateur clique sur "Se connecter avec GitHub"
+        2. Redirection vers cette route
+        3. Redirection automatique vers GitHub
+        4. Callback vers `/auth/callback/github`
       responses:
         '302':
           description: Redirection vers GitHub pour l'authentification
+          headers:
+            Location:
+              description: URL GitHub OAuth avec les paramètres appropriés
+              schema: 
+                type: string
+                example: https://github.com/login/oauth/authorize?client_id=...
         '500':
-          description: Erreur serveur lors de l'initialisation de l'authentification
+          description: Erreur serveur lors de l'initialisation OAuth
   /auth/callback/github:
     get:
       tags:
         - Authentication
-      summary: Callback GitHub après authentification
+      summary: Callback GitHub après authentification OAuth
       operationId: callbackGithub
       description: |
+        🔄 **Route de callback automatique GitHub**
+        
         URL de callback utilisée par GitHub après l'authentification.
-        Cette route est automatiquement appelée par GitHub et gère :
-        - L'échange du code d'autorisation contre un token d'accès
-        - La création/mise à jour de l'utilisateur en base
-        - L'établissement de la session utilisateur
+        Cette route est automatiquement appelée par GitHub et NE DOIT PAS être appelée manuellement.
+        
+        **Processus automatique :**
+        - Échange du code d'autorisation contre un token d'accès
+        - Récupération des informations utilisateur GitHub
+        - Création/mise à jour de l'utilisateur en base de données
+        - Génération et définition des cookies de session
+        - Redirection vers l'application frontend
+        
+        **Données GitHub synchronisées :**
+        - Informations de profil (nom, avatar, bio)
+        - Token d'accès GitHub (pour futures intégrations)
+        - Email principal GitHub
       parameters:
         - name: code
           in: query
-          description: Code d'autorisation fourni par GitHub
+          description: Code d'autorisation fourni par GitHub OAuth
           required: true
           schema:
             type: string
+            example: 1234567890abcdef
         - name: state
           in: query
-          description: Paramètre d'état pour la sécurité
+          description: Paramètre d'état pour la sécurité CSRF
           required: false
           schema:
             type: string
       responses:
         '302':
           description: Redirection vers l'application après connexion réussie
+          headers:
+            Location:
+              description: URL de redirection vers le frontend
+              schema:
+                type: string
+                example: http://localhost:3000/
+            Set-Cookie:
+              description: Cookies de session SuperTokens
+              schema:
+                type: array
+                items:
+                  type: string
+                example: 
+                  - sAccessToken=...; HttpOnly; Secure; SameSite=Lax
+                  - sRefreshToken=...; HttpOnly; Secure; SameSite=Lax
         '400':
-          description: Code d'autorisation invalide ou manquant
+          description: Erreur lors du processus OAuth GitHub
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Erreur SuperTokens lors du callback GitHub
+                  status:
+                    type: string
+                    example: 'NO_EMAIL_GIVEN_BY_PROVIDER'
         '500':
-          description: Erreur lors de l'authentification
+          description: Erreur serveur lors du traitement GitHub
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Missing user info during authentication'
   /auth/session:
     get:
       tags:
@@ -429,10 +831,15 @@ paths:
     post:
       tags:
         - Authentication
-      summary: Déconnexion de l'utilisateur
+      summary: 🚪 Déconnexion de l'utilisateur
       operationId: signout
       description: |
         Termine la session utilisateur et supprime les cookies d'authentification.
+        
+        **Actions effectuées :**
+        - Révocation de la session SuperTokens
+        - Suppression des cookies `sAccessToken` et `sRefreshToken`
+        - Invalidation côté serveur et client
       security:
         - supertokens_session: []
       responses:
@@ -446,8 +853,219 @@ paths:
                   status:
                     type: string
                     example: 'OK'
+          headers:
+            Set-Cookie:
+              description: Suppression des cookies de session
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - sAccessToken=; HttpOnly; Secure; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT
+                  - sRefreshToken=; HttpOnly; Secure; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT
         '401':
-          description: Utilisateur non connecté
+          description: Utilisateur non connecté - aucune session active
+  /auth/session/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: 🔄 Renouveler la session utilisateur
+      operationId: refreshSession
+      description: |
+        Renouvelle automatiquement la session utilisateur avec le refresh token.
+        
+        **Utilisation automatique :**
+        - Appelé automatiquement par le SDK SuperTokens
+        - Utilise le cookie `sRefreshToken` pour générer un nouveau `sAccessToken`
+        - Transparent pour l'utilisateur final
+        
+        **Note :** Cette route est généralement appelée automatiquement par le SDK, 
+        pas directement par l'application frontend.
+      security:
+        - supertokens_refresh: []
+      responses:
+        '200':
+          description: Session renouvelée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
+          headers:
+            Set-Cookie:
+              description: Nouveaux cookies de session
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  - sAccessToken=newToken...; HttpOnly; Secure; SameSite=Lax
+        '401':
+          description: Token de rafraîchissement invalide ou expiré
+  /auth/session/verify:
+    get:
+      tags:
+        - Authentication
+      summary: ✅ Vérifier la validité de la session
+      operationId: verifySession
+      description: |
+        Vérifie si la session actuelle est valide sans retourner les données utilisateur.
+        
+        **Cas d'usage :**
+        - Vérification rapide de l'état de connexion
+        - Middleware de protection des routes
+        - Checks de sécurité avant actions sensibles
+        
+        **Différence avec `/auth/session` :**
+        - `/auth/session/verify` : Vérification seule (léger)
+        - `/auth/session` : Vérification + données utilisateur (complet)
+      security:
+        - supertokens_session: []
+      responses:
+        '200':
+          description: Session valide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
+        '401':
+          description: Session invalide ou expirée
+  /auth/user/password/reset:
+    post:
+      tags:
+        - Authentication
+      summary: 🔑 Demander une réinitialisation de mot de passe
+      operationId: resetPasswordRequest
+      description: |
+        Initie le processus de réinitialisation de mot de passe par email.
+        
+        **Processus :**
+        1. Validation de l'email/username fourni
+        2. Génération d'un token de réinitialisation
+        3. Envoi d'un email avec le lien de réinitialisation
+        
+        **Sécurité :** 
+        - Aucune information n'est révélée sur l'existence ou non du compte
+        - Token à usage unique avec expiration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formFields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        enum: [email]
+                      value:
+                        type: string
+                  example:
+                    - id: email
+                      value: john@example.com
+              required:
+                - formFields
+      responses:
+        '200':
+          description: Email de réinitialisation envoyé (ou pas, pour la sécurité)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
+        '400':
+          description: Erreur dans la demande de réinitialisation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'GENERAL_ERROR'
+                  message:
+                    type: string
+                    description: Message d'erreur de SuperTokens
+  /auth/user/password/reset/token:
+    post:
+      tags:
+        - Authentication
+      summary: 🔒 Confirmer la réinitialisation de mot de passe
+      operationId: confirmPasswordReset
+      description: |
+        Finalise la réinitialisation avec le token reçu par email.
+        
+        **Utilisation :**
+        - Appelée depuis le lien dans l'email de réinitialisation
+        - Le token est généralement dans l'URL du lien
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                method:
+                  type: string
+                  example: token
+                token:
+                  type: string
+                  description: Token de réinitialisation reçu par email
+                formFields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        enum: [password]
+                      value:
+                        type: string
+                  example:
+                    - id: password
+                      value: newSecurePassword123
+              required:
+                - method
+                - token
+                - formFields
+      responses:
+        '200':
+          description: Mot de passe réinitialisé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'OK'
+        '400':
+          description: Token invalide ou erreur de validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'GENERAL_ERROR'
+                  message:
+                    type: string
+                    description: Message d'erreur SuperTokens pour token invalide ou mot de passe incorrect
 components:
   schemas:
     TechStackDto:
@@ -629,17 +1247,7 @@ components:
         - description
         - status
         - techStacks
-    AuthError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Message d'erreur d'authentification
-          example: 'unauthorised'
-        statusCode:
-          type: integer
-          description: Code de statut HTTP
-          example: 401
+
     SessionInfo:
       type: object
       properties:
@@ -758,4 +1366,17 @@ components:
       type: apiKey
       in: cookie
       name: sAccessToken
-      description: Jeton de session SuperTokens (stocké dans un cookie sAccessToken)
+      description: |
+        Jeton de session SuperTokens pour l'authentification.
+        Automatiquement géré par le navigateur via cookies HttpOnly.
+        
+        **Cookies utilisés :**
+        - `sAccessToken` : Token d'accès principal
+        - `sRefreshToken` : Token de rafraîchissement (optionnel selon la route)
+    supertokens_refresh:
+      type: apiKey  
+      in: cookie
+      name: sRefreshToken
+      description: |
+        Jeton de rafraîchissement SuperTokens pour renouveler les sessions.
+        Utilisé automatiquement par `/auth/session/refresh`.

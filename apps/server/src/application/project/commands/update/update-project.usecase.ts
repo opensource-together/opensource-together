@@ -10,6 +10,7 @@ import { Project } from '@/domain/project/project.entity';
 import { Title } from '@/domain/project/title/title.vo';
 import { Description } from '@/domain/project/description/description.vo';
 import { Link } from '@/domain/project/link/link.vo';
+import { UpdateProjectRoleDto } from '@/presentation/project/dto/UpdateProjectRoleDto.request';
 
 export class UpdateProjectCommand implements ICommand {
   constructor(
@@ -17,7 +18,7 @@ export class UpdateProjectCommand implements ICommand {
     public readonly title: string | null,
     public readonly description: string | null,
     public readonly link: string | null,
-    public readonly projectRoles: object[],
+    public readonly projectRoles: UpdateProjectRoleDto[],
     public readonly techStacks: TechStackDto[],
     public readonly ownerId: string,
   ) {}
@@ -40,6 +41,7 @@ export class UpdateProjectCommandHandler
         : undefined,
       link: command.link ? Link.create(command.link) : undefined,
       techStacks: command.techStacks,
+      projectRoles: command.projectRoles,
     };
 
     const project = await this.projectRepo.updateProjectById(
