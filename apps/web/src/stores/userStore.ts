@@ -1,27 +1,29 @@
+import Session from "supertokens-web-js/recipe/session";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import Session from "supertokens-web-js/recipe/session";
 
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  avatarUrl: string;
-  bio: string;
-  githubUrl: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Profile } from "@/features/profile/types/profileTypes";
+
+// export interface User {
+//   id: string;
+//   username: string;
+//   email: string;
+//   avatarUrl: string;
+//   bio: string;
+//   githubUrl: string;
+//   createdAt: string;
+//   updatedAt: string;
+// }
 
 interface UserState {
-  user: User | null;
+  profile: Profile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   hasHydrated: boolean;
 }
 
 interface UserActions {
-  setUser: (user: User | null) => void;
+  setUser: (profile: Profile | null) => void;
   setLoading: (loading: boolean) => void;
   logout: () => Promise<void>;
   checkSession: () => Promise<boolean>;
@@ -34,32 +36,31 @@ export const useUserStore = create<UserStore>()(
   devtools(
     (set, get) => ({
       // State
-      user: null,
+      profile: null,
       isAuthenticated: false,
       isLoading: true,
       hasHydrated: false,
 
       // Actions
-      setUser: (user) =>
+      setProfile: (profile: Profile | null) =>
         set(
           {
-            user,
-            isAuthenticated: !!user,
+            profile,
+            isAuthenticated: !!profile,
             isLoading: false,
           },
           false,
-          "setUser"
+          "setProfile"
         ),
 
-      setLoading: (loading) =>
-        set({ isLoading: loading }, false, "setLoading"),
+      setLoading: (loading) => set({ isLoading: loading }, false, "setLoading"),
 
       logout: async () => {
         try {
           await Session.signOut();
           set(
             {
-              user: null,
+              profile: null,
               isAuthenticated: false,
               isLoading: false,
             },
@@ -74,18 +75,19 @@ export const useUserStore = create<UserStore>()(
       checkSession: async () => {
         try {
           const sessionExists = await Session.doesSessionExist();
-          
+
           if (sessionExists) {
             // Récupérer les données utilisateur depuis l'API
-            const response = await fetch("http://localhost:4000/user/me", {
+            const response = await fetch("http://localhost:4000/profile/me", {
               credentials: "include",
             });
-            
+
             if (response.ok) {
               const userData = await response.json();
+              console.log({ userData });
               set(
                 {
-                  user: userData,
+                  profile: userData,
                   isAuthenticated: true,
                   isLoading: false,
                 },
@@ -95,10 +97,10 @@ export const useUserStore = create<UserStore>()(
               return true;
             }
           }
-          
+
           set(
             {
-              user: null,
+              profile: null,
               isAuthenticated: false,
               isLoading: false,
             },
@@ -110,7 +112,7 @@ export const useUserStore = create<UserStore>()(
           console.error("Erreur lors de la vérification de session:", error);
           set(
             {
-              user: null,
+              profile: null,
               isAuthenticated: false,
               isLoading: false,
             },
@@ -123,7 +125,7 @@ export const useUserStore = create<UserStore>()(
 
       hydrate: async () => {
         if (get().hasHydrated) return;
-        
+
         set({ isLoading: true }, false, "hydrate");
         await get().checkSession();
         set({ hasHydrated: true }, false, "hydrate");

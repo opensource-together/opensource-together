@@ -32,7 +32,7 @@ export default function useAuth() {
         // Vérifier s'il y a une URL de redirection
         const urlParams = new URLSearchParams(window.location.search);
         const redirectTo = urlParams.get("redirectTo");
-        router.push(redirectTo || "/");
+        router.push(redirectTo || "/profile");
       },
       onError: async() => router.push("/auth/login"),
     },
