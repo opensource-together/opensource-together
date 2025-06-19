@@ -1,9 +1,12 @@
 import { SocialLink } from '@/domain/profile/social-link.vo';
 
-// Note: On expose ici les VOs directement, c'est un choix acceptable
-// car ils sont déjà des structures de données. On pourrait aussi les mapper
-// vers des DTOs dédiés si on voulait plus de contrôle sur le format JSON.
+export type ProfileProjectDto = {
+  name: string;
+  description: string;
+  url: string;
+};
 export class ProfileResponseDto {
+
   id: string;
   name: string;
   avatarUrl: string;
@@ -19,6 +22,7 @@ export class ProfileResponseDto {
     startDate: string;
     endDate: string | null;
   }[];
+  projects: ProfileProjectDto[];
   joinedAt: string; // ISO string
   profileUpdatedAt: string; // ISO string
 }

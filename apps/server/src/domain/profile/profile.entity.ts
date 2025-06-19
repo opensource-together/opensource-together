@@ -12,15 +12,11 @@ export class Profile {
   private location: string;
   private company: string;
 
-  // Les structures complexes sont remplacées par des listes de VOs
   private socialLinks: SocialLink[];
   private skills: ProfileSkill[];
   private experiences: ProfileExperience[];
   private projects: ProfileProject[];
   private updatedAt: Date;
-
-  // Les autres listes (techStacks, badges, projects) suivraient le même pattern.
-  // Je les laisse en-dehors pour la clarté de l'exemple.
 
   private constructor(props: {
     userId: string;
@@ -98,27 +94,11 @@ export class Profile {
       bio: this.bio,
       location: this.location,
       company: this.company,
-      // On retourne l'état des VOs pour la persistance
-      socialLinks: this.socialLinks.map((link) => ({
-        type: link.type,
-        url: link.url,
-      })),
-      skills: this.skills.map((skill) => ({
-        name: skill.name,
-        level: skill.level,
-      })),
-      experiences: this.experiences.map((exp) => ({
-        company: exp.company,
-        position: exp.position,
-        startDate: exp.startDate.toISOString(),
-        endDate: exp.endDate?.toISOString() || null,
-      })),
-      projects: this.projects.map((project) => ({
-        name: project.name,
-        description: project.description,
-        url: project.url,
-      })),
       updatedAt: this.updatedAt,
+      socialLinks: this.socialLinks,
+      skills: this.skills,
+      experiences: this.experiences,
+      projects: this.projects,
     };
   }
 }

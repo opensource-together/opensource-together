@@ -3,25 +3,42 @@ import { ProfileResponseDto } from '../dtos/profile-response.dto';
 
 export class ProfileMapper {
   static toDto(data: FullProfileData): ProfileResponseDto {
+    const userState = data.user.getState();
+    const profileState = data.profile.getState();
+
     return {
-      id: data.profile.getState().userId,
-      name: data.profile.getState().name,
-      avatarUrl: data.profile.getState().avatarUrl,
-      bio: data.profile.getState().bio,
-      location: data.profile.getState().location,
-      company: data.profile.getState().company,
-      socialLinks: data.profile.getState().socialLinks,
-      skills: data.profile.getState().skills,
-      experiences: data.profile.getState().experiences.map((experience) => ({
+      id: profileState.userId,
+      name: profileState.name,
+      avatarUrl: profileState.avatarUrl,
+      bio: profileState.bio,
+      location: profileState.location,
+      company: profileState.company,
+
+      socialLinks: profileState.socialLinks.map((link) => ({
+        type: link.type,
+        url: link.url,
+      })),
+
+      skills: profileState.skills.map((skill) => ({
+        name: skill.name,
+        level: skill.level,
+      })),
+
+      experiences: profileState.experiences.map((experience) => ({
         company: experience.company,
         position: experience.position,
-        startDate: new Date(experience.startDate).toISOString(),
-        endDate: experience.endDate
-          ? new Date(experience.endDate).toISOString()
-          : null,
+        startDate: experience.startDate.toISOString(),
+        endDate: experience.endDate?.toISOString() ?? null,
       })),
-      joinedAt: data.user.getState().createdAt.toISOString(),
-      profileUpdatedAt: data.profile.getState().updatedAt.toISOString(),
+
+      projects: profileState.projects.map((project) => ({
+        name: project.name,
+        description: project.description,
+        url: project.url,
+      })),
+
+      joinedAt: userState.createdAt.toISOString(),
+      profileUpdatedAt: profileState.updatedAt.toISOString(),
     };
   }
 }
