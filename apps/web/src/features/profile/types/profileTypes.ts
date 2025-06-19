@@ -58,7 +58,7 @@ export type ProfileProject = {
 // Correspond to GitHub User format
 export type Profile = {
   id: string;
-  username:string;
+  name: string;
   login: string;
   avatarUrl: string;
   websiteUrl?: string;
@@ -67,7 +67,7 @@ export type Profile = {
   location?: string;
   blog?: string;
   company?: string;
-  createdAt?: string;
+  joinedAt?: string;
   // updatedAt?: string;
   skills?: ProfileSkill[];
   projects?: ProfileProject[];

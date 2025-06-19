@@ -12,7 +12,7 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatarUrl, username, createdAt, bio, skills, experiences, links } =
+  const { avatarUrl, name, joinedAt, bio, skills, experiences, links } =
     profile;
   console.log({
     profile,
@@ -31,11 +31,11 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-medium">{username}</h2>
+            <h2 className="text-2xl font-medium">{name}</h2>
             <p className="text-[11px] text-black/50">
               Rejoint le{" "}
-              {createdAt
-                ? new Date(createdAt).toLocaleDateString("fr-FR", {
+              {joinedAt
+                ? new Date(joinedAt).toLocaleDateString("fr-FR", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",

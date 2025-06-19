@@ -5,8 +5,7 @@ import {
 } from '../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
 import { Result } from '@/shared/result';
-import { UserResponseDto } from '../dtos/user-response.dto';
-import { UserMapper } from '../mappers/user.mapper';
+import { User } from '@/domain/user/user.entity';
 
 export class FindUserByIdQuery implements IQuery {
   constructor(public readonly id: string) {}
@@ -21,17 +20,13 @@ export class FindUserByIdQueryHandler
     private readonly userRepo: UserRepositoryPort,
   ) {}
 
-  async execute(
-    query: FindUserByIdQuery,
-  ): Promise<
-    Result<UserResponseDto, { username?: string; email?: string } | string>
-  > {
+  async execute(query: FindUserByIdQuery): Promise<Result<User, string>> {
     const result = await this.userRepo.findById(query.id);
 
     if (!result.success) {
       return Result.fail('User not found');
     }
 
-    return Result.ok(UserMapper.toDto(result.value));
+    return Result.ok(result.value);
   }
 }

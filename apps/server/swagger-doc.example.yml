@@ -37,11 +37,11 @@ tags:
   - name: Authentication
     description: Opérations liées à l'authentification utilisateur
 paths:
-  /user/me:
+  /profile/me:
     get:
       tags:
-        - User
-      summary: Récupérer le profil utilisateur courant
+        - Profile
+      summary: Récupérer le profil de l'utilisateur courant
       description: Retourne le profil de l'utilisateur actuellement authentifié.
       security:
         - supertokens_session: []
@@ -51,16 +51,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponseDto'
+                $ref: '#/components/schemas/ProfileResponseDto'
               example:
                 id: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
-                username: 'Jhondoe'
-                email: 'jhondoe@gmail.com'
+                name: 'Jhondoe'
                 avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4'
                 bio: "Fullstack Developer | \r\nExpress & React | \r\nBuilding @jhongo-project "
-                githubUrl: 'https://github.com/Jhondoe'
-                createdAt: '2025-04-16T15:47:31.633Z'
-                updatedAt: '2025-06-16T19:57:31.633Z'
+                location: 'Paris, France'
+                company: 'Jhongo'
+                socialLinks:
+                  - type: 'github'
+                    url: 'https://github.com/Jhondoe'
+                  - type: 'twitter'
+                    url: 'https://twitter.com/Jhondoe'
+                  - type: 'linkedin'
+                    url: 'https://www.linkedin.com/in/jhondoe/'
+                  - type: 'website'
+                    url: 'https://jhondoe.com'
+                skills: []
+                experiences: []
+                joinedAt: '2025-04-16T15:47:31.633Z'
+                profileUpdatedAt: '2025-04-16T15:47:31.633Z'
         '404':
           description: Utilisateur non trouvé
           content:
@@ -78,7 +89,7 @@ paths:
                     type: integer
                     example: 404
               example:
-                message: 'User not found'
+                message: 'Utilisateur non trouvé.'
                 error: 'Not Found'
                 statusCode: 404
   /projects:
