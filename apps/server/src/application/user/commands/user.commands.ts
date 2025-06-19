@@ -1,15 +1,15 @@
 import {
-  CreateUserCommand,
+  // CreateUserCommand,
   CreateUserCommandHandler,
 } from './create-user.command';
 import {
-  UpdateUserGhTokenCommand,
-  UpdateUserGhTokenCommandHandler,
-} from './update-user-gh-token.command';
+  // DeleteUserCommand,
+  DeleteUserCommandHandler,
+} from './delete-user.command';
 
 export const userCommandsContainer = [
-  CreateUserCommand,
+  // CreateUserCommand,
   CreateUserCommandHandler,
-  UpdateUserGhTokenCommand,
-  UpdateUserGhTokenCommandHandler,
+  // DeleteUserCommand,
+  DeleteUserCommandHandler,
 ];

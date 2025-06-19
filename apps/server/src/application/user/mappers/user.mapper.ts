@@ -3,15 +3,13 @@ import { UserResponseDto } from '../dtos/user-response.dto';
 
 export class UserMapper {
   static toDto(user: User): UserResponseDto {
+    const userState = user.getState();
     return {
-      id: user.getId(),
-      username: user.getUsername(),
-      email: user.getEmail(),
-      avatarUrl: user.getAvatarUrl(),
-      bio: user.getBio(),
-      githubUrl: user.getGithubUrl(),
-      createdAt: user.getCreatedAt(),
-      updatedAt: user.getUpdatedAt(),
+      id: userState.id,
+      username: userState.username,
+      email: userState.email,
+      createdAt: userState.createdAt?.toISOString() ?? '',
+      updatedAt: userState.updatedAt?.toISOString() ?? '',
     };
   }
 }

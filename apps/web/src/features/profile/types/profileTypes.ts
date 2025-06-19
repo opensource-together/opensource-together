@@ -34,6 +34,7 @@ export interface ProfileLink {
   url: string;
 }
 
+// TODO: Changer les properties pour correspondre a la vison 1 projet = 1 ou plusierus repository
 // Correspond to GitHub Repository format
 export type ProfileProject = {
   id: string;
@@ -57,30 +58,21 @@ export type ProfileProject = {
 // Correspond to GitHub User format
 export type Profile = {
   id: string;
+  username:string;
   login: string;
-  avatar_url: string;
-  html_url: string;
-  x_page?: string;
-  linkedin_page?: string;
-  github_page?: string;
-  website_page?: string;
+  avatarUrl: string;
+  websiteUrl?: string;
   type: string;
-  site_admin: boolean;
-  name?: string;
   bio?: string;
   location?: string;
   blog?: string;
   company?: string;
-  public_repos?: number;
-  public_gists?: number;
-  followers?: number;
-  following?: number;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  // updatedAt?: string;
   skills?: ProfileSkill[];
   projects?: ProfileProject[];
   socialLinks?: ProfileSocialLink[];
-  contributions_count?: number;
+  contributionsCount?: number;
   experiences?: ProfileExperience[];
   links?: ProfileLink[];
 };

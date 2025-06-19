@@ -1,73 +1,67 @@
+// apps/server/src/domain/user/user.entity.ts
+
 import { Username } from '@domain/user/username.vo';
 import { Email } from '@domain/user/email.vo';
+import { Result } from '@/shared/result';
+
 export class User {
   private readonly id: string;
   private username: Username;
   private email: Email;
-  private avatarUrl: string;
-  private bio: string;
-  private githubUrl: string;
-  private githubUserId: string;
   private readonly createdAt: Date;
   private readonly updatedAt: Date;
-  constructor({
-    id,
-    username,
-    email,
-    avatarUrl,
-    bio,
-    githubUrl,
-    createdAt,
-    updatedAt,
-  }: {
+
+  // Le constructeur est le SEUL moyen de créer un User.
+  // Il garantit qu'un User ne peut pas exister dans un état invalide.
+  private constructor(props: {
     id: string;
     username: Username;
     email: Email;
-    avatarUrl: string;
-    bio: string;
-    githubUrl: string;
     createdAt: Date;
     updatedAt: Date;
   }) {
-    this.id = id;
-    this.username = username;
-    this.email = email;
-    this.avatarUrl = avatarUrl;
-    this.bio = bio;
-    this.githubUrl = githubUrl;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+    this.id = props.id;
+    this.username = props.username;
+    this.email = props.email;
+    this.createdAt = props.createdAt ?? new Date();
+    this.updatedAt = props.updatedAt ?? new Date();
   }
 
-  public getId() {
-    return this.id;
+  public static reconstitute(props: {
+    id: string;
+    username: Username;
+    email: Email;
+    createdAt: Date;
+    updatedAt: Date;
+  }): User {
+    return new User(props);
+  }
+  // Pas de setters ! On expose un comportement métier.
+  public changeUsername(newUsername: string) {
+    // Logique de validation, règles métier...
+    // Par exemple: if (this.isPremiumUser()) { ... }
+    const usernameVo = Username.create(newUsername);
+    if (!usernameVo.success) return Result.fail({ username: usernameVo.error });
+
+    this.username = usernameVo.value;
   }
 
-  public getUsername() {
-    return this.username.getUsername();
+  public changeEmail(newEmail: string) {
+    const emailVo = Email.create(newEmail);
+    if (!emailVo.success) return Result.fail({ email: emailVo.error });
+
+    this.email = emailVo.value;
   }
 
-  public getEmail() {
-    return this.email.getEmail();
-  }
-
-  public getCreatedAt() {
-    return this.createdAt;
-  }
-
-  public getUpdatedAt() {
-    return this.updatedAt;
-  }
-
-  public getAvatarUrl() {
-    return this.avatarUrl;
-  }
-
-  public getBio() {
-    return this.bio;
-  }
-
-  public getGithubUrl() {
-    return this.githubUrl;
+  // On n'expose pas les données brutes via des getters.
+  // On expose une méthode pour extraire l'état à des fins de persistance ou de DTO.
+  public getState() {
+    return {
+      id: this.id,
+      username: this.username.getUsername(),
+      email: this.email.getEmail(),
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 }

@@ -25,12 +25,22 @@ model User {
   id        					String   @id @default(uuid())
   username  					String   @unique
   email     					String   @unique
-  avatarUrl					  String?
-  bio							    String?
-  githubUrl					  String?
   createdAt 					DateTime @default(now())
   updatedAt 					DateTime @updatedAt
   githubCredentials			UserGitHubCredentials? 
+  profile							Profile?
+}
+
+model Profile {
+  userId						String   @unique @id 
+  name							  String
+  avatarUrl					  String?
+  location					  String?
+  company						  String?
+  bio							    String?
+  updatedAt 					DateTime @default(now()) @updatedAt
+  user							  User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  socialLinks   UserSocialLink[]
 }
 
 model UserGitHubCredentials {
@@ -41,6 +51,7 @@ model UserGitHubCredentials {
   createdAt 					DateTime @default(now())
   updatedAt 					DateTime @updatedAt
 }
+
 model Project {
   id          				String        	@id @default(uuid())
   ownerId     				String
@@ -90,4 +101,18 @@ model ProjectRole {
 
   // Index pour recherche par projet et rôle
   @@index([projectId, roleTitle], name: "idx_project_roles")
+}
+
+model UserSocialLink {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // ex: "github", "twitter", "linkedin", "website"
+  url       String
+  createdAt DateTime @default(now())
+
+  // Relation
+  profile   Profile  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  // Un utilisateur ne peut avoir qu'un seul lien d'un type donné.
+  @@unique([userId, type])
 }

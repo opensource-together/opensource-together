@@ -5,10 +5,9 @@ import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encrypti
 import { EncryptionServicePort } from '@/application/encryption/ports/encryption.service.port';
 import {
   USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
+  UserGitHubCredentialsData,
   UserGitHubCredentialsRepositoryPort,
-} from '../ports/user-github-credentials.repository';
-import { UserGitHubCredentials } from '@/domain/user/user-github-credentials.entity';
-import { UserGitHubCredentialsFactory } from '@/domain/user/user-github-credentials.factory';
+} from '../ports/user-github-credentials.repository.port';
 
 export class UpdateUserGhTokenCommand implements ICommand {
   constructor(
@@ -42,29 +41,24 @@ export class UpdateUserGhTokenCommandHandler
    */
   async execute(
     command: UpdateUserGhTokenCommand,
-  ): Promise<Result<UserGitHubCredentials, string>> {
+  ): Promise<Result<UserGitHubCredentialsData, string>> {
     const encryptedGithubAccessToken = this.encryptionService.encrypt(
       command.githubAccessToken,
     );
     if (!encryptedGithubAccessToken.success)
       return Result.fail(encryptedGithubAccessToken.error);
-    const ghToken: Result<string, string> =
-      await this.userGitHubCredentialsRepo.findGhTokenByUserId(command.userId);
-    if (!ghToken.success) return Result.fail(ghToken.error);
 
-    const userGitHubCredentialsToUpdate =
-      UserGitHubCredentialsFactory.reconstitute({
+    const updatedCredentialsResult =
+      await this.userGitHubCredentialsRepo.update({
         userId: command.userId,
         githubUserId: command.githubUserId,
         githubAccessToken: encryptedGithubAccessToken.value,
       });
-    const updatedUserGitHubCredentials =
-      await this.userGitHubCredentialsRepo.update(
-        userGitHubCredentialsToUpdate,
-      );
-    if (!updatedUserGitHubCredentials.success)
-      return Result.fail(updatedUserGitHubCredentials.error);
 
-    return Result.ok(updatedUserGitHubCredentials.value);
+    if (!updatedCredentialsResult.success) {
+      return Result.fail(updatedCredentialsResult.error);
+    }
+
+    return Result.ok(updatedCredentialsResult.value);
   }
 }

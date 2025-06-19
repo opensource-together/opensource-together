@@ -2,10 +2,10 @@ import Session from 'supertokens-node/recipe/session';
 import { SuperTokensModuleOptions } from 'supertokens-nestjs/dist/supertokens.types';
 import { emailPasswordRecipe } from '@infrastructures/auth/recipes/email-password.recipe';
 import EmailVerification from 'supertokens-node/recipe/emailverification';
-import { QueryBus } from '@nestjs/cqrs';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ConfigService } from '@nestjs/config';
 import { thirdPartyRecipe } from '@infrastructures/auth/recipes/third-party.recipe';
+
 export function createSupertokensConfig(
   queryBus: QueryBus,
   commandBus: CommandBus,

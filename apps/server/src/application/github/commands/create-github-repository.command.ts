@@ -15,8 +15,8 @@ import {
   ENCRYPTION_SERVICE_PORT,
   EncryptionServicePort,
 } from '@/application/encryption/ports/encryption.service.port';
-import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/application/user/ports/user-github-credentials.repository';
-import { UserGitHubCredentialsRepositoryPort } from '@/application/user/ports/user-github-credentials.repository';
+import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/application/github/ports/user-github-credentials.repository.port';
+import { UserGitHubCredentialsRepositoryPort } from '@/application/github/ports/user-github-credentials.repository.port';
 
 export class CreateGitHubRepositoryCommand implements ICommand {
   constructor(

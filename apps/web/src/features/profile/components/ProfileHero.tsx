@@ -12,15 +12,18 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatar_url, name, created_at, bio, skills, experiences, links } =
+  const { avatarUrl, username, createdAt, bio, skills, experiences, links } =
     profile;
+  console.log({
+    profile,
+  })
   return (
     <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">
       <div className="relative top-[-15px] flex items-center justify-between">
         <div className="flex items-center">
           <div className="relative top-[-20px] mr-4">
             <Image
-              src={avatar_url}
+              src={avatarUrl}
               alt="Profile"
               width={120}
               height={120}
@@ -28,11 +31,11 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             />
           </div>
           <div>
-            <h2 className="text-2xl font-medium">{name}</h2>
+            <h2 className="text-2xl font-medium">{username}</h2>
             <p className="text-[11px] text-black/50">
               Rejoint le{" "}
-              {created_at
-                ? new Date(created_at).toLocaleDateString("fr-FR", {
+              {createdAt
+                ? new Date(createdAt).toLocaleDateString("fr-FR", {
                     day: "numeric",
                     month: "long",
                     year: "numeric",

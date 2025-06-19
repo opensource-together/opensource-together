@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/infrastructures/orm/prisma/prisma.service';
-import { UserGitHubCredentialsRepositoryPort } from '@/application/user/ports/user-github-credentials.repository';
-import { UserGitHubCredentials } from '@/domain/user/user-github-credentials.entity';
+import {
+  UserGitHubCredentialsData,
+  UserGitHubCredentialsRepositoryPort,
+} from '@/application/github/ports/user-github-credentials.repository.port';
 import { Result } from '@/shared/result';
-import { PrismaUserGitHubCredentialsMapper } from './prisma.user-github-credentials.mapper';
 
 @Injectable()
 export class PrismaUserGitHubCredentialsRepository
@@ -12,56 +13,75 @@ export class PrismaUserGitHubCredentialsRepository
   constructor(private readonly prisma: PrismaService) {}
 
   async findGhTokenByUserId(userId: string): Promise<Result<string, string>> {
-    const ghToken = await this.prisma.userGitHubCredentials.findUnique({
-      where: { userId },
-      select: {
-        githubAccessToken: true,
-      },
-    });
-    if (!ghToken || !ghToken.githubAccessToken)
-      //Une erreur est survenue lors de la récupération des credentials GitHub
+    try {
+      const ghToken = await this.prisma.userGitHubCredentials.findUnique({
+        where: { userId },
+        select: {
+          githubAccessToken: true,
+        },
+      });
+      if (!ghToken || !ghToken.githubAccessToken) {
+        return Result.fail('GitHub credentials not found for this user.');
+      }
 
-      return Result.fail('Une erreur est survenue');
-
-    return Result.ok(ghToken.githubAccessToken);
+      return Result.ok(ghToken.githubAccessToken);
+    } catch (e) {
+      // Idéalement, logger l'erreur 'e' ici
+      return Result.fail(
+        'A technical error occurred while fetching GitHub credentials.',
+      );
+    }
   }
 
   async update(
-    userGitHubCredentials: UserGitHubCredentials,
-  ): Promise<Result<UserGitHubCredentials, string>> {
-    const { userId, githubAccessToken, githubUserId } =
-      PrismaUserGitHubCredentialsMapper.toPrisma(userGitHubCredentials);
-    const updatedUserGitHubCredentials =
-      await this.prisma.userGitHubCredentials.update({
-        where: { userId },
-        data: {
-          githubAccessToken,
-          githubUserId,
+    props: UserGitHubCredentialsData,
+  ): Promise<Result<UserGitHubCredentialsData, string>> {
+    try {
+      const updatedCredentials = await this.prisma.userGitHubCredentials.update(
+        {
+          where: { userId: props.userId },
+          data: {
+            githubAccessToken: props.githubAccessToken,
+            githubUserId: props.githubUserId,
+          },
         },
+      );
+      return Result.ok({
+        userId: updatedCredentials.userId,
+        githubUserId: updatedCredentials.githubUserId ?? '',
+        githubAccessToken: updatedCredentials.githubAccessToken ?? '',
       });
-    return Result.ok(
-      PrismaUserGitHubCredentialsMapper.toDomain(updatedUserGitHubCredentials),
-    );
+    } catch (e) {
+      // Idéalement, logger l'erreur 'e' ici
+      return Result.fail(
+        'A technical error occurred while updating GitHub credentials.',
+      );
+    }
   }
 
-  async save(
-    userGitHubCredentials: UserGitHubCredentials,
-  ): Promise<Result<UserGitHubCredentials, string>> {
-    const { userId, githubAccessToken, githubUserId } =
-      PrismaUserGitHubCredentialsMapper.toPrisma(userGitHubCredentials);
-    const createdUserGitHubCredentials =
-      await this.prisma.userGitHubCredentials.create({
-        data: {
-          userId,
-          githubAccessToken,
-          githubUserId,
+  async create(
+    props: UserGitHubCredentialsData,
+  ): Promise<Result<UserGitHubCredentialsData, string>> {
+    try {
+      const createdCredentials = await this.prisma.userGitHubCredentials.create(
+        {
+          data: {
+            userId: props.userId,
+            githubAccessToken: props.githubAccessToken,
+            githubUserId: props.githubUserId,
+          },
         },
+      );
+      return Result.ok({
+        userId: createdCredentials.userId,
+        githubUserId: createdCredentials.githubUserId ?? '',
+        githubAccessToken: createdCredentials.githubAccessToken ?? '',
       });
-    if (!createdUserGitHubCredentials)
-      //Erreur lors de la création des credentials GitHub
-      return Result.fail('Une erreur est survenue');
-    return Result.ok(
-      PrismaUserGitHubCredentialsMapper.toDomain(createdUserGitHubCredentials),
-    );
+    } catch (e) {
+      // Idéalement, logger l'erreur 'e' ici
+      return Result.fail(
+        'A technical error occurred while creating GitHub credentials.',
+      );
+    }
   }
 }

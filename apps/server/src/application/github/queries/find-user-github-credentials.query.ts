@@ -4,7 +4,7 @@ import { Result } from '@/shared/result';
 import {
   USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
   UserGitHubCredentialsRepositoryPort,
-} from '../ports/user-github-credentials.repository';
+} from '../ports/user-github-credentials.repository.port';
 
 export interface GitHubCredentials {
   userId: string;
