@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
 import { AuthProvider } from "@/features/auth/components/AuthProvider";
+import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
 
 import Header from "@/components/shared/layout/Header";
 import { Toaster } from "@/components/ui/sonner";

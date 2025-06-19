@@ -16,7 +16,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
     profile;
   console.log({
     profile,
-  })
+  });
   return (
     <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">
       <div className="relative top-[-15px] flex items-center justify-between">

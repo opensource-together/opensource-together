@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
+
 import { useAuth } from "./AuthProvider";
 
 interface ProtectedRouteProps {
@@ -10,10 +11,10 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-export function ProtectedRoute({ 
-  children, 
+export function ProtectedRoute({
+  children,
   fallback,
-  redirectTo = "/auth/login" 
+  redirectTo = "/auth/login",
 }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
@@ -29,8 +30,8 @@ export function ProtectedRoute({
   if (isLoading) {
     return (
       fallback || (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900"></div>
         </div>
       )
     );
@@ -48,10 +49,7 @@ interface PublicRouteProps {
   redirectTo?: string;
 }
 
-export function PublicRoute({ 
-  children, 
-  redirectTo = "/" 
-}: PublicRouteProps) {
+export function PublicRoute({ children, redirectTo = "/" }: PublicRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
@@ -63,8 +61,8 @@ export function PublicRoute({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900"></div>
       </div>
     );
   }
@@ -74,4 +72,4 @@ export function PublicRoute({
   }
 
   return <>{children}</>;
-} 
+}

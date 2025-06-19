@@ -1,6 +1,7 @@
 // import { mockProfiles } from "../data/mockProfile";
-import { Profile } from "../types/profileTypes";
 import { useUserStore } from "@/stores/userStore";
+
+import { Profile } from "../types/profileTypes";
 
 /**
  * Get the profile of the authenticated user

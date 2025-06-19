@@ -6,7 +6,6 @@ export type ProfileProjectDto = {
   url: string;
 };
 export class ProfileResponseDto {
-
   id: string;
   name: string;
   avatarUrl: string;

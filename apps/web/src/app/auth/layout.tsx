@@ -5,9 +5,5 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PublicRoute>
-      {children}
-    </PublicRoute>
-  );
+  return <PublicRoute>{children}</PublicRoute>;
 }

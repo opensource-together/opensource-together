@@ -4,17 +4,6 @@ import { devtools } from "zustand/middleware";
 
 import { Profile } from "@/features/profile/types/profileTypes";
 
-// export interface User {
-//   id: string;
-//   username: string;
-//   email: string;
-//   avatarUrl: string;
-//   bio: string;
-//   githubUrl: string;
-//   createdAt: string;
-//   updatedAt: string;
-// }
-
 interface UserState {
   profile: Profile | null;
   isAuthenticated: boolean;
@@ -23,7 +12,7 @@ interface UserState {
 }
 
 interface UserActions {
-  setUser: (profile: Profile | null) => void;
+  setProfile: (profile: Profile | null) => void;
   setLoading: (loading: boolean) => void;
   logout: () => Promise<void>;
   checkSession: () => Promise<boolean>;

@@ -39,7 +39,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, profile, logout } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
@@ -149,16 +149,16 @@ export default function Header() {
                 onClick={handleProfile}
                 className="flex items-center space-x-2 hover:opacity-80"
               >
-                {user?.avatarUrl && (
+                {profile?.avatarUrl && (
                   <Image
-                    src={user.avatarUrl}
+                    src={profile.avatarUrl}
                     alt="Profile"
                     width={32}
                     height={32}
                     className="rounded-full"
                   />
                 )}
-                <span className="text-sm font-medium">{user?.username}</span>
+                <span className="text-sm font-medium">{profile?.name}</span>
               </button>
 
               <Button variant="outline" size="sm" onClick={handleLogout}>

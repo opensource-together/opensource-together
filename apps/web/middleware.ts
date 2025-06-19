@@ -12,7 +12,7 @@ const protectedRoutes = [
 const publicRoutes = [
   "/",
   "/auth/login",
-  "/auth/signup", 
+  "/auth/signup",
   "/auth/callback/github",
   "/projects", // Liste publique des projets
   "/guides",
@@ -38,7 +38,7 @@ export function middleware(request: NextRequest) {
   // Si c'est une route protégée, vérifier l'authentification via cookie
   if (isProtectedRoute) {
     const sessionCookie = request.cookies.get("sAccessToken");
-    
+
     if (!sessionCookie) {
       // Rediriger vers la page de connexion
       const loginUrl = new URL("/auth/login", request.url);
@@ -50,7 +50,7 @@ export function middleware(request: NextRequest) {
   // Si l'utilisateur est connecté et essaie d'accéder aux pages d'auth
   if (pathname.startsWith("/auth/") && !pathname.includes("/callback")) {
     const sessionCookie = request.cookies.get("sAccessToken");
-    
+
     if (sessionCookie) {
       // Rediriger vers la page d'accueil si déjà connecté
       return NextResponse.redirect(new URL("/", request.url));
@@ -72,4 +72,4 @@ export const config = {
      */
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-}; 
+};

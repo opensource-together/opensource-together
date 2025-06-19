@@ -1,12 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, ReactNode } from "react";
+import { ReactNode, createContext, useContext, useEffect } from "react";
+
 import { useUserStore } from "@/stores/userStore";
+import { Profile } from "@/features/profile/types/profileTypes";
 
 interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
-  user: any;
+  profile: Profile | null;
   logout: () => Promise<void>;
 }
 
@@ -17,7 +19,8 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { user, isAuthenticated, isLoading, logout, hydrate } = useUserStore();
+  const { profile, isAuthenticated, isLoading, logout, hydrate } =
+    useUserStore();
 
   useEffect(() => {
     // Hydrate le store au montage du composant
@@ -27,7 +30,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const value: AuthContextType = {
     isLoading,
     isAuthenticated,
-    user,
+    profile,
     logout,
   };
 
@@ -40,4 +43,4 @@ export function useAuth() {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-} 
+}

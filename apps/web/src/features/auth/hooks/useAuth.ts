@@ -1,7 +1,8 @@
 import { useRouter } from "next/navigation";
 
-import { useToastMutation } from "@/hooks/useToastMutation";
 import { useUserStore } from "@/stores/userStore";
+
+import { useToastMutation } from "@/hooks/useToastMutation";
 
 import { getGitHubAuthUrl, handleGitHubCallback } from "../services/authApi";
 
@@ -34,7 +35,7 @@ export default function useAuth() {
         const redirectTo = urlParams.get("redirectTo");
         router.push(redirectTo || "/profile");
       },
-      onError: async() => router.push("/auth/login"),
+      onError: async () => router.push("/auth/login"),
     },
   });
 
