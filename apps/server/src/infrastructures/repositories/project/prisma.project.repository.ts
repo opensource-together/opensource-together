@@ -8,6 +8,7 @@ import { PrismaProjectMapper } from './prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 import { Prisma } from '@prisma/client';
+import { UpdateProjectRoleInputsDto } from '@/application/dto/inputs/update-project-role-inputs.dto';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {

@@ -2,30 +2,29 @@ import {
   IsString,
   IsNotEmpty,
   IsArray,
+  IsOptional,
   IsBoolean,
   ValidateNested,
 } from 'class-validator';
+import { TechStackDto } from '../../project/dto/TechStackDto.request';
 import { Type } from 'class-transformer';
-import { TechStackDto } from './TechStackDto.request';
 
-export class CreateProjectRoleDto {
+export class UpdateProjectRoleDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   roleTitle: string;
 
-  // @IsString()
-  // projectId: string;
-
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => TechStackDto)
   skillSet: TechStackDto[];
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @IsBoolean()
-  @IsNotEmpty()
+  @IsOptional()
   isFilled: boolean;
 }

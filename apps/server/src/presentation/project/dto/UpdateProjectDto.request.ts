@@ -1,7 +1,7 @@
 import { IsString, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { TechStackDto } from './TechStackDto.request';
 import { TeamMemberDto } from './TeamMemberDto.request';
-import { UpdateProjectRoleDto } from './UpdateProjectRoleDto.request';
+import { UpdateProjectRoleDto } from '../../projectRole/dto/UpdateProjectRoleDto.request';
 import { Type } from 'class-transformer';
 
 export class UpdateProjectDtoRequest {
