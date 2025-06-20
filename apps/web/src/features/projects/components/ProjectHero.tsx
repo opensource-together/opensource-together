@@ -14,10 +14,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     description = "",
     longDescription,
     keyBenefits = [],
-    difficulty = "",
-    authorName = "",
-    authorImage = "/icons/empty-project.svg",
-    techStacks = [],
+    // difficulty = "",
+    // authorName = "",
+    // authorImage = "/icons/empty-project.svg",
+    // techStacks = [],
     projectImages = [],
   } = project;
 

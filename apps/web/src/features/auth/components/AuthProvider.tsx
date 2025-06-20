@@ -3,6 +3,7 @@
 import { ReactNode, createContext, useContext, useEffect } from "react";
 
 import { useUserStore } from "@/stores/userStore";
+
 import { Profile } from "@/features/profile/types/profileTypes";
 
 interface AuthContextType {
