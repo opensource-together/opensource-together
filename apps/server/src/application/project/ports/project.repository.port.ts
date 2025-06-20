@@ -1,6 +1,7 @@
 import { Result } from '@/shared/result';
 import { Project } from '@domain/project/project.entity';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
+import { UpdateProjectRoleInputsDto } from '@/application/dto/inputs/update-project-role-inputs.dto';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 export const PROJECT_REPOSITORY_PORT = Symbol('PROJECT_REPOSITORY_PORT');
 export interface ProjectRepositoryPort {

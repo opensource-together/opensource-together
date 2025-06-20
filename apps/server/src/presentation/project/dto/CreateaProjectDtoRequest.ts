@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { TechStackDto } from './TechStackDto.request';
-import { CreateProjectRoleDto } from './ProjectRoleDto.request';
+import { CreateProjectRoleDto } from '../../projectRole/dto/CreateProjectRoleDto.request';
 import { TeamMemberDto } from './TeamMemberDto.request';
 
 export class CreateProjectDtoRequest {

@@ -12,7 +12,7 @@ import { Inject } from '@nestjs/common';
 import { ICommandHandler } from '@nestjs/cqrs';
 import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
 import TeamMemberFactory from '@/domain/teamMember/teamMember.factory';
-import { CreateProjectRoleDto } from '@/presentation/project/dto/ProjectRoleDto.request';
+import { CreateProjectRoleDto } from '@/presentation/projectRole/dto/CreateProjectRoleDto.request';
 import { TeamMemberDto } from '@/presentation/project/dto/TeamMemberDto.request';
 
 export class CreateProjectCommand implements ICommand {
