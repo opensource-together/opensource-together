@@ -16,7 +16,8 @@ export interface ProjectRoleRepositoryPort {
     payload: UpdateProjectRoleInputsDto,
   ): Promise<Result<ProjectRole>>;
 
-  // deleteProjectRoleById(id: string): Promise<Result<ProjectRole>>;
+  deleteProjectRoleById(roleId: string): Promise<Result<boolean>>;
+
   // getProjectRoleById(id: string): Promise<Result<ProjectRole>>;
   // getProjectRolesByProjectId(projectId: string): Promise<Result<ProjectRole[]>>;
 }

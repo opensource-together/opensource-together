@@ -144,4 +144,33 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepositoryPort {
       return Result.fail(`Unknown error: ${error}`);
     }
   }
+
+  /**
+   * Supprime un rôle de projet par son ID
+   * @returns true si la suppression a réussi
+   */
+  async deleteProjectRoleById(roleId: string): Promise<Result<boolean>> {
+    try {
+      // Supprimer le rôle
+      await this.prisma.projectRole.delete({
+        where: {
+          id: roleId,
+        },
+      });
+
+      return Result.ok(true);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          return Result.fail('Role not found');
+        }
+        if (error.code === 'P2003') {
+          return Result.fail(
+            'Cannot delete role: it may still be referenced elsewhere',
+          );
+        }
+      }
+      return Result.fail(`Unknown error during role deletion: ${error}`);
+    }
+  }
 }

@@ -724,6 +724,105 @@ paths:
                   statusCode:
                     type: integer
                     example: 404
+    delete:
+      tags:
+        - Projects
+      summary: Supprimer un rôle de projet
+      operationId: deleteProjectRole
+      description: |
+        Supprime un rôle spécifique d'un projet.
+        
+        **🔒 Sécurité :**
+        - Seul le propriétaire du projet peut supprimer des rôles
+        - Vérification automatique de propriété côté serveur
+        
+        **⚠️ Action irréversible :**
+        Cette action supprime définitivement le rôle et ses associations.
+      security:
+        - supertokens_session: []
+      parameters:
+        - name: id
+          in: path
+          description: ID du projet contenant le rôle
+          required: true
+          schema:
+            type: string
+            example: '123e4567-e89b-12d3-a456-426614174000'
+        - name: roleId
+          in: path
+          description: ID du rôle à supprimer
+          required: true
+          schema:
+            type: string
+            example: '789e4567-e89b-12d3-a456-426614174111'
+      responses:
+        '200':
+          description: Rôle de projet supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project role deleted successfully'
+        '400':
+          description: Erreur lors de la suppression du rôle
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message d'erreur technique lors de la suppression
+                    oneOf:
+                      - example: 'Unknown error during role deletion'
+                      - example: 'Cannot delete role: it may still be referenced elsewhere'
+                  statusCode:
+                    type: integer
+                    example: 400
+        '401':
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
+        '403':
+          description: Accès interdit - vous n'êtes pas le propriétaire de ce projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not allowed to delete roles from this project'
+                  statusCode:
+                    type: integer
+                    example: 403
+        '404':
+          description: Projet ou rôle non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    oneOf:
+                      - example: 'Project not found'
+                      - example: 'Role not found in this project'
+                  statusCode:
+                    type: integer
+                    example: 404
   /auth/signup:
     post:
       tags:

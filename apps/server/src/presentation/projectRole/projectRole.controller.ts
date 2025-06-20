@@ -6,12 +6,14 @@ import {
   HttpException,
   HttpStatus,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
 import { Result } from '@/shared/result';
 import { ProjectRole } from '@/domain/projectRole/projectRole.entity';
 import { CreateProjectRoleCommand } from '@/application/projectRole/commands/create/create-project-role.command';
+import { DeleteProjectRoleCommand } from '@/application/projectRole/commands/delete/delete-project-role.command';
 import { UpdateProjectRoleCommand } from '@/application/projectRole/commands/update/update-project-role.command';
 import { CreateProjectRoleDto } from './dto/CreateProjectRoleDto.request';
 import { UpdateProjectRoleDto } from './dto/UpdateProjectRoleDto.request';
@@ -86,6 +88,36 @@ export class ProjectRoleController {
     return {
       message: 'Project role updated successfully',
       role: toProjectRoleResponseDto(result.value),
+    };
+  }
+
+  @Delete(':roleId')
+  async deleteProjectRole(
+    @Session('userId') ownerId: string,
+    @Param('projectId') projectId: string,
+    @Param('roleId') roleId: string,
+  ) {
+    const result = await this.commandBus.execute(
+      new DeleteProjectRoleCommand(projectId, roleId, ownerId),
+    );
+
+    if (!result.success) {
+      if (
+        result.error === 'Project not found' ||
+        result.error === 'Role not found in this project'
+      ) {
+        throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+      }
+      if (
+        result.error === 'You are not allowed to delete roles from this project'
+      ) {
+        throw new HttpException(result.error, HttpStatus.FORBIDDEN);
+      }
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+
+    return {
+      message: 'Project role deleted successfully',
     };
   }
 }
