@@ -29,7 +29,7 @@ export function createSupertokensConfig(
       EmailVerification.init({
         mode: 'OPTIONAL',
       }),
-      thirdPartyRecipe({ configService, commandBus, queryBus }),
+      thirdPartyRecipe({ configService, commandBus }),
       Session.init({
         getTokenTransferMethod: () => {
           return 'cookie';

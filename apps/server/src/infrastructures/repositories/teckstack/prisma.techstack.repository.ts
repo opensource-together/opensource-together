@@ -27,7 +27,7 @@ export class PrismaTechstackRepository implements TechstackRepositoryPort {
       }
       return Result.ok(teckStack);
     } catch (error) {
-      console.error({ error });
+      console.error(error);
       return Result.fail('Une erreur est survernue');
     }
   }

@@ -26,6 +26,7 @@ export class PrismaUserGitHubCredentialsRepository
 
       return Result.ok(ghToken.githubAccessToken);
     } catch (e) {
+      console.error(e);
       // Idéalement, logger l'erreur 'e' ici
       return Result.fail(
         'A technical error occurred while fetching GitHub credentials.',
@@ -52,6 +53,7 @@ export class PrismaUserGitHubCredentialsRepository
         githubAccessToken: updatedCredentials.githubAccessToken ?? '',
       });
     } catch (e) {
+      console.error(e);
       // Idéalement, logger l'erreur 'e' ici
       return Result.fail(
         'A technical error occurred while updating GitHub credentials.',
@@ -78,6 +80,7 @@ export class PrismaUserGitHubCredentialsRepository
         githubAccessToken: createdCredentials.githubAccessToken ?? '',
       });
     } catch (e) {
+      console.error(e);
       // Idéalement, logger l'erreur 'e' ici
       return Result.fail(
         'A technical error occurred while creating GitHub credentials.',
