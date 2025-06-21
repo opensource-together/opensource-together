@@ -12,6 +12,7 @@ export default function ProfileView() {
   if (isLoading) return <SkeletonProfilePageView />;
   if (isError || !profile) return <ProfileError />;
 
+  console.log({ profile });
   return (
     <div className="mx-auto mt-4 flex max-w-[1300px] flex-col items-center justify-center gap-5 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
       <div className="w-full lg:max-w-[721.96px]">

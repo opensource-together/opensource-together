@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useAuth } from "@/features/auth/components/AuthProvider";
+
 import { Button } from "@/components/ui/button";
 
 import GithubLink from "../GithubLink";
@@ -37,6 +39,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { isAuthenticated, profile, logout } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
@@ -44,6 +47,19 @@ export default function Header() {
 
   const handleCreate = () => {
     router.push("/projects/new");
+  };
+
+  const handleLogin = () => {
+    router.push("/auth/login");
+  };
+
+  const handleProfile = () => {
+    router.push("/profile");
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
   };
 
   return (
@@ -64,7 +80,11 @@ export default function Header() {
         {/* Navigation pour desktop et tablette */}
         <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
           <NavLink href="/">Accueil</NavLink>
-          <NavLink href="/profile">Profil</NavLink>
+          {isAuthenticated && (
+            <>
+              <NavLink href="/profile">Profil</NavLink>
+            </>
+          )}
           <NavLink href="/my-projects">Gestion projet</NavLink>
         </nav>
       </section>
@@ -110,17 +130,45 @@ export default function Header() {
           url="https://github.com/opensource-together/opensource-together"
         />
 
-        <Button onClick={handleCreate}>
-          <span className="hidden sm:inline">Créer un Projet</span>
-          <span className="inline sm:hidden">Nouveau projet</span>
-          <Image
-            src="/icons/cross-icon.svg"
-            alt="crossIcon"
-            width={11}
-            height={11}
-            className="ml-1.5"
-          />
-        </Button>
+        {isAuthenticated ? (
+          <>
+            <Button onClick={handleCreate}>
+              <span className="hidden sm:inline">Créer un Projet</span>
+              <span className="inline sm:hidden">Nouveau projet</span>
+              <Image
+                src="/icons/cross-icon.svg"
+                alt="crossIcon"
+                width={11}
+                height={11}
+                className="ml-1.5"
+              />
+            </Button>
+
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleProfile}
+                className="flex items-center space-x-2 hover:opacity-80"
+              >
+                {profile?.avatarUrl && (
+                  <Image
+                    src={profile.avatarUrl}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                )}
+                <span className="text-sm font-medium">{profile?.name}</span>
+              </button>
+
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Déconnexion
+              </Button>
+            </div>
+          </>
+        ) : (
+          <Button onClick={handleLogin}>Se connecter</Button>
+        )}
       </section>
 
       {/* Actions mobile affichées dans le menu */}

@@ -1,11 +1,14 @@
 import { useRouter } from "next/navigation";
 
+import { useUserStore } from "@/stores/userStore";
+
 import { useToastMutation } from "@/hooks/useToastMutation";
 
 import { getGitHubAuthUrl, handleGitHubCallback } from "../services/authApi";
 
 export default function useAuth() {
   const router = useRouter();
+  const { checkSession } = useUserStore();
 
   const githubSignInMutation = useToastMutation({
     mutationFn: async () => {
@@ -24,8 +27,15 @@ export default function useAuth() {
     successMessage: "Connexion réussie !",
     errorMessage: "Une erreur est survenue lors de la connexion",
     options: {
-      onSuccess: () => router.push("/"),
-      onError: () => router.push("/auth/login"),
+      onSuccess: async () => {
+        // Mettre à jour le store avec les nouvelles données utilisateur
+        await checkSession();
+        // Vérifier s'il y a une URL de redirection
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectTo = urlParams.get("redirectTo");
+        router.push(redirectTo || "/profile");
+      },
+      onError: async () => router.push("/auth/login"),
     },
   });
 

@@ -2,9 +2,11 @@ import { User } from '@domain/user/user.entity';
 import { Result } from '@shared/result';
 export const USER_REPOSITORY_PORT = Symbol('UserRepository');
 export interface UserRepositoryPort {
-  save(
-    user: User,
-  ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  create(user: {
+    id: string;
+    username: string;
+    email: string;
+  }): Promise<Result<User, { username?: string; email?: string } | string>>;
   findByUsername(
     username: string,
   ): Promise<Result<User, { username?: string; email?: string } | string>>;
@@ -17,4 +19,5 @@ export interface UserRepositoryPort {
   update(
     user: User,
   ): Promise<Result<User, { username?: string; email?: string } | string>>;
+  delete(user: User): Promise<Result<void, string>>;
 }

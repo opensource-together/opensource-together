@@ -3,30 +3,30 @@ info:
   title: OpenSource Together API
   description: |
     Documentation de l'API pour la plateforme OpenSource Together.
-    
+
     ## Authentification
-    
+
     L'API utilise SuperTokens avec l'authentification GitHub OAuth.
-    
+
 
     TEST TEST TEST
     ### Pour les développeurs Frontend
-    
+
     **Processus de connexion :**
     1. Rediriger vers `/auth/authorize/github` pour initier la connexion
     2. L'utilisateur est redirigé vers GitHub pour autoriser l'application
     3. GitHub redirige vers `/auth/callback/github` avec le code d'autorisation
     4. Les cookies de session sont automatiquement définis
     5. Utiliser `/auth/session` pour récupérer les infos utilisateur (équivalent `/me`)
-    
+
     **Cookies de session :**
     - `sAccessToken` : Token d'accès principal
     - `sRefreshToken` : Token de rafraîchissement
     - Ces cookies sont automatiquement gérés par le navigateur
-    
+
     **Routes protégées :**
     Les routes nécessitant une authentification sont marquées avec le symbole 🔒.
-    
+
     **Base URL :** `http://localhost:4000`
   version: 1.0.0
 servers:
@@ -37,6 +37,61 @@ tags:
   - name: Authentication
     description: Opérations liées à l'authentification utilisateur
 paths:
+  /profile/me:
+    get:
+      tags:
+        - Profile
+      summary: Récupérer le profil de l'utilisateur courant
+      description: Retourne le profil de l'utilisateur actuellement authentifié.
+      security:
+        - supertokens_session: []
+      responses:
+        '200':
+          description: Profil utilisateur retourné avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDto'
+              example:
+                id: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+                name: 'Jhondoe'
+                avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4'
+                bio: "Fullstack Developer | \r\nExpress & React | \r\nBuilding @jhongo-project "
+                location: 'Paris, France'
+                company: 'Jhongo'
+                socialLinks:
+                  - type: 'github'
+                    url: 'https://github.com/Jhondoe'
+                  - type: 'twitter'
+                    url: 'https://twitter.com/Jhondoe'
+                  - type: 'linkedin'
+                    url: 'https://www.linkedin.com/in/jhondoe/'
+                  - type: 'website'
+                    url: 'https://jhondoe.com'
+                skills: []
+                experiences: []
+                joinedAt: '2025-04-16T15:47:31.633Z'
+                profileUpdatedAt: '2025-04-16T15:47:31.633Z'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+                  error:
+                    type: string
+                    example: Not Found
+                  statusCode:
+                    type: integer
+                    example: 404
+              example:
+                message: 'Utilisateur non trouvé.'
+                error: 'Not Found'
+                statusCode: 404
   /projects:
     get:
       tags:
@@ -102,14 +157,11 @@ paths:
                   skillSet:
                     - id: 'react'
                   isFilled: false
-              projectMembers: [
-                {
-                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
-                },
-                {
-                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
-                }
-              ]
+              projectMembers:
+                [
+                  { 'userId': '9b4d1ac3-a5ca-4d97-988f-3924e52314e7' },
+                  { 'userId': '9b4d1ac3-a5ca-4d97-988f-3924e52314e7' },
+                ]
       responses:
         '200':
           description: Projet créé avec succès
@@ -475,44 +527,44 @@ components:
         id:
           type: string
           description: ID unique du projet
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          example: '123e4567-e89b-12d3-a456-426614174000'
         title:
           type: string
           description: Titre du projet
-          example: "Plateforme E-commerce React"
+          example: 'Plateforme E-commerce React'
         description:
           type: string
           description: Description détaillée du projet
-          example: "Application e-commerce moderne avec React et Node.js"
+          example: 'Application e-commerce moderne avec React et Node.js'
         difficulty:
           type: string
           enum: [EASY, MEDIUM, HARD]
           description: Niveau de difficulté du projet
-          example: "MEDIUM"
+          example: 'MEDIUM'
         link:
           type: string
           description: Lien vers le site web ou démo du projet
           nullable: true
-          example: "https://my-ecommerce-demo.com"
+          example: 'https://my-ecommerce-demo.com'
         githubLink:
           type: string
           description: Lien vers le dépôt GitHub du projet
           nullable: true
-          example: "https://github.com/user/ecommerce-platform"
+          example: 'https://github.com/user/ecommerce-platform'
         ownerId:
           type: string
           description: ID de l'utilisateur propriétaire du projet
-          example: "github_user123"
+          example: 'github_user123'
         createdAt:
           type: string
           format: date-time
           description: Date de création du projet
-          example: "2024-01-15T10:30:00.000Z"
+          example: '2024-01-15T10:30:00.000Z'
         updatedAt:
           type: string
           format: date-time
           description: Date de dernière modification
-          example: "2024-01-20T14:45:00.000Z"
+          example: '2024-01-20T14:45:00.000Z'
         techStacks:
           type: array
           items:
@@ -702,7 +754,7 @@ components:
               type: integer
               description: Nombre d'abonnés
               example: 150
-              following:
+            following:
               type: integer
               description: Nombre de personnes suivies
               example: 75
@@ -712,7 +764,7 @@ components:
         roleTitle:
           type: string
           description: Titre du rôle recherché
-          example: "Frontend Developer"
+          example: 'Frontend Developer'
         description:
           type: string
           description: Description détaillée du rôle
@@ -737,22 +789,68 @@ components:
         userId:
           type: string
           description: ID de l'utilisateur membre du projet
-          example: "github_123456789"
+          example: 'github_123456789'
         role:
           type: string
           description: Rôle de l'utilisateur dans le projet
-          example: "Frontend Developer"
+          example: 'Frontend Developer'
         joinedAt:
           type: string
           format: date-time
           description: Date d'ajout au projet
-          example: "2024-01-15T10:30:00.000Z"
+          example: '2024-01-15T10:30:00.000Z'
         user:
           $ref: '#/components/schemas/GitHubUser'
       required:
         - userId
         - role
         - joinedAt
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID utilisateur unique
+          example: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+        username:
+          type: string
+          description: Nom d'utilisateur
+          example: 'Lhourquin'
+        email:
+          type: string
+          description: Email de l'utilisateur
+          example: 'lhourquin@gmail.com'
+        avatarUrl:
+          type: string
+          description: URL de l'avatar utilisateur
+          example: 'https://avatars.githubusercontent.com/u/45101981?v=4'
+        bio:
+          type: string
+          description: Biographie de l'utilisateur
+          example: "Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together "
+        githubUrl:
+          type: string
+          description: URL du profil GitHub
+          example: 'https://github.com/Lhourquin'
+        createdAt:
+          type: string
+          format: date-time
+          description: Date de création du compte
+          example: '2025-06-16T19:57:31.633Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date de dernière modification
+          example: '2025-06-16T19:57:31.633Z'
+      required:
+        - id
+        - username
+        - email
+        - avatarUrl
+        - bio
+        - githubUrl
+        - createdAt
+        - updatedAt
   securitySchemes:
     supertokens_session:
       type: apiKey
