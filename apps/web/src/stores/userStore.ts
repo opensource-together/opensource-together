@@ -2,6 +2,7 @@ import Session from "supertokens-web-js/recipe/session";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
+import { fetchAuthenticatedUserProfile } from "@/features/profile/services/profileApi";
 import { Profile } from "@/features/profile/types/profileTypes";
 
 interface UserState {
@@ -68,12 +69,9 @@ export const useUserStore = create<UserStore>()(
           const sessionExists = await Session.doesSessionExist();
 
           if (sessionExists) {
-            const response = await fetch("http://localhost:4000/profile/me", {
-              credentials: "include",
-            });
+            const userData = await fetchAuthenticatedUserProfile();
 
-            if (response.ok) {
-              const userData = await response.json();
+            if (userData) {
               set(
                 {
                   user: userData,
@@ -84,8 +82,6 @@ export const useUserStore = create<UserStore>()(
                 "checkSession"
               );
               return true;
-            } else {
-              console.warn("Failed to fetch user data");
             }
           }
 

@@ -9,7 +9,7 @@ import { Profile } from "../types/profileTypes";
  */
 export const useCurrentUserProfile = () => {
   return useQuery<Profile>({
-    queryKey: ["user/me"],
+    queryKey: ["profile/me"],
     queryFn: getCurrentUserProfile,
   });
 };
