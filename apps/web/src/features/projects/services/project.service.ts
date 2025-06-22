@@ -1,4 +1,4 @@
-import { mockProjects } from "../mocks/project-mock";
+import { mockProjects } from "../mocks/project.mock";
 import { Project } from "../types/project.type";
 import {
   CreateProjectData,

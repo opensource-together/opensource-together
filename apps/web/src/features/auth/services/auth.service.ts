@@ -66,7 +66,7 @@ export async function getGitHubAuthUrl(): Promise<string> {
 /**
  * Handle the GitHub callback after the authorization
  */
-export async function handleGitHubCallback() {
+export async function handleGitHubCallback(): Promise<{ success: boolean }> {
   try {
     const response = await signInAndUp();
     const sessionExists = await checkSession();
@@ -93,7 +93,7 @@ export async function handleGitHubCallback() {
 /**
  * Logout the user
  */
-export async function logout() {
+export async function logout(): Promise<void> {
   try {
     await Session.signOut();
   } catch (err) {
