@@ -80,11 +80,7 @@ export default function Header() {
         {/* Navigation pour desktop et tablette */}
         <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
           <NavLink href="/">Accueil</NavLink>
-          {isAuthenticated && (
-            <>
-              <NavLink href="/profile">Profil</NavLink>
-            </>
-          )}
+          <NavLink href="/profile">Profil</NavLink>
           <NavLink href="/my-projects">Gestion projet</NavLink>
         </nav>
       </section>
