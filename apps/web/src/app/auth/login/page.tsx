@@ -1,4 +1,4 @@
-import LoginView from "@/features/auth/views/LoginView";
+import LoginView from "@/features/auth/views/login.view";
 
 export default function LoginPage() {
   return <LoginView />;
