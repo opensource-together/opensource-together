@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
+import GithubLink from "../GithubLink";
 import TwitterLink from "../TwitterLink";
 
 export default function Footer() {
@@ -33,6 +34,7 @@ export default function Footer() {
           {/* Right */}
           <div className="flex items-center gap-3">
             <TwitterLink url="https://x.com/OpenSTogether" />
+            <GithubLink url="https://github.com/opensource-together" />
           </div>
         </div>
       </div>

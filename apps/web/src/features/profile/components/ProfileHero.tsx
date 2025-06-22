@@ -12,11 +12,9 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatarUrl, name, joinedAt, bio, skills, experiences, links } =
+  const { avatarUrl, name, joinedAt, bio, skills, experiences, socialLinks } =
     profile;
-  console.log({
-    profile,
-  });
+
   return (
     <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">
       <div className="relative top-[-15px] flex items-center justify-between">
@@ -44,56 +42,33 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-end space-x-3">
-          <div className="flex items-center space-x-3">
-            <button>
-              <a
-                href={links?.find((link) => link.type === "x")?.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image src="/icons/x.svg" alt="x" width={19} height={19} />
-              </a>
-            </button>
-            <button>
-              <a
-                href={links?.find((link) => link.type === "linkedin")?.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/icons/linkedin.svg"
-                  alt="linkedin"
-                  width={17}
-                  height={19}
-                />
-              </a>
-            </button>
-            <button>
-              <a
-                href={links?.find((link) => link.type === "github")?.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src="/icons/github.svg"
-                  alt="github"
-                  width={19}
-                  height={19}
-                />
-              </a>
-            </button>
+        {socialLinks && socialLinks.length > 0 && (
+          <div className="flex items-center justify-end space-x-3">
+            <div className="flex items-center space-x-3">
+              {socialLinks.map((link) => (
+                <button key={link.type}>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">
+                    <Image
+                      src={`/icons/${link.type}.svg`}
+                      alt={link.type}
+                      width={19}
+                      height={19}
+                    />
+                  </a>
+                </button>
+              ))}
+            </div>
+            <Button className="font-normal">
+              Contact{" "}
+              <Image
+                src="/icons/discord-icon.svg"
+                alt="arrow-right"
+                width={15}
+                height={15}
+              />
+            </Button>
           </div>
-          <Button className="font-normal">
-            Contact{" "}
-            <Image
-              src="/icons/discord-icon.svg"
-              alt="arrow-right"
-              width={15}
-              height={15}
-            />
-          </Button>
-        </div>
+        )}
       </div>
 
       <div className="mb-5 flex items-center justify-between">

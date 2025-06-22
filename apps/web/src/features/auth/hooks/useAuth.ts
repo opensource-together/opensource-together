@@ -1,14 +1,30 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
-import { useUserStore } from "@/stores/userStore";
 
 import { useToastMutation } from "@/hooks/useToastMutation";
 
-import { getGitHubAuthUrl, handleGitHubCallback } from "../services/authApi";
+import {
+  getCurrentUser,
+  getGitHubAuthUrl,
+  handleGitHubCallback,
+  logout,
+} from "../services/authApi";
 
 export default function useAuth() {
   const router = useRouter();
-  const { checkSession } = useUserStore();
+  const queryClient = useQueryClient();
+
+  // Query to get the current user
+  const {
+    data: currentUser,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["user/me"],
+    queryFn: getCurrentUser,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: false,
+  });
 
   const githubSignInMutation = useToastMutation({
     mutationFn: async () => {
@@ -27,22 +43,42 @@ export default function useAuth() {
     successMessage: "Connexion réussie !",
     errorMessage: "Une erreur est survenue lors de la connexion",
     options: {
-      onSuccess: async () => {
-        // Mettre à jour le store avec les nouvelles données utilisateur
-        await checkSession();
-        // Vérifier s'il y a une URL de redirection
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectTo = urlParams.get("redirectTo");
-        router.push(redirectTo || "/profile");
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        router.push("/profile");
       },
-      onError: async () => router.push("/auth/login"),
+      onError: () => router.push("/auth/login"),
+    },
+  });
+
+  const logoutMutation = useToastMutation({
+    mutationFn: logout,
+    loadingMessage: "Déconnexion en cours...",
+    successMessage: "Déconnexion réussie !",
+    errorMessage: "Erreur lors de la déconnexion",
+    options: {
+      onSuccess: () => {
+        queryClient.setQueryData(["user/me"], null);
+        router.push("/");
+      },
     },
   });
 
   return {
+    // Data
+    currentUser,
+    isAuthenticated: !!currentUser,
+    isLoading,
+    isError,
+
+    // Actions
     signInWithGitHub: githubSignInMutation.mutate,
     redirectAfterGitHub: githubCallbackMutation.mutate,
-    isLoading:
-      githubSignInMutation.isPending || githubCallbackMutation.isPending,
+    logout: logoutMutation.mutate,
+
+    // Loading states
+    isSigningIn: githubSignInMutation.isPending,
+    isProcessingCallback: githubCallbackMutation.isPending,
+    isLoggingOut: logoutMutation.isPending,
   };
 }
