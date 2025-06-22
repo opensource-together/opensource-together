@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
-import { useAuth } from "./AuthProvider";
+import { useUserStore } from "@/stores/userStore";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -16,7 +16,7 @@ export function ProtectedRoute({
   fallback,
   redirectTo = "/auth/login",
 }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ interface PublicRouteProps {
 }
 
 export function PublicRoute({ children, redirectTo = "/" }: PublicRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useUserStore();
   const router = useRouter();
 
   useEffect(() => {

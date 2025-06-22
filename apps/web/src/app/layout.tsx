@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { AuthProvider } from "@/features/auth/components/AuthProvider";
 import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
 
+import { AuthHydrator } from "@/components/shared/AuthHydrator";
 import Header from "@/components/shared/layout/Header";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -37,17 +37,17 @@ export default function RootLayout({
 }) {
   return (
     <html
+      suppressHydrationWarning
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
         <SuperTokensInitializer />
+        <AuthHydrator />
         <Providers>
-          <AuthProvider>
-            <Header />
-            {children}
-            <Toaster />
-          </AuthProvider>
+          <Header />
+          {children}
+          <Toaster />
         </Providers>
       </body>
     </html>

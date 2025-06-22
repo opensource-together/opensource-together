@@ -5,14 +5,14 @@ import { devtools } from "zustand/middleware";
 import { Profile } from "@/features/profile/types/profileTypes";
 
 interface UserState {
-  profile: Profile | null;
+  user: Profile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   hasHydrated: boolean;
 }
 
 interface UserActions {
-  setProfile: (profile: Profile | null) => void;
+  setUser: (user: Profile | null) => void;
   setLoading: (loading: boolean) => void;
   logout: () => Promise<void>;
   checkSession: () => Promise<boolean>;
@@ -25,21 +25,21 @@ export const useUserStore = create<UserStore>()(
   devtools(
     (set, get) => ({
       // State
-      profile: null,
+      user: null,
       isAuthenticated: false,
       isLoading: true,
       hasHydrated: false,
 
       // Actions
-      setProfile: (profile: Profile | null) =>
+      setUser: (user: Profile | null) =>
         set(
           {
-            profile,
-            isAuthenticated: !!profile,
+            user,
+            isAuthenticated: !!user,
             isLoading: false,
           },
           false,
-          "setProfile"
+          "setUser"
         ),
 
       setLoading: (loading) => set({ isLoading: loading }, false, "setLoading"),
@@ -49,7 +49,7 @@ export const useUserStore = create<UserStore>()(
           await Session.signOut();
           set(
             {
-              profile: null,
+              user: null,
               isAuthenticated: false,
               isLoading: false,
             },
@@ -76,7 +76,7 @@ export const useUserStore = create<UserStore>()(
               const userData = await response.json();
               set(
                 {
-                  profile: userData,
+                  user: userData,
                   isAuthenticated: true,
                   isLoading: false,
                 },
@@ -91,7 +91,7 @@ export const useUserStore = create<UserStore>()(
 
           set(
             {
-              profile: null,
+              user: null,
               isAuthenticated: false,
               isLoading: false,
             },
@@ -103,7 +103,7 @@ export const useUserStore = create<UserStore>()(
           console.error("Error checking session:", error);
           set(
             {
-              profile: null,
+              user: null,
               isAuthenticated: false,
               isLoading: false,
             },
