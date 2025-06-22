@@ -7,30 +7,30 @@ const authRoutes = ["/auth/login", "/auth/register"];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Vérifier la présence des cookies de session SuperTokens
+  // Check presence of SuperTokens session cookies
   const hasSessionCookies =
     request.cookies.has("sFrontToken") ||
     request.cookies.has("sAccessToken") ||
     request.cookies.has("st-access-token") ||
     request.cookies.has("st-refresh-token");
 
-  // Si l'utilisateur est connecté et tente d'accéder aux pages d'auth
+  // If the user is authenticated and tries to access auth routes
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   if (isAuthRoute && hasSessionCookies)
     return NextResponse.redirect(new URL("/", request.url));
 
-  // Vérifier si la route nécessite une authentification
+  // Check if the route requires authentication
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
 
   if (!isProtectedRoute) return NextResponse.next();
 
-  // Pour les routes protégées, vérifier la session
+  // For protected routes, check the session
   if (!hasSessionCookies) return redirectToLogin(request);
 
-  // Si les cookies existent, laisser passer (la vérification fine se fait côté client)
+  // If the cookies exist, let them pass (the fine check is done on the client side)
   return NextResponse.next();
 }
 
