@@ -57,23 +57,23 @@ export const useUserStore = create<UserStore>()(
             "logout"
           );
         } catch (error) {
-          console.error("Erreur lors de la déconnexion:", error);
+          console.error("Error during logout:", error);
         }
       },
 
       checkSession: async () => {
         try {
+          set({ isLoading: true }, false, "checkSession");
+
           const sessionExists = await Session.doesSessionExist();
 
           if (sessionExists) {
-            // Récupérer les données utilisateur depuis l'API
             const response = await fetch("http://localhost:4000/profile/me", {
               credentials: "include",
             });
 
             if (response.ok) {
               const userData = await response.json();
-              console.log({ userData });
               set(
                 {
                   profile: userData,
@@ -84,6 +84,8 @@ export const useUserStore = create<UserStore>()(
                 "checkSession"
               );
               return true;
+            } else {
+              console.warn("Failed to fetch user data");
             }
           }
 
@@ -98,7 +100,7 @@ export const useUserStore = create<UserStore>()(
           );
           return false;
         } catch (error) {
-          console.error("Erreur lors de la vérification de session:", error);
+          console.error("Error checking session:", error);
           set(
             {
               profile: null,
@@ -109,6 +111,8 @@ export const useUserStore = create<UserStore>()(
             "checkSession"
           );
           return false;
+        } finally {
+          set({ isLoading: false }, false, "checkSession");
         }
       },
 

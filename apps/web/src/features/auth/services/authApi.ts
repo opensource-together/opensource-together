@@ -12,16 +12,25 @@ export async function getGitHubAuthUrl(): Promise<string> {
 }
 
 export async function handleGitHubCallback() {
-  const response = await signInAndUp();
-  const sessionExists = await Session.doesSessionExist();
+  try {
+    const response = await signInAndUp();
+    const sessionExists = await Session.doesSessionExist();
 
-  if (response.status === "OK" && sessionExists) {
-    return { success: true };
+    if (response.status === "OK" && sessionExists) {
+      return { success: true };
+    }
+
+    if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
+      throw new Error("GitHub n'a pas fourni d'adresse email");
+    }
+
+    if (!sessionExists) {
+      throw new Error("La session n'a pas pu être créée après le login.");
+    }
+
+    throw new Error("Une erreur est survenue lors de la connexion.");
+  } catch (err) {
+    console.error("handleGitHubCallback error:", err);
+    throw new Error("Erreur lors de la connexion via GitHub.");
   }
-
-  if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
-    throw new Error("GitHub n'a pas fourni d'adresse email");
-  }
-
-  throw new Error("Une erreur est survenue lors de la connexion");
 }
