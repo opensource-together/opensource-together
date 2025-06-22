@@ -5,6 +5,14 @@ import { useState } from "react";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 
+/**
+ * Displays a visual indicator of difficulty level using a set of three vertical bars.
+ *
+ * The number of colored bars corresponds to the specified difficulty: one for "Easy", two for "Medium", and three for "Hard".
+ *
+ * @param level - The difficulty level to represent ("Easy", "Medium", or "Hard").
+ * @returns A React element showing the difficulty bars.
+ */
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   if (level === "Easy") {
     return (

@@ -10,6 +10,13 @@ interface ProjectSideBarProps {
   project: Project;
 }
 
+/**
+ * Displays a sidebar with project details, including image, title, community statistics, tech stack, and main contributors.
+ *
+ * Renders action buttons for joining the project and, if available, viewing the GitHub repository. Shows up to three contributor avatars and a list of technology stack logos.
+ *
+ * @param project - The project data to display in the sidebar
+ */
 export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const {
     title = "",

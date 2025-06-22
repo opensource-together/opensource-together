@@ -1,3 +1,8 @@
+/**
+ * Renders a styled container displaying a static preview of a Bitcoin Core README file.
+ *
+ * The component includes a header with a title and a "View full version" button, a separator, and informational content about Bitcoin Core, including links and descriptive text.
+ */
 export default function ProjectReadme() {
   return (
     <div

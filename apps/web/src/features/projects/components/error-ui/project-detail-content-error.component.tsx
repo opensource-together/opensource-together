@@ -1,5 +1,10 @@
 import Breadcrumb from "@/shared/components/shared/Breadcrumb";
 
+/**
+ * Displays a static error message and breadcrumb navigation when project data fails to load.
+ *
+ * Renders a breadcrumb trail and a styled error box informing the user of a loading failure, with instructions to try again later.
+ */
 export default function ProjectDetailContentError() {
   return (
     <>

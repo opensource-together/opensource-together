@@ -9,6 +9,17 @@ interface StackLogoProps {
   className?: string;
 }
 
+/**
+ * Renders a stack logo icon with an optional label.
+ *
+ * Displays an icon image, optionally accompanied by a name label. The icon source is automatically prefixed with `/icons/` if it is a relative string path.
+ *
+ * @param icon - The source path or identifier for the icon image
+ * @param alt - The alternative text for the icon image
+ * @param name - Optional label text displayed next to the icon
+ * @param width - Optional width of the icon image; defaults to 14.5
+ * @param height - Optional height of the icon image; defaults to 10.22
+ */
 export default function StackLogo({
   icon,
   alt,

@@ -1,5 +1,10 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+/**
+ * Renders a skeleton placeholder UI for pinned projects during loading states.
+ *
+ * Displays a header skeleton and three project card skeletons, each with placeholders for titles, descriptions, technology tags, and icons.
+ */
 export default function SkeletonPinnedProjects() {
   return (
     <div className="flex w-full max-w-[731px] flex-col items-center gap-4">

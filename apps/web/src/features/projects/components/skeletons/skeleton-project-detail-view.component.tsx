@@ -6,6 +6,11 @@ import { SkeletonProjectHero } from "../project-hero.component";
 import { SkeletonProjectSideBar } from "../project-side-bar.component";
 import { SkeletonRoleCard } from "../role-card.component";
 
+/**
+ * Renders a skeleton loading UI for the project detail view.
+ *
+ * Displays placeholder components for the breadcrumb, project hero, sidebar, filters, and a list of role cards to indicate loading state while project details are being fetched.
+ */
 export default function SkeletonProjectDetailView() {
   return (
     <>

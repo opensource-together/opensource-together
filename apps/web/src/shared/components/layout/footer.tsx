@@ -5,6 +5,12 @@ import { Button } from "@/shared/components/ui/button";
 import GithubLink from "../logos/github-link";
 import TwitterLink from "../logos/twitter-link";
 
+/**
+ * Renders the footer section with navigation links and social media icons.
+ *
+ * Displays copyright information, navigation to main site sections,
+ * and links to Twitter and GitHub profiles for Open Source Together.
+ */
 export default function Footer() {
   const navItems = ["Accueil", "Projets", "Blog"];
 

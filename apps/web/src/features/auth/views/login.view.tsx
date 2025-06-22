@@ -4,6 +4,11 @@ import Link from "next/link";
 import AuthIllustration from "../components/auth-illustration.component";
 import LoginForm from "../components/login-form.component";
 
+/**
+ * Renders the login page layout with a logo, login form, contact link, and an authentication illustration.
+ *
+ * The layout adapts responsively for different screen sizes, displaying the login form and illustration side by side on larger screens and stacked on smaller screens.
+ */
 export default function LoginView() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">

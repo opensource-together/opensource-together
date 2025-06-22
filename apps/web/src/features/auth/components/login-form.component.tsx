@@ -1,5 +1,10 @@
 import GitHubButton from "./github-button.component";
 
+/**
+ * Renders a centered login form for the OpenSource Together platform with options to log in or sign up using GitHub.
+ *
+ * Displays a welcoming header and description in French, followed by buttons for GitHub authentication.
+ */
 export default function LoginForm() {
   return (
     <div className="flex items-center">

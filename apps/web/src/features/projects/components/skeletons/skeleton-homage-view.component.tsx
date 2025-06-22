@@ -1,5 +1,10 @@
 import SkeletonProjectGrid from "./skeleton-project-grid.component";
 
+/**
+ * Renders a skeleton placeholder for the homepage view, simulating the loading state of the hero section, project grid, and pagination controls.
+ *
+ * This component displays animated skeleton elements for the main homepage layout, including a hero section with badge, title, and filter bar placeholders, as well as a grid and pagination skeletons for projects.
+ */
 export default function SkeletonHomepageView() {
   return (
     <div className="space-y-4 md:space-y-5">

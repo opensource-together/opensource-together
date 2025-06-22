@@ -1,5 +1,12 @@
 import { Button } from "@/shared/components/ui/button";
 
+/**
+ * Renders a UI step for selecting a project creation method.
+ *
+ * Displays options to either import a project from GitHub or create a new project from scratch. Calls the provided `onNext` callback with the selected mode when an option is chosen.
+ *
+ * @param onNext - Callback invoked with the selected mode: "import" or "scratch"
+ */
 export default function StepOne({
   onNext,
 }: {

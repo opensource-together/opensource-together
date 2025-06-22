@@ -1,5 +1,10 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+/**
+ * Renders a skeleton placeholder for a profile hero section during loading states.
+ *
+ * Displays a structured layout with skeleton elements representing a profile image, text lines, action button, and multiple content blocks to mimic the appearance of a fully loaded profile hero.
+ */
 export default function SkeletonProfileHero() {
   return (
     <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">

@@ -7,6 +7,11 @@ import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero from "../components/profile-hero.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
+/**
+ * Displays the authenticated user's profile view, including profile details and pinned projects.
+ *
+ * Renders a loading skeleton while user data is loading, an error component if loading fails or no user is found, and the main profile content when data is available.
+ */
 export default function ProfileView() {
   const { currentUser, isLoading, isError } = useAuth();
 

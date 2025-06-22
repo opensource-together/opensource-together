@@ -8,6 +8,13 @@ import ProjectEditSidebar from "../components/project-edit-sidebar.component";
 import SkeletonProjectEditForm from "../components/skeletons/skeleton-project-edit-form.component";
 import { useProject } from "../hooks/use-projects.hook";
 
+/**
+ * Displays the project editing view for a given project ID.
+ *
+ * Renders a loading skeleton while fetching project data, an error state if loading fails or data is missing, and the main editing interface with a breadcrumb, edit form, and sidebar when data is available.
+ *
+ * @param projectId - The unique identifier of the project to edit
+ */
 export default function ProjectEditView({ projectId }: { projectId: string }) {
   const { data: project, isLoading, isError } = useProject(projectId);
 

@@ -14,6 +14,15 @@ interface RoleCardProps {
   className?: string;
 }
 
+/**
+ * Displays a card representing a project role, including its title, description, technology badges, and a sample "Good first issue" section.
+ *
+ * Shows the role's main information and associated technology stack icons. If no badges are provided, displays default MongoDB badges. The "Good first issue" section is static and not dynamically sourced.
+ *
+ * @param role - The project role to display, including title, description, and badges.
+ * @param techStacks - Optional list of available technology stacks for icon resolution.
+ * @param className - Optional additional CSS classes for styling.
+ */
 export default function RoleCard({
   role,
   techStacks = [],

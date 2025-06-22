@@ -10,6 +10,11 @@ import ProjectGrid from "../components/project-grid.component";
 import SkeletonHomepageViews from "../components/skeletons/skeleton-homage-view.component";
 import { useProjects } from "../hooks/use-projects.hook";
 
+/**
+ * Renders the main homepage view displaying a list of projects with pagination, a hero section, and a footer.
+ *
+ * Shows loading and error states as appropriate before displaying the project grid.
+ */
 export default function HomepageView() {
   const { data: projects, isLoading, isError } = useProjects();
 

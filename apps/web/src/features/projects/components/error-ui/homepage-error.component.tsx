@@ -1,5 +1,10 @@
 import { Button } from "@/shared/components/ui/button";
 
+/**
+ * Displays a centered error message with a retry button for the homepage.
+ *
+ * Informs the user that the project list could not be loaded and provides a button to reload the page.
+ */
 export default function HomepageError() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center">

@@ -10,6 +10,13 @@ import {
   logout,
 } from "../services/auth.service";
 
+/**
+ * Custom React hook for managing user authentication state and actions.
+ *
+ * Provides the current user, authentication status, loading and error states, and functions for signing in with GitHub, handling the GitHub OAuth callback, and logging out. Also exposes loading states for each authentication action.
+ *
+ * @returns An object containing authentication data, action functions, and loading states.
+ */
 export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();

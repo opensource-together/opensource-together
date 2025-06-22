@@ -1,5 +1,10 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+/**
+ * Renders a skeleton placeholder for a project card to indicate loading state.
+ *
+ * Displays animated skeleton elements simulating the layout of a project card, including avatar, title, tech stack tags, creator info, and status.
+ */
 export default function SkeletonProjectCard() {
   return (
     <div className="group relative h-[207px] w-full max-w-[731px] overflow-hidden rounded-[20px] border border-slate-200 bg-white px-[12px] py-[12px] shadow-md transition duration-200 ease-in-out">

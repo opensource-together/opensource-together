@@ -1,5 +1,10 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+/**
+ * Renders a skeleton placeholder for the project edit form layout.
+ *
+ * Displays static skeleton elements representing the structure of a project edit form, including form fields, technical stack inputs, sidebar sections, and action buttons. Intended for use as a loading state while the actual form data is being fetched.
+ */
 export default function SkeletonProjectEditForm() {
   return (
     <div className="mx-auto mt-4 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">

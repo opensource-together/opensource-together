@@ -7,6 +7,11 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+/**
+ * A styled wrapper for the Radix Select root component.
+ *
+ * Forwards all props to the underlying SelectPrimitive.Root and adds a `data-slot="select"` attribute for styling or targeting.
+ */
 function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {

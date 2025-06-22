@@ -2,6 +2,13 @@ import Image from "next/image";
 
 import { Button } from "@/shared/components/ui/button";
 
+/**
+ * Renders a confirmation step for reviewing static Github project information and proceeding to the next step.
+ *
+ * Displays the project name, description, and repository link in a styled layout, and provides a button to confirm and continue.
+ *
+ * @param onNext - Callback invoked when the user confirms the information.
+ */
 export default function StepThree({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col items-center rounded-[20px] bg-white p-10">

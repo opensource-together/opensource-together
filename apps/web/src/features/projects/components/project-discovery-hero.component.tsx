@@ -2,6 +2,13 @@ import Image from "next/image";
 
 import FilterSearchBar from "./filter-search-bar.component";
 
+/**
+ * Renders the hero section for the project discovery page, featuring a promotional message, headline, description, and a search bar for filtering projects.
+ *
+ * The section highlights recent project additions and encourages users to explore and collaborate on open source projects. The search bar is displayed on medium and larger screens.
+ *
+ * @returns The JSX markup for the project discovery hero section.
+ */
 export default function ProjectDiscoveryHero() {
   return (
     <div className="relative mx-auto rounded-4xl border border-black/5">

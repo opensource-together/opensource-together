@@ -9,6 +9,11 @@ import {
 } from "@/shared/components/ui/project-card";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+/**
+ * Renders a responsive grid of six skeleton project cards as placeholders during loading states.
+ *
+ * Each card simulates the structure of a project card with skeleton elements for headers, descriptions, and footers, providing a visual cue while actual project data is being fetched.
+ */
 export default function SkeletonProjectGrid() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 md:gap-6">

@@ -7,6 +7,11 @@ import { useEffect } from "react";
 import AuthIllustration from "../components/auth-illustration.component";
 import useAuth from "../hooks/use-auth.hook";
 
+/**
+ * Displays a loading screen while handling GitHub authentication callback and triggers user redirection after authentication.
+ *
+ * This component initiates the post-GitHub authentication redirect process on mount and presents a visual loading state to inform the user that their GitHub information is being verified.
+ */
 export default function GithubCallbackView() {
   const { redirectAfterGitHub } = useAuth();
 

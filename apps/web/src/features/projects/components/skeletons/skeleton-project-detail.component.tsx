@@ -3,6 +3,11 @@ import { SkeletonProjectHero } from "../project-hero.component";
 import { SkeletonProjectSideBar } from "../project-side-bar.component";
 import { SkeletonRoleCard } from "../role-card.component";
 
+/**
+ * Renders a skeleton placeholder for the project detail page layout.
+ *
+ * Displays placeholder components for the project hero, sidebar, filters, and a list of role cards to indicate loading state before actual content is available.
+ */
 export default function SkeletonProjectDetail() {
   return (
     <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
