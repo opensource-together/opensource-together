@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { useUserStore } from "@/stores/userStore";
+import useAuth from "@/features/auth/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
 
@@ -39,7 +39,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, user, logout } = useUserStore();
+  const { isAuthenticated, currentUser, logout } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
@@ -149,16 +149,16 @@ export default function Header() {
                 onClick={handleProfile}
                 className="flex items-center space-x-2 hover:opacity-80"
               >
-                {user?.avatarUrl && (
+                {currentUser?.avatarUrl && (
                   <Image
-                    src={user.avatarUrl}
+                    src={currentUser.avatarUrl}
                     alt="Profile"
                     width={32}
                     height={32}
                     className="rounded-full"
                   />
                 )}
-                <span className="text-sm font-medium">{user?.name}</span>
+                <span className="text-sm font-medium">{currentUser?.name}</span>
               </button>
 
               <Button variant="outline" size="sm" onClick={handleLogout}>

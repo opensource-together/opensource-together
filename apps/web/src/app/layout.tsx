@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
 
-import { AuthHydrator } from "@/components/shared/AuthHydrator";
 import Header from "@/components/shared/layout/Header";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -43,7 +42,6 @@ export default function RootLayout({
     >
       <body>
         <SuperTokensInitializer />
-        <AuthHydrator />
         <Providers>
           <Header />
           {children}
