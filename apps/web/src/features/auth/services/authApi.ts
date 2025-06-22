@@ -21,16 +21,16 @@ export async function handleGitHubCallback() {
     }
 
     if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
-      throw new Error("GitHub n'a pas fourni d'adresse email");
+      throw new Error("GitHub didn't provide an email");
     }
 
     if (!sessionExists) {
-      throw new Error("La session n'a pas pu être créée après le login.");
+      throw new Error("The session couldn't be created after login.");
     }
 
-    throw new Error("Une erreur est survenue lors de la connexion.");
+    throw new Error("An error occurred during the login.");
   } catch (err) {
     console.error("handleGitHubCallback error:", err);
-    throw new Error("Erreur lors de la connexion via GitHub.");
+    throw new Error("Error during the login via GitHub.");
   }
 }

@@ -38,37 +38,7 @@ export function ProtectedRoute({
   }
 
   if (!isAuthenticated) {
-    return null; // Le useEffect va gérer la redirection
-  }
-
-  return <>{children}</>;
-}
-
-interface PublicRouteProps {
-  children: ReactNode;
-  redirectTo?: string;
-}
-
-export function PublicRoute({ children, redirectTo = "/" }: PublicRouteProps) {
-  const { isAuthenticated, isLoading } = useUserStore();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      router.push(redirectTo);
-    }
-  }, [isAuthenticated, isLoading, router, redirectTo]);
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
-
-  if (isAuthenticated) {
-    return null; // Le useEffect va gérer la redirection
+    return null;
   }
 
   return <>{children}</>;

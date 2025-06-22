@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { useAuth } from "@/features/auth/components/AuthProvider";
+import { useUserStore } from "@/stores/userStore";
 
 import { Button } from "@/components/ui/button";
 
@@ -39,7 +39,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, profile, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useUserStore();
 
   if (pathname.startsWith("/auth")) {
     return null;
@@ -149,16 +149,16 @@ export default function Header() {
                 onClick={handleProfile}
                 className="flex items-center space-x-2 hover:opacity-80"
               >
-                {profile?.avatarUrl && (
+                {user?.avatarUrl && (
                   <Image
-                    src={profile.avatarUrl}
+                    src={user.avatarUrl}
                     alt="Profile"
                     width={32}
                     height={32}
                     className="rounded-full"
                   />
                 )}
-                <span className="text-sm font-medium">{profile?.name}</span>
+                <span className="text-sm font-medium">{user?.name}</span>
               </button>
 
               <Button variant="outline" size="sm" onClick={handleLogout}>
@@ -167,7 +167,16 @@ export default function Header() {
             </div>
           </>
         ) : (
-          <Button onClick={handleLogin}>Se connecter</Button>
+          <Button onClick={handleLogin}>
+            <span className="hidden sm:inline">Créer un Projet</span>
+            <Image
+              src="/icons/cross-icon.svg"
+              alt="crossIcon"
+              width={11}
+              height={11}
+              className="ml-1.5"
+            />
+          </Button>
         )}
       </section>
 
