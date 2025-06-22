@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import AuthIllustration from "../components/auth-illustration";
-import LoginForm from "../components/login-form";
+import AuthIllustration from "../components/auth-illustration.component";
+import LoginForm from "../components/login-form.component";
 
 export default function LoginView() {
   return (

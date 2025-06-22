@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
 
-import AuthIllustration from "../components/auth-illustration";
+import AuthIllustration from "../components/auth-illustration.component";
 import useAuth from "../hooks/use-auth.hook";
 
 export default function GithubCallbackView() {

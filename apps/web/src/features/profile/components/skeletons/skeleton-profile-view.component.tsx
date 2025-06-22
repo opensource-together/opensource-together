@@ -1,5 +1,5 @@
-import SkeletonPinnedProjects from "./skeleton-pinned-projects";
-import SkeletonProfileHero from "./skeleton-profile-hero";
+import SkeletonPinnedProjects from "./skeleton-pinned-projects.component";
+import SkeletonProfileHero from "./skeleton-profile-hero.component";
 
 export default function SkeletonProfileView() {
   return (

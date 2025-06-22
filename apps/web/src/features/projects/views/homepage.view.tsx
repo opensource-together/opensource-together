@@ -3,14 +3,14 @@
 import Footer from "@/shared/components/layout/footer";
 import Pagination from "@/shared/components/shared/Pagination";
 
-import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero";
+import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
-import HomepageError from "../components/error-ui/homepage-error";
-import ProjectGrid from "../components/project-grid";
-import SkeletonHomepageViews from "../components/skeletons/skeleton-homage-view";
+import HomepageError from "../components/error-ui/homepage-error.component";
+import ProjectGrid from "../components/project-grid.component";
+import SkeletonHomepageViews from "../components/skeletons/skeleton-homage-view.component";
 import { useProjects } from "../hooks/use-projects.hook";
 
-export default function HomepageViews() {
+export default function HomepageView() {
   const { data: projects, isLoading, isError } = useProjects();
 
   if (isLoading) return <SkeletonHomepageViews />;

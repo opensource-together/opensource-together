@@ -1,6 +1,6 @@
 "use client";
 
-import StepperForm from "../components/stepper/stepper-form";
+import StepperForm from "../components/stepper/stepper-form.component";
 
 export default function ProjectCreateView() {
   return (

@@ -1,10 +1,10 @@
 import { SkeletonBreadcrumb } from "@/shared/components/shared/Breadcrumb";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-import { SkeletonProjectFilters } from "../project-filters";
-import { SkeletonProjectHero } from "../project-hero";
-import { SkeletonProjectSideBar } from "../project-side-bar";
-import { SkeletonRoleCard } from "../role-card";
+import { SkeletonProjectFilters } from "../project-filters.component";
+import { SkeletonProjectHero } from "../project-hero.component";
+import { SkeletonProjectSideBar } from "../project-side-bar.component";
+import { SkeletonRoleCard } from "../role-card.component";
 
 export default function SkeletonProjectDetailView() {
   return (

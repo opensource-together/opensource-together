@@ -2,15 +2,15 @@
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
-import ProfileError from "../components/error-ui/profile-error";
-import PinnedProjects from "../components/pinned-projects";
-import ProfileHero from "../components/profile-hero";
-import SkeletonProfilePageView from "../components/skeletons/skeleton-profile-view";
+import ProfileError from "../components/error-ui/profile-error.component";
+import PinnedProjects from "../components/pinned-projects.component";
+import ProfileHero from "../components/profile-hero.component";
+import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
 export default function ProfileView() {
   const { currentUser, isLoading, isError } = useAuth();
 
-  if (isLoading) return <SkeletonProfilePageView />;
+  if (isLoading) return <SkeletonProfileView />;
   if (isError || !currentUser) return <ProfileError />;
 
   return (

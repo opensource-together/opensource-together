@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import FilterSearchBar from "./filter-search-bar";
+import FilterSearchBar from "./filter-search-bar.component";
 
 export default function ProjectDiscoveryHero() {
   return (

@@ -1,4 +1,4 @@
-import GitHubButton from "./gitHub-button";
+import GitHubButton from "./github-button.component";
 
 export default function LoginForm() {
   return (

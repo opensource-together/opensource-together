@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 
-import ProjectDetailError from "../components/error-ui/project-detail-content-error";
-import ProjectFilters from "../components/project-filters";
-import ProjectHero from "../components/project-hero";
-import ProjectLatestUpdate from "../components/project-latest-update";
-import ProjectReadMe from "../components/project-readme";
-import ProjectSideBar from "../components/project-side-bar";
-import RoleCard from "../components/role-card";
-import SkeletonProjectDetailView from "../components/skeletons/skeleton-project-detail-view";
+import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
+import ProjectFilters from "../components/project-filters.component";
+import ProjectHero from "../components/project-hero.component";
+import ProjectLatestUpdate from "../components/project-latest-update.component";
+import ProjectReadMe from "../components/project-readme.component";
+import ProjectSideBar from "../components/project-side-bar.component";
+import RoleCard from "../components/role-card.component";
+import SkeletonProjectDetailView from "../components/skeletons/skeleton-project-detail-view.component";
 import { useProject } from "../hooks/use-projects.hook";
 
 interface ProjectDetailViewProps {

@@ -1,4 +1,4 @@
-import SkeletonProjectGrid from "./skeleton-project-grid";
+import SkeletonProjectGrid from "./skeleton-project-grid.component";
 
 export default function SkeletonHomepageView() {
   return (
