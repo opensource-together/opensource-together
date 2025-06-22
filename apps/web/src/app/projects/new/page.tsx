@@ -1,4 +1,4 @@
-import ProjectCreateView from "@/features/projects/views/ProjectCreateView";
+import ProjectCreateView from "@/features/projects/views/project-create.view";
 
 export default async function ProjectPage({
   params,

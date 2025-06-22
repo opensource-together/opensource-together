@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { SuperTokensInitializer } from "@/features/auth/utils/SuperTokensInitializer";
+import Header from "@/shared/components/layout/header";
+import { Toaster } from "@/shared/components/ui/sonner";
 
-import Header from "@/components/shared/layout/Header";
-import { Toaster } from "@/components/ui/sonner";
+import { SuperTokensInitializer } from "@/features/auth/utils/supertokens-initializer";
 
 import "../../public/fonts/font-face.css";
 import "./globals.css";

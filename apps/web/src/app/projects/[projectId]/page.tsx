@@ -1,9 +1,9 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
-import { getQueryClient } from "@/lib/queryClient";
+import { getQueryClient } from "@/shared/lib/query-client";
 
-import { getProjectDetails } from "@/features/projects/services/projectAPI";
-import ProjectDetailView from "@/features/projects/views/ProjectDetailView";
+import { getProjectDetails } from "@/features/projects/services/project.service";
+import ProjectDetailView from "@/features/projects/views/project-detail.view";
 
 export default async function ProjectPage({
   params,

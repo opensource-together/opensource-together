@@ -16,11 +16,14 @@
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
     "^@/config/(.*)$",
-    "^@/lib/(.*)$",
-    "^@/stores/(.*)$",
-    "^@/hooks/(.*)$",
+    "^@/types/(.*)$",
+    "^@/shared/(.*)$",
+    "^@/shared/components/(.*)$",
+    "^@/shared/hooks/(.*)$",
+    "^@/shared/lib/(.*)$",
+    "^@/shared/stores/(.*)$",
+    "^@/shared/types/(.*)$",
     "^@/features/(.*)$",
-    "^@/components/(.*)$",
     "^@/app/(.*)$",
     "^[./]"
   ]
