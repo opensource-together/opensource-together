@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { useUserStore } from "@/stores/userStore";
 
@@ -22,15 +23,16 @@ export default function useAuth() {
   });
 
   const githubCallbackMutation = useToastMutation({
-    mutationFn: handleGitHubCallback,
+    mutationFn: async () => {
+      await handleGitHubCallback();
+      await checkSession();
+    },
     loadingMessage: "Vérification de vos informations GitHub...",
     successMessage: "Connexion réussie !",
     errorMessage: "Une erreur est survenue lors de la connexion",
     options: {
-      onSuccess: async () => {
-        // Mettre à jour le store avec les nouvelles données utilisateur
-        await checkSession();
-        // Vérifier s'il y a une URL de redirection
+      onSuccess: () => {
+        toast.dismiss();
         const urlParams = new URLSearchParams(window.location.search);
         const redirectTo = urlParams.get("redirectTo");
         router.push(redirectTo || "/profile");
