@@ -1,75 +1,47 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-// Routes qui nécessitent une authentification
-const protectedRoutes = [
-  "/profile",
-  "/projects/new",
-  "/projects/*/edit",
-  "/dashboard",
-];
-
-// Routes publiques (accessibles sans authentification)
-const publicRoutes = [
-  "/",
-  "/auth/login",
-  "/auth/signup",
-  "/auth/callback/github",
-  "/projects", // Liste publique des projets
-  "/guides",
-];
+const protectedRoutes = ["/profile", "/projects/new", "/my-projects"];
+const authRoutes = ["/auth/login", "/auth/register"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Vérifier si la route est protégée
-  const isProtectedRoute = protectedRoutes.some((route) => {
-    if (route.includes("*")) {
-      const pattern = route.replace("*", "[^/]+");
-      return new RegExp(`^${pattern}$`).test(pathname);
-    }
-    return pathname.startsWith(route);
-  });
+  // Vérifier la présence des cookies de session SuperTokens
+  const hasSessionCookies =
+    request.cookies.has("sFrontToken") ||
+    request.cookies.has("sAccessToken") ||
+    request.cookies.has("st-access-token") ||
+    request.cookies.has("st-refresh-token");
 
-  // Vérifier si la route est publique
-  const isPublicRoute = publicRoutes.some((route) => {
-    return pathname === route || pathname.startsWith(route);
-  });
+  // Si l'utilisateur est connecté et tente d'accéder aux pages d'auth
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-  // Si c'est une route protégée, vérifier l'authentification via cookie
-  if (isProtectedRoute) {
-    const sessionCookie = request.cookies.get("sAccessToken");
+  if (isAuthRoute && hasSessionCookies)
+    return NextResponse.redirect(new URL("/", request.url));
 
-    if (!sessionCookie) {
-      // Rediriger vers la page de connexion
-      const loginUrl = new URL("/auth/login", request.url);
-      loginUrl.searchParams.set("redirectTo", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
+  // Vérifier si la route nécessite une authentification
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
-  // Si l'utilisateur est connecté et essaie d'accéder aux pages d'auth
-  if (pathname.startsWith("/auth/") && !pathname.includes("/callback")) {
-    const sessionCookie = request.cookies.get("sAccessToken");
+  if (!isProtectedRoute) return NextResponse.next();
 
-    if (sessionCookie) {
-      // Rediriger vers la page d'accueil si déjà connecté
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-  }
+  // Pour les routes protégées, vérifier la session
+  if (!hasSessionCookies) return redirectToLogin(request);
 
+  // Si les cookies existent, laisser passer (la vérification fine se fait côté client)
   return NextResponse.next();
+}
+
+function redirectToLogin(request: NextRequest) {
+  const loginUrl = new URL("/auth/login", request.url);
+  loginUrl.searchParams.set("redirectTo", request.nextUrl.href);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
