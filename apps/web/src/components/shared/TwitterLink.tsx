@@ -14,7 +14,12 @@ export default function TwitterLink({
 }: TwitterLinkProps) {
   return (
     <Link href={url} className={className} target="_blank" aria-label="Twitter">
-      <Image src="/icons/x-logo.svg" alt="twitter" width={size} height={size} />
+      <Image
+        src="/icons/twitter.svg"
+        alt="twitter"
+        width={size}
+        height={size}
+      />
     </Link>
   );
 }

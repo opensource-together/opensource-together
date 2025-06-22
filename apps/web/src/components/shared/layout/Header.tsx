@@ -116,16 +116,19 @@ export default function Header() {
         </NavLink>
 
         <div className="flex items-center justify-center space-x-6 py-2">
+          <span className="text-sm font-medium">Star Us</span>
           <GithubLink url="https://github.com/opensource-together/opensource-together" />
         </div>
       </nav>
 
       <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
-        <GithubLink
-          className="flex items-center gap-2 font-medium"
-          url="https://github.com/opensource-together/opensource-together"
-        />
-
+        <div className="flex items-center space-x-2">
+          <span className="text-sm font-medium">Star Us</span>
+          <GithubLink
+            className="flex items-center gap-2 font-medium"
+            url="https://github.com/opensource-together/opensource-together"
+          />
+        </div>
         {isAuthenticated ? (
           <>
             <Button onClick={handleCreate}>
