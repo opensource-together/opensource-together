@@ -1,4 +1,4 @@
-import ProjectCreateView from "@/features/projects/views/project-create.view";
+import { redirect } from "next/navigation";
 
 export default async function ProjectPage({
   params,
@@ -9,5 +9,6 @@ export default async function ProjectPage({
 }) {
   await params; // Attendre que la Promise soit résolue
 
-  return <ProjectCreateView />;
+  // Redirect to the new create flow
+  redirect("/projects/create");
 }
