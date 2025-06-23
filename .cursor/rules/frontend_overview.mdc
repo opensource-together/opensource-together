@@ -30,12 +30,13 @@ You MUST strictly follow these principles and rules. Violations will cause maint
 src/
 ├── app/            # Next.js routing only (no business logic or UI)
 ├── features/       # Autonomous business feature modules
-│   └── feature-name/
+│   └── feature-name/ 
 │       ├── components/    # Stateless UI components
 │       ├── views/         # Feature-specific views/pages
+│       ├── forms/         # Feature-specific forms (React Hook Form components)
 │       ├── hooks/         # Business logic hooks
 │       ├── services/      # API communication and side-effects
-│       ├── store/         # Zustand stores (UI/client state)
+│       ├── stores/        # Zustand stores (UI/client state)
 │       ├── validations/   # Zod schemas for runtime validation
 │       └── types/         # Feature-specific TypeScript types (.type.ts files)
 ├── shared/         # Reusable components, hooks, lib, and stores (cross-feature)
@@ -65,6 +66,7 @@ src/
    • Precise suffixes per file role:
    • .component.tsx — UI components
    • .view.tsx — main pages/views exported by the feature
+   • .form.tsx — React Hook Form components with logic
    • .hook.ts — business logic hooks (logic + state)
    • .service.ts — API calls / communication services
    • .store.ts — Zustand stores (UI state)
