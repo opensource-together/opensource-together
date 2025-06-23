@@ -6,10 +6,7 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/shared/components/ui/button";
 
 import { useCreateProject } from "../hooks/use-projects.hook";
-import {
-  ProjectSchema,
-  projectSchema,
-} from "../validations/project.form.schema";
+import { ProjectSchema, projectSchema } from "../validations/project.schema";
 
 export default function ProjectForm() {
   const { createProject, isCreating, isCreateError } = useCreateProject();
