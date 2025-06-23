@@ -16,7 +16,7 @@ import {
   stepThreeSchema,
 } from "@/features/projects/validations/step-three.schema";
 
-import { useProjectCreateStore } from "../../store/project-create.store";
+import { useProjectCreateStore } from "../../stores/project-create.store";
 
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   if (level === "Easy") {

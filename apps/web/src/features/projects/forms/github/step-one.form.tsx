@@ -9,7 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 
-import { useProjectCreateStore } from "../../store/project-create.store";
+import { useProjectCreateStore } from "../../stores/project-create.store";
 
 // Temporary schema for GitHub step-one
 const githubStepOneSchema = z.object({

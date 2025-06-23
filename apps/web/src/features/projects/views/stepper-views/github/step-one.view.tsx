@@ -7,7 +7,7 @@ import React, { useRef, useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import { useProjectCreateStore } from "../../../store/project-create.store";
+import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 const repositories = [
   { name: "OpenSource Together", date: "10/09/25" },

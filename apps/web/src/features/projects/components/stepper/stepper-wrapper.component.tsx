@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { type ProjectCreateMethod } from "../../store/project-create.store";
+import { ProjectCreateMethod } from "../../stores/project-create.store";
 import { SimpleStepper } from "./simple-stepper.component";
 
 interface StepperWrapperProps {

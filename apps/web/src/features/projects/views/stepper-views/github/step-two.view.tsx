@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/shared/components/ui/button";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import { useProjectCreateStore } from "../../../store/project-create.store";
+import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 export default function StepTwoView() {
   const router = useRouter();

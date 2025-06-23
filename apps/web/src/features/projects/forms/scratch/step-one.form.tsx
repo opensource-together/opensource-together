@@ -9,7 +9,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 
-import { useProjectCreateStore } from "../../store/project-create.store";
+import { useProjectCreateStore } from "../../stores/project-create.store";
 import {
   type ScratchStepOneFormData,
   scratchStepOneSchema,

@@ -8,7 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 import {
   type ProjectCreateMethod,
   useProjectCreateStore,
-} from "../../store/project-create.store";
+} from "../../stores/project-create.store";
 
 export default function StepZeroView() {
   const router = useRouter();

@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { useProjectCreateStore } from "@/features/projects/store/project-create.store";
+import { useProjectCreateStore } from "@/features/projects/stores/project-create.store";
 
 export default function ProjectCreateLayout({
   children,

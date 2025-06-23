@@ -8,7 +8,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import { useProjectCreateStore } from "../../../store/project-create.store";
+import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   if (level === "Easy") {
