@@ -1,7 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -10,84 +11,100 @@ import { Textarea } from "@/shared/components/ui/textarea";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import { useProjectCreateStore } from "../../../store/project-create.store";
+import {
+  type ScratchStepOneFormData,
+  scratchStepOneSchema,
+} from "../../../validations/scratch-step-one.schema";
 
 export default function StepOneView() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
 
-  // Local state for form inputs
-  const [projectName, setProjectName] = useState(formData.projectName);
-  const [description, setDescription] = useState(formData.description);
-  const [website, setWebsite] = useState(formData.website);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<ScratchStepOneFormData>({
+    resolver: zodResolver(scratchStepOneSchema),
+    defaultValues: {
+      projectName: formData.projectName || "",
+      description: formData.description || "",
+      website: formData.website || "",
+    },
+  });
 
-  const handleNext = () => {
-    // Save form data to store
+  const description = watch("description");
+
+  const onSubmit = (data: ScratchStepOneFormData) => {
     updateProjectInfo({
-      projectName,
-      description,
-      website,
+      projectName: data.projectName,
+      description: data.description,
+      website: data.website || "",
     });
 
-    // Navigate to next step
     router.push("/projects/create/scratch/step-two");
   };
 
   return (
     <StepperWrapper currentStep={1} method="scratch">
-      <div className="flex flex-col items-center p-10">
-        <h2 className="mb-2 text-2xl font-medium">
-          Renseignez les informations de votre projet
+      <div className="flex flex-col items-center rounded-lg bg-white p-10">
+        <h2 className="mb-2 text-3xl font-medium text-black">
+          Renseignez vos informations
         </h2>
-        <p className="mb-8 text-sm text-black/70">
-          Renseignez les informations de votre projet open source ci-dessous
+        <p className="mb-8 text-center text-sm text-black/70">
+          Renseignez les informations de base de votre projet open source
         </p>
         <form
           className="flex w-full flex-col gap-5"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleNext();
-          }}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <div>
             <Label>Nom du projet</Label>
-            <Input
-              className="w-full"
-              placeholder="Nom du projet"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              maxLength={100}
-            />
+            <Input {...register("projectName")} maxLength={100} />
+            {errors.projectName && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.projectName.message}
+              </p>
+            )}
           </div>
+
           <div>
             <div className="mr-2 mb-1 flex items-center justify-between">
               <Label>Description</Label>
               <span className="text-xs font-normal text-black/20">
-                {description.length}/250
+                {description?.length || 0}/250
               </span>
             </div>
             <Textarea
-              className="w-full"
+              {...register("description")}
               placeholder="Décrivez votre projet"
-              value={description}
-              onChange={(e) => setDescription(e.target.value.slice(0, 250))}
               maxLength={250}
             />
+            {errors.description && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.description.message}
+              </p>
+            )}
           </div>
+
           <div>
             <Label>Lien vers le site web</Label>
-            <Input
-              className="w-full"
-              placeholder="https://www.example.com"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-            />
+            <Input {...register("website")} placeholder="https://example.com" />
+            {errors.website && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.website.message}
+              </p>
+            )}
           </div>
+
           <Button
             size="lg"
             className="flex items-center justify-center"
             type="submit"
+            disabled={isSubmitting}
           >
-            Confirmer les informations
+            {isSubmitting ? "Validation..." : "Confirmer et continuer"}
           </Button>
         </form>
       </div>

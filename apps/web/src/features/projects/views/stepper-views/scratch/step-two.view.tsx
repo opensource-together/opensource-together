@@ -65,34 +65,34 @@ export default function StepTwoView() {
               {formData.description || "Description du projet"}
             </div>
           </div>
-          {/* Dotted border */}
-          <div className="my-4 border-t-2 border-dashed border-black/5" />
-          {/* Website Link */}
           {formData.website && (
-            <div>
-              <div className="mb-1 flex items-center gap-1">
-                <span className="text-sm font-medium text-black/70">
-                  Lien vers le site web
-                </span>
-                <Image
-                  src="/icons/writing-icon.svg"
-                  alt="writing-icon"
-                  width={13}
-                  height={13}
-                />
+            <>
+              <div className="my-4 border-t-2 border-dashed border-black/5" />
+              <div>
+                <div className="mb-1 flex items-center gap-1">
+                  <span className="text-sm font-medium text-black/70">
+                    Lien vers le site web
+                  </span>
+                  <Image
+                    src="/icons/writing-icon.svg"
+                    alt="writing-icon"
+                    width={13}
+                    height={13}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/icons/link-icon.svg"
+                    alt="link-icon"
+                    width={15}
+                    height={15}
+                  />
+                  <span className="text-sm font-normal break-all text-black/50">
+                    {formData.website}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/icons/link-icon.svg"
-                  alt="link-icon"
-                  width={15}
-                  height={15}
-                />
-                <span className="text-sm font-normal break-all text-black/50">
-                  {formData.website}
-                </span>
-              </div>
-            </div>
+            </>
           )}
         </div>
         <Button

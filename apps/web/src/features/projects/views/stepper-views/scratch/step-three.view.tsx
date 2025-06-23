@@ -1,11 +1,20 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+
+import {
+  NewRoleFormData,
+  StepThreeFormData,
+  newRoleSchema,
+  stepThreeSchema,
+} from "@/features/projects/validations/step-three.schema";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import { useProjectCreateStore } from "../../../store/project-create.store";
@@ -92,6 +101,51 @@ export default function StepThreeView() {
     "enter" | "enter-active" | "exit" | "exit-active" | null
   >(null);
 
+  // Main form
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<StepThreeFormData>({
+    resolver: zodResolver(stepThreeSchema),
+    defaultValues: {
+      collaborators: [],
+      techStack: [],
+      difficulty: "MEDIUM",
+      roles: [],
+    },
+  });
+
+  // New role form
+  const {
+    register: registerRole,
+    handleSubmit: handleSubmitRole,
+    reset: resetRoleForm,
+    formState: { errors: roleErrors },
+  } = useForm<NewRoleFormData>({
+    resolver: zodResolver(newRoleSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      skills: [],
+      skillLevel: "INTERMEDIATE",
+    },
+  });
+
+  // Field array for roles
+  const {
+    fields: roles,
+    append: appendRole,
+    remove: removeRole,
+  } = useFieldArray({
+    control,
+    name: "roles",
+  });
+
+  const selectedDifficulty = watch("difficulty");
+
   // Animate modal blur on open/close
   const openRoleModal = () => {
     setShowRoleModal(true);
@@ -106,10 +160,35 @@ export default function StepThreeView() {
     }, 300);
   };
 
-  const handleCreateProject = () => {
-    // Here you would typically call your API to create the project
-    // For now, we'll just show the confirmation
-    setShowConfirmation(true);
+  const onSubmit = async (data: StepThreeFormData) => {
+    try {
+      updateRoles(
+        data.roles.map((role) => ({
+          id: role.id,
+          name: role.title,
+          description: role.description,
+          skillLevel: role.skillLevel,
+          isOpen: role.isOpen,
+        }))
+      );
+
+      setShowConfirmation(true);
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const onAddRole = (roleData: NewRoleFormData) => {
+    appendRole({
+      id: `role-${Date.now()}`,
+      title: roleData.title,
+      description: roleData.description,
+      skillLevel: roleData.skillLevel,
+      skills: roleData.skills,
+      isOpen: true,
+    });
+    resetRoleForm();
+    closeRoleModal();
   };
 
   const handleFinish = () => {
@@ -398,7 +477,7 @@ export default function StepThreeView() {
           <Button
             size="lg"
             className="mt-12 mb-4 w-full"
-            onClick={handleCreateProject}
+            onClick={handleSubmit(onSubmit)}
           >
             Créer un nouveau projet
           </Button>
