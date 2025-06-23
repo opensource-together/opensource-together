@@ -3,9 +3,9 @@
 import Breadcrumb from "@/shared/components/shared/Breadcrumb";
 
 import ProjectEditFormError from "../components/error-ui/project-edit-form-error.component";
-import ProjectEditForm from "../components/project-edit-form.component";
 import ProjectEditSidebar from "../components/project-edit-sidebar.component";
 import SkeletonProjectEditForm from "../components/skeletons/skeleton-project-edit-form.component";
+import ProjectEditForm from "../forms/project-edit.form";
 import { useProject } from "../hooks/use-projects.hook";
 
 export default function ProjectEditView({ projectId }: { projectId: string }) {
