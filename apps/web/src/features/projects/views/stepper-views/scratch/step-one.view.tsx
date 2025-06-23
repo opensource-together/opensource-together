@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Label } from "@/shared/components/ui/label";
+import { Textarea } from "@/shared/components/ui/textarea";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import { useProjectCreateStore } from "../../../store/project-create.store";
@@ -46,11 +49,10 @@ export default function StepOneView() {
           }}
         >
           <div>
-            <label className="mb-1 block font-medium tracking-tight text-black">
-              Nom du projet
-            </label>
-            <input
-              className="w-full rounded-md border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
+            <Label>Nom du projet</Label>
+            <Input
+              className="w-full"
+              placeholder="Nom du projet"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               maxLength={100}
@@ -58,15 +60,13 @@ export default function StepOneView() {
           </div>
           <div>
             <div className="mr-2 mb-1 flex items-center justify-between">
-              <label className="font-medium tracking-tight text-black">
-                Description
-              </label>
+              <Label>Description</Label>
               <span className="text-xs font-normal text-black/20">
                 {description.length}/250
               </span>
             </div>
-            <textarea
-              className="w-full resize-none rounded-md border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
+            <Textarea
+              className="w-full"
               placeholder="Décrivez votre projet"
               value={description}
               onChange={(e) => setDescription(e.target.value.slice(0, 250))}
@@ -74,11 +74,10 @@ export default function StepOneView() {
             />
           </div>
           <div>
-            <label className="mb-1 block font-medium tracking-tight text-black">
-              Lien vers le site web
-            </label>
-            <input
-              className="w-full rounded-md border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
+            <Label>Lien vers le site web</Label>
+            <Input
+              className="w-full"
+              placeholder="https://www.example.com"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
             />
@@ -88,7 +87,7 @@ export default function StepOneView() {
             className="flex items-center justify-center"
             type="submit"
           >
-            Confirmer les informations et continuer
+            Confirmer les informations
           </Button>
         </form>
       </div>
