@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 
-import { StepperWrapper } from "../../../components/stepper-wrapper.component";
+import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import { useProjectCreateStore } from "../../../store/project-create.store";
 
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {

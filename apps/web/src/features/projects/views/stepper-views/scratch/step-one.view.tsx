@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 
-import { StepperWrapper } from "../../../components/stepper-wrapper.component";
+import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import { useProjectCreateStore } from "../../../store/project-create.store";
 
 export default function StepOneView() {
