@@ -5,7 +5,7 @@ import {
   CreateProjectSchema,
   UpdateProjectData,
   UpdateProjectSchema,
-} from "../validations/project.api.schema";
+} from "../validations/project.schema";
 
 /**
  * Get the list of projects

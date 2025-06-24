@@ -1,9 +1,20 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+
+import {
+  StepThreeFormData,
+  stepThreeSchema,
+} from "@/features/projects/validations/project-stepper.schema";
+
+import { useProjectCreateStore } from "../stores/project-create.store";
 
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   if (level === "Easy") {
@@ -78,12 +89,29 @@ function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   }
 }
 
-export default function StepFour() {
-  const [showConfirmation, setShowConfirmation] = useState(false);
+interface StepThreeFormProps {
+  onSuccess: () => void;
+}
+
+export function StepThreeForm({ onSuccess }: StepThreeFormProps) {
+  const router = useRouter();
+  const { updateRoles, resetForm } = useProjectCreateStore();
+  const [showConfirmation] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [modalBlurState, setModalBlurState] = useState<
     "enter" | "enter-active" | "exit" | "exit-active" | null
   >(null);
+
+  // Main form
+  const { handleSubmit } = useForm<StepThreeFormData>({
+    resolver: zodResolver(stepThreeSchema),
+    defaultValues: {
+      collaborators: [],
+      techStack: [],
+      difficulty: "MEDIUM",
+      roles: [],
+    },
+  });
 
   // Animate modal blur on open/close
   const openRoleModal = () => {
@@ -99,25 +127,28 @@ export default function StepFour() {
     }, 300);
   };
 
-  if (showConfirmation) {
-    return (
-      <div className="font-geist flex flex-col items-center justify-center rounded-[20px] bg-white p-10">
-        <h2 className="font-geist mb-2 text-center text-[30px] font-medium tracking-tight">
-          Félicitations ! Votre projet a été créé
-        </h2>
-        <p className="mb-8 text-center text-[15px] text-black/70">
-          Vous pouvez maintenant trouver vos projets dans votre tableau de bord
-          "Mes projets" et les membres pourront postuler à n'importe quel rôle
-          ouvert
-        </p>
-        <Link href="/" className="w-full">
-          <Button size="lg" variant="outline" className="w-full">
-            Voir le projet
-          </Button>
-        </Link>
-      </div>
-    );
-  }
+  const onSubmit = async (data: StepThreeFormData) => {
+    try {
+      updateRoles(
+        data.roles.map((role) => ({
+          id: role.id,
+          name: role.title,
+          description: role.description,
+          skillLevel: role.skillLevel,
+          isOpen: role.isOpen,
+        }))
+      );
+
+      onSuccess();
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const handleFinish = () => {
+    resetForm();
+    router.push("/projects");
+  };
 
   // Modale Create New Role
   const RoleModal = () => (
@@ -214,7 +245,7 @@ export default function StepFour() {
           <Button
             size="lg"
             className="mt-0 mb-4 flex items-center justify-center"
-            onClick={() => setShowConfirmation(true)}
+            onClick={closeRoleModal}
           >
             Créer un nouveau rôle
           </Button>
@@ -223,10 +254,32 @@ export default function StepFour() {
     </div>
   );
 
+  if (showConfirmation) {
+    return (
+      <div className="font-geist flex flex-col items-center justify-center rounded-[20px] bg-white p-10">
+        <h2 className="font-geist mb-2 text-center text-[30px] font-medium tracking-tight">
+          Félicitations ! Votre projet a été créé
+        </h2>
+        <p className="mb-8 text-center text-[15px] text-black/70">
+          Vous pouvez maintenant trouver vos projets dans votre tableau de bord
+          "Mes projets" et les membres pourront postuler à n'importe quel rôle
+          ouvert
+        </p>
+        <Button
+          size="lg"
+          variant="outline"
+          className="w-full"
+          onClick={handleFinish}
+        >
+          Voir mes projets
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="font-geist flex w-[500px] flex-col gap-8 rounded-[20px] bg-white p-10">
       {/* Add collaborators */}
-
       <div>
         <h2 className="font-geist mb-2 text-center text-[30px] font-medium tracking-tight">
           Ajouter les détails du projet
@@ -375,7 +428,7 @@ export default function StepFour() {
         <Button
           size="lg"
           className="mt-12 mb-4 w-full"
-          onClick={() => setShowConfirmation(true)}
+          onClick={handleSubmit(onSubmit)}
         >
           Créer un nouveau projet
         </Button>

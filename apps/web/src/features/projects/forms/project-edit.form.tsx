@@ -12,10 +12,7 @@ import { Button } from "@/shared/components/ui/button";
 
 import { useUpdateProject } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
-import {
-  ProjectSchema,
-  projectSchema,
-} from "../validations/project.form.schema";
+import { ProjectSchema, projectSchema } from "../validations/project.schema";
 
 interface ProjectEditFormProps {
   project: Project;
