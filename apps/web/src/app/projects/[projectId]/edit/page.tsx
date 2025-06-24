@@ -1,4 +1,4 @@
-import ProjectEditView from "@/features/projects/views/ProjectEditView";
+import ProjectEditView from "@/features/projects/views/project-edit.view";
 
 export default async function ProjectEditPage({
   params,

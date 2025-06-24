@@ -2,103 +2,32 @@ openapi: 3.0.4
 info:
   title: OpenSource Together API
   description: |
-    Documentation complète de l'API pour la plateforme OpenSource Together.
-    
-    ## 🔐 Système d'Authentification
-    
-    OpenSource Together utilise **SuperTokens** avec un système dual d'authentification :
-    
-    ### 🎯 Méthodes d'Authentification Disponibles
-    
-    **1. GitHub OAuth (Recommandé) 🐙**
-    - Connexion/inscription avec GitHub en un clic
-    - Synchronisation automatique des données de profil
-    - Accès sécurisé aux repositories (permissions : `read:user`, `user:email`, `repo`, `admin:repo_hook`)
-    
-    **2. Email/Password Traditionnel 📧**
-    - Inscription avec email + username personnalisé
-    - Système de réinitialisation de mot de passe
-    - Flexibilité : connexion avec email OU username
-    
-    ### 🔄 Flow d'Authentification GitHub (Principal)
-    
-    ```mermaid
-    sequenceDiagram
-        participant F as Frontend
-        participant A as API (/auth)
-        participant G as GitHub
-        participant D as Database
-        
-        F->>A: GET /auth/authorize/github
-        A->>G: Redirect to GitHub OAuth
-        G->>F: Redirect to /auth/callback/github?code=...
-        F->>A: GET /auth/callback/github?code=...
-        A->>G: Exchange code for access_token
-        G->>A: Return user data + access_token
-        A->>D: Create/Update user
-        A->>F: Set session cookies + redirect
-        F->>A: GET /auth/session (get user info)
-    ```
-    
-    ### 🍪 Gestion des Sessions
-    
-    **Cookies automatiques (HttpOnly, Secure, SameSite) :**
-    - `sAccessToken` : Token d'accès principal (courte durée)
-    - `sRefreshToken` : Token de rafraîchissement (longue durée)
-    - `sIdRefreshToken` : Token de rafraîchissement ID (anti-CSRF)
-    
-    **Renouvellement automatique :**
-    - Le SDK SuperTokens gère automatiquement le renouvellement
-    - Appel transparent à `/auth/session/refresh` quand nécessaire
-    
-    ### 🛡️ Routes Protégées
-    
-    Les routes nécessitant une authentification sont marquées avec 🔒 et utilisent :
-    ```yaml
-    security:
-      - supertokens_session: []
-    ```
-    
-    ### 🚀 Guide d'Intégration Frontend
-    
-    **Initialisation (Next.js) :**
-    ```typescript
-    // app/layout.tsx
-    import SuperTokens from "supertokens-web-js";
-    
-    SuperTokens.init({
-      appInfo: {
-        appName: "OST",
-        apiDomain: "http://localhost:4000",
-        apiBasePath: "/auth",
-      },
-      recipeList: [Session.init(), ThirdParty.init()],
-    });
-    ```
-    
-    **Connexion GitHub :**
-    ```typescript
-    import { getAuthorisationURLWithQueryParamsAndSetState } from "supertokens-web-js/recipe/thirdparty";
-    
-    const authUrl = await getAuthorisationURLWithQueryParamsAndSetState({
-      thirdPartyId: "github",
-      frontendRedirectURI: "http://localhost:3000/auth/callback/github"
-    });
-    window.location.assign(authUrl);
-    ```
-    
-    **Vérification de session :**
-    ```typescript
-    import Session from "supertokens-web-js/recipe/session";
-    
-    const sessionExists = await Session.doesSessionExist();
-    if (sessionExists) {
-      // User is logged in
-      const userInfo = await fetch('/auth/session');
-    }
-    ```
-    
-    **Base URL de développement :** `http://localhost:4000`
+    Documentation de l'API pour la plateforme OpenSource Together.
+
+    ## Authentification
+
+    L'API utilise SuperTokens avec l'authentification GitHub OAuth.
+
+
+    TEST TEST TEST
+    ### Pour les développeurs Frontend
+
+    **Processus de connexion :**
+    1. Rediriger vers `/auth/authorize/github` pour initier la connexion
+    2. L'utilisateur est redirigé vers GitHub pour autoriser l'application
+    3. GitHub redirige vers `/auth/callback/github` avec le code d'autorisation
+    4. Les cookies de session sont automatiquement définis
+    5. Utiliser `/auth/session` pour récupérer les infos utilisateur (équivalent `/me`)
+
+    **Cookies de session :**
+    - `sAccessToken` : Token d'accès principal
+    - `sRefreshToken` : Token de rafraîchissement
+    - Ces cookies sont automatiquement gérés par le navigateur
+
+    **Routes protégées :**
+    Les routes nécessitant une authentification sont marquées avec le symbole 🔒.
+
+    **Base URL :** `http://localhost:4000`
   version: 1.0.0
 servers:
   - url: http://localhost:4000
@@ -108,6 +37,61 @@ tags:
   - name: Authentication
     description: Opérations liées à l'authentification utilisateur
 paths:
+  /profile/me:
+    get:
+      tags:
+        - Profile
+      summary: Récupérer le profil de l'utilisateur courant
+      description: Retourne le profil de l'utilisateur actuellement authentifié.
+      security:
+        - supertokens_session: []
+      responses:
+        '200':
+          description: Profil utilisateur retourné avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDto'
+              example:
+                id: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+                name: 'Jhondoe'
+                avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4'
+                bio: "Fullstack Developer | \r\nExpress & React | \r\nBuilding @jhongo-project "
+                location: 'Paris, France'
+                company: 'Jhongo'
+                socialLinks:
+                  - type: 'github'
+                    url: 'https://github.com/Jhondoe'
+                  - type: 'twitter'
+                    url: 'https://twitter.com/Jhondoe'
+                  - type: 'linkedin'
+                    url: 'https://www.linkedin.com/in/jhondoe/'
+                  - type: 'website'
+                    url: 'https://jhondoe.com'
+                skills: []
+                experiences: []
+                joinedAt: '2025-04-16T15:47:31.633Z'
+                profileUpdatedAt: '2025-04-16T15:47:31.633Z'
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+                  error:
+                    type: string
+                    example: Not Found
+                  statusCode:
+                    type: integer
+                    example: 404
+              example:
+                message: 'Utilisateur non trouvé.'
+                error: 'Not Found'
+                statusCode: 404
   /projects:
     get:
       tags:
@@ -173,14 +157,11 @@ paths:
                   skillSet:
                     - id: 'react'
                   isFilled: false
-              projectMembers: [
-                {
-                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
-                },
-                {
-                  "userId": "9b4d1ac3-a5ca-4d97-988f-3924e52314e7",
-                }
-              ]
+              projectMembers:
+                [
+                  { 'userId': '9b4d1ac3-a5ca-4d97-988f-3924e52314e7' },
+                  { 'userId': '9b4d1ac3-a5ca-4d97-988f-3924e52314e7' },
+                ]
       responses:
         '200':
           description: Projet créé avec succès
@@ -425,11 +406,11 @@ paths:
       operationId: deleteProject
       description: |
         Supprime définitivement un projet de la plateforme.
-        
+
         **🔒 Restriction de sécurité :**
         - Seul le propriétaire (créateur) du projet peut le supprimer
         - Vérification automatique de propriété côté serveur
-        
+
         **⚠️ Action irréversible :**
         Cette action supprime définitivement le projet et toutes ses données associées.
       security:
@@ -616,11 +597,11 @@ paths:
       operationId: updateProjectRole
       description: |
         Met à jour les informations d'un rôle spécifique dans un projet.
-        
+
         **🔒 Sécurité :**
         - Seul le propriétaire du projet peut modifier les rôles
         - Vérification automatique de propriété côté serveur
-        
+
         **✏️ Modifications possibles :**
         - Titre du rôle
         - Description
@@ -731,11 +712,11 @@ paths:
       operationId: deleteProjectRole
       description: |
         Supprime un rôle spécifique d'un projet.
-        
+
         **🔒 Sécurité :**
         - Seul le propriétaire du projet peut supprimer des rôles
         - Vérification automatique de propriété côté serveur
-        
+
         **⚠️ Action irréversible :**
         Cette action supprime définitivement le rôle et ses associations.
       security:
@@ -832,7 +813,7 @@ paths:
       description: |
         Inscription traditionnelle avec email, username et mot de passe.
         Accepte à la fois un email ET un username pour une flexibilité maximale.
-        
+
         **Validation :**
         - Le champ "email" accepte un username OU un email valide
         - Le champ "actualEmail" doit être un email valide
@@ -857,7 +838,7 @@ paths:
                   example:
                     - id: email
                       value: johndoe
-                    - id: actualEmail  
+                    - id: actualEmail
                       value: john@example.com
                     - id: password
                       value: mySecurePassword123
@@ -965,16 +946,16 @@ paths:
       operationId: authorizeGithub
       description: |
         🔗 **Route principale pour démarrer l'authentification GitHub**
-        
+
         Redirige automatiquement vers GitHub pour l'authentification OAuth.
         Cette route est utilisée par le frontend pour commencer le processus d'authentification.
-        
+
         **Permissions GitHub demandées :**
         - `read:user` : Lire les informations de profil
         - `user:email` : Accéder à l'email
         - `repo` : Accès aux repositories (pour les futures fonctionnalités)
         - `write:repo_hook` & `admin:repo_hook` : Gestion des webhooks
-        
+
         **Flow automatique :**
         1. L'utilisateur clique sur "Se connecter avec GitHub"
         2. Redirection vers cette route
@@ -986,7 +967,7 @@ paths:
           headers:
             Location:
               description: URL GitHub OAuth avec les paramètres appropriés
-              schema: 
+              schema:
                 type: string
                 example: https://github.com/login/oauth/authorize?client_id=...
         '500':
@@ -999,17 +980,17 @@ paths:
       operationId: callbackGithub
       description: |
         🔄 **Route de callback automatique GitHub**
-        
+
         URL de callback utilisée par GitHub après l'authentification.
         Cette route est automatiquement appelée par GitHub et NE DOIT PAS être appelée manuellement.
-        
+
         **Processus automatique :**
         - Échange du code d'autorisation contre un token d'accès
         - Récupération des informations utilisateur GitHub
         - Création/mise à jour de l'utilisateur en base de données
         - Génération et définition des cookies de session
         - Redirection vers l'application frontend
-        
+
         **Données GitHub synchronisées :**
         - Informations de profil (nom, avatar, bio)
         - Token d'accès GitHub (pour futures intégrations)
@@ -1043,7 +1024,7 @@ paths:
                 type: array
                 items:
                   type: string
-                example: 
+                example:
                   - sAccessToken=...; HttpOnly; Secure; SameSite=Lax
                   - sRefreshToken=...; HttpOnly; Secure; SameSite=Lax
         '400':
@@ -1152,7 +1133,7 @@ paths:
       operationId: signout
       description: |
         Termine la session utilisateur et supprime les cookies d'authentification.
-        
+
         **Actions effectuées :**
         - Révocation de la session SuperTokens
         - Suppression des cookies `sAccessToken` et `sRefreshToken`
@@ -1190,12 +1171,12 @@ paths:
       operationId: refreshSession
       description: |
         Renouvelle automatiquement la session utilisateur avec le refresh token.
-        
+
         **Utilisation automatique :**
         - Appelé automatiquement par le SDK SuperTokens
         - Utilise le cookie `sRefreshToken` pour générer un nouveau `sAccessToken`
         - Transparent pour l'utilisateur final
-        
+
         **Note :** Cette route est généralement appelée automatiquement par le SDK, 
         pas directement par l'application frontend.
       security:
@@ -1230,12 +1211,12 @@ paths:
       operationId: verifySession
       description: |
         Vérifie si la session actuelle est valide sans retourner les données utilisateur.
-        
+
         **Cas d'usage :**
         - Vérification rapide de l'état de connexion
         - Middleware de protection des routes
         - Checks de sécurité avant actions sensibles
-        
+
         **Différence avec `/auth/session` :**
         - `/auth/session/verify` : Vérification seule (léger)
         - `/auth/session` : Vérification + données utilisateur (complet)
@@ -1262,12 +1243,12 @@ paths:
       operationId: resetPasswordRequest
       description: |
         Initie le processus de réinitialisation de mot de passe par email.
-        
+
         **Processus :**
         1. Validation de l'email/username fourni
         2. Génération d'un token de réinitialisation
         3. Envoi d'un email avec le lien de réinitialisation
-        
+
         **Sécurité :** 
         - Aucune information n'est révélée sur l'existence ou non du compte
         - Token à usage unique avec expiration
@@ -1325,7 +1306,7 @@ paths:
       operationId: confirmPasswordReset
       description: |
         Finalise la réinitialisation avec le token reçu par email.
-        
+
         **Utilisation :**
         - Appelée depuis le lien dans l'email de réinitialisation
         - Le token est généralement dans l'URL du lien
@@ -1413,7 +1394,7 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Compétences techniques requises pour ce rôle
-          
+
     CreateProjectRoleDto:
       type: object
       properties:
@@ -1439,7 +1420,7 @@ components:
         - description
         - isFilled
         - skillSet
-        
+
     UpdateProjectRoleDto:
       type: object
       properties:
@@ -1460,7 +1441,7 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Compétences techniques requises pour ce rôle
-      
+
     TechStackDto:
       type: object
       properties:
@@ -1486,44 +1467,44 @@ components:
         id:
           type: string
           description: ID unique du projet
-          example: "123e4567-e89b-12d3-a456-426614174000"
+          example: '123e4567-e89b-12d3-a456-426614174000'
         title:
           type: string
           description: Titre du projet
-          example: "Plateforme E-commerce React"
+          example: 'Plateforme E-commerce React'
         description:
           type: string
           description: Description détaillée du projet
-          example: "Application e-commerce moderne avec React et Node.js"
+          example: 'Application e-commerce moderne avec React et Node.js'
         difficulty:
           type: string
           enum: [EASY, MEDIUM, HARD]
           description: Niveau de difficulté du projet
-          example: "MEDIUM"
+          example: 'MEDIUM'
         link:
           type: string
           description: Lien vers le site web ou démo du projet
           nullable: true
-          example: "https://my-ecommerce-demo.com"
+          example: 'https://my-ecommerce-demo.com'
         githubLink:
           type: string
           description: Lien vers le dépôt GitHub du projet
           nullable: true
-          example: "https://github.com/user/ecommerce-platform"
+          example: 'https://github.com/user/ecommerce-platform'
         ownerId:
           type: string
           description: ID de l'utilisateur propriétaire du projet
-          example: "github_user123"
+          example: 'github_user123'
         createdAt:
           type: string
           format: date-time
           description: Date de création du projet
-          example: "2024-01-15T10:30:00.000Z"
+          example: '2024-01-15T10:30:00.000Z'
         updatedAt:
           type: string
           format: date-time
           description: Date de dernière modification
-          example: "2024-01-20T14:45:00.000Z"
+          example: '2024-01-20T14:45:00.000Z'
         techStacks:
           type: array
           items:
@@ -1703,7 +1684,7 @@ components:
               type: integer
               description: Nombre d'abonnés
               example: 150
-              following:
+            following:
               type: integer
               description: Nombre de personnes suivies
               example: 75
@@ -1713,7 +1694,7 @@ components:
         roleTitle:
           type: string
           description: Titre du rôle recherché
-          example: "Frontend Developer"
+          example: 'Frontend Developer'
         description:
           type: string
           description: Description détaillée du rôle
@@ -1738,22 +1719,68 @@ components:
         userId:
           type: string
           description: ID de l'utilisateur membre du projet
-          example: "github_123456789"
+          example: 'github_123456789'
         role:
           type: string
           description: Rôle de l'utilisateur dans le projet
-          example: "Frontend Developer"
+          example: 'Frontend Developer'
         joinedAt:
           type: string
           format: date-time
           description: Date d'ajout au projet
-          example: "2024-01-15T10:30:00.000Z"
+          example: '2024-01-15T10:30:00.000Z'
         user:
           $ref: '#/components/schemas/GitHubUser'
       required:
         - userId
         - role
         - joinedAt
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID utilisateur unique
+          example: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+        username:
+          type: string
+          description: Nom d'utilisateur
+          example: 'Lhourquin'
+        email:
+          type: string
+          description: Email de l'utilisateur
+          example: 'lhourquin@gmail.com'
+        avatarUrl:
+          type: string
+          description: URL de l'avatar utilisateur
+          example: 'https://avatars.githubusercontent.com/u/45101981?v=4'
+        bio:
+          type: string
+          description: Biographie de l'utilisateur
+          example: "Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together "
+        githubUrl:
+          type: string
+          description: URL du profil GitHub
+          example: 'https://github.com/Lhourquin'
+        createdAt:
+          type: string
+          format: date-time
+          description: Date de création du compte
+          example: '2025-06-16T19:57:31.633Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date de dernière modification
+          example: '2025-06-16T19:57:31.633Z'
+      required:
+        - id
+        - username
+        - email
+        - avatarUrl
+        - bio
+        - githubUrl
+        - createdAt
+        - updatedAt
   securitySchemes:
     supertokens_session:
       type: apiKey
@@ -1762,12 +1789,12 @@ components:
       description: |
         Jeton de session SuperTokens pour l'authentification.
         Automatiquement géré par le navigateur via cookies HttpOnly.
-        
+
         **Cookies utilisés :**
         - `sAccessToken` : Token d'accès principal
         - `sRefreshToken` : Token de rafraîchissement (optionnel selon la route)
     supertokens_refresh:
-      type: apiKey  
+      type: apiKey
       in: cookie
       name: sRefreshToken
       description: |
