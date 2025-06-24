@@ -14,7 +14,7 @@ import {
   StepThreeFormData,
   newRoleSchema,
   stepThreeSchema,
-} from "@/features/projects/validations/step-three.schema";
+} from "@/features/projects/validations/project-stepper.schema";
 
 import { useProjectCreateStore } from "../../stores/project-create.store";
 

@@ -11,9 +11,9 @@ import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import {
-  type ScratchStepOneFormData,
-  scratchStepOneSchema,
-} from "../../validations/scratch-step-one.schema";
+  StepOneFormData,
+  stepOneSchema,
+} from "../../validations/project-stepper.schema";
 
 export function StepOneForm() {
   const router = useRouter();
@@ -24,8 +24,8 @@ export function StepOneForm() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<ScratchStepOneFormData>({
-    resolver: zodResolver(scratchStepOneSchema),
+  } = useForm<StepOneFormData>({
+    resolver: zodResolver(stepOneSchema),
     defaultValues: {
       projectName: formData.projectName || "",
       description: formData.description || "",
@@ -35,7 +35,7 @@ export function StepOneForm() {
 
   const description = watch("description");
 
-  const onSubmit = (data: ScratchStepOneFormData) => {
+  const onSubmit = (data: StepOneFormData) => {
     updateProjectInfo({
       projectName: data.projectName,
       description: data.description,
