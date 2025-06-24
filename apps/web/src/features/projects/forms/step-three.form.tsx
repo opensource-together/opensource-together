@@ -4,19 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 
 import {
-  NewRoleFormData,
   StepThreeFormData,
-  newRoleSchema,
   stepThreeSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
-import { useProjectCreateStore } from "../../stores/project-create.store";
+import { useProjectCreateStore } from "../stores/project-create.store";
 
 function DifficultyBars({ level }: { level: "Easy" | "Medium" | "Hard" }) {
   if (level === "Easy") {
@@ -97,21 +95,15 @@ interface StepThreeFormProps {
 
 export function StepThreeForm({ onSuccess }: StepThreeFormProps) {
   const router = useRouter();
-  const { formData, updateRoles, resetForm } = useProjectCreateStore();
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const { updateRoles, resetForm } = useProjectCreateStore();
+  const [showConfirmation] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [modalBlurState, setModalBlurState] = useState<
     "enter" | "enter-active" | "exit" | "exit-active" | null
   >(null);
 
   // Main form
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<StepThreeFormData>({
+  const { handleSubmit } = useForm<StepThreeFormData>({
     resolver: zodResolver(stepThreeSchema),
     defaultValues: {
       collaborators: [],
@@ -120,34 +112,6 @@ export function StepThreeForm({ onSuccess }: StepThreeFormProps) {
       roles: [],
     },
   });
-
-  // New role form
-  const {
-    register: registerRole,
-    handleSubmit: handleSubmitRole,
-    reset: resetRoleForm,
-    formState: { errors: roleErrors },
-  } = useForm<NewRoleFormData>({
-    resolver: zodResolver(newRoleSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      skills: [],
-      skillLevel: "INTERMEDIATE",
-    },
-  });
-
-  // Field array for roles
-  const {
-    fields: roles,
-    append: appendRole,
-    remove: removeRole,
-  } = useFieldArray({
-    control,
-    name: "roles",
-  });
-
-  const selectedDifficulty = watch("difficulty");
 
   // Animate modal blur on open/close
   const openRoleModal = () => {
@@ -179,19 +143,6 @@ export function StepThreeForm({ onSuccess }: StepThreeFormProps) {
     } catch (error) {
       console.error("Error creating project:", error);
     }
-  };
-
-  const onAddRole = (roleData: NewRoleFormData) => {
-    appendRole({
-      id: `role-${Date.now()}`,
-      title: roleData.title,
-      description: roleData.description,
-      skillLevel: roleData.skillLevel,
-      skills: roleData.skills,
-      isOpen: true,
-    });
-    resetRoleForm();
-    closeRoleModal();
   };
 
   const handleFinish = () => {

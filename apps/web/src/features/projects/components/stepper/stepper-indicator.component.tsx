@@ -4,19 +4,17 @@ import React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-interface SimpleStepperProps {
+interface StepperIndicatorProps {
   currentStep: number;
   totalSteps: number;
-  steps?: string[];
   className?: string;
 }
 
-export function SimpleStepper({
+export function StepperIndicator({
   currentStep,
   totalSteps,
-  steps = [],
   className,
-}: SimpleStepperProps) {
+}: StepperIndicatorProps) {
   return (
     <div className={cn("flex items-center justify-center", className)}>
       {Array.from({ length: totalSteps }, (_, index) => (

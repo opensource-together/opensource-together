@@ -41,10 +41,6 @@ interface ProjectCreateStore {
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;
-
-  // Helpers
-  getNextStepUrl: () => string;
-  getPreviousStepUrl: () => string;
 }
 
 const initialFormData: ProjectFormData = {
@@ -59,7 +55,7 @@ const initialFormData: ProjectFormData = {
 export const useProjectCreateStore = create<ProjectCreateStore>()(
   devtools(
     persist(
-      (set, get) => ({
+      (set) => ({
         formData: initialFormData,
         currentStep: 0,
 
@@ -99,42 +95,6 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
             formData: initialFormData,
             currentStep: 0,
           }),
-
-        getNextStepUrl: () => {
-          const { formData, currentStep } = get();
-          const base = "/projects/create";
-
-          if (currentStep === 0) {
-            return base; // Stay on method selection
-          }
-
-          if (!formData.method) return base;
-
-          const method = formData.method;
-          const nextStep = currentStep + 1;
-
-          if (nextStep > 3) {
-            return "/projects"; // Redirect to projects list after completion
-          }
-
-          return `${base}/${method}/step${nextStep}`;
-        },
-
-        getPreviousStepUrl: () => {
-          const { formData, currentStep } = get();
-          const base = "/projects/create";
-
-          if (currentStep <= 1) {
-            return base; // Go back to method selection
-          }
-
-          if (!formData.method) return base;
-
-          const method = formData.method;
-          const prevStep = currentStep - 1;
-
-          return `${base}/${method}/step${prevStep}`;
-        },
       }),
       {
         name: "project-create-storage",
