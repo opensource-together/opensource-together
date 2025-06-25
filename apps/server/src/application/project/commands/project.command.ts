@@ -6,10 +6,16 @@ import {
   UpdateProjectCommand,
   UpdateProjectCommandHandler,
 } from './update/update-project.usecase';
+import {
+  DeleteProjectCommand,
+  DeleteProjectCommandHandler,
+} from './delete/delete-project.command';
 
 export const projectCommandsContainer = [
   CreateProjectCommand,
   CreateProjectCommandHandler,
   UpdateProjectCommand,
   UpdateProjectCommandHandler,
+  DeleteProjectCommand,
+  DeleteProjectCommandHandler,
 ];

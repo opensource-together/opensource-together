@@ -4,7 +4,7 @@ import { PrismaService } from '@infrastructures/orm/prisma/prisma.service';
 import { Result } from '@/shared/result';
 import { UserRepositoryPort } from '@/application/user/ports/user.repository.port';
 import { PrismaUserMapper } from './prisma.user.mapper';
-import { Prisma, User as PrismaUser } from '@prisma/client';
+import { User as PrismaUser } from '@prisma/client';
 @Injectable()
 export class PrismaUserRepository implements UserRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -29,17 +29,14 @@ export class PrismaUserRepository implements UserRepositoryPort {
     }
   }
 
-  async save(
-    user: User,
-  ): Promise<Result<User, { username?: string; email?: string } | string>> {
+  async create(user: {
+    id: string;
+    username: string;
+    email: string;
+  }): Promise<Result<User, { username?: string; email?: string } | string>> {
     try {
-      const userData: Result<
-        Prisma.UserCreateInput,
-        { username?: string; email?: string } | string
-      > = PrismaUserMapper.toRepo(user);
-      if (!userData.success) return Result.fail(userData.error);
       const savedUser = await this.prisma.user.create({
-        data: userData.value,
+        data: user,
       });
       if (!savedUser)
         return Result.fail("Erreur lors de la création de l'utilisateur.");
@@ -97,5 +94,14 @@ export class PrismaUserRepository implements UserRepositoryPort {
       PrismaUserMapper.toDomain(updatedUser);
     if (!userResult.success) return Result.fail(userResult.error);
     return Result.ok(userResult.value);
+  }
+
+  async delete(user: User): Promise<Result<void, string>> {
+    const { id } = user.getState();
+    const deletedUser = await this.prisma.user.delete({
+      where: { id },
+    });
+    if (!deletedUser) return Result.fail('User not deleted');
+    return Result.ok(undefined);
   }
 }

@@ -98,11 +98,6 @@ export const emailPasswordRecipe = (
                 responseSignUpPOSTSupertokens.user.id,
                 usernameForCreateUser,
                 emailForCreateUser,
-                '',
-                '',
-                '',
-                '',
-                '',
               ),
             );
             console.log(
@@ -159,7 +154,7 @@ export const emailPasswordRecipe = (
           }
           input.formFields = input.formFields.map((field) => {
             if (field.id === 'email') {
-              return { ...field, value: user.value.getEmail() };
+              return { ...field, value: user.value.getState().email };
             }
             return field;
           });

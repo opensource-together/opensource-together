@@ -61,51 +61,96 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     ownerId: string,
   ): Promise<Result<Project>> {
     try {
+      // Vérification des permissions
       const project = await this.prisma.project.findUnique({
         where: { id },
+        include: { projectRoles: true },
       });
       if (!project) return Result.fail('Project not found');
       if (project.ownerId !== ownerId)
         return Result.fail('You are not allowed to update this project');
 
-      const updatePayload = {
-        title: payload.title?.success
-          ? payload.title.value.getTitle()
-          : undefined,
-        description: payload.description?.success
-          ? payload.description.value.getDescription()
-          : undefined,
-        link: payload.link?.success ? payload.link.value.getLink() : undefined,
-        ...(payload.techStacks && {
-          techStacks: {
-            // Déconnecte toutes les techStacks existantes
-            set: [],
-            // Connecte les nouvelles techStacks en utilisant leurs IDs
-            connect: payload.techStacks.map((techStack) => ({
-              id: techStack.id,
-            })),
+      // Utilisation d'une transaction pour garantir l'atomicité
+      return await this.prisma.$transaction(async (tx) => {
+        // 1. Mise à jour des informations de base du projet
+        await tx.project.update({
+          where: { id },
+          data: {
+            title: payload.title?.success
+              ? payload.title.value.getTitle()
+              : undefined,
+            description: payload.description?.success
+              ? payload.description.value.getDescription()
+              : undefined,
+            link: payload.link?.success
+              ? payload.link.value.getLink()
+              : undefined,
           },
-        }),
-      };
+        });
 
-      const updatedProject = await this.prisma.project.update({
-        where: { id },
-        data: updatePayload,
-        include: {
-          techStacks: true,
-          projectRoles: {
-            include: { skillSet: true },
+        // 2. Mise à jour des techStacks si nécessaire
+        if (payload.techStacks) {
+          await tx.project.update({
+            where: { id },
+            data: {
+              techStacks: {
+                set: [], // On repart à zéro
+                connect: payload.techStacks.map((ts) => ({ id: ts.id })),
+              },
+            },
+          });
+        }
+
+        // 4. Récupération du projet final avec toutes ses relations
+        const finalProject = await tx.project.findUnique({
+          where: { id },
+          include: {
+            techStacks: true,
+            projectRoles: {
+              include: { skillSet: true },
+            },
+            projectMembers: true,
           },
-          projectMembers: true,
-        },
+        });
+
+        if (!finalProject) return Result.fail('Project not found');
+        const domainProject = PrismaProjectMapper.toDomain(finalProject);
+        if (!domainProject.success) return Result.fail(domainProject.error);
+
+        return Result.ok(domainProject.value);
+      });
+    } catch (error) {
+      return Result.fail(`Unknown error: ${error}`);
+    }
+  }
+
+  async deleteProjectById(
+    id: string,
+    ownerId: string,
+  ): Promise<Result<boolean>> {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: { id },
       });
 
-      const domainProject = PrismaProjectMapper.toDomain(updatedProject);
-      if (!domainProject.success) return Result.fail(domainProject.error);
+      if (!project) return Result.fail('Project not found');
 
-      return Result.ok(domainProject.value);
+      if (project.ownerId !== ownerId) {
+        return Result.fail('You are not allowed to delete this project');
+      }
+
+      await this.prisma.project.delete({
+        where: { id },
+      });
+
+      return Result.ok(true);
     } catch (error) {
-      return Result.fail(`Unknown error : ${error}`);
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          return Result.fail('Project not found');
+        }
+      }
+      return Result.fail(`Unknown error during project deletion: ${error}`);
     }
   }
 

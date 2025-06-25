@@ -1,5 +1,4 @@
 import { Result } from '@shared/result';
-import { UserFactory } from '@/domain/user/user.factory';
 import { User } from '@domain/user/user.entity';
 import {
   USER_REPOSITORY_PORT,
@@ -7,19 +6,14 @@ import {
 } from '../ports/user.repository.port';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
-import { EncryptionServicePort } from '@/application/encryption/ports/encryption.service.port';
+import { Username } from '@/domain/user/username.vo';
+import { Email } from '@/domain/user/email.vo';
 
 export class CreateUserCommand implements ICommand {
   constructor(
     public readonly id: string,
     public readonly username: string,
     public readonly email: string,
-    public readonly avatarUrl: string,
-    public readonly bio: string,
-    public readonly githubUrl: string,
-    public readonly githubUserId: string,
-    public readonly githubAccessToken: string,
   ) {}
 }
 
@@ -34,8 +28,6 @@ export class CreateUserCommandHandler
   constructor(
     @Inject(USER_REPOSITORY_PORT)
     private readonly userRepo: UserRepositoryPort,
-    @Inject(ENCRYPTION_SERVICE_PORT)
-    private readonly encryptionService: EncryptionServicePort,
   ) {}
 
   /**
@@ -48,37 +40,29 @@ export class CreateUserCommandHandler
   async execute(
     command: CreateUserCommand,
   ): Promise<Result<User, { username?: string; email?: string } | string>> {
-    const encryptedGithubAccessToken = this.encryptionService.encrypt(
-      command.githubAccessToken,
-    );
-    if (!encryptedGithubAccessToken.success)
-      return Result.fail(
-        "Erreur technique lors de la création de l'utilisateur.",
-      );
-
     const [userExistsByUsername, userExistsByEmail] = await Promise.all([
       this.userRepo.findByUsername(command.username),
       this.userRepo.findByEmail(command.email),
     ]);
+    console.log({ userExistsByUsername, userExistsByEmail });
     if (userExistsByUsername.success || userExistsByEmail.success)
       return Result.fail('Identifiants incorrects.');
 
-    const user: Result<User, { username?: string; email?: string } | string> =
-      UserFactory.create({
-        id: command.id,
-        username: command.username,
-        email: command.email,
-        avatarUrl: command.avatarUrl,
-        bio: command.bio,
-        githubUrl: command.githubUrl,
-        githubUserId: command.githubUserId,
-        githubAccessToken: encryptedGithubAccessToken.value,
-      });
-    if (!user.success) return Result.fail(user.error);
+    const usernameVo = Username.create(command.username);
+    const emailVo = Email.create(command.email);
+    const error: { username?: string; email?: string } = {};
+    if (!emailVo.success) error.email = emailVo.error;
+    if (!usernameVo.success) error.username = usernameVo.error;
+    if (!usernameVo.success || !emailVo.success) return Result.fail(error);
+
     const savedUser: Result<
       User,
       { username?: string; email?: string } | string
-    > = await this.userRepo.save(user.value);
+    > = await this.userRepo.create({
+      id: command.id,
+      username: command.username,
+      email: command.email,
+    });
     if (!savedUser.success)
       //TODO: faire un mapping des erreurs ?
       return Result.fail(

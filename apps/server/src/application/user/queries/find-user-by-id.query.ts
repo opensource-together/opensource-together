@@ -1,9 +1,12 @@
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { UserRepositoryPort } from '../ports/user.repository.port';
+import {
+  UserRepositoryPort,
+  USER_REPOSITORY_PORT,
+} from '../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
-import { USER_REPOSITORY_PORT } from '../ports/user.repository.port';
-import { Result } from '@shared/result';
-import { User } from '@domain/user/user.entity';
+import { Result } from '@/shared/result';
+import { User } from '@/domain/user/user.entity';
+
 export class FindUserByIdQuery implements IQuery {
   constructor(public readonly id: string) {}
 }
@@ -17,14 +20,13 @@ export class FindUserByIdQueryHandler
     private readonly userRepo: UserRepositoryPort,
   ) {}
 
-  async execute(
-    query: FindUserByIdQuery,
-  ): Promise<Result<User, { username?: string; email?: string } | string>> {
-    const result: Result<User, { username?: string; email?: string } | string> =
-      await this.userRepo.findById(query.id);
+  async execute(query: FindUserByIdQuery): Promise<Result<User, string>> {
+    const result = await this.userRepo.findById(query.id);
+
     if (!result.success) {
-      return Result.fail(result.error);
+      return Result.fail('User not found');
     }
+
     return Result.ok(result.value);
   }
 }

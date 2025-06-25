@@ -1,44 +1,42 @@
-import { User as DomainUser } from '@/domain/user/user.entity';
-import { UserFactory } from '@/domain/user/user.factory';
+import { User as DomainUser, User } from '@/domain/user/user.entity';
+import { Email } from '@/domain/user/email.vo';
+import { Username } from '@/domain/user/username.vo';
 import { Result } from '@/shared/result';
 import { User as PrismaUser } from '@prisma/client';
 
 export class PrismaUserMapper {
-  static toRepo(
-    user: DomainUser,
-  ): Result<PrismaUser, { username?: string; email?: string } | string> {
+  static toRepo(user: DomainUser): Result<PrismaUser, string> {
     try {
       const toRepo = {
-        id: user.getId(),
-        username: user.getUsername(),
-        email: user.getEmail(),
-        avatarUrl: user.getAvatarUrl(),
-        bio: user.getBio(),
-        githubUrl: user.getGithubUrl(),
-        githubUserId: user.getGithubUserId(),
-        githubAccessToken: user.getGithubAccessToken(),
-        createdAt: user.getCreatedAt(),
-        updatedAt: user.getUpdatedAt(),
+        id: user.getState().id,
+        username: user.getState().username,
+        email: user.getState().email,
       };
-      return Result.ok(toRepo);
+      return Result.ok(toRepo as PrismaUser);
     } catch (error) {
       return Result.fail(`Error mapping user to repository format : ${error}`);
     }
   }
 
   static toDomain(prismaUser: PrismaUser): Result<DomainUser, string> {
-    const userResult = UserFactory.create({
+    const username = Username.create(prismaUser.username);
+    const email = Email.create(prismaUser.email);
+    if (!username.success)
+      return Result.fail(
+        "Une erreur est survenue lors de la récupération des données de l'utilisateur",
+      );
+    if (!email.success)
+      return Result.fail(
+        "Une erreur est survenue lors de la récupération des données de l'utilisateur",
+      );
+    const userResult = User.reconstitute({
       id: prismaUser.id,
-      username: prismaUser.username,
-      email: prismaUser.email,
-      avatarUrl: prismaUser.avatarUrl ?? '',
-      bio: prismaUser.bio ?? '',
-      githubUrl: prismaUser.githubUrl ?? '',
-      githubUserId: prismaUser.githubUserId ?? '',
-      githubAccessToken: prismaUser.githubAccessToken ?? '',
+      username: username.value,
+      email: email.value,
+      createdAt: prismaUser.createdAt,
+      updatedAt: prismaUser.updatedAt,
     });
-    if (!userResult.success) return Result.fail('Invalid user data');
 
-    return Result.ok(userResult.value);
+    return Result.ok(userResult);
   }
 }

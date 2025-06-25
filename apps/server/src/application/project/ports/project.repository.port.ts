@@ -10,6 +10,7 @@ export interface ProjectRepositoryPort {
     project: UpdateProjectInputsDto,
     userId: string,
   ): Promise<Result<Project>>;
+  deleteProjectById(id: string, ownerId: string): Promise<Result<boolean>>;
   findProjectById(id: string): Promise<Result<Project | null>>;
   findProjectByFilters(
     filters: ProjectFilterInputsDto,
