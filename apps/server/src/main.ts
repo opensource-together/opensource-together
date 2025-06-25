@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
@@ -16,6 +17,18 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // Activation de la validation automatique des DTOs
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Supprime les propriétés non décorées
+      forbidNonWhitelisted: true, // Lance une erreur si des propriétés non autorisées sont présentes
+      transform: true, // Transforme automatiquement les types (ex: string vers number)
+    }),
+  );
+
+  console.log('Test');
+
+  app.useGlobalFilters(new SuperTokensExceptionFilter());
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(
     new AllExceptionsFilter(httpAdapter),

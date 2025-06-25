@@ -59,7 +59,7 @@ export class PrismaProjectMapper {
     prismaProject: PrismaProjectWithIncludes,
   ): Result<DomainProject> {
     // Transformer les techStacks (relation existante)
-    const techStacksResult = TechStackFactory.createMany(
+    const techStacksResult = TechStackFactory.fromPersistence(
       prismaProject.techStacks,
     );
     if (!techStacksResult.success) return Result.fail(techStacksResult.error);

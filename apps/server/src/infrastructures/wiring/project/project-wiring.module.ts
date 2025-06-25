@@ -4,6 +4,8 @@ import { PrismaProjectRepository } from '@/infrastructures/repositories/project/
 import { RepositoryModule } from '@infrastructures/repositories/repository.module';
 import { projectCommandsContainer } from '@/application/project/commands/project.command';
 import { projectQueriesContainer } from '@/application/project/queries/project.queries';
+import { projectRoleCommandsContainer } from '@/application/projectRole/commands/projectRole.command';
+
 @Module({
   imports: [RepositoryModule],
   providers: [
@@ -13,6 +15,7 @@ import { projectQueriesContainer } from '@/application/project/queries/project.q
     },
     ...projectCommandsContainer,
     ...projectQueriesContainer,
+    ...projectRoleCommandsContainer,
   ],
   exports: [],
 })

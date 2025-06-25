@@ -4,12 +4,4 @@ export class TechStackDto {
   @IsString()
   @IsNotEmpty()
   id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  iconUrl: string;
 }

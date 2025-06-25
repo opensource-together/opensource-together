@@ -1,5 +1,8 @@
-import { IsString, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { TechStackDto } from './TechStackDto.request';
+import { TeamMemberDto } from './TeamMemberDto.request';
+import { UpdateProjectRoleDto } from '../../projectRole/dto/UpdateProjectRoleDto.request';
+import { Type } from 'class-transformer';
 
 export class UpdateProjectDtoRequest {
   @IsString()
@@ -12,17 +15,31 @@ export class UpdateProjectDtoRequest {
 
   @IsString()
   @IsOptional()
-  link: string;
-
-  @IsArray()
-  @IsOptional()
-  projectRoles: object[];
+  difficulty: 'easy' | 'medium' | 'hard';
 
   @IsString()
   @IsOptional()
-  status: 'PUBLISHED' | 'DRAFT';
+  link: string;
+
+  @IsString()
+  @IsOptional()
+  githubLink: string;
 
   @IsArray()
   @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => TechStackDto)
   techStacks: TechStackDto[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => TeamMemberDto)
+  projectMembers: TeamMemberDto[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProjectRoleDto)
+  projectRoles: UpdateProjectRoleDto[];
 }
