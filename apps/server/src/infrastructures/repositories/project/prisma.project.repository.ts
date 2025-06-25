@@ -8,7 +8,6 @@ import { PrismaProjectMapper } from './prisma.project.mapper';
 import { UpdateProjectInputsDto } from '@/application/dto/inputs/update-project-inputs.dto';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 import { Prisma } from '@prisma/client';
-import { UpdateProjectRoleInputsDto } from '@/application/dto/inputs/update-project-role-inputs.dto';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
@@ -74,7 +73,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       // Utilisation d'une transaction pour garantir l'atomicité
       return await this.prisma.$transaction(async (tx) => {
         // 1. Mise à jour des informations de base du projet
-        let updatedProject = await tx.project.update({
+        await tx.project.update({
           where: { id },
           data: {
             title: payload.title?.success
@@ -91,20 +90,13 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
         // 2. Mise à jour des techStacks si nécessaire
         if (payload.techStacks) {
-          updatedProject = await tx.project.update({
+          await tx.project.update({
             where: { id },
             data: {
               techStacks: {
                 set: [], // On repart à zéro
                 connect: payload.techStacks.map((ts) => ({ id: ts.id })),
               },
-            },
-            include: {
-              techStacks: true,
-              projectRoles: {
-                include: { skillSet: true },
-              },
-              projectMembers: true,
             },
           });
         }

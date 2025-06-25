@@ -63,7 +63,7 @@ export class ProjectRoleController {
     @Param('roleId') roleId: string,
     @Body() roleData: UpdateProjectRoleDto,
   ) {
-    const result = await this.commandBus.execute(
+    const result: Result<ProjectRole> = await this.commandBus.execute(
       new UpdateProjectRoleCommand(projectId, roleId, ownerId, {
         roleTitle: roleData.roleTitle,
         description: roleData.description,
@@ -97,7 +97,7 @@ export class ProjectRoleController {
     @Param('projectId') projectId: string,
     @Param('roleId') roleId: string,
   ) {
-    const result = await this.commandBus.execute(
+    const result: Result<boolean> = await this.commandBus.execute(
       new DeleteProjectRoleCommand(projectId, roleId, ownerId),
     );
 

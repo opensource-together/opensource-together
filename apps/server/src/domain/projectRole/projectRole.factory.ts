@@ -1,4 +1,3 @@
-import { TechStack } from '@/domain/techStack/techstack.entity';
 import { ProjectRole } from './projectRole.entity';
 import { Result } from '@/shared/result';
 import { TechStackFactory } from '@/domain/techStack/techStack.factory';
@@ -108,6 +107,10 @@ export class ProjectRoleFactory {
         errors.push(`Role ${prismaRole.id}: ${error}`);
         continue; // Passer au rôle suivant
       }
+    }
+
+    if (errors.length > 0) {
+      return Result.fail(errors.join(', '));
     }
 
     return Result.ok(projectRoles);

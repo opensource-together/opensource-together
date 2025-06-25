@@ -1,5 +1,4 @@
 import { ProjectRole as DomainProjectRole } from '@/domain/projectRole/projectRole.entity';
-import { ProjectRoleFactory } from '@/domain/projectRole/projectRole.factory';
 import { Result } from '@/shared/result';
 import {
   ProjectRole as PrismaProjectRole,

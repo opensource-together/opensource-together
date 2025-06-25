@@ -13,9 +13,6 @@ export class CreateProjectRoleDto {
   @IsNotEmpty()
   roleTitle: string;
 
-  // @IsString()
-  // projectId: string;
-
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TechStackDto)
