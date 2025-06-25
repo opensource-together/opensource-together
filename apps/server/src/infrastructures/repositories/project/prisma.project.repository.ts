@@ -51,7 +51,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         }
       }
       // Catch any other errors that are not PrismaClientKnownRequestError
-      return Result.fail(`Unknown error during project creation: ${error}`);
+      return Result.fail(`Unknown error during project creation`);
     }
   }
 
