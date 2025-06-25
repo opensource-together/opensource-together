@@ -3,6 +3,9 @@ export class Username {
   private constructor(private readonly username: string) {}
 
   static create(username: string): Result<Username> {
+    if (!username) {
+      return Result.fail('Username cannot be undefined');
+    }
     if (username.length < 3) {
       return Result.fail('Username must be at least 3 characters long');
     }

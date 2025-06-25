@@ -1,0 +1,13 @@
+import { Result } from '@/shared/result';
+import { GithubInvitationDto } from './github-invitation.dto';
+
+export function toGithubInvitationDto(
+  data: unknown,
+): Result<GithubInvitationDto> {
+  try {
+    const invitation = data as GithubInvitationDto;
+    return Result.ok(invitation);
+  } catch (e) {
+    return Result.fail(e);
+  }
+}
