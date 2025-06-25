@@ -16,8 +16,8 @@ export class PrismaTechstackMapper {
   static toPrisma(techstack: TechStack): PrismaTechStack {
     return {
       id: techstack.getId(),
-      name: techstack.getName(),
-      iconUrl: techstack.getIconUrl(),
+      name: techstack.getName() || '',
+      iconUrl: techstack.getIconUrl() || '',
     };
   }
 }

@@ -41,7 +41,7 @@ export class CreateProjectCommandHandler
   async execute(
     createProjectCommand: CreateProjectCommand,
   ): Promise<Result<Project>> {
-    const techStacks = TechStackFactory.createMany(
+    const techStacks = TechStackFactory.createManyFromIds(
       createProjectCommand.techStacks,
     );
     if (!techStacks.success) {

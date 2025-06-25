@@ -15,7 +15,7 @@ export class ProjectRoleFactory {
     description: string;
     isFilled: boolean;
   }): Result<ProjectRole> {
-    const techStackResult = TechStackFactory.createMany(skillSet);
+    const techStackResult = TechStackFactory.createManyFromIds(skillSet);
     if (!techStackResult.success) {
       return Result.fail(techStackResult.error);
     }
