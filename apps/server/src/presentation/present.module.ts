@@ -3,7 +3,6 @@ import { ProjectModule } from './project/project.module';
 import { HealthModule } from './health/health.module';
 import { GithubModule } from './github/github.module';
 import { TechstackModule } from './techstack/techstack.module';
-import { ProfileModule } from './profile/profile.module';
 import { ProjectRoleModule } from './projectRole/projectRole.module';
 @Module({
   imports: [
@@ -11,7 +10,6 @@ import { ProjectRoleModule } from './projectRole/projectRole.module';
     HealthModule,
     ProjectRoleModule,
     TechstackModule,
-    ProfileModule,
     GithubModule,
   ],
   controllers: [],

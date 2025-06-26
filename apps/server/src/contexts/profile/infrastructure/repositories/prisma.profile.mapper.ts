@@ -2,9 +2,12 @@ import {
   Profile as PrismaProfile,
   UserSocialLink as PrismaSocialLink,
 } from '@prisma/client';
-import { Profile } from '@/domain/profile/profile.entity';
-import { SocialLink, SocialLinkType } from '@/domain/profile/social-link.vo';
-import { ProfileExperience } from '@/domain/profile/profile-experience.vo';
+import { Profile } from '@/contexts/profile/domain/profile.entity';
+import {
+  SocialLink,
+  SocialLinkType,
+} from '@/contexts/profile/domain/social-link.vo';
+import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 // Un type helper pour représenter un objet Prisma avec ses relations
 type RawPrismaProfile = PrismaProfile & {

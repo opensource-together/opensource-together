@@ -1,4 +1,4 @@
-import { FullProfileData } from '@/application/profile/queries/find-profile-by-id.query';
+import { FullProfileData } from '@/contexts/profile/use-cases/queries/find-profile-by-id.query';
 import { ProfileResponseDto } from '../dtos/profile-response.dto';
 
 export class ProfileMapper {

@@ -6,9 +6,9 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   FindProfileByIdQuery,
   FullProfileData,
-} from '@/application/profile/queries/find-profile-by-id.query';
-import { ProfileResponseDto } from './dtos/profile-response.dto';
-import { ProfileMapper } from './mappers/profile.mapper';
+} from '@/contexts/profile/use-cases/queries/find-profile-by-id.query';
+import { ProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/profile-response.dto';
+import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/mappers/profile.mapper';
 
 @Controller('profile')
 export class ProfileController {

@@ -1,11 +1,14 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { ProfileRepositoryPort } from '../ports/profile.repository.port';
-import { Profile } from '@/domain/profile/profile.entity';
+import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { Result } from '@/shared/result';
-import { PROFILE_REPOSITORY_PORT } from '../ports/profile.repository.port';
+import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Inject } from '@nestjs/common';
-import { SocialLink, SocialLinkType } from '@/domain/profile/social-link.vo';
-import { ProfileExperience } from '@/domain/profile/profile-experience.vo';
+import {
+  SocialLink,
+  SocialLinkType,
+} from '@/contexts/profile/domain/social-link.vo';
+import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 export class CreateProfileCommand implements ICommand {
   public readonly userId: string;

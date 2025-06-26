@@ -1,4 +1,4 @@
-import { SocialLink } from '@/domain/profile/social-link.vo';
+import { SocialLink } from '@/contexts/profile/domain/social-link.vo';
 
 export type ProfileProjectDto = {
   name: string;

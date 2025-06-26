@@ -1,6 +1,6 @@
-import { ProfileExperience } from '@/domain/profile/profile-experience.vo';
-import { Profile } from '@/domain/profile/profile.entity';
-import { SocialLink } from '@/domain/profile/social-link.vo';
+import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
+import { Profile } from '@/contexts/profile/domain/profile.entity';
+import { SocialLink } from '@/contexts/profile/domain/social-link.vo';
 import { Result } from '@/shared/result';
 
 export const PROFILE_REPOSITORY_PORT = Symbol('ProfileRepository');

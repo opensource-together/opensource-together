@@ -6,6 +6,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { WiringModule } from '@infrastructures/wiring/wiring.module';
 import { PresentModule } from './presentation/present.module';
+import { ContextsModule } from './contexts/contexts.module';
 @Module({
   imports: [
     CqrsModule.forRoot(),
@@ -13,6 +14,7 @@ import { PresentModule } from './presentation/present.module';
       isGlobal: true,
     }),
     AuthModule,
+    ContextsModule,
     WiringModule,
     PresentModule,
   ],

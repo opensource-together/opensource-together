@@ -5,7 +5,7 @@ import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-use
 import { deleteUser } from 'supertokens-node';
 import { Result } from '@/shared/result';
 import { User } from '@/contexts/user/domain/user.entity';
-import { CreateProfileCommand } from '@/application/profile/commands/create-profile.command';
+import { CreateProfileCommand } from '@/contexts/profile/use-cases/commands/create-profile.command';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { CreateUserGhTokenCommand } from '@/application/github/commands/create-user-gh-token.command';
 import { UpdateUserGhTokenCommand } from '@/application/github/commands/update-user-gh-token.command';
