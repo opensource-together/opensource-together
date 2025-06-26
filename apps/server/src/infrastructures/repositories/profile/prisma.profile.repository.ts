@@ -1,7 +1,7 @@
 import { Profile } from '@/domain/profile/profile.entity';
 import { ProfileRepositoryPort } from '@/application/profile/ports/profile.repository.port';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/infrastructures/orm/prisma/prisma.service';
+import { PrismaService } from '@/orm/prisma/prisma.service';
 import { Result } from '@/shared/result';
 import { PrismaProfileMapper } from './prisma.profile.mapper';
 import { SocialLink } from '@/domain/profile/social-link.vo';

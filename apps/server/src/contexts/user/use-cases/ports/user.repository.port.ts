@@ -1,5 +1,5 @@
-import { User } from '@domain/user/user.entity';
-import { Result } from '@shared/result';
+import { User } from '@/contexts/user/domain/user.entity';
+import { Result } from '@/shared/result';
 export const USER_REPOSITORY_PORT = Symbol('UserRepository');
 export interface UserRepositoryPort {
   create(user: {

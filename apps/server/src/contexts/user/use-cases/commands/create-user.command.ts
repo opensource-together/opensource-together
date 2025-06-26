@@ -1,13 +1,13 @@
 import { Result } from '@shared/result';
-import { User } from '@domain/user/user.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 import {
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
 } from '../ports/user.repository.port';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { Username } from '@/domain/user/username.vo';
-import { Email } from '@/domain/user/email.vo';
+import { Username } from '@/contexts/user/domain/username.vo';
+import { Email } from '@/contexts/user/domain/email.vo';
 
 export class CreateUserCommand implements ICommand {
   constructor(

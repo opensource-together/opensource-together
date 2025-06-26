@@ -1,12 +1,12 @@
 import { ConfigService } from '@nestjs/config';
 import ThirdParty from 'supertokens-node/recipe/thirdparty';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateUserCommand } from '@/application/user/commands/create-user.command';
+import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
 import { deleteUser } from 'supertokens-node';
 import { Result } from '@/shared/result';
-import { User } from '@/domain/user/user.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 import { CreateProfileCommand } from '@/application/profile/commands/create-profile.command';
-import { DeleteUserCommand } from '@/application/user/commands/delete-user.command';
+import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { CreateUserGhTokenCommand } from '@/application/github/commands/create-user-gh-token.command';
 import { UpdateUserGhTokenCommand } from '@/application/github/commands/update-user-gh-token.command';
 

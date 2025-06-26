@@ -3,7 +3,7 @@ import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import {
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
-} from '@/application/user/ports/user.repository.port';
+} from '@/contexts/user/use-cases/ports/user.repository.port';
 import { Inject } from '@nestjs/common';
 
 export class DeleteUserCommand implements ICommand {

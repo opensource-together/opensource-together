@@ -8,10 +8,10 @@ import {
 import { Request } from 'express';
 import Session from 'supertokens-node/recipe/session';
 import { GithubAuthRequest } from '../types/github-auth-request.interface';
-import { USER_REPOSITORY_PORT } from '@/application/user/ports/user.repository.port';
+import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { EncryptionService } from '@/infrastructures/encryption/encryption.service';
 import { Octokit } from '@octokit/rest';
-import { UserRepositoryPort } from '@/application/user/ports/user.repository.port';
+import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/application/github/ports/user-github-credentials.repository.port';
 import { UserGitHubCredentialsRepositoryPort } from '@/application/github/ports/user-github-credentials.repository.port';
 

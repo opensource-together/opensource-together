@@ -1,7 +1,7 @@
 // apps/server/src/domain/user/user.entity.ts
 
-import { Username } from '@domain/user/username.vo';
-import { Email } from '@domain/user/email.vo';
+import { Username } from '@/contexts/user/domain/username.vo';
+import { Email } from '@/contexts/user/domain/email.vo';
 import { Result } from '@/shared/result';
 
 export class User {

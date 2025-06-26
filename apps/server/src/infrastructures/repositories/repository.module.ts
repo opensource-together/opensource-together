@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from '@infrastructures/orm/prisma/prisma.service';
-import { PrismaUserRepository } from '@/infrastructures/repositories/user/prisma.user.repository';
-import { USER_REPOSITORY_PORT } from '@/application/user/ports/user.repository.port';
+import { PrismaService } from '@/orm/prisma/prisma.service';
+import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { PrismaProjectRoleRepository } from './projectRoles/prisma.projectRole.repository';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/application/project/ports/projectRole.repository.port';
 import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/application/github/ports/user-github-credentials.repository.port';
@@ -10,17 +9,18 @@ import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/tecksta
 import { PrismaTechstackRepository } from '@/infrastructures/repositories/teckstack/prisma.techstack.repository';
 import { PrismaProfileRepository } from '@/infrastructures/repositories/profile/prisma.profile.repository';
 import { PROFILE_REPOSITORY_PORT } from '@/application/profile/ports/profile.repository.port';
+import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 
 @Module({
   providers: [
     PrismaService,
     {
-      provide: USER_REPOSITORY_PORT,
-      useClass: PrismaUserRepository,
-    },
-    {
       provide: PROJECT_ROLE_REPOSITORY_PORT,
       useClass: PrismaProjectRoleRepository,
+    },
+    {
+      provide: USER_REPOSITORY_PORT,
+      useClass: PrismaUserRepository,
     },
     {
       provide: USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,

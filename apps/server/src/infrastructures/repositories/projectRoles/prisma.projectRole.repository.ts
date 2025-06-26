@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectRoleRepositoryPort } from '@/application/project/ports/projectRole.repository.port';
-import { PrismaService } from '../../orm/prisma/prisma.service';
+import { PrismaService } from '@/orm/prisma/prisma.service';
 import { Result } from '@/shared/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CreateProjectRoleInputsDto } from '@/application/dto/inputs/create-project-role-inputs.dto';

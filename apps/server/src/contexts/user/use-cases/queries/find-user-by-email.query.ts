@@ -1,5 +1,5 @@
 import { UserRepositoryPort } from '../ports/user.repository.port';
-import { User } from '@domain/user/user.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { USER_REPOSITORY_PORT } from '../ports/user.repository.port';

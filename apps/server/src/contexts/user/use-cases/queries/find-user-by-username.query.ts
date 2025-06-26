@@ -3,7 +3,7 @@ import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { USER_REPOSITORY_PORT } from '../ports/user.repository.port';
 import { Result } from '@shared/result';
-import { User } from '@domain/user/user.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 export class FindUserByUsernameQuery implements IQuery {
   constructor(public readonly username: string) {}
 }

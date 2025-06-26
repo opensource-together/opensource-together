@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/infrastructures/orm/prisma/prisma.service';
+import { PrismaService } from '@/orm/prisma/prisma.service';
 import {
   UserGitHubCredentialsData,
   UserGitHubCredentialsRepositoryPort,

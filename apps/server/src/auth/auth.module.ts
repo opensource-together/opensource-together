@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SuperTokensModule } from 'supertokens-nestjs';
 import { RepositoryModule } from '@infrastructures/repositories/repository.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createSupertokensConfig } from '@infrastructures/auth/supertokens.config';
+import { createSupertokensConfig } from '@/auth/supertokens.config';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 

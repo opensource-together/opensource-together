@@ -1,11 +1,11 @@
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import { Result } from '@shared/result';
-import { Email } from '@domain/user/email.vo';
-import { Username } from '@domain/user/username.vo';
-import { UserExistQuery } from '@/application/user/queries/user-exist.query';
-import { CreateUserCommand } from '@/application/user/commands/create-user.command';
-import { User } from '@domain/user/user.entity';
-import { FindUserByUsernameQuery } from '@/application/user/queries/find-user-by-username.query';
+import { Email } from '@/contexts/user/domain/email.vo';
+import { Username } from '@/contexts/user/domain/username.vo';
+import { UserExistQuery } from '@/contexts/user/use-cases/queries/user-exist.query';
+import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
+import { User } from '@/contexts/user/domain/user.entity';
+import { FindUserByUsernameQuery } from '@/contexts/user/use-cases/queries/find-user-by-username.query';
 import { deleteUser } from 'supertokens-node';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';

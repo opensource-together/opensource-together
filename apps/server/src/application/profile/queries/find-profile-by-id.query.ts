@@ -3,10 +3,10 @@ import { Inject } from '@nestjs/common';
 import { ProfileRepositoryPort } from '../ports/profile.repository.port';
 import { PROFILE_REPOSITORY_PORT } from '../ports/profile.repository.port';
 import { Result } from '@/shared/result';
-import { USER_REPOSITORY_PORT } from '@/application/user/ports/user.repository.port';
-import { UserRepositoryPort } from '@/application/user/ports/user.repository.port';
+import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
+import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { Profile } from '@/domain/profile/profile.entity';
-import { User } from '@/domain/user/user.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 
 export type FullProfileData = {
   profile: Profile;

@@ -5,7 +5,7 @@ import {
 } from '../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
 import { Result } from '@/shared/result';
-import { User } from '@/domain/user/user.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 
 export class FindUserByIdQuery implements IQuery {
   constructor(public readonly id: string) {}
