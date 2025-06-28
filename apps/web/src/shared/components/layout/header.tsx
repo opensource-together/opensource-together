@@ -46,7 +46,7 @@ export default function Header() {
   }
 
   const handleCreate = () => {
-    router.push("/projects/new");
+    router.push("/projects/create");
   };
 
   const handleLogin = () => {
