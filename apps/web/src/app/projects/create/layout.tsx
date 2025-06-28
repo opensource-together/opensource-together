@@ -43,5 +43,5 @@ export default function ProjectCreateLayout({
     }
   }, [pathname, formData, router]);
 
-  return <div className="min-h-screen">{children}</div>;
+  return <>{children}</>;
 }

@@ -9,7 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
-import GithubLink from "../logos/github-link";
+import Icon from "../ui/icon";
 
 interface NavLinkProps {
   href: string;
@@ -46,7 +46,7 @@ export default function Header() {
   }
 
   const handleCreate = () => {
-    router.push("/projects/new");
+    router.push("/projects/create");
   };
 
   const handleLogin = () => {
@@ -115,32 +115,35 @@ export default function Header() {
           My Projects
         </NavLink>
 
-        <div className="flex items-center justify-center space-x-6 py-2">
-          <span className="text-sm font-medium">Star Us</span>
-          <GithubLink url="https://github.com/opensource-together/opensource-together" />
-        </div>
+        <Link
+          href="https://github.com/opensource-together/opensource-together"
+          target="_blank"
+        >
+          <Button
+            variant="outline"
+            className="flex items-center font-medium shadow-none"
+          >
+            Star Us <Icon name="github" size="md" />
+          </Button>
+        </Link>
       </nav>
 
+      {/* Desktop */}
       <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium">Star Us</span>
-          <GithubLink
-            className="flex items-center gap-2 font-medium"
-            url="https://github.com/opensource-together/opensource-together"
-          />
-        </div>
+        <Link href="https://github.com/opensource-together" target="_blank">
+          <Button
+            variant="outline"
+            className="flex items-center font-medium shadow-none"
+          >
+            Star Us <Icon name="github" size="md" />
+          </Button>
+        </Link>
         {isAuthenticated ? (
           <>
             <Button onClick={handleCreate}>
               <span className="hidden sm:inline">Créer un Projet</span>
               <span className="inline sm:hidden">Nouveau projet</span>
-              <Image
-                src="/icons/cross-icon.svg"
-                alt="crossIcon"
-                width={11}
-                height={11}
-                className="ml-1.5"
-              />
+              <Icon name="cross" size="xs" className="ml-1.5" />
             </Button>
 
             <div className="flex items-center space-x-2">
@@ -160,7 +163,7 @@ export default function Header() {
                 <span className="text-sm font-medium">{currentUser?.name}</span>
               </button>
 
-              <Button variant="outline" size="sm" onClick={handleLogout}>
+              <Button variant="outline" onClick={handleLogout}>
                 Déconnexion
               </Button>
             </div>
@@ -168,13 +171,7 @@ export default function Header() {
         ) : (
           <Button onClick={handleLogin}>
             <span className="hidden sm:inline">Créer un Projet</span>
-            <Image
-              src="/icons/cross-icon.svg"
-              alt="crossIcon"
-              width={11}
-              height={11}
-              className="ml-1.5"
-            />
+            <Icon name="cross" size="xs" className="ml-1.5" />
           </Button>
         )}
       </section>
@@ -184,13 +181,7 @@ export default function Header() {
         <div className="mt-3 flex w-full justify-center md:hidden">
           <Button onClick={handleCreate} className="w-full max-w-[220px]">
             New Project{" "}
-            <Image
-              src="/icons/cross-icon.svg"
-              alt="crossIcon"
-              width={11}
-              height={11}
-              className="ml-0 align-middle"
-            />
+            <Icon name="cross" size="xs" className="ml-0 align-middle" />
           </Button>
         </div>
       )}

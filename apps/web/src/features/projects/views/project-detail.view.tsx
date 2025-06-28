@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
@@ -36,15 +34,8 @@ export default function ProjectDetailView({
             <ProjectLatestUpdate />
             <div>
               <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
-                <p className="items-centers flex gap-1 text-lg font-medium">
-                  Rôles Disponibles{" "}
-                  <Image
-                    src="/icons/people.svg"
-                    className="mt-1"
-                    alt="peopleicon"
-                    width={14}
-                    height={14}
-                  />{" "}
+                <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
+                  Rôles Disponibles
                 </p>
                 <ProjectFilters
                   filters={[

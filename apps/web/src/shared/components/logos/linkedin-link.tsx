@@ -1,16 +1,21 @@
 import Link from "next/link";
-import { RxLinkedinLogo } from "react-icons/rx";
+
+import { Icon, IconSize, IconVariant } from "../ui/icon";
 
 interface LinkedinLinkProps {
   url: string;
-  size?: number;
+  size?: IconSize;
+  variant?: IconVariant;
   className?: string;
+  interactive?: boolean;
 }
 
 export default function LinkedinLink({
   url,
-  size = 5,
-  className,
+  size = "md",
+  variant = "black",
+  className = "",
+  interactive = true,
 }: LinkedinLinkProps) {
   return (
     <Link
@@ -19,8 +24,11 @@ export default function LinkedinLink({
       target="_blank"
       aria-label="LinkedIn"
     >
-      <RxLinkedinLogo
-        className={`size-${size} transition-colors duration-200 hover:text-black/70`}
+      <Icon
+        name="linkedin"
+        size={size}
+        variant={variant}
+        interactive={interactive}
       />
     </Link>
   );

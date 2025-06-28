@@ -1,5 +1,7 @@
+import { IconName } from "@/shared/components/ui/icon";
+
 export type ProfileSocialLink = {
-  type: "github" | "twitter" | "linkedin" | "website";
+  type: IconName;
   url: string;
 };
 
@@ -30,7 +32,7 @@ export type ProfileExperience = {
 };
 
 export interface ProfileLink {
-  type: string;
+  type: IconName;
   url: string;
 }
 

@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { Icon } from "@/shared/components/ui/icon";
 import { getRoleBadgeVariant } from "@/shared/lib/utils/badges";
 
 import { Profile } from "../types/profile.type";
@@ -47,24 +48,18 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               {socialLinks.map((link) => (
                 <button key={link.type}>
                   <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <Image
-                      src={`/icons/${link.type}.svg`}
-                      alt={link.type}
-                      width={19}
-                      height={19}
+                    <Icon
+                      name={link.type}
+                      size="md"
+                      variant="black"
+                      interactive
                     />
                   </a>
                 </button>
               ))}
             </div>
             <Button className="font-normal">
-              Contact{" "}
-              <Image
-                src="/icons/discord-icon.svg"
-                alt="arrow-right"
-                width={15}
-                height={15}
-              />
+              Contact <Icon name="discord" size="md" variant="white" />
             </Button>
           </div>
         )}
