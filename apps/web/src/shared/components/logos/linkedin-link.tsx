@@ -1,25 +1,25 @@
 import Link from "next/link";
-import { RxGithubLogo } from "react-icons/rx";
+import { RxLinkedinLogo } from "react-icons/rx";
 
-interface GithubLinkProps {
+interface LinkedinLinkProps {
   url: string;
   size?: number;
   className?: string;
 }
 
-export default function GithubLink({
+export default function LinkedinLink({
   url,
   size = 5,
   className,
-}: GithubLinkProps) {
+}: LinkedinLinkProps) {
   return (
     <Link
       href={url}
       className={`flex items-center gap-1 text-sm tracking-tighter ${className}`}
       target="_blank"
-      aria-label="GitHub"
+      aria-label="LinkedIn"
     >
-      <RxGithubLogo
+      <RxLinkedinLogo
         className={`size-${size} transition-colors duration-200 hover:text-black/70`}
       />
     </Link>
