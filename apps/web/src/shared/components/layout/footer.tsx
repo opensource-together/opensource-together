@@ -10,7 +10,8 @@ import TwitterLink from "../logos/twitter-link";
 
 export default function Footer() {
   const pathname = usePathname();
-  const hideFooter = pathname.startsWith("/auth");
+  const hideFooter =
+    pathname.startsWith("/auth") || pathname.startsWith("/projects/create");
 
   const navigationLinks = [
     { name: "Services", href: "/services" },
