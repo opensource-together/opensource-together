@@ -86,8 +86,8 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   search: {
     default: "/icons/search.svg",
     gray: "/icons/search-gray.svg",
-    white: "/icons/search.svg",
-    black: "/icons/search.svg",
+    white: "/icons/search-white.svg",
+    black: "/icons/search-black.svg",
     filled: "/icons/search.svg",
     outline: "/icons/search.svg",
   },

@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Button } from "@/shared/components/ui/button";
+import Icon from "@/shared/components/ui/icon";
 
 interface FilterItemProps {
   label: string;
@@ -48,7 +49,9 @@ export default function FilterSearchBar() {
           </div>
         </div>
 
-        <Button className="px-4">Chercher un Projet</Button>
+        <Button className="px-4">
+          Chercher un Projet <Icon name="search" size="xs" variant="white" />
+        </Button>
       </div>
     </div>
   );
