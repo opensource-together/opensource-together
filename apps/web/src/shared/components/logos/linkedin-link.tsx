@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { RxLinkedinLogo } from "react-icons/rx";
 
 interface LinkedinLinkProps {
   url: string;
@@ -9,7 +9,7 @@ interface LinkedinLinkProps {
 
 export default function LinkedinLink({
   url,
-  size = 18,
+  size = 5,
   className,
 }: LinkedinLinkProps) {
   return (
@@ -19,11 +19,8 @@ export default function LinkedinLink({
       target="_blank"
       aria-label="LinkedIn"
     >
-      <Image
-        src="/icons/linkedin.svg"
-        alt="linkedin"
-        width={size}
-        height={size}
+      <RxLinkedinLogo
+        className={`size-${size} transition-colors duration-200 hover:text-black/70`}
       />
     </Link>
   );

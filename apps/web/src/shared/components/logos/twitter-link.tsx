@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { FaXTwitter } from "react-icons/fa6";
 
 interface TwitterLinkProps {
   url: string;
@@ -9,16 +9,13 @@ interface TwitterLinkProps {
 
 export default function TwitterLink({
   url,
-  size = 18,
+  size = 5,
   className,
 }: TwitterLinkProps) {
   return (
     <Link href={url} className={className} target="_blank" aria-label="Twitter">
-      <Image
-        src="/icons/twitter.svg"
-        alt="twitter"
-        width={size}
-        height={size}
+      <FaXTwitter
+        className={`size-${size} transition-colors duration-200 hover:text-black/70`}
       />
     </Link>
   );

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { RxGithubLogo } from "react-icons/rx";
 
 interface GithubLinkProps {
   url: string;
@@ -9,7 +9,7 @@ interface GithubLinkProps {
 
 export default function GithubLink({
   url,
-  size = 18,
+  size = 5,
   className,
 }: GithubLinkProps) {
   return (
@@ -19,7 +19,9 @@ export default function GithubLink({
       target="_blank"
       aria-label="GitHub"
     >
-      <Image src="/icons/github.svg" alt="github" width={size} height={size} />
+      <RxGithubLogo
+        className={`size-${size} transition-colors duration-200 hover:text-black/70`}
+      />
     </Link>
   );
 }
