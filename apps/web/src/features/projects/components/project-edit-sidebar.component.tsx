@@ -41,7 +41,7 @@ export default function ProjectEditSidebar({
       title: "Statistiques du projet",
       links: [
         {
-          icon: "/icons/black-star.svg",
+          icon: "/icons/star.svg",
           label: "Stars",
           value: stars,
         },

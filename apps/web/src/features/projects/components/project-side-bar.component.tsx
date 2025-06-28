@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Button } from "@/shared/components/ui/button";
+import { Icon } from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
@@ -45,31 +46,15 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           {title}
         </h1>
         <div className="flex items-center gap-1">
-          <Image
-            src="/icons/branch-git-fork.svg"
-            alt="forks"
-            width={11}
-            height={11}
-          />
+          <Icon name="fork" size="sm" variant="black" />
           <span className="text-xs text-black">{forks}</span>
         </div>
         <div className="flex items-center gap-1">
-          <Image
-            src="/icons/people-filled-in-black.svg"
-            alt="contributors"
-            width={12}
-            height={11}
-          />
+          <Icon name="people" size="sm" variant="black" />
           <span className="text-xs text-black">{contributors}</span>
         </div>
         <div className="mt-[1px] flex items-center gap-1">
-          <Image
-            src="/icons/star-filled-in-black.svg"
-            alt="stars"
-            width={11}
-            height={11}
-            className="mb-[2px]"
-          />
+          <Icon name="star" size="sm" variant="black" />
           <span className="text-xs text-black">{stars}</span>
         </div>
       </div>
@@ -91,12 +76,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           <Button variant="outline" className="flex-1" asChild>
             <a href={githubLink} target="_blank" rel="noopener noreferrer">
               Voir le Repo
-              <Image
-                src="/icons/github.svg"
-                alt="github"
-                width={16}
-                height={16}
-              />
+              <Icon name="github" size="sm" />
             </a>
           </Button>
         )}

@@ -1,21 +1,29 @@
 import Link from "next/link";
-import { FaXTwitter } from "react-icons/fa6";
+
+import { Icon, IconSize, IconVariant } from "../ui/icon";
 
 interface TwitterLinkProps {
   url: string;
-  size?: number;
+  size?: IconSize;
+  variant?: IconVariant;
   className?: string;
+  interactive?: boolean;
 }
 
 export default function TwitterLink({
   url,
-  size = 5,
-  className,
+  size = "md",
+  variant = "black",
+  className = "",
+  interactive = true,
 }: TwitterLinkProps) {
   return (
     <Link href={url} className={className} target="_blank" aria-label="Twitter">
-      <FaXTwitter
-        className={`size-${size} transition-colors duration-200 hover:text-black/70`}
+      <Icon
+        name="twitter"
+        size={size}
+        variant={variant}
+        interactive={interactive}
       />
     </Link>
   );

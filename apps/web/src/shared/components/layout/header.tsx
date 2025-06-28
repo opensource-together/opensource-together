@@ -10,6 +10,7 @@ import { Button } from "@/shared/components/ui/button";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import GithubLink from "../logos/github-link";
+import Icon from "../ui/icon";
 
 interface NavLinkProps {
   href: string;
@@ -134,13 +135,7 @@ export default function Header() {
             <Button onClick={handleCreate}>
               <span className="hidden sm:inline">Créer un Projet</span>
               <span className="inline sm:hidden">Nouveau projet</span>
-              <Image
-                src="/icons/cross-icon.svg"
-                alt="crossIcon"
-                width={11}
-                height={11}
-                className="ml-1.5"
-              />
+              <Icon name="cross" size="xs" className="ml-1.5" />
             </Button>
 
             <div className="flex items-center space-x-2">
@@ -168,13 +163,7 @@ export default function Header() {
         ) : (
           <Button onClick={handleLogin}>
             <span className="hidden sm:inline">Créer un Projet</span>
-            <Image
-              src="/icons/cross-icon.svg"
-              alt="crossIcon"
-              width={11}
-              height={11}
-              className="ml-1.5"
-            />
+            <Icon name="cross" size="xs" className="ml-1.5" />
           </Button>
         )}
       </section>
@@ -184,13 +173,7 @@ export default function Header() {
         <div className="mt-3 flex w-full justify-center md:hidden">
           <Button onClick={handleCreate} className="w-full max-w-[220px]">
             New Project{" "}
-            <Image
-              src="/icons/cross-icon.svg"
-              alt="crossIcon"
-              width={11}
-              height={11}
-              className="ml-0 align-middle"
-            />
+            <Icon name="cross" size="xs" className="ml-0 align-middle" />
           </Button>
         </div>
       )}

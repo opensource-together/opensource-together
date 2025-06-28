@@ -1,16 +1,21 @@
 import Link from "next/link";
-import { RxGithubLogo } from "react-icons/rx";
+
+import { Icon, IconSize, IconVariant } from "../ui/icon";
 
 interface GithubLinkProps {
   url: string;
-  size?: number;
+  size?: IconSize;
+  variant?: IconVariant;
   className?: string;
+  interactive?: boolean;
 }
 
 export default function GithubLink({
   url,
-  size = 5,
-  className,
+  size = "md",
+  variant = "black",
+  className = "",
+  interactive = true,
 }: GithubLinkProps) {
   return (
     <Link
@@ -19,8 +24,11 @@ export default function GithubLink({
       target="_blank"
       aria-label="GitHub"
     >
-      <RxGithubLogo
-        className={`size-${size} transition-colors duration-200 hover:text-black/70`}
+      <Icon
+        name="github"
+        size={size}
+        variant={variant}
+        interactive={interactive}
       />
     </Link>
   );

@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Badge } from "@/shared/components/ui/badge";
 import {
   ProjectCard,
@@ -19,6 +17,8 @@ import {
 } from "@/shared/components/ui/project-card";
 import { useVisibleRoles } from "@/shared/hooks/use-visible-roles";
 import { getRoleBadgeVariant } from "@/shared/lib/utils/badges";
+
+import { Icon } from "../ui/icon";
 
 interface ProjectCardProps {
   projectId?: string;
@@ -108,30 +108,15 @@ export default function ProjectCardComponent({
             )}
             <div className="ml-auto flex items-center justify-between space-x-2">
               <div className="flex items-center justify-center gap-1 text-xs">
-                <Image
-                  src="/icons/branch-git-fork.svg"
-                  alt="Branch"
-                  width={10}
-                  height={10}
-                />
+                <Icon name="fork" size="xs" variant="black" />
                 {communityStats?.forks || 0}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
-                <Image
-                  src="/icons/people-filled-in-black.svg"
-                  alt="People"
-                  width={10}
-                  height={10}
-                />
+                <Icon name="people" size="xs" variant="black" />
                 {communityStats?.contributors || 0}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
-                <Image
-                  src="/icons/star-filled-in-black.svg"
-                  alt="Star"
-                  width={10}
-                  height={10}
-                />
+                <Icon name="star" size="xs" variant="black" />
                 {communityStats?.stars || 0}
               </div>
             </div>
