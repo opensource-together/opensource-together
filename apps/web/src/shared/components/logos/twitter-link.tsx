@@ -9,7 +9,7 @@ interface TwitterLinkProps {
 
 export default function TwitterLink({
   url,
-  size = 18,
+  size = 20,
   className,
 }: TwitterLinkProps) {
   return (

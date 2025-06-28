@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import GithubLink from "../logos/github-link";
+import LinkedinLink from "../logos/linkedin-link";
 import TwitterLink from "../logos/twitter-link";
 
 export default function Footer() {
@@ -33,12 +34,13 @@ export default function Footer() {
               <p className="mt-8">
                 Trouvez des projets, postulez à des rôles, collaborez,
                 construisons, <br /> partageons et grandissons ensemble grâce à
-                l'open source
+                l'open source.
               </p>
             </div>
-            <div className="flex items-center gap-3 pt-2">
+            <div className="mt-8 flex items-center gap-3">
               <TwitterLink url="https://x.com/OpenSTogether" />
               <GithubLink url="https://github.com/opensource-together" />
+              <LinkedinLink url="https://www.linkedin.com/company/opensource-together" />
             </div>
           </div>
 

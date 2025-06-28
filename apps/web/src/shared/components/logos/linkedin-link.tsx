@@ -1,25 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
 
-interface GithubLinkProps {
+interface LinkedinLinkProps {
   url: string;
   size?: number;
   className?: string;
 }
 
-export default function GithubLink({
+export default function LinkedinLink({
   url,
   size = 20,
   className,
-}: GithubLinkProps) {
+}: LinkedinLinkProps) {
   return (
     <Link
       href={url}
       className={`flex items-center gap-1 text-sm tracking-tighter ${className}`}
       target="_blank"
-      aria-label="GitHub"
+      aria-label="LinkedIn"
     >
-      <Image src="/icons/github.svg" alt="github" width={size} height={size} />
+      <Image
+        src="/icons/linkedin.svg"
+        alt="linkedin"
+        width={size}
+        height={size}
+      />
     </Link>
   );
 }
