@@ -118,7 +118,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   "arrow-up-right": {
     default: "/icons/arrow-up-right.svg",
     gray: "/icons/arrow-up-right-gray.svg",
-    white: "/icons/arrow-up-right.svg",
+    white: "/icons/arrow-up-right-white.svg",
     black: "/icons/arrow-up-right.svg",
     filled: "/icons/arrow-up-right.svg",
     outline: "/icons/arrow-up-right.svg",
