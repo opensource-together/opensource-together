@@ -19,10 +19,10 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="mx-14 rounded-t-4xl bg-neutral-50 tracking-tighter">
+    <footer className="mx-4 rounded-t-4xl bg-neutral-50 tracking-tighter md:mx-14">
       {/* Main Footer Content */}
-      <div className="mx-auto p-12 pr-20">
-        <div className="flex justify-between">
+      <div className="mx-auto p-8 md:p-12 md:pr-20">
+        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between lg:gap-0">
           <div className="space-y-4 lg:col-span-1">
             <div className="space-y-3">
               <Image
@@ -30,14 +30,15 @@ export default function Footer() {
                 alt="OpenSource Together"
                 width={190}
                 height={40}
+                className="w-40 md:w-auto"
               />
-              <p className="mt-8">
+              <p className="mt-4 text-sm md:mt-8 md:text-base">
                 Trouvez des projets, postulez à des rôles, collaborez,
-                construisons, <br /> partageons et grandissons ensemble grâce à
-                l'open source.
+                construisons, <br className="hidden md:block" /> partageons et
+                grandissons ensemble grâce à l'open source.
               </p>
             </div>
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-6 flex items-center gap-3 md:mt-8">
               <TwitterLink url="https://x.com/OpenSTogether" />
               <GithubLink url="https://github.com/opensource-together" />
               <LinkedinLink url="https://www.linkedin.com/company/opensource-together" />
@@ -45,7 +46,7 @@ export default function Footer() {
           </div>
 
           {/* Footer links */}
-          <div className="mt-3 flex gap-20">
+          <div className="mt-3 flex gap-8 sm:gap-20">
             <div className="space-y-4">
               <h3 className="font-medium">Navigation</h3>
               <ul className="space-y-3">
