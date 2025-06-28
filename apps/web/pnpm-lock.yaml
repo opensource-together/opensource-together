@@ -21,14 +21,14 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3(@types/react@19.0.12)(react@18.3.1)
       '@tanstack/react-query':
-        specifier: ^5.74.11
-        version: 5.75.6(react@18.3.1)
+        specifier: ^5.81.5
+        version: 5.81.5(react@18.3.1)
       '@tanstack/react-query-devtools':
         specifier: ^5.76.1
-        version: 5.76.1(@tanstack/react-query@5.75.6(react@18.3.1))(react@18.3.1)
+        version: 5.76.1(@tanstack/react-query@5.81.5(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query-next-experimental':
         specifier: ^5.77.0
-        version: 5.77.0(@tanstack/react-query@5.75.6(react@18.3.1))(next@15.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 5.77.0(@tanstack/react-query@5.81.5(react@18.3.1))(next@15.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^5.2.2
         version: 5.2.2(prettier@3.5.3)
@@ -56,9 +56,6 @@ importers:
       react-hook-form:
         specifier: ^7.56.3
         version: 7.56.4(react@18.3.1)
-      react-icons:
-        specifier: ^5.5.0
-        version: 5.5.0(react@18.3.1)
       sonner:
         specifier: ^2.0.3
         version: 2.0.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -826,8 +823,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  '@tanstack/query-core@5.75.6':
-    resolution: {integrity: sha512-r+WQ/z30KZF0TFkzCT7C8gWgrLuv7/t+gEjqeEp69JAIUS/omuieaHeIkoscjEcT6yaWebXGTyjdiIxJkYzEXg==}
+  '@tanstack/query-core@5.81.5':
+    resolution: {integrity: sha512-ZJOgCy/z2qpZXWaj/oxvodDx07XcQa9BF92c0oINjHkoqUPsmm3uG08HpTaviviZ/N9eP1f9CM7mKSEkIo7O1Q==}
 
   '@tanstack/query-devtools@5.76.0':
     resolution: {integrity: sha512-1p92nqOBPYVqVDU0Ua5nzHenC6EGZNrLnB2OZphYw8CNA1exuvI97FVgIKON7Uug3uQqvH/QY8suUKpQo8qHNQ==}
@@ -845,8 +842,8 @@ packages:
       next: ^13 || ^14 || ^15
       react: ^18 || ^19
 
-  '@tanstack/react-query@5.75.6':
-    resolution: {integrity: sha512-0d97uvpeHUNN5eTEsJzYgxLgAEyUM+XaJAWFFAaXH+dQgDN//TTDNbei/YVzN5BUJcWcnQ7YaQDtLLzSe+IvTg==}
+  '@tanstack/react-query@5.81.5':
+    resolution: {integrity: sha512-lOf2KqRRiYWpQT86eeeftAGnjuTR35myTP8MXyvHa81VlomoAWNEd8x5vkcAfQefu0qtYCvyqLropFZqgI2EQw==}
     peerDependencies:
       react: ^18 || ^19
 
@@ -2078,11 +2075,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
-  react-icons@5.5.0:
-    resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
-    peerDependencies:
-      react: '*'
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -3046,25 +3038,25 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tanstack/query-core@5.75.6': {}
+  '@tanstack/query-core@5.81.5': {}
 
   '@tanstack/query-devtools@5.76.0': {}
 
-  '@tanstack/react-query-devtools@5.76.1(@tanstack/react-query@5.75.6(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-query-devtools@5.76.1(@tanstack/react-query@5.81.5(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/query-devtools': 5.76.0
-      '@tanstack/react-query': 5.75.6(react@18.3.1)
+      '@tanstack/react-query': 5.81.5(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query-next-experimental@5.77.0(@tanstack/react-query@5.75.6(react@18.3.1))(next@15.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-query-next-experimental@5.77.0(@tanstack/react-query@5.81.5(react@18.3.1))(next@15.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@tanstack/react-query': 5.75.6(react@18.3.1)
+      '@tanstack/react-query': 5.81.5(react@18.3.1)
       next: 15.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query@5.75.6(react@18.3.1)':
+  '@tanstack/react-query@5.81.5(react@18.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.75.6
+      '@tanstack/query-core': 5.81.5
       react: 18.3.1
 
   '@trivago/prettier-plugin-sort-imports@5.2.2(prettier@3.5.3)':
@@ -4379,10 +4371,6 @@ snapshots:
       scheduler: 0.23.2
 
   react-hook-form@7.56.4(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
-  react-icons@5.5.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
