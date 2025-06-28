@@ -9,7 +9,7 @@ interface GithubLinkProps {
 
 export default function GithubLink({
   url,
-  size = 20,
+  size = 18,
   className,
 }: GithubLinkProps) {
   return (

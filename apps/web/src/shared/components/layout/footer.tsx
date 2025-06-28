@@ -21,7 +21,7 @@ export default function Footer() {
   return (
     <footer className="mx-4 rounded-t-4xl bg-neutral-50 tracking-tighter md:mx-14">
       {/* Main Footer Content */}
-      <div className="mx-auto p-8 md:p-12 md:pr-20">
+      <div className="mx-auto p-8 md:p-12 md:pr-24">
         <div className="flex flex-col gap-8 lg:flex-row lg:justify-between lg:gap-0">
           <div className="space-y-4 lg:col-span-1">
             <div className="space-y-3">
@@ -32,7 +32,7 @@ export default function Footer() {
                 height={40}
                 className="w-40 md:w-auto"
               />
-              <p className="mt-4 text-sm md:mt-8 md:text-base">
+              <p className="mt-4 text-sm md:mt-5 md:text-base">
                 Trouvez des projets, postulez à des rôles, collaborez,
                 construisons, <br className="hidden md:block" /> partageons et
                 grandissons ensemble grâce à l'open source.
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
 
           {/* Footer links */}
-          <div className="mt-3 flex gap-8 sm:gap-20">
+          <div className="flex gap-8 sm:gap-20">
             <div className="space-y-4">
               <h3 className="font-medium">Navigation</h3>
               <ul className="space-y-3">

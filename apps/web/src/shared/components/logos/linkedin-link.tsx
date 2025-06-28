@@ -9,7 +9,7 @@ interface LinkedinLinkProps {
 
 export default function LinkedinLink({
   url,
-  size = 20,
+  size = 18,
   className,
 }: LinkedinLinkProps) {
   return (
