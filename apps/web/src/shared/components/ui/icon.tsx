@@ -158,7 +158,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   discord: {
     default: "/icons/discord-icon.svg",
     gray: "/icons/discord-icon.svg",
-    white: "/icons/discord-icon.svg",
+    white: "/icons/discord-white.svg",
     black: "/icons/discord-icon.svg",
     filled: "/icons/discord-icon.svg",
     outline: "/icons/discord-icon.svg",
