@@ -9,6 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
+import { Avatar } from "../ui/avatar";
 import Icon from "../ui/icon";
 
 interface NavLinkProps {
@@ -151,16 +152,15 @@ export default function Header() {
                 onClick={handleProfile}
                 className="flex items-center space-x-2 hover:opacity-80"
               >
-                {currentUser?.avatarUrl && (
-                  <Image
-                    src={currentUser.avatarUrl}
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
-                )}
-                <span className="text-sm font-medium">{currentUser?.name}</span>
+                <Avatar
+                  src={currentUser?.avatarUrl}
+                  name={currentUser?.name}
+                  alt={currentUser?.name}
+                  size="sm"
+                />
+                <span className="text-sm font-medium tracking-tighter">
+                  {currentUser?.name}
+                </span>
               </button>
 
               <Button variant="outline" onClick={handleLogout}>
