@@ -71,27 +71,29 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>
       <div className="flex-grow border-t border-black/5" />
 
-      <div className="mt-10 mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-medium tracking-tighter">
-          Compétences techniques
-        </h3>
-      </div>
+      {skills.map((skill, index) => (
+        <div key={index}>
+          <div className="mt-10 mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-medium tracking-tighter">
+              Compétences techniques
+            </h3>
+          </div>
 
-      <div className="flex flex-wrap gap-2">
-        {skills.map((skill, index) => (
-          <Badge
-            key={index}
-            style={{
-              color: skill.badges[0].color,
-              backgroundColor: skill.badges[0].bgColor,
-            }}
-            variant={getRoleBadgeVariant(skill.name)}
-            className="text-xs"
-          >
-            {skill.name}
-          </Badge>
-        ))}
-      </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge
+              key={index}
+              style={{
+                color: skill.badges[0].color,
+                backgroundColor: skill.badges[0].bgColor,
+              }}
+              variant={getRoleBadgeVariant(skill.name)}
+              className="text-xs"
+            >
+              {skill.name}
+            </Badge>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
