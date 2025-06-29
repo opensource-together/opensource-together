@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
+import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -22,6 +23,13 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   // Récupérer le lien GitHub
   const githubLink = socialLinks.find((link) => link.type === "github")?.url;
+
+  // Données fictives des contributeurs pour tester l'Avatar
+  const contributorsData = [
+    { name: "Byron M", avatar: "/icons/exemplebyronIcon.svg" },
+    { name: "Killian C", avatar: "/icons/killiancodes-icon.jpg" },
+    { name: "P2aco Dev", avatar: "/icons/p2aco-icon.png" },
+  ];
 
   return (
     <div className="flex flex-col gap-5 bg-white">
@@ -112,32 +120,31 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
       {/* Contributors Avatars */}
       <div>
+        <h3 className="mb-3 text-sm font-medium tracking-tighter text-black/80">
+          Contributeurs ({contributors})
+        </h3>
         <div className="flex gap-2">
-          {Array.from({ length: Math.min(contributors, 3) }).map((_, index) => {
-            // Alterner entre les différentes icônes de contributeurs
-            const contributorIcons = [
-              "/icons/exemplebyronIcon.svg",
-              "/icons/killiancodes-icon.jpg",
-              "/icons/p2aco-icon.png",
-              "/icons/empty-project.svg",
-            ];
-            const iconSrc = contributorIcons[index % contributorIcons.length];
+          {Array.from({ length: Math.min(contributors, 5) }).map((_, index) => {
+            const contributor =
+              contributorsData[index % contributorsData.length];
 
             return (
-              <div
+              <Avatar
                 key={index}
-                className="h-8 w-8 overflow-hidden rounded-full bg-gray-300"
-              >
-                <Image
-                  src={iconSrc}
-                  alt={`Contributor ${index + 1}`}
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-              </div>
+                src={contributor.avatar}
+                name={contributor.name}
+                alt={contributor.name}
+                size="sm"
+              />
             );
           })}
+
+          {/* Indicateur "+X autres" si plus de 5 contributeurs */}
+          {contributors > 5 && (
+            <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
+              +{contributors - 5}
+            </div>
+          )}
         </div>
       </div>
     </div>

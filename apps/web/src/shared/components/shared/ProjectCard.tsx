@@ -5,7 +5,6 @@ import {
   ProjectCardDivider,
   ProjectCardFooter,
   ProjectCardHeader,
-  ProjectCardImage,
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardTitle,
@@ -15,6 +14,7 @@ import {
 } from "@/shared/components/ui/project-card";
 
 import StackLogo from "../logos/stack-logo";
+import { Avatar } from "../ui/avatar";
 import { Icon } from "../ui/icon";
 
 interface ProjectCardProps {
@@ -41,21 +41,25 @@ interface ProjectCardProps {
 
 export default function ProjectCardComponent({
   projectId = "1",
-  title = "LeetGrind",
-  description = "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algorithme dans une ambiance motivante",
+  title = "",
+  description = "",
   techStack = [],
   showTechStack = true,
   showViewProject = true,
   className = "",
-  image,
-  authorName,
-  communityStats,
+  image = "",
+  authorName = "",
+  communityStats = {
+    forks: 0,
+    contributors: 0,
+    stars: 0,
+  },
 }: ProjectCardProps) {
   return (
     <ProjectCard className={className}>
       <ProjectCardHeader>
         <ProjectCardLeftGroup>
-          {image && <ProjectCardImage src={image} alt={`${title} icon`} />}
+          <Avatar src={image} name={authorName} alt={authorName} size="lg" />
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
             <p className="text-muted-foreground text-sm tracking-tighter">
@@ -66,9 +70,7 @@ export default function ProjectCardComponent({
         {showViewProject && <ProjectCardViewLink projectId={projectId} />}
       </ProjectCardHeader>
       <ProjectCardContent>
-        {description && (
-          <ProjectCardDescription>{description}</ProjectCardDescription>
-        )}
+        <ProjectCardDescription>{description}</ProjectCardDescription>
         <ProjectCardDivider />
         {showTechStack && (
           <ProjectCardFooter>
@@ -90,15 +92,15 @@ export default function ProjectCardComponent({
             <div className="ml-auto flex items-center justify-between space-x-2">
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="fork" size="xs" variant="black" />
-                {communityStats?.forks || 0}
+                {communityStats.forks}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="people" size="xs" variant="black" />
-                {communityStats?.contributors || 0}
+                {communityStats.contributors}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="star" size="xs" variant="black" />
-                {communityStats?.stars || 0}
+                {communityStats.stars}
               </div>
             </div>
           </ProjectCardFooter>
