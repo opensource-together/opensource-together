@@ -47,6 +47,7 @@ export type IconName =
   | "writing"
   | "pinned"
   | "joined"
+  | "logout"
   | "created-projects";
 
 // Mapping of the icon names to the SVG files
@@ -172,12 +173,12 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/linkedin.svg",
   },
   user: {
-    default: "/icons/mini-user-icon-empty.svg",
-    gray: "/icons/mini-user-icon-gray.svg",
-    white: "/icons/mini-user-icon-empty.svg",
-    black: "/icons/mini-user-icon-empty.svg",
-    filled: "/icons/mini-user-icon-empty.svg",
-    outline: "/icons/mini-user-icon-empty.svg",
+    default: "/icons/user.svg",
+    gray: "/icons/user.svg",
+    white: "/icons/user.svg",
+    black: "/icons/user.svg",
+    filled: "/icons/user.svg",
+    outline: "/icons/user.svg",
   },
   project: {
     default: "/icons/empty-project.svg",
@@ -226,6 +227,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/joined.svg",
     filled: "/icons/joined.svg",
     outline: "/icons/joined.svg",
+  },
+  logout: {
+    default: "/icons/logout.svg",
+    gray: "/icons/logout.svg",
+    white: "/icons/logout.svg",
+    black: "/icons/logout.svg",
+    filled: "/icons/logout.svg",
+    outline: "/icons/logout.svg",
   },
   "created-projects": {
     default: "/icons/created-projects-icon.svg",

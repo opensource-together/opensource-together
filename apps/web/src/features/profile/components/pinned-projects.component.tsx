@@ -1,4 +1,8 @@
+import Link from "next/link";
+
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
+import { Button } from "@/shared/components/ui/button";
+import { Icon } from "@/shared/components/ui/icon";
 
 import { Profile } from "../types/profile.type";
 
@@ -7,45 +11,63 @@ interface PinnedProjectsProps {
 }
 
 export default function PinnedProjects({ profile }: PinnedProjectsProps) {
-  const { projects } = profile;
+  const { projects = [] } = profile;
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="mb-5 gap-1 text-left text-xl font-medium">
+    <div className="flex w-full flex-col gap-4">
+      <h2 className="mb-5 gap-1 text-left text-lg font-medium tracking-tighter">
         Projets Rejoints
       </h2>
-      {projects?.slice(0, 3).map((project) => (
-        <ProjectCardComponent
-          key={project.id}
-          projectId={project.id}
-          title={project.name}
-          description={project.description || ""}
-          image={project.image || ""}
-          stars={project.stargazers_count || 0}
-          showViewProject={true}
-          roles={
-            project.techStacks?.map((tech) => ({
-              name: tech.name,
-              color: "#000000",
-              bgColor: "#FFFFFF",
-            })) ?? []
-          }
-          roleCount={project.techStacks?.length ?? 0}
-          techStack={
-            project.techStacks?.map((tech) => ({
-              icon: tech.iconUrl,
-              alt: tech.name,
-            })) ?? []
-          }
-          communityStats={{
-            forks: project.forks_count || 0,
-            contributors: project.watchers_count || 0,
-            stars: project.stargazers_count || 0,
-          }}
-          authorName={project.full_name.split("/")[0] || "Unknown"}
-          className="w-full max-w-[731px] bg-white"
-        />
-      ))}
+
+      {projects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed bg-gray-50 py-16 text-center">
+          <h3 className="mb-2 text-base font-medium tracking-tight text-gray-900">
+            Aucun projet rejoint
+          </h3>
+          <p className="mb-6 max-w-sm text-sm text-gray-500">
+            Découvrez des projets open source de la communauté et rejoignez-les.
+          </p>
+          <Link href="/">
+            <Button className="font-medium">
+              Explorer les projets
+              <Icon name="arrow-up-right" size="xs" variant="white" />
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        projects.slice(0, 3).map((project) => (
+          <ProjectCardComponent
+            key={project.id}
+            projectId={project.id}
+            title={project.name}
+            description={project.description || ""}
+            image={project.image || ""}
+            stars={project.stargazers_count || 0}
+            showViewProject={true}
+            roles={
+              project.techStacks?.map((tech) => ({
+                name: tech.name,
+                color: "#000000",
+                bgColor: "#FFFFFF",
+              })) ?? []
+            }
+            roleCount={project.techStacks?.length ?? 0}
+            techStack={
+              project.techStacks?.map((tech) => ({
+                icon: tech.iconUrl,
+                alt: tech.name,
+              })) ?? []
+            }
+            communityStats={{
+              forks: project.forks_count || 0,
+              contributors: project.watchers_count || 0,
+              stars: project.stargazers_count || 0,
+            }}
+            authorName={project.full_name.split("/")[0] || "Unknown"}
+            className="w-full max-w-[731px] bg-white"
+          />
+        ))
+      )}
     </div>
   );
 }

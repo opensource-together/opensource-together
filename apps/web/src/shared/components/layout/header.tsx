@@ -6,9 +6,16 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
+import { Avatar } from "../ui/avatar";
 import Icon from "../ui/icon";
 
 interface NavLinkProps {
@@ -24,10 +31,10 @@ function NavLink({ href, children, className = "" }: NavLinkProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center justify-center px-[10px] py-[2px] transition-all duration-200 ${
+      className={`flex items-center justify-center px-3.5 py-1.5 transition-all duration-200 ${
         isActive
-          ? "rounded-[3px] bg-[black]/5"
-          : "text-[black]/70 hover:rounded-[3px] hover:bg-[black]/5"
+          ? "rounded-full bg-[black]/5"
+          : "text-[black]/70 hover:rounded-full hover:bg-[black]/5"
       } ${className}`}
     >
       {children}
@@ -146,27 +153,41 @@ export default function Header() {
               <Icon name="cross" size="xs" className="ml-1.5" />
             </Button>
 
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={handleProfile}
-                className="flex items-center space-x-2 hover:opacity-80"
-              >
-                {currentUser?.avatarUrl && (
-                  <Image
-                    src={currentUser.avatarUrl}
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-1 px-2"
+                >
+                  <Avatar
+                    src={currentUser?.avatarUrl}
+                    name={currentUser?.name}
+                    alt={currentUser?.name}
+                    size="xs"
                   />
-                )}
-                <span className="text-sm font-medium">{currentUser?.name}</span>
-              </button>
-
-              <Button variant="outline" onClick={handleLogout}>
-                Déconnexion
-              </Button>
-            </div>
+                  <span className="text-sm font-medium tracking-tighter">
+                    {currentUser?.name}
+                  </span>
+                  <Icon name="chevron-down" size="md" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={handleProfile}
+                  className="cursor-pointer"
+                >
+                  <Icon name="user" size="sm" />
+                  Mon Profil
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="cursor-pointer"
+                >
+                  <Icon name="logout" size="sm" />
+                  Déconnexion
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </>
         ) : (
           <Button onClick={handleLogin}>
