@@ -25,10 +25,10 @@ function NavLink({ href, children, className = "" }: NavLinkProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center justify-center px-[10px] py-[2px] transition-all duration-200 ${
+      className={`flex items-center justify-center px-3.5 py-1.5 transition-all duration-200 ${
         isActive
-          ? "rounded-[3px] bg-[black]/5"
-          : "text-[black]/70 hover:rounded-[3px] hover:bg-[black]/5"
+          ? "rounded-full bg-[black]/5"
+          : "text-[black]/70 hover:rounded-full hover:bg-[black]/5"
       } ${className}`}
     >
       {children}
