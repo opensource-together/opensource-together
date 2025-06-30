@@ -26,8 +26,6 @@ async function bootstrap() {
     }),
   );
 
-  console.log('Test');
-
   app.useGlobalFilters(new SuperTokensExceptionFilter());
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(
@@ -42,7 +40,10 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 4000);
 }
-bootstrap().catch((error) => {
-  console.error('Failed to start application:', error);
-  process.exit(1);
-});
+bootstrap()
+  .then(() => {
+    console.log(`Server started !`);
+  })
+  .catch((e) => {
+    console.log(`Server crashed : ${e}`);
+  });
