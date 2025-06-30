@@ -26,10 +26,10 @@ export class TechStackTestBuilder {
 
   public buildAsMock(): TechStack {
     return {
-      getId: () => this.id,
-      getName: () => this.name,
-      getIconUrl: () => this.iconUrl,
-    } as TechStack;
+      id: this.id,
+      name: this.name,
+      iconUrl: this.iconUrl,
+    };
   }
 
   public buildAsPrismaResult() {

@@ -1,14 +1,16 @@
 import { Result } from '@/shared/result';
+
 import {
   Project,
-  ProjectCreateProps,
+  ProjectPrimitive,
   ProjectValidationErrors,
 } from './project.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 
 describe('Domain Project Entity', () => {
   describe('create', () => {
     it('should create a project with valid properties', () => {
-      const props = getValidProjectProps();
+      const props = getProjectProps();
       const projectResult = Project.create(props);
       if (projectResult.success) {
         expect(projectResult.value).toBeInstanceOf(Project);
@@ -50,7 +52,7 @@ describe('Domain Project Entity', () => {
         'projectRoles',
         [
           {
-            name: 'Test Role',
+            title: 'Test Role',
             description: 'a'.repeat(1001),
           },
         ],
@@ -63,7 +65,7 @@ describe('Domain Project Entity', () => {
         'projectRoles',
         [
           {
-            name: 'Test Role',
+            title: 'Test Role',
             description: '',
           },
         ],
@@ -75,12 +77,12 @@ describe('Domain Project Entity', () => {
         'projectRoles',
         [
           {
-            name: '',
+            title: '',
             description: 'Test Description',
           },
         ],
         {
-          projectRoles: 'Name for project roles is required',
+          projectRoles: 'Title for project roles is required',
         },
       ],
       //projectMembers
@@ -101,7 +103,7 @@ describe('Domain Project Entity', () => {
     ])(
       'should fail validation if %s is invalid with value: %j',
       (field, value, expectedError) => {
-        const props = getValidProjectProps({ [field]: value as any });
+        const props = getProjectProps({ [field]: value });
         // props[field as keyof ProjectCreateProps] = value as any;
         const projectResult: Result<Project, ProjectValidationErrors | string> =
           Project.create(props);
@@ -118,12 +120,183 @@ describe('Domain Project Entity', () => {
       },
     );
   });
+
+  describe('reconstitute', () => {
+    it('should fail if createdAt is after updatedAt', () => {
+      const props = getProjectProps({
+        id: '123',
+        createdAt: new Date(Date.now() + 1000),
+        updatedAt: new Date(),
+      });
+      const reconstitute: Result<Project, ProjectValidationErrors | string> =
+        Project.reconstitute(props);
+      if (reconstitute.success) {
+        throw new Error('Project reconstitution should have failed');
+      }
+      expect(reconstitute.error).toBe('createdAt must be before updatedAt');
+    });
+
+    it('should fail if createdAt is not provided', () => {
+      const props = getProjectProps({
+        id: '123',
+        createdAt: undefined,
+        updatedAt: new Date(),
+      });
+      const reconstitute: Result<Project, ProjectValidationErrors | string> =
+        Project.reconstitute(props);
+      if (reconstitute.success) {
+        throw new Error('Project reconstitution should have failed');
+      }
+      expect(reconstitute.error).toBe('createdAt and updatedAt are required');
+    });
+    it('should fail if updatedAt is not provided', () => {
+      const props = getProjectProps({
+        id: '123',
+        createdAt: new Date(),
+        updatedAt: undefined,
+      });
+      const reconstitute: Result<Project, ProjectValidationErrors | string> =
+        Project.reconstitute(props);
+      if (reconstitute.success) {
+        throw new Error('Project reconstitution should have failed');
+      }
+      expect(reconstitute.error).toBe('createdAt and updatedAt are required');
+    });
+
+    it('should fail if id is not provided', () => {
+      const props = getProjectProps({
+        id: undefined,
+      });
+      const reconstitute: Result<Project, ProjectValidationErrors | string> =
+        Project.reconstitute(props);
+      if (reconstitute.success) {
+        throw new Error('Project reconstitution should have failed');
+      }
+      expect(reconstitute.error).toBe('id is required');
+    });
+
+    it('should be success if all props are valid', () => {
+      const props = getProjectProps({
+        id: '123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      const reconstitute: Result<Project, ProjectValidationErrors | string> =
+        Project.reconstitute(props);
+      if (!reconstitute.success) {
+        throw new Error('Project reconstitution should have succeeded');
+      }
+    });
+  });
+
+  describe('toPrimitive', () => {
+    it('should convert a project to a primitive object (without id)', () => {
+      const props = getProjectProps();
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      const primitive = project.value.toPrimitive();
+      console.group('without id and createdAt and updatedAt');
+      console.log('props', JSON.stringify(props, null, 2));
+      console.log('primitive', JSON.stringify(primitive, null, 2));
+      console.groupEnd();
+      expect(primitive).toEqual(props);
+    });
+    it('should convert a project to a primitive object (with id)', () => {
+      const props = getProjectProps({
+        id: '123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      const project = Project.reconstitute(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      const primitive = project.value.toPrimitive();
+      console.group('with id and createdAt and updatedAt');
+      console.log('props', JSON.stringify(props, null, 2));
+      console.log('primitive', JSON.stringify(primitive, null, 2));
+      console.groupEnd();
+      expect(primitive).toEqual(props);
+    });
+  });
+
+  describe('hasRoleWithName', () => {
+    it('should return true if a role with the same name exists (case-insensitive)', () => {
+      const props = getProjectProps({
+        projectRoles: [{ title: 'Developer', description: '...' }],
+      });
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+
+      expect(project.value.hasRoleWithTitle('Developer')).toBe(true);
+      expect(project.value.hasRoleWithTitle('developer')).toBe(true); // Test de la casse
+    });
+
+    it('should return false if no role with that name exists', () => {
+      const props = getProjectProps({
+        projectRoles: [{ title: 'Designer', description: '...' }],
+      });
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+
+      expect(project.value.hasRoleWithTitle('Developer')).toBe(false);
+    });
+  });
+
+  describe('hasOwnerId', () => {
+    it('should return true if the project has the ownerId', () => {
+      const user = User.create({
+        id: '123',
+        username: 'test',
+        email: 'test@test.com',
+      });
+      if (!user.success) {
+        throw new Error('User creation should have succeeded');
+      }
+      const props = getProjectProps({
+        ownerId: '123',
+      });
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      expect(project.value.hasOwnerId(user.value.toPrimitive().id)).toBe(true);
+    });
+
+    it('should return false if the ownerId is not same than the userId', () => {
+      const user = User.create({
+        id: '456',
+        username: 'test',
+        email: 'test@test.com',
+      });
+      if (!user.success) {
+        throw new Error('User creation should have succeeded');
+      }
+
+      const ownerId = '123';
+      const props = getProjectProps({
+        ownerId,
+      });
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      expect(project.value.hasOwnerId(user.value.toPrimitive().id)).toBe(false);
+    });
+  });
 });
 
-const getValidProjectProps = (
-  overrides: Partial<ProjectCreateProps> = {},
-): ProjectCreateProps => ({
+const getProjectProps = (
+  overrides: Partial<ProjectPrimitive> = {},
+): ProjectPrimitive => ({
   title: 'Test Project',
+  projectImages: ['https://test.com', 'https://test.com'],
   ownerId: '123',
   description: 'Test Description',
   difficulty: 'easy',
@@ -137,13 +310,14 @@ const getValidProjectProps = (
   ],
   projectRoles: [
     {
-      name: 'Test Role',
+      title: 'Test Role',
       description: 'Test Description',
     },
   ],
   projectMembers: [
     {
       userId: '1',
+      name: 'jhonDow',
       role: 'developer',
     },
   ],

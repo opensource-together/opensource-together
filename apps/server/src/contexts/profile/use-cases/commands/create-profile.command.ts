@@ -4,11 +4,6 @@ import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { Result } from '@/shared/result';
 import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Inject } from '@nestjs/common';
-import {
-  SocialLink,
-  SocialLinkType,
-} from '@/contexts/profile/domain/social-link.vo';
-import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 export class CreateProfileCommand implements ICommand {
   public readonly userId: string;
@@ -63,47 +58,18 @@ export class CreateProfileCommandHandler
   async execute(
     command: CreateProfileCommand,
   ): Promise<Result<Profile, string>> {
-    if (!command.userId || !command.name) {
-      return Result.fail('userId and name are required to create a profile.');
-    }
+    const profileResult: Result<Profile, string> = Profile.create(command);
 
-    const socialLinkVOs: SocialLink[] = [];
-    for (const linkData of command.socialLinks) {
-      if (!linkData.url) continue;
+    if (!profileResult.success) return Result.fail(profileResult.error);
 
-      const socialLinkResult = SocialLink.create({
-        type: linkData.type as SocialLinkType,
-        url: linkData.url,
-      });
-      if (!socialLinkResult.success) {
-        return Result.fail(socialLinkResult.error);
-      }
-      socialLinkVOs.push(socialLinkResult.value);
-    }
+    const profile: Profile = profileResult.value;
 
-    const experienceVOs: ProfileExperience[] = [];
-    for (const expData of command.experiences) {
-      const experienceResult = ProfileExperience.create(expData);
-      if (!experienceResult.success) {
-        return Result.fail(experienceResult.error);
-      }
-      experienceVOs.push(experienceResult.value);
-    }
+    const savedProfileResult = await this.profileRepository.create(
+      profile.getState(),
+    );
 
-    const savedProfileResult = await this.profileRepository.create({
-      userId: command.userId,
-      name: command.name,
-      avatarUrl: command.avatarUrl,
-      bio: command.bio,
-      location: command.location,
-      company: command.company,
-      socialLinks: socialLinkVOs,
-      experiences: experienceVOs,
-    });
-
-    if (!savedProfileResult.success) {
+    if (!savedProfileResult.success)
       return Result.fail('Erreur technique lors de la création du profil.');
-    }
 
     return Result.ok(savedProfileResult.value);
   }

@@ -6,7 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TechStackDto } from '../../project/dto/TechStackDto.request';
+import { TechStackDto } from '@/contexts/project/infrastructure/controllers/dto/TechStackDto.request';
 
 export class CreateProjectRoleDto {
   @IsString()

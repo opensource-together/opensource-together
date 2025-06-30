@@ -2,11 +2,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   ProjectRepositoryPort,
   PROJECT_REPOSITORY_PORT,
-} from '@/application/project/ports/project.repository.port';
+} from '@/contexts/project/use-cases/ports/project.repository.port';
 import {
   ProjectRoleRepositoryPort,
   PROJECT_ROLE_REPOSITORY_PORT,
-} from '@/application/project/ports/projectRole.repository.port';
+} from '@/contexts/project/use-cases/ports/projectRole.repository.port';
 import { Result } from '@/shared/result';
 import { Injectable, Inject } from '@nestjs/common';
 import { ProjectRole } from '@/domain/projectRole/projectRole.entity';

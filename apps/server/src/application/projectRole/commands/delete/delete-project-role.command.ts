@@ -4,11 +4,11 @@ import { Result } from '@/shared/result';
 import {
   ProjectRoleRepositoryPort,
   PROJECT_ROLE_REPOSITORY_PORT,
-} from '@/application/project/ports/projectRole.repository.port';
+} from '@/contexts/project/use-cases/ports/projectRole.repository.port';
 import {
   ProjectRepositoryPort,
   PROJECT_REPOSITORY_PORT,
-} from '@/application/project/ports/project.repository.port';
+} from '@/contexts/project/use-cases/ports/project.repository.port';
 
 export class DeleteProjectRoleCommand {
   constructor(

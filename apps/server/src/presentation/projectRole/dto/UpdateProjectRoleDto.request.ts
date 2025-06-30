@@ -5,7 +5,7 @@ import {
   IsBoolean,
   ValidateNested,
 } from 'class-validator';
-import { TechStackDto } from '../../project/dto/TechStackDto.request';
+import { TechStackDto } from '@/contexts/project/infrastructure/controllers/dto/TechStackDto.request';
 import { Type } from 'class-transformer';
 
 export class UpdateProjectRoleDto {

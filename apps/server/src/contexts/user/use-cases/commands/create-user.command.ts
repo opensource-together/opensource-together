@@ -6,8 +6,6 @@ import {
 } from '../ports/user.repository.port';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { Username } from '@/contexts/user/domain/username.vo';
-import { Email } from '@/contexts/user/domain/email.vo';
 
 export class CreateUserCommand implements ICommand {
   constructor(
@@ -48,21 +46,16 @@ export class CreateUserCommandHandler
     if (userExistsByUsername.success || userExistsByEmail.success)
       return Result.fail('Identifiants incorrects.');
 
-    const usernameVo = Username.create(command.username);
-    const emailVo = Email.create(command.email);
-    const error: { username?: string; email?: string } = {};
-    if (!emailVo.success) error.email = emailVo.error;
-    if (!usernameVo.success) error.username = usernameVo.error;
-    if (!usernameVo.success || !emailVo.success) return Result.fail(error);
-
-    const savedUser: Result<
-      User,
-      { username?: string; email?: string } | string
-    > = await this.userRepo.create({
+    const validUser = User.create({
       id: command.id,
       username: command.username,
       email: command.email,
     });
+    if (!validUser.success) return Result.fail(validUser.error);
+
+    const savedUser: Result<User, string> = await this.userRepo.create(
+      validUser.value,
+    );
     if (!savedUser.success)
       //TODO: faire un mapping des erreurs ?
       return Result.fail(

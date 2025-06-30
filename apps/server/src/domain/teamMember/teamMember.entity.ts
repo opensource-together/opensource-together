@@ -1,4 +1,4 @@
-import { Project } from '@/domain/project/project.entity';
+import { Project } from '@/contexts/project/domain/project.entity';
 import { ProjectRole } from '@/domain/projectRole/projectRole.entity';
 
 export class TeamMember {

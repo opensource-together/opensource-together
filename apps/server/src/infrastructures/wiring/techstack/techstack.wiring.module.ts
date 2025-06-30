@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/teckstack.repository.port';
+import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/techstack.repository.port';
 import { PrismaTechstackRepository } from '@/infrastructures/repositories/teckstack/prisma.techstack.repository';
 import { RepositoryModule } from '@/infrastructures/repositories/repository.module';
 import { techStackApplicationContainer } from '@/application/teckstack/teckstack.application';

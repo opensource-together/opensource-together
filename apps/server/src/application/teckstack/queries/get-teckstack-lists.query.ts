@@ -1,8 +1,8 @@
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { TechstackRepositoryPort } from '@/application/teckstack/ports/teckstack.repository.port';
+import { TechstackRepositoryPort } from '@/application/teckstack/ports/techstack.repository.port';
 import { TechStack } from '@/domain/techStack/techstack.entity';
 import { Inject } from '@nestjs/common';
-import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/teckstack.repository.port';
+import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/techstack.repository.port';
 import { Result } from '@/shared/result';
 
 export class GetTechstackListsQuery implements IQuery {}

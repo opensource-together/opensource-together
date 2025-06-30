@@ -1,7 +1,7 @@
-import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
-import { Title } from '@/domain/project/title/title.vo';
-import { Description } from '@/domain/project/description/description.vo';
-import { Link } from '@/domain/project/link/link.vo';
+import { TechStackDto } from '@/contexts/project/infrastructure/controllers/dto/TechStackDto.request';
+import { Title } from '@/contexts/project/domain/title/title.vo';
+import { Description } from '@/contexts/project/domain/description/description.vo';
+import { Link } from '@/contexts/project/domain/link/link.vo';
 import { Result } from '@/shared/result';
 import { UpdateProjectRoleDto } from '@/presentation/projectRole/dto/UpdateProjectRoleDto.request';
 

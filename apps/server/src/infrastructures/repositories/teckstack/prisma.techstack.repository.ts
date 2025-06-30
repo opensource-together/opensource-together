@@ -1,4 +1,4 @@
-import { TechstackRepositoryPort } from '@/application/teckstack/ports/teckstack.repository.port';
+import { TechstackRepositoryPort } from '@/application/teckstack/ports/techstack.repository.port';
 import { TechStack } from '@/domain/techStack/techstack.entity';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/orm/prisma/prisma.service';

@@ -1,7 +1,7 @@
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { ProfileRepositoryPort } from '../ports/profile.repository.port';
-import { PROFILE_REPOSITORY_PORT } from '../ports/profile.repository.port';
+import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Result } from '@/shared/result';
 import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';

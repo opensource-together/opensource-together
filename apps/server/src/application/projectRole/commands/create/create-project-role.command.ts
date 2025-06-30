@@ -1,16 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Injectable, Inject } from '@nestjs/common';
 import { Result } from '@/shared/result';
-import {
-  ProjectRoleRepositoryPort,
-  PROJECT_ROLE_REPOSITORY_PORT,
-} from '@/application/project/ports/projectRole.repository.port';
-import {
-  ProjectRepositoryPort,
-  PROJECT_REPOSITORY_PORT,
-} from '@/application/project/ports/project.repository.port';
+import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
+import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
+import { ProjectRoleRepositoryPort } from '@/contexts/project/use-cases/ports/projectRole.repository.port';
+import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/projectRole.repository.port';
 import { ProjectRole } from '@/domain/projectRole/projectRole.entity';
-import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
+import { TechStackDto } from '@/contexts/project/infrastructure/controllers/dto/TechStackDto.request';
 import { CreateProjectRoleInputsDto } from '@/application/dto/inputs/create-project-role-inputs.dto';
 
 export class CreateProjectRoleCommand {

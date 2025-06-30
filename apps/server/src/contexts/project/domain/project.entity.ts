@@ -4,18 +4,6 @@ import {
   TechStackValidationErrors,
 } from '@/domain/techStack/techstack.entity';
 
-export type ProjectCreateProps = {
-  ownerId: string;
-  title: string;
-  description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  socialLinks?: string[] | undefined;
-  githubLink: string | null;
-  techStacks: { id: string; name: string; iconUrl: string }[];
-  projectRoles?: { name: string; description: string }[];
-  projectMembers?: { userId: string; role: string }[];
-};
-
 export type ProjectValidationErrors = {
   title?: string;
   description?: string;
@@ -25,17 +13,33 @@ export type ProjectValidationErrors = {
   projectRoles?: string;
   projectMembers?: string;
 };
+export type ProjectPrimitive = {
+  id?: string;
+  ownerId: string;
+  title: string;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  externalLinks?: { type: string; url: string }[] | undefined;
+  projectImages?: string[];
+  githubLink: string | null;
+  techStacks: { id?: string; name: string; iconUrl: string }[];
+  projectRoles?: { id?: string; title: string; description: string }[];
+  projectMembers?: { userId: string; name: string; role: string }[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 export type ProjectProps = {
   id?: string;
   ownerId: string;
   title: string;
   description: string;
   difficulty: 'easy' | 'medium' | 'hard';
-  socialLinks?: string[] | undefined;
+  externalLinks?: { type: string; url: string }[] | undefined;
+  projectImages?: string[];
   githubLink: string | null;
   techStacks: TechStack[];
-  projectRoles?: { name: string; description: string }[];
-  projectMembers?: { userId: string; role: string }[];
+  projectRoles?: { id?: string; title: string; description: string }[];
+  projectMembers?: { userId: string; name: string; role: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -45,13 +49,14 @@ export class Project {
   private title: string;
   private description: string;
   private difficulty: 'easy' | 'medium' | 'hard';
-  private socialLinks?: string[] | undefined;
+  private externalLinks?: { type: string; url: string }[] | undefined;
+  private projectImages?: string[];
   private githubLink: string | null;
+  private techStacks: TechStack[];
+  private projectRoles?: { title: string; description: string }[];
+  private projectMembers?: { userId: string; name: string; role: string }[];
   private createdAt?: Date;
   private updatedAt?: Date;
-  private techStacks: TechStack[];
-  private projectRoles: { name: string; description: string }[];
-  private projectMembers?: { userId: string; role: string }[];
 
   constructor(props: ProjectProps) {
     this.id = props.id;
@@ -59,7 +64,8 @@ export class Project {
     this.title = props.title;
     this.description = props.description;
     this.difficulty = props.difficulty;
-    this.socialLinks = props.socialLinks;
+    this.externalLinks = props.externalLinks;
+    this.projectImages = props.projectImages;
     this.githubLink = props.githubLink;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
@@ -69,40 +75,41 @@ export class Project {
   }
 
   public static create(
-    props: ProjectCreateProps,
+    props: ProjectPrimitive,
   ): Result<Project, ProjectValidationErrors | string> {
     return Project.validate(props);
   }
 
   public static validate(
-    props: ({ projectId?: string } & ProjectCreateProps) | ProjectProps,
+    props: ProjectPrimitive,
   ): Result<Project, ProjectValidationErrors | string> {
+    const { id, createdAt, updatedAt, ...rest } = props;
     const error: ProjectValidationErrors = {};
-    //title
-    if (!props.title || props.title.trim() === '') {
+    //title, TODO: make a VO
+    if (!rest.title || rest.title.trim() === '') {
       error.title = 'Title is required';
     }
-    if (props.title.length > 100) {
+    if (rest.title.length > 100) {
       error.title = 'Title must be less than 100 characters';
     }
-    //description
-    if (!props.description || props.description.trim() === '') {
+    //description, TODO: make a VO
+    if (!rest.description || rest.description.trim() === '') {
       error.description = 'Description is required';
     }
-    if (props.description.length > 1000) {
+    if (rest.description.length > 1000) {
       error.description = 'Description must be less than 1000 characters';
     }
-    //difficulty
-    if (!props.difficulty) {
+    //difficulty, TODO: make a VO
+    if (!rest.difficulty) {
       error.difficulty = 'Difficulty is required';
     }
-    //projectRoles
-    if (!props.projectRoles || props.projectRoles.length === 0) {
+    //projectRoles TODO: verifiy if is not need to be moved to another entity dedicated
+    if (!rest.projectRoles || rest.projectRoles.length === 0) {
       error.projectRoles = 'Project roles are required';
     } else {
-      for (const role of props.projectRoles) {
-        if (!role.name || role.name.trim() === '') {
-          error.projectRoles = 'Name for project roles is required';
+      for (const role of rest.projectRoles) {
+        if (!role.title || role.title.trim() === '') {
+          error.projectRoles = 'Title for project roles is required';
           break;
         }
         if (!role.description || role.description.trim() === '') {
@@ -116,9 +123,9 @@ export class Project {
         }
       }
     }
-    //projectMembers
-    if (props.projectMembers && props.projectMembers.length > 0) {
-      for (const member of props.projectMembers) {
+    //projectMembers TODO: verifiy if is not need to be moved to another entity dedicated
+    if (rest.projectMembers && rest.projectMembers.length > 0) {
+      for (const member of rest.projectMembers) {
         if (!member.userId || member.userId.trim() === '') {
           error.projectMembers = 'User id for project members is required';
           break;
@@ -129,39 +136,88 @@ export class Project {
         }
       }
     }
-    //techStacks
-    if (props.techStacks.length === 0) {
+    //techStacks, TODO: verify if is not need to be moved to another part dedicated
+    if (rest.techStacks.length === 0) {
       error.techStacks = 'Tech stacks are required';
     }
     const techStacks: Result<TechStack, TechStackValidationErrors | string>[] =
-      props.techStacks.map((techStack) => TechStack.reconstitute(techStack));
+      rest.techStacks.map((techStack) =>
+        TechStack.reconstitute({
+          id: techStack.id ?? '',
+          name: techStack.name,
+          iconUrl: techStack.iconUrl,
+        }),
+      );
 
     const validTechStacks = techStacks
       .filter((res) => res.success)
       .map((res) => res.value);
 
-    if (validTechStacks.length !== props.techStacks.length) {
+    if (validTechStacks.length !== rest.techStacks.length) {
       error.techStacks = 'Tech stacks are not valid';
     }
 
     if (Object.keys(error).length > 0) {
       return Result.fail(error);
     }
-    return Result.ok(
-      new Project({
-        id: 'projectId' in props ? props.projectId : undefined,
-        ...props,
-        techStacks: validTechStacks,
-      }),
-    );
+    const project: Project = new Project({
+      id,
+      ...rest,
+      techStacks: validTechStacks,
+      createdAt,
+      updatedAt,
+    });
+    return Result.ok(project);
   }
 
   public static reconstitute(
-    props: ProjectProps,
+    props: ProjectPrimitive,
   ): Result<Project, ProjectValidationErrors | string> {
     if (!props.id) {
-      return Result.fail('Id is required');
+      return Result.fail('id is required');
+    }
+    if (!props.createdAt || !props.updatedAt) {
+      return Result.fail('createdAt and updatedAt are required');
+    }
+    if (props.createdAt > props.updatedAt) {
+      return Result.fail('createdAt must be before updatedAt');
     }
     return Project.validate(props);
+  }
+
+  public toPrimitive(): ProjectPrimitive {
+    return {
+      id: this.id,
+      ownerId: this.ownerId,
+      title: this.title,
+      description: this.description,
+      difficulty: this.difficulty,
+      externalLinks: this.externalLinks,
+      projectImages: this.projectImages,
+      githubLink: this.githubLink,
+      techStacks: this.techStacks.map((techStack) => ({
+        id: techStack.toPrimitive().id,
+        name: techStack.toPrimitive().name,
+        iconUrl: techStack.toPrimitive().iconUrl,
+      })),
+      projectRoles: this.projectRoles,
+      projectMembers: this.projectMembers,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+
+  public hasRoleWithTitle(title: string): boolean {
+    if (!this.projectRoles) {
+      return false;
+    }
+    const normalizedTitle = title.toLowerCase();
+    return this.projectRoles.some(
+      (role) => role.title.toLowerCase() === normalizedTitle,
+    );
+  }
+
+  public hasOwnerId(userId: string): boolean {
+    return this.ownerId === userId;
   }
 }

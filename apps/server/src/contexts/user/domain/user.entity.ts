@@ -8,8 +8,8 @@ export class User {
   private readonly id: string;
   private username: Username;
   private email: Email;
-  private readonly createdAt: Date;
-  private readonly updatedAt: Date;
+  private readonly createdAt?: Date;
+  private readonly updatedAt?: Date;
 
   // Le constructeur est le SEUL moyen de créer un User.
   // Il garantit qu'un User ne peut pas exister dans un état invalide.
@@ -17,8 +17,8 @@ export class User {
     id: string;
     username: Username;
     email: Email;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
   }) {
     this.id = props.id;
     this.username = props.username;
@@ -27,14 +27,71 @@ export class User {
     this.updatedAt = props.updatedAt ?? new Date();
   }
 
+  public static create(props: {
+    id: string;
+    username: string;
+    email: string;
+  }): Result<
+    User,
+    { id?: string; username?: string; email?: string } | string
+  > {
+    const validateVO = this.validate(props);
+    if (!validateVO.success) {
+      return Result.fail(validateVO.error);
+    }
+    return Result.ok(
+      new User({
+        id: props.id,
+        username: validateVO.value.username,
+        email: validateVO.value.email,
+      }),
+    );
+  }
+
   public static reconstitute(props: {
     id: string;
-    username: Username;
-    email: Email;
+    username: string;
+    email: string;
     createdAt: Date;
     updatedAt: Date;
-  }): User {
-    return new User(props);
+  }): Result<User, { username?: string; email?: string } | string> {
+    const validUser = this.validate(props);
+    if (!validUser.success) {
+      return Result.fail(validUser.error);
+    }
+    return Result.ok(
+      new User({
+        id: validUser.value.id,
+        username: validUser.value.username,
+        email: validUser.value.email,
+        createdAt: props.createdAt,
+        updatedAt: props.updatedAt,
+      }),
+    );
+  }
+
+  public static validate(props: {
+    id: string;
+    username: string;
+    email: string;
+  }): Result<
+    { id: string; username: Username; email: Email },
+    { id?: string; username?: string; email?: string } | string
+  > {
+    const error: { id?: string; username?: string; email?: string } = {};
+    if (!props.id) {
+      error.id = 'User id is required';
+    }
+    const usernameVo = Username.create(props.username);
+    const emailVo = Email.create(props.email);
+    if (!emailVo.success) error.email = emailVo.error;
+    if (!usernameVo.success) error.username = usernameVo.error;
+    if (!usernameVo.success || !emailVo.success) return Result.fail(error);
+    return Result.ok({
+      id: props.id,
+      username: usernameVo.value,
+      email: emailVo.value,
+    });
   }
   // Pas de setters ! On expose un comportement métier.
   public changeUsername(newUsername: string) {
@@ -55,7 +112,7 @@ export class User {
 
   // On n'expose pas les données brutes via des getters.
   // On expose une méthode pour extraire l'état à des fins de persistance ou de DTO.
-  public getState() {
+  public toPrimitive() {
     return {
       id: this.id,
       username: this.username.getUsername(),

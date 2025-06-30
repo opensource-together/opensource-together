@@ -38,7 +38,7 @@ export class ProfileMapper {
       })),
 
       joinedAt: userState.createdAt.toISOString(),
-      profileUpdatedAt: profileState.updatedAt.toISOString(),
+      profileUpdatedAt: profileState.updatedAt?.toISOString() ?? '',
     };
   }
 }
