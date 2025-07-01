@@ -57,15 +57,15 @@ export default function RoleCard({
 
   return (
     <div
-      className={`w-[668px] rounded-3xl border border-[black]/5 p-6 shadow-xs ${className}`}
+      className={`w-full max-w-[668px] rounded-3xl border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
     >
       {/* Role Title */}
-      <h3 className="mb-4 text-lg font-medium tracking-tighter text-black">
+      <h3 className="mb-3 text-lg font-medium tracking-tighter text-black md:mb-4">
         {title}
       </h3>
 
       {/* Role Description */}
-      <p className="mb-6 text-sm leading-relaxed tracking-tighter text-black/70">
+      <p className="mb-4 text-sm leading-relaxed tracking-tighter text-black/70 md:mb-6">
         {description}
       </p>
 
@@ -107,10 +107,9 @@ export default function RoleCard({
       {/* </div> */}
 
       {/* Bottom Section */}
-
-      <div className="mt-auto flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
         {/* Tech Badges */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {badges.length > 0 ? (
             badges.map((badge) => (
               <StackLogo
@@ -143,7 +142,7 @@ export default function RoleCard({
         </div>
 
         {/* Apply Button */}
-        <Button>
+        <Button className="w-full md:w-auto">
           Apply for Role
           <Icon name="arrow-up-right" size="xs" variant="white" />
         </Button>

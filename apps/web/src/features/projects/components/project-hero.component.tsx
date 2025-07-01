@@ -25,21 +25,21 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
   return (
     <section className="flex flex-col bg-white">
       {/* Header with logo and stars */}
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         {/* Project Icon and Title */}
-        <div className="flex items-center gap-4">
-          <div className="flex h-[65px] w-[65px] items-center justify-center rounded-4xl bg-[#F4F4F4]">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex h-[50px] w-[50px] items-center justify-center rounded-4xl bg-[#F4F4F4] sm:h-[65px] sm:w-[65px]">
             <Image
               src={image || "/icons/empty-project.svg"}
               alt={title}
-              width={65}
-              height={65}
-              className="rounded-4xl"
+              width={50}
+              height={50}
+              className="rounded-4xl sm:h-[65px] sm:w-[65px]"
             />
           </div>
           {/* Project Title */}
           <h1
-            className="text-start text-3xl font-medium text-black"
+            className="text-start text-2xl font-medium text-black sm:text-3xl"
             style={{ letterSpacing: "-2px" }}
           >
             {title}
@@ -47,7 +47,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         </div>
 
         {/* Stars button */}
-        <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 rounded-full border border-black/5 text-sm font-medium">
+        <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
           <span>{stars}</span>
           <Image
             src="/icons/empty-star.svg"
@@ -66,7 +66,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         {/* separator */}
         <div className="my-5 h-[2px] w-full bg-black/3" />
 
-        <div className="w-[629px]">
+        <div className="w-full max-w-[629px]">
           {keyBenefits.length > 0 && (
             <>
               <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
