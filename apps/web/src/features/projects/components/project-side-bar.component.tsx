@@ -25,6 +25,8 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
     title = "",
     techStacks = [],
     socialLinks = [],
+    lastCommit,
+    categories = [],
     communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
   } = project;
 
@@ -86,7 +88,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       </div>
 
       {/* Details Section */}
-      <div className="flex flex-col">
+      <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-1 font-medium text-black">Details</h2>
 
         {/* Stars */}
@@ -134,7 +136,9 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           <div className="mx-4 flex flex-1 items-center">
             <div className="h-[1px] w-full bg-black/5" />
           </div>
-          <span className="text-sm font-medium text-black">54</span>
+          <span className="text-sm font-medium text-black">
+            {lastCommit || "N/A"}
+          </span>
         </div>
 
         {/* Contributors */}
@@ -158,7 +162,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       </div>
 
       {/* Tech Stack Section */}
-      <div className="flex flex-col">
+      <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
         {/* Tech Stack */}
         {techStacks.length > 0 && (
@@ -175,6 +179,21 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Categories Section */}
+      <div className="mb-2 flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-normal text-black/50"
+            >
+              {category}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Contributors Section */}

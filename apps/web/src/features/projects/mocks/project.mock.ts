@@ -5,6 +5,7 @@ export const mockProjects: Project[] = [
     id: "1",
     slug: "leetgrind",
     title: "LeetGrind",
+    categories: ["Discord", "Bot", "Open Source"],
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
     projectImages: [
@@ -99,12 +100,26 @@ export const mockProjects: Project[] = [
       "Travaille sur un projet open-source utile pour des centaines de développeurs",
       "Découvre les coulisses du développement d'un bot Discord communautaire",
     ],
+    keyFeatures: [
+      "Défis LeetCode quotidiens automatisés",
+      "Système de classement compétitif",
+      "Canal d'entraide communautaire",
+      "Interface Discord intuitive",
+      "Suivi des progrès personnalisé",
+    ],
+    projectGoals: [
+      "Aider 1000+ développeurs à améliorer leurs compétences en algorithmie",
+      "Créer une communauté active et bienveillante autour de la programmation",
+      "Développer des fonctionnalités avancées de gamification",
+      "Intégrer des statistiques détaillées de progression",
+    ],
   },
   {
     id: "7",
     slug: "gitify",
     title: "Gitify",
     image: "/icons/gitifyIcon.png",
+    categories: ["GitHub", "Open Source", "Challenges"],
     projectImages: [
       "/images/gitify-1.png",
       "/images/gitify-2.png",
@@ -180,11 +195,25 @@ export const mockProjects: Project[] = [
       "Gagne des badges tout en apprenant et pratiquant sur des projets concrets",
       "Découvre les coulisses du développement d'un bot Discord communautaire",
     ],
+    keyFeatures: [
+      "Système de challenges open source",
+      "Badges de progression personnalisés",
+      "Notifications GitHub intégrées",
+      "Suivi des pull requests",
+      "Interface moderne et intuitive",
+    ],
+    projectGoals: [
+      "Gamifier la contribution à l'open source",
+      "Créer une communauté de contributeurs actifs",
+      "Simplifier la découverte de projets open source",
+      "Encourager les développeurs débutants à contribuer",
+    ],
   },
   {
     id: "2",
     slug: "devcord",
     title: "DevCord",
+    categories: ["Discord", "Bot", "Open Source"],
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
     projectImages: [
@@ -265,12 +294,26 @@ export const mockProjects: Project[] = [
       "Gagnez du temps avec des commandes puissantes prêtes à l'emploi",
       "Contribuez à un outil open-source utilisé par des équipes tech",
     ],
+    keyFeatures: [
+      "Commandes de formatage de code intégrées",
+      "Générateur de tâches cron",
+      "Convertisseur de formats multiple",
+      "Validation regex en temps réel",
+      "Support Discord et Slack",
+    ],
+    projectGoals: [
+      "Devenir l'outil de référence pour les développeurs sur Discord/Slack",
+      "Intégrer plus de 50 commandes utilitaires",
+      "Supporter 10+ plateformes de communication",
+      "Créer une API publique pour les développeurs",
+    ],
   },
   {
     id: "6",
     slug: "codesnippet",
     title: "CodeSnippet",
     image: "/icons/codesnippet-icon.png",
+    categories: ["IDE", "Open Source", "Snippets"],
     projectImages: [
       "/images/gitify-1.png",
       "/images/gitify-2.png",
@@ -349,6 +392,19 @@ export const mockProjects: Project[] = [
       "Gérez vos snippets de code de manière efficace et organisée",
       "Partagez et découvrez des snippets créés par la communauté",
       "Intégrez CodeSnippet dans votre workflow de développement",
+    ],
+    keyFeatures: [
+      "Stockage et organisation de snippets",
+      "Hub communautaire de partage",
+      "Recherche avancée par tags et langages",
+      "Intégration IDE via extensions",
+      "Système de notation et commentaires",
+    ],
+    projectGoals: [
+      "Devenir la référence pour le stockage de snippets",
+      "Construire une communauté de 10k+ développeurs",
+      "Intégrer tous les IDEs populaires",
+      "Créer un marketplace de snippets premium",
     ],
   },
   {
@@ -435,12 +491,26 @@ export const mockProjects: Project[] = [
       "Documente et teste tes composants dans un environnement dédié",
       "Contribue à un outil qui simplifie le développement frontend",
     ],
+    keyFeatures: [
+      "Alternative légère à Storybook",
+      "Support natif des Server Components",
+      "Optimisation des images Next.js",
+      "Hot-reload intelligent",
+      "Intégration routing Next.js",
+    ],
+    projectGoals: [
+      "Devenir l'alternative de référence à Storybook pour Next.js",
+      "Atteindre 10k+ téléchargements mensuels",
+      "Supporter toutes les fonctionnalités Next.js",
+      "Créer un écosystème de plugins",
+    ],
   },
 
   {
     id: "4",
     slug: "g9s",
     title: "g9s",
+    categories: ["Go", "Open Source", "Monitoring"],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
     projectImages: [
@@ -512,11 +582,25 @@ export const mockProjects: Project[] = [
       "Installation simple : agent léger, serveur centralisé, TUI personnalisable",
       "Pensé pour être open-source, modulaire et auto-hébergé",
     ],
+    keyFeatures: [
+      "Interface terminal façon k9s",
+      "Monitoring temps réel des conteneurs",
+      "Architecture modulaire (serveur/agent/TUI)",
+      "Métriques système détaillées",
+      "Auto-hébergement et open source",
+    ],
+    projectGoals: [
+      "Devenir l'alternative open source à Datadog pour les équipes DevOps",
+      "Supporter Kubernetes et Docker nativement",
+      "Créer une communauté d'utilisateurs DevOps",
+      "Intégrer des alertes intelligentes",
+    ],
   },
   {
     id: "8",
     slug: "sherpa",
     title: "Sherpa",
+    categories: ["Go", "Open Source", "Secrets"],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
     projectImages: [
@@ -594,11 +678,25 @@ export const mockProjects: Project[] = [
       "Gérer ses environnement de développements facilement",
       "Transférer ses variables de manière sécurisée",
     ],
+    keyFeatures: [
+      "Chiffrement zero-trust des données",
+      "Partage collaboratif en équipe",
+      "Interface CLI et web intuitive",
+      "Gestion des environnements multiples",
+      "Synchronisation automatique",
+    ],
+    projectGoals: [
+      "Simplifier la gestion des secrets pour les développeurs",
+      "Assurer une sécurité maximale des données sensibles",
+      "Créer une alternative open source aux outils propriétaires",
+      "Intégrer les principaux outils de CI/CD",
+    ],
   },
   {
     id: "3",
     slug: "liltea",
     title: "Liltea.me",
+    categories: ["Next.js", "Open Source", "Bio"],
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
     projectImages: [
@@ -673,11 +771,25 @@ export const mockProjects: Project[] = [
       "Personnalise ton profil avec des thèmes et composants élégants",
       "Open-source et propulsé par une stack technique de pointe",
     ],
+    keyFeatures: [
+      "Pages bio stylées et animées",
+      "Thèmes personnalisables",
+      "Centralisation de tous tes liens",
+      "Design responsive optimisé",
+      "Analyses de trafic intégrées",
+    ],
+    projectGoals: [
+      "Devenir l'alternative moderne à Linktree",
+      "Atteindre 100k+ utilisateurs actifs",
+      "Créer un marketplace de thèmes communautaires",
+      "Intégrer des fonctionnalités e-commerce",
+    ],
   },
   {
     id: "9",
     slug: "devspace",
     title: "DevSpace",
+    categories: ["Go", "Open Source", "Monitoring"],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
     projectImages: [
@@ -746,11 +858,25 @@ export const mockProjects: Project[] = [
       "Configuration automatique et cohérente des environnements",
       "Collaboration simplifiée entre développeurs",
     ],
+    keyFeatures: [
+      "Environnements cloud instantanés",
+      "Configuration automatisée",
+      "Partage d'environnements en équipe",
+      "Intégration Docker/Kubernetes",
+      "Templates prêts à l'emploi",
+    ],
+    projectGoals: [
+      "Révolutionner le setup des environnements de développement",
+      "Supporter 50+ stacks techniques populaires",
+      "Créer une marketplace de templates",
+      "Atteindre 10k+ développeurs utilisateurs",
+    ],
   },
   {
     id: "10",
     slug: "techdocs",
     title: "TechDocs",
+    categories: ["Next.js", "Open Source", "Documentation"],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
     projectImages: [
@@ -818,6 +944,19 @@ export const mockProjects: Project[] = [
       "Documentation technique collaborative en temps réel",
       "Versioning Git intégré pour le suivi des changements",
       "Interface intuitive pour l'édition Markdown",
+    ],
+    keyFeatures: [
+      "Éditeur Markdown collaboratif",
+      "Versioning Git natif",
+      "Templates de documentation",
+      "Recherche avancée",
+      "Intégration outils développement",
+    ],
+    projectGoals: [
+      "Devenir la référence pour la documentation technique",
+      "Intégrer tous les principaux outils de développement",
+      "Créer une communauté de rédacteurs techniques",
+      "Atteindre 50k+ documents créés",
     ],
   },
 ];

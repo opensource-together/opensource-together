@@ -14,6 +14,8 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     description = "",
     longDescription,
     keyBenefits = [],
+    keyFeatures = [],
+    projectGoals = [],
     image,
     communityStats,
   } = project;
@@ -62,27 +64,53 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         <p className="mb-0 text-sm font-medium">{description}</p>
 
         {/* separator */}
-        <div className="my-5 h-[1px] w-full bg-black/10" />
+        <div className="my-5 h-[2px] w-full bg-black/3" />
 
         <div className="w-[629px]">
           {keyBenefits.length > 0 && (
             <>
-              <p className="text-sm leading-[16px] font-normal text-black/70">
-                Les avantages clés de notre outil de suivi de l'empreinte
-                carbone incluent:
-              </p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black/70">
+              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {keyBenefits.map((benefit, index) => (
                   <li key={index}>{benefit}</li>
                 ))}
               </ul>
             </>
           )}
-          {!keyBenefits.length && longDescription && (
-            <p className="text-sm font-normal text-black/70">
-              {longDescription}
-            </p>
+
+          {keyFeatures.length > 0 && (
+            <>
+              <h3 className="mb-2 text-sm font-normal text-black">
+                Fonctionnalités clés :
+              </h3>
+              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+                {keyFeatures.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+            </>
           )}
+
+          {projectGoals.length > 0 && (
+            <>
+              <h3 className="mb-2 text-sm font-normal text-black">
+                Objectifs du projet :
+              </h3>
+              <ul className="mb-6 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+                {projectGoals.map((goal, index) => (
+                  <li key={index}>{goal}</li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {!keyBenefits.length &&
+            !keyFeatures.length &&
+            !projectGoals.length &&
+            longDescription && (
+              <p className="text-sm font-normal text-black/70">
+                {longDescription}
+              </p>
+            )}
         </div>
       </div>
     </section>
