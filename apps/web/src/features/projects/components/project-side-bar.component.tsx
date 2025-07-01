@@ -1,7 +1,16 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/shared/components/ui/breadcrumb";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -15,14 +24,16 @@ interface ProjectSideBarProps {
 export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const {
     title = "",
-    image = "/icons/empty-project.svg",
     techStacks = [],
     socialLinks = [],
+    lastCommit,
+    categories = [],
     communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
   } = project;
 
   // Récupérer le lien GitHub
-  const githubLink = socialLinks.find((link) => link.type === "github")?.url;
+  const githubLink =
+    socialLinks.find((link) => link.type === "github")?.url || "";
 
   // Données fictives des contributeurs pour tester l'Avatar
   const contributorsData = [
@@ -33,118 +44,180 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   return (
     <div className="flex flex-col gap-5 bg-white">
-      {/* Project Icon */}
-      <div className="flex h-[252px] w-[252px] items-center justify-center self-center rounded-4xl bg-[#F4F4F4]">
-        <Image
-          src={image}
-          alt={title}
-          width={252}
-          height={252}
-          className="rounded-4xl"
-        />
-      </div>
-
-      {/* Stats */}
-      <div className="flex items-center justify-start gap-2 px-2 text-sm text-black/70">
-        {/* Project Title */}
-        <h1
-          className="text-start text-3xl font-medium text-black"
-          style={{ letterSpacing: "-2px" }}
-        >
-          {title}
-        </h1>
-        <div className="flex items-center gap-1">
-          <Icon name="fork" size="sm" variant="black" />
-          <span className="text-xs text-black">{forks}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Icon name="people" size="sm" variant="black" />
-          <span className="text-xs text-black">{contributors}</span>
-        </div>
-        <div className="mt-[1px] flex items-center gap-1">
-          <Icon name="star" size="sm" variant="black" />
-          <span className="text-xs text-black">{stars}</span>
-        </div>
-      </div>
+      {/* Breadcrumb */}
+      <Breadcrumb className="mb-3">
+        <BreadcrumbList className="gap-3 text-xs">
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/" className="text-black/50">
+              Accueil
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <Image
+              src="/icons/breadcrumb-chevron-icon.svg"
+              alt="chevron"
+              width={5}
+              height={5}
+            />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbPage>{title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
       {/* Action Buttons */}
-      <div className="flex gap-2">
-        <Button className="flex flex-1 items-center justify-center gap-0">
-          Rejoindre le projet
-          <Image
-            src="/icons/chevron-right.svg"
-            alt="chevron right"
-            width={7}
-            height={8}
-            className="ml-2"
-            style={{ filter: "invert(1)", marginTop: "1px" }}
-          />
-        </Button>
-        {githubLink && (
-          <Button variant="outline" className="flex-1" asChild>
-            <a href={githubLink} target="_blank" rel="noopener noreferrer">
-              Voir le Repo
-              <Icon name="github" size="sm" />
-            </a>
+      <div className="mb-3 flex gap-2">
+        <Button size="lg">Rejoindre le projet</Button>
+        <Link href={githubLink} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" size="lg">
+            Voir le Repo
+            <Icon name="github" size="sm" />
           </Button>
+        </Link>
+      </div>
+
+      {/* Details Section */}
+      <div className="mb-2 flex flex-col">
+        <h2 className="text-md mb-1 font-medium text-black">Details</h2>
+
+        {/* Stars */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon
+              name="star"
+              size="sm"
+              variant="black"
+              className="opacity-50"
+            />
+            <span className="text-sm font-normal text-black/50">Stars</span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">{stars}</span>
+        </div>
+
+        {/* Forks */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon
+              name="fork"
+              size="sm"
+              variant="black"
+              className="opacity-50"
+            />
+            <span className="text-sm font-normal text-black/50">Forks</span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">{forks}</span>
+        </div>
+
+        {/* Last Commit */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon name="last-commit" size="sm" variant="default" />
+            <span className="text-sm font-normal text-black/50">
+              Last Commit
+            </span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">
+            {lastCommit || "N/A"}
+          </span>
+        </div>
+
+        {/* Contributors */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon
+              name="people"
+              size="sm"
+              variant="black"
+              className="opacity-50"
+            />
+            <span className="text-sm font-normal text-black/50">
+              Contributors
+            </span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">{contributors}</span>
+        </div>
+      </div>
+
+      {/* Tech Stack Section */}
+      <div className="mb-2 flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
+        {/* Tech Stack */}
+        {techStacks.length > 0 && (
+          <div>
+            <div className="flex flex-wrap gap-2">
+              {techStacks.map((tech, index) => (
+                <StackLogo
+                  key={index}
+                  name={tech.name}
+                  icon={tech.iconUrl || "/icons/empty-project.svg"}
+                  alt={tech.name}
+                />
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-normal text-black/30">Stack Technique</h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-
-      {/* Tech Stack */}
-      {techStacks.length > 0 && (
-        <div>
-          <div className="flex flex-wrap gap-2">
-            {techStacks.map((tech, index) => (
-              <StackLogo
-                key={index}
-                name={tech.name}
-                icon={tech.iconUrl || "/icons/empty-project.svg"}
-                alt={tech.name}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-normal text-black/30">
-          Contributeurs Principaux
-        </h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-
-      {/* Contributors Avatars */}
-      <div>
-        <h3 className="mb-3 text-sm font-medium tracking-tighter text-black/80">
-          Contributeurs ({contributors})
-        </h3>
-        <div className="flex gap-2">
-          {Array.from({ length: Math.min(contributors, 5) }).map((_, index) => {
-            const contributor =
-              contributorsData[index % contributorsData.length];
-
-            return (
-              <Avatar
-                key={index}
-                src={contributor.avatar}
-                name={contributor.name}
-                alt={contributor.name}
-                size="sm"
-              />
-            );
-          })}
-
-          {/* Indicateur "+X autres" si plus de 5 contributeurs */}
-          {contributors > 5 && (
-            <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-              +{contributors - 5}
+      {/* Categories Section */}
+      <div className="mb-2 flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
+            >
+              {category}
             </div>
-          )}
+          ))}
+        </div>
+      </div>
+
+      {/* Contributors Section */}
+      <div className="flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">
+          Contributeurs Principaux
+        </h2>
+        {/* Contributors Avatars */}
+        <div>
+          <div className="flex gap-2">
+            {Array.from({ length: Math.min(contributors, 5) }).map(
+              (_, index) => {
+                const contributor =
+                  contributorsData[index % contributorsData.length];
+
+                return (
+                  <Avatar
+                    key={index}
+                    src={contributor.avatar}
+                    name={contributor.name}
+                    alt={contributor.name}
+                    size="sm"
+                  />
+                );
+              }
+            )}
+
+            {/* Indicateur "+X autres" si plus de 5 contributeurs */}
+            {contributors > 5 && (
+              <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
+                +{contributors - 5}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
