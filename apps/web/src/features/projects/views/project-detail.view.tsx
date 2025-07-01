@@ -3,8 +3,6 @@
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
-import ProjectLatestUpdate from "../components/project-latest-update.component";
-import ProjectReadMe from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
 import SkeletonProjectDetailView from "../components/skeletons/skeleton-project-detail-view.component";
@@ -30,8 +28,6 @@ export default function ProjectDetailView({
           <ProjectSideBar project={project} />
           <div className="flex w-full flex-col gap-8 lg:max-w-[668px]">
             <ProjectHero project={project} />
-            <ProjectReadMe />
-            <ProjectLatestUpdate />
             <div>
               <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
                 <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
