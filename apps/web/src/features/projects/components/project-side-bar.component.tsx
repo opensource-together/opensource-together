@@ -15,7 +15,6 @@ interface ProjectSideBarProps {
 export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const {
     title = "",
-    image = "/icons/empty-project.svg",
     techStacks = [],
     socialLinks = [],
     communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
@@ -33,26 +32,8 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   return (
     <div className="flex flex-col gap-5 bg-white">
-      {/* Project Icon */}
-      <div className="flex h-[252px] w-[252px] items-center justify-center self-center rounded-4xl bg-[#F4F4F4]">
-        <Image
-          src={image}
-          alt={title}
-          width={252}
-          height={252}
-          className="rounded-4xl"
-        />
-      </div>
-
       {/* Stats */}
       <div className="flex items-center justify-start gap-2 px-2 text-sm text-black/70">
-        {/* Project Title */}
-        <h1
-          className="text-start text-3xl font-medium text-black"
-          style={{ letterSpacing: "-2px" }}
-        >
-          {title}
-        </h1>
         <div className="flex items-center gap-1">
           <Icon name="fork" size="sm" variant="black" />
           <span className="text-xs text-black">{forks}</span>
