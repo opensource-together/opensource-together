@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
@@ -49,13 +50,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         {/* Stars button */}
         <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
           <span>{stars}</span>
-          <Image
-            src="/icons/empty-star.svg"
-            alt="star"
-            width={16}
-            height={16}
-            className="rounded-4xl"
-          />
+          <Icon name="star" size="sm" />
         </button>
       </div>
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -31,7 +32,8 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   } = project;
 
   // Récupérer le lien GitHub
-  const githubLink = socialLinks.find((link) => link.type === "github")?.url;
+  const githubLink =
+    socialLinks.find((link) => link.type === "github")?.url || "";
 
   // Données fictives des contributeurs pour tester l'Avatar
   const contributorsData = [
@@ -66,25 +68,13 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
-        <Button className="flex flex-1 items-center justify-center gap-0">
-          Rejoindre le projet
-          <Image
-            src="/icons/chevron-right.svg"
-            alt="chevron right"
-            width={7}
-            height={8}
-            className="ml-2"
-            style={{ filter: "invert(1)", marginTop: "1px" }}
-          />
-        </Button>
-        {githubLink && (
-          <Button variant="outline" className="flex-1" asChild>
-            <a href={githubLink} target="_blank" rel="noopener noreferrer">
-              Voir le Repo
-              <Icon name="github" size="sm" />
-            </a>
+        <Button size="lg">Rejoindre le projet</Button>
+        <Link href={githubLink} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" size="lg">
+            Voir le Repo
+            <Icon name="github" size="sm" />
           </Button>
-        )}
+        </Link>
       </div>
 
       {/* Details Section */}
@@ -188,7 +178,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           {categories.map((category, index) => (
             <div
               key={index}
-              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-normal text-black/50"
+              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
             >
               {category}
             </div>
