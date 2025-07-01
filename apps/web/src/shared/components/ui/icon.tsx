@@ -26,6 +26,7 @@ const iconSizes: Record<IconSize, string> = {
 // List of the available icons based on the existing files
 export type IconName =
   | "github"
+  | "last-commit"
   | "star"
   | "fork"
   | "people"
@@ -243,6 +244,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/created-projects-icon.svg",
     filled: "/icons/created-projects-icon.svg",
     outline: "/icons/created-projects-icon.svg",
+  },
+  "last-commit": {
+    default: "/icons/last-commit-icon.svg",
+    gray: "/icons/last-commit-icon.svg",
+    white: "/icons/last-commit-icon.svg",
+    black: "/icons/last-commit-icon.svg",
+    filled: "/icons/last-commit-icon.svg",
+    outline: "/icons/last-commit-icon.svg",
   },
 };
 

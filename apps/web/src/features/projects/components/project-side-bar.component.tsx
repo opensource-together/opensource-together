@@ -32,24 +32,8 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   return (
     <div className="flex flex-col gap-5 bg-white">
-      {/* Stats */}
-      <div className="flex items-center justify-start gap-2 px-2 text-sm text-black/70">
-        <div className="flex items-center gap-1">
-          <Icon name="fork" size="sm" variant="black" />
-          <span className="text-xs text-black">{forks}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Icon name="people" size="sm" variant="black" />
-          <span className="text-xs text-black">{contributors}</span>
-        </div>
-        <div className="mt-[1px] flex items-center gap-1">
-          <Icon name="star" size="sm" variant="black" />
-          <span className="text-xs text-black">{stars}</span>
-        </div>
-      </div>
-
       {/* Action Buttons */}
-      <div className="flex gap-2">
+      <div className="mb-3 flex gap-2">
         <Button className="flex flex-1 items-center justify-center gap-0">
           Rejoindre le projet
           <Image
@@ -71,61 +55,130 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         )}
       </div>
 
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-normal text-black/30">Stack Technique</h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
+      {/* Details Section */}
+      <div className="flex flex-col">
+        <h2 className="text-md mb-1 font-medium text-black">Details</h2>
 
-      {/* Tech Stack */}
-      {techStacks.length > 0 && (
-        <div>
-          <div className="flex flex-wrap gap-2">
-            {techStacks.map((tech, index) => (
-              <StackLogo
-                key={index}
-                name={tech.name}
-                icon={tech.iconUrl || "/icons/empty-project.svg"}
-                alt={tech.name}
-              />
-            ))}
+        {/* Stars */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon
+              name="star"
+              size="sm"
+              variant="black"
+              className="opacity-50"
+            />
+            <span className="text-sm font-normal text-black/50">Stars</span>
           </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">{stars}</span>
         </div>
-      )}
 
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-normal text-black/30">
-          Contributeurs Principaux
-        </h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
+        {/* Forks */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon
+              name="fork"
+              size="sm"
+              variant="black"
+              className="opacity-50"
+            />
+            <span className="text-sm font-normal text-black/50">Forks</span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">{forks}</span>
+        </div>
+
+        {/* Last Commit */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon name="last-commit" size="sm" variant="default" />
+            <span className="text-sm font-normal text-black/50">
+              Last Commit
+            </span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">54</span>
+        </div>
+
+        {/* Contributors */}
+        <div className="flex items-center justify-between py-1">
+          <div className="flex items-center gap-2">
+            <Icon
+              name="people"
+              size="sm"
+              variant="black"
+              className="opacity-50"
+            />
+            <span className="text-sm font-normal text-black/50">
+              Contributors
+            </span>
+          </div>
+          <div className="mx-4 flex flex-1 items-center">
+            <div className="h-[1px] w-full bg-black/5" />
+          </div>
+          <span className="text-sm font-medium text-black">{contributors}</span>
+        </div>
       </div>
 
-      {/* Contributors Avatars */}
-      <div>
-        <h3 className="mb-3 text-sm font-medium tracking-tighter text-black/80">
-          Contributeurs ({contributors})
-        </h3>
-        <div className="flex gap-2">
-          {Array.from({ length: Math.min(contributors, 5) }).map((_, index) => {
-            const contributor =
-              contributorsData[index % contributorsData.length];
-
-            return (
-              <Avatar
-                key={index}
-                src={contributor.avatar}
-                name={contributor.name}
-                alt={contributor.name}
-                size="sm"
-              />
-            );
-          })}
-
-          {/* Indicateur "+X autres" si plus de 5 contributeurs */}
-          {contributors > 5 && (
-            <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-              +{contributors - 5}
+      {/* Tech Stack Section */}
+      <div className="flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
+        {/* Tech Stack */}
+        {techStacks.length > 0 && (
+          <div>
+            <div className="flex flex-wrap gap-2">
+              {techStacks.map((tech, index) => (
+                <StackLogo
+                  key={index}
+                  name={tech.name}
+                  icon={tech.iconUrl || "/icons/empty-project.svg"}
+                  alt={tech.name}
+                />
+              ))}
             </div>
-          )}
+          </div>
+        )}
+      </div>
+
+      {/* Contributors Section */}
+      <div className="flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">
+          Contributeurs Principaux
+        </h2>
+        {/* Contributors Avatars */}
+        <div>
+          <div className="flex gap-2">
+            {Array.from({ length: Math.min(contributors, 5) }).map(
+              (_, index) => {
+                const contributor =
+                  contributorsData[index % contributorsData.length];
+
+                return (
+                  <Avatar
+                    key={index}
+                    src={contributor.avatar}
+                    name={contributor.name}
+                    alt={contributor.name}
+                    size="sm"
+                  />
+                );
+              }
+            )}
+
+            {/* Indicateur "+X autres" si plus de 5 contributeurs */}
+            {contributors > 5 && (
+              <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
+                +{contributors - 5}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
