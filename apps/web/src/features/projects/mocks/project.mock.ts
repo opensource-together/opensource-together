@@ -39,7 +39,7 @@ export const mockProjects: Project[] = [
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
     },
-    description:
+    shortDescription:
       "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algo.",
     longDescription:
       "LeetGrind est un bot Discord qui propose un challenge LeetCode aléatoire chaque jour à une communauté active de développeurs. Avec un système de classement, un canal dédié à l'entraide et une interface ludique, LeetGrind aide les développeurs à coder de façon régulière, à progresser ensemble et à retrouver la motivation au quotidien.",
@@ -116,12 +116,12 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/LeetGrindBot" },
       { type: "website", url: "https://leetgrindbot.com/" },
       { type: "twitter", url: "https://x.com/y2_dev" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 4,
       stars: 8,
       forks: 0,
@@ -184,7 +184,7 @@ export const mockProjects: Project[] = [
       name: "69Killian",
       avatarUrl: "/icons/killiancodes-icon.jpg",
     },
-    description:
+    shortDescription:
       "Réalise des challenges en contribuant à des projets open source.",
     longDescription:
       "Gitify est une application pour réaliser des challenges et gagner des techStacks en contribuant à des projets open source. Elle permet de suivre les notifications, les messages et les demandes de pull request de vos projets GitHub.",
@@ -239,7 +239,7 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/69killian/Gitify" },
       {
         type: "website",
@@ -247,7 +247,7 @@ export const mockProjects: Project[] = [
       },
       { type: "twitter", url: "https://x.com/y2_dev" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 4,
       stars: 52,
       forks: 0,
@@ -302,7 +302,7 @@ export const mockProjects: Project[] = [
       name: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
-    description:
+    shortDescription:
       "Le bot ultime pour les développeurs, directement intégré à Discord et Slack.",
     longDescription:
       "DevCord est un bot conçu pour booster la productivité des développeurs grâce à des commandes simples et puissantes intégrées à Discord et Slack. Qu'il s'agisse de formater du code, de générer des tâches cron, de convertir des formats ou de valider des regex, DevCord est votre copilote de développement. 100% gratuit, rapide et pensé pour les équipes modernes, avec une documentation claire et complète.",
@@ -363,12 +363,12 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/devcord-bot/devcord" },
       { type: "website", url: "https://docs.devcord.app/introduction" },
       { type: "twitter", url: "https://x.com/theotruvelot" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 1,
       stars: 52,
       forks: 10,
@@ -403,7 +403,7 @@ export const mockProjects: Project[] = [
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
     },
-    description:
+    shortDescription:
       "Stockez, organisez et découvrez des snippets de code avec facilité.",
     longDescription:
       "CodeSnippet révolutionne la gestion du code pour les développeurs. Notre plateforme vous permet de stocker, organiser et découvrir facilement des snippets de code. Le Hub communautaire vous offre la possibilité de partager et d'explorer des snippets créés par d'autres développeurs. Simplifiez votre flux de travail et apprenez des autres—votre code, toujours à portée de main.",
@@ -464,12 +464,12 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/codesnippet/codesnippet" },
       { type: "website", url: "code-snippet-mocha.vercel.app" },
       { type: "twitter", url: "https://twitter.com/codesnippet" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 5,
       stars: 42,
       forks: 8,
@@ -499,7 +499,7 @@ export const mockProjects: Project[] = [
       name: "Byron Love",
       avatarUrl: "exemplebyronIcon.svg",
     },
-    description:
+    shortDescription:
       "Une alternative légère et intégrée à Storybook, spécialement optimisée pour Next.js, permettant de visualiser, tester et documenter facilement vos composants UI.",
     longDescription:
       "NextSandbox est une solution moderne pour le développement et la documentation de composants UI dans l'écosystème Next.js. Elle offre une alternative plus légère et mieux intégrée que Storybook, avec des fonctionnalités spécifiques pour Next.js comme le support natif des Server Components, l'optimisation des images, et l'intégration avec le système de routing.",
@@ -560,12 +560,17 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/nextsandbox/nextsandbox" },
       { type: "website", url: "https://nextsandbox.dev" },
       { type: "twitter", url: "https://twitter.com/nextsandbox" },
     ],
-    communityStats: {
+    categories: [
+      { id: "1", name: "Next.js" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "UI/UX" },
+    ],
+    projectStats: {
       contributors: 3,
       stars: 28,
       forks: 5,
@@ -604,7 +609,7 @@ export const mockProjects: Project[] = [
       name: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
-    description:
+    shortDescription:
       "Un outil terminal open source pour monitorer vos serveurs et containers en temps réel, inspiré de k9s avec une interface intuitive et des fonctionnalités avancées",
     longDescription:
       "g9s est une suite d'outils en ligne de commande pour visualiser, analyser et interagir avec vos serveurs et containers. Le projet est composé de trois modules : un serveur central qui collecte et expose les données, un agent qui remonte les infos système, et une interface terminal (TUI) élégante à la k9s. Le tout est développé en Go, orchestré via Docker et Kubernetes, et entièrement open source.",
@@ -653,7 +658,7 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/69killian/Gitify" },
       {
         type: "website",
@@ -661,7 +666,7 @@ export const mockProjects: Project[] = [
       },
       { type: "twitter", url: "https://twitter.com/g9scli" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 3,
       stars: 15,
       forks: 2,
@@ -700,7 +705,7 @@ export const mockProjects: Project[] = [
       avatarUrl:
         "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
     },
-    description:
+    shortDescription:
       "Un outil de transfert de variable d'environnement sécurisé et collaboratif, permettant de partager facilement vos configurations entre équipes",
     longDescription:
       "Sherpa est un outil permettant de transférer ses variables d'environnement de manière sécurisé, pour soi ou pour son équipe. Avec un système de chiffrement zero-trust, on assure la sécurité des données transférées",
@@ -756,11 +761,11 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/Olyxz16/sherpa" },
       { type: "twitter", url: "https://x.com/Ox16__" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 2,
       stars: 6,
       forks: 0,
@@ -801,7 +806,7 @@ export const mockProjects: Project[] = [
       name: "Shyybi",
       avatarUrl: "/icons/shyybi-icon.png",
     },
-    description:
+    shortDescription:
       "Crée ton profil bio stylé, rapide et animé — comme guns.lol, mais avec ta touche. Une plateforme moderne pour centraliser tous tes liens importants sur une page élégante et responsive",
     longDescription:
       "Liltea est une plateforme de biographie moderne qui te permet de centraliser tous tes liens importants (réseaux sociaux, projets, contenus) sur une page élégante et responsive. Liltea offre une expérience fluide, rapide et personnalisable, propulsée par une stack moderne. Idéal pour les créateurs, développeurs, streamers ou freelances qui souhaitent partager leur univers en un seul lien.",
@@ -856,12 +861,12 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/liltea-dev/liltea" },
       { type: "website", url: "https://liltea.app" },
       { type: "twitter", url: "https://twitter.com/lilteaapp" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 4,
       stars: 37,
       forks: 5,
@@ -896,7 +901,7 @@ export const mockProjects: Project[] = [
       name: "Sarah Miller",
       avatarUrl: "exemplebyronIcon.svg",
     },
-    description:
+    shortDescription:
       "Une plateforme de développement cloud qui simplifie la configuration et le partage d'environnements de développement.",
     longDescription:
       "DevSpace permet aux équipes de développement de créer, partager et gérer des environnements de développement dans le cloud. Il automatise la configuration des environnements, facilite le partage entre développeurs et assure la cohérence entre les environnements de développement et de production.",
@@ -945,12 +950,12 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/devspace-platform" },
       { type: "website", url: "https://devspace.cloud" },
       { type: "twitter", url: "https://twitter.com/devspace_cloud" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 8,
       stars: 156,
       forks: 23,
@@ -988,7 +993,7 @@ export const mockProjects: Project[] = [
       name: "Emma Wilson",
       avatarUrl: "exemplebyronIcon.svg",
     },
-    description:
+    shortDescription:
       "Une plateforme de documentation technique collaborative avec support Markdown et intégration Git.",
     longDescription:
       "TechDocs est une plateforme moderne pour la documentation technique qui permet aux équipes de créer, maintenir et partager leur documentation de manière collaborative. Elle offre une interface intuitive pour l'édition Markdown, la versioning avec Git, et l'intégration avec les outils de développement existants.",
@@ -1037,12 +1042,12 @@ export const mockProjects: Project[] = [
         ],
       },
     ],
-    socialLinks: [
+    externalLinks: [
       { type: "github", url: "https://github.com/techdocs-platform" },
       { type: "website", url: "https://techdocs.dev" },
       { type: "twitter", url: "https://twitter.com/techdocs_platform" },
     ],
-    communityStats: {
+    projectStats: {
       contributors: 5,
       stars: 112,
       forks: 18,

@@ -1,27 +1,37 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
+import {
+  Category,
+  Collaborator,
+  ExternalLink,
+  KeyFeature,
+  ProjectGoal,
+  ProjectRole,
+  TechStack,
+} from "../types/project.type";
+
 export type ProjectCreateMethod = "github" | "scratch";
 
 export interface ProjectFormData {
   method: ProjectCreateMethod | null;
   // Data for scratch method
   projectName: string;
-  description: string;
-  website: string;
+  shortDescription: string;
+  image: string;
+  // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  externalLinks: ExternalLink[];
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
+  techStack: TechStack[];
+  categories: Category[];
   // Data for github method
   selectedRepository: {
     name: string;
     date: string;
   } | null;
   // Common data for roles configuration
-  roles: Array<{
-    id: string;
-    name: string;
-    description: string;
-    skillLevel: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-    isOpen: boolean;
-  }>;
+  roles: ProjectRole[];
 }
 
 interface ProjectCreateStore {
@@ -33,7 +43,19 @@ interface ProjectCreateStore {
   setMethod: (method: ProjectCreateMethod) => void;
   updateProjectInfo: (
     info: Partial<
-      Pick<ProjectFormData, "projectName" | "description" | "website">
+      Pick<
+        ProjectFormData,
+        | "projectName"
+        | "shortDescription"
+        | "image"
+        // | "status"
+        | "keyFeatures"
+        | "projectGoals"
+        | "techStack"
+        | "categories"
+        | "roles"
+        | "externalLinks"
+      >
     >
   ) => void;
   selectRepository: (repo: { name: string; date: string }) => void;
@@ -46,9 +68,15 @@ interface ProjectCreateStore {
 const initialFormData: ProjectFormData = {
   method: null,
   projectName: "",
-  description: "",
-  website: "",
+  shortDescription: "",
+  image: "",
+  // status: "DRAFT",
+  externalLinks: [],
+  keyFeatures: [],
+  projectGoals: [],
   selectedRepository: null,
+  techStack: [],
+  categories: [],
   roles: [],
 };
 

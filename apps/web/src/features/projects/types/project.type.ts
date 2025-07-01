@@ -15,14 +15,15 @@ export interface ProjectRole {
   title: string;
   description: string;
   techStacks: TechStack[];
+  roleCount?: number;
 }
 
-export interface SocialLink {
+export interface ExternalLink {
   type: "github" | "website" | "discord" | "twitter" | "other";
   url: string;
 }
 
-export interface CommunityStats {
+export interface ProjectStats {
   contributors?: number;
   stars?: number;
   forks?: number;
@@ -39,6 +40,7 @@ export interface Collaborator {
   email?: string;
   avatarUrl?: string;
   role?: string;
+  collaboratorsCount?: number;
 }
 
 export interface KeyFeature {
@@ -57,17 +59,17 @@ export interface Project {
   title: string;
   image?: string;
   author: Author;
-  description: string;
+  shortDescription: string;
   longDescription?: string;
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   collaborators?: Collaborator[];
   techStacks: TechStack[];
-  roles?: ProjectRole[];
-  socialLinks?: SocialLink[];
-  communityStats?: CommunityStats;
-  keyFeatures?: KeyFeature[];
-  projectGoals?: ProjectGoal[];
-  categories?: Category[];
+  roles: ProjectRole[];
+  externalLinks?: ExternalLink[];
+  projectStats?: ProjectStats;
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
+  categories: Category[];
   lastCommitAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
