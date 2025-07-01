@@ -1,3 +1,9 @@
+export interface Author {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+}
+
 export interface TechStack {
   id: string;
   name: string;
@@ -28,34 +34,33 @@ export interface Category {
 }
 
 export interface Collaborator {
-  id?: string;
-  name?: string;
+  id: string;
+  name: string;
   email?: string;
+  avatarUrl?: string;
+  role?: string;
 }
 
 export interface KeyFeature {
   id?: string;
-  name: string;
+  title: string;
 }
 
 export interface ProjectGoal {
   id?: string;
-  name: string;
+  goal: string;
 }
 
-// Interface Project complète
 export interface Project {
   id?: string;
   slug?: string;
   title: string;
   image?: string;
-  authorName?: string;
-  authorImage?: string;
+  author: Author;
   description: string;
   longDescription?: string;
-  collaborator?: Collaborator[];
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  difficulty?: "Facile" | "Moyenne" | "Difficile";
+  collaborators?: Collaborator[];
   techStacks: TechStack[];
   roles?: ProjectRole[];
   socialLinks?: SocialLink[];
@@ -63,7 +68,7 @@ export interface Project {
   keyFeatures?: KeyFeature[];
   projectGoals?: ProjectGoal[];
   categories?: Category[];
-  lastCommit?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  lastCommitAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

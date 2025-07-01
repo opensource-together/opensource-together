@@ -10,12 +10,35 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Bot" },
       { id: "3", name: "Open Source" },
     ],
+    collaborators: [
+      {
+        id: "1",
+        name: "Byron M",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Lead Developer",
+      },
+      {
+        id: "2",
+        name: "Killian C",
+        avatarUrl: "/icons/killiancodes-icon.jpg",
+        role: "Frontend Developer",
+      },
+      {
+        id: "3",
+        name: "P2aco Dev",
+        avatarUrl: "/icons/p2aco-icon.png",
+        role: "Backend Developer",
+      },
+    ],
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
 
-    authorName: "y2_dev",
-    authorImage:
-      "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
+    author: {
+      id: "1",
+      name: "y2_dev",
+      avatarUrl:
+        "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
+    },
     description:
       "Un bot Discord pour pratiquer LeetCode chaque jour et progresser en algo.",
     longDescription:
@@ -59,8 +82,8 @@ export const mockProjects: Project[] = [
           "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Discord_Logo_sans_texte.svg/1818px-Discord_Logo_sans_texte.svg.png",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -104,40 +127,63 @@ export const mockProjects: Project[] = [
       forks: 0,
     },
     keyFeatures: [
-      { id: "1", name: "Défis LeetCode quotidiens automatisés" },
-      { id: "2", name: "Système de classement compétitif" },
-      { id: "3", name: "Canal d'entraide communautaire" },
-      { id: "4", name: "Interface Discord intuitive" },
-      { id: "5", name: "Suivi des progrès personnalisé" },
+      { id: "1", title: "Défis LeetCode quotidiens automatisés" },
+      { id: "2", title: "Système de classement compétitif" },
+      { id: "3", title: "Canal d'entraide communautaire" },
+      { id: "4", title: "Interface Discord intuitive" },
+      { id: "5", title: "Suivi des progrès personnalisé" },
     ],
     projectGoals: [
       {
         id: "1",
-        name: "Aider 1000+ développeurs à améliorer leurs compétences en algorithmie",
+        goal: "Aider 1000+ développeurs à améliorer leurs compétences en algorithmie",
       },
       {
         id: "2",
-        name: "Créer une communauté active et bienveillante autour de la programmation",
+        goal: "Créer une communauté active et bienveillante autour de la programmation",
       },
       {
         id: "3",
-        name: "Développer des fonctionnalités avancées de gamification",
+        goal: "Développer des fonctionnalités avancées de gamification",
       },
-      { id: "4", name: "Intégrer des statistiques détaillées de progression" },
+      { id: "4", goal: "Intégrer des statistiques détaillées de progression" },
     ],
   },
   {
     id: "7",
     slug: "gitify",
     title: "Gitify",
+    collaborators: [
+      {
+        id: "1",
+        name: "Byron M",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Lead Developer",
+      },
+      {
+        id: "2",
+        name: "Killian C",
+        avatarUrl: "/icons/killiancodes-icon.jpg",
+        role: "Frontend Developer",
+      },
+      {
+        id: "3",
+        name: "P2aco Dev",
+        avatarUrl: "/icons/p2aco-icon.png",
+        role: "Backend Developer",
+      },
+    ],
     image: "/icons/gitifyIcon.png",
     categories: [
       { id: "1", name: "GitHub" },
       { id: "2", name: "Open Source" },
       { id: "3", name: "Challenges" },
     ],
-    authorName: "69Killian",
-    authorImage: "/icons/killiancodes-icon.jpg",
+    author: {
+      id: "1",
+      name: "69Killian",
+      avatarUrl: "/icons/killiancodes-icon.jpg",
+    },
     description:
       "Réalise des challenges en contribuant à des projets open source.",
     longDescription:
@@ -169,8 +215,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -207,17 +253,17 @@ export const mockProjects: Project[] = [
       forks: 0,
     },
     keyFeatures: [
-      { id: "1", name: "Système de challenges open source" },
-      { id: "2", name: "techStacks de progression personnalisés" },
-      { id: "3", name: "Notifications GitHub intégrées" },
-      { id: "4", name: "Suivi des pull requests" },
-      { id: "5", name: "Interface moderne et intuitive" },
+      { id: "1", title: "Système de challenges open source" },
+      { id: "2", title: "techStacks de progression personnalisés" },
+      { id: "3", title: "Notifications GitHub intégrées" },
+      { id: "4", title: "Suivi des pull requests" },
+      { id: "5", title: "Interface moderne et intuitive" },
     ],
     projectGoals: [
-      { id: "1", name: "Gamifier la contribution à l'open source" },
-      { id: "2", name: "Créer une communauté de contributeurs actifs" },
-      { id: "3", name: "Simplifier la découverte de projets open source" },
-      { id: "4", name: "Encourager les développeurs débutants à contribuer" },
+      { id: "1", goal: "Gamifier la contribution à l'open source" },
+      { id: "2", goal: "Créer une communauté de contributeurs actifs" },
+      { id: "3", goal: "Simplifier la découverte de projets open source" },
+      { id: "4", goal: "Encourager les développeurs débutants à contribuer" },
     ],
   },
   {
@@ -229,10 +275,33 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Bot" },
       { id: "3", name: "Open Source" },
     ],
+    collaborators: [
+      {
+        id: "1",
+        name: "Byron M",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Lead Developer",
+      },
+      {
+        id: "2",
+        name: "Killian C",
+        avatarUrl: "/icons/killiancodes-icon.jpg",
+        role: "Frontend Developer",
+      },
+      {
+        id: "3",
+        name: "P2aco Dev",
+        avatarUrl: "/icons/p2aco-icon.png",
+        role: "Backend Developer",
+      },
+    ],
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
-    authorName: "p2aco",
-    authorImage: "/icons/p2aco-icon.png",
+    author: {
+      id: "1",
+      name: "p2aco",
+      avatarUrl: "/icons/p2aco-icon.png",
+    },
     description:
       "Le bot ultime pour les développeurs, directement intégré à Discord et Slack.",
     longDescription:
@@ -270,8 +339,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/slack/slack-original.svg",
       },
     ],
-    createdAt: "2025-01-15T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2025-01-15"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -305,20 +374,17 @@ export const mockProjects: Project[] = [
       forks: 10,
     },
     keyFeatures: [
-      { id: "1", name: "Commandes de formatage de code intégrées" },
-      { id: "2", name: "Générateur de tâches cron" },
-      { id: "3", name: "Convertisseur de formats multiple" },
-      { id: "4", name: "Validation regex en temps réel" },
-      { id: "5", name: "Support Discord et Slack" },
+      { id: "1", title: "Commandes de formatage de code intégrées" },
+      { id: "5", title: "Support Discord et Slack" },
     ],
     projectGoals: [
       {
         id: "1",
-        name: "Devenir l'outil de référence pour les développeurs sur Discord/Slack",
+        goal: "Devenir l'outil de référence pour les développeurs sur Discord/Slack",
       },
-      { id: "2", name: "Intégrer plus de 50 commandes utilitaires" },
-      { id: "3", name: "Supporter 10+ plateformes de communication" },
-      { id: "4", name: "Créer une API publique pour les développeurs" },
+      { id: "2", goal: "Intégrer plus de 50 commandes utilitaires" },
+      { id: "3", goal: "Supporter 10+ plateformes de communication" },
+      { id: "4", goal: "Créer une API publique pour les développeurs" },
     ],
   },
   {
@@ -331,9 +397,12 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Open Source" },
       { id: "3", name: "Snippets" },
     ],
-    authorName: "Spectre",
-    authorImage:
-      "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
+    author: {
+      id: "1",
+      name: "Spectre",
+      avatarUrl:
+        "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
+    },
     description:
       "Stockez, organisez et découvrez des snippets de code avec facilité.",
     longDescription:
@@ -371,8 +440,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -406,17 +475,17 @@ export const mockProjects: Project[] = [
       forks: 8,
     },
     keyFeatures: [
-      { id: "1", name: "Stockage et organisation de snippets" },
-      { id: "2", name: "Hub communautaire de partage" },
-      { id: "3", name: "Recherche avancée par tags et langages" },
-      { id: "4", name: "Intégration IDE via extensions" },
-      { id: "5", name: "Système de notation et commentaires" },
+      { id: "1", title: "Stockage et organisation de snippets" },
+      { id: "2", title: "Hub communautaire de partage" },
+      { id: "3", title: "Recherche avancée par tags et langages" },
+      { id: "4", title: "Intégration IDE via extensions" },
+      { id: "5", title: "Système de notation et commentaires" },
     ],
     projectGoals: [
-      { id: "1", name: "Devenir la référence pour le stockage de snippets" },
-      { id: "2", name: "Construire une communauté de 10k+ développeurs" },
-      { id: "3", name: "Intégrer tous les IDEs populaires" },
-      { id: "4", name: "Créer un marketplace de snippets premium" },
+      { id: "1", goal: "Devenir la référence pour le stockage de snippets" },
+      { id: "2", goal: "Construire une communauté de 10k+ développeurs" },
+      { id: "3", goal: "Intégrer tous les IDEs populaires" },
+      { id: "4", goal: "Créer un marketplace de snippets premium" },
     ],
   },
   {
@@ -425,8 +494,11 @@ export const mockProjects: Project[] = [
     title: "NextSandbox",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
-    authorName: "Byron Love",
-    authorImage: "exemplebyronIcon.svg",
+    author: {
+      id: "1",
+      name: "Byron Love",
+      avatarUrl: "exemplebyronIcon.svg",
+    },
     description:
       "Une alternative légère et intégrée à Storybook, spécialement optimisée pour Next.js, permettant de visualiser, tester et documenter facilement vos composants UI.",
     longDescription:
@@ -464,8 +536,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -499,20 +571,20 @@ export const mockProjects: Project[] = [
       forks: 5,
     },
     keyFeatures: [
-      { id: "1", name: "Alternative légère à Storybook" },
-      { id: "2", name: "Support natif des Server Components" },
-      { id: "3", name: "Optimisation des images Next.js" },
-      { id: "4", name: "Hot-reload intelligent" },
-      { id: "5", name: "Intégration routing Next.js" },
+      { id: "1", title: "Alternative légère à Storybook" },
+      { id: "2", title: "Support natif des Server Components" },
+      { id: "3", title: "Optimisation des images Next.js" },
+      { id: "4", title: "Hot-reload intelligent" },
+      { id: "5", title: "Intégration routing Next.js" },
     ],
     projectGoals: [
       {
         id: "1",
-        name: "Devenir l'alternative de référence à Storybook pour Next.js",
+        goal: "Devenir l'alternative de référence à Storybook pour Next.js",
       },
-      { id: "2", name: "Atteindre 10k+ téléchargements mensuels" },
-      { id: "3", name: "Supporter toutes les fonctionnalités Next.js" },
-      { id: "4", name: "Créer un écosystème de plugins" },
+      { id: "2", goal: "Atteindre 10k+ téléchargements mensuels" },
+      { id: "3", goal: "Supporter toutes les fonctionnalités Next.js" },
+      { id: "4", goal: "Créer un écosystème de plugins" },
     ],
   },
 
@@ -527,8 +599,11 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
-    authorName: "p2aco",
-    authorImage: "/icons/p2aco-icon.png",
+    author: {
+      id: "1",
+      name: "p2aco",
+      avatarUrl: "/icons/p2aco-icon.png",
+    },
     description:
       "Un outil terminal open source pour monitorer vos serveurs et containers en temps réel, inspiré de k9s avec une interface intuitive et des fonctionnalités avancées",
     longDescription:
@@ -554,8 +629,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
       },
     ],
-    createdAt: "2025-05-19T00:00:00Z",
-    updatedAt: "2025-05-19T00:00:00Z",
+    createdAt: new Date("2025-05-19"),
+    updatedAt: new Date("2025-05-19"),
     roles: [
       {
         id: "1",
@@ -592,20 +667,20 @@ export const mockProjects: Project[] = [
       forks: 2,
     },
     keyFeatures: [
-      { id: "1", name: "Interface terminal façon k9s" },
-      { id: "2", name: "Monitoring temps réel des conteneurs" },
-      { id: "3", name: "Architecture modulaire (serveur/agent/TUI)" },
-      { id: "4", name: "Métriques système détaillées" },
-      { id: "5", name: "Auto-hébergement et open source" },
+      { id: "1", title: "Interface terminal façon k9s" },
+      { id: "2", title: "Monitoring temps réel des conteneurs" },
+      { id: "3", title: "Architecture modulaire (serveur/agent/TUI)" },
+      { id: "4", title: "Métriques système détaillées" },
+      { id: "5", title: "Auto-hébergement et open source" },
     ],
     projectGoals: [
       {
         id: "1",
-        name: "Devenir l'alternative open source à Datadog pour les équipes DevOps",
+        goal: "Devenir l'alternative open source à Datadog pour les équipes DevOps",
       },
-      { id: "2", name: "Supporter Kubernetes et Docker nativement" },
-      { id: "3", name: "Créer une communauté d'utilisateurs DevOps" },
-      { id: "4", name: "Intégrer des alertes intelligentes" },
+      { id: "2", goal: "Supporter Kubernetes et Docker nativement" },
+      { id: "3", goal: "Créer une communauté d'utilisateurs DevOps" },
+      { id: "4", goal: "Intégrer des alertes intelligentes" },
     ],
   },
   {
@@ -619,9 +694,12 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
-    authorName: "Olyxz16",
-    authorImage:
-      "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
+    author: {
+      id: "1",
+      name: "Olyxz16",
+      avatarUrl:
+        "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
+    },
     description:
       "Un outil de transfert de variable d'environnement sécurisé et collaboratif, permettant de partager facilement vos configurations entre équipes",
     longDescription:
@@ -653,8 +731,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -688,23 +766,23 @@ export const mockProjects: Project[] = [
       forks: 0,
     },
     keyFeatures: [
-      { id: "1", name: "Chiffrement zero-trust des données" },
-      { id: "2", name: "Partage collaboratif en équipe" },
-      { id: "3", name: "Interface CLI et web intuitive" },
-      { id: "4", name: "Gestion des environnements multiples" },
-      { id: "5", name: "Synchronisation automatique" },
+      { id: "1", title: "Chiffrement zero-trust des données" },
+      { id: "2", title: "Partage collaboratif en équipe" },
+      { id: "3", title: "Interface CLI et web intuitive" },
+      { id: "4", title: "Gestion des environnements multiples" },
+      { id: "5", title: "Synchronisation automatique" },
     ],
     projectGoals: [
       {
         id: "1",
-        name: "Simplifier la gestion des secrets pour les développeurs",
+        goal: "Simplifier la gestion des secrets pour les développeurs",
       },
-      { id: "2", name: "Assurer une sécurité maximale des données sensibles" },
+      { id: "2", goal: "Assurer une sécurité maximale des données sensibles" },
       {
         id: "3",
-        name: "Créer une alternative open source aux outils propriétaires",
+        goal: "Créer une alternative open source aux outils propriétaires",
       },
-      { id: "4", name: "Intégrer les principaux outils de CI/CD" },
+      { id: "4", goal: "Intégrer les principaux outils de CI/CD" },
     ],
   },
   {
@@ -718,8 +796,11 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
-    authorName: "Shyybi",
-    authorImage: "/icons/shyybi-icon.png",
+    author: {
+      id: "1",
+      name: "Shyybi",
+      avatarUrl: "/icons/shyybi-icon.png",
+    },
     description:
       "Crée ton profil bio stylé, rapide et animé — comme guns.lol, mais avec ta touche. Une plateforme moderne pour centraliser tous tes liens importants sur une page élégante et responsive",
     longDescription:
@@ -751,8 +832,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fastify/fastify-original.svg",
       },
     ],
-    createdAt: "2025-04-10T00:00:00Z",
-    updatedAt: "2025-05-19T00:00:00Z",
+    createdAt: new Date("2025-04-10"),
+    updatedAt: new Date("2025-05-19"),
     roles: [
       {
         id: "1",
@@ -786,17 +867,17 @@ export const mockProjects: Project[] = [
       forks: 5,
     },
     keyFeatures: [
-      { id: "1", name: "Pages bio stylées et animées" },
-      { id: "2", name: "Thèmes personnalisables" },
-      { id: "3", name: "Centralisation de tous tes liens" },
-      { id: "4", name: "Design responsive optimisé" },
-      { id: "5", name: "Analyses de trafic intégrées" },
+      { id: "1", title: "Pages bio stylées et animées" },
+      { id: "2", title: "Thèmes personnalisables" },
+      { id: "3", title: "Centralisation de tous tes liens" },
+      { id: "4", title: "Design responsive optimisé" },
+      { id: "5", title: "Analyses de trafic intégrées" },
     ],
     projectGoals: [
-      { id: "1", name: "Devenir l'alternative moderne à Linktree" },
-      { id: "2", name: "Atteindre 100k+ utilisateurs actifs" },
-      { id: "3", name: "Créer un marketplace de thèmes communautaires" },
-      { id: "4", name: "Intégrer des fonctionnalités e-commerce" },
+      { id: "1", goal: "Devenir l'alternative moderne à Linktree" },
+      { id: "2", goal: "Atteindre 100k+ utilisateurs actifs" },
+      { id: "3", goal: "Créer un marketplace de thèmes communautaires" },
+      { id: "4", goal: "Intégrer des fonctionnalités e-commerce" },
     ],
   },
   {
@@ -810,8 +891,11 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
-    authorName: "Sarah Miller",
-    authorImage: "exemplebyronIcon.svg",
+    author: {
+      id: "1",
+      name: "Sarah Miller",
+      avatarUrl: "exemplebyronIcon.svg",
+    },
     description:
       "Une plateforme de développement cloud qui simplifie la configuration et le partage d'environnements de développement.",
     longDescription:
@@ -837,8 +921,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -872,20 +956,20 @@ export const mockProjects: Project[] = [
       forks: 23,
     },
     keyFeatures: [
-      { id: "1", name: "Environnements cloud instantanés" },
-      { id: "2", name: "Configuration automatisée" },
-      { id: "3", name: "Partage d'environnements en équipe" },
-      { id: "4", name: "Intégration Docker/Kubernetes" },
-      { id: "5", name: "Templates prêts à l'emploi" },
+      { id: "1", title: "Environnements cloud instantanés" },
+      { id: "2", title: "Configuration automatisée" },
+      { id: "3", title: "Partage d'environnements en équipe" },
+      { id: "4", title: "Intégration Docker/Kubernetes" },
+      { id: "5", title: "Templates prêts à l'emploi" },
     ],
     projectGoals: [
       {
         id: "1",
-        name: "Révolutionner le setup des environnements de développement",
+        goal: "Révolutionner le setup des environnements de développement",
       },
-      { id: "2", name: "Supporter 50+ stacks techniques populaires" },
-      { id: "3", name: "Créer une marketplace de templates" },
-      { id: "4", name: "Atteindre 10k+ développeurs utilisateurs" },
+      { id: "2", goal: "Supporter 50+ stacks techniques populaires" },
+      { id: "3", goal: "Créer une marketplace de templates" },
+      { id: "4", goal: "Atteindre 10k+ développeurs utilisateurs" },
     ],
   },
   {
@@ -899,8 +983,11 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
-    authorName: "Emma Wilson",
-    authorImage: "exemplebyronIcon.svg",
+    author: {
+      id: "1",
+      name: "Emma Wilson",
+      avatarUrl: "exemplebyronIcon.svg",
+    },
     description:
       "Une plateforme de documentation technique collaborative avec support Markdown et intégration Git.",
     longDescription:
@@ -926,8 +1013,8 @@ export const mockProjects: Project[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
       },
     ],
-    createdAt: "2024-12-01T00:00:00Z",
-    updatedAt: "2025-05-15T00:00:00Z",
+    createdAt: new Date("2024-12-01"),
+    updatedAt: new Date("2025-05-15"),
     roles: [
       {
         id: "1",
@@ -961,17 +1048,17 @@ export const mockProjects: Project[] = [
       forks: 18,
     },
     keyFeatures: [
-      { id: "1", name: "Éditeur Markdown collaboratif" },
-      { id: "2", name: "Versioning Git natif" },
-      { id: "3", name: "Templates de documentation" },
-      { id: "4", name: "Recherche avancée" },
-      { id: "5", name: "Intégration outils développement" },
+      { id: "1", title: "Éditeur Markdown collaboratif" },
+      { id: "2", title: "Versioning Git natif" },
+      { id: "3", title: "Templates de documentation" },
+      { id: "4", title: "Recherche avancée" },
+      { id: "5", title: "Intégration outils développement" },
     ],
     projectGoals: [
-      { id: "1", name: "Devenir la référence pour la documentation technique" },
-      { id: "2", name: "Intégrer tous les principaux outils de développement" },
-      { id: "3", name: "Créer une communauté de rédacteurs techniques" },
-      { id: "4", name: "Atteindre 50k+ documents créés" },
+      { id: "1", goal: "Devenir la référence pour la documentation technique" },
+      { id: "2", goal: "Intégrer tous les principaux outils de développement" },
+      { id: "3", goal: "Créer une communauté de rédacteurs techniques" },
+      { id: "4", goal: "Atteindre 50k+ documents créés" },
     ],
   },
 ];
