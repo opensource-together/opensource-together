@@ -4,6 +4,10 @@ import {
   TechStackValidationErrors,
   TechStackPrimitive,
 } from '@/domain/techStack/techstack.entity';
+import { Title } from './title.vo';
+import { Description } from './description.vo';
+import { Difficulty } from './difficulty.vo';
+import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
 
 export type ProjectValidationErrors = {
   title?: string;
@@ -40,7 +44,7 @@ export type ProjectPrimitive = {
   projectImages?: string[];
   githubLink: string | null;
   techStacks: TechStack[];
-  projectRoles?: { id?: string; title: string; description: string }[];
+  projectRoles: ProjectRole[];
   projectMembers?: { userId: string; name: string; role: string }[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -55,7 +59,7 @@ export type ProjectProps = {
   projectImages?: string[];
   githubLink: string | null;
   techStacks: TechStack[];
-  projectRoles?: { id?: string; title: string; description: string }[];
+  projectRoles: ProjectRole[];
   projectMembers?: { userId: string; name: string; role: string }[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -70,8 +74,8 @@ export class Project {
   private projectImages?: string[];
   private githubLink: string | null;
   private techStacks: TechStack[];
-  private projectRoles?: { title: string; description: string }[];
-  private projectMembers?: { userId: string; name: string; role: string }[];
+  private projectRoles: ProjectRole[];
+  private projectMembers: { userId: string; name: string; role: string }[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -87,7 +91,7 @@ export class Project {
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
     this.techStacks = props.techStacks;
-    this.projectRoles = props.projectRoles ?? [];
+    this.projectRoles = props.projectRoles;
     this.projectMembers = props.projectMembers ?? [];
   }
 
@@ -102,28 +106,22 @@ export class Project {
   ): Result<Project, ProjectValidationErrors | string> {
     const { id, createdAt, updatedAt, ...rest } = props;
     const error: ProjectValidationErrors = {};
-    //title, TODO: make a VO
-    if (!rest.title || rest.title.trim() === '') {
-      error.title = 'Title is required';
+    const title = Title.create(rest.title);
+    if (!title.success) {
+      error.title = title.error;
     }
-    if (rest.title.length > 100) {
-      error.title = 'Title must be less than 100 characters';
+
+    const description = Description.create(rest.description);
+    if (!description.success) {
+      error.description = description.error;
     }
-    //description, TODO: make a VO
-    if (!rest.description || rest.description.trim() === '') {
-      error.description = 'Description is required';
+
+    const difficulty = Difficulty.create(rest.difficulty);
+    if (!difficulty.success) {
+      error.difficulty = difficulty.error;
     }
-    if (rest.description.length > 1000) {
-      error.description = 'Description must be less than 1000 characters';
-    }
-    //difficulty, TODO: make a VO
-    if (!rest.difficulty) {
-      error.difficulty = 'Difficulty is required';
-    }
-    //projectRoles TODO: verifiy if is not need to be moved to another entity dedicated
-    if (!rest.projectRoles || rest.projectRoles.length === 0) {
-      error.projectRoles = 'Project roles are required';
-    } else {
+    //projectRoles TODO: verify if is not needed to be moved to another entity dedicated
+    if (rest.projectRoles && rest.projectRoles.length > 0) {
       for (const role of rest.projectRoles) {
         if (!role.title || role.title.trim() === '') {
           error.projectRoles = 'Title for project roles is required';
@@ -184,6 +182,7 @@ export class Project {
       id,
       ...rest,
       techStacks: validTechStacks,
+      projectRoles: [],
       createdAt,
       updatedAt,
     });
@@ -208,8 +207,8 @@ export class Project {
   private getTechStacks(): TechStack[] {
     return [...this.techStacks];
   }
-  private getProjectRoles(): { title: string; description: string }[] {
-    return [...(this.projectRoles ?? [])];
+  private getProjectRoles(): ProjectRole[] {
+    return [...this.projectRoles];
   }
 
   public toPrimitive(): ProjectPrimitive {
@@ -230,17 +229,56 @@ export class Project {
     };
   }
 
+  public addProjectRole(projectRole: ProjectRole): Result<ProjectRole, string> {
+    if (!this.id) {
+      return Result.fail('Project id is required');
+    }
+    const projectRoleResult = ProjectRole.create({
+      projectId: this.id,
+      roleTitle: projectRole.toPrimitive().roleTitle,
+      description: projectRole.toPrimitive().description,
+      isFilled: projectRole.toPrimitive().isFilled,
+      skillSet: projectRole.toPrimitive().skillSet,
+    });
+    if (!projectRoleResult.success) {
+      return Result.fail(projectRoleResult.error as string);
+    }
+
+    if (
+      this.hasRoleWithTitle(projectRoleResult.value.toPrimitive().roleTitle)
+    ) {
+      return Result.fail(
+        'A role with this title already exists in this project',
+      );
+    }
+
+    this.projectRoles.push(projectRoleResult.value);
+    return Result.ok(projectRoleResult.value);
+  }
+
   public hasRoleWithTitle(title: string): boolean {
     if (!this.projectRoles) {
       return false;
     }
     const normalizedTitle = title.toLowerCase();
     return this.projectRoles.some(
-      (role) => role.title.toLowerCase() === normalizedTitle,
+      (role) => role.toPrimitive().roleTitle.toLowerCase() === normalizedTitle,
     );
+  }
+
+  public hasRoleId(roleId: string): boolean {
+    if (!this.projectRoles) {
+      return false;
+    }
+    return this.projectRoles.some((role) => role.toPrimitive().id === roleId);
   }
 
   public hasOwnerId(userId: string): boolean {
     return this.ownerId === userId;
+  }
+
+  // Authorization and validation methods only
+  public canUserModifyRoles(userId: string): boolean {
+    return this.hasOwnerId(userId);
   }
 }
