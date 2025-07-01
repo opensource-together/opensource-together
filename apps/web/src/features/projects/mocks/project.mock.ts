@@ -5,15 +5,14 @@ export const mockProjects: Project[] = [
     id: "1",
     slug: "leetgrind",
     title: "LeetGrind",
-    categories: ["Discord", "Bot", "Open Source"],
+    categories: [
+      { id: "1", name: "Discord" },
+      { id: "2", name: "Bot" },
+      { id: "3", name: "Open Source" },
+    ],
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
+
     authorName: "y2_dev",
     authorImage:
       "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
@@ -68,21 +67,30 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Frontend",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        badges: [{ label: "Next.js" }, { label: "React" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "React" },
+        ],
       },
       {
         id: "2",
         title: "UI/UX Designer",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        badges: [{ label: "Next.js" }, { label: "React" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "React" },
+        ],
       },
       {
         id: "3",
         title: "Développeur·se Backend",
         description:
           "Nous recherchons un·e développeur·se Nest.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
-        badges: [{ label: "Nest.js" }, { label: "PostgreSQL" }],
+        techStacks: [
+          { id: "1", name: "Nest.js" },
+          { id: "2", name: "PostgreSQL" },
+        ],
       },
     ],
     socialLinks: [
@@ -95,23 +103,27 @@ export const mockProjects: Project[] = [
       stars: 8,
       forks: 0,
     },
-    keyBenefits: [
-      "Progresse chaque jour en algorithmie dans une ambiance bienveillante",
-      "Travaille sur un projet open-source utile pour des centaines de développeurs",
-      "Découvre les coulisses du développement d'un bot Discord communautaire",
-    ],
     keyFeatures: [
-      "Défis LeetCode quotidiens automatisés",
-      "Système de classement compétitif",
-      "Canal d'entraide communautaire",
-      "Interface Discord intuitive",
-      "Suivi des progrès personnalisé",
+      { id: "1", name: "Défis LeetCode quotidiens automatisés" },
+      { id: "2", name: "Système de classement compétitif" },
+      { id: "3", name: "Canal d'entraide communautaire" },
+      { id: "4", name: "Interface Discord intuitive" },
+      { id: "5", name: "Suivi des progrès personnalisé" },
     ],
     projectGoals: [
-      "Aider 1000+ développeurs à améliorer leurs compétences en algorithmie",
-      "Créer une communauté active et bienveillante autour de la programmation",
-      "Développer des fonctionnalités avancées de gamification",
-      "Intégrer des statistiques détaillées de progression",
+      {
+        id: "1",
+        name: "Aider 1000+ développeurs à améliorer leurs compétences en algorithmie",
+      },
+      {
+        id: "2",
+        name: "Créer une communauté active et bienveillante autour de la programmation",
+      },
+      {
+        id: "3",
+        name: "Développer des fonctionnalités avancées de gamification",
+      },
+      { id: "4", name: "Intégrer des statistiques détaillées de progression" },
     ],
   },
   {
@@ -119,19 +131,17 @@ export const mockProjects: Project[] = [
     slug: "gitify",
     title: "Gitify",
     image: "/icons/gitifyIcon.png",
-    categories: ["GitHub", "Open Source", "Challenges"],
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
+    categories: [
+      { id: "1", name: "GitHub" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Challenges" },
     ],
     authorName: "69Killian",
     authorImage: "/icons/killiancodes-icon.jpg",
     description:
       "Réalise des challenges en contribuant à des projets open source.",
     longDescription:
-      "Gitify est une application pour réaliser des challenges et gagner des badges en contribuant à des projets open source. Elle permet de suivre les notifications, les messages et les demandes de pull request de vos projets GitHub.",
+      "Gitify est une application pour réaliser des challenges et gagner des techStacks en contribuant à des projets open source. Elle permet de suivre les notifications, les messages et les demandes de pull request de vos projets GitHub.",
     status: "PUBLISHED",
     techStacks: [
       {
@@ -167,14 +177,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Frontend",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        badges: [{ label: "Next.js" }, { label: "React" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "React" },
+        ],
       },
       {
         id: "2",
         title: "Développeur·se Backend",
         description:
           "Nous recherchons un·e développeur·se Next.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
-        badges: [{ label: "Next.js" }, { label: "PostgreSQL" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "PostgreSQL" },
+        ],
       },
     ],
     socialLinks: [
@@ -190,38 +206,31 @@ export const mockProjects: Project[] = [
       stars: 52,
       forks: 0,
     },
-    keyBenefits: [
-      "Progresse en contribuant à des projets open source",
-      "Gagne des badges tout en apprenant et pratiquant sur des projets concrets",
-      "Découvre les coulisses du développement d'un bot Discord communautaire",
-    ],
     keyFeatures: [
-      "Système de challenges open source",
-      "Badges de progression personnalisés",
-      "Notifications GitHub intégrées",
-      "Suivi des pull requests",
-      "Interface moderne et intuitive",
+      { id: "1", name: "Système de challenges open source" },
+      { id: "2", name: "techStacks de progression personnalisés" },
+      { id: "3", name: "Notifications GitHub intégrées" },
+      { id: "4", name: "Suivi des pull requests" },
+      { id: "5", name: "Interface moderne et intuitive" },
     ],
     projectGoals: [
-      "Gamifier la contribution à l'open source",
-      "Créer une communauté de contributeurs actifs",
-      "Simplifier la découverte de projets open source",
-      "Encourager les développeurs débutants à contribuer",
+      { id: "1", name: "Gamifier la contribution à l'open source" },
+      { id: "2", name: "Créer une communauté de contributeurs actifs" },
+      { id: "3", name: "Simplifier la découverte de projets open source" },
+      { id: "4", name: "Encourager les développeurs débutants à contribuer" },
     ],
   },
   {
     id: "2",
     slug: "devcord",
     title: "DevCord",
-    categories: ["Discord", "Bot", "Open Source"],
+    categories: [
+      { id: "1", name: "Discord" },
+      { id: "2", name: "Bot" },
+      { id: "3", name: "Open Source" },
+    ],
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "p2aco",
     authorImage: "/icons/p2aco-icon.png",
     description:
@@ -269,14 +278,20 @@ export const mockProjects: Project[] = [
         title: "Contributeur·rice Documentation",
         description:
           "Participez à la rédaction de la documentation officielle (https://docs.devcord.app) pour rendre DevCord encore plus accessible à la communauté.",
-        badges: [{ label: "Markdown" }, { label: "Rédaction technique" }],
+        techStacks: [
+          { id: "1", name: "Markdown" },
+          { id: "2", name: "Rédaction technique" },
+        ],
       },
       {
         id: "2",
         title: "Développeur·se Backend",
         description:
           "Aidez-nous à améliorer le cœur du bot : parsing intelligent, génération dynamique de commandes, gestion des formats, et plus encore. Une bonne connaissance de Go est attendue.",
-        badges: [{ label: "Golang" }, { label: "REST API" }],
+        techStacks: [
+          { id: "1", name: "Golang" },
+          { id: "2", name: "REST API" },
+        ],
       },
     ],
     socialLinks: [
@@ -289,23 +304,21 @@ export const mockProjects: Project[] = [
       stars: 52,
       forks: 10,
     },
-    keyBenefits: [
-      "Automatisez vos tâches courantes sans quitter Discord ou Slack",
-      "Gagnez du temps avec des commandes puissantes prêtes à l'emploi",
-      "Contribuez à un outil open-source utilisé par des équipes tech",
-    ],
     keyFeatures: [
-      "Commandes de formatage de code intégrées",
-      "Générateur de tâches cron",
-      "Convertisseur de formats multiple",
-      "Validation regex en temps réel",
-      "Support Discord et Slack",
+      { id: "1", name: "Commandes de formatage de code intégrées" },
+      { id: "2", name: "Générateur de tâches cron" },
+      { id: "3", name: "Convertisseur de formats multiple" },
+      { id: "4", name: "Validation regex en temps réel" },
+      { id: "5", name: "Support Discord et Slack" },
     ],
     projectGoals: [
-      "Devenir l'outil de référence pour les développeurs sur Discord/Slack",
-      "Intégrer plus de 50 commandes utilitaires",
-      "Supporter 10+ plateformes de communication",
-      "Créer une API publique pour les développeurs",
+      {
+        id: "1",
+        name: "Devenir l'outil de référence pour les développeurs sur Discord/Slack",
+      },
+      { id: "2", name: "Intégrer plus de 50 commandes utilitaires" },
+      { id: "3", name: "Supporter 10+ plateformes de communication" },
+      { id: "4", name: "Créer une API publique pour les développeurs" },
     ],
   },
   {
@@ -313,12 +326,10 @@ export const mockProjects: Project[] = [
     slug: "codesnippet",
     title: "CodeSnippet",
     image: "/icons/codesnippet-icon.png",
-    categories: ["IDE", "Open Source", "Snippets"],
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
+    categories: [
+      { id: "1", name: "IDE" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Snippets" },
     ],
     authorName: "Spectre",
     authorImage:
@@ -368,14 +379,20 @@ export const mockProjects: Project[] = [
         title: "UI/UX Designer",
         description:
           "Conçois l'interface utilisateur de CodeSnippet et améliore l'expérience de développement des composants.",
-        badges: [{ label: "Figma" }, { label: "Design System" }],
+        techStacks: [
+          { id: "1", name: "Figma" },
+          { id: "2", name: "Design System" },
+        ],
       },
       {
         id: "2",
         title: "Développeur·se Backend",
         description:
           "Développe l'API et le système de stockage des snippets, avec un focus sur la performance et la scalabilité.",
-        badges: [{ label: "PostgreSQL" }, { label: "API REST" }],
+        techStacks: [
+          { id: "3", name: "PostgreSQL" },
+          { id: "4", name: "API REST" },
+        ],
       },
     ],
     socialLinks: [
@@ -388,23 +405,18 @@ export const mockProjects: Project[] = [
       stars: 42,
       forks: 8,
     },
-    keyBenefits: [
-      "Gérez vos snippets de code de manière efficace et organisée",
-      "Partagez et découvrez des snippets créés par la communauté",
-      "Intégrez CodeSnippet dans votre workflow de développement",
-    ],
     keyFeatures: [
-      "Stockage et organisation de snippets",
-      "Hub communautaire de partage",
-      "Recherche avancée par tags et langages",
-      "Intégration IDE via extensions",
-      "Système de notation et commentaires",
+      { id: "1", name: "Stockage et organisation de snippets" },
+      { id: "2", name: "Hub communautaire de partage" },
+      { id: "3", name: "Recherche avancée par tags et langages" },
+      { id: "4", name: "Intégration IDE via extensions" },
+      { id: "5", name: "Système de notation et commentaires" },
     ],
     projectGoals: [
-      "Devenir la référence pour le stockage de snippets",
-      "Construire une communauté de 10k+ développeurs",
-      "Intégrer tous les IDEs populaires",
-      "Créer un marketplace de snippets premium",
+      { id: "1", name: "Devenir la référence pour le stockage de snippets" },
+      { id: "2", name: "Construire une communauté de 10k+ développeurs" },
+      { id: "3", name: "Intégrer tous les IDEs populaires" },
+      { id: "4", name: "Créer un marketplace de snippets premium" },
     ],
   },
   {
@@ -413,12 +425,6 @@ export const mockProjects: Project[] = [
     title: "NextSandbox",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "Byron Love",
     authorImage: "exemplebyronIcon.svg",
     description:
@@ -466,14 +472,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Core",
         description:
           "Participe au développement du cœur de NextSandbox : système de rendu des composants, hot-reload, et intégration avec Next.js.",
-        badges: [{ label: "Next.js" }, { label: "TypeScript" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "TypeScript" },
+        ],
       },
       {
         id: "2",
         title: "Designer UI/UX",
         description:
           "Conçois l'interface utilisateur de NextSandbox et améliore l'expérience de développement des composants.",
-        badges: [{ label: "React" }, { label: "Tailwind" }],
+        techStacks: [
+          { id: "3", name: "React" },
+          { id: "4", name: "Tailwind" },
+        ],
       },
     ],
     socialLinks: [
@@ -486,23 +498,21 @@ export const mockProjects: Project[] = [
       stars: 28,
       forks: 5,
     },
-    keyBenefits: [
-      "Développe des composants UI plus rapidement avec un outil optimisé pour Next.js",
-      "Documente et teste tes composants dans un environnement dédié",
-      "Contribue à un outil qui simplifie le développement frontend",
-    ],
     keyFeatures: [
-      "Alternative légère à Storybook",
-      "Support natif des Server Components",
-      "Optimisation des images Next.js",
-      "Hot-reload intelligent",
-      "Intégration routing Next.js",
+      { id: "1", name: "Alternative légère à Storybook" },
+      { id: "2", name: "Support natif des Server Components" },
+      { id: "3", name: "Optimisation des images Next.js" },
+      { id: "4", name: "Hot-reload intelligent" },
+      { id: "5", name: "Intégration routing Next.js" },
     ],
     projectGoals: [
-      "Devenir l'alternative de référence à Storybook pour Next.js",
-      "Atteindre 10k+ téléchargements mensuels",
-      "Supporter toutes les fonctionnalités Next.js",
-      "Créer un écosystème de plugins",
+      {
+        id: "1",
+        name: "Devenir l'alternative de référence à Storybook pour Next.js",
+      },
+      { id: "2", name: "Atteindre 10k+ téléchargements mensuels" },
+      { id: "3", name: "Supporter toutes les fonctionnalités Next.js" },
+      { id: "4", name: "Créer un écosystème de plugins" },
     ],
   },
 
@@ -510,15 +520,13 @@ export const mockProjects: Project[] = [
     id: "4",
     slug: "g9s",
     title: "g9s",
-    categories: ["Go", "Open Source", "Monitoring"],
+    categories: [
+      { id: "1", name: "Go" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Monitoring" },
+    ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "p2aco",
     authorImage: "/icons/p2aco-icon.png",
     description:
@@ -554,14 +562,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Backend Go",
         description:
           "Travaille sur l'API, la gestion des agents et le stockage des métriques serveur. Bonne connaissance de Go, REST, et des performances système requise.",
-        badges: [{ label: "Go" }, { label: "Docker" }],
+        techStacks: [
+          { id: "1", name: "Go" },
+          { id: "2", name: "Docker" },
+        ],
       },
       {
         id: "2",
         title: "Contributeur·rice TUI (CLI)",
         description:
           "Développe l'interface en terminal façon k9s/vim. Connaissances appréciées en curses/tcell et design UX dans le terminal.",
-        badges: [{ label: "Terminal UI" }, { label: "Tcell" }],
+        techStacks: [
+          { id: "3", name: "Terminal UI" },
+          { id: "4", name: "Tcell" },
+        ],
       },
     ],
     socialLinks: [
@@ -577,38 +591,34 @@ export const mockProjects: Project[] = [
       stars: 15,
       forks: 2,
     },
-    keyBenefits: [
-      "Surveillez vos serveurs comme un pro, en mode terminal pur",
-      "Installation simple : agent léger, serveur centralisé, TUI personnalisable",
-      "Pensé pour être open-source, modulaire et auto-hébergé",
-    ],
     keyFeatures: [
-      "Interface terminal façon k9s",
-      "Monitoring temps réel des conteneurs",
-      "Architecture modulaire (serveur/agent/TUI)",
-      "Métriques système détaillées",
-      "Auto-hébergement et open source",
+      { id: "1", name: "Interface terminal façon k9s" },
+      { id: "2", name: "Monitoring temps réel des conteneurs" },
+      { id: "3", name: "Architecture modulaire (serveur/agent/TUI)" },
+      { id: "4", name: "Métriques système détaillées" },
+      { id: "5", name: "Auto-hébergement et open source" },
     ],
     projectGoals: [
-      "Devenir l'alternative open source à Datadog pour les équipes DevOps",
-      "Supporter Kubernetes et Docker nativement",
-      "Créer une communauté d'utilisateurs DevOps",
-      "Intégrer des alertes intelligentes",
+      {
+        id: "1",
+        name: "Devenir l'alternative open source à Datadog pour les équipes DevOps",
+      },
+      { id: "2", name: "Supporter Kubernetes et Docker nativement" },
+      { id: "3", name: "Créer une communauté d'utilisateurs DevOps" },
+      { id: "4", name: "Intégrer des alertes intelligentes" },
     ],
   },
   {
     id: "8",
     slug: "sherpa",
     title: "Sherpa",
-    categories: ["Go", "Open Source", "Secrets"],
+    categories: [
+      { id: "1", name: "Go" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Secrets" },
+    ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "Olyxz16",
     authorImage:
       "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
@@ -651,17 +661,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Backend",
         description:
           "Nous recherchons un·e développeur·se Golang pour ajouter des fonctionnalités à Sherpa : Chiffrement, gestion des équipes ...",
-        badges: [{ label: "Golang" }, { label: "PostgreSQL" }],
+        techStacks: [
+          { id: "1", name: "Golang" },
+          { id: "2", name: "PostgreSQL" },
+        ],
       },
       {
         id: "2",
         title: "Développeur·se Frontend",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        badges: [
-          { label: "VueJS" },
-          { label: "Next.js" },
-          { label: "Tailwind" },
+        techStacks: [
+          { id: "3", name: "VueJS" },
+          { id: "4", name: "Next.js" },
+          { id: "5", name: "Tailwind" },
         ],
       },
     ],
@@ -674,37 +687,37 @@ export const mockProjects: Project[] = [
       stars: 6,
       forks: 0,
     },
-    keyBenefits: [
-      "Gérer ses environnement de développements facilement",
-      "Transférer ses variables de manière sécurisée",
-    ],
     keyFeatures: [
-      "Chiffrement zero-trust des données",
-      "Partage collaboratif en équipe",
-      "Interface CLI et web intuitive",
-      "Gestion des environnements multiples",
-      "Synchronisation automatique",
+      { id: "1", name: "Chiffrement zero-trust des données" },
+      { id: "2", name: "Partage collaboratif en équipe" },
+      { id: "3", name: "Interface CLI et web intuitive" },
+      { id: "4", name: "Gestion des environnements multiples" },
+      { id: "5", name: "Synchronisation automatique" },
     ],
     projectGoals: [
-      "Simplifier la gestion des secrets pour les développeurs",
-      "Assurer une sécurité maximale des données sensibles",
-      "Créer une alternative open source aux outils propriétaires",
-      "Intégrer les principaux outils de CI/CD",
+      {
+        id: "1",
+        name: "Simplifier la gestion des secrets pour les développeurs",
+      },
+      { id: "2", name: "Assurer une sécurité maximale des données sensibles" },
+      {
+        id: "3",
+        name: "Créer une alternative open source aux outils propriétaires",
+      },
+      { id: "4", name: "Intégrer les principaux outils de CI/CD" },
     ],
   },
   {
     id: "3",
     slug: "liltea",
     title: "Liltea.me",
-    categories: ["Next.js", "Open Source", "Bio"],
+    categories: [
+      { id: "1", name: "Next.js" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Bio" },
+    ],
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "Shyybi",
     authorImage: "/icons/shyybi-icon.png",
     description:
@@ -746,14 +759,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Fullstack",
         description:
           "Participe au développement de Liltea avec Next.js, Fastify et TailwindCSS. Ton rôle inclara la création de composants UI, la gestion des APIs et l'optimisation des performances.",
-        badges: [{ label: "Next.js" }, { label: "Fastify" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "Fastify" },
+        ],
       },
       {
         id: "2",
         title: "Designer UI/UX",
         description:
           "Aide-nous à concevoir des interfaces élégantes et intuitives pour les pages de profil. Une sensibilité pour les designs minimalistes et responsives est un plus.",
-        badges: [{ label: "Figma" }, { label: "Design System" }],
+        techStacks: [
+          { id: "3", name: "Figma" },
+          { id: "4", name: "Design System" },
+        ],
       },
     ],
     socialLinks: [
@@ -766,38 +785,31 @@ export const mockProjects: Project[] = [
       stars: 37,
       forks: 5,
     },
-    keyBenefits: [
-      "Crée une page bio moderne et rapide en quelques clics",
-      "Personnalise ton profil avec des thèmes et composants élégants",
-      "Open-source et propulsé par une stack technique de pointe",
-    ],
     keyFeatures: [
-      "Pages bio stylées et animées",
-      "Thèmes personnalisables",
-      "Centralisation de tous tes liens",
-      "Design responsive optimisé",
-      "Analyses de trafic intégrées",
+      { id: "1", name: "Pages bio stylées et animées" },
+      { id: "2", name: "Thèmes personnalisables" },
+      { id: "3", name: "Centralisation de tous tes liens" },
+      { id: "4", name: "Design responsive optimisé" },
+      { id: "5", name: "Analyses de trafic intégrées" },
     ],
     projectGoals: [
-      "Devenir l'alternative moderne à Linktree",
-      "Atteindre 100k+ utilisateurs actifs",
-      "Créer un marketplace de thèmes communautaires",
-      "Intégrer des fonctionnalités e-commerce",
+      { id: "1", name: "Devenir l'alternative moderne à Linktree" },
+      { id: "2", name: "Atteindre 100k+ utilisateurs actifs" },
+      { id: "3", name: "Créer un marketplace de thèmes communautaires" },
+      { id: "4", name: "Intégrer des fonctionnalités e-commerce" },
     ],
   },
   {
     id: "9",
     slug: "devspace",
     title: "DevSpace",
-    categories: ["Go", "Open Source", "Monitoring"],
+    categories: [
+      { id: "1", name: "Go" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Monitoring" },
+    ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "Sarah Miller",
     authorImage: "exemplebyronIcon.svg",
     description:
@@ -833,14 +845,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Backend",
         description:
           "Développe le cœur de la plateforme en Go, avec un focus sur la gestion des conteneurs et l'orchestration.",
-        badges: [{ label: "Go" }, { label: "Docker" }],
+        techStacks: [
+          { id: "1", name: "Go" },
+          { id: "2", name: "Docker" },
+        ],
       },
       {
         id: "2",
         title: "DevOps Engineer",
         description:
           "Gère l'infrastructure cloud et l'automatisation des déploiements.",
-        badges: [{ label: "Kubernetes" }, { label: "CI/CD" }],
+        techStacks: [
+          { id: "3", name: "Kubernetes" },
+          { id: "4", name: "CI/CD" },
+        ],
       },
     ],
     socialLinks: [
@@ -853,38 +871,34 @@ export const mockProjects: Project[] = [
       stars: 156,
       forks: 23,
     },
-    keyBenefits: [
-      "Environnements de développement cloud prêts à l'emploi",
-      "Configuration automatique et cohérente des environnements",
-      "Collaboration simplifiée entre développeurs",
-    ],
     keyFeatures: [
-      "Environnements cloud instantanés",
-      "Configuration automatisée",
-      "Partage d'environnements en équipe",
-      "Intégration Docker/Kubernetes",
-      "Templates prêts à l'emploi",
+      { id: "1", name: "Environnements cloud instantanés" },
+      { id: "2", name: "Configuration automatisée" },
+      { id: "3", name: "Partage d'environnements en équipe" },
+      { id: "4", name: "Intégration Docker/Kubernetes" },
+      { id: "5", name: "Templates prêts à l'emploi" },
     ],
     projectGoals: [
-      "Révolutionner le setup des environnements de développement",
-      "Supporter 50+ stacks techniques populaires",
-      "Créer une marketplace de templates",
-      "Atteindre 10k+ développeurs utilisateurs",
+      {
+        id: "1",
+        name: "Révolutionner le setup des environnements de développement",
+      },
+      { id: "2", name: "Supporter 50+ stacks techniques populaires" },
+      { id: "3", name: "Créer une marketplace de templates" },
+      { id: "4", name: "Atteindre 10k+ développeurs utilisateurs" },
     ],
   },
   {
     id: "10",
     slug: "techdocs",
     title: "TechDocs",
-    categories: ["Next.js", "Open Source", "Documentation"],
+    categories: [
+      { id: "1", name: "Next.js" },
+      { id: "2", name: "Open Source" },
+      { id: "3", name: "Documentation" },
+    ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
-    projectImages: [
-      "/images/gitify-1.png",
-      "/images/gitify-2.png",
-      "/images/gitify-3.png",
-      "/images/gitify-4.png",
-    ],
     authorName: "Emma Wilson",
     authorImage: "exemplebyronIcon.svg",
     description:
@@ -920,14 +934,20 @@ export const mockProjects: Project[] = [
         title: "Développeur·se Fullstack",
         description:
           "Développe les fonctionnalités de la plateforme, de l'éditeur Markdown à l'intégration Git.",
-        badges: [{ label: "Next.js" }, { label: "TypeScript" }],
+        techStacks: [
+          { id: "1", name: "Next.js" },
+          { id: "2", name: "TypeScript" },
+        ],
       },
       {
         id: "2",
         title: "Développeur·se Backend",
         description:
           "Gère le stockage et la versioning de la documentation, avec un focus sur la performance.",
-        badges: [{ label: "PostgreSQL" }, { label: "Git" }],
+        techStacks: [
+          { id: "3", name: "PostgreSQL" },
+          { id: "4", name: "Git" },
+        ],
       },
     ],
     socialLinks: [
@@ -940,23 +960,18 @@ export const mockProjects: Project[] = [
       stars: 112,
       forks: 18,
     },
-    keyBenefits: [
-      "Documentation technique collaborative en temps réel",
-      "Versioning Git intégré pour le suivi des changements",
-      "Interface intuitive pour l'édition Markdown",
-    ],
     keyFeatures: [
-      "Éditeur Markdown collaboratif",
-      "Versioning Git natif",
-      "Templates de documentation",
-      "Recherche avancée",
-      "Intégration outils développement",
+      { id: "1", name: "Éditeur Markdown collaboratif" },
+      { id: "2", name: "Versioning Git natif" },
+      { id: "3", name: "Templates de documentation" },
+      { id: "4", name: "Recherche avancée" },
+      { id: "5", name: "Intégration outils développement" },
     ],
     projectGoals: [
-      "Devenir la référence pour la documentation technique",
-      "Intégrer tous les principaux outils de développement",
-      "Créer une communauté de rédacteurs techniques",
-      "Atteindre 50k+ documents créés",
+      { id: "1", name: "Devenir la référence pour la documentation technique" },
+      { id: "2", name: "Intégrer tous les principaux outils de développement" },
+      { id: "3", name: "Créer une communauté de rédacteurs techniques" },
+      { id: "4", name: "Atteindre 50k+ documents créés" },
     ],
   },
 ];
