@@ -2,6 +2,7 @@ import { Result } from '@/shared/result';
 import {
   TechStack,
   TechStackValidationErrors,
+  TechStackPrimitive,
 } from '@/domain/techStack/techstack.entity';
 
 export type ProjectValidationErrors = {
@@ -13,6 +14,22 @@ export type ProjectValidationErrors = {
   projectRoles?: string;
   projectMembers?: string;
 };
+
+export type ProjectCreateProps = {
+  id?: string;
+  ownerId: string;
+  title: string;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  externalLinks?: { type: string; url: string }[] | undefined;
+  projectImages?: string[];
+  githubLink: string | null;
+  techStacks: TechStackPrimitive[];
+  projectRoles?: { id?: string; title: string; description: string }[];
+  projectMembers?: { userId: string; name: string; role: string }[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 export type ProjectPrimitive = {
   id?: string;
   ownerId: string;
@@ -22,7 +39,7 @@ export type ProjectPrimitive = {
   externalLinks?: { type: string; url: string }[] | undefined;
   projectImages?: string[];
   githubLink: string | null;
-  techStacks: { id?: string; name: string; iconUrl: string }[];
+  techStacks: TechStack[];
   projectRoles?: { id?: string; title: string; description: string }[];
   projectMembers?: { userId: string; name: string; role: string }[];
   createdAt?: Date;
@@ -75,13 +92,13 @@ export class Project {
   }
 
   public static create(
-    props: ProjectPrimitive,
+    props: ProjectCreateProps,
   ): Result<Project, ProjectValidationErrors | string> {
     return Project.validate(props);
   }
 
   public static validate(
-    props: ProjectPrimitive,
+    props: ProjectCreateProps,
   ): Result<Project, ProjectValidationErrors | string> {
     const { id, createdAt, updatedAt, ...rest } = props;
     const error: ProjectValidationErrors = {};
@@ -140,6 +157,9 @@ export class Project {
     if (rest.techStacks.length === 0) {
       error.techStacks = 'Tech stacks are required';
     }
+    if (rest.techStacks.some((techStack) => !techStack.id)) {
+      error.techStacks = 'Tech stack id is required';
+    }
     const techStacks: Result<TechStack, TechStackValidationErrors | string>[] =
       rest.techStacks.map((techStack) =>
         TechStack.reconstitute({
@@ -171,7 +191,7 @@ export class Project {
   }
 
   public static reconstitute(
-    props: ProjectPrimitive,
+    props: ProjectCreateProps,
   ): Result<Project, ProjectValidationErrors | string> {
     if (!props.id) {
       return Result.fail('id is required');
@@ -185,6 +205,13 @@ export class Project {
     return Project.validate(props);
   }
 
+  private getTechStacks(): TechStack[] {
+    return [...this.techStacks];
+  }
+  private getProjectRoles(): { title: string; description: string }[] {
+    return [...(this.projectRoles ?? [])];
+  }
+
   public toPrimitive(): ProjectPrimitive {
     return {
       id: this.id,
@@ -195,12 +222,8 @@ export class Project {
       externalLinks: this.externalLinks,
       projectImages: this.projectImages,
       githubLink: this.githubLink,
-      techStacks: this.techStacks.map((techStack) => ({
-        id: techStack.toPrimitive().id,
-        name: techStack.toPrimitive().name,
-        iconUrl: techStack.toPrimitive().iconUrl,
-      })),
-      projectRoles: this.projectRoles,
+      techStacks: this.getTechStacks(),
+      projectRoles: this.getProjectRoles(),
       projectMembers: this.projectMembers,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,

@@ -5,13 +5,13 @@ import { Inject } from '@nestjs/common';
 import { Result } from '@/shared/result';
 import {
   Project,
-  ProjectPrimitive,
+  ProjectCreateProps,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
 
 export class UpdateProjectCommand implements ICommand {
   constructor(
-    public readonly props: Partial<ProjectPrimitive> & { userId: string },
+    public readonly props: Partial<ProjectCreateProps> & { userId: string },
   ) {}
 }
 
@@ -41,6 +41,9 @@ export class UpdateProjectCommandHandler
     const projectToUpdateWithNewData = {
       ...projectToUpdatePrimitive,
       ...rest,
+      techStacks: projectToUpdatePrimitive.techStacks.map((techStack) =>
+        techStack.toPrimitive(),
+      ),
     };
 
     const updatedProject: Result<Project, ProjectValidationErrors | string> =

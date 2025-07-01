@@ -1,6 +1,6 @@
 import {
   Project,
-  ProjectPrimitive,
+  ProjectCreateProps,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/shared/result';
@@ -14,7 +14,7 @@ import { ICommandHandler } from '@nestjs/cqrs';
 import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/techstack.repository.port';
 import { TechStackRepositoryPort } from '@/application/teckstack/ports/techstack.repository.port';
 export class CreateProjectCommand implements ICommand {
-  constructor(public readonly props: ProjectPrimitive) {}
+  constructor(public readonly props: ProjectCreateProps) {}
 }
 
 @CommandHandler(CreateProjectCommand)

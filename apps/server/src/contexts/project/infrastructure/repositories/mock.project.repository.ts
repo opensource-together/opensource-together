@@ -1,17 +1,36 @@
 import { ProjectRepositoryPort } from '../../use-cases/ports/project.repository.port';
-import {
-  Project,
-  ProjectPrimitive,
-} from '@/contexts/project/domain/project.entity';
+import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/shared/result';
 import { Inject, Injectable } from '@nestjs/common';
 import { CLOCK_PORT, ClockPort } from '@/shared/time';
+import { TechStackPrimitive } from '@/domain/techStack/techstack.entity';
+
+interface TechStackInMemory extends TechStackPrimitive {
+  id: string;
+  name: string;
+  iconUrl: string;
+}
+type ProjectInMemory = {
+  id: string;
+  ownerId: string;
+  title: string;
+  description: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  externalLinks?: { type: string; url: string }[] | undefined;
+  projectImages?: string[];
+  githubLink: string | null;
+  techStacks: TechStackInMemory[];
+  projectRoles?: { id?: string; title: string; description: string }[];
+  projectMembers?: { userId: string; name: string; role: string }[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
 @Injectable()
 export class InMemoryProjectRepository implements ProjectRepositoryPort {
   constructor(@Inject(CLOCK_PORT) private clock: ClockPort) {}
 
-  private projects: ProjectPrimitive[] = [
+  private projects: ProjectInMemory[] = [
     {
       id: 'i39pYIlZKF',
       ownerId: '123',
@@ -24,6 +43,7 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       techStacks: [
         { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
         { id: '2', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' },
+        { id: '3', name: 'nodejs', iconUrl: 'https://nodejs.org/favicon.ico' },
       ],
       projectRoles: [
         { id: 'role-1', title: 'test', description: 'test' },
@@ -36,8 +56,13 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
   ];
   create(project: Project): Promise<Result<Project, string>> {
     const projectToRepo = project.toPrimitive();
-    const newProject = {
+    const newProject: ProjectInMemory = {
       ...projectToRepo,
+      techStacks: projectToRepo.techStacks.map((techStack) => ({
+        id: techStack.toPrimitive().id as string,
+        name: techStack.toPrimitive().name,
+        iconUrl: techStack.toPrimitive().iconUrl,
+      })),
       id: randomString(),
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
@@ -50,7 +75,7 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
     return Promise.resolve(Result.ok(projectCreated.value));
   }
   findProjectByTitle(title: string): Promise<Result<Project, string>> {
-    const projectFound: ProjectPrimitive | undefined = this.projects.find(
+    const projectFound: ProjectInMemory | undefined = this.projects.find(
       (p) => p.title === title,
     );
     if (!projectFound) {
@@ -79,6 +104,11 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
     const projectToUpdate = project.toPrimitive();
     this.projects[index] = {
       ...projectToUpdate,
+      techStacks: projectToUpdate.techStacks.map((techStack) => ({
+        id: techStack.toPrimitive().id as string,
+        name: techStack.toPrimitive().name,
+        iconUrl: techStack.toPrimitive().iconUrl,
+      })),
       id: id,
       createdAt: foundedProject.createdAt,
       updatedAt: this.clock.now(),

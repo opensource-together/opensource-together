@@ -9,7 +9,7 @@ import {
 } from '../../ports/project.repository.port';
 import {
   Project,
-  ProjectPrimitive,
+  ProjectCreateProps,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
 import { TechStackRepositoryPort } from '@/application/teckstack/ports/techstack.repository.port';
@@ -21,13 +21,15 @@ import {
   TechStackPrimitive,
 } from '@/domain/techStack/techstack.entity';
 import { Result } from '@/shared/result';
+import { MockClock } from '@/shared/time/mock-clock';
+
 describe('CreateProjectCommandHandler', () => {
   let handler: CreateProjectCommandHandler;
   let projectRepo: ProjectRepositoryPort;
   let techStackRepo: TechStackRepositoryPort;
-
   const mockTechStackRepo = new InMemoryTechStackRepository();
-  const mockProjectRepo = new InMemoryProjectRepository();
+  const mockClock = new MockClock(new Date('2024-01-01T09:00:00Z'));
+  const mockProjectRepo = new InMemoryProjectRepository(mockClock);
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -57,7 +59,7 @@ describe('CreateProjectCommandHandler', () => {
   describe('Success', () => {
     it('should create and save a project successfully with minimal props needed', async () => {
       // Arrange
-      const minimalPropsNeeded: ProjectPrimitive = getMinimalPropsNeeded();
+      const minimalPropsNeeded: ProjectCreateProps = getMinimalPropsNeeded();
       const command = new CreateProjectCommand(minimalPropsNeeded);
 
       await createTechStacksInMemory(techStackRepo);
@@ -67,10 +69,15 @@ describe('CreateProjectCommandHandler', () => {
       // Assert
       if (result.success) {
         expect(result.value).toBeInstanceOf(Project);
+        console.log('result.value', result.value.toPrimitive());
         await projectRepo.delete(result.value.toPrimitive().id as string);
         await deleteTechStacksInMemory(
           techStackRepo,
-          minimalPropsNeeded.techStacks,
+          minimalPropsNeeded.techStacks.map((techStack) => ({
+            id: techStack.id,
+            name: techStack.name,
+            iconUrl: techStack.iconUrl,
+          })),
         );
       } else {
         throw new Error(result.error as string);
@@ -96,7 +103,7 @@ describe('CreateProjectCommandHandler', () => {
         ],
       });
       console.log('props', props);
-      const command = new CreateProjectCommand(props as ProjectPrimitive);
+      const command = new CreateProjectCommand(props as ProjectCreateProps);
       const result = await handler.execute(command);
       if (!result.success) {
         expect(result.error).toEqual('Tech stacks not found');
@@ -107,7 +114,7 @@ describe('CreateProjectCommandHandler', () => {
     it('should return an error when project with this title already exists', async () => {
       // Arrange
       const props1 = getCommandProps({ title: 'test1' });
-      const project1 = Project.create(props1 as ProjectPrimitive);
+      const project1 = Project.create(props1 as ProjectCreateProps);
       if (!project1.success) {
         throw new Error(project1.error as string);
       }
@@ -116,7 +123,7 @@ describe('CreateProjectCommandHandler', () => {
         throw new Error(projectCreated1.error);
       }
       await createTechStacksInMemory(techStackRepo);
-      const command = new CreateProjectCommand(props1 as ProjectPrimitive);
+      const command = new CreateProjectCommand(props1 as ProjectCreateProps);
       const result = await handler.execute(command);
       if (!result.success) {
         await deleteTechStacksInMemory(techStackRepo, props1.techStacks);
@@ -129,7 +136,7 @@ describe('CreateProjectCommandHandler', () => {
   });
 });
 
-const getCommandProps = (override: Partial<ProjectPrimitive>) => {
+const getCommandProps = (override: Partial<ProjectCreateProps>) => {
   return {
     ownerId: '1',
     title: 'command props',
@@ -143,15 +150,15 @@ const getCommandProps = (override: Partial<ProjectPrimitive>) => {
       { id: '2', name: 'angular', iconUrl: 'https://angular.io/favicon.ico' },
     ],
     projectRoles: [
-      { name: 'test', description: 'test' },
-      { name: 'test', description: 'test' },
+      { id: '1', title: 'test', description: 'test' },
+      { id: '2', title: 'test', description: 'test' },
     ],
     projectMembers: [],
     ...override,
   };
 };
 
-const getMinimalPropsNeeded = (): ProjectPrimitive => {
+const getMinimalPropsNeeded = (): ProjectCreateProps => {
   return {
     ownerId: '1',
     title: 'minimal project',
@@ -165,8 +172,8 @@ const getMinimalPropsNeeded = (): ProjectPrimitive => {
       { id: '2', name: 'angular', iconUrl: 'https://angular.io/favicon.ico' },
     ],
     projectRoles: [
-      { name: 'test', description: 'test' },
-      { name: 'test', description: 'test' },
+      { id: '1', title: 'test', description: 'test' },
+      { id: '2', title: 'test', description: 'test' },
     ],
     projectMembers: [],
   };

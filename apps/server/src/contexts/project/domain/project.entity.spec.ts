@@ -1,8 +1,8 @@
 import { Result } from '@/shared/result';
-
+import { TechStack } from '@/domain/techStack/techstack.entity';
 import {
   Project,
-  ProjectPrimitive,
+  ProjectCreateProps,
   ProjectValidationErrors,
 } from './project.entity';
 import { User } from '@/contexts/user/domain/user.entity';
@@ -290,24 +290,38 @@ describe('Domain Project Entity', () => {
       expect(project.value.hasOwnerId(user.value.toPrimitive().id)).toBe(false);
     });
   });
+
+  describe('immutability', () => {
+    it('should return immutable copy of projectRoles', () => {
+      const props = getProjectProps();
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      const projectRoles = project.value.toPrimitive().projectRoles;
+      console.log('before', projectRoles);
+      if (projectRoles) {
+        projectRoles.push({
+          title: 'Test Role',
+          description: 'Test Description',
+        });
+      }
+      console.log('after', projectRoles);
+      expect(project.value.toPrimitive().projectRoles).toHaveLength(1);
+    });
+  });
 });
 
 const getProjectProps = (
-  overrides: Partial<ProjectPrimitive> = {},
-): ProjectPrimitive => ({
+  overrides: Partial<ProjectCreateProps> = {},
+): ProjectCreateProps => ({
   title: 'Test Project',
   projectImages: ['https://test.com', 'https://test.com'],
   ownerId: '123',
   description: 'Test Description',
   difficulty: 'easy',
   githubLink: 'https://github.com/test',
-  techStacks: [
-    {
-      id: 'ts-1',
-      name: 'Test Tech Stack',
-      iconUrl: 'https://test.com',
-    },
-  ],
+  techStacks: [createTechStack('ts-1', 'Test Tech Stack', 'https://test.com')],
   projectRoles: [
     {
       title: 'Test Role',
@@ -323,3 +337,15 @@ const getProjectProps = (
   ],
   ...overrides,
 });
+
+const createTechStack = (id: string, name: string, iconUrl: string) => {
+  const result = TechStack.reconstitute({
+    id,
+    name,
+    iconUrl,
+  });
+  if (!result.success) {
+    throw new Error('Failed to create tech stack');
+  }
+  return result.value.toPrimitive();
+};

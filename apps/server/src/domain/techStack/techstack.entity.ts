@@ -1,10 +1,5 @@
 import { Result } from '@/shared/result';
 
-export type TechStackCreateProps = {
-  name: string;
-  iconUrl: string;
-};
-
 export type TechStackValidationErrors = {
   id?: string;
   name?: string;
@@ -42,11 +37,11 @@ export type TechStackPrimitive = {
  */
 
 export class TechStack {
-  private readonly id: string | undefined;
+  private readonly id?: string | undefined;
   private name: string;
   private iconUrl: string;
 
-  constructor(props: {
+  private constructor(props: {
     id: string | undefined;
     name: string;
     iconUrl: string;
@@ -57,7 +52,7 @@ export class TechStack {
   }
 
   public static create(
-    props: TechStackCreateProps,
+    props: TechStackPrimitive,
   ): Result<TechStack, TechStackValidationErrors | string> {
     return TechStack.validate(props);
   }
@@ -73,7 +68,7 @@ export class TechStack {
   }
   public static validate(
     props:
-      | TechStackCreateProps
+      | TechStackPrimitive
       | {
           id: string;
           name: string;
