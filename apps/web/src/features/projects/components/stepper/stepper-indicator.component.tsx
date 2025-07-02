@@ -1,47 +1,42 @@
 "use client";
 
-import React from "react";
-
-import { cn } from "@/shared/lib/utils";
-
 interface StepperIndicatorProps {
   currentStep: number;
   totalSteps: number;
   className?: string;
+  onStepChange?: (step: number) => void;
 }
 
-export function StepperIndicator({
+export function StepperIndicatorComponent({
   currentStep,
   totalSteps,
   className,
+  onStepChange,
 }: StepperIndicatorProps) {
   return (
-    <div className={cn("flex items-center justify-center", className)}>
-      {Array.from({ length: totalSteps }, (_, index) => (
-        <React.Fragment key={index}>
-          {/* Step Indicator */}
-          <div
-            className={cn(
-              "font-geist flex h-[28px] w-[28px] items-center justify-center rounded-full text-[15px] font-medium transition-colors duration-200",
-              currentStep >= index
-                ? "bg-black text-white"
-                : "bg-black/5 text-black"
-            )}
-          >
-            {index + 1}
-          </div>
+    <div
+      className={`mx-auto max-w-xl min-w-[300px] space-y-8 text-center ${className}`}
+    >
+      <div className="space-y-3">
+        <div className="bg-border flex h-2 w-full overflow-hidden rounded-full">
+          {Array.from({ length: totalSteps }, (_, index) => {
+            const step = index + 1;
+            const isCompleted = step <= currentStep;
 
-          {/* Separator (not for the last step) */}
-          {index < totalSteps - 1 && (
-            <div
-              className={cn(
-                "mx-2 h-[2px] w-[90px] transition-colors duration-200",
-                currentStep > index ? "bg-black" : "bg-black/5"
-              )}
-            />
-          )}
-        </React.Fragment>
-      ))}
+            return (
+              <div
+                key={step}
+                className={`h-full flex-1 transition-colors duration-200 ${
+                  isCompleted ? "bg-primary" : "bg-border"
+                } ${onStepChange ? "cursor-pointer" : ""}`}
+                onClick={() => onStepChange?.(step)}
+              />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
+
+export default StepperIndicatorComponent;
