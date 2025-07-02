@@ -4,33 +4,32 @@ import {
   TechStackValidationErrors,
   TechStackPrimitive,
 } from '@/domain/techStack/techstack.entity';
-import { Title } from './title.vo';
-import { Description } from './description.vo';
-import { Difficulty } from './difficulty.vo';
-import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+// import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+import { Description, ShortDescription, Title } from './vo';
 
 export type ProjectValidationErrors = {
   title?: string;
   description?: string;
+  shortDescription?: string;
+  projectImage?: string;
   difficulty?: string;
   techStacks?: string;
   socialLinks?: string;
   projectRoles?: string;
-  projectMembers?: string;
+  collaborators?: string;
 };
 
 export type ProjectCreateProps = {
   id?: string;
   ownerId: string;
   title: string;
+  shortDescription: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
   externalLinks?: { type: string; url: string }[] | undefined;
-  projectImages?: string[];
-  githubLink: string | null;
+  // projectImage: string;
   techStacks: TechStackPrimitive[];
-  projectRoles?: { id?: string; title: string; description: string }[];
-  projectMembers?: { userId: string; name: string; role: string }[];
+  // projectRoles: ProjectRole[];
+  // projectMembers?: { userId: string; name: string; role: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -39,13 +38,14 @@ export type ProjectPrimitive = {
   ownerId: string;
   title: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  shortDescription: string;
+  // projectImage: string;
   externalLinks?: { type: string; url: string }[] | undefined;
-  projectImages?: string[];
-  githubLink: string | null;
   techStacks: TechStack[];
-  projectRoles: ProjectRole[];
-  projectMembers?: { userId: string; name: string; role: string }[];
+  // projectRoles: ProjectRole[];
+  // collaborators: { userId: string; name: string; role: string }[];
+  // keyFeatures: string[];
+  // projectGoals: string[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -53,14 +53,15 @@ export type ProjectProps = {
   id?: string;
   ownerId: string;
   title: string;
+  shortDescription: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  externalLinks?: { type: string; url: string }[] | undefined;
-  projectImages?: string[];
-  githubLink: string | null;
+  externalLinks?: { type: string; url: string }[]; //au moins un qui est le repo github, apres la creation de projet
+  // projectImage: string;
   techStacks: TechStack[];
-  projectRoles: ProjectRole[];
-  projectMembers?: { userId: string; name: string; role: string }[];
+  // projectRoles: ProjectRole[];
+  // collaborators: { userId: string; name: string; role: string }[];
+  // keyFeatures: string[];
+  // projectGoals: string[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -68,14 +69,15 @@ export class Project {
   private readonly id?: string;
   private ownerId: string;
   private title: string;
+  private shortDescription: string;
   private description: string;
-  private difficulty: 'easy' | 'medium' | 'hard';
   private externalLinks?: { type: string; url: string }[] | undefined;
-  private projectImages?: string[];
-  private githubLink: string | null;
+  // private projectImage: string;
   private techStacks: TechStack[];
-  private projectRoles: ProjectRole[];
-  private projectMembers: { userId: string; name: string; role: string }[];
+  // private projectRoles: ProjectRole[];
+  // private collaborators: { userId: string; name: string; role: string }[];
+  // private keyFeatures: string[];
+  // private projectGoals: string[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -83,16 +85,17 @@ export class Project {
     this.id = props.id;
     this.ownerId = props.ownerId;
     this.title = props.title;
+    this.shortDescription = props.shortDescription;
     this.description = props.description;
-    this.difficulty = props.difficulty;
     this.externalLinks = props.externalLinks;
-    this.projectImages = props.projectImages;
-    this.githubLink = props.githubLink;
+    // this.projectImage = props.projectImage;
+    // this.keyFeatures = props.keyFeatures;
+    // this.projectGoals = props.projectGoals;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
     this.techStacks = props.techStacks;
-    this.projectRoles = props.projectRoles;
-    this.projectMembers = props.projectMembers ?? [];
+    // this.projectRoles = props.projectRoles;
+    // this.collaborators = props.collaborators ?? [];
   }
 
   public static create(
@@ -116,41 +119,11 @@ export class Project {
       error.description = description.error;
     }
 
-    const difficulty = Difficulty.create(rest.difficulty);
-    if (!difficulty.success) {
-      error.difficulty = difficulty.error;
+    const shortDescription = ShortDescription.create(rest.shortDescription);
+    if (!shortDescription.success) {
+      error.shortDescription = shortDescription.error;
     }
-    //projectRoles TODO: verify if is not needed to be moved to another entity dedicated
-    if (rest.projectRoles && rest.projectRoles.length > 0) {
-      for (const role of rest.projectRoles) {
-        if (!role.title || role.title.trim() === '') {
-          error.projectRoles = 'Title for project roles is required';
-          break;
-        }
-        if (!role.description || role.description.trim() === '') {
-          error.projectRoles = 'Description for project roles is required';
-          break;
-        }
-        if (role.description.length > 1000) {
-          error.projectRoles =
-            'Description for project roles must be less than 1000 characters';
-          break;
-        }
-      }
-    }
-    //projectMembers TODO: verifiy if is not need to be moved to another entity dedicated
-    if (rest.projectMembers && rest.projectMembers.length > 0) {
-      for (const member of rest.projectMembers) {
-        if (!member.userId || member.userId.trim() === '') {
-          error.projectMembers = 'User id for project members is required';
-          break;
-        }
-        if (!member.role || member.role.trim() === '') {
-          error.projectMembers = 'Role for project members is required';
-          break;
-        }
-      }
-    }
+
     //techStacks, TODO: verify if is not need to be moved to another part dedicated
     if (rest.techStacks.length === 0) {
       error.techStacks = 'Tech stacks are required';
@@ -181,8 +154,13 @@ export class Project {
     const project: Project = new Project({
       id,
       ...rest,
+      shortDescription: rest.shortDescription,
+      // projectImage: rest.projectImage,
       techStacks: validTechStacks,
-      projectRoles: [],
+      // projectRoles: [],
+      // collaborators: [],
+      // keyFeatures: [],
+      // projectGoals: [],
       createdAt,
       updatedAt,
     });
@@ -207,71 +185,72 @@ export class Project {
   private getTechStacks(): TechStack[] {
     return [...this.techStacks];
   }
-  private getProjectRoles(): ProjectRole[] {
-    return [...this.projectRoles];
-  }
+  // private getProjectRoles(): ProjectRole[] {
+  //   return [...this.projectRoles];
+  // }
 
   public toPrimitive(): ProjectPrimitive {
     return {
       id: this.id,
       ownerId: this.ownerId,
       title: this.title,
+      shortDescription: this.shortDescription,
       description: this.description,
-      difficulty: this.difficulty,
       externalLinks: this.externalLinks,
-      projectImages: this.projectImages,
-      githubLink: this.githubLink,
+      // projectImage: this.projectImage,
       techStacks: this.getTechStacks(),
-      projectRoles: this.getProjectRoles(),
-      projectMembers: this.projectMembers,
+      // projectRoles: this.getProjectRoles(),
+      // collaborators: this.collaborators,
+      // keyFeatures: this.keyFeatures,
+      // projectGoals: this.projectGoals,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
   }
 
-  public addProjectRole(projectRole: ProjectRole): Result<ProjectRole, string> {
-    if (!this.id) {
-      return Result.fail('Project id is required');
-    }
-    const projectRoleResult = ProjectRole.create({
-      projectId: this.id,
-      roleTitle: projectRole.toPrimitive().roleTitle,
-      description: projectRole.toPrimitive().description,
-      isFilled: projectRole.toPrimitive().isFilled,
-      skillSet: projectRole.toPrimitive().skillSet,
-    });
-    if (!projectRoleResult.success) {
-      return Result.fail(projectRoleResult.error as string);
-    }
+  // public addProjectRole(projectRole: ProjectRole): Result<ProjectRole, string> {
+  //   if (!this.id) {
+  //     return Result.fail('Project id is required');
+  //   }
+  //   const projectRoleResult = ProjectRole.create({
+  //     projectId: this.id,
+  //     roleTitle: projectRole.toPrimitive().roleTitle,
+  //     description: projectRole.toPrimitive().description,
+  //     isFilled: projectRole.toPrimitive().isFilled,
+  //     skillSet: projectRole.toPrimitive().skillSet,
+  //   });
+  //   if (!projectRoleResult.success) {
+  //     return Result.fail(projectRoleResult.error as string);
+  //   }
 
-    if (
-      this.hasRoleWithTitle(projectRoleResult.value.toPrimitive().roleTitle)
-    ) {
-      return Result.fail(
-        'A role with this title already exists in this project',
-      );
-    }
+  //   if (
+  //     this.hasRoleWithTitle(projectRoleResult.value.toPrimitive().roleTitle)
+  //   ) {
+  //     return Result.fail(
+  //       'A role with this title already exists in this project',
+  //     );
+  //   }
 
-    this.projectRoles.push(projectRoleResult.value);
-    return Result.ok(projectRoleResult.value);
-  }
+  //   this.projectRoles.push(projectRoleResult.value);
+  //   return Result.ok(projectRoleResult.value);
+  // }
 
-  public hasRoleWithTitle(title: string): boolean {
-    if (!this.projectRoles) {
-      return false;
-    }
-    const normalizedTitle = title.toLowerCase();
-    return this.projectRoles.some(
-      (role) => role.toPrimitive().roleTitle.toLowerCase() === normalizedTitle,
-    );
-  }
+  // public hasRoleWithTitle(title: string): boolean {
+  //   if (!this.projectRoles) {
+  //     return false;
+  //   }
+  //   const normalizedTitle = title.toLowerCase();
+  //   return this.projectRoles.some(
+  //     (role) => role.toPrimitive().roleTitle.toLowerCase() === normalizedTitle,
+  //   );
+  // }
 
-  public hasRoleId(roleId: string): boolean {
-    if (!this.projectRoles) {
-      return false;
-    }
-    return this.projectRoles.some((role) => role.toPrimitive().id === roleId);
-  }
+  // public hasRoleId(roleId: string): boolean {
+  //   if (!this.projectRoles) {
+  //     return false;
+  //   }
+  //   return this.projectRoles.some((role) => role.toPrimitive().id === roleId);
+  // }
 
   public hasOwnerId(userId: string): boolean {
     return this.ownerId === userId;
