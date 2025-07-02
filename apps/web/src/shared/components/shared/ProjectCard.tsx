@@ -9,9 +9,14 @@ import {
   ProjectCardLeftGroup,
   ProjectCardTitle,
   ProjectCardViewLink,
-  Role,
-  TechIcon,
 } from "@/shared/components/ui/project-card";
+
+import {
+  Author,
+  ProjectRole,
+  ProjectStats,
+  TechStack,
+} from "@/features/projects/types/project.type";
 
 import StackLogo from "../logos/stack-logo";
 import { Avatar } from "../ui/avatar";
@@ -20,36 +25,32 @@ import { Icon } from "../ui/icon";
 interface ProjectCardProps {
   projectId?: string;
   title?: string;
-  description?: string;
-  techStack?: TechIcon[];
+  shortDescription?: string;
+  techStacks?: TechStack[];
   showTechStack?: boolean;
-  stars?: number;
-  showStars?: boolean;
-  roles?: Role[];
-  roleCount?: number;
-  showRoles?: boolean;
+  roles?: ProjectRole[];
   showViewProject?: boolean;
   className?: string;
   image?: string;
-  authorName?: string;
-  communityStats?: {
-    forks?: number;
-    contributors?: number;
-    stars?: number;
-  };
+  author?: Author;
+  projectStats?: ProjectStats;
 }
 
 export default function ProjectCardComponent({
   projectId = "1",
   title = "",
-  description = "",
-  techStack = [],
+  shortDescription = "",
+  techStacks = [],
   showTechStack = true,
   showViewProject = true,
   className = "",
   image = "",
-  authorName = "",
-  communityStats = {
+  author = {
+    id: "",
+    name: "",
+    avatarUrl: "",
+  },
+  projectStats = {
     forks: 0,
     contributors: 0,
     stars: 0,
@@ -59,48 +60,48 @@ export default function ProjectCardComponent({
     <ProjectCard className={className}>
       <ProjectCardHeader>
         <ProjectCardLeftGroup>
-          <Avatar src={image} name={authorName} alt={authorName} size="lg" />
+          <Avatar src={image} name={author.name} alt={author.name} size="lg" />
           <ProjectCardInfo>
             <ProjectCardTitle>{title}</ProjectCardTitle>
             <p className="text-muted-foreground text-sm tracking-tighter">
-              by {authorName}
+              by {author.name}
             </p>
           </ProjectCardInfo>
         </ProjectCardLeftGroup>
         {showViewProject && <ProjectCardViewLink projectId={projectId} />}
       </ProjectCardHeader>
       <ProjectCardContent>
-        <ProjectCardDescription>{description}</ProjectCardDescription>
+        <ProjectCardDescription>{shortDescription}</ProjectCardDescription>
         <ProjectCardDivider />
         {showTechStack && (
           <ProjectCardFooter>
             <>
-              {techStack.slice(0, 3).map((tech, index) => (
+              {techStacks.slice(0, 3).map((tech, index) => (
                 <StackLogo
-                  key={index}
-                  icon={tech.icon}
-                  alt={tech.alt}
-                  name={tech.alt}
+                  key={tech.id || index}
+                  icon={tech.iconUrl || ""}
+                  alt={tech.name}
+                  name={tech.name}
                 />
               ))}
-              {techStack.length > 3 && (
+              {techStacks.length > 3 && (
                 <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                  +{techStack.length - 3}
+                  +{techStacks.length - 3}
                 </span>
               )}
             </>
             <div className="ml-auto flex items-center justify-between space-x-2">
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="fork" size="xs" variant="black" />
-                {communityStats.forks}
+                {projectStats.forks || 0}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="people" size="xs" variant="black" />
-                {communityStats.contributors}
+                {projectStats.contributors || 0}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="star" size="xs" variant="black" />
-                {communityStats.stars}
+                {projectStats.stars || 0}
               </div>
             </div>
           </ProjectCardFooter>
