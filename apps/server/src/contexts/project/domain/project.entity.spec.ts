@@ -392,6 +392,19 @@ describe('Domain Project Entity', () => {
   });
 
   describe('immutability', () => {
+    it('should return immutable copy of techStacks', () => {
+      const props = getProjectProps();
+      const project = Project.create(props);
+      if (!project.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      const techStacks = project.value.toPrimitive().techStacks;
+      expect(techStacks).toBeInstanceOf(Array);
+      expect(techStacks).toHaveLength(1);
+      expect(techStacks[0]).toBeInstanceOf(TechStack);
+      expect(techStacks[0].toPrimitive()).toEqual(props.techStacks[0]);
+      expect(techStacks[0].toPrimitive().id).toEqual(props.techStacks[0].id);
+    });
     // it('should return immutable copy of projectRoles', () => {
     //   const techStack = TechStack.reconstitute({
     //     id: '1',

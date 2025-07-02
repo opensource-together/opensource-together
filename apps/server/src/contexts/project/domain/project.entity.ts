@@ -35,20 +35,20 @@ export type ProjectCreateProps = {
   updatedAt?: Date;
 };
 export type ProjectPrimitive = {
-  id?: string;
-  ownerId: string;
-  title: string;
-  description: string;
-  shortDescription: string;
+  id?: Readonly<string>;
+  ownerId: Readonly<string>;
+  title: Readonly<string>;
+  description: Readonly<string>;
+  shortDescription: Readonly<string>;
   // projectImage: string;
-  externalLinks?: { type: string; url: string }[] | undefined;
-  techStacks: TechStack[];
+  externalLinks?: ReadonlyArray<{ type: string; url: string }>;
+  techStacks: ReadonlyArray<TechStack>;
   // projectRoles: ProjectRole[];
   // collaborators: { userId: string; name: string; role: string }[];
   // keyFeatures: string[];
   // projectGoals: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Readonly<Date>;
+  updatedAt?: Readonly<Date>;
 };
 export type ProjectProps = {
   id?: string;
@@ -109,28 +109,11 @@ export class Project {
     props: ProjectCreateProps,
   ): Result<Project, ProjectValidationErrors | string> {
     const validationErrors: ProjectValidationErrors = {};
-
     if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
-
-    //validate the title, description, shortDescription
-    const validationResults = {
-      title: Title.create(props.title),
-      description: Description.create(props.description),
-      shortDescription: ShortDescription.create(props.shortDescription),
-    };
-    //extract the error from the validation results
-    Object.entries(validationResults).forEach(([key, result]) => {
-      if (!result.success)
-        validationErrors[key as keyof ProjectValidationErrors] = result.error;
-    });
-
-    //techStacks, TODO: verify if is not need to be moved to another part dedicated
     if (props.techStacks.length === 0)
       validationErrors.techStacks = 'Tech stacks are required';
 
-    if (props.techStacks.some((techStack) => !techStack.id))
-      validationErrors.techStacks = 'Tech stack id is required';
-
+    //techStacks, TODO: verify if is not need to be moved to another part dedicated
     const techStacks: Result<TechStack, TechStackValidationErrors | string>[] =
       props.techStacks.map((techStack) =>
         TechStack.reconstitute({
@@ -140,6 +123,8 @@ export class Project {
         }),
       );
 
+    if (props.techStacks.some((techStack) => !techStack.id))
+      validationErrors.techStacks = 'Tech stack id is required';
     const validTechStacks = techStacks
       .filter((res) => res.success)
       .map((res) => res.value);
@@ -147,13 +132,20 @@ export class Project {
     if (validTechStacks.length !== props.techStacks.length) {
       validationErrors.techStacks = 'Tech stacks are not valid';
     }
-
-    if (Object.keys(validationErrors).length > 0)
-      return Result.fail(validationErrors);
-
+    //validate the title, description, shortDescription
+    const voValidationResults = {
+      title: Title.create(props.title),
+      description: Description.create(props.description),
+      shortDescription: ShortDescription.create(props.shortDescription),
+    };
+    //extract the error from the validation results
+    Object.entries(voValidationResults).forEach(([key, result]) => {
+      if (!result.success)
+        validationErrors[key as keyof ProjectValidationErrors] = result.error;
+    });
     //reconstitute the object with the value of the validation results
     const { title, description, shortDescription } = Object.fromEntries(
-      Object.entries(validationResults).map(([key, result]) => [
+      Object.entries(voValidationResults).map(([key, result]) => [
         key,
         result.success ? result.value : result.error,
       ]),
@@ -162,6 +154,9 @@ export class Project {
       description: Description;
       shortDescription: ShortDescription;
     };
+
+    if (Object.keys(validationErrors).length > 0)
+      return Result.fail(validationErrors);
 
     return Result.ok(
       new Project({
@@ -189,8 +184,8 @@ export class Project {
     return Project.validate(props);
   }
 
-  private getTechStacks(): TechStack[] {
-    return [...this.techStacks];
+  private getTechStacks(): ReadonlyArray<TechStack> {
+    return Object.freeze([...this.techStacks]);
   }
   // private getProjectRoles(): ProjectRole[] {
   //   return [...this.projectRoles];
