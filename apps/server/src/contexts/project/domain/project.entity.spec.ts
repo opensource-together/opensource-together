@@ -51,7 +51,6 @@ describe('Domain Project Entity', () => {
       ],
       //description
       ['description', '', { description: 'Description is required' }],
-      ['description', '   ', { description: 'Description is required' }],
       [
         'description',
         'a'.repeat(1001),

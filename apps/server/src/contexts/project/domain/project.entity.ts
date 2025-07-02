@@ -8,15 +8,16 @@ import {
 import { Description, ShortDescription, Title } from './vo';
 
 export type ProjectValidationErrors = {
+  ownerId?: string;
   title?: string;
   description?: string;
   shortDescription?: string;
-  projectImage?: string;
-  difficulty?: string;
+  // projectImage?: string;
+  // difficulty?: string;
   techStacks?: string;
-  socialLinks?: string;
-  projectRoles?: string;
-  collaborators?: string;
+  // socialLinks?: string;
+  // projectRoles?: string;
+  // collaborators?: string;
 };
 
 export type ProjectCreateProps = {
@@ -52,9 +53,9 @@ export type ProjectPrimitive = {
 export type ProjectProps = {
   id?: string;
   ownerId: string;
-  title: string;
-  shortDescription: string;
-  description: string;
+  title: Title;
+  shortDescription: ShortDescription;
+  description: Description;
   externalLinks?: { type: string; url: string }[]; //au moins un qui est le repo github, apres la creation de projet
   // projectImage: string;
   techStacks: TechStack[];
@@ -68,9 +69,9 @@ export type ProjectProps = {
 export class Project {
   private readonly id?: string;
   private ownerId: string;
-  private title: string;
-  private shortDescription: string;
-  private description: string;
+  private title: Title;
+  private shortDescription: ShortDescription;
+  private description: Description;
   private externalLinks?: { type: string; url: string }[] | undefined;
   // private projectImage: string;
   private techStacks: TechStack[];
@@ -107,32 +108,31 @@ export class Project {
   public static validate(
     props: ProjectCreateProps,
   ): Result<Project, ProjectValidationErrors | string> {
-    const { id, createdAt, updatedAt, ...rest } = props;
-    const error: ProjectValidationErrors = {};
-    const title = Title.create(rest.title);
-    if (!title.success) {
-      error.title = title.error;
-    }
+    const validationErrors: ProjectValidationErrors = {};
 
-    const description = Description.create(rest.description);
-    if (!description.success) {
-      error.description = description.error;
-    }
+    if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
 
-    const shortDescription = ShortDescription.create(rest.shortDescription);
-    if (!shortDescription.success) {
-      error.shortDescription = shortDescription.error;
-    }
+    //validate the title, description, shortDescription
+    const validationResults = {
+      title: Title.create(props.title),
+      description: Description.create(props.description),
+      shortDescription: ShortDescription.create(props.shortDescription),
+    };
+    //extract the error from the validation results
+    Object.entries(validationResults).forEach(([key, result]) => {
+      if (!result.success)
+        validationErrors[key as keyof ProjectValidationErrors] = result.error;
+    });
 
     //techStacks, TODO: verify if is not need to be moved to another part dedicated
-    if (rest.techStacks.length === 0) {
-      error.techStacks = 'Tech stacks are required';
-    }
-    if (rest.techStacks.some((techStack) => !techStack.id)) {
-      error.techStacks = 'Tech stack id is required';
-    }
+    if (props.techStacks.length === 0)
+      validationErrors.techStacks = 'Tech stacks are required';
+
+    if (props.techStacks.some((techStack) => !techStack.id))
+      validationErrors.techStacks = 'Tech stack id is required';
+
     const techStacks: Result<TechStack, TechStackValidationErrors | string>[] =
-      rest.techStacks.map((techStack) =>
+      props.techStacks.map((techStack) =>
         TechStack.reconstitute({
           id: techStack.id ?? '',
           name: techStack.name,
@@ -144,27 +144,34 @@ export class Project {
       .filter((res) => res.success)
       .map((res) => res.value);
 
-    if (validTechStacks.length !== rest.techStacks.length) {
-      error.techStacks = 'Tech stacks are not valid';
+    if (validTechStacks.length !== props.techStacks.length) {
+      validationErrors.techStacks = 'Tech stacks are not valid';
     }
 
-    if (Object.keys(error).length > 0) {
-      return Result.fail(error);
-    }
-    const project: Project = new Project({
-      id,
-      ...rest,
-      shortDescription: rest.shortDescription,
-      // projectImage: rest.projectImage,
-      techStacks: validTechStacks,
-      // projectRoles: [],
-      // collaborators: [],
-      // keyFeatures: [],
-      // projectGoals: [],
-      createdAt,
-      updatedAt,
-    });
-    return Result.ok(project);
+    if (Object.keys(validationErrors).length > 0)
+      return Result.fail(validationErrors);
+
+    //reconstitute the object with the value of the validation results
+    const { title, description, shortDescription } = Object.fromEntries(
+      Object.entries(validationResults).map(([key, result]) => [
+        key,
+        result.success ? result.value : result.error,
+      ]),
+    ) as {
+      title: Title;
+      description: Description;
+      shortDescription: ShortDescription;
+    };
+
+    return Result.ok(
+      new Project({
+        ...props,
+        title,
+        shortDescription,
+        description,
+        techStacks: validTechStacks,
+      }),
+    );
   }
 
   public static reconstitute(
@@ -193,9 +200,9 @@ export class Project {
     return {
       id: this.id,
       ownerId: this.ownerId,
-      title: this.title,
-      shortDescription: this.shortDescription,
-      description: this.description,
+      title: this.title.getTitle(),
+      shortDescription: this.shortDescription.getShortDescription(),
+      description: this.description.getDescription(),
       externalLinks: this.externalLinks,
       // projectImage: this.projectImage,
       techStacks: this.getTechStacks(),
