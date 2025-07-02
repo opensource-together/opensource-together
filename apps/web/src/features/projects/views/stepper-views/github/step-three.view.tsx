@@ -14,10 +14,6 @@ export default function StepThreeView() {
   const { resetForm } = useProjectCreateStore();
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const handleSuccess = () => {
-    setShowConfirmation(true);
-  };
-
   const handleFinish = () => {
     resetForm();
     router.push("/projects");
@@ -50,7 +46,7 @@ export default function StepThreeView() {
 
   return (
     <StepperWrapper currentStep={3} method="github">
-      <StepThreeForm onSuccess={handleSuccess} />
+      <StepThreeForm />
     </StepperWrapper>
   );
 }
