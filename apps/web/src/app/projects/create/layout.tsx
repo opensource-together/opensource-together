@@ -37,7 +37,10 @@ export default function ProjectCreateLayout({
 
     if (
       isScratchStep2OrLater &&
-      (!formData.projectName || !formData.description)
+      (!formData.projectName ||
+        !formData.shortDescription ||
+        !formData.keyFeatures?.length ||
+        !formData.projectGoals?.length)
     ) {
       router.replace("/projects/create/scratch/step-one");
     }
