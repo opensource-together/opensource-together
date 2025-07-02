@@ -96,7 +96,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   "chevron-left": {
     default: "/icons/chevron-left.svg",
     gray: "/icons/chevron-left-gray.svg",
-    white: "/icons/chevron-left.svg",
+    white: "/icons/chevron-left-white.svg",
     black: "/icons/chevron-left.svg",
     filled: "/icons/chevron-left.svg",
     outline: "/icons/chevron-left.svg",
@@ -104,7 +104,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   "chevron-right": {
     default: "/icons/chevron-right.svg",
     gray: "/icons/chevron-right-gray.svg",
-    white: "/icons/chevron-right.svg",
+    white: "/icons/chevron-right-white.svg",
     black: "/icons/chevron-right.svg",
     filled: "/icons/chevron-right.svg",
     outline: "/icons/chevron-right.svg",
