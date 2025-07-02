@@ -1,7 +1,7 @@
 "use client";
 
 import { StepperWrapper } from "@/features/projects/components/stepper/stepper-wrapper.component";
-import { StepFourForm } from "@/features/projects/forms/scratch/step-four.form";
+import { StepFourForm } from "@/features/projects/forms/step-four.form";
 
 export default function StepFourView() {
   return (

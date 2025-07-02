@@ -18,6 +18,7 @@ import {
   roleSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
+import { FormNavigationButtons } from "../components/form-navigation-buttons.component";
 import { useProjectCreateStore } from "../stores/project-create.store";
 
 const TECH_STACK_OPTIONS = [
@@ -50,6 +51,10 @@ export function StepThreeForm() {
   );
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handlePrevious = () => {
+    router.push("/projects/create/scratch/step-two");
+  };
 
   const onSubmit = async () => {
     console.log("Starting form submission");
@@ -267,14 +272,14 @@ export function StepThreeForm() {
         </div>
       </div>
       {showRoleModal && <RoleModal />}
-      <Button
-        size="lg"
-        className="mt-8"
-        onClick={onSubmit}
-        disabled={isSubmitting || roles.length === 0}
-      >
-        {isSubmitting ? "Création en cours..." : "Créer le projet"}
-      </Button>
+      <FormNavigationButtons
+        onPrevious={handlePrevious}
+        nextLabel="Créer le projet"
+        isLoading={isSubmitting}
+        isNextDisabled={roles.length === 0}
+        nextType="button"
+        onNext={onSubmit}
+      />
     </div>
   );
 }

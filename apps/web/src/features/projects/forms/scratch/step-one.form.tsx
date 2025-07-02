@@ -10,6 +10,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 
+import { FormNavigationButtons } from "../../components/form-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import {
   StepOneFormData,
@@ -91,6 +92,10 @@ export function StepOneForm() {
 
     router.push("/projects/create/scratch/step-two");
   });
+
+  const handlePrevious = () => {
+    router.push("/projects/create");
+  };
 
   return (
     <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
@@ -191,14 +196,13 @@ export function StepOneForm() {
         )}
       </div>
 
-      <Button
-        size="lg"
-        className="flex items-center justify-center"
-        type="submit"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Validation..." : "Confirmer et continuer"}
-      </Button>
+      <FormNavigationButtons
+        onPrevious={handlePrevious}
+        previousLabel="Retour"
+        nextLabel="Suivant"
+        isLoading={isSubmitting}
+        nextType="submit"
+      />
     </form>
   );
 }

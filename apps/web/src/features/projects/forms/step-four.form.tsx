@@ -4,14 +4,19 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 
 import { useProjectCreateStore } from "@/features/projects/stores/project-create.store";
+
+import { FormNavigationButtons } from "../components/form-navigation-buttons.component";
 
 export function StepFourForm() {
   const router = useRouter();
   const { formData, resetForm } = useProjectCreateStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handlePrevious = () => {
+    router.push("/projects/create/scratch/step-three");
+  };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -153,14 +158,14 @@ export function StepFourForm() {
         </div>
       </div>
 
-      <div className="mt-8 flex w-full justify-end gap-4">
-        <Button variant="outline" onClick={() => window.history.back()}>
-          Modifier
-        </Button>
-        <Button onClick={handleSubmit} disabled={isSubmitting}>
-          {isSubmitting ? "Publication en cours..." : "Publier le projet"}
-        </Button>
-      </div>
+      <FormNavigationButtons
+        onPrevious={handlePrevious}
+        onNext={handleSubmit}
+        nextLabel="Publier le projet"
+        previousLabel="Modifier"
+        isLoading={isSubmitting}
+        nextType="button"
+      />
     </div>
   );
 }

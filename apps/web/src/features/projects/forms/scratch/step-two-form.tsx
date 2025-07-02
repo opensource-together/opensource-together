@@ -8,6 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 
+import { FormNavigationButtons } from "../../components/form-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import { ExternalLink } from "../../types/project.type";
 
@@ -122,6 +123,10 @@ export function StepTwoForm() {
 
   const removeExternalLink = (index: number) => {
     setExternalLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handlePrevious = () => {
+    router.push("/projects/create/scratch/step-one");
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -304,14 +309,12 @@ export function StepTwoForm() {
         </div>
       </div>
 
-      <Button
-        size="lg"
-        className="flex items-center justify-center"
-        type="submit"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Validation..." : "Confirmer et continuer"}
-      </Button>
+      <FormNavigationButtons
+        onPrevious={handlePrevious}
+        nextLabel="Suivant"
+        isLoading={isSubmitting}
+        nextType="submit"
+      />
     </form>
   );
 }
