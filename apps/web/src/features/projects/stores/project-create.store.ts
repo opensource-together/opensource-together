@@ -3,7 +3,6 @@ import { devtools, persist } from "zustand/middleware";
 
 import {
   Category,
-  Collaborator,
   ExternalLink,
   KeyFeature,
   ProjectGoal,
