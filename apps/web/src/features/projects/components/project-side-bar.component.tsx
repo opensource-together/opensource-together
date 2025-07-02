@@ -25,22 +25,17 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const {
     title = "",
     techStacks = [],
-    socialLinks = [],
-    lastCommit,
+    externalLinks = [],
+    lastCommitAt,
     categories = [],
     communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
   } = project;
 
   // Récupérer le lien GitHub
   const githubLink =
-    socialLinks.find((link) => link.type === "github")?.url || "";
+    externalLinks.find((link) => link.type === "github")?.url || "";
 
-  // Données fictives des contributeurs pour tester l'Avatar
-  const contributorsData = [
-    { name: "Byron M", avatar: "/icons/exemplebyronIcon.svg" },
-    { name: "Killian C", avatar: "/icons/killiancodes-icon.jpg" },
-    { name: "P2aco Dev", avatar: "/icons/p2aco-icon.png" },
-  ];
+  const collaborators = project.collaborators || [];
 
   return (
     <div className="flex flex-col gap-5 bg-white">
@@ -127,7 +122,9 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
             <div className="h-[1px] w-full bg-black/5" />
           </div>
           <span className="text-sm font-medium text-black">
-            {lastCommit || "N/A"}
+            {lastCommitAt
+              ? new Date(lastCommitAt).toLocaleDateString("fr-FR")
+              : "N/A"}
           </span>
         </div>
 
@@ -180,7 +177,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
               key={index}
               className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
             >
-              {category}
+              {category.name}
             </div>
           ))}
         </div>
@@ -194,27 +191,20 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         {/* Contributors Avatars */}
         <div>
           <div className="flex gap-2">
-            {Array.from({ length: Math.min(contributors, 5) }).map(
-              (_, index) => {
-                const contributor =
-                  contributorsData[index % contributorsData.length];
+            {collaborators.slice(0, 5).map((collaborator) => (
+              <Avatar
+                key={collaborator.id}
+                src={collaborator.avatarUrl}
+                name={collaborator.name}
+                alt={collaborator.name}
+                size="sm"
+              />
+            ))}
 
-                return (
-                  <Avatar
-                    key={index}
-                    src={contributor.avatar}
-                    name={contributor.name}
-                    alt={contributor.name}
-                    size="sm"
-                  />
-                );
-              }
-            )}
-
-            {/* Indicateur "+X autres" si plus de 5 contributeurs */}
-            {contributors > 5 && (
+            {/* Indicateur "+X autres" si plus de 5 collaborateurs */}
+            {collaborators.length > 5 && (
               <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                +{contributors - 5}
+                +{collaborators.length - 5}
               </div>
             )}
           </div>
