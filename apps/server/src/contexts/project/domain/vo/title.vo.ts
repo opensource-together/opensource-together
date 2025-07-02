@@ -19,7 +19,7 @@ export class Title {
     }
     return Result.ok(new Title(title));
   }
-  getValue(): string {
+  getTitle(): string {
     return this.title;
   }
 }

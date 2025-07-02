@@ -13,7 +13,7 @@ export class ShortDescription {
     return Result.ok(new ShortDescription(shortDescription));
   }
 
-  public getDescription(): string {
+  public getShortDescription(): string {
     return this.description;
   }
 }
