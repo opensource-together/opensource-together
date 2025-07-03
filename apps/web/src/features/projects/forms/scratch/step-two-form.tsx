@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import { Combobox, ComboboxOption } from "@/shared/components/ui/combobox";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 
@@ -12,7 +13,7 @@ import { FormNavigationButtons } from "../../components/form-navigation-buttons.
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import { ExternalLink } from "../../types/project.type";
 
-const TECH_STACK_OPTIONS = [
+const TECH_STACK_OPTIONS: ComboboxOption[] = [
   { id: "react", name: "React" },
   { id: "nextjs", name: "Next.js" },
   { id: "angular", name: "Angular" },
@@ -30,7 +31,7 @@ const TECH_STACK_OPTIONS = [
   { id: "azure", name: "Azure" },
 ];
 
-const CATEGORIES_OPTIONS = [
+const CATEGORIES_OPTIONS: ComboboxOption[] = [
   { id: "ai", name: "IA" },
   { id: "finance", name: "Finance" },
   { id: "health", name: "Santé" },
@@ -88,22 +89,6 @@ export function StepTwoForm() {
   const [newLinkUrl, setNewLinkUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const handleTechChange = (techId: string) => {
-    setSelectedTech((prev) =>
-      prev.includes(techId)
-        ? prev.filter((id) => id !== techId)
-        : [...prev, techId]
-    );
-  };
-
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId]
-    );
-  };
 
   const addExternalLink = () => {
     if (newLinkUrl.trim()) {
@@ -179,48 +164,40 @@ export function StepTwoForm() {
       {/* Technologies */}
       <div>
         <Label>Technologies</Label>
-        <div className="mt-2 grid grid-cols-2 gap-3">
-          {TECH_STACK_OPTIONS.map((tech) => (
-            <label
-              key={tech.id}
-              className="flex cursor-pointer items-center gap-2"
-            >
-              <input
-                type="checkbox"
-                checked={selectedTech.includes(tech.id)}
-                onChange={() => handleTechChange(tech.id)}
-                className="rounded"
-              />
-              <span className="text-sm">{tech.name}</span>
-            </label>
-          ))}
+        <div className="mt-2">
+          <Combobox
+            options={TECH_STACK_OPTIONS}
+            value={selectedTech}
+            onChange={setSelectedTech}
+            placeholder="Sélectionner les technologies..."
+            searchPlaceholder="Rechercher une technologie..."
+            emptyText="Aucune technologie trouvée."
+          />
         </div>
         {errors.techStack && (
-          <p className="mt-1 text-sm text-red-500">{errors.techStack}</p>
+          <p className="mt-1 text-start text-sm text-red-500">
+            {errors.techStack}
+          </p>
         )}
       </div>
 
       {/* Catégories */}
       <div>
         <Label>Catégories</Label>
-        <div className="mt-2 grid grid-cols-2 gap-3">
-          {CATEGORIES_OPTIONS.map((category) => (
-            <label
-              key={category.id}
-              className="flex cursor-pointer items-center gap-2"
-            >
-              <input
-                type="checkbox"
-                checked={selectedCategories.includes(category.id)}
-                onChange={() => handleCategoryChange(category.id)}
-                className="rounded"
-              />
-              <span className="text-sm">{category.name}</span>
-            </label>
-          ))}
+        <div className="mt-2">
+          <Combobox
+            options={CATEGORIES_OPTIONS}
+            value={selectedCategories}
+            onChange={setSelectedCategories}
+            placeholder="Sélectionner les catégories..."
+            searchPlaceholder="Rechercher une catégorie..."
+            emptyText="Aucune catégorie trouvée."
+          />
         </div>
         {errors.categories && (
-          <p className="mt-1 text-sm text-red-500">{errors.categories}</p>
+          <p className="mt-1 text-start text-sm text-red-500">
+            {errors.categories}
+          </p>
         )}
       </div>
 

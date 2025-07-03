@@ -5,10 +5,11 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { Combobox, ComboboxOption } from "@/shared/components/ui/combobox";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -21,7 +22,7 @@ import {
 import { FormNavigationButtons } from "../components/form-navigation-buttons.component";
 import { useProjectCreateStore } from "../stores/project-create.store";
 
-const TECH_STACK_OPTIONS = [
+const TECH_STACK_OPTIONS: ComboboxOption[] = [
   { id: "react", name: "React" },
   { id: "nextjs", name: "Next.js" },
   { id: "angular", name: "Angular" },
@@ -97,12 +98,13 @@ export function StepThreeForm() {
     handleSubmit: handleRoleSubmit,
     formState: { errors: roleErrors },
     reset: resetRoleForm,
-    watch: watchRole,
+    control,
   } = useForm<RoleFormData>({
     resolver: zodResolver(roleSchema),
+    defaultValues: {
+      techStack: [],
+    },
   });
-
-  const selectedTechStack = watchRole("techStack") || [];
 
   const onAddRole = handleRoleSubmit((data) => {
     console.log("Adding new role:", data);
@@ -159,35 +161,21 @@ export function StepThreeForm() {
 
           <div>
             <Label>Technologies (max 6)</Label>
-            <div className="flex flex-wrap gap-2">
-              {TECH_STACK_OPTIONS.map((tech) => (
-                <label
-                  key={tech.id}
-                  className={`cursor-pointer rounded-full px-3 py-1 text-sm ${
-                    selectedTechStack.includes(tech.id)
-                      ? "bg-black text-white"
-                      : "bg-gray-100"
-                  } ${
-                    selectedTechStack.length >= 6 &&
-                    !selectedTechStack.includes(tech.id)
-                      ? "opacity-50"
-                      : ""
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    {...registerRole("techStack")}
-                    value={tech.id}
-                    className="hidden"
-                    disabled={
-                      selectedTechStack.length >= 6 &&
-                      !selectedTechStack.includes(tech.id)
-                    }
-                  />
-                  {tech.name}
-                </label>
-              ))}
-            </div>
+            <Controller
+              name="techStack"
+              control={control}
+              render={({ field }) => (
+                <Combobox
+                  options={TECH_STACK_OPTIONS}
+                  value={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Sélectionner les technologies..."
+                  searchPlaceholder="Rechercher une technologie..."
+                  emptyText="Aucune technologie trouvée."
+                  maxSelections={6}
+                />
+              )}
+            />
             {roleErrors.techStack && (
               <p className="mt-1 text-sm text-red-500">
                 {roleErrors.techStack.message}
