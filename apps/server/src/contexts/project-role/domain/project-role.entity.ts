@@ -1,170 +1,80 @@
 import { Result } from '@/shared/result';
-import { TechStack } from '@/domain/techStack/techstack.entity';
+import {
+  TechStack,
+  TechStackValidationErrors,
+} from '@/contexts/techstack/domain/techstack.entity';
 
-export type ProjectRoleCreateProps = {
-  projectId: string;
-  roleTitle: string;
-  description: string;
-  isFilled: boolean;
-  skillSet: TechStack[];
-};
-
-export type ProjectRoleValidationErrors = {
-  projectId?: string;
-  roleTitle?: string;
-  description?: string;
-  isFilled?: string;
-  skillSet?: string;
-};
-
-export type ProjectRolePrimitive = {
+// Type unifié pour la création et la reconstitution
+export type ProjectRoleData = {
   id?: string;
   projectId: string;
-  roleTitle: string;
+  title: string;
   description: string;
   isFilled: boolean;
-  skillSet: TechStack[];
+  techStacks: { id: string; name: string; iconUrl: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
 
-/**
- * ProjectRole Entity
- *
- * Représente un rôle dans un projet avec ses compétences requises.
- * Cette entité encapsule les propriétés d'un rôle de projet et garantit leur validité
- * à travers des méthodes de validation strictes.
- *
- * @example
- * ```typescript
- * // Création d'un nouveau ProjectRole
- * const projectRole = ProjectRole.create({
- *   projectId: '123',
- *   roleTitle: 'Frontend Developer',
- *   description: 'Responsible for UI development',
- *   isFilled: false,
- *   skillSet: [reactTechStack, typescriptTechStack]
- * });
- *
- * // Reconstitution d'un ProjectRole existant
- * const existingProjectRole = ProjectRole.reconstitute({
- *   id: '456',
- *   projectId: '123',
- *   roleTitle: 'Frontend Developer',
- *   description: 'Responsible for UI development',
- *   isFilled: false,
- *   skillSet: [reactTechStack, typescriptTechStack],
- *   createdAt: new Date(),
- *   updatedAt: new Date()
- * });
- * ```
- */
+// Alias pour la consistance du code
+export type ProjectRoleCreateProps = Omit<
+  ProjectRoleData,
+  'id' | 'createdAt' | 'updatedAt'
+>;
+export type ProjectRolePrimitive = ProjectRoleData;
+
+export type ProjectRoleValidationErrors = {
+  id?: string;
+  projectId?: string;
+  title?: string;
+  description?: string;
+  isFilled?: string;
+  techStacks?: TechStackValidationErrors | string;
+};
+
 export class ProjectRole {
   private readonly id?: string;
   private readonly projectId: string;
-  private roleTitle: string;
+  private title: string;
   private description: string;
   private isFilled: boolean;
-  private skillSet: TechStack[];
+  private techStacks: TechStack[];
   private readonly createdAt?: Date;
   private readonly updatedAt?: Date;
 
   private constructor(props: {
     id?: string;
     projectId: string;
-    roleTitle: string;
+    title: string;
     description: string;
     isFilled: boolean;
-    skillSet: TechStack[];
+    techStacks: TechStack[];
     createdAt?: Date;
     updatedAt?: Date;
   }) {
     this.id = props.id;
     this.projectId = props.projectId;
-    this.roleTitle = props.roleTitle;
+    this.title = props.title;
     this.description = props.description;
     this.isFilled = props.isFilled;
-    this.skillSet = props.skillSet;
+    this.techStacks = props.techStacks;
     this.createdAt = props.createdAt ?? new Date();
     this.updatedAt = props.updatedAt ?? new Date();
   }
 
-  public static create(
-    props: ProjectRoleCreateProps,
-  ): Result<ProjectRole, ProjectRoleValidationErrors | string> {
-    const validationResult = this.validate(props);
-    if (!validationResult.success) {
-      return Result.fail(validationResult.error);
-    }
-
-    return Result.ok(
-      new ProjectRole({
-        projectId: props.projectId,
-        roleTitle: props.roleTitle,
-        description: props.description,
-        isFilled: props.isFilled,
-        skillSet: props.skillSet,
-      }),
-    );
-  }
-
-  public static reconstitute(props: {
-    id: string;
-    projectId: string;
-    roleTitle: string;
-    description: string;
-    isFilled: boolean;
-    skillSet: TechStack[];
-    createdAt: Date;
-    updatedAt: Date;
-  }): Result<ProjectRole, ProjectRoleValidationErrors | string> {
-    if (!props.id) {
-      return Result.fail('Id is required');
-    }
-
-    const validationResult = this.validate(props);
-    if (!validationResult.success) {
-      return Result.fail(validationResult.error);
-    }
-
-    return Result.ok(
-      new ProjectRole({
-        id: props.id,
-        projectId: props.projectId,
-        roleTitle: props.roleTitle,
-        description: props.description,
-        isFilled: props.isFilled,
-        skillSet: props.skillSet,
-        createdAt: props.createdAt,
-        updatedAt: props.updatedAt,
-      }),
-    );
-  }
-
   private static validate(
-    props:
-      | ProjectRoleCreateProps
-      | {
-          id?: string;
-          projectId: string;
-          roleTitle: string;
-          description: string;
-          isFilled: boolean;
-          skillSet: TechStack[];
-          createdAt?: Date;
-          updatedAt?: Date;
-        },
-  ): Result<void, ProjectRoleValidationErrors | string> {
+    props: ProjectRoleData,
+  ): Result<ProjectRole, ProjectRoleValidationErrors | string> {
     const errors: ProjectRoleValidationErrors = {};
 
     if (!props.projectId || props.projectId.trim() === '') {
       errors.projectId = 'Project ID is required';
     }
 
-    if (!props.roleTitle || props.roleTitle.trim() === '') {
-      errors.roleTitle = 'Role title is required';
-    } else if (props.roleTitle.length > 100) {
-      errors.roleTitle = 'Role title must be less than 100 characters';
+    if (!props.title || props.title.trim() === '') {
+      errors.title = 'Role title is required';
+    } else if (props.title.length > 100) {
+      errors.title = 'Role title must be less than 100 characters';
     }
 
     if (!props.description || props.description.trim() === '') {
@@ -177,33 +87,81 @@ export class ProjectRole {
       errors.isFilled = 'isFilled must be a boolean';
     }
 
-    if (!props.skillSet || props.skillSet.length === 0) {
-      errors.skillSet = 'At least one skill is required';
+    if (!props.techStacks || props.techStacks.length === 0) {
+      errors.techStacks = 'At least one tech stack is required';
     }
 
-    if (props.skillSet.some((skill) => !skill.toPrimitive().id)) {
-      errors.skillSet = 'Skill ID is required';
+    const techStacksResult = TechStack.reconstituteMany(props.techStacks);
+    if (!techStacksResult.success) {
+      errors.techStacks = techStacksResult.error as string;
     }
 
     if (Object.keys(errors).length > 0) {
       return Result.fail(errors);
     }
 
-    return Result.ok(undefined);
+    return Result.ok(
+      new ProjectRole({
+        ...props,
+        techStacks: techStacksResult.success ? techStacksResult.value : [],
+      }),
+    );
+  }
+
+  public static create(
+    props: ProjectRoleCreateProps,
+  ): Result<ProjectRole, ProjectRoleValidationErrors | string> {
+    if (props.isFilled) {
+      return Result.fail({ isFilled: 'isFilled must be false on creation' });
+    }
+    const dataToValidate: ProjectRoleData = { ...props, isFilled: false };
+    return this.validate(dataToValidate);
+  }
+
+  public static reconstitute(
+    props: ProjectRolePrimitive,
+  ): Result<ProjectRole, ProjectRoleValidationErrors | string> {
+    if (!props.id) {
+      return Result.fail({ id: 'id is required' });
+    }
+    if (!props.createdAt || !props.updatedAt) {
+      return Result.fail('createdAt and updatedAt are required');
+    }
+    if (props.createdAt > props.updatedAt) {
+      return Result.fail('createdAt must be before updatedAt');
+    }
+    return this.validate(props);
+  }
+
+  public static reconstituteMany(
+    props: ProjectRolePrimitive[],
+  ): Result<ProjectRole[], ProjectRoleValidationErrors | string> {
+    const results = props.map((p) => this.reconstitute(p));
+
+    if (!results.every((r) => r.success))
+      return Result.fail(results.find((r) => !r.success)?.error as string);
+    return Result.ok(results.map((r) => r.value));
   }
 
   public updateRole(props: {
-    roleTitle?: string;
+    title?: string;
     description?: string;
     isFilled?: boolean;
-    skillSet?: TechStack[];
+    techStacks?: TechStack[];
   }): Result<void, ProjectRoleValidationErrors | string> {
-    const updatedProps = {
+    const techStackPrimitives = (props.techStacks || this.techStacks).map(
+      (ts) => ts.toPrimitive(),
+    );
+
+    const updatedProps: ProjectRoleData = {
+      id: this.id,
       projectId: this.projectId,
-      roleTitle: props.roleTitle ?? this.roleTitle,
+      title: props.title ?? this.title,
       description: props.description ?? this.description,
       isFilled: props.isFilled ?? this.isFilled,
-      skillSet: props.skillSet ?? this.skillSet,
+      techStacks: techStackPrimitives,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
 
     const validationResult = ProjectRole.validate(updatedProps);
@@ -211,10 +169,11 @@ export class ProjectRole {
       return Result.fail(validationResult.error);
     }
 
-    if (props.roleTitle !== undefined) this.roleTitle = props.roleTitle;
-    if (props.description !== undefined) this.description = props.description;
-    if (props.isFilled !== undefined) this.isFilled = props.isFilled;
-    if (props.skillSet !== undefined) this.skillSet = props.skillSet;
+    const validatedRole = validationResult.value;
+    this.title = validatedRole.title;
+    this.description = validatedRole.description;
+    this.isFilled = validatedRole.isFilled;
+    this.techStacks = validatedRole.techStacks;
 
     return Result.ok(undefined);
   }
@@ -228,29 +187,29 @@ export class ProjectRole {
   }
 
   public addSkill(techStack: TechStack): Result<void, string> {
-    const skillExists = this.skillSet.some(
-      (skill) => skill.toPrimitive().id === techStack.toPrimitive().id,
+    const skillExists = this.techStacks.some(
+      (ts) => ts.toPrimitive().id === techStack.toPrimitive().id,
     );
 
     if (skillExists) {
       return Result.fail('Skill already exists in this role');
     }
 
-    this.skillSet.push(techStack);
+    this.techStacks.push(techStack);
     return Result.ok(undefined);
   }
 
   public removeSkill(techStackId: string): Result<void, string> {
-    const initialLength = this.skillSet.length;
-    this.skillSet = this.skillSet.filter(
+    const initialLength = this.techStacks.length;
+    this.techStacks = this.techStacks.filter(
       (skill) => skill.toPrimitive().id !== techStackId,
     );
 
-    if (this.skillSet.length === initialLength) {
+    if (this.techStacks.length === initialLength) {
       return Result.fail('Skill not found in this role');
     }
 
-    if (this.skillSet.length === 0) {
+    if (this.techStacks.length === 0) {
       return Result.fail(
         'Cannot remove last skill - at least one skill is required',
       );
@@ -259,47 +218,18 @@ export class ProjectRole {
     return Result.ok(undefined);
   }
 
-  //   // Getters
-  //   public getId(): string | undefined {
-  //     return this.id;
-  //   }
-
-  //   public getProjectId(): string {
-  //     return this.projectId;
-  //   }
-
-  //   public getRoleTitle(): string {
-  //     return this.roleTitle;
-  //   }
-
-  //   public getDescription(): string {
-  //     return this.description;
-  //   }
-
-  //   public getIsFilled(): boolean {
-  //     return this.isFilled;
-  //   }
-
-  public getSkillSet(): TechStack[] {
-    return [...this.skillSet]; // Return copy to maintain immutability
+  public getTechStacks(): TechStack[] {
+    return [...this.techStacks];
   }
-
-  //   public getCreatedAt(): Date | undefined {
-  //     return this.createdAt;
-  //   }
-
-  //   public getUpdatedAt(): Date | undefined {
-  //     return this.updatedAt;
-  //   }
 
   public toPrimitive(): ProjectRolePrimitive {
     return {
       id: this.id,
       projectId: this.projectId,
-      roleTitle: this.roleTitle,
+      title: this.title,
       description: this.description,
       isFilled: this.isFilled,
-      skillSet: this.getSkillSet(),
+      techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

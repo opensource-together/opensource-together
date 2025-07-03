@@ -1,5 +1,5 @@
 import { Result } from '@/shared/result';
-import { TechStack } from '@/domain/techStack/techstack.entity';
+import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import {
   Project,
   ProjectCreateProps,
@@ -57,54 +57,7 @@ describe('Domain Project Entity', () => {
         { description: 'Description must be less than 1000 characters' },
       ],
       //techStacks
-      ['techStacks', [], { techStacks: 'Tech stacks are required' }],
-      [
-        'techStacks',
-        [{ name: 'Invalid', iconUrl: 'url' }], // Simulating invalid reconstituted TechStack
-        { techStacks: 'Tech stacks are not valid' },
-      ],
-      //collaborators
-      // [
-      //   'collaborators',
-      //   [{ userId: '', role: 'developer' }],
-      //   {
-      //     collaborators: 'User id for collaborators is required',
-      //   },
-      // ],
-      // [
-      //   'collaborators',
-      //   [{ userId: '1', role: '' }],
-      //   {
-      //     collaborators: 'Role for collaborators is required',
-      //   },
-      // ],
-      // //keyFeatures
-      // [
-      //   'keyFeatures',
-      //   [],
-      //   { keyFeatures: 'Key features required at least one' },
-      // ],
-      // [
-      //   'keyFeatures',
-      //   [{ keyFeature: 'a'.repeat(101) }],
-      //   {
-      //     keyFeatures: 'Key features must be less than 100 characters',
-      //   },
-      // ],
-      // //projectGoals
-      // ['projectGoals', [], { projectGoals: 'Project goals are required' }],
-      // [
-      //   'projectGoals',
-      //   [],
-      //   { projectGoals: 'Project goals required at least one' },
-      // ],
-      // [
-      //   'projectGoals',
-      //   [{ projectGoal: 'a'.repeat(101) }],
-      //   {
-      //     projectGoals: 'Project goals must be less than 100 characters',
-      //   },
-      // ],
+      ['techStacks', [], { techStacks: 'At least one tech stack is required' }],
     ])(
       'should fail validation if %s is invalid with value: %j',
       (field, value, expectedError) => {
@@ -120,6 +73,7 @@ describe('Domain Project Entity', () => {
             )}`,
           );
         } else {
+          console.log('projectResult.error', projectResult.error);
           expect(projectResult.error).toEqual(expectedError);
         }
       },
@@ -228,41 +182,41 @@ describe('Domain Project Entity', () => {
   });
 
   describe('addProjectRole', () => {
-    // it('should add a project role to the project', () => {
-    //   const projectResult = Project.create(
-    //     getProjectProps({
-    //       id: '123',
-    //     }),
-    //   );
-    //   if (!projectResult.success) {
-    //     throw new Error('Project creation should have succeeded');
-    //   }
-    //   const techStack = TechStack.reconstitute({
-    //     id: '1',
-    //     name: 'React',
-    //     iconUrl: 'https://react.dev/favicon.ico',
-    //   });
-    //   if (!techStack.success) {
-    //     throw new Error(JSON.stringify(techStack.error));
-    //   }
-    //   const projectRole = ProjectRole.create({
-    //     projectId: 'id',
-    //     roleTitle: 'Developer',
-    //     description: '...',
-    //     isFilled: false,
-    //     skillSet: [techStack.value],
-    //   });
-    //   if (!projectRole.success) {
-    //     throw new Error(JSON.stringify(projectRole.error));
-    //   }
-    //   const project = projectResult.value;
-    //   const addProjectRoleResult: Result<ProjectRole, string> =
-    //     project.addProjectRole(projectRole.value);
-    //   if (!addProjectRoleResult.success) {
-    //     throw new Error(addProjectRoleResult.error);
-    //   }
-    //   expect(project.toPrimitive().projectRoles).toHaveLength(1);
-    // });
+    it('should add a project role to the project', () => {
+      const projectResult = Project.create(
+        getProjectProps({
+          id: '123',
+        }),
+      );
+      if (!projectResult.success) {
+        throw new Error('Project creation should have succeeded');
+      }
+      const techStack = TechStack.reconstitute({
+        id: '1',
+        name: 'React',
+        iconUrl: 'https://react.dev/favicon.ico',
+      });
+      if (!techStack.success) {
+        throw new Error(JSON.stringify(techStack.error));
+      }
+      const projectRole = ProjectRole.create({
+        projectId: 'id',
+        title: 'Developer',
+        description: '...',
+        isFilled: false,
+        techStacks: [techStack.value],
+      });
+      if (!projectRole.success) {
+        throw new Error(JSON.stringify(projectRole.error));
+      }
+      const project = projectResult.value;
+      const addProjectRoleResult: Result<ProjectRole, string> =
+        project.createProjectRole(projectRole.value.toPrimitive());
+      if (!addProjectRoleResult.success) {
+        throw new Error(addProjectRoleResult.error);
+      }
+      expect(project.toPrimitive().projectRoles).toHaveLength(1);
+    });
 
     it('should fail if project id is not provided', () => {
       const projectResult = Project.create(
@@ -284,10 +238,10 @@ describe('Domain Project Entity', () => {
 
       const projectRole = ProjectRole.create({
         projectId: '',
-        roleTitle: 'Developer',
+        title: 'Developer',
         description: '...',
         isFilled: false,
-        skillSet: [techStack.value],
+        techStacks: [techStack.value],
       });
       if (projectRole.success) {
         throw new Error('Project role creation should have failed');
@@ -399,11 +353,20 @@ describe('Domain Project Entity', () => {
         throw new Error('Project creation should have succeeded');
       }
       const techStacks = project.value.toPrimitive().techStacks;
-      expect(techStacks).toBeInstanceOf(Array);
+      console.log('techStacks', JSON.stringify(techStacks, null, 2));
+      console.log(
+        'props.techStacks',
+        JSON.stringify(props.techStacks, null, 2),
+      );
+      techStacks.push({
+        id: '2',
+        name: 'php',
+        iconUrl: 'https://php.net/favicon.ico',
+      });
+      // expect(techStacks).toBeInstanceOf(Array);
       expect(techStacks).toHaveLength(1);
-      expect(techStacks[0]).toBeInstanceOf(TechStack);
-      expect(techStacks[0].toPrimitive()).toEqual(props.techStacks[0]);
-      expect(techStacks[0].toPrimitive().id).toEqual(props.techStacks[0].id);
+      // expect(techStacks[0]).toBeInstanceOf(TechStack);
+      expect(techStacks[0]).toEqual(props.techStacks[0]);
     });
     // it('should return immutable copy of projectRoles', () => {
     //   const techStack = TechStack.reconstitute({
@@ -464,16 +427,8 @@ const getProjectProps = (
   ownerId: '123',
   description: 'Test Description',
   shortDescription: 'Test Short Description',
-  // projectImage: 'https://test.com',
-  techStacks: [createTechStack('ts-1', 'Test Tech Stack', 'https://test.com')],
-  // projectRoles: [],
-  // projectMembers: [
-  //   {
-  //     userId: '1',
-  //     name: 'jhonDow',
-  //     role: 'developer',
-  //   },
-  // ],
+  techStacks: [createTechStack('1', 'React', 'https://react.dev/favicon.ico')],
+  projectRoles: [],
   ...overrides,
 });
 

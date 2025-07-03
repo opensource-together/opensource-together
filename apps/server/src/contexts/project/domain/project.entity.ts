@@ -2,9 +2,11 @@ import { Result } from '@/shared/result';
 import {
   TechStack,
   TechStackValidationErrors,
-  TechStackPrimitive,
-} from '@/domain/techStack/techstack.entity';
-// import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+} from '@/contexts/techstack/domain/techstack.entity';
+import {
+  ProjectRole,
+  ProjectRoleValidationErrors,
+} from '@/contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
 
 export type ProjectValidationErrors = {
@@ -12,60 +14,50 @@ export type ProjectValidationErrors = {
   title?: string;
   description?: string;
   shortDescription?: string;
-  // projectImage?: string;
-  // difficulty?: string;
-  techStacks?: string;
-  // socialLinks?: string;
-  // projectRoles?: string;
+  techStacks?: TechStackValidationErrors | string;
+  projectRoles?: ProjectRoleValidationErrors | string;
   // collaborators?: string;
 };
 
-export type ProjectCreateProps = {
+// Type unifié pour création et reconstitution
+export type ProjectData = {
   id?: string;
   ownerId: string;
   title: string;
   shortDescription: string;
   description: string;
-  externalLinks?: { type: string; url: string }[] | undefined;
-  // projectImage: string;
-  techStacks: TechStackPrimitive[];
-  // projectRoles: ProjectRole[];
-  // projectMembers?: { userId: string; name: string; role: string }[];
+  externalLinks?: { type: string; url: string }[];
+  techStacks: { id: string; name: string; iconUrl: string }[];
+  projectRoles: {
+    id?: string;
+    title: string;
+    description: string;
+    isFilled: boolean;
+    techStacks: { id: string; name: string; iconUrl: string }[];
+    createdAt?: Date;
+    updatedAt?: Date;
+  }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
-export type ProjectPrimitive = {
-  id?: Readonly<string>;
-  ownerId: Readonly<string>;
-  title: Readonly<string>;
-  description: Readonly<string>;
-  shortDescription: Readonly<string>;
-  // projectImage: string;
-  externalLinks?: ReadonlyArray<{ type: string; url: string }>;
-  techStacks: ReadonlyArray<TechStack>;
-  // projectRoles: ProjectRole[];
-  // collaborators: { userId: string; name: string; role: string }[];
-  // keyFeatures: string[];
-  // projectGoals: string[];
-  createdAt?: Readonly<Date>;
-  updatedAt?: Readonly<Date>;
-};
+
+// Alias pour compatibilité avec le code existant
+export type ProjectCreateProps = ProjectData;
+export type ProjectPrimitive = ProjectData;
+
 export type ProjectProps = {
   id?: string;
   ownerId: string;
   title: Title;
   shortDescription: ShortDescription;
   description: Description;
-  externalLinks?: { type: string; url: string }[]; //au moins un qui est le repo github, apres la creation de projet
-  // projectImage: string;
+  externalLinks?: { type: string; url: string }[];
   techStacks: TechStack[];
-  // projectRoles: ProjectRole[];
-  // collaborators: { userId: string; name: string; role: string }[];
-  // keyFeatures: string[];
-  // projectGoals: string[];
+  projectRoles?: ProjectRole[];
   createdAt?: Date;
   updatedAt?: Date;
 };
+
 export class Project {
   private readonly id?: string;
   private ownerId: string;
@@ -73,12 +65,8 @@ export class Project {
   private shortDescription: ShortDescription;
   private description: Description;
   private externalLinks?: { type: string; url: string }[] | undefined;
-  // private projectImage: string;
   private techStacks: TechStack[];
-  // private projectRoles: ProjectRole[];
-  // private collaborators: { userId: string; name: string; role: string }[];
-  // private keyFeatures: string[];
-  // private projectGoals: string[];
+  private projectRoles?: ProjectRole[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -89,72 +77,74 @@ export class Project {
     this.shortDescription = props.shortDescription;
     this.description = props.description;
     this.externalLinks = props.externalLinks;
-    // this.projectImage = props.projectImage;
-    // this.keyFeatures = props.keyFeatures;
-    // this.projectGoals = props.projectGoals;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
     this.techStacks = props.techStacks;
-    // this.projectRoles = props.projectRoles;
-    // this.collaborators = props.collaborators ?? [];
+    this.projectRoles = props.projectRoles;
   }
 
   public static create(
-    props: ProjectCreateProps,
+    props: ProjectData,
   ): Result<Project, ProjectValidationErrors | string> {
     return Project.validate(props);
   }
 
   public static validate(
-    props: ProjectCreateProps,
+    props: ProjectData,
   ): Result<Project, ProjectValidationErrors | string> {
     const validationErrors: ProjectValidationErrors = {};
     if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
-    if (props.techStacks.length === 0)
-      validationErrors.techStacks = 'Tech stacks are required';
+    if (!props.techStacks || props.techStacks.length === 0)
+      validationErrors.techStacks = 'At least one tech stack is required';
 
-    //techStacks, TODO: verify if is not need to be moved to another part dedicated
-    const techStacks: Result<TechStack, TechStackValidationErrors | string>[] =
-      props.techStacks.map((techStack) =>
-        TechStack.reconstitute({
-          id: techStack.id ?? '',
-          name: techStack.name,
-          iconUrl: techStack.iconUrl,
-        }),
-      );
-
-    if (props.techStacks.some((techStack) => !techStack.id))
-      validationErrors.techStacks = 'Tech stack id is required';
-    const validTechStacks = techStacks
-      .filter((res) => res.success)
-      .map((res) => res.value);
-
-    if (validTechStacks.length !== props.techStacks.length) {
-      validationErrors.techStacks = 'Tech stacks are not valid';
-    }
-    //validate the title, description, shortDescription
     const voValidationResults = {
       title: Title.create(props.title),
       description: Description.create(props.description),
       shortDescription: ShortDescription.create(props.shortDescription),
+      techStacks: TechStack.reconstituteMany(props.techStacks),
     };
     //extract the error from the validation results
     Object.entries(voValidationResults).forEach(([key, result]) => {
       if (!result.success)
-        validationErrors[key as keyof ProjectValidationErrors] = result.error;
+        validationErrors[key as keyof ProjectValidationErrors] =
+          result.error as string;
     });
     //reconstitute the object with the value of the validation results
-    const { title, description, shortDescription } = Object.fromEntries(
-      Object.entries(voValidationResults).map(([key, result]) => [
-        key,
-        result.success ? result.value : result.error,
-      ]),
-    ) as {
-      title: Title;
-      description: Description;
-      shortDescription: ShortDescription;
-    };
+    const { title, description, shortDescription, techStacks } =
+      Object.fromEntries(
+        Object.entries(voValidationResults).map(([key, result]) => [
+          key,
+          result.success ? result.value : result.error,
+        ]),
+      ) as {
+        title: Title;
+        description: Description;
+        shortDescription: ShortDescription;
+        techStacks: TechStack[];
+      };
 
+    let projectRoles: ProjectRole[] = [];
+    if (props.projectRoles.length > 0) {
+      let validationResults: Result<
+        ProjectRole[],
+        ProjectRoleValidationErrors | string
+      >;
+      if (props.projectRoles.every((pr) => pr.id)) {
+        validationResults = ProjectRole.reconstituteMany(
+          props.projectRoles.map((pr) => ({
+            ...pr,
+            projectId: props.id as string,
+          })),
+        );
+        if (!validationResults.success) {
+          validationErrors.projectRoles =
+            validationResults.error as ProjectRoleValidationErrors;
+        }
+        projectRoles = validationResults.success ? validationResults.value : [];
+      }
+    } else {
+      projectRoles = [];
+    }
     if (Object.keys(validationErrors).length > 0)
       return Result.fail(validationErrors);
 
@@ -164,34 +154,38 @@ export class Project {
         title,
         shortDescription,
         description,
-        techStacks: validTechStacks,
+        techStacks,
+        projectRoles,
       }),
     );
   }
 
   public static reconstitute(
-    props: ProjectCreateProps,
+    props: ProjectData,
   ): Result<Project, ProjectValidationErrors | string> {
     if (!props.id) {
       return Result.fail('id is required');
     }
     if (!props.createdAt || !props.updatedAt) {
-      return Result.fail('createdAt and updatedAt are required');
+      return Result.fail(
+        'createdAt and updatedAt are required for the project reconstitution',
+      );
     }
     if (props.createdAt > props.updatedAt) {
       return Result.fail('createdAt must be before updatedAt');
     }
+
     return Project.validate(props);
   }
 
   private getTechStacks(): ReadonlyArray<TechStack> {
     return Object.freeze([...this.techStacks]);
   }
-  // private getProjectRoles(): ProjectRole[] {
-  //   return [...this.projectRoles];
+  // private getProjectRoles(): ReadonlyArray<ProjectRole> {
+  //   return Object.freeze([...(this.projectRoles || [])]);
   // }
 
-  public toPrimitive(): ProjectPrimitive {
+  public toPrimitive(): ProjectData {
     return {
       id: this.id,
       ownerId: this.ownerId,
@@ -199,59 +193,74 @@ export class Project {
       shortDescription: this.shortDescription.getShortDescription(),
       description: this.description.getDescription(),
       externalLinks: this.externalLinks,
-      // projectImage: this.projectImage,
-      techStacks: this.getTechStacks(),
-      // projectRoles: this.getProjectRoles(),
-      // collaborators: this.collaborators,
-      // keyFeatures: this.keyFeatures,
-      // projectGoals: this.projectGoals,
+      techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
+      projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
   }
 
-  // public addProjectRole(projectRole: ProjectRole): Result<ProjectRole, string> {
-  //   if (!this.id) {
-  //     return Result.fail('Project id is required');
-  //   }
-  //   const projectRoleResult = ProjectRole.create({
-  //     projectId: this.id,
-  //     roleTitle: projectRole.toPrimitive().roleTitle,
-  //     description: projectRole.toPrimitive().description,
-  //     isFilled: projectRole.toPrimitive().isFilled,
-  //     skillSet: projectRole.toPrimitive().skillSet,
-  //   });
-  //   if (!projectRoleResult.success) {
-  //     return Result.fail(projectRoleResult.error as string);
-  //   }
+  public createProjectRole(projectRole: {
+    title: string;
+    description: string;
+    isFilled: boolean;
+    techStacks: { id: string; name: string; iconUrl: string }[];
+  }): Result<ProjectRole, string> {
+    const techStacks = TechStack.reconstituteMany(projectRole.techStacks);
+    if (!techStacks.success) {
+      return Result.fail(techStacks.error as string);
+    }
+    console.log('projectId', this.id);
+    const projectRoleResult = ProjectRole.create({
+      projectId: this.id as string,
+      title: projectRole.title,
+      description: projectRole.description,
+      isFilled: projectRole.isFilled,
+      techStacks: techStacks.value.map((ts) => ts.toPrimitive()),
+    });
+    if (!projectRoleResult.success) {
+      return Result.fail(projectRoleResult.error as string);
+    }
 
-  //   if (
-  //     this.hasRoleWithTitle(projectRoleResult.value.toPrimitive().roleTitle)
-  //   ) {
-  //     return Result.fail(
-  //       'A role with this title already exists in this project',
-  //     );
-  //   }
+    // this.projectRoles?.push(projectRoleResult.value);
+    return Result.ok(projectRoleResult.value);
+  }
 
-  //   this.projectRoles.push(projectRoleResult.value);
-  //   return Result.ok(projectRoleResult.value);
-  // }
+  public addProjectRole(projectRole: ProjectRole): Result<void, string> {
+    if (projectRole.toPrimitive().projectId !== this.id) {
+      return Result.fail('Project role does not belong to this project');
+    }
+    if (!projectRole.toPrimitive().id) {
+      return Result.fail('Project role id is required');
+    }
+    if (!this.projectRoles) {
+      this.projectRoles = [];
+    }
+    this.projectRoles.push(projectRole);
+    return Result.ok(undefined);
+  }
+
+  public addProjectRoles(projectRoles: ProjectRole[]): Result<void, string> {
+    const projectRolesResults = projectRoles.map((pr) =>
+      this.addProjectRole(pr),
+    );
+    if (projectRolesResults.some((r) => !r.success)) {
+      return Result.fail(
+        projectRolesResults.find((r) => !r.success)?.error as string,
+      );
+    }
+    return Result.ok(undefined);
+  }
 
   // public hasRoleWithTitle(title: string): boolean {
-  //   if (!this.projectRoles) {
-  //     return false;
-  //   }
-  //   const normalizedTitle = title.toLowerCase();
-  //   return this.projectRoles.some(
-  //     (role) => role.toPrimitive().roleTitle.toLowerCase() === normalizedTitle,
-  //   );
+  // if (!this.projectRoles) {
+  //   return false;
   // }
-
-  // public hasRoleId(roleId: string): boolean {
-  //   if (!this.projectRoles) {
-  //     return false;
-  //   }
-  //   return this.projectRoles.some((role) => role.toPrimitive().id === roleId);
+  // const normalizedTitle = title.toLowerCase();
+  // return this.projectRoles.some(
+  //   (role) => role.toPrimitive().title.toLowerCase() === normalizedTitle,
+  // );
+  //   return false;
   // }
 
   public hasOwnerId(userId: string): boolean {

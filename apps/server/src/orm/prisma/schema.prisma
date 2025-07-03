@@ -57,17 +57,16 @@ model Project {
   ownerId     				String
   title       				String
   description 				String
-	difficulty					Difficulty
-  link        				String?
-	github							String
-	createAt						DateTime				@default(now())
+  shortDescription      String          // ADDED
+	externalLinks       String[]        @default([])
+	createdAt						DateTime				@default(now()) // RENAMED
 	updatedAt						DateTime				@updatedAt
   techStacks  				TechStack[]
 	projectMembers			teamMember[]
 	projectRoles				ProjectRole[]
 
-  // Index composite pour recherche par difficulté + tri par date
-  @@index([difficulty, createAt(sort: Desc)], name: "idx_difficulty_date")
+  // Index composite pour recherche + tri par date
+  @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
   @@index([title], name: "idx_title_search")
 }
@@ -92,15 +91,15 @@ model teamMember {
 model ProjectRole {
 	id									String		@id @default(uuid())
 	projectId						String
-	roleTitle						String
-	skillSet						TechStack[]
+	title   						String          // RENAMED
+	techStacks					TechStack[]     // RENAMED
 	description					String
 	isFilled						Boolean
 	teamMember					teamMember[]
 	project							Project			@relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   // Index pour recherche par projet et rôle
-  @@index([projectId, roleTitle], name: "idx_project_roles")
+  @@index([projectId, title], name: "idx_project_roles") // UPDATED
 }
 
 model UserSocialLink {

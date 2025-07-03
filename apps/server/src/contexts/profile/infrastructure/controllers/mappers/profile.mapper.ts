@@ -3,8 +3,8 @@ import { ProfileResponseDto } from '../dtos/profile-response.dto';
 
 export class ProfileMapper {
   static toDto(data: FullProfileData): ProfileResponseDto {
-    const userState = data.user.getState();
-    const profileState = data.profile.getState();
+    const userState = data.user.toPrimitive();
+    const profileState = data.profile.toPrimitive();
 
     return {
       id: profileState.userId,
@@ -37,7 +37,7 @@ export class ProfileMapper {
         url: project.url,
       })),
 
-      joinedAt: userState.createdAt.toISOString(),
+      joinedAt: userState.createdAt?.toISOString() ?? '',
       profileUpdatedAt: profileState.updatedAt?.toISOString() ?? '',
     };
   }

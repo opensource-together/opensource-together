@@ -173,7 +173,7 @@ export class Profile {
 
   // ... autres méthodes métier (`updateInfo`, `addSkill`, etc.)
 
-  public getState() {
+  public toPrimitive() {
     return {
       userId: this.userId,
       name: this.name,

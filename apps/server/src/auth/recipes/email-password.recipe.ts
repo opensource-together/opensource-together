@@ -154,7 +154,7 @@ export const emailPasswordRecipe = (
           }
           input.formFields = input.formFields.map((field) => {
             if (field.id === 'email') {
-              return { ...field, value: user.value.getState().email };
+              return { ...field, value: user.value.toPrimitive().email };
             }
             return field;
           });

@@ -19,8 +19,8 @@ export class FindProjectByIdHandler
     private readonly projectRepo: ProjectRepositoryPort,
   ) {}
 
-  async execute(query: FindProjectByIdQuery): Promise<Result<Project | null>> {
-    const result = await this.projectRepo.findProjectById(query.id);
+  async execute(query: FindProjectByIdQuery): Promise<Result<Project, string>> {
+    const result = await this.projectRepo.findById(query.id);
     if (result.success) {
       return Result.ok(result.value);
     }

@@ -65,7 +65,7 @@ export class CreateProfileCommandHandler
     const profile: Profile = profileResult.value;
 
     const savedProfileResult = await this.profileRepository.create(
-      profile.getState(),
+      profile.toPrimitive(),
     );
 
     if (!savedProfileResult.success)

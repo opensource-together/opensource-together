@@ -29,14 +29,12 @@ export class PrismaUserRepository implements UserRepositoryPort {
     }
   }
 
-  async create(user: {
-    id: string;
-    username: string;
-    email: string;
-  }): Promise<Result<User, { username?: string; email?: string } | string>> {
+  async create(user: User): Promise<Result<User, string>> {
+    const userData: Result<PrismaUser, string> = PrismaUserMapper.toRepo(user);
+    if (!userData.success) return Result.fail(userData.error);
     try {
       const savedUser = await this.prisma.user.create({
-        data: user,
+        data: userData.value,
       });
       if (!savedUser)
         return Result.fail("Erreur lors de la création de l'utilisateur.");
@@ -97,7 +95,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
   }
 
   async delete(user: User): Promise<Result<void, string>> {
-    const { id } = user.getState();
+    const { id } = user.toPrimitive();
     const deletedUser = await this.prisma.user.delete({
       where: { id },
     });

@@ -1,5 +1,5 @@
+import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import { ProjectRole, ProjectRoleCreateProps } from './project-role.entity';
-import { TechStack } from '@/domain/techStack/techstack.entity';
 
 describe('ProjectRole Entity', () => {
   let reactTechStack: TechStack;

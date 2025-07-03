@@ -15,7 +15,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
     private readonly projectRepo: ProjectRepositoryPort,
   ) {}
 
-  async execute(): Promise<Result<Project[]>> {
+  async execute(): Promise<Result<Project[], string>> {
     const result = await this.projectRepo.getAllProjects();
     if (result.success) {
       return Result.ok(result.value);

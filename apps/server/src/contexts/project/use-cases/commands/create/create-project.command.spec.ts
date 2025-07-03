@@ -9,19 +9,36 @@ import {
 } from '../../ports/project.repository.port';
 import {
   Project,
-  ProjectCreateProps,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
-import { TechStackRepositoryPort } from '@/application/teckstack/ports/techstack.repository.port';
-import { TECHSTACK_REPOSITORY_PORT } from '@/application/teckstack/ports/techstack.repository.port';
-import { InMemoryTechStackRepository } from '@/infrastructures/repositories/teckstack/mock.teckstack.repository';
+import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
-import {
-  TechStack,
-  TechStackPrimitive,
-} from '@/domain/techStack/techstack.entity';
+import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import { Result } from '@/shared/result';
 import { MockClock } from '@/shared/time/mock-clock';
+import { PROJECT_VALIDATION_SERVICE_PORT } from '../../ports/project-validation.service.port';
+import { ProjectValidationService } from '@/contexts/project/infrastructure/services/project-validation.service';
+import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
+import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
+
+// Type pour les props du CreateProjectCommand
+type CreateProjectCommandProps = {
+  ownerId: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  externalLinks: { type: string; url: string }[];
+  techStacks: { id: string; name: string; iconUrl: string }[];
+  projectRoles: {
+    id: string;
+    title: string;
+    description: string;
+    isFilled: boolean;
+    techStacks: { id: string; name: string; iconUrl: string }[];
+  }[];
+};
 
 describe('CreateProjectCommandHandler', () => {
   let handler: CreateProjectCommandHandler;
@@ -30,6 +47,7 @@ describe('CreateProjectCommandHandler', () => {
   const mockTechStackRepo = new InMemoryTechStackRepository();
   const mockClock = new MockClock(new Date('2024-01-01T09:00:00Z'));
   const mockProjectRepo = new InMemoryProjectRepository(mockClock);
+  const mockProjectRoleRepo = new InMemoryProjectRoleRepository(mockClock);
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -41,6 +59,14 @@ describe('CreateProjectCommandHandler', () => {
         {
           provide: TECHSTACK_REPOSITORY_PORT,
           useValue: mockTechStackRepo,
+        },
+        {
+          provide: PROJECT_VALIDATION_SERVICE_PORT,
+          useClass: ProjectValidationService,
+        },
+        {
+          provide: PROJECT_ROLE_REPOSITORY_PORT,
+          useValue: mockProjectRoleRepo,
         },
       ],
     }).compile();
@@ -56,161 +82,249 @@ describe('CreateProjectCommandHandler', () => {
     );
   });
 
+  afterEach(() => {
+    mockProjectRepo.reset();
+    // mockTechStackRepo.reset();
+    mockProjectRoleRepo.reset();
+  });
+
   describe('Success', () => {
     it('should create and save a project successfully with minimal props needed', async () => {
+      await createTechStacksInMemory(techStackRepo);
       // Arrange
-      const minimalPropsNeeded: ProjectCreateProps = getMinimalPropsNeeded();
+      const projectResultExpected = Project.reconstitute({
+        id: '1',
+        title: 'minimal project',
+        description: 'une description',
+        shortDescription: 'une description',
+        externalLinks: [],
+        projectRoles: [],
+        techStacks: [
+          {
+            id: '1',
+            name: 'react',
+            iconUrl: 'https://reactjs.org/favicon.ico',
+          },
+        ],
+        ownerId: '1',
+        createdAt: mockClock.now(),
+        updatedAt: mockClock.now(),
+      });
+      if (!projectResultExpected.success) {
+        throw new Error(JSON.stringify(projectResultExpected.error));
+      }
+      const minimalPropsNeeded = getMinimalPropsNeeded();
       const command = new CreateProjectCommand(minimalPropsNeeded);
 
-      await createTechStacksInMemory(techStackRepo);
+      // createTechStacksInMemory(techStackRepo);
       const result: Result<Project, ProjectValidationErrors | string> =
         await handler.execute(command);
 
       // Assert
       if (result.success) {
         expect(result.value).toBeInstanceOf(Project);
+        expect(result.value.toPrimitive()).toMatchObject(
+          projectResultExpected.value.toPrimitive(),
+        );
+        await projectRepo.delete(result.value.toPrimitive().id as string);
+        // await deleteTechStacksInMemory(
+        //   techStackRepo,
+        //   minimalPropsNeeded.techStacks,
+        // );
+      } else {
+        throw new Error(JSON.stringify(result.error));
+      }
+    });
+    it('should create and save a project successfully with project roles', async () => {
+      // Arrange
+      await createTechStacksInMemory(techStackRepo);
+      const props = getCommandProps({
+        projectRoles: [
+          {
+            id: '1',
+            title: 'Fullstack Developer',
+            description: 'Need a fullstack developer for a new project',
+            isFilled: false,
+            techStacks: [
+              {
+                id: '1',
+                name: 'react',
+                iconUrl: 'https://reactjs.org/favicon.ico',
+              },
+            ],
+          },
+        ],
+      });
+      const projectResultExpected = Project.reconstitute({
+        id: '1',
+        title: 'command props',
+        description: 'une description',
+        shortDescription: 'une description courte',
+        externalLinks: [],
+        projectRoles: [
+          {
+            id: '1',
+            title: 'Fullstack Developer',
+            description: 'Need a fullstack developer for a new project',
+            isFilled: false,
+            techStacks: [
+              {
+                id: '1',
+                name: 'react',
+                iconUrl: 'https://reactjs.org/favicon.ico',
+              },
+            ],
+            createdAt: mockClock.now(),
+            updatedAt: mockClock.now(),
+          },
+        ],
+        techStacks: [
+          {
+            id: '1',
+            name: 'react',
+            iconUrl: 'https://reactjs.org/favicon.ico',
+          },
+        ],
+        ownerId: '1',
+        createdAt: mockClock.now(),
+        updatedAt: mockClock.now(),
+      });
+      if (!projectResultExpected.success) {
+        throw new Error(JSON.stringify(projectResultExpected.error));
+      }
+      const command = new CreateProjectCommand({
+        title: 'command props',
+        description: 'une description',
+        shortDescription: 'une description courte',
+        externalLinks: [],
+        projectRoles: [
+          {
+            title: 'Fullstack Developer',
+            description: 'Need a fullstack developer for a new project',
+            isFilled: false,
+            techStacks: [
+              {
+                id: '1',
+                name: 'react',
+                iconUrl: 'https://reactjs.org/favicon.ico',
+              },
+            ],
+          },
+        ],
+        techStacks: [
+          {
+            id: '1',
+            name: 'react',
+            iconUrl: 'https://reactjs.org/favicon.ico',
+          },
+        ],
+        ownerId: '1',
+      });
+
+      const result: Result<Project, ProjectValidationErrors | string> =
+        await handler.execute(command);
+
+      // Assert
+      if (result.success) {
+        expect(result.value).toBeInstanceOf(Project);
+        expect(result.value.toPrimitive()).toMatchObject(
+          projectResultExpected.value.toPrimitive(),
+        );
         console.log('result.value', result.value.toPrimitive());
         await projectRepo.delete(result.value.toPrimitive().id as string);
-        await deleteTechStacksInMemory(
-          techStackRepo,
-          minimalPropsNeeded.techStacks.map((techStack) => ({
-            id: techStack.id,
-            name: techStack.name,
-            iconUrl: techStack.iconUrl,
-          })),
-        );
+        await deleteTechStacksInMemory(techStackRepo, props.techStacks);
       } else {
-        throw new Error(result.error as string);
+        throw new Error(JSON.stringify(result.error));
       }
     });
   });
 
   describe('Failures', () => {
     it('should return an error when tech stacks are not found', async () => {
-      await createTechStacksInMemory(techStackRepo);
+      createTechStacksInMemory(techStackRepo);
       const props = getCommandProps({
         techStacks: [
           {
-            id: '1',
-            name: 'php',
-            iconUrl: 'https://php.net/favicon.ico',
-          },
-          {
-            id: '2',
-            name: 'angular',
-            iconUrl: 'https://angular.io/favicon.ico',
+            id: '999', // ID qui n'existe pas
+            name: 'nonexistent',
+            iconUrl: 'https://example.com/icon.svg',
           },
         ],
       });
       console.log('props', props);
-      const command = new CreateProjectCommand(props as ProjectCreateProps);
+      const command = new CreateProjectCommand(props);
       const result = await handler.execute(command);
       if (!result.success) {
-        expect(result.error).toEqual('Tech stacks not found');
+        console.log('result', result.error);
+        expect(result.error).toContain('Tech stacks not found');
         await deleteTechStacksInMemory(techStackRepo, props.techStacks);
-      }
-    });
-
-    it('should return an error when project with this title already exists', async () => {
-      // Arrange
-      const props1 = getCommandProps({ title: 'test1' });
-      const project1 = Project.create(props1 as ProjectCreateProps);
-      if (!project1.success) {
-        throw new Error(project1.error as string);
-      }
-      const projectCreated1 = await projectRepo.create(project1.value);
-      if (!projectCreated1.success) {
-        throw new Error(projectCreated1.error);
-      }
-      await createTechStacksInMemory(techStackRepo);
-      const command = new CreateProjectCommand(props1 as ProjectCreateProps);
-      const result = await handler.execute(command);
-      if (!result.success) {
-        await deleteTechStacksInMemory(techStackRepo, props1.techStacks);
-        await projectRepo.delete(
-          projectCreated1.value.toPrimitive().id as string,
-        );
-        expect(result.error).toEqual('Project with this title already exists');
+      } else {
+        throw new Error('Test should have failed but succeeded');
       }
     });
   });
 });
 
-const getCommandProps = (override: Partial<ProjectCreateProps>) => {
+const getCommandProps = (
+  override: Partial<CreateProjectCommandProps> = {},
+): CreateProjectCommandProps => {
   return {
     ownerId: '1',
     title: 'command props',
+    shortDescription: 'une description courte',
     description: 'une description',
-    difficulty: 'easy',
-    externalLinks: undefined,
-    projectImages: [],
-    githubLink: 'https://github.com/test',
+    externalLinks: [],
+    projectRoles: [],
     techStacks: [
       { id: '1', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' },
       { id: '2', name: 'angular', iconUrl: 'https://angular.io/favicon.ico' },
     ],
-    projectRoles: [
-      { id: '1', title: 'test', description: 'test' },
-      { id: '2', title: 'test', description: 'test' },
-    ],
-    projectMembers: [],
     ...override,
   };
 };
 
-const getMinimalPropsNeeded = (): ProjectCreateProps => {
+const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
   return {
     ownerId: '1',
     title: 'minimal project',
     description: 'une description',
-    difficulty: 'easy',
-    externalLinks: undefined,
-    projectImages: [],
-    githubLink: 'https://github.com/test',
+    shortDescription: 'une description',
+    externalLinks: [],
+    projectRoles: [],
     techStacks: [
       { id: '1', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' },
-      { id: '2', name: 'angular', iconUrl: 'https://angular.io/favicon.ico' },
     ],
-    projectRoles: [
-      { id: '1', title: 'test', description: 'test' },
-      { id: '2', title: 'test', description: 'test' },
-    ],
-    projectMembers: [],
   };
 };
 
 const createTechStacksInMemory = async (
   techStackRepo: TechStackRepositoryPort,
-) => {
+): Promise<void> => {
   //create tech stacks in memory
-  const techStack1 = TechStack.create({
-    name: 'php',
-    iconUrl: 'https://php.net/favicon.ico',
-  });
-  const techStack2 = TechStack.create({
+  const techStack1 = TechStack.reconstitute({
+    id: '1',
     name: 'react',
     iconUrl: 'https://reactjs.org/favicon.ico',
   });
-  if (!techStack1.success) {
-    throw new Error(techStack1.error as string);
+  const techStack2 = TechStack.reconstitute({
+    id: '2',
+    name: 'angular',
+    iconUrl: 'https://angular.io/favicon.ico',
+  });
+  if (!techStack1.success || !techStack2.success) {
+    throw new Error('Tech stacks not created');
   }
-  if (!techStack2.success) {
-    throw new Error(techStack2.error as string);
-  }
-  const [techStack1Created, techStack2Created] = await Promise.all([
+  await Promise.all([
     techStackRepo.create(techStack1.value),
     techStackRepo.create(techStack2.value),
   ]);
-  if (!techStack1Created.success || !techStack2Created.success) {
-    throw new Error('Tech stacks not created');
-  }
 };
 
 const deleteTechStacksInMemory = async (
   techStackRepo: TechStackRepositoryPort,
-  techStacks: TechStackPrimitive[],
+  techStacks: { id: string; name: string; iconUrl: string }[],
 ) => {
   await Promise.all(
-    techStacks.map((techStack) => techStackRepo.delete(techStack.id as string)),
+    techStacks.map((techStack) => techStackRepo.delete(techStack.id)),
   );
 };

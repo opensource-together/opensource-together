@@ -8,13 +8,14 @@ export class PrismaUserMapper {
   static toRepo(user: DomainUser): Result<PrismaUser, string> {
     try {
       const toRepo = {
-        id: user.getState().id,
-        username: user.getState().username,
-        email: user.getState().email,
+        id: user.toPrimitive().id,
+        username: user.toPrimitive().username,
+        email: user.toPrimitive().email,
       };
       return Result.ok(toRepo as PrismaUser);
     } catch (error) {
-      return Result.fail(`Error mapping user to repository format : ${error}`);
+      console.error(error);
+      return Result.fail(`Error mapping user to repository format`);
     }
   }
 
@@ -31,12 +32,16 @@ export class PrismaUserMapper {
       );
     const userResult = User.reconstitute({
       id: prismaUser.id,
-      username: username.value,
-      email: email.value,
+      username: prismaUser.username,
+      email: prismaUser.email,
       createdAt: prismaUser.createdAt,
       updatedAt: prismaUser.updatedAt,
     });
 
-    return Result.ok(userResult);
+    if (!userResult.success)
+      return Result.fail(
+        "Une erreur est survenue lors de la récupération des données de l'utilisateur",
+      );
+    return Result.ok(userResult.value);
   }
 }

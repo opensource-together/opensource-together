@@ -1,7 +1,7 @@
-import {
-  FindProjectByFiltersHandler,
-  FindProjectByFiltersQuery,
-} from './find-by-filters/find-project-by-filters.handler';
+// import {
+//   FindProjectByFiltersHandler,
+//   FindProjectByFiltersQuery,
+// } from './find-by-filters/find-project-by-filters.handler';
 import {
   FindProjectByIdHandler,
   FindProjectByIdQuery,
@@ -12,8 +12,8 @@ import {
 } from './get-all/get-projects.handler';
 
 export const projectQueriesContainer = [
-  FindProjectByFiltersHandler,
-  FindProjectByFiltersQuery,
+  // FindProjectByFiltersHandler,
+  // FindProjectByFiltersQuery,
   FindProjectByIdHandler,
   FindProjectByIdQuery,
   GetProjectsHandler,
