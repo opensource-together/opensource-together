@@ -218,6 +218,7 @@ export class Project {
       isFilled: projectRole.isFilled,
       techStacks: techStacks.value.map((ts) => ts.toPrimitive()),
     });
+    console.log('projectRoleResult', projectRoleResult);
     if (!projectRoleResult.success) {
       return Result.fail(projectRoleResult.error as string);
     }

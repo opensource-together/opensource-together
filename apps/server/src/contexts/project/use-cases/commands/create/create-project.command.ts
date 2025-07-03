@@ -107,38 +107,64 @@ export class CreateProjectCommandHandler
     if (!savedProject.success) return Result.fail(savedProject.error);
 
     if (projectRoles.length > 0) {
-      const roleTechStacks = projectRoles
-        .flatMap((role) => {
-          return allTechStacksValidated.filter((ts) =>
-            role.techStacks.some((rts) => rts.id === ts.toPrimitive().id),
-          );
-        })
-        .map((ts) => ts.toPrimitive());
-      const projectRolesCreated = await Promise.all(
+      // const roleTechStacks = projectRoles
+      //   .flatMap((role) => {
+      //     return allTechStacksValidated.filter((ts) =>
+      //       role.techStacks.some((rts) => rts.id === ts.toPrimitive().id),
+      //     );
+      //   })
+      //   .map((ts) => ts.toPrimitive());
+      const projectRolesResults = await Promise.all(
         projectRoles.map(async (role) => {
           const projectRole = savedProject.value.createProjectRole({
             title: role.title,
             description: role.description,
             isFilled: role.isFilled,
-            techStacks: roleTechStacks,
+            techStacks: role.techStacks
+              .map((ts) =>
+                allTechStacksValidated
+                  .find((validated) => validated.toPrimitive().id === ts.id)
+                  ?.toPrimitive(),
+              )
+              .filter(Boolean) as {
+              id: string;
+              name: string;
+              iconUrl: string;
+            }[],
           });
-          if (!projectRole.success) return Result.fail(projectRole.error);
-          return await this.projectRoleRepo.create(projectRole.value);
+
+          if (!projectRole.success) {
+            return Result.fail(projectRole.error);
+          }
+
+          const projectRoleSaved = await this.projectRoleRepo.create(
+            projectRole.value,
+          );
+
+          if (!projectRoleSaved.success) {
+            return Result.fail(projectRoleSaved.error);
+          }
+
+          return Result.ok(projectRoleSaved.value);
         }),
       );
-      if (!projectRolesCreated.every((r) => r.success))
-        return Result.fail(
-          projectRolesCreated.find((r) => !r.success)?.error as
-            | ProjectRoleValidationErrors
-            | string,
-        );
-      const projectRolesSaved = projectRolesCreated.map(
-        (r) => r.value,
-      ) as ProjectRole[];
+
+      const failedResult = projectRolesResults.find(
+        (result) => !result.success,
+      );
+      if (failedResult) {
+        return Result.fail(failedResult.error);
+      }
+
+      const projectRolesSaved = projectRolesResults
+        .filter((result) => result.success)
+        .map((result) => result.value as ProjectRole);
       const projectRolesAdded =
         savedProject.value.addProjectRoles(projectRolesSaved);
-      if (!projectRolesAdded.success)
+
+      if (!projectRolesAdded.success) {
         return Result.fail(projectRolesAdded.error);
+      }
     }
     return Result.ok(savedProject.value);
   }

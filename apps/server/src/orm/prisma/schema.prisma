@@ -97,6 +97,8 @@ model ProjectRole {
 	isFilled						Boolean
 	teamMember					teamMember[]
 	project							Project			@relation(fields: [projectId], references: [id], onDelete: Cascade)
+	createdAt						DateTime				@default(now())
+	updatedAt						DateTime				@updatedAt
 
   // Index pour recherche par projet et rôle
   @@index([projectId, title], name: "idx_project_roles") // UPDATED
