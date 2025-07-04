@@ -25,7 +25,7 @@ import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/g
 // import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.usecase';
 import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
 import { FilterProjectsDto } from './dto/SearchFilterProject.dto';
-import { CreateGitHubRepositoryCommand } from '@/application/github/commands/create-github-repository.command';
+// import { CreateGitHubRepositoryCommand } from '@/contexts/github/use-cases/commands/create-github-repository.command';
 @Controller('projects')
 export class ProjectController {
   constructor(

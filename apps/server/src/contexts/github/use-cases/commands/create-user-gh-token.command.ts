@@ -11,9 +11,11 @@ import {
 
 export class CreateUserGhTokenCommand implements ICommand {
   constructor(
-    public readonly userId: string,
-    public readonly githubUserId: string,
-    public readonly githubAccessToken: string,
+    public readonly props: {
+      userId: string;
+      githubUserId: string;
+      githubAccessToken: string;
+    },
   ) {}
 }
 
@@ -42,15 +44,15 @@ export class CreateUserGhTokenCommandHandler
   async execute(
     command: CreateUserGhTokenCommand,
   ): Promise<Result<UserGitHubCredentialsData, string>> {
-    const encryptedGithubAccessToken = this.encryptionService.encrypt(
-      command.githubAccessToken,
-    );
+    const { userId, githubUserId, githubAccessToken } = command.props;
+    const encryptedGithubAccessToken =
+      this.encryptionService.encrypt(githubAccessToken);
     if (!encryptedGithubAccessToken.success)
       return Result.fail(encryptedGithubAccessToken.error);
 
     const savedCredentialsResult = await this.userGitHubCredentialsRepo.create({
-      userId: command.userId,
-      githubUserId: command.githubUserId,
+      userId,
+      githubUserId,
       githubAccessToken: encryptedGithubAccessToken.value,
     });
 

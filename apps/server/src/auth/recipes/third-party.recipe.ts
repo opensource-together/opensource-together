@@ -7,8 +7,8 @@ import { Result } from '@/shared/result';
 import { User } from '@/contexts/user/domain/user.entity';
 import { CreateProfileCommand } from '@/contexts/profile/use-cases/commands/create-profile.command';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
-import { CreateUserGhTokenCommand } from '@/application/github/commands/create-user-gh-token.command';
-import { UpdateUserGhTokenCommand } from '@/application/github/commands/update-user-gh-token.command';
+import { CreateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
+import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
 
 interface GithubUserInfo {
   user: {
@@ -124,7 +124,7 @@ export const thirdPartyRecipe = ({
                     await commandBus.execute(new DeleteUserCommand(id));
 
                     await deleteUser(id);
-                    throw new Error('Failed to create user');
+                    throw new Error(newUserResult.error);
                   }
 
                   const newProfileResult: Result<any> =
@@ -144,9 +144,11 @@ export const thirdPartyRecipe = ({
                   }
 
                   const createUserGhTokenCommand = new CreateUserGhTokenCommand(
-                    id,
-                    String(githubUser.id),
-                    accessToken,
+                    {
+                      userId: id,
+                      githubUserId: String(githubUser.id),
+                      githubAccessToken: accessToken,
+                    },
                   );
                   await commandBus.execute(createUserGhTokenCommand);
                 } catch (error) {

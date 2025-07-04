@@ -1,6 +1,6 @@
 import { GithubRepositoryDto } from '@/application/dto/adapters/github/github-repository.dto';
 import { toGithubRepositoryDto } from '@/application/dto/adapters/github/github-repository.adapter';
-import { GithubRepositoryPort } from '@/application/github/ports/github-repository.port';
+import { GithubRepositoryPort } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Result } from '@/shared/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
@@ -11,7 +11,7 @@ import { GithubRepositoryPermissionsDto } from '@/application/dto/adapters/githu
 import { toGithubInvitationDto } from '@/application/dto/adapters/github/github-invitation.adapter';
 
 @Injectable()
-export class GithubRepositoryAdapter implements GithubRepositoryPort {
+export class GithubRepository implements GithubRepositoryPort {
   constructor() {}
 
   async createGithubRepository(

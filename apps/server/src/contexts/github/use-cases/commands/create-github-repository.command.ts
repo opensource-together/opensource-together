@@ -7,20 +7,25 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { Result } from '@/shared/result';
-import {
-  GITHUB_API_SERVICE_PORT,
-  GitHubApiServicePort,
-} from '@/application/github/ports/github-api.service.port';
+// import {
+//   GITHUB_API_SERVICE_PORT,
+//   GitHubApiServicePort,
+// } from '@/contexts/github/use-cases/ports/github-api.service.port';
 import {
   ENCRYPTION_SERVICE_PORT,
   EncryptionServicePort,
 } from '@/application/encryption/ports/encryption.service.port';
-import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/application/github/ports/user-github-credentials.repository.port';
-import { UserGitHubCredentialsRepositoryPort } from '@/application/github/ports/user-github-credentials.repository.port';
+import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
+import { UserGitHubCredentialsRepositoryPort } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
+// import { GitHubApiService } from '@/infrastructures/api/github-api.service';
+import { GithubRepository } from '@/contexts/github/infrastructure/repositories/github.repository';
+import { Octokit } from 'octokit';
+import { GITHUB_REPOSITORY_PORT } from '../ports/github-repository.port';
 
 export class CreateGitHubRepositoryCommand implements ICommand {
   constructor(
     public readonly userId: string,
+    public readonly octokit: Octokit,
     public readonly repoName: string,
     public readonly description?: string,
     public readonly isPrivate?: boolean,
@@ -34,10 +39,10 @@ export class CreateGitHubRepositoryCommandHandler
   constructor(
     @Inject(USER_GITHUB_CREDENTIALS_REPOSITORY_PORT)
     private readonly userGitHubCredentialsRepo: UserGitHubCredentialsRepositoryPort,
-    @Inject(GITHUB_API_SERVICE_PORT)
-    private readonly githubApiService: GitHubApiServicePort,
     @Inject(ENCRYPTION_SERVICE_PORT)
     private readonly encryptionService: EncryptionServicePort,
+    @Inject(GITHUB_REPOSITORY_PORT)
+    private readonly githubRepository: GithubRepository,
   ) {}
 
   async execute(
@@ -59,13 +64,12 @@ export class CreateGitHubRepositoryCommandHandler
       );
     }
     console.log({ command });
-    const createRepoResult = await this.githubApiService.createRepository(
-      decryptedGhToken.value,
+    const createRepoResult = await this.githubRepository.createGithubRepository(
       {
         name: command.repoName,
-        description: command.description,
-        isPrivate: command.isPrivate,
+        description: command.description ?? '',
       },
+      command.octokit,
     );
 
     if (!createRepoResult.success) {

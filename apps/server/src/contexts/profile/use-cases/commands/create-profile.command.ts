@@ -67,6 +67,7 @@ export class CreateProfileCommandHandler
     const savedProfileResult = await this.profileRepository.create(
       profile.toPrimitive(),
     );
+    console.log({ savedProfileResult });
 
     if (!savedProfileResult.success)
       return Result.fail('Erreur technique lors de la création du profil.');

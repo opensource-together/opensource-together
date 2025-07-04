@@ -84,7 +84,7 @@ describe('CreateProjectCommandHandler', () => {
 
   afterEach(() => {
     mockProjectRepo.reset();
-    // mockTechStackRepo.reset();
+    mockTechStackRepo.reset();
     mockProjectRoleRepo.reset();
   });
 

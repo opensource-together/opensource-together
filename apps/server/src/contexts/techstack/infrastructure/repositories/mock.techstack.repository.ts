@@ -20,7 +20,7 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
     });
     const newTechStack = this.techStacks[this.techStacks.length - 1];
     const techStackReconstituted = TechStack.reconstitute({
-      id: newTechStack.id as string,
+      id: newTechStack.id,
       name: newTechStack.name,
       iconUrl: newTechStack.iconUrl,
     });
@@ -34,7 +34,7 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
   async getAll(): Promise<Result<TechStack[], string>> {
     const techStacks = this.techStacks.map((ts) =>
       TechStack.reconstitute({
-        id: ts.id as string,
+        id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
       }),
@@ -47,10 +47,10 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
 
   // Implémentation de la méthode de l'interface
   async findByIds(ids: string[]): Promise<Result<TechStack[], string>> {
-    const found = this.techStacks.filter((ts) => ids.includes(ts.id as string));
+    const found = this.techStacks.filter((ts) => ids.includes(ts.id));
     const techStacks = found.map((ts) =>
       TechStack.reconstitute({
-        id: ts.id as string,
+        id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
       }),
@@ -69,5 +69,9 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
     this.techStacks = this.techStacks.filter((ts) => ts.id !== id);
     console.log('techStacks', this.techStacks);
     return Promise.resolve(Result.ok(true));
+  }
+
+  reset(): void {
+    this.techStacks = [];
   }
 }
