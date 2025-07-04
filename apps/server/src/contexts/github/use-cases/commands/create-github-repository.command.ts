@@ -66,7 +66,7 @@ export class CreateGitHubRepositoryCommandHandler
     console.log({ command });
     const createRepoResult = await this.githubRepository.createGithubRepository(
       {
-        name: command.repoName,
+        title: command.repoName,
         description: command.description ?? '',
       },
       command.octokit,

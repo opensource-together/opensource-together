@@ -20,6 +20,12 @@ import {
   TECHSTACK_REPOSITORY_PORT,
   TechStackRepositoryPort,
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import {
+  GITHUB_REPOSITORY_PORT,
+  GithubRepositoryPort,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
+import { Octokit } from '@octokit/rest';
+import { GithubRepositoryDto } from '@/application/dto/adapters/github/github-repository.dto';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -37,6 +43,7 @@ export class CreateProjectCommand implements ICommand {
         isFilled: boolean;
         techStacks: { id: string; name: string; iconUrl: string }[];
       }[];
+      octokit: Octokit;
     },
   ) {}
 }
@@ -52,6 +59,8 @@ export class CreateProjectCommandHandler
     private readonly projectRoleRepo: ProjectRoleRepositoryPort,
     @Inject(TECHSTACK_REPOSITORY_PORT)
     private readonly techStackRepo: TechStackRepositoryPort,
+    @Inject(GITHUB_REPOSITORY_PORT)
+    private readonly githubRepository: GithubRepositoryPort,
   ) {}
 
   async execute(
@@ -70,6 +79,7 @@ export class CreateProjectCommandHandler
       externalLinks,
       techStacks,
       projectRoles,
+      octokit,
     } = createProjectCommand.props;
     // Récupérer tous les IDs des techStacks du projet
     const projectTechStackIds = techStacks.map((ts) => ts.id);
@@ -105,6 +115,36 @@ export class CreateProjectCommandHandler
 
     const savedProject = await this.projectRepo.create(project.value);
     if (!savedProject.success) return Result.fail(savedProject.error);
+
+    const githubRepositoryResult: Result<GithubRepositoryDto, string> =
+      await this.githubRepository.createGithubRepository(
+        {
+          title: savedProject.value.toPrimitive().title,
+          description: savedProject.value.toPrimitive().description,
+        },
+        octokit,
+      );
+
+    if (!githubRepositoryResult.success) {
+      return Result.fail(githubRepositoryResult.error);
+    }
+
+    const { html_url } = githubRepositoryResult.value;
+
+    console.log('html_url', html_url);
+    if (html_url) {
+      savedProject.value.addExternalLink({
+        type: 'github',
+        url: html_url,
+      });
+      const savedProjectWithGithubLink = await this.projectRepo.update(
+        savedProject.value.toPrimitive().id as string,
+        savedProject.value,
+      );
+      if (!savedProjectWithGithubLink.success) {
+        return Result.fail(savedProjectWithGithubLink.error);
+      }
+    }
 
     if (projectRoles.length > 0) {
       // const roleTechStacks = projectRoles

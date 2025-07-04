@@ -382,12 +382,12 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProject.value);
     } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          return Result.fail('Project not found');
-        }
-      }
-      return Result.fail(`Unknown error during project update: ${error}`);
+      // if (error instanceof PrismaClientKnownRequestError) {
+      //   if (error.code === 'P2025') {
+      //     return Result.fail('Project not found');
+      //   }
+      // }
+      return Result.fail(`Unknown error during project update`);
     }
   }
 }

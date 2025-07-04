@@ -200,6 +200,17 @@ export class Project {
     };
   }
 
+  public addExternalLink(externalLink: {
+    type: string;
+    url: string;
+  }): Result<void, string> {
+    if (!this.externalLinks) {
+      this.externalLinks = [];
+    }
+    this.externalLinks.push(externalLink);
+    return Result.ok(undefined);
+  }
+
   public createProjectRole(projectRole: {
     title: string;
     description: string;

@@ -26,7 +26,10 @@ export class PrismaProjectMapper {
       title: projectData.title,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
-      externalLinks: projectData.externalLinks?.map((link) => link.url) || [],
+      externalLinks:
+        projectData.externalLinks
+          ?.filter((link) => link && link.url) // Filtrer les liens invalides
+          ?.map((link) => link.url) || [],
       ownerId: projectData.ownerId,
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({

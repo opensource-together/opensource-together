@@ -8,11 +8,22 @@ import { PrismaProjectRoleRepository } from '@/contexts/project-role/infrastruct
 import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
 import { ProjectController } from '@/contexts/project/infrastructure/controllers/project.controller';
+import { GithubRepository } from '@/contexts/github/infrastructure/repositories/github.repository';
+import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
+// import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
+// import { OctokitProvider } from '@/contexts/github/infrastructure/providers/octokit.provider';
+import { GithubInfrastructure } from '@/contexts/github/infrastructure/github.infrastructure';
+import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
+import { PrismaUserGitHubCredentialsRepository } from '@/contexts/github/infrastructure/repositories/prisma.user-github-credentials.repository';
+import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
+import { EncryptionService } from '@/infrastructures/encryption/encryption.service';
 
 @Module({
   imports: [],
   providers: [
     PrismaService,
+    // OctokitProvider,
+    // GithubAuthGuard,
     {
       provide: PROJECT_REPOSITORY_PORT,
       useClass: PrismaProjectRepository,
@@ -25,9 +36,25 @@ import { ProjectController } from '@/contexts/project/infrastructure/controllers
       provide: PROJECT_ROLE_REPOSITORY_PORT,
       useClass: PrismaProjectRoleRepository,
     },
+    {
+      provide: GITHUB_REPOSITORY_PORT,
+      useClass: GithubRepository,
+    },
+    {
+      provide: ENCRYPTION_SERVICE_PORT,
+      useClass: EncryptionService,
+    },
+    {
+      provide: USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
+      useClass: PrismaUserGitHubCredentialsRepository,
+    },
+    GithubInfrastructure,
     ...projectUseCases,
   ],
   controllers: [ProjectController],
-  exports: [...projectUseCases],
+  exports: [
+    ...projectUseCases,
+    // OctokitProvider
+  ],
 })
 export class ProjectInfrastructure {}

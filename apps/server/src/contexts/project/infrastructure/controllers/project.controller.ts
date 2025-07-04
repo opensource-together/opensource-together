@@ -2,30 +2,36 @@ import {
   Controller,
   Post,
   Body,
-  Get,
-  Param,
-  Query,
+  // Get,
+  // Param,
+  // Query,
   HttpException,
   HttpStatus,
-  Patch,
-  Delete,
+  // Patch,
+  // Delete,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@shared/result';
-import { ProjectResponseDto } from '@/application/dto/adapters/project-response.dto';
+// import { ProjectResponseDto } from '@/application/dto/adapters/project-response.dto';
 // import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
-import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
+// import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 // import { FindProjectByFiltersQuery } from '@/contexts/project/use-cases/queries/find-by-filters/find-project-by-filters.handler';
-import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
+// import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
 // import { CreateProjectDtoRequest } from './dto/CreateaProjectDtoRequest';
 // import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
 // import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.usecase';
-import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
-import { FilterProjectsDto } from './dto/SearchFilterProject.dto';
+// import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
+// import { FilterProjectsDto } from './dto/SearchFilterProject.dto';
+import { Octokit } from '@octokit/rest';
+import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
+import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 // import { CreateGitHubRepositoryCommand } from '@/contexts/github/use-cases/commands/create-github-repository.command';
+@UseGuards(GithubAuthGuard)
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -91,6 +97,8 @@ export class ProjectController {
   @Post()
   async createProject(
     @Session('userId') ownerId: string,
+    @Req() req: Request,
+    @GitHubOctokit() octokit: Octokit,
     @Body()
     project: {
       title: string;
@@ -157,6 +165,7 @@ export class ProjectController {
             iconUrl: techStack.iconUrl,
           })),
         })),
+        octokit: octokit,
       }),
     );
     console.log('projectRes', projectRes);

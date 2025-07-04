@@ -5,8 +5,9 @@ export function toGithubRepositoryDto(
   data: unknown,
 ): Result<GithubRepositoryDto> {
   try {
-    const repository = data as GithubRepositoryDto;
-    return Result.ok(repository);
+    const repository = data as { data: GithubRepositoryDto };
+    console.log('repository', repository);
+    return Result.ok(repository.data);
   } catch (e) {
     return Result.fail(e);
   }

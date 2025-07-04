@@ -4,7 +4,7 @@ import { GithubRepositoryPort } from '@/contexts/github/use-cases/ports/github-r
 import { Result } from '@/shared/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
-import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
+// import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
 import { GithubInvitationDto } from '@/application/dto/adapters/github/github-invitation.dto';
 import { InviteUserToRepoInput } from '@/application/dto/inputs/invite-user-to-repo.inputs.dto';
 import { GithubRepositoryPermissionsDto } from '@/application/dto/adapters/github/github-permissions.dto';
@@ -15,18 +15,22 @@ export class GithubRepository implements GithubRepositoryPort {
   constructor() {}
 
   async createGithubRepository(
-    input: CreateGithubRepositoryInput,
+    input: {
+      title: string;
+      description: string;
+    },
     octokit: Octokit,
   ): Promise<Result<GithubRepositoryDto>> {
     try {
       const response = await octokit.rest.repos.createForAuthenticatedUser({
-        name: input.name,
+        name: input.title,
         description: input.description,
         private: false,
         headers: {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
+      console.log('response', response);
       return toGithubRepositoryDto(response);
     } catch (e) {
       return Result.fail(e);

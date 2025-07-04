@@ -59,7 +59,6 @@ export class GithubAuthGuard implements CanActivate {
     const octokit = new Octokit({
       auth: decryptedTokenResult.value,
     });
-
     // Injecter Octokit dans la requête
     request.octokit = octokit;
 
