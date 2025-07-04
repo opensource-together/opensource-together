@@ -30,6 +30,8 @@ import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/crea
 import { Octokit } from '@octokit/rest';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
+import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
+import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 // import { CreateGitHubRepositoryCommand } from '@/contexts/github/use-cases/commands/create-github-repository.command';
 @UseGuards(GithubAuthGuard)
 @Controller('projects')
@@ -99,28 +101,28 @@ export class ProjectController {
     @Session('userId') ownerId: string,
     @Req() req: Request,
     @GitHubOctokit() octokit: Octokit,
-    @Body()
-    project: {
-      title: string;
-      description: string;
-      shortDescription: string;
-      externalLinks?: string[];
-      techStacks: {
-        id: string;
-        name: string;
-        iconUrl: string;
-      }[];
-      projectRoles: {
-        title: string;
-        techStacks: {
-          id: string;
-          name: string;
-          iconUrl: string;
-        }[];
-        description: string;
-        isFilled: boolean;
-      }[];
-    },
+    @Body() project: CreateProjectDtoRequest,
+    // project: {
+    //   title: string;
+    //   description: string;
+    //   shortDescription: string;
+    //   externalLinks?: string[];
+    //   techStacks: {
+    //     id: string;
+    //     name: string;
+    //     iconUrl: string;
+    //   }[];
+    //   projectRoles: {
+    //     title: string;
+    //     techStacks: {
+    //       id: string;
+    //       name: string;
+    //       iconUrl: string;
+    //     }[];
+    //     description: string;
+    //     isFilled: boolean;
+    //   }[];
+    // },
   ) {
     // console.log('project', project);
     // Convertir les DTOs en commandes
@@ -145,11 +147,11 @@ export class ProjectController {
         title: project.title,
         description: project.description,
         shortDescription: project.shortDescription,
-        externalLinks:
-          project.externalLinks?.map((link) => ({
-            type: 'github',
-            url: link,
-          })) || [],
+        // externalLinks:
+        //   project.externalLinks?.map((link) => ({
+        //     type: 'github',
+        //     url: link,
+        //   })) || [],
         techStacks: project.techStacks.map((techStack) => ({
           id: techStack.id,
           name: techStack.name,
@@ -172,7 +174,7 @@ export class ProjectController {
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }
-    return projectRes.value;
+    return CreateProjectResponseDto.toResponse(projectRes.value);
   }
 
   //   @Patch(':id') async updateProject(

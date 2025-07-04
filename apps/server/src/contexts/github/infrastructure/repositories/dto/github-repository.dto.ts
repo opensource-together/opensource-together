@@ -1,6 +1,6 @@
 import { GithubUserDto } from './github-user.dto';
 
-export class GithubRepositoryDto {
+export type GithubRepositoryDto = {
   id: number;
   node_id: string;
   name: string;
@@ -8,4 +8,4 @@ export class GithubRepositoryDto {
   owner: GithubUserDto;
   html_url: string;
   description: string;
-}
+};

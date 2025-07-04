@@ -15,8 +15,8 @@ import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github
 import { GithubInfrastructure } from '@/contexts/github/infrastructure/github.infrastructure';
 import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
 import { PrismaUserGitHubCredentialsRepository } from '@/contexts/github/infrastructure/repositories/prisma.user-github-credentials.repository';
-import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
-import { EncryptionService } from '@/infrastructures/encryption/encryption.service';
+import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
+import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
 
 @Module({
   imports: [],

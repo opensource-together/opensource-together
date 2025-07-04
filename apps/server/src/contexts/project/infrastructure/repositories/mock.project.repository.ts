@@ -109,7 +109,7 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
     return Promise.resolve(Result.ok(projectResult.value));
   }
 
-  findProjectByTitle(title: string): Promise<Result<Project, string>> {
+  findByTitle(title: string): Promise<Result<Project, string>> {
     const projectFound = this.projects.find((p) => p.title === title);
     if (!projectFound) {
       return Promise.resolve(Result.fail('Project not found'));

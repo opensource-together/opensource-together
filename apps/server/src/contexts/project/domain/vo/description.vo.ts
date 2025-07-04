@@ -1,7 +1,7 @@
 import { Result } from '@shared/result';
 
 export class Description {
-  private constructor(private readonly description: string) {}
+  private constructor(private readonly value: string) {}
 
   static create(description: string): Result<Description, string> {
     if (!description || description.trim() === '') {
@@ -14,6 +14,6 @@ export class Description {
   }
 
   public getDescription(): string {
-    return this.description;
+    return this.value;
   }
 }

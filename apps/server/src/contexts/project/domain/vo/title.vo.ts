@@ -3,8 +3,8 @@ import { Result } from '@shared/result';
 export class Title {
   private static readonly MAX_LENGTH = 100;
   private static readonly MIN_LENGTH = 3;
-  private constructor(private readonly title: string) {
-    this.title = title;
+  private constructor(private readonly value: string) {
+    this.value = value;
   }
 
   static create(title: string): Result<Title, string> {
@@ -20,6 +20,6 @@ export class Title {
     return Result.ok(new Title(title));
   }
   getTitle(): string {
-    return this.title;
+    return this.value;
   }
 }

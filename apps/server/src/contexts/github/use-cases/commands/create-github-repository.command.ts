@@ -14,7 +14,7 @@ import { Result } from '@/shared/result';
 import {
   ENCRYPTION_SERVICE_PORT,
   EncryptionServicePort,
-} from '@/application/encryption/ports/encryption.service.port';
+} from '@/contexts/encryption/ports/encryption.service.port';
 import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
 import { UserGitHubCredentialsRepositoryPort } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
 // import { GitHubApiService } from '@/infrastructures/api/github-api.service';

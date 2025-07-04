@@ -1,14 +1,14 @@
-import { GithubRepositoryDto } from '@/application/dto/adapters/github/github-repository.dto';
-import { toGithubRepositoryDto } from '@/application/dto/adapters/github/github-repository.adapter';
+import { GithubRepositoryDto } from './dto/github-repository.dto';
+import { toGithubRepositoryDto } from './dto/github-repository.adapter';
 import { GithubRepositoryPort } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Result } from '@/shared/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 // import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
-import { GithubInvitationDto } from '@/application/dto/adapters/github/github-invitation.dto';
-import { InviteUserToRepoInput } from '@/application/dto/inputs/invite-user-to-repo.inputs.dto';
-import { GithubRepositoryPermissionsDto } from '@/application/dto/adapters/github/github-permissions.dto';
-import { toGithubInvitationDto } from '@/application/dto/adapters/github/github-invitation.adapter';
+import { GithubInvitationDto } from './dto/github-invitation.dto';
+import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/dto/invite-user-to-repo.inputs.dto';
+import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
+import { toGithubInvitationDto } from './dto/github-invitation.adapter';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
@@ -33,7 +33,8 @@ export class GithubRepository implements GithubRepositoryPort {
       console.log('response', response);
       return toGithubRepositoryDto(response);
     } catch (e) {
-      return Result.fail(e);
+      console.log('e', e);
+      return Result.fail('Failed to create github repository');
     }
   }
 

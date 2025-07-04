@@ -15,7 +15,7 @@ import {
 import {
   ENCRYPTION_SERVICE_PORT,
   EncryptionServicePort,
-} from '@/application/encryption/ports/encryption.service.port';
+} from '@/contexts/encryption/ports/encryption.service.port';
 
 export interface GithubAuthRequest extends SessionRequest {
   octokit: Octokit;

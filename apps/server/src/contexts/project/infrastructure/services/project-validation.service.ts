@@ -52,7 +52,7 @@ export class ProjectValidationService implements ProjectValidationServicePort {
   async validateProjectTitleUniqueness(
     title: string,
   ): Promise<Result<void, string>> {
-    const existingProject = await this.projectRepo.findProjectByTitle(title);
+    const existingProject = await this.projectRepo.findByTitle(title);
     if (existingProject.success) {
       return Result.fail('Project with this title already exists');
     }

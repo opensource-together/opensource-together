@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
-import { EncryptionService } from '@/infrastructures/encryption/encryption.service';
+import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
+import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
 
 @Module({
   imports: [ConfigModule],
@@ -13,4 +13,4 @@ import { EncryptionService } from '@/infrastructures/encryption/encryption.servi
   ],
   exports: [ENCRYPTION_SERVICE_PORT],
 })
-export class EncryptionWiringModule {}
+export class EncryptionInfrastructure {}

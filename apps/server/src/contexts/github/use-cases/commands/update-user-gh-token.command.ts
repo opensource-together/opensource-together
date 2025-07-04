@@ -1,8 +1,8 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { Result } from '@shared/result';
-import { ENCRYPTION_SERVICE_PORT } from '@/application/encryption/ports/encryption.service.port';
-import { EncryptionServicePort } from '@/application/encryption/ports/encryption.service.port';
+import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
+import { EncryptionServicePort } from '@/contexts/encryption/ports/encryption.service.port';
 import {
   USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
   UserGitHubCredentialsData,

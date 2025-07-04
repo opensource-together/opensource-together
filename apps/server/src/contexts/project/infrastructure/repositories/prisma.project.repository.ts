@@ -307,7 +307,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
-  async findProjectByTitle(title: string): Promise<Result<Project, string>> {
+  async findByTitle(title: string): Promise<Result<Project, string>> {
     try {
       const projectPrisma = await this.prisma.project.findFirst({
         where: { title },
@@ -333,7 +333,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
       return Result.ok(domainProject.value);
     } catch (error) {
-      return Result.fail(`Unknown error : ${error}`);
+      return Result.fail(`Unknown error`);
     }
   }
 
@@ -346,7 +346,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       return Result.ok(true);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
+        if (error.code === '') {
           return Result.fail('Project not found');
         }
       }
