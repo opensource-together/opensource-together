@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { TechStackPrimitive } from '@/contexts/techstack/domain/techstack.entity';
 
 export const PROJECT_VALIDATION_SERVICE_PORT = Symbol(

@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { ProjectRole } from '../../domain/project-role.entity';
 
 export const PROJECT_ROLE_REPOSITORY_PORT = Symbol('ProjectRoleRepository');

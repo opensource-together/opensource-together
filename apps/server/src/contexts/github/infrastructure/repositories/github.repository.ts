@@ -1,7 +1,7 @@
 import { GithubRepositoryDto } from './dto/github-repository.dto';
 import { toGithubRepositoryDto } from './dto/github-repository.adapter';
 import { GithubRepositoryPort } from '@/contexts/github/use-cases/ports/github-repository.port';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 // import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';

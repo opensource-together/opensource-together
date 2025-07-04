@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { GithubUserDto } from './github-user.dto';
 
 export function toGithubUserDto(data: unknown): Result<GithubUserDto> {

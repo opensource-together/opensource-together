@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 export const USER_GITHUB_CREDENTIALS_REPOSITORY_PORT = Symbol(
   'UserGitHubCredentialsRepository',

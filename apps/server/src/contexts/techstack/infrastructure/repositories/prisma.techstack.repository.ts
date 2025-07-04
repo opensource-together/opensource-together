@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaService } from '@/orm/prisma/prisma.service';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 @Injectable()
 export class PrismaTechStackRepository implements TechStackRepositoryPort {

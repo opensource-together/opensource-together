@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { PrismaService } from '@/orm/prisma/prisma.service';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';

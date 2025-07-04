@@ -9,7 +9,7 @@ import { ProjectRole } from '../../domain/project-role.entity';
 import { TechStack } from '@/domain/techStack/techstack.entity';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
-import { CLOCK_PORT, ClockPort, MockClock } from '@/shared/time';
+import { CLOCK_PORT, ClockPort, MockClock } from '@/libs/time';
 import { CreateProjectRoleCommand } from './create-project-role.command';
 
 describe('DeleteProjectRoleCommandHandler', () => {

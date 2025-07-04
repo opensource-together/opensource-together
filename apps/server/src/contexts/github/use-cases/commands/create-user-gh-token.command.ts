@@ -1,6 +1,6 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
 import { EncryptionServicePort } from '@/contexts/encryption/ports/encryption.service.port';
 import {

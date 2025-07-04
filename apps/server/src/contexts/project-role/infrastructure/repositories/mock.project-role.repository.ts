@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { ProjectRole } from '../../domain/project-role.entity';
 import { ProjectRoleRepositoryPort } from '../../use-cases/ports/project-role.repository.port';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { MockClock } from '@/shared/time/mock-clock';
+import { MockClock } from '@/libs/time/mock-clock';
 
 type ProjectRoleInMemory = {
   id: string;

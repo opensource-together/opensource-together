@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { Project } from '@/contexts/project/domain/project.entity';
 
 export const PROJECT_REPOSITORY_PORT = Symbol('PROJECT_REPOSITORY_PORT');

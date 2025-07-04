@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { GithubInvitationDto } from './github-invitation.dto';
 
 export function toGithubInvitationDto(

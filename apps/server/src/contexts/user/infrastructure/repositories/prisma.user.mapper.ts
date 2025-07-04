@@ -1,7 +1,7 @@
 import { User as DomainUser, User } from '@/contexts/user/domain/user.entity';
 import { Email } from '@/contexts/user/domain/email.vo';
 import { Username } from '@/contexts/user/domain/username.vo';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { User as PrismaUser } from '@prisma/client';
 
 export class PrismaUserMapper {

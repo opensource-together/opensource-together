@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 // import { ProjectResponseDto } from '@/application/dto/adapters/project-response.dto';
 // import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';

@@ -2,7 +2,7 @@ import {
   Project,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,

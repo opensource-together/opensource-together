@@ -7,7 +7,7 @@ import { PROJECT_ROLE_REPOSITORY_PORT } from '../ports/project-role.repository.p
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { InMemoryProjectRoleRepository } from '../../infrastructure/repositories/mock.project-role.repository';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
-import { CLOCK_PORT, MockClock } from '@/shared/time';
+import { CLOCK_PORT, MockClock } from '@/libs/time';
 import { ProjectRole } from '../../domain/project-role.entity';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 

@@ -1,7 +1,7 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   FindProfileByIdQuery,

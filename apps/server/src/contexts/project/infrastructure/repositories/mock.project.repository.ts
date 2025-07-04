@@ -1,8 +1,8 @@
 import { ProjectRepositoryPort } from '../../use-cases/ports/project.repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
-import { CLOCK_PORT, ClockPort } from '@/shared/time';
+import { CLOCK_PORT, ClockPort } from '@/libs/time';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 
 type ProjectInMemory = {

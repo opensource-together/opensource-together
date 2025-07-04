@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EncryptionServicePort } from '@/contexts/encryption/ports/encryption.service.port';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import * as crypto from 'crypto';
 
 @Injectable()

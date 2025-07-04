@@ -9,7 +9,7 @@ import {
 } from '../../ports/project.repository.port';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { MockClock, CLOCK_PORT } from '@/shared/time';
+import { MockClock, CLOCK_PORT } from '@/libs/time';
 
 describe('UpdateProjectCommandHandler', () => {
   let handler: UpdateProjectCommandHandler;

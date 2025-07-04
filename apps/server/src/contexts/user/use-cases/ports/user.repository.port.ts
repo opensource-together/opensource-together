@@ -1,5 +1,5 @@
 import { User } from '@/contexts/user/domain/user.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 export const USER_REPOSITORY_PORT = Symbol('UserRepository');
 export interface UserRepositoryPort {
   create(user: User): Promise<Result<User, string>>;

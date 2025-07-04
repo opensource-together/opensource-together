@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 export const ENCRYPTION_SERVICE_PORT = Symbol('EncryptionService');
 

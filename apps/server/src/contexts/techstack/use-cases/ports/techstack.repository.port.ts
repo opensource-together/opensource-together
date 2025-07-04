@@ -1,5 +1,5 @@
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 export type TechStackId = string;
 

@@ -9,7 +9,7 @@ import { InMemoryProjectRoleRepository } from '../../infrastructure/repositories
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
 import { ProjectRole } from '../../domain/project-role.entity';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { CLOCK_PORT, MockClock } from '@/shared/time';
+import { CLOCK_PORT, MockClock } from '@/libs/time';
 
 describe('GetProjectRoleByIdQueryHandler', () => {
   let handler: GetProjectRoleByIdQueryHandler;

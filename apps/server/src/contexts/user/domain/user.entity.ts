@@ -2,7 +2,7 @@
 
 import { Username } from '@/contexts/user/domain/username.vo';
 import { Email } from '@/contexts/user/domain/email.vo';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 export class User {
   private readonly id: string;

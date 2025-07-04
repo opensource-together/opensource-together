@@ -1,7 +1,7 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Profile } from '@/contexts/profile/domain/profile.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Inject } from '@nestjs/common';
 

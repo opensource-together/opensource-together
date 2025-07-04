@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { GithubRepositoryDto } from './github-repository.dto';
 
 export function toGithubRepositoryDto(

@@ -1,4 +1,4 @@
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 
 export class ShortDescription {
   private constructor(private readonly value: string) {}

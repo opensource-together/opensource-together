@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { SocialLink } from './social-link.vo';
 import { ProfileExperience } from './profile-experience.vo';
 import { ProfileSkill } from './profile-skill.vo';

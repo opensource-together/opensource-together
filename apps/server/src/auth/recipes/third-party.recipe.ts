@@ -3,7 +3,7 @@ import ThirdParty from 'supertokens-node/recipe/thirdparty';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
 import { deleteUser } from 'supertokens-node';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { User } from '@/contexts/user/domain/user.entity';
 import { CreateProfileCommand } from '@/contexts/profile/use-cases/commands/create-profile.command';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';

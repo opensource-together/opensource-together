@@ -12,7 +12,7 @@ import {
   GithubAuthRequest,
 } from '../guards/github-auth.guard';
 import { CreateGitHubRepositoryCommand } from '../../use-cases/commands/create-github-repository.command';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 import { Session } from 'supertokens-nestjs';
 

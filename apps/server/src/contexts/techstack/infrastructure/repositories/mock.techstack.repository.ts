@@ -2,7 +2,7 @@ import {
   TechStack,
   TechStackPrimitive,
 } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 
 // On implémente la même interface que le vrai repository

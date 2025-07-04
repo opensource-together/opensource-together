@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { TechStackPrimitive } from '@/contexts/techstack/domain/techstack.entity';
 import { ProjectValidationServicePort } from '@/contexts/project/use-cases/ports/project-validation.service.port';
 import {

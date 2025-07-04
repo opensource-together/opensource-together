@@ -1,4 +1,4 @@
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 import { User } from '@/contexts/user/domain/user.entity';
 import {
   USER_REPOSITORY_PORT,

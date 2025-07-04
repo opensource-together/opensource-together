@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import {
   Project,

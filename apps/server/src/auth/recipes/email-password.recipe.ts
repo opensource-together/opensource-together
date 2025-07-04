@@ -1,5 +1,5 @@
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 import { Email } from '@/contexts/user/domain/email.vo';
 import { Username } from '@/contexts/user/domain/username.vo';
 import { UserExistQuery } from '@/contexts/user/use-cases/queries/user-exist.query';

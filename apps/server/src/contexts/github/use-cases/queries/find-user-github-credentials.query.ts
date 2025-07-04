@@ -1,6 +1,6 @@
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import {
   USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
   UserGitHubCredentialsRepositoryPort,

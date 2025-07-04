@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import {
   USER_REPOSITORY_PORT,

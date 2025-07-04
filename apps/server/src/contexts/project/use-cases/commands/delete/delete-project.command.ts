@@ -1,5 +1,5 @@
 import { ICommand, ICommandHandler, CommandHandler } from '@nestjs/cqrs';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
 import {
   PROJECT_REPOSITORY_PORT,

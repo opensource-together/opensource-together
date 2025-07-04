@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import {
   ProjectRole,
   ProjectRoleValidationErrors,

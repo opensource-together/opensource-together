@@ -6,7 +6,7 @@
  */
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 // import {
 //   GITHUB_API_SERVICE_PORT,
 //   GitHubApiServicePort,

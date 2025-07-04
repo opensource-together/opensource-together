@@ -4,7 +4,7 @@ import {
   ProjectData,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import {
   Project as PrismaProject,
   TechStack,

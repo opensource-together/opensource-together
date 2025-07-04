@@ -1,4 +1,4 @@
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 
 export class Title {
   private static readonly MAX_LENGTH = 100;

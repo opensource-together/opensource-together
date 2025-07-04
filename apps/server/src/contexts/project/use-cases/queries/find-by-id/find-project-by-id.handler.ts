@@ -3,7 +3,7 @@ import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/projec
 import { Inject } from '@nestjs/common';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { IQuery } from '@nestjs/cqrs';
 
 export class FindProjectByIdQuery implements IQuery {

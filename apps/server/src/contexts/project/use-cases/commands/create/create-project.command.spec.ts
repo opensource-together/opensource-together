@@ -16,8 +16,8 @@ import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/
 import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/shared/result';
-import { MockClock } from '@/shared/time/mock-clock';
+import { Result } from '@/libs/result';
+import { MockClock } from '@/libs/time/mock-clock';
 import { PROJECT_VALIDATION_SERVICE_PORT } from '../../ports/project-validation.service.port';
 import { ProjectValidationService } from '@/contexts/project/infrastructure/services/project-validation.service';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';

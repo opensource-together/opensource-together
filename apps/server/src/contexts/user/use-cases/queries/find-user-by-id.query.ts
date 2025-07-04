@@ -4,7 +4,7 @@ import {
   USER_REPOSITORY_PORT,
 } from '../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { User } from '@/contexts/user/domain/user.entity';
 
 export class FindUserByIdQuery implements IQuery {

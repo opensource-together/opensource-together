@@ -1,5 +1,5 @@
 /*import { PrismaProjectRepository } from './prisma.project.repository';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { ProjectTestBuilder } from '@/shared/__test__/ProjectTestBuilder';
 import { PrismaMock } from '@/infrastructures/repositories/__tests__/PrismaMock';

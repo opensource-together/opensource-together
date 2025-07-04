@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 export class Difficulty {
   private constructor(private readonly difficulty: string) {}

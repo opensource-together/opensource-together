@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 export const PROJECT_AUTHORIZATION_PORT = Symbol('PROJECT_AUTHORIZATION_PORT');
 

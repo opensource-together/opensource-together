@@ -3,7 +3,7 @@ import { User } from '@/contexts/user/domain/user.entity';
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { USER_REPOSITORY_PORT } from '../ports/user.repository.port';
-import { Result } from '@shared/result';
+import { Result } from '@/libs/result';
 export class FindUserByEmailQuery implements IQuery {
   constructor(public readonly email: string) {}
 }

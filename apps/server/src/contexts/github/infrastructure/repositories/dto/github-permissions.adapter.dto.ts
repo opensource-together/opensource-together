@@ -1,4 +1,4 @@
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 import { GithubRepositoryPermissionsDto } from './github-permissions.dto';
 
 export function toPermissionsDto<

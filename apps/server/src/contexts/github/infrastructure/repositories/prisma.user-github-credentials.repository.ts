@@ -4,7 +4,7 @@ import {
   UserGitHubCredentialsData,
   UserGitHubCredentialsRepositoryPort,
 } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
-import { Result } from '@/shared/result';
+import { Result } from '@/libs/result';
 
 @Injectable()
 export class PrismaUserGitHubCredentialsRepository
