@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { UpdateProjectRoleCommandHandler } from './update-project-role.command';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '../ports/project-role.repository.port';
@@ -15,7 +20,7 @@ describe('UpdateProjectRoleCommandHandler', () => {
   let projectRepo: InMemoryProjectRepository;
   let mockClock: MockClock;
   let reactTechStack: TechStack;
-  let typescriptTechStack: TechStack;
+
   let nodejsTechStack: TechStack;
 
   beforeEach(async () => {

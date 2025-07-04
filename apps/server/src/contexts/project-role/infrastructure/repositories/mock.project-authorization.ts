@@ -33,12 +33,12 @@ export class InMemoryProjectAuthorization implements ProjectAuthorizationPort {
       return Result.fail('Project not found');
     }
 
-    return Result.ok(project.ownerId === userId);
+    return Promise.resolve(Result.ok(project.ownerId === userId));
   }
 
   async projectExists(projectId: string): Promise<Result<boolean, string>> {
     const exists = this.projects.some((p) => p.id === projectId);
-    return Result.ok(exists);
+    return Promise.resolve(Result.ok(exists));
   }
 
   // Helper methods for tests

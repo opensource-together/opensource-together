@@ -1,0 +1,130 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Project Infrastructure Layer Rules
+
+## Repository Pattern
+- **PrismaProjectRepository** implémente `ProjectRepositoryPort`
+- **Mapper** sépare la transformation Prisma ↔ Domain
+- **Relations Prisma** : techStacks, projectRoles, teamMembers via foreign keys
+
+## Controller Structure
+```typescript
+@Controller('projects')
+export class ProjectController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+  
+  // Pattern standard : DTO → Command → Result → Response
+  @Post()
+  async createProject(@Body() dto: CreateProjectDtoRequest, @Session() session) {
+    const command = new CreateProjectCommand({...dto, ownerId: session.getUserId()});
+    const result = await this.commandBus.execute(command);
+    
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    
+    return CreateProjectResponseDto.toResponse(result.value);
+  }
+}
+```
+
+## DTOs & Validation
+```typescript
+// Request DTOs avec class-validator
+export class CreateProjectDtoRequest {
+  @IsString() @IsNotEmpty()
+  title: string;
+  
+  @IsString() @IsNotEmpty() 
+  description: string;
+  
+  @IsArray()
+  techStacks: { id: string; name: string; iconUrl: string }[];
+  
+  @IsArray()
+  projectRoles: {
+    title: string;
+    description: string; 
+    isFilled: boolean;
+    techStacks: { id: string; name: string; iconUrl: string }[];
+  }[];
+}
+
+// Response DTOs via static methods
+export class CreateProjectResponseDto {
+  public static toResponse(project: Project): ProjectData {
+    return project.toPrimitive();
+  }
+}
+```
+
+## Prisma Mapping Patterns
+```typescript
+// PrismaProjectMapper.toDomain()
+export class PrismaProjectMapper {
+  static toDomain(prismaData: PrismaProjectWithRelations): Project {
+    // 1. Reconstituer les TechStacks
+    const techStacks = prismaData.techStacks.map(ts => 
+      TechStack.reconstitute({id: ts.id, name: ts.name, iconUrl: ts.iconUrl})
+    );
+    
+    // 2. Reconstituer les ProjectRoles
+    const projectRoles = prismaData.projectRoles.map(pr =>
+      ProjectRole.reconstitute({...pr, projectId: prismaData.id})
+    );
+    
+    // 3. Reconstituer le Project
+    return Project.reconstitute({
+      id: prismaData.id,
+      ownerId: prismaData.ownerId,
+      // ... autres champs
+      techStacks: techStacks.map(ts => ts.toPrimitive()),
+      projectRoles: projectRoles.map(pr => pr.toPrimitive()),
+    });
+  }
+  
+  static toPrisma(project: Project) {
+    const primitive = project.toPrimitive();
+    return {
+      id: primitive.id,
+      ownerId: primitive.ownerId,
+      title: primitive.title,
+      // ... séparation des relations
+    };
+  }
+}
+```
+
+## Infrastructure Module
+```typescript
+@Module({
+  providers: [
+    PrismaService,
+    {provide: PROJECT_REPOSITORY_PORT, useClass: PrismaProjectRepository},
+    {provide: PROJECT_ROLE_REPOSITORY_PORT, useClass: PrismaProjectRoleRepository},
+    {provide: TECHSTACK_REPOSITORY_PORT, useClass: PrismaTechStackRepository},
+    {provide: GITHUB_REPOSITORY_PORT, useClass: GithubRepository},
+    ...projectUseCases,
+  ],
+  controllers: [ProjectController],
+  exports: [...projectUseCases],
+})
+export class ProjectInfrastructure {}
+```
+
+## Error Handling
+- **Domain errors** → `BadRequestException` (400)
+- **Not found** → `NotFoundException` (404) 
+- **Unauthorized** → Check `session.getUserId()` vs `project.ownerId`
+- **Prisma errors** → Log + convert to generic message
+
+## Dependencies
+- **Required ports** : PROJECT_REPOSITORY_PORT, TECHSTACK_REPOSITORY_PORT, PROJECT_ROLE_REPOSITORY_PORT, GITHUB_REPOSITORY_PORT
+- **External services** : GitHub API via Octokit, SuperTokens pour auth
+- **Database** : PostgreSQL via Prisma avec relations many-to-many

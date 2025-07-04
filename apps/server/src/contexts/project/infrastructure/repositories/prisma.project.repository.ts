@@ -332,7 +332,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       }
 
       return Result.ok(domainProject.value);
-    } catch (error) {
+    } catch (error: any) {
+      console.log('error', error);
       return Result.fail(`Unknown error`);
     }
   }
@@ -381,7 +382,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       }
 
       return Result.ok(domainProject.value);
-    } catch (error) {
+    } catch (error: any) {
+      console.log('error', error);
       // if (error instanceof PrismaClientKnownRequestError) {
       //   if (error.code === 'P2025') {
       //     return Result.fail('Project not found');

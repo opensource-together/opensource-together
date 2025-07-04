@@ -19,7 +19,7 @@ import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-c
 import { UserGitHubCredentialsRepositoryPort } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
 // import { GitHubApiService } from '@/infrastructures/api/github-api.service';
 import { GithubRepository } from '@/contexts/github/infrastructure/repositories/github.repository';
-import { Octokit } from 'octokit';
+import { Octokit } from '@octokit/rest';
 import { GITHUB_REPOSITORY_PORT } from '../ports/github-repository.port';
 
 export class CreateGitHubRepositoryCommand implements ICommand {

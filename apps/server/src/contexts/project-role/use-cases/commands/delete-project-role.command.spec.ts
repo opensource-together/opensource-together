@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   DeleteProjectRoleCommand,
@@ -10,7 +15,6 @@ import { TechStack } from '@/domain/techStack/techstack.entity';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
 import { CLOCK_PORT, ClockPort, MockClock } from '@/libs/time';
-import { CreateProjectRoleCommand } from './create-project-role.command';
 
 describe('DeleteProjectRoleCommandHandler', () => {
   let handler: DeleteProjectRoleCommandHandler;

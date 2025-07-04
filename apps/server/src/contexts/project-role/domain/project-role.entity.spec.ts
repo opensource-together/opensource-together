@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import { ProjectRole, ProjectRoleCreateProps } from './project-role.entity';
 
@@ -373,7 +378,7 @@ describe('ProjectRole Entity', () => {
 
     it('should remove skill successfully', () => {
       // Arrange
-      const reactId = reactTechStack.toPrimitive().id!;
+      const reactId = reactTechStack.toPrimitive().id;
 
       // Act
       const result = projectRole.removeSkill(reactId);
@@ -404,7 +409,7 @@ describe('ProjectRole Entity', () => {
       } else {
         throw new Error('Project role creation should have succeeded');
       }
-      const reactId = reactTechStack.toPrimitive().id!;
+      const reactId = reactTechStack.toPrimitive().id;
 
       // Act
       const singleSkillResult = singleSkillRole.removeSkill(reactId);
