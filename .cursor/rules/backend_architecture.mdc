@@ -104,6 +104,13 @@ src/
 │       ├── domain/
 │       ├── use-cases/
 │       └── infrastructure/
+├──-----techstack/              # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──-----encryption/             # Service transversal
+│       ├── infrastructure/
+│       └── ports/
 ├──-----contexts.module.ts       # Module principal regroupant tous les contextes
 ├── main.ts
 └── root.module.ts
@@ -673,6 +680,7 @@ import { ProjectInfrastructure } from './project/infrastructure/project.infrastr
 import { ProfileInfrastructure } from './profile/infrastructure/profile.infrastructure';
 import { ProjectRoleInfrastructure } from './project-role/infrastructure/project-role.infrastructure';
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
+import { TechStackInfrastructure } from './techstack/infrastructure/techstack.infrastructure';
 
 @Module({
   imports: [
@@ -681,6 +689,7 @@ import { GithubInfrastructure } from './github/infrastructure/github.infrastruct
     ProfileInfrastructure,
     ProjectRoleInfrastructure,
     GithubInfrastructure,
+    TechStackInfrastructure,
   ],
 })
 export class ContextsModule {}
@@ -869,3 +878,29 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
 - **Test paramétrés** : `it.each()` pour éviter la duplication de code
 - **Mocks** : Implémentations en mémoire des repositories et services externes
 - **Clock Mocking** : Pour tester les comportements liés au temps (`MockClock`)
+
+- **@nestjs/testing** : Module de test pour NestJS avec injection de dépendances
+- **Test paramétrés** : `it.each()` pour éviter la duplication de code
+- **Mocks** : Implémentations en mémoire des repositories et services externes
+- **Clock Mocking** : Pour tester les comportements liés au temps (`MockClock`)
+
+- **@nestjs/testing** : Module de test pour NestJS avec injection de dépendances
+- **Test paramétrés** : `it.each()` pour éviter la duplication de code
+- **Mocks** : Implémentations en mémoire des repositories et services externes
+- **Clock Mocking** : Pour tester les comportements liés au temps (`MockClock`)
+## 📊 Statut de la migration (Dernière MAJ: [DATE])
+
+### ✅ **Terminé**
+- Migration `shared/` → `libs/` 
+- Correction de tous les imports (`@shared/*` → `@/libs/*`)
+- Structure contextes conforme à l'architecture
+- Module principal `contexts.module.ts` fonctionnel
+
+### ⚠️ **Dossiers obsolètes à nettoyer**
+- `src/application/` : Contient encore des DTOs et logique obsolète  
+- `src/infrastructures/` : Contient des services API et wiring à migrer
+
+### 🎯 **Prochaines étapes**
+- Supprimer `/application` après migration complète des DTOs vers les contextes
+- Supprimer `/infrastructures` après migration des services vers les contextes appropriés
+- Nettoyer `/github-temp` (dossier temporaire)
