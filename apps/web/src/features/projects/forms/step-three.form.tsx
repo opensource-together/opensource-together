@@ -1,17 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { Combobox, ComboboxOption } from "@/shared/components/ui/combobox";
+import { Combobox } from "@/shared/components/ui/combobox";
+import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
+import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import {
@@ -19,30 +19,15 @@ import {
   roleSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
-import { FormNavigationButtons } from "../components/form-navigation-buttons.component";
+import { TechStackList } from "../../../shared/components/ui/tech-stack-list.component";
+import { FormNavigationButtons } from "../components/stepper/stepper-navigation-buttons.component";
+import { useTechStack } from "../hooks/use-tech-stack";
 import { useProjectCreateStore } from "../stores/project-create.store";
-
-const TECH_STACK_OPTIONS: ComboboxOption[] = [
-  { id: "react", name: "React" },
-  { id: "nextjs", name: "Next.js" },
-  { id: "angular", name: "Angular" },
-  { id: "vuejs", name: "Vue.js" },
-  { id: "nodejs", name: "Node.js" },
-  { id: "express", name: "Express" },
-  { id: "mongodb", name: "MongoDB" },
-  { id: "postgresql", name: "PostgreSQL" },
-  { id: "mysql", name: "MySQL" },
-  { id: "redis", name: "Redis" },
-  { id: "docker", name: "Docker" },
-  { id: "kubernetes", name: "Kubernetes" },
-  { id: "aws", name: "AWS" },
-  { id: "gcp", name: "GCP" },
-  { id: "azure", name: "Azure" },
-];
 
 export function StepThreeForm() {
   const router = useRouter();
   const { formData, updateRoles } = useProjectCreateStore();
+  const { techStackOptions, getTechStacksByIds } = useTechStack();
   const [roles, setRoles] = useState<RoleFormData[]>(
     formData.roles?.map((role) => ({
       title: role.title,
@@ -71,19 +56,15 @@ export function StepThreeForm() {
         id: crypto.randomUUID(),
         title: role.title,
         description: role.description,
-        techStacks: role.techStack.map((techId) => {
-          const tech = TECH_STACK_OPTIONS.find((t) => t.id === techId);
-          return {
-            id: tech?.id || techId,
-            name: tech?.name || techId,
-          };
-        }),
+        techStacks: getTechStacksByIds(role.techStack).map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+        })),
       }));
 
       console.log("Updating store with formatted roles:", formattedRoles);
       updateRoles(formattedRoles);
 
-      // Navigate to the next step or success page
       router.push("/projects/create/scratch/step-four");
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -118,36 +99,89 @@ export function StepThreeForm() {
     setRoles(roles.filter((_, i) => i !== index));
   };
 
-  // Modal pour ajouter un rôle
-  const RoleModal = () => (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/10"
-      onClick={() => setShowRoleModal(false)}
-    >
-      <div
-        className="font-geist relative flex w-[603px] flex-col items-center rounded-[20px] border border-black/5 bg-white p-6 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="relative mb-8 flex w-full items-center justify-center">
-          <h3 className="font-geist text-[18px] font-medium">
-            Créer un nouveau rôle
-          </h3>
-          <button
-            className="absolute right-0 flex items-center justify-center"
-            onClick={() => setShowRoleModal(false)}
-          >
-            <Image
-              src="/icons/croix-suppression.svg"
-              alt="close"
-              width={12}
-              height={12}
-            />
-          </button>
-        </div>
+  const modalFooter = (
+    <div className="flex justify-end gap-2">
+      <Button variant="outline" onClick={() => setShowRoleModal(false)}>
+        Annuler
+      </Button>
+      <Button type="submit" form="role-form">
+        Créer le rôle
+      </Button>
+    </div>
+  );
 
-        <form onSubmit={onAddRole} className="w-full space-y-6">
-          <div>
-            <Label>Titre du rôle</Label>
+  return (
+    <div className="flex w-full flex-col gap-8">
+      <div>
+        <Button
+          onClick={() => setShowRoleModal(true)}
+          size="lg"
+          className="w-full"
+        >
+          Créer un nouveau rôle
+          <Icon name="cross" size="xs" />
+        </Button>
+        {roles.length > 0 && (
+          <div className="mt-16 flex items-center justify-between">
+            <Label className="text-lg">Rôles créés</Label>
+            <span className="tracking-tighter text-black/20">
+              {roles.length}/6
+            </span>
+          </div>
+        )}
+
+        <div className="mt-4 flex flex-col gap-6">
+          {roles.map((role, index) => (
+            <div
+              key={index}
+              className="group relative overflow-hidden rounded-3xl border border-black/5 p-4 shadow-xs md:p-6"
+            >
+              {/* Header avec titre et bouton de suppression */}
+              <div className="flex items-start justify-between">
+                <h3 className="text-xl font-medium tracking-tighter text-black">
+                  {role.title}
+                </h3>
+                <button
+                  onClick={() => removeRole(index)}
+                  className="rounded-full p-2 hover:bg-black/5 hover:text-black/5"
+                >
+                  <Image
+                    src="/icons/croix-suppression.svg"
+                    alt="supprimer"
+                    width={12}
+                    height={12}
+                  />
+                </button>
+              </div>
+
+              {/* Description */}
+              <div>
+                <p className="mt-4 text-start text-sm leading-relaxed text-black/70">
+                  {role.description}
+                </p>
+              </div>
+
+              <div className="mt-6 h-px w-full border-t border-black/5"></div>
+
+              {/* Technologies */}
+              <div className="mt-6">
+                <TechStackList techStackIds={role.techStack} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Modal
+        open={showRoleModal}
+        onOpenChange={setShowRoleModal}
+        title="Ajouter des exigences de rôle"
+        footer={modalFooter}
+        size="lg"
+      >
+        <form id="role-form" onSubmit={onAddRole} className="space-y-6">
+          <div className="mt-6">
+            <Label required>Titre du rôle</Label>
             <Input
               {...registerRole("title")}
               placeholder="Ex: Développeur Frontend"
@@ -160,13 +194,13 @@ export function StepThreeForm() {
           </div>
 
           <div>
-            <Label>Technologies (max 6)</Label>
+            <Label required>Technologies (max 6)</Label>
             <Controller
               name="techStack"
               control={control}
               render={({ field }) => (
                 <Combobox
-                  options={TECH_STACK_OPTIONS}
+                  options={techStackOptions}
                   value={field.value || []}
                   onChange={field.onChange}
                   placeholder="Sélectionner les technologies..."
@@ -184,7 +218,7 @@ export function StepThreeForm() {
           </div>
 
           <div>
-            <Label>Description</Label>
+            <Label required>Description</Label>
             <Textarea
               {...registerRole("description")}
               placeholder="Décrivez les responsabilités et attentes pour ce rôle"
@@ -196,73 +230,12 @@ export function StepThreeForm() {
               </p>
             )}
           </div>
-
-          <Button type="submit" className="w-full">
-            Ajouter le rôle
-          </Button>
         </form>
-      </div>
-    </div>
-  );
+      </Modal>
 
-  return (
-    <div className="flex w-[500px] flex-col gap-8 rounded-[20px] bg-white p-10">
-      <div>
-        <div className="mb-4 flex items-center justify-between">
-          <Label className="text-[18px]">Rôles ({roles.length})</Label>
-          <Button
-            onClick={() => setShowRoleModal(true)}
-            variant="outline"
-            className="gap-2"
-          >
-            <span>Ajouter un rôle</span>
-            <Plus className="size-4" />
-          </Button>
-        </div>
-
-        <div className="space-y-4">
-          {roles.map((role, index) => (
-            <div
-              key={index}
-              className="rounded-[10px] border border-black/10 bg-white p-4"
-            >
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="font-geist text-[17px] font-medium">
-                  {role.title}
-                </h3>
-                <button
-                  onClick={() => removeRole(index)}
-                  className="text-black/50"
-                >
-                  <Image
-                    src="/icons/croix-suppression.svg"
-                    alt="supprimer"
-                    width={13}
-                    height={13}
-                  />
-                </button>
-              </div>
-              <div className="mb-2 flex flex-wrap gap-2">
-                {role.techStack.map((techId) => {
-                  const tech = TECH_STACK_OPTIONS.find((t) => t.id === techId);
-                  return (
-                    tech && (
-                      <Badge key={techId} variant="success">
-                        {tech.name}
-                      </Badge>
-                    )
-                  );
-                })}
-              </div>
-              <p className="text-sm text-black/70">{role.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-      {showRoleModal && <RoleModal />}
       <FormNavigationButtons
         onPrevious={handlePrevious}
-        nextLabel="Créer le projet"
+        nextLabel="Suivant"
         isLoading={isSubmitting}
         isNextDisabled={roles.length === 0}
         nextType="button"

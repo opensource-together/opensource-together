@@ -7,25 +7,8 @@ import { Combobox, ComboboxOption } from "@/shared/components/ui/combobox";
 import { Label } from "@/shared/components/ui/label";
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
+import { useTechStack } from "../../hooks/use-tech-stack";
 import { useProjectCreateStore } from "../../stores/project-create.store";
-
-const TECH_STACK_OPTIONS: ComboboxOption[] = [
-  { id: "react", name: "React" },
-  { id: "nextjs", name: "Next.js" },
-  { id: "angular", name: "Angular" },
-  { id: "vuejs", name: "Vue.js" },
-  { id: "nodejs", name: "Node.js" },
-  { id: "express", name: "Express" },
-  { id: "mongodb", name: "MongoDB" },
-  { id: "postgresql", name: "PostgreSQL" },
-  { id: "mysql", name: "MySQL" },
-  { id: "redis", name: "Redis" },
-  { id: "docker", name: "Docker" },
-  { id: "kubernetes", name: "Kubernetes" },
-  { id: "aws", name: "AWS" },
-  { id: "gcp", name: "GCP" },
-  { id: "azure", name: "Azure" },
-];
 
 const CATEGORIES_OPTIONS: ComboboxOption[] = [
   { id: "ai", name: "IA" },
@@ -44,7 +27,7 @@ const CATEGORIES_OPTIONS: ComboboxOption[] = [
 export function StepTwoForm() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
-
+  const { techStackOptions } = useTechStack();
   const [selectedTech, setSelectedTech] = useState<string[]>(
     Array.isArray(formData.techStack)
       ? formData.techStack.map((tech) => tech.id)
@@ -85,16 +68,14 @@ export function StepTwoForm() {
         return;
       }
 
-      const selectedTechStack = TECH_STACK_OPTIONS.filter((tech) =>
-        selectedTech.includes(tech.id)
-      );
-
       const selectedCategoriesData = CATEGORIES_OPTIONS.filter((category) =>
         selectedCategories.includes(category.id)
       );
 
       updateProjectInfo({
-        techStack: selectedTechStack,
+        techStack: techStackOptions.filter((tech) =>
+          selectedTech.includes(tech.id)
+        ),
         categories: selectedCategoriesData,
       });
 
@@ -112,7 +93,7 @@ export function StepTwoForm() {
         <Label required>Technologies</Label>
         <div className="mt-2">
           <Combobox
-            options={TECH_STACK_OPTIONS}
+            options={techStackOptions}
             value={selectedTech}
             onChange={setSelectedTech}
             placeholder="Ajouter des technologies..."
