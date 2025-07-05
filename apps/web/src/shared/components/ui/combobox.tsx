@@ -20,9 +20,12 @@ import {
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
 
+import { TechStack } from "@/features/projects/types/project.type";
+
 export interface ComboboxOption {
   id: string;
   name: string;
+  techStack?: TechStack[];
 }
 
 interface ComboboxProps {
@@ -95,7 +98,7 @@ export function Combobox({
         </div>
       )}
 
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
