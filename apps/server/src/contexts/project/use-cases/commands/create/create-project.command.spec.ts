@@ -241,7 +241,6 @@ describe('CreateProjectCommandHandler', () => {
           {
             title: 'Fullstack Developer',
             description: 'Need a fullstack developer for a new project',
-            isFilled: false,
             techStacks: ['1'],
           },
         ],
