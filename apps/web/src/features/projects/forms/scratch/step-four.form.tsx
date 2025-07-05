@@ -46,42 +46,28 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
     form.setValue("logo", file || undefined);
   };
 
+  // Convert form inputs to ExternalLink array format
+  const convertToExternalLinksArray = (
+    formLinks: StepFourFormData["externalLinks"]
+  ) => {
+    return Object.entries(formLinks)
+      .filter(([_, url]) => typeof url === "string" && url.trim())
+      .map(([type, url]) => ({
+        type:
+          type === "website"
+            ? ("other" as const)
+            : (type as "github" | "discord" | "twitter"),
+        url: url as string,
+      }));
+  };
+
   const handleSubmit = async (data: StepFourFormData) => {
     try {
-      // Update the store with step 4 data
-      const externalLinksArray = [];
-
-      if (data.externalLinks?.github) {
-        externalLinksArray.push({
-          type: "github" as const,
-          url: data.externalLinks.github,
-        });
-      }
-      if (data.externalLinks?.discord) {
-        externalLinksArray.push({
-          type: "discord" as const,
-          url: data.externalLinks.discord,
-        });
-      }
-      if (data.externalLinks?.twitter) {
-        externalLinksArray.push({
-          type: "twitter" as const,
-          url: data.externalLinks.twitter,
-        });
-      }
-      if (data.externalLinks?.website) {
-        externalLinksArray.push({
-          type: "other" as const,
-          url: data.externalLinks.website,
-        });
-      }
-
       updateProjectInfo({
         image: data.logo ? URL.createObjectURL(data.logo) : "",
-        externalLinks: externalLinksArray,
+        externalLinks: convertToExternalLinksArray(data.externalLinks),
       });
 
-      // Call the onSubmit function passed from the view
       onSubmit();
     } catch (error) {
       console.error("Erreur lors de la préparation des données:", error);
@@ -167,7 +153,7 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
         previousLabel="Retour"
         nextLabel="Publier le projet"
         isLoading={isLoading}
-        isNextDisabled={false} // No specific disabled state for this step
+        isNextDisabled={false}
         nextType="button"
       />
     </form>

@@ -34,7 +34,7 @@ export const getProjectDetails = async (
 };
 
 /**
- * Create a new project from store form data
+ * Create a new project
  */
 export const createProject = async (
   storeData: ProjectFormData
@@ -43,84 +43,51 @@ export const createProject = async (
     console.log("=== SERVICE: DONNÉES REÇUES DU STORE ===");
     console.log("Store data:", storeData);
 
-    // Format external links - they are already in array format in the store
-    const externalLinksArray = storeData.externalLinks.filter(
-      (link) => link.url && link.url.trim() !== ""
-    );
-
-    // Format roles to match ProjectRole interface
+    // Add IDs to items that don't have them
     const formattedRoles = storeData.roles.map((role) => ({
+      ...role,
       id: role.id || crypto.randomUUID(),
-      title: role.title,
-      description: role.description,
-      techStacks: role.techStacks || [],
     }));
 
-    // Format key features to match KeyFeature interface
     const formattedKeyFeatures = storeData.keyFeatures.map((feature) => ({
+      ...feature,
       id: feature.id || crypto.randomUUID(),
-      title: feature.title,
     }));
 
-    // Format project goals to match ProjectGoal interface
     const formattedProjectGoals = storeData.projectGoals.map((goal) => ({
+      ...goal,
       id: goal.id || crypto.randomUUID(),
-      goal: goal.goal,
     }));
-
-    // Create the full project data matching Project interface
-    const projectData = {
-      title: storeData.projectName,
-      shortDescription: storeData.shortDescription,
-      longDescription: "", // Could be added later
-      image: storeData.image,
-      status: "DRAFT" as const,
-      techStacks: storeData.techStack || [],
-      roles: formattedRoles,
-      externalLinks: externalLinksArray,
-      keyFeatures: formattedKeyFeatures,
-      projectGoals: formattedProjectGoals,
-      categories: storeData.categories || [],
-      author: {
-        id: "current-user", // This should come from auth context
-        name: "Current User", // This should come from auth context
-      },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
 
     // Format for the validation schema (CreateProjectData)
     const createProjectData = {
       projectId: `project-${Date.now()}`,
       data: {
-        title: projectData.title,
-        description: projectData.shortDescription,
-        longDescription: projectData.longDescription,
-        status: projectData.status,
-        techStacks: projectData.techStacks,
-        roles: projectData.roles.map((role) => ({
+        title: storeData.projectName,
+        description: storeData.shortDescription,
+        longDescription: "", // Could be added later
+        status: "DRAFT" as const,
+        techStacks: storeData.techStack || [],
+        roles: formattedRoles.map((role) => ({
           title: role.title,
           description: role.description,
           badges: [], // Required by schema but not used yet
           experienceBadge: undefined, // Optional in schema
         })),
-        socialLinks: projectData.externalLinks,
-        keyBenefits: projectData.keyFeatures.map((feature) => feature.title), // Schema expects keyBenefits
+        socialLinks: storeData.externalLinks || [],
+        keyBenefits: formattedKeyFeatures.map((feature) => feature.title),
       },
     };
 
     console.log("=== SERVICE: DONNÉES FORMATÉES POUR VALIDATION ===");
     console.log("Create project data:", createProjectData);
 
-    // Validate input data
+    // Validate and create project
     const validatedData = CreateProjectSchema.parse(createProjectData);
+    await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate network delay
 
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    // Create a new project with mock data
     const newProject: Project = {
-      id: `project-${Date.now()}`, // Generate a unique ID
+      id: `project-${Date.now()}`,
       slug: `project-${Date.now()}`,
       title: validatedData.data.title,
       shortDescription: validatedData.data.description,
@@ -134,15 +101,14 @@ export const createProject = async (
           description: role.description,
           techStacks: [],
         })) || [],
-      externalLinks:
-        validatedData.data.socialLinks?.map((link) => ({
-          type: link.type,
-          url: link.url,
-        })) || [],
-      keyFeatures: projectData.keyFeatures,
-      projectGoals: projectData.projectGoals,
-      categories: projectData.categories,
-      author: projectData.author,
+      externalLinks: validatedData.data.socialLinks || [],
+      keyFeatures: formattedKeyFeatures,
+      projectGoals: formattedProjectGoals,
+      categories: storeData.categories || [],
+      author: {
+        id: "current-user",
+        name: "Current User",
+      },
       createdAt: new Date(),
       updatedAt: new Date(),
     };

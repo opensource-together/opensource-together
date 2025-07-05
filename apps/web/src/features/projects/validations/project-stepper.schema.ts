@@ -100,25 +100,24 @@ export const createProjectSchema = z.object({
     .nullable(),
 });
 
+// Step 4: Logo and External Links - using object input with conversion to ExternalLink array
 export const stepFourSchema = z.object({
   logo: z.instanceof(File).optional(),
-  externalLinks: z
-    .object({
-      github: urlWithDomainCheck(
-        ["github.com"],
-        "URL GitHub invalide (doit contenir github.com)"
-      ),
-      discord: urlWithDomainCheck(
-        ["discord.gg", "discord.com"],
-        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-      ),
-      twitter: urlWithDomainCheck(
-        ["twitter.com", "x.com"],
-        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-      ),
-      website: urlWithDomainCheck([], "URL du site web invalide"),
-    })
-    .optional(),
+  externalLinks: z.object({
+    github: urlWithDomainCheck(
+      ["github.com"],
+      "URL GitHub invalide (doit contenir github.com)"
+    ),
+    discord: urlWithDomainCheck(
+      ["discord.gg", "discord.com"],
+      "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+    ),
+    twitter: urlWithDomainCheck(
+      ["twitter.com", "x.com"],
+      "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+    ),
+    website: urlWithDomainCheck([], "URL du site web invalide"),
+  }),
 });
 
 // Type exports
