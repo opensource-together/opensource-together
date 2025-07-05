@@ -38,7 +38,7 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Generate prisma dependencies
-        run: pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma
+        run: pnpm prisma generate --schema=src/orm/prisma/schema.prisma
 
       - name: Run unit tests
         run: pnpm run test

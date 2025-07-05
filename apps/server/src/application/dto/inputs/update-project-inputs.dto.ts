@@ -1,14 +1,16 @@
-import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
-import { Title } from '@/domain/project/title/title.vo';
-import { Description } from '@/domain/project/description/description.vo';
-import { Link } from '@/domain/project/link/link.vo';
-import { Result } from '@/shared/result';
-import { UpdateProjectRoleDto } from '@/presentation/projectRole/dto/UpdateProjectRoleDto.request';
+// import { Result } from '@/shared/result';
+// import { Title } from '@/contexts/project/domain/vo';
+// import { Description } from '@/contexts/project/domain/vo';
+// import { ShortDescription } from '@/contexts/project/domain/vo';
+// import { ExternalLink } from '@/contexts/project/domain/vo';
+// import { TechStackDto } from '@/contexts/project/infrastructure/controllers/dto/TechStackDto.request';
+// import { UpdateProjectRoleInputsDto } from '@/application/dto/inputs/update-project-role-inputs.dto';
 
-export class UpdateProjectInputsDto {
-  title?: Result<Title> | undefined;
-  description?: Result<Description> | undefined;
-  link?: Result<Link> | undefined;
-  techStacks?: TechStackDto[] | undefined;
-  projectRoles?: UpdateProjectRoleDto[] | undefined;
-}
+// export class UpdateProjectInputsDto {
+//   title?: Result<Title> | undefined;
+//   description?: Result<Description> | undefined;
+//   shortDescription?: Result<ShortDescription> | undefined;
+//   externalLinks?: Result<ExternalLink>[] | undefined;
+//   techStacks?: TechStackDto[] | undefined;
+//   projectRoles?: UpdateProjectRoleInputsDto[] | undefined;
+// }

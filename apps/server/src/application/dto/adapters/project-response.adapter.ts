@@ -1,35 +1,36 @@
-import { Project } from '@/domain/project/project.entity';
-import { ProjectResponseDto } from './project-response.dto';
+// import { Project } from '@/contexts/project/domain/project.entity.legacy';
+// import { ProjectResponseDto } from './project-response.dto';
+// import { TechStack } from '@/domain/techStack/techstack.entity';
 
-export function toProjectResponseDto(project: Project): ProjectResponseDto {
-  return {
-    id: project.getId(),
-    title: project.getTitle(),
-    description: project.getDescription(),
-    link: project.getLink(),
-    ownerId: project.getOwnerId(),
-    createdAt: project.getCreatedAt(),
-    updatedAt: project.getUpdatedAt(),
-    techStacks: project.getTechStacks().map((ts) => ({
-      id: ts.getId(),
-      name: ts.getName(),
-      iconUrl: ts.getIconUrl(),
-    })),
-    projectMembers: project.getTeamMembers().map((tm) => ({
-      userId: tm.getUserId(),
-      projectRoleId: tm.getProjectRole()?.getId(),
-      roleTitle: tm.getProjectRole()?.getRoleTitle(),
-    })),
-    projectRoles: project.getProjectRoles().map((pr) => ({
-      id: pr.getId(),
-      roleTitle: pr.getRoleTitle(),
-      description: pr.getDescription(),
-      isFilled: pr.getIsFilled(),
-      skillSet: pr.getSkillSet().map((ts) => ({
-        id: ts.getId(),
-        name: ts.getName(),
-        iconUrl: ts.getIconUrl(),
-      })),
-    })),
-  };
-}
+// export function toProjectResponseDto(project: Project): ProjectResponseDto {
+//   return {
+//     id: project.getId(),
+//     title: project.getTitle(),
+//     description: project.getDescription(),
+//     link: project.getLink(),
+//     ownerId: project.getOwnerId(),
+//     createdAt: project.getCreatedAt(),
+//     updatedAt: project.getUpdatedAt(),
+//     techStacks: project.getTechStacks().map((ts: TechStack) => ({
+//       id: ts.id,
+//       name: ts.name,
+//       iconUrl: ts.iconUrl,
+//     })),
+//     projectMembers: project.teamMembers.map((tm) => ({
+//       userId: tm.userId,
+//       projectRoleId: tm.projectRoleId,
+//       roleTitle: tm.roleTitle,
+//     })),
+//     projectRoles: project.projectRoles.map((pr) => ({
+//       id: pr.id,
+//       roleTitle: pr.roleTitle,
+//       description: pr.description,
+//       isFilled: pr.isFilled,
+//       skillSet: pr.skillSet.map((ts) => ({
+//         id: ts.id,
+//         name: ts.name,
+//         iconUrl: ts.iconUrl,
+//       })),
+//     })),
+//   };
+// }
