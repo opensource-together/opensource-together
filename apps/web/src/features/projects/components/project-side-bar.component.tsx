@@ -26,9 +26,13 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
     title = "",
     techStacks = [],
     externalLinks = [],
-    lastCommitAt,
     categories = [],
-    communityStats: { stars = 0, contributors = 0, forks = 0 } = {},
+    lastCommitAt = "",
+    projectStats = {
+      stars: 0,
+      forks: 0,
+      contributors: 0,
+    },
   } = project;
 
   // Récupérer le lien GitHub
@@ -90,7 +94,9 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           <div className="mx-4 flex flex-1 items-center">
             <div className="h-[1px] w-full bg-black/5" />
           </div>
-          <span className="text-sm font-medium text-black">{stars}</span>
+          <span className="text-sm font-medium text-black">
+            {projectStats.stars}
+          </span>
         </div>
 
         {/* Forks */}
@@ -107,7 +113,9 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           <div className="mx-4 flex flex-1 items-center">
             <div className="h-[1px] w-full bg-black/5" />
           </div>
-          <span className="text-sm font-medium text-black">{forks}</span>
+          <span className="text-sm font-medium text-black">
+            {projectStats.forks}
+          </span>
         </div>
 
         {/* Last Commit */}
@@ -144,7 +152,9 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           <div className="mx-4 flex flex-1 items-center">
             <div className="h-[1px] w-full bg-black/5" />
           </div>
-          <span className="text-sm font-medium text-black">{contributors}</span>
+          <span className="text-sm font-medium text-black">
+            {projectStats.contributors}
+          </span>
         </div>
       </div>
 
