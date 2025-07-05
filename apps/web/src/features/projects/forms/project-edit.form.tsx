@@ -1,12 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useEffect } from "react";
-import {
-  Controller,
-  SubmitHandler,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
 
@@ -19,7 +14,7 @@ interface ProjectEditFormProps {
 }
 
 export default function ProjectEditForm({ project }: ProjectEditFormProps) {
-  const { image, title, description } = project;
+  const { image, title, shortDescription } = project;
 
   const { updateProject, isUpdating, isUpdateError } = useUpdateProject();
 
@@ -33,7 +28,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     resolver: zodResolver(projectSchema),
     defaultValues: {
       title: title || "Sans titre",
-      description: description || "",
+      description: shortDescription || "",
       longDescription: project.longDescription || "",
       status: project.status || "DRAFT",
       techStacks:
@@ -42,15 +37,44 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
           name: tech.name || "",
           iconUrl: tech.iconUrl || "",
         })) || [],
-      roles: project.roles || [],
-      keyBenefits: project.keyBenefits || [],
-      socialLinks: project.socialLinks || [],
+      roles:
+        project.roles?.map((role) => ({
+          title: role.title,
+          description: role.description,
+          badges: [],
+          experienceBadge: undefined,
+        })) || [],
+      keyBenefits: [],
+      socialLinks:
+        project.externalLinks?.map((link) => ({
+          type: link.type,
+          url: link.url,
+        })) || [],
     },
   });
 
   useEffect(() => {
     if (project) {
-      reset(project);
+      reset({
+        title: project.title || "Sans titre",
+        description: project.shortDescription || "",
+        longDescription: project.longDescription || "",
+        status: project.status || "DRAFT",
+        techStacks: project.techStacks || [],
+        roles:
+          project.roles?.map((role) => ({
+            title: role.title,
+            description: role.description,
+            badges: [],
+            experienceBadge: undefined,
+          })) || [],
+        keyBenefits: [],
+        socialLinks:
+          project.externalLinks?.map((link) => ({
+            type: link.type,
+            url: link.url,
+          })) || [],
+      });
     }
   }, [project, reset]);
 
@@ -63,7 +87,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     name: "techStacks",
   });
 
-  const onSubmit: SubmitHandler<ProjectSchema> = (data) => {
+  const onSubmit = (data: ProjectSchema) => {
     updateProject({ data, projectId: project.id! });
   };
 

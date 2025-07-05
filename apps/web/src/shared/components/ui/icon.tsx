@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/shared/lib/utils";
 
 // Type for the icon size
-export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+export type IconSize = "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type IconVariant =
   | "default"
   | "gray"
@@ -15,6 +15,7 @@ export type IconVariant =
 
 // Mapping of the sizes with the Tailwind classes
 const iconSizes: Record<IconSize, string> = {
+  xxs: "w-2 h-2", // 8px
   xs: "w-3 h-3", // 12px
   sm: "w-4 h-4", // 16px
   md: "w-5 h-5", // 20px
@@ -26,6 +27,8 @@ const iconSizes: Record<IconSize, string> = {
 // List of the available icons based on the existing files
 export type IconName =
   | "github"
+  | "twitter"
+  | "discord"
   | "last-commit"
   | "star"
   | "fork"
@@ -35,17 +38,17 @@ export type IconName =
   | "chevron-right"
   | "chevron-down"
   | "arrow-up-right"
+  | "plus"
   | "cross"
+  | "download"
   | "lock"
   | "link"
-  | "twitter"
-  | "discord"
   | "linkedin"
   | "user"
   | "project"
   | "difficulty-bar"
-  | "validation"
-  | "writing"
+  | "check"
+  | "pencil"
   | "pinned"
   | "joined"
   | "logout"
@@ -60,6 +63,30 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/github.svg",
     filled: "/icons/github.svg",
     outline: "/icons/github.svg",
+  },
+  linkedin: {
+    default: "/icons/linkedin.svg",
+    gray: "/icons/linkedin-gray.svg",
+    white: "/icons/linkedin-white.svg",
+    black: "/icons/linkedin.svg",
+    filled: "/icons/linkedin.svg",
+    outline: "/icons/linkedin.svg",
+  },
+  twitter: {
+    default: "/icons/twitter.svg",
+    gray: "/icons/twitter-gray.svg",
+    white: "/icons/twitter.svg",
+    black: "/icons/x.svg",
+    filled: "/icons/twitter.svg",
+    outline: "/icons/twitter.svg",
+  },
+  discord: {
+    default: "/icons/discord.svg",
+    gray: "/icons/discord-gray.svg",
+    white: "/icons/discord-white.svg",
+    black: "/icons/discord.svg",
+    filled: "/icons/discord.svg",
+    outline: "/icons/discord.svg",
   },
   star: {
     default: "/icons/empty-star.svg",
@@ -96,7 +123,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   "chevron-left": {
     default: "/icons/chevron-left.svg",
     gray: "/icons/chevron-left-gray.svg",
-    white: "/icons/chevron-left.svg",
+    white: "/icons/chevron-left-white.svg",
     black: "/icons/chevron-left.svg",
     filled: "/icons/chevron-left.svg",
     outline: "/icons/chevron-left.svg",
@@ -104,7 +131,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   "chevron-right": {
     default: "/icons/chevron-right.svg",
     gray: "/icons/chevron-right-gray.svg",
-    white: "/icons/chevron-right.svg",
+    white: "/icons/chevron-right-white.svg",
     black: "/icons/chevron-right.svg",
     filled: "/icons/chevron-right.svg",
     outline: "/icons/chevron-right.svg",
@@ -125,13 +152,29 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/arrow-up-right.svg",
     outline: "/icons/arrow-up-right.svg",
   },
+  plus: {
+    default: "/icons/plus.svg",
+    gray: "/icons/plus-gray.svg",
+    white: "/icons/plus-white.svg",
+    black: "/icons/plus.svg",
+    filled: "/icons/plus.svg",
+    outline: "/icons/plus.svg",
+  },
   cross: {
-    default: "/icons/cross-icon.svg",
-    gray: "/icons/cross-icon-gray.svg",
-    white: "/icons/cross-icon.svg",
-    black: "/icons/cross-icon.svg",
-    filled: "/icons/cross-icon.svg",
-    outline: "/icons/cross-icon.svg",
+    default: "/icons/cross.svg",
+    gray: "/icons/cross-gray.svg",
+    white: "/icons/cross-white.svg",
+    black: "/icons/cross.svg",
+    filled: "/icons/cross.svg",
+    outline: "/icons/cross.svg",
+  },
+  download: {
+    default: "/icons/download.svg",
+    gray: "/icons/download-gray.svg",
+    white: "/icons/download-white.svg",
+    black: "/icons/download.svg",
+    filled: "/icons/download.svg",
+    outline: "/icons/download.svg",
   },
   lock: {
     default: "/icons/lock.svg",
@@ -142,37 +185,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/lock.svg",
   },
   link: {
-    default: "/icons/link-icon.svg",
-    gray: "/icons/link-icon.svg",
-    white: "/icons/link-icon.svg",
-    black: "/icons/link-icon.svg",
-    filled: "/icons/link-icon.svg",
-    outline: "/icons/link-icon.svg",
+    default: "/icons/link.svg",
+    gray: "/icons/link-gray.svg",
+    white: "/icons/link.svg",
+    black: "/icons/link.svg",
+    filled: "/icons/link.svg",
+    outline: "/icons/link.svg",
   },
-  twitter: {
-    default: "/icons/twitter.svg",
-    gray: "/icons/twitter-gray.svg",
-    white: "/icons/twitter.svg",
-    black: "/icons/x.svg",
-    filled: "/icons/twitter.svg",
-    outline: "/icons/twitter.svg",
-  },
-  discord: {
-    default: "/icons/discord-icon.svg",
-    gray: "/icons/discord-icon.svg",
-    white: "/icons/discord-white.svg",
-    black: "/icons/discord-icon.svg",
-    filled: "/icons/discord-icon.svg",
-    outline: "/icons/discord-icon.svg",
-  },
-  linkedin: {
-    default: "/icons/linkedin.svg",
-    gray: "/icons/linkedin-gray.svg",
-    white: "/icons/linkedin.svg",
-    black: "/icons/linkedin.svg",
-    filled: "/icons/linkedin.svg",
-    outline: "/icons/linkedin.svg",
-  },
+
   user: {
     default: "/icons/user.svg",
     gray: "/icons/user.svg",
@@ -197,21 +217,21 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/Difficulty-bar-light.svg",
     outline: "/icons/Difficulty-bar-light.svg",
   },
-  validation: {
-    default: "/icons/validation-icon.svg",
-    gray: "/icons/validation-icon.svg",
-    white: "/icons/validation-icon.svg",
-    black: "/icons/validation-icon.svg",
-    filled: "/icons/validation-icon.svg",
-    outline: "/icons/validation-icon.svg",
+  check: {
+    default: "/icons/check.svg",
+    gray: "/icons/check-gray.svg",
+    white: "/icons/check-white.svg",
+    black: "/icons/check.svg",
+    filled: "/icons/check.svg",
+    outline: "/icons/check.svg",
   },
-  writing: {
-    default: "/icons/writing-icon.svg",
-    gray: "/icons/writing-icon.svg",
-    white: "/icons/writing-icon.svg",
-    black: "/icons/writing-icon.svg",
-    filled: "/icons/writing-icon.svg",
-    outline: "/icons/writing-icon.svg",
+  pencil: {
+    default: "/icons/pencil.svg",
+    gray: "/icons/pencil-gray.svg",
+    white: "/icons/pencil-white.svg",
+    black: "/icons/pencil-black.svg",
+    filled: "/icons/pencil-filled.svg",
+    outline: "/icons/pencil-outline.svg",
   },
   pinned: {
     default: "/icons/pinned-icon.svg",

@@ -1,39 +1,61 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
+import {
+  Category,
+  ExternalLink,
+  KeyFeature,
+  ProjectGoal,
+  ProjectRole,
+  TechStack,
+} from "../types/project.type";
+
 export type ProjectCreateMethod = "github" | "scratch";
 
 export interface ProjectFormData {
   method: ProjectCreateMethod | null;
   // Data for scratch method
   projectName: string;
-  description: string;
-  website: string;
+  shortDescription: string;
+  image: string;
+  // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  externalLinks: ExternalLink[];
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
+  techStack: TechStack[];
+  categories: Category[];
   // Data for github method
   selectedRepository: {
     name: string;
     date: string;
   } | null;
   // Common data for roles configuration
-  roles: Array<{
-    id: string;
-    name: string;
-    description: string;
-    skillLevel: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-    isOpen: boolean;
-  }>;
+  roles: ProjectRole[];
 }
 
 interface ProjectCreateStore {
   // State
   formData: ProjectFormData;
   currentStep: number;
+  hasHydrated: boolean;
 
   // Actions
   setMethod: (method: ProjectCreateMethod) => void;
   updateProjectInfo: (
     info: Partial<
-      Pick<ProjectFormData, "projectName" | "description" | "website">
+      Pick<
+        ProjectFormData,
+        | "projectName"
+        | "shortDescription"
+        | "image"
+        // | "status"
+        | "keyFeatures"
+        | "projectGoals"
+        | "techStack"
+        | "categories"
+        | "roles"
+        | "externalLinks"
+      >
     >
   ) => void;
   selectRepository: (repo: { name: string; date: string }) => void;
@@ -41,14 +63,21 @@ interface ProjectCreateStore {
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 }
 
 const initialFormData: ProjectFormData = {
   method: null,
   projectName: "",
-  description: "",
-  website: "",
+  shortDescription: "",
+  image: "",
+  // status: "DRAFT",
+  externalLinks: [],
+  keyFeatures: [],
+  projectGoals: [],
   selectedRepository: null,
+  techStack: [],
+  categories: [],
   roles: [],
 };
 
@@ -58,6 +87,7 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
       (set) => ({
         formData: initialFormData,
         currentStep: 0,
+        hasHydrated: false,
 
         setMethod: (method) =>
           set((state) => ({
@@ -66,9 +96,7 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
           })),
 
         updateProjectInfo: (info) =>
-          set((state) => ({
-            formData: { ...state.formData, ...info },
-          })),
+          set((state) => ({ formData: { ...state.formData, ...info } })),
 
         selectRepository: (repo) =>
           set((state) => ({
@@ -76,25 +104,21 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
           })),
 
         updateRoles: (roles) =>
-          set((state) => ({
-            formData: { ...state.formData, roles },
-          })),
+          set((state) => ({ formData: { ...state.formData, roles } })),
 
         nextStep: () =>
-          set((state) => ({
-            currentStep: state.currentStep + 1,
-          })),
+          set((state) => ({ currentStep: state.currentStep + 1 })),
 
         previousStep: () =>
-          set((state) => ({
-            currentStep: Math.max(0, state.currentStep - 1),
-          })),
+          set((state) => ({ currentStep: Math.max(0, state.currentStep - 1) })),
 
         resetForm: () =>
           set({
             formData: initialFormData,
             currentStep: 0,
           }),
+
+        setHasHydrated: (hasHydrated) => set({ hasHydrated }),
       }),
       {
         name: "project-create-storage",
@@ -102,6 +126,9 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
           formData: state.formData,
           currentStep: state.currentStep,
         }),
+        onRehydrateStorage: () => (state) => {
+          state?.setHasHydrated(true);
+        },
       }
     ),
     {

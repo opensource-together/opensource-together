@@ -3,7 +3,7 @@
 import React from "react";
 
 import { ProjectCreateMethod } from "../../stores/project-create.store";
-import { StepperIndicator } from "./stepper-indicator.component";
+import StepperIndicatorComponent from "./stepper-indicator.component";
 
 interface StepperWrapperProps {
   currentStep: number;
@@ -13,12 +13,12 @@ interface StepperWrapperProps {
 
 export function StepperWrapper({ currentStep, children }: StepperWrapperProps) {
   return (
-    <div className="mx-auto mt-8 max-w-2xl">
-      <div className="mt-[100px] flex flex-col items-center justify-center">
-        <StepperIndicator
+    <div className="mx-auto mt-8 max-w-md">
+      <div className="my-24 flex flex-col items-center justify-center">
+        <StepperIndicatorComponent
           currentStep={currentStep}
           totalSteps={4}
-          className="mb-10 w-fit"
+          className="mb-20"
         />
         {children}
       </div>

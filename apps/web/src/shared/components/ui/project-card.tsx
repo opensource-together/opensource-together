@@ -4,17 +4,7 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-/* ---------------------------------- Types --------------------------------- */
-export interface TechIcon {
-  icon: string;
-  alt: string;
-}
-
-export interface Role {
-  name: string;
-  color?: string;
-  bgColor?: string;
-}
+import { ProjectRole, TechStack } from "@/features/projects/types/project.type";
 
 /* ---------------------------------- Root ---------------------------------- */
 const ProjectCard = React.forwardRef<
@@ -123,7 +113,7 @@ ProjectCardTitle.displayName = "ProjectCardTitle";
 /* ------------------------------ Tech Stack ------------------------------- */
 interface ProjectCardTechStackProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  techStack: TechIcon[];
+  techStack: TechStack[];
 }
 
 const ProjectCardTechStack = React.forwardRef<
@@ -132,10 +122,10 @@ const ProjectCardTechStack = React.forwardRef<
 >(({ className, techStack, ...props }, ref) => (
   <div ref={ref} className={cn("mt-1 flex gap-1", className)} {...props}>
     {techStack.map((tech, index) => {
-      if (!tech.icon) return null;
+      if (!tech.iconUrl) return null;
       return (
-        <div key={index} className="relative flex-shrink-0">
-          <Image src={tech.icon} alt={tech.alt} width={15} height={15} />
+        <div key={tech.id || index} className="relative flex-shrink-0">
+          <Image src={tech.iconUrl} alt={tech.name} width={15} height={15} />
         </div>
       );
     })}
@@ -254,7 +244,7 @@ ProjectCardRolesCount.displayName = "ProjectCardRolesCount";
 /* ------------------------------ Roles List -------------------------------- */
 interface ProjectCardRolesListProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  roles: Role[];
+  roles: ProjectRole[];
   maxVisible?: number;
 }
 
@@ -276,7 +266,7 @@ const ProjectCardRolesList = React.forwardRef<
           key={index}
           className="flex h-5 flex-shrink-0 items-center rounded-full bg-[#1E1E1E]/[0.1] px-1 text-xs font-semibold tracking-tighter whitespace-nowrap text-[#1E1E1E]/[0.8]"
         >
-          {role.name}
+          {role.title}
         </span>
       ))}
       {remainingRoles > 0 && (

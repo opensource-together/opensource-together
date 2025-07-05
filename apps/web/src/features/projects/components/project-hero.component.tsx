@@ -12,16 +12,15 @@ interface ProjectHeroProps {
 export default function ProjectHero({ project }: ProjectHeroProps) {
   const {
     title = "",
-    description = "",
+    shortDescription = "",
     longDescription,
-    keyBenefits = [],
     keyFeatures = [],
     projectGoals = [],
     image,
-    communityStats,
+    projectStats,
   } = project;
 
-  const stars = communityStats?.stars || 0;
+  const stars = projectStats?.stars || 0;
 
   return (
     <section className="flex flex-col bg-white">
@@ -56,22 +55,12 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
       {/* Description */}
       <div className="mt-2">
-        <p className="mb-0 text-sm font-medium">{description}</p>
+        <p className="mb-0 text-sm font-medium">{shortDescription}</p>
 
         {/* separator */}
         <div className="my-5 h-[2px] w-full bg-black/3" />
 
         <div className="w-full max-w-[629px]">
-          {keyBenefits.length > 0 && (
-            <>
-              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
-                {keyBenefits.map((benefit, index) => (
-                  <li key={index}>{benefit}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
           {keyFeatures.length > 0 && (
             <>
               <h3 className="mb-2 text-sm font-normal text-black">
@@ -79,7 +68,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
               </h3>
               <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {keyFeatures.map((feature, index) => (
-                  <li key={index}>{feature}</li>
+                  <li key={index}>{feature.title}</li>
                 ))}
               </ul>
             </>
@@ -92,20 +81,17 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
               </h3>
               <ul className="mb-6 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {projectGoals.map((goal, index) => (
-                  <li key={index}>{goal}</li>
+                  <li key={index}>{goal.goal}</li>
                 ))}
               </ul>
             </>
           )}
 
-          {!keyBenefits.length &&
-            !keyFeatures.length &&
-            !projectGoals.length &&
-            longDescription && (
-              <p className="text-sm font-normal text-black/70">
-                {longDescription}
-              </p>
-            )}
+          {!keyFeatures.length && !projectGoals.length && longDescription && (
+            <p className="text-sm font-normal text-black/70">
+              {longDescription}
+            </p>
+          )}
         </div>
       </div>
     </section>

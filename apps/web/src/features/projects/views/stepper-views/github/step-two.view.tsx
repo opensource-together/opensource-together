@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/shared/components/ui/button";
+import Icon from "@/shared/components/ui/icon";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
@@ -38,12 +38,7 @@ export default function StepTwoView() {
               <span className="font-geist text-[16px] font-medium text-black/70">
                 Nom
               </span>
-              <Image
-                src="/icons/writing-icon.svg"
-                alt="writing-icon"
-                width={13}
-                height={13}
-              />
+              <Icon name="pencil" variant="gray" size="xs" />
             </div>
             <div className="font-geist mb-3 text-[12px] font-normal text-black/50">
               {formData.selectedRepository.name}
@@ -58,12 +53,7 @@ export default function StepTwoView() {
                 <span className="font-geist text-[16px] font-medium text-black/70">
                   Description
                 </span>
-                <Image
-                  src="/icons/writing-icon.svg"
-                  alt="writing-icon"
-                  width={13}
-                  height={13}
-                />
+                <Icon name="pencil" variant="gray" size="xs" />
               </div>
               <span className="text-[10px] font-normal text-black/10">
                 250/250
@@ -87,20 +77,10 @@ export default function StepTwoView() {
               <span className="font-geist text-[16px] font-medium text-black/70">
                 Lien vers le repository
               </span>
-              <Image
-                src="/icons/writing-icon.svg"
-                alt="writing-icon"
-                width={13}
-                height={13}
-              />
+              <Icon name="pencil" variant="gray" size="xs" />
             </div>
             <div className="flex items-center gap-2">
-              <Image
-                src="/icons/link-icon.svg"
-                alt="link-icon"
-                width={15}
-                height={15}
-              />
+              <Icon name="link" variant="gray" size="sm" />
               <span className="font-geist text-[12px] font-normal break-all text-black/50">
                 https://github.com/opensource-together/
                 {formData.selectedRepository.name

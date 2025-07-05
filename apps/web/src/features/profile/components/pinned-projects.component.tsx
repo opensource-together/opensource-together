@@ -40,30 +40,26 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             key={project.id}
             projectId={project.id}
             title={project.name}
-            description={project.description || ""}
+            shortDescription={project.description || ""}
             image={project.image || ""}
-            stars={project.stargazers_count || 0}
             showViewProject={true}
-            roles={
+            techStacks={
               project.techStacks?.map((tech) => ({
+                id: tech.id,
                 name: tech.name,
-                color: "#000000",
-                bgColor: "#FFFFFF",
+                iconUrl: tech.iconUrl,
               })) ?? []
             }
-            roleCount={project.techStacks?.length ?? 0}
-            techStack={
-              project.techStacks?.map((tech) => ({
-                icon: tech.iconUrl,
-                alt: tech.name,
-              })) ?? []
-            }
-            communityStats={{
+            author={{
+              id: project.full_name?.split("/")[0] || "unknown",
+              name: project.full_name?.split("/")[0] || "Unknown",
+              avatarUrl: "",
+            }}
+            projectStats={{
               forks: project.forks_count || 0,
-              contributors: project.watchers_count || 0,
+              contributors: 0, // Not available in ProfileProject
               stars: project.stargazers_count || 0,
             }}
-            authorName={project.full_name.split("/")[0] || "Unknown"}
             className="w-full max-w-[731px] bg-white"
           />
         ))

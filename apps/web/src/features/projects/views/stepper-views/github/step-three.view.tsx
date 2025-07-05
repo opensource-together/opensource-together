@@ -6,17 +6,13 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import { StepThreeForm } from "../../../forms/step-three.form";
+import { StepThreeForm } from "../../../forms/scratch/step-three.form";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 export default function StepThreeView() {
   const router = useRouter();
   const { resetForm } = useProjectCreateStore();
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
-  const handleSuccess = () => {
-    setShowConfirmation(true);
-  };
+  const [showConfirmation] = useState(false);
 
   const handleFinish = () => {
     resetForm();
@@ -50,7 +46,7 @@ export default function StepThreeView() {
 
   return (
     <StepperWrapper currentStep={3} method="github">
-      <StepThreeForm onSuccess={handleSuccess} />
+      <StepThreeForm />
     </StepperWrapper>
   );
 }

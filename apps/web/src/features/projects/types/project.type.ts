@@ -1,53 +1,76 @@
+export interface Author {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+}
+
 export interface TechStack {
   id: string;
   name: string;
   iconUrl?: string;
 }
 
-export interface Badge {
-  label: string;
-}
-
 export interface ProjectRole {
   id?: string;
   title: string;
   description: string;
-  badges: Badge[];
+  techStacks: TechStack[];
+  roleCount?: number;
 }
 
-export interface SocialLink {
+export interface ExternalLink {
   type: "github" | "website" | "discord" | "twitter" | "other";
   url: string;
 }
 
-export interface CommunityStats {
+export interface ProjectStats {
   contributors?: number;
   stars?: number;
   forks?: number;
 }
 
-// Interface Project complète
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface Collaborator {
+  id: string;
+  name: string;
+  email?: string;
+  avatarUrl?: string;
+  role?: string;
+  collaboratorsCount?: number;
+}
+
+export interface KeyFeature {
+  id?: string;
+  title: string;
+}
+
+export interface ProjectGoal {
+  id?: string;
+  goal: string;
+}
+
 export interface Project {
   id?: string;
   slug?: string;
   title: string;
   image?: string;
-  projectImages?: string[];
-  authorName?: string;
-  authorImage?: string;
-  description: string;
+  author: Author;
+  shortDescription: string;
   longDescription?: string;
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  difficulty?: "Facile" | "Moyenne" | "Difficile";
+  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  collaborators?: Collaborator[];
   techStacks: TechStack[];
-  roles?: ProjectRole[];
-  socialLinks?: SocialLink[];
-  communityStats?: CommunityStats;
-  keyBenefits?: string[];
-  keyFeatures?: string[];
-  projectGoals?: string[];
-  categories?: string[];
-  lastCommit?: string; // temporary nullable
-  createdAt?: string;
-  updatedAt?: string;
+  roles: ProjectRole[];
+  externalLinks?: ExternalLink[];
+  projectStats?: ProjectStats;
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
+  categories: Category[];
+  lastCommitAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

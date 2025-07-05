@@ -157,7 +157,12 @@ export default function Header() {
               <Button onClick={handleCreate}>
                 <span className="hidden sm:inline">Créer un Projet</span>
                 <span className="inline sm:hidden">Nouveau projet</span>
-                <Icon name="cross" size="xs" className="ml-1.5" />
+                <Icon
+                  name="plus"
+                  size="xs"
+                  variant="white"
+                  className="ml-1.5"
+                />
               </Button>
 
               <DropdownMenu>
@@ -199,7 +204,7 @@ export default function Header() {
           ) : (
             <Button onClick={handleLogin}>
               <span className="hidden sm:inline">Créer un Projet</span>
-              <Icon name="cross" size="xs" className="ml-1.5" />
+              <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
             </Button>
           )}
         </section>
@@ -209,7 +214,12 @@ export default function Header() {
           <div className="mt-3 flex w-full justify-center md:hidden">
             <Button onClick={handleCreate} className="w-full max-w-[220px]">
               New Project{" "}
-              <Icon name="cross" size="xs" className="ml-0 align-middle" />
+              <Icon
+                name="plus"
+                size="xs"
+                variant="white"
+                className="ml-0 align-middle"
+              />
             </Button>
           </div>
         )}

@@ -18,11 +18,13 @@ export default function RoleCard({
   techStacks = [],
   className,
 }: RoleCardProps) {
-  const { title = "", description = "", badges = [] } = role;
+  const {
+    title = "",
+    description = "",
+    techStacks: roleTechStacks = [],
+  } = role;
 
-  // Fonction pour trouver l'iconUrl correspondant au badge
-  const getTechIcon = (badgeLabel: string): string => {
-    // Correspondances spéciales pour les badges qui n'ont pas de techStack direct
+  const getTechIcon = (techStackName: string): string => {
     const specialMappings: Record<string, string> = {
       React:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
@@ -39,17 +41,15 @@ export default function RoleCard({
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
     };
 
-    // Vérifier d'abord les correspondances spéciales
-    if (specialMappings[badgeLabel]) {
-      return specialMappings[badgeLabel];
+    if (specialMappings[techStackName]) {
+      return specialMappings[techStackName];
     }
 
-    // Ensuite chercher dans les techStacks du projet
     const techStack = techStacks.find(
       (tech) =>
-        tech.name.toLowerCase() === badgeLabel.toLowerCase() ||
-        tech.name.toLowerCase().includes(badgeLabel.toLowerCase()) ||
-        badgeLabel.toLowerCase().includes(tech.name.toLowerCase())
+        tech.name.toLowerCase() === techStackName.toLowerCase() ||
+        tech.name.toLowerCase().includes(techStackName.toLowerCase()) ||
+        techStackName.toLowerCase().includes(tech.name.toLowerCase())
     );
 
     return techStack?.iconUrl || "/icons/mongodb.svg"; // Fallback
@@ -69,54 +69,20 @@ export default function RoleCard({
         {description}
       </p>
 
-      {/* Good First Issue Section */}
-      {/* <div
-        className="mb-7 rounded-lg border border-[black]/5 p-4"
-        style={{ backgroundColor: "rgba(250, 250, 250, 0.5)" }}
-      >
-        <div className="mb-2 flex items-center justify-between">
-          <h4 className="text-sm font-medium text-black">Good first issue</h4>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-black/50">20 days ago</span>
-            <Image
-              src="/icons/exemplebyronIcon.svg"
-              alt="Byron Love"
-              width={15}
-              height={15}
-              className="rounded-full"
-            />
-            <span className="text-xs text-black/70">Byron Love</span>
-          </div>
-        </div> */}
-
       {/* Ligne de séparation */}
       <div className="mb-3 w-full border-t border-dashed border-black/8"></div>
-
-      {/* Issue */}
-      {/* <div className="flex items-start gap-3">
-          <Badge
-            className="mt-1 mt-[0.5px] text-xs font-normal"
-            style={{ backgroundColor: "#F0FDF4", color: "#00C950" }}
-          >
-            #24572
-          </Badge>
-          <span className="text-sm text-black">
-            Remove m_is_test_chain, use ChainType directly
-          </span>
-        </div> */}
-      {/* </div> */}
 
       {/* Bottom Section */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
         {/* Tech Badges */}
         <div className="flex flex-wrap gap-2">
-          {badges.length > 0 ? (
-            badges.map((badge) => (
+          {roleTechStacks.length > 0 ? (
+            roleTechStacks.map((techStack: TechStack) => (
               <StackLogo
-                key={`${badge.label}`}
-                name={badge.label}
-                icon={getTechIcon(badge.label)}
-                alt={badge.label}
+                key={`${techStack.id}`}
+                name={techStack.name}
+                icon={techStack.iconUrl || getTechIcon(techStack.name)}
+                alt={techStack.name}
               />
             ))
           ) : (

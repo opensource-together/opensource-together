@@ -14,21 +14,13 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           key={project.id}
           projectId={project.id}
           title={project.title}
-          description={project.description}
+          shortDescription={project.shortDescription}
           image={project.image}
-          techStack={project.techStacks
-            ?.filter((tech) => typeof tech.iconUrl === "string")
-            .map((tech) => ({
-              icon: tech.iconUrl as string,
-              alt: tech.name,
-            }))}
-          stars={project.communityStats?.stars || 0}
-          roles={project.roles?.map((role) => ({
-            name: role.title,
-          }))}
-          roleCount={project.roles?.length || 0}
-          authorName={project.authorName}
-          communityStats={project.communityStats}
+          techStacks={project.techStacks}
+          roles={project.roles}
+          author={project.author}
+          projectStats={project.projectStats}
+          showViewProject={true}
         />
       ))}
     </div>

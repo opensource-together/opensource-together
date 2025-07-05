@@ -17,6 +17,7 @@ const roleSchema = z.object({
   description: z.string().min(1, "Description du rôle requise"),
   badges: z.array(badgeSchema),
   experienceBadge: z.string().optional(),
+  techStacks: z.array(techStackSchema).optional(),
 });
 
 const socialLinkSchema = z.object({

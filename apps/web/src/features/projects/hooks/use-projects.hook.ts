@@ -43,15 +43,16 @@ export function useProject(projectId: string) {
 export function useCreateProject() {
   const router = useRouter();
   const queryClient = getQueryClient();
+
   const mutation = useToastMutation({
     mutationFn: createProject,
     loadingMessage: "Création du projet en cours...",
     successMessage: "Projet créé avec succès",
     errorMessage: "Erreur lors de la création du projet",
     options: {
-      onSuccess: (project) => {
+      onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["projects"] });
-        router.push(`/projects/${project.id}`);
+        router.push("/projects/create/success");
       },
     },
   });
