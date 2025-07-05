@@ -36,7 +36,10 @@ export function StepThreeForm() {
     })) || []
   );
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [editingRoleIndex, setEditingRoleIndex] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isEditMode = editingRoleIndex !== null;
 
   const handlePrevious = () => {
     router.push("/projects/create/scratch/step-two");
@@ -87,11 +90,40 @@ export function StepThreeForm() {
     },
   });
 
+  const openCreateModal = () => {
+    setEditingRoleIndex(null);
+    resetRoleForm({
+      title: "",
+      description: "",
+      techStack: [],
+    });
+    setShowRoleModal(true);
+  };
+
+  const openEditModal = (index: number) => {
+    const role = roles[index];
+    setEditingRoleIndex(index);
+    resetRoleForm({
+      title: role.title,
+      description: role.description,
+      techStack: role.techStack,
+    });
+    setShowRoleModal(true);
+  };
+
   const onAddRole = handleRoleSubmit((data) => {
-    console.log("Adding new role:", data);
-    setRoles([...roles, data]);
+    if (isEditMode && editingRoleIndex !== null) {
+      // Edit existing role
+      const updatedRoles = [...roles];
+      updatedRoles[editingRoleIndex] = data;
+      setRoles(updatedRoles);
+    } else {
+      // Add new role
+      setRoles([...roles, data]);
+    }
     resetRoleForm();
     setShowRoleModal(false);
+    setEditingRoleIndex(null);
   });
 
   const removeRole = (index: number) => {
@@ -99,13 +131,19 @@ export function StepThreeForm() {
     setRoles(roles.filter((_, i) => i !== index));
   };
 
+  const handleCloseModal = () => {
+    setShowRoleModal(false);
+    setEditingRoleIndex(null);
+    resetRoleForm();
+  };
+
   const modalFooter = (
-    <div className="flex justify-end gap-2">
-      <Button variant="outline" onClick={() => setShowRoleModal(false)}>
+    <div className="mt-10 flex justify-end gap-2">
+      <Button variant="outline" onClick={handleCloseModal}>
         Annuler
       </Button>
       <Button type="submit" form="role-form">
-        Créer le rôle
+        {isEditMode ? "Modifier le rôle" : "Créer le rôle"}
       </Button>
     </div>
   );
@@ -113,13 +151,9 @@ export function StepThreeForm() {
   return (
     <div className="flex w-full flex-col gap-8">
       <div>
-        <Button
-          onClick={() => setShowRoleModal(true)}
-          size="lg"
-          className="w-full"
-        >
+        <Button onClick={openCreateModal} size="lg" className="w-full">
           Créer un nouveau rôle
-          <Icon name="cross" size="xs" />
+          <Icon name="plus" size="xs" variant="white" />
         </Button>
         {roles.length > 0 && (
           <div className="mt-16 flex items-center justify-between">
@@ -136,22 +170,36 @@ export function StepThreeForm() {
               key={index}
               className="group relative overflow-hidden rounded-3xl border border-black/5 p-4 shadow-xs md:p-6"
             >
-              {/* Header avec titre et bouton de suppression */}
               <div className="flex items-start justify-between">
                 <h3 className="text-xl font-medium tracking-tighter text-black">
                   {role.title}
                 </h3>
-                <button
-                  onClick={() => removeRole(index)}
-                  className="rounded-full p-2 hover:bg-black/5 hover:text-black/5"
-                >
-                  <Image
-                    src="/icons/croix-suppression.svg"
-                    alt="supprimer"
-                    width={12}
-                    height={12}
-                  />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => openEditModal(index)}
+                    className="rounded-full p-2 hover:bg-black/5 hover:text-black/5"
+                    title="Modifier le rôle"
+                  >
+                    <Image
+                      src="/icons/pencil-gray.svg"
+                      alt="modifier"
+                      width={14}
+                      height={14}
+                    />
+                  </button>
+                  <button
+                    onClick={() => removeRole(index)}
+                    className="rounded-full p-2 hover:bg-black/5 hover:text-black/5"
+                    title="Supprimer le rôle"
+                  >
+                    <Image
+                      src="/icons/cross-gray.svg"
+                      alt="supprimer"
+                      width={14}
+                      height={14}
+                    />
+                  </button>
+                </div>
               </div>
 
               {/* Description */}
@@ -174,10 +222,12 @@ export function StepThreeForm() {
 
       <Modal
         open={showRoleModal}
-        onOpenChange={setShowRoleModal}
-        title="Ajouter des exigences de rôle"
+        onOpenChange={handleCloseModal}
+        title={
+          isEditMode ? "Modifier le rôle" : "Ajouter des exigences de rôle"
+        }
         footer={modalFooter}
-        size="lg"
+        size="xl"
       >
         <form id="role-form" onSubmit={onAddRole} className="space-y-6">
           <div className="mt-6">

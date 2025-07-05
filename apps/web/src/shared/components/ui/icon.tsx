@@ -35,6 +35,7 @@ export type IconName =
   | "chevron-right"
   | "chevron-down"
   | "arrow-up-right"
+  | "plus"
   | "cross"
   | "lock"
   | "link"
@@ -45,7 +46,7 @@ export type IconName =
   | "project"
   | "difficulty-bar"
   | "validation"
-  | "writing"
+  | "pencil"
   | "pinned"
   | "joined"
   | "logout"
@@ -125,13 +126,21 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/arrow-up-right.svg",
     outline: "/icons/arrow-up-right.svg",
   },
+  plus: {
+    default: "/icons/plus.svg",
+    gray: "/icons/plus-gray.svg",
+    white: "/icons/plus-white.svg",
+    black: "/icons/plus.svg",
+    filled: "/icons/plus.svg",
+    outline: "/icons/plus.svg",
+  },
   cross: {
-    default: "/icons/cross-icon.svg",
-    gray: "/icons/cross-icon-gray.svg",
-    white: "/icons/cross-icon.svg",
-    black: "/icons/cross-icon.svg",
-    filled: "/icons/cross-icon.svg",
-    outline: "/icons/cross-icon.svg",
+    default: "/icons/cross.svg",
+    gray: "/icons/cross-gray.svg",
+    white: "/icons/cross-white.svg",
+    black: "/icons/cross.svg",
+    filled: "/icons/cross.svg",
+    outline: "/icons/cross.svg",
   },
   lock: {
     default: "/icons/lock.svg",
@@ -142,12 +151,12 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/lock.svg",
   },
   link: {
-    default: "/icons/link-icon.svg",
-    gray: "/icons/link-icon.svg",
-    white: "/icons/link-icon.svg",
-    black: "/icons/link-icon.svg",
-    filled: "/icons/link-icon.svg",
-    outline: "/icons/link-icon.svg",
+    default: "/icons/link.svg",
+    gray: "/icons/link-gray.svg",
+    white: "/icons/link.svg",
+    black: "/icons/link.svg",
+    filled: "/icons/link.svg",
+    outline: "/icons/link.svg",
   },
   twitter: {
     default: "/icons/twitter.svg",
@@ -205,13 +214,13 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/validation-icon.svg",
     outline: "/icons/validation-icon.svg",
   },
-  writing: {
-    default: "/icons/writing-icon.svg",
-    gray: "/icons/writing-icon.svg",
-    white: "/icons/writing-icon.svg",
-    black: "/icons/writing-icon.svg",
-    filled: "/icons/writing-icon.svg",
-    outline: "/icons/writing-icon.svg",
+  pencil: {
+    default: "/icons/pencil-icon.svg",
+    gray: "/icons/pencil-icon.svg",
+    white: "/icons/pencil-icon.svg",
+    black: "/icons/pencil-icon.svg",
+    filled: "/icons/pencil-icon.svg",
+    outline: "/icons/pencil-icon.svg",
   },
   pinned: {
     default: "/icons/pinned-icon.svg",
