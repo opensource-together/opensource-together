@@ -17,6 +17,9 @@ import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-c
 import { PrismaUserGitHubCredentialsRepository } from '@/contexts/github/infrastructure/repositories/prisma.user-github-credentials.repository';
 import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
 import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
+import { InMemoryProjectRepository } from './repositories/mock.project.repository';
+import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
+import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
 
 @Module({
   imports: [],
@@ -26,15 +29,24 @@ import { EncryptionService } from '@/contexts/encryption/infrastructure/encrypti
     // GithubAuthGuard,
     {
       provide: PROJECT_REPOSITORY_PORT,
-      useClass: PrismaProjectRepository,
+      useClass:
+        process.env.NODE_ENV === 'test'
+          ? InMemoryProjectRepository
+          : PrismaProjectRepository,
     },
     {
       provide: TECHSTACK_REPOSITORY_PORT,
-      useClass: PrismaTechStackRepository,
+      useClass:
+        process.env.NODE_ENV === 'test'
+          ? InMemoryTechStackRepository
+          : PrismaTechStackRepository,
     },
     {
       provide: PROJECT_ROLE_REPOSITORY_PORT,
-      useClass: PrismaProjectRoleRepository,
+      useClass:
+        process.env.NODE_ENV === 'test'
+          ? InMemoryProjectRoleRepository
+          : PrismaProjectRoleRepository,
     },
     {
       provide: GITHUB_REPOSITORY_PORT,

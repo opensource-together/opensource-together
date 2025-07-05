@@ -106,7 +106,9 @@ describe('Domain Project Entity', () => {
       if (reconstitute.success) {
         throw new Error('Project reconstitution should have failed');
       }
-      expect(reconstitute.error).toBe('createdAt and updatedAt are required');
+      expect(reconstitute.error).toBe(
+        'createdAt and updatedAt are required for the project reconstitution',
+      );
     });
     it('should fail if updatedAt is not provided', () => {
       const props = getProjectProps({
@@ -119,7 +121,9 @@ describe('Domain Project Entity', () => {
       if (reconstitute.success) {
         throw new Error('Project reconstitution should have failed');
       }
-      expect(reconstitute.error).toBe('createdAt and updatedAt are required');
+      expect(reconstitute.error).toBe(
+        'createdAt and updatedAt are required for the project reconstitution',
+      );
     });
 
     it('should fail if id is not provided', () => {
@@ -199,21 +203,23 @@ describe('Domain Project Entity', () => {
       if (!techStack.success) {
         throw new Error(JSON.stringify(techStack.error));
       }
-      const projectRole = ProjectRole.create({
-        projectId: 'id',
+      const projectRole = ProjectRole.reconstitute({
+        id: '432',
+        projectId: '123',
         title: 'Developer',
         description: '...',
         isFilled: false,
-        techStacks: [techStack.value],
+        techStacks: [techStack.value.toPrimitive()],
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
       if (!projectRole.success) {
         throw new Error(JSON.stringify(projectRole.error));
       }
       const project = projectResult.value;
-      const addProjectRoleResult: Result<ProjectRole, string> =
-        project.createProjectRole(projectRole.value.toPrimitive());
+      const addProjectRoleResult = project.addRole(projectRole.value);
       if (!addProjectRoleResult.success) {
-        throw new Error(addProjectRoleResult.error);
+        throw new Error(JSON.stringify(addProjectRoleResult.error));
       }
       expect(project.toPrimitive().projectRoles).toHaveLength(1);
     });
@@ -236,18 +242,21 @@ describe('Domain Project Entity', () => {
         throw new Error(JSON.stringify(techStack.error));
       }
 
-      const projectRole = ProjectRole.create({
+      const projectRole = ProjectRole.reconstitute({
+        id: '432',
         projectId: '',
         title: 'Developer',
         description: '...',
         isFilled: false,
-        techStacks: [techStack.value],
+        techStacks: [techStack.value.toPrimitive()],
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
       if (projectRole.success) {
         throw new Error('Project role creation should have failed');
       }
       expect(projectRole.error).toEqual({
-        projectId: 'Project ID is required',
+        projectId: 'projectId is required',
       });
     });
   });
@@ -364,9 +373,9 @@ describe('Domain Project Entity', () => {
         iconUrl: 'https://php.net/favicon.ico',
       });
       // expect(techStacks).toBeInstanceOf(Array);
-      expect(techStacks).toHaveLength(1);
+      expect(props.techStacks).toHaveLength(1);
       // expect(techStacks[0]).toBeInstanceOf(TechStack);
-      expect(techStacks[0]).toEqual(props.techStacks[0]);
+      expect(props.techStacks[0]).toEqual(techStacks[0]);
     });
     // it('should return immutable copy of projectRoles', () => {
     //   const techStack = TechStack.reconstitute({
