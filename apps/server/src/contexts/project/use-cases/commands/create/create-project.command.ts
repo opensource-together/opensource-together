@@ -10,8 +10,6 @@ import {
 import { CommandHandler, ICommand } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { ICommandHandler } from '@nestjs/cqrs';
-import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
-import { ProjectRoleRepositoryPort } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
 import {
   TECHSTACK_REPOSITORY_PORT,
   TechStackRepositoryPort,
@@ -22,7 +20,6 @@ import {
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Octokit } from '@octokit/rest';
 import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
-// import { TechStackValidationErrors } from '@/contexts/techstack/domain/techstack.entity';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -34,7 +31,6 @@ export class CreateProjectCommand implements ICommand {
       techStacks: { id: string; name: string; iconUrl: string }[];
       externalLinks?: { type: string; url: string }[];
       projectRoles: {
-        // id: string;
         title: string;
         description: string;
         isFilled: boolean;
@@ -52,8 +48,6 @@ export class CreateProjectCommandHandler
   constructor(
     @Inject(PROJECT_REPOSITORY_PORT)
     private readonly projectRepo: ProjectRepositoryPort,
-    @Inject(PROJECT_ROLE_REPOSITORY_PORT)
-    private readonly projectRoleRepo: ProjectRoleRepositoryPort,
     @Inject(TECHSTACK_REPOSITORY_PORT)
     private readonly techStackRepo: TechStackRepositoryPort,
     @Inject(GITHUB_REPOSITORY_PORT)
@@ -74,7 +68,6 @@ export class CreateProjectCommandHandler
       projectRoles,
       octokit,
     } = createProjectCommand.props;
-    // Récupérer tous les IDs des techStacks du projet
     // verifier si un project n'existe pas déjà avec le même titre
     const projectWithSameTitle = await this.projectRepo.findByTitle(title);
     if (projectWithSameTitle.success) {
@@ -92,6 +85,7 @@ export class CreateProjectCommandHandler
       ...new Set([...projectTechStackIds, ...roleTechStackIds]),
     ];
     //vérifier si les techStacks existent et son valide
+    //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
     const techStacksValidation =
       await this.techStackRepo.findByIds(allTechStackIds);
     if (!techStacksValidation.success) {
@@ -123,6 +117,7 @@ export class CreateProjectCommandHandler
     if (!savedProject.success) return Result.fail('Unable to create project');
 
     //si le projet est valide alors on créer un github repository
+    //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
     const githubRepositoryResult: Result<GithubRepositoryDto, string> =
       await this.githubRepository.createGithubRepository(
         {
