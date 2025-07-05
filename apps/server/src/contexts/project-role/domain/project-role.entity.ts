@@ -129,6 +129,9 @@ export class ProjectRole {
     if (!props.id) {
       return Result.fail({ id: 'id is required' });
     }
+    if (!props.projectId) {
+      return Result.fail({ projectId: 'projectId is required' });
+    }
 
     if (!props.createdAt || !props.updatedAt) {
       return Result.fail(
