@@ -20,7 +20,7 @@ export function FormNavigationButtons({
   onPrevious,
   onNext,
   nextLabel = "Suivant",
-  previousLabel = "Précédent",
+  previousLabel = "Retour",
   isNextDisabled = false,
   isPreviousDisabled = false,
   isLoading = false,

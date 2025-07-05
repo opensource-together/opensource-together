@@ -128,6 +128,7 @@ export function StepTwoForm() {
 
       <FormNavigationButtons
         onPrevious={handlePrevious}
+        previousLabel="Retour"
         nextLabel="Suivant"
         isLoading={isSubmitting}
         nextType="submit"

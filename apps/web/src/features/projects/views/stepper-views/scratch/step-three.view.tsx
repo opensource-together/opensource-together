@@ -3,7 +3,7 @@
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import { StepThreeForm } from "../../../forms/step-three.form";
+import { StepThreeForm } from "../../../forms/scratch/step-three.form";
 
 export default function StepThreeView() {
   return (

@@ -39,8 +39,8 @@ export default function StepTwoView() {
                 Nom
               </span>
               <Image
-                src="/icons/writing-icon.svg"
-                alt="writing-icon"
+                src="/icons/pencil-gray.svg"
+                alt="pencil"
                 width={13}
                 height={13}
               />
@@ -59,8 +59,8 @@ export default function StepTwoView() {
                   Description
                 </span>
                 <Image
-                  src="/icons/writing-icon.svg"
-                  alt="writing-icon"
+                  src="/icons/pencil-gray.svg"
+                  alt="pencil"
                   width={13}
                   height={13}
                 />
@@ -88,16 +88,16 @@ export default function StepTwoView() {
                 Lien vers le repository
               </span>
               <Image
-                src="/icons/writing-icon.svg"
-                alt="writing-icon"
+                src="/icons/pencil-gray.svg"
+                alt="pencil"
                 width={13}
                 height={13}
               />
             </div>
             <div className="flex items-center gap-2">
               <Image
-                src="/icons/link-icon.svg"
-                alt="link-icon"
+                src="/icons/link-gray.svg"
+                alt="link"
                 width={15}
                 height={15}
               />

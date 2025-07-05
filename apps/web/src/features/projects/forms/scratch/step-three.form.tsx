@@ -19,10 +19,10 @@ import {
   roleSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
-import { TechStackList } from "../../../shared/components/ui/tech-stack-list.component";
-import { FormNavigationButtons } from "../components/stepper/stepper-navigation-buttons.component";
-import { useTechStack } from "../hooks/use-tech-stack";
-import { useProjectCreateStore } from "../stores/project-create.store";
+import { TechStackList } from "../../../../shared/components/ui/tech-stack-list.component";
+import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
+import { useTechStack } from "../../hooks/use-tech-stack";
+import { useProjectCreateStore } from "../../stores/project-create.store";
 
 export function StepThreeForm() {
   const router = useRouter();
@@ -285,6 +285,7 @@ export function StepThreeForm() {
 
       <FormNavigationButtons
         onPrevious={handlePrevious}
+        previousLabel="Retour"
         nextLabel="Suivant"
         isLoading={isSubmitting}
         isNextDisabled={roles.length === 0}

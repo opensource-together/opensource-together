@@ -14,7 +14,7 @@ interface StepperWrapperProps {
 export function StepperWrapper({ currentStep, children }: StepperWrapperProps) {
   return (
     <div className="mx-auto mt-8 max-w-md">
-      <div className="mt-[100px] flex flex-col items-center justify-center">
+      <div className="my-24 flex flex-col items-center justify-center">
         <StepperIndicatorComponent
           currentStep={currentStep}
           totalSteps={4}
