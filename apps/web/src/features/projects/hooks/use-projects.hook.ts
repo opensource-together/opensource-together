@@ -10,7 +10,6 @@ import {
   getProjects,
   updateProject,
 } from "../services/project.service";
-import { useProjectCreateStore } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
 
 /**
@@ -44,7 +43,6 @@ export function useProject(projectId: string) {
 export function useCreateProject() {
   const router = useRouter();
   const queryClient = getQueryClient();
-  const { resetForm } = useProjectCreateStore();
 
   const mutation = useToastMutation({
     mutationFn: createProject,
