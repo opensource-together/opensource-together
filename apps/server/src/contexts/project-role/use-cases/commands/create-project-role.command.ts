@@ -68,26 +68,12 @@ export class CreateProjectRoleCommandHandler
       return Result.fail('You are not allowed to add roles to this project');
     }
 
-    // if (project.hasRoleWithTitle(roleTitle)) {
-    //   return Result.fail(
-    //     'A role with this title already exists in this project',
-    //   );
-    // }
-
     // Créer l'entité ProjectRole
-    const projectRoleResult: Result<
-      ProjectRole,
-      ProjectRoleValidationErrors | string
-    > = ProjectRole.create({
-      projectId,
+    const projectRoleResult = project.createRole({
       title,
       description,
       isFilled,
-      techStacks: techStacksValidation.value.map((ts) => ({
-        id: ts.toPrimitive().id,
-        name: ts.toPrimitive().name,
-        iconUrl: ts.toPrimitive().iconUrl,
-      })),
+      techStacks: techStacksValidation.value.map((ts) => ts.toPrimitive()),
     });
 
     if (!projectRoleResult.success) {

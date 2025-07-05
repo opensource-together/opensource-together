@@ -193,6 +193,22 @@ export class Project {
     return Result.ok(undefined);
   }
 
+  public createRole(projectRoles: {
+    title: string;
+    description: string;
+    isFilled: boolean;
+    techStacks: { id: string; name: string; iconUrl: string }[];
+  }): Result<ProjectRole, ProjectRoleValidationErrors | string> {
+    const projectId = this.id;
+    const projectRoleResult = ProjectRole.create({
+      ...projectRoles,
+      projectId,
+    });
+    if (!projectRoleResult.success) {
+      return Result.fail(projectRoleResult.error as string);
+    }
+    return Result.ok(projectRoleResult.value);
+  }
   //pour créer un role qui respecte nos regles métier, utiliser uniquement quand un projet existe et est récupérer de la persistance
   public createRoles(
     projectRoles: {
@@ -201,7 +217,7 @@ export class Project {
       isFilled: boolean;
       techStacks: { id: string; name: string; iconUrl: string }[];
     }[],
-  ): Result<ProjectRole[], string> {
+  ): Result<ProjectRole[], ProjectRoleValidationErrors | string> {
     const projectRolesResults = ProjectRole.createMany(projectRoles);
     if (!projectRolesResults.success) {
       return Result.fail(projectRolesResults.error as string);
