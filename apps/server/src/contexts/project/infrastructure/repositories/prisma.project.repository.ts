@@ -358,12 +358,19 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
 
   async update(id: string, project: Project): Promise<Result<Project, string>> {
     try {
-      const repoProject = PrismaProjectMapper.toRepo(project);
-      if (!repoProject.success) return Result.fail(repoProject.error);
+      const projectData = project.toPrimitive();
 
       const updatedProject = await this.prisma.project.update({
         where: { id },
-        data: repoProject.value,
+        data: {
+          title: projectData.title,
+          description: projectData.description,
+          shortDescription: projectData.shortDescription,
+          externalLinks:
+            projectData.externalLinks
+              ?.filter((link) => link && link.url)
+              ?.map((link) => link.url) || [],
+        },
         include: {
           techStacks: true,
           projectRoles: {
@@ -385,11 +392,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       return Result.ok(domainProject.value);
     } catch (error: any) {
       console.log('error', error);
-      // if (error instanceof PrismaClientKnownRequestError) {
-      //   if (error.code === 'P2025') {
-      //     return Result.fail('Project not found');
-      //   }
-      // }
       return Result.fail(`Unknown error during project update`);
     }
   }
