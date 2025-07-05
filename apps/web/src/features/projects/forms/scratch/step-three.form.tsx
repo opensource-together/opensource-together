@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -174,30 +173,20 @@ export function StepThreeForm() {
                 <h3 className="text-xl font-medium tracking-tighter text-black">
                   {role.title}
                 </h3>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <button
                     onClick={() => openEditModal(index)}
-                    className="rounded-full p-2 hover:bg-black/5 hover:text-black/5"
+                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
                     title="Modifier le rôle"
                   >
-                    <Image
-                      src="/icons/pencil-gray.svg"
-                      alt="modifier"
-                      width={14}
-                      height={14}
-                    />
+                    <Icon name="pencil" variant="gray" size="xs" />
                   </button>
                   <button
                     onClick={() => removeRole(index)}
-                    className="rounded-full p-2 hover:bg-black/5 hover:text-black/5"
+                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
                     title="Supprimer le rôle"
                   >
-                    <Image
-                      src="/icons/cross-gray.svg"
-                      alt="supprimer"
-                      width={14}
-                      height={14}
-                    />
+                    <Icon name="cross" variant="gray" size="xs" />
                   </button>
                 </div>
               </div>

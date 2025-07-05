@@ -88,12 +88,12 @@ export function StepFourForm() {
           size="xl"
           name={formData.projectName}
           fallback={formData.projectName}
+          className="mt-4"
         />
       </div>
 
       <div className="mt-4 flex flex-col gap-4">
         <Label>Liens externes</Label>
-
         <div className="space-y-2">
           <InputWithIcon
             icon="github"

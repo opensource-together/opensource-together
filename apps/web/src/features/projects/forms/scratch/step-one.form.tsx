@@ -135,13 +135,19 @@ export function StepOneForm() {
       <div>
         <Label required>Fonctionnalités clés</Label>
         <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
+          <div className="relative">
             <Input
               value={newFeature}
               onChange={(e) => setNewFeature(e.target.value)}
               placeholder="Ajouter une fonctionnalité"
+              className="pr-20"
             />
-            <Button type="button" onClick={addFeature}>
+            <Button
+              type="button"
+              onClick={addFeature}
+              variant="secondary"
+              className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+            >
               Ajouter
             </Button>
           </div>
@@ -154,6 +160,8 @@ export function StepOneForm() {
                 <Button
                   type="button"
                   variant="ghost"
+                  size="sm"
+                  className="text-xs"
                   onClick={() => removeFeature(index)}
                 >
                   Supprimer
@@ -172,13 +180,19 @@ export function StepOneForm() {
       <div>
         <Label required>Objectifs du projet</Label>
         <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
+          <div className="relative">
             <Input
               value={newGoal}
               onChange={(e) => setNewGoal(e.target.value)}
               placeholder="Ajouter un objectif"
+              className="pr-20"
             />
-            <Button type="button" onClick={addGoal}>
+            <Button
+              type="button"
+              onClick={addGoal}
+              variant="secondary"
+              className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+            >
               Ajouter
             </Button>
           </div>
@@ -192,6 +206,7 @@ export function StepOneForm() {
                   type="button"
                   variant="ghost"
                   size="sm"
+                  className="text-xs"
                   onClick={() => removeGoal(index)}
                 >
                   Supprimer

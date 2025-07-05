@@ -225,12 +225,12 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/validation-icon.svg",
   },
   pencil: {
-    default: "/icons/pencil-icon.svg",
-    gray: "/icons/pencil-icon.svg",
-    white: "/icons/pencil-icon.svg",
-    black: "/icons/pencil-icon.svg",
-    filled: "/icons/pencil-icon.svg",
-    outline: "/icons/pencil-icon.svg",
+    default: "/icons/pencil.svg",
+    gray: "/icons/pencil-gray.svg",
+    white: "/icons/pencil-white.svg",
+    black: "/icons/pencil-black.svg",
+    filled: "/icons/pencil-filled.svg",
+    outline: "/icons/pencil-outline.svg",
   },
   pinned: {
     default: "/icons/pinned-icon.svg",
