@@ -10,10 +10,42 @@ const projectGoalSchema = z.object({
   goal: z.string(),
 });
 
-const externalLinkSchema = z.object({
-  type: z.enum(["github", "website", "discord", "twitter", "other"]),
-  url: z.string().url("URL invalide"),
-});
+const urlWithDomainCheck = (allowedDomains: string[], errorMsg: string) =>
+  z
+    .string()
+    .trim()
+    .transform((val) => {
+      if (!val) return ""; // accept empty fields
+      return val.startsWith("http://") || val.startsWith("https://")
+        ? val
+        : `https://${val}`;
+    })
+    .refine(
+      (val) => {
+        if (val === "") return true;
+
+        try {
+          const parsed = new URL(val);
+
+          // The hostname must contain a dot (.)
+          if (!parsed.hostname.includes(".")) return false;
+
+          // If no specific domains, a valid URL is enough
+          if (allowedDomains.length === 0) return true;
+
+          return allowedDomains.some(
+            (domain) =>
+              parsed.hostname === domain ||
+              parsed.hostname.endsWith(`.${domain}`)
+          );
+        } catch {
+          return false;
+        }
+      },
+      { message: errorMsg }
+    )
+    .optional()
+    .or(z.literal(""));
 
 // Step 1: Basic Project Information
 export const stepOneSchema = z.object({
@@ -35,21 +67,19 @@ export const stepOneSchema = z.object({
 export const stepTwoSchema = z.object({
   techStack: z.array(z.string()).min(1, "Au moins une technologie est requise"),
   categories: z.array(z.string()).min(1, "Au moins une catégorie est requise"),
-  image: z.string().optional(),
-  externalLinks: z.array(externalLinkSchema).optional(),
 });
 
 // Step 3: Project Roles
 export const roleSchema = z.object({
   title: z.string().min(1, "Le titre du rôle est requis"),
-  description: z
-    .string()
-    .min(1, "La description est requise")
-    .max(250, "La description ne peut pas dépasser 250 caractères"),
   techStack: z
     .array(z.string())
     .min(1, "Au moins une technologie est requise")
     .max(6, "Maximum 6 technologies autorisées"),
+  description: z
+    .string()
+    .min(10, "La description doit contenir au moins 10 caractères")
+    .max(250, "La description ne peut pas dépasser 250 caractères"),
 });
 
 export const stepThreeSchema = z.object({
@@ -70,9 +100,31 @@ export const createProjectSchema = z.object({
     .nullable(),
 });
 
+export const stepFourSchema = z.object({
+  logo: z.instanceof(File).optional(),
+  externalLinks: z
+    .object({
+      github: urlWithDomainCheck(
+        ["github.com"],
+        "URL GitHub invalide (doit contenir github.com)"
+      ),
+      discord: urlWithDomainCheck(
+        ["discord.gg", "discord.com"],
+        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+      ),
+      twitter: urlWithDomainCheck(
+        ["twitter.com", "x.com"],
+        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+      ),
+      website: urlWithDomainCheck([], "URL du site web invalide"),
+    })
+    .optional(),
+});
+
 // Type exports
 export type StepOneFormData = z.infer<typeof stepOneSchema>;
 export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
 export type RoleFormData = z.infer<typeof roleSchema>;
 export type StepThreeFormData = z.infer<typeof stepThreeSchema>;
+export type StepFourFormData = z.infer<typeof stepFourSchema>;
 export type CreateProjectFormData = z.infer<typeof createProjectSchema>;
