@@ -10,7 +10,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 
-import { FormNavigationButtons } from "../../components/form-navigation-buttons.component";
+import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import {
   StepOneFormData,
@@ -100,8 +100,12 @@ export function StepOneForm() {
   return (
     <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
       <div>
-        <Label>Nom du projet</Label>
-        <Input {...register("projectName")} maxLength={100} />
+        <Label required>Nom du projet</Label>
+        <Input
+          {...register("projectName")}
+          maxLength={100}
+          placeholder="Nom du projet"
+        />
         {errors.projectName && (
           <p className="mt-1 text-sm text-red-500">
             {errors.projectName.message}
@@ -111,7 +115,7 @@ export function StepOneForm() {
 
       <div>
         <div className="mr-2 mb-1 flex items-center justify-between">
-          <Label>Description</Label>
+          <Label required>Description</Label>
           <span className="text-xs font-normal text-black/20">
             {shortDescription?.length || 0}/250
           </span>
@@ -129,71 +133,78 @@ export function StepOneForm() {
       </div>
 
       <div>
-        <Label>Fonctionnalités clés</Label>
-        <div className="flex gap-2">
-          <Input
-            value={newFeature}
-            onChange={(e) => setNewFeature(e.target.value)}
-            placeholder="Intégration Docker/Kubernetes"
-          />
-          <Button type="button" onClick={addFeature}>
-            Ajouter
-          </Button>
+        <Label required>Fonctionnalités clés</Label>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Input
+              value={newFeature}
+              onChange={(e) => setNewFeature(e.target.value)}
+              placeholder="Ajouter une fonctionnalité"
+            />
+            <Button type="button" onClick={addFeature}>
+              Ajouter
+            </Button>
+          </div>
+          <div className="flex flex-col gap-2">
+            {safeKeyFeatures.map((feature, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="flex-1 rounded-md bg-gray-50 p-2">
+                  {feature.title}
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => removeFeature(index)}
+                >
+                  Supprimer
+                </Button>
+              </div>
+            ))}
+          </div>
+          {errors.keyFeatures && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.keyFeatures.message}
+            </p>
+          )}
         </div>
-        <ul className="mt-2 space-y-2">
-          {safeKeyFeatures.map((feature, index) => (
-            <li key={index} className="flex items-center gap-2">
-              <span>{feature.title}</span>
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => removeFeature(index)}
-              >
-                Supprimer
-              </Button>
-            </li>
-          ))}
-        </ul>
-        {errors.keyFeatures && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.keyFeatures.message}
-          </p>
-        )}
       </div>
 
       <div>
-        <Label>Objectifs du projet</Label>
-        <div className="flex gap-2">
-          <Input
-            value={newGoal}
-            onChange={(e) => setNewGoal(e.target.value)}
-            placeholder="Suivi des progrès personnalisé"
-          />
-          <Button type="button" onClick={addGoal}>
-            Ajouter
-          </Button>
+        <Label required>Objectifs du projet</Label>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Input
+              value={newGoal}
+              onChange={(e) => setNewGoal(e.target.value)}
+              placeholder="Ajouter un objectif"
+            />
+            <Button type="button" onClick={addGoal}>
+              Ajouter
+            </Button>
+          </div>
+          <div className="flex flex-col gap-2">
+            {safeProjectGoals.map((goal, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="flex-1 rounded-md bg-gray-50 p-2">
+                  {goal.goal}
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeGoal(index)}
+                >
+                  Supprimer
+                </Button>
+              </div>
+            ))}
+          </div>
+          {errors.projectGoals && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.projectGoals.message}
+            </p>
+          )}
         </div>
-        <ul className="mt-2 space-y-2">
-          {safeProjectGoals.map((goal, index) => (
-            <li key={index} className="flex items-center gap-2">
-              <span>{goal.goal}</span>
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => removeGoal(index)}
-              >
-                Supprimer
-              </Button>
-            </li>
-          ))}
-        </ul>
-        {errors.projectGoals && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.projectGoals.message}
-          </p>
-        )}
       </div>
 
       <FormNavigationButtons
