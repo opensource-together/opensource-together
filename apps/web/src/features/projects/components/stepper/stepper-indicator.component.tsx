@@ -14,9 +14,7 @@ export function StepperIndicatorComponent({
   onStepChange,
 }: StepperIndicatorProps) {
   return (
-    <div
-      className={`mx-auto max-w-xl min-w-[300px] space-y-8 text-center ${className}`}
-    >
+    <div className={`mx-auto min-w-md space-y-8 text-center ${className}`}>
       <div className="space-y-3">
         <div className="bg-border flex h-2 w-full overflow-hidden rounded-full">
           {Array.from({ length: totalSteps }, (_, index) => {
