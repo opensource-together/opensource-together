@@ -1,0 +1,906 @@
+---
+description: Ceci donnes une documentation de la clean architecture utilisé et de sa logique. Elle met du contexte quand on parle de notre clean architecture et de comment integrer de nouvelles choses si necessaire
+globs: 
+alwaysApply: false
+---
+# 🏗️ Architecture du Monorepo et Configuration Docker Compose
+
+## Vue d'ensemble du Monorepo
+
+Le projet est structuré en monorepo pour faciliter la gestion des différentes applications et packages partagés. Cela permet une meilleure organisation, une gestion centralisée des dépendances, et une optimisation des builds.
+
+## Services Principaux
+
+### Base de Données Métier (PostgreSQL)
+
+- **Port** : 5433
+- **Objectif** : Stockage des données principales de l'application
+
+### Base de Données SuperTokens (PostgreSQL)
+
+- **Port** : 5432
+- **Objectif** : Stockage des données d'authentification
+
+### SuperTokens Core
+
+- **Port** : 3567
+- **Objectif** : Service d'authentification
+
+### Backend (NestJS)
+
+- **Port** : 4000
+- **Objectif** : Serveur API
+
+### Frontend (Next.js)
+
+- **Port** : 3000
+- **Objectif** : Application web
+
+## Configuration Docker Compose
+
+- **Isolation des Services** : Chaque service est conteneurisé, assurant une isolation complète et une communication via un réseau Docker personnalisé.
+- **Volumes** : Utilisation de volumes pour la persistance des données et le rechargement à chaud des applications.
+- **Vérifications de Santé** : Implémentation de vérifications de santé pour garantir le bon démarrage et la disponibilité des services.
+- **Dépendances** : Utilisation de `depends_on` pour assurer l'ordre de démarrage correct des services.
+
+## Avantages de cette Configuration
+
+- **Développement Simplifié** : Hot reload et gestion centralisée des dépendances.
+- **Scalabilité** : Facilité d'ajout de nouveaux services ou de mise à jour des existants.
+- **Maintenance** : Structure claire et modulaire facilitant la maintenance et l'évolution du projet.
+
+---
+
+# 🧱 Architecture Backend — Clean Architecture Simplifiée + CQRS avec NestJS
+
+## 🏗️ Vue d'ensemble
+
+Le projet suit les principes de **Clean Architecture**, en séparant clairement les responsabilités entre les couches :
+
+- **Domain** : Le cœur métier pur contenant les invariants métier (entity, value object, factory)
+- **Use Cases** : Contient la logique métier applicative sous forme de Use Cases suivant le pattern CQRS
+- **Infrastructure** : Contient tout ce qui est librairie externe, implémentation concrète des ports/interfaces (ORM, API tiers, services, contrôleurs)
+
+Le pattern **CQRS (Command Query Responsibility Segregation)** est utilisé pour séparer clairement :
+
+- les **commands** (écriture)
+- les **queries** (lecture)
+
+Chaque action utilisateur transite par cette structure, facilitant le découplage, le test et l'évolution.
+
+---
+
+## 📁 Structure des dossiers (Nouvelle Organisation Simplifiée)
+
+### Organisation générale
+
+```
+src/
+├── auth/                    # Service transversal d'authentification
+├── orm/                     # Configuration ORM (Prisma)
+├── libs/                    # Utilitaires partagés (ex: result.ts)
+├── examples/                # Templates pour nouveaux contextes
+|
+|___contexts/
+|   |___
+|       |
+├-----── user/                    # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──------project/                 # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──-----profile/                 # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──-----project-role/            # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──-----github/                  # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──-----techstack/              # Contexte métier
+│       ├── domain/
+│       ├── use-cases/
+│       └── infrastructure/
+├──-----encryption/             # Service transversal
+│       ├── infrastructure/
+│       └── ports/
+├──-----contexts.module.ts       # Module principal regroupant tous les contextes
+├── main.ts
+└── root.module.ts
+```
+
+### Avantages de cette nouvelle structure
+
+- **Navigation simplifiée** : Chaque contexte regroupe ses 3 couches au même niveau
+- **Cohésion renforcée** : Toutes les préoccupations d'un contexte sont proches géographiquement
+- **Séparation claire** : `/auth` et `/orm` restent à la racine car transversaux
+- **Évolutivité** : Facile d'ajouter de nouveaux contextes via le template `/examples`
+- **Élimination de la navigation complexe** : Plus besoin de naviguer entre `/contexts/<entity>/`, `/application/<entity>/`, `/presentation/<entity>/`
+
+---
+
+## 📁 Structure détaillée par contexte
+
+Chaque contexte métier (user, project, profile, etc.) suit cette organisation :
+
+### `src/<context_name>/domain/`
+
+Contient la représentation métier pure, indépendante de NestJS ou de toute autre lib/framework.
+
+#### Structure du domaine :
+```
+domain/
+├── user.entity.ts
+├── user.entity.spec.ts      # Tests unitaires de l'entité
+├── username.vo.ts
+├── email.vo.ts
+└── user.factory.ts          # Optionnel selon le contexte
+```
+
+#### Exemple concret d'entité (User) :
+
+```typescript
+// user.entity.ts
+import { Username } from './username.vo';
+import { Email } from './email.vo';
+import { Result } from '@libs/result';
+
+export class User {
+  private readonly id: string;
+  private username: Username;
+  private email: Email;
+  private readonly createdAt?: Date;
+  private readonly updatedAt?: Date;
+
+  private constructor(props: {
+    id: string;
+    username: Username;
+    email: Email;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }) {
+    this.id = props.id;
+    this.username = props.username;
+    this.email = props.email;
+    this.createdAt = props.createdAt ?? new Date();
+    this.updatedAt = props.updatedAt ?? new Date();
+  }
+
+  public static create(props: {
+    id: string;
+    username: string;
+    email: string;
+  }): Result<User, { id?: string; username?: string; email?: string } | string> {
+    const validateVO = this.validate(props);
+    if (!validateVO.success) {
+      return Result.fail(validateVO.error);
+    }
+    return Result.ok(
+      new User({
+        id: props.id,
+        username: validateVO.value.username,
+        email: validateVO.value.email,
+      }),
+    );
+  }
+
+  public static reconstitute(props: {
+    id: string;
+    username: string;
+    email: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }): Result<User, { username?: string; email?: string } | string> {
+    const validUser = this.validate(props);
+    if (!validUser.success) {
+      return Result.fail(validUser.error);
+    }
+    return Result.ok(
+      new User({
+        id: validUser.value.id,
+        username: validUser.value.username,
+        email: validUser.value.email,
+        createdAt: props.createdAt,
+        updatedAt: props.updatedAt,
+      }),
+    );
+  }
+
+  private static validate(props: {
+    id: string;
+    username: string;
+    email: string;
+  }): Result<
+    { id: string; username: Username; email: Email },
+    { id?: string; username?: string; email?: string } | string
+  > {
+    const error: { id?: string; username?: string; email?: string } = {};
+    if (!props.id) error.id = 'User id is required';
+    
+    const usernameVo = Username.create(props.username);
+    const emailVo = Email.create(props.email);
+    
+    if (!emailVo.success) error.email = emailVo.error;
+    if (!usernameVo.success) error.username = usernameVo.error;
+    if (!usernameVo.success || !emailVo.success) return Result.fail(error);
+    
+    return Result.ok({
+      id: props.id,
+      username: usernameVo.value,
+      email: emailVo.value,
+    });
+  }
+
+  public changeUsername(newUsername: string): Result<void, { username: string }> {
+    const usernameVo = Username.create(newUsername);
+    if (!usernameVo.success) return Result.fail({ username: usernameVo.error });
+    this.username = usernameVo.value;
+    return Result.ok(undefined);
+  }
+
+  public toPrimitive() {
+    return {
+      id: this.id,
+      username: this.username.getUsername(),
+      email: this.email.getEmail(),
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+}
+```
+
+#### Exemple de Value Object :
+
+```typescript
+// username.vo.ts
+import { Result } from '@libs/result';
+
+export class Username {
+  private constructor(private readonly value: string) {}
+
+  public static create(value: string): Result<Username, string> {
+    if (!value || value.trim() === '') {
+      return Result.fail('Username is required');
+    }
+    if (value.length < 3) {
+      return Result.fail('Username must be at least 3 characters');
+    }
+    if (value.length > 50) {
+      return Result.fail('Username must be less than 50 characters');
+    }
+    return Result.ok(new Username(value.trim()));
+  }
+
+  public getUsername(): string {
+    return this.value;
+  }
+}
+```
+
+#### Tests unitaires des entités (TDD) :
+
+```typescript
+// user.entity.spec.ts
+describe('Domain User Entity', () => {
+  describe('create', () => {
+    it('should create a user with valid properties', () => {
+      const userResult = User.create({
+        id: '123',
+        username: 'johndoe',
+        email: 'john@example.com'
+      });
+      
+      expect(userResult.success).toBe(true);
+      if (userResult.success) {
+        expect(userResult.value).toBeInstanceOf(User);
+      }
+    });
+
+    it.each([
+      ['id', '', { id: 'User id is required' }],
+      ['username', '', { username: 'Username is required' }],
+      ['username', 'ab', { username: 'Username must be at least 3 characters' }],
+      ['email', 'invalid-email', { email: 'Invalid email format' }],
+    ])('should fail validation if %s is invalid', (field, value, expectedError) => {
+      const props = { id: '123', username: 'johndoe', email: 'john@example.com' };
+      props[field as keyof typeof props] = value as any;
+      
+      const userResult = User.create(props);
+      expect(userResult.success).toBe(false);
+      if (!userResult.success) {
+        expect(userResult.error).toEqual(expectedError);
+      }
+    });
+  });
+
+  describe('reconstitute', () => {
+    it('should reconstitute user from persistence', () => {
+      const userResult = User.reconstitute({
+        id: '123',
+        username: 'johndoe',
+        email: 'john@example.com',
+        createdAt: new Date('2024-01-01'),
+        updatedAt: new Date('2024-01-02'),
+      });
+      
+      expect(userResult.success).toBe(true);
+    });
+  });
+});
+```
+
+**✳️ Convention de nommage VO :**
+
+- Fichier : `xxx.vo.ts`
+- Classe : `Email`, `Username`, etc. (pas de suffixe "Vo")
+
+**✳️ Principes des entités :**
+
+- **Constructeur privé** : Force l'utilisation des méthodes statiques `create()` et `reconstitute()`
+- **Validation centralisée** : Toute la logique de validation dans la méthode `validate()`
+- **Result Pattern** : Retour explicite de succès/échec avec erreurs typées
+- **Immutabilité** : Propriétés privates avec méthodes métier pour les modifications
+- **toPrimitive()** : Méthode pour extraire l'état pour la persistance ou les DTOs
+
+### `src/<context_name>/use-cases/`
+
+Contient la logique métier applicative (use cases qui sont soit query, soit command) et les abstractions nécessaires pour exécuter ces cas d'usage (ports).
+
+#### Structure des use-cases :
+
+```
+use-cases/
+├── commands/
+│   ├── create-user.command.ts
+│   └── user.commands.ts
+├── queries/
+│   ├── find-user-by-id.query.ts
+│   └── user.queries.ts
+├── ports/
+│   └── user.repository.port.ts
+└── user.use-cases.ts
+```
+
+#### Exemple de Command :
+
+```typescript
+// create-user.command.ts
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { Inject } from '@nestjs/common';
+import { Result } from '@libs/result';
+import { USER_REPOSITORY_PORT, UserRepositoryPort } from '../ports/user.repository.port';
+
+export class CreateUserCommand implements ICommand {
+  constructor(
+    public readonly username: string,
+    public readonly email: string,
+  ) {}
+}
+
+@CommandHandler(CreateUserCommand)
+export class CreateUserCommandHandler implements ICommandHandler<CreateUserCommand> {
+  constructor(
+    @Inject(USER_REPOSITORY_PORT)
+    private readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(command: CreateUserCommand): Promise<Result<User, string>> {
+    // logique métier
+  }
+}
+```
+
+#### Exemple de Query :
+
+```typescript
+// find-user-by-id.query.ts
+import { IQuery, IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { Inject } from "@nestjs/common";
+import { USER_REPOSITORY_PORT, UserRepositoryPort } from "../ports/user.repository.port";
+
+export class FindUserByIdQuery implements IQuery {
+  constructor(public readonly id: string) {}
+}
+
+@QueryHandler(FindUserByIdQuery)
+export class FindUserByIdQueryHandler implements IQueryHandler<FindUserByIdQuery> {
+  constructor(
+    @Inject(USER_REPOSITORY_PORT)
+    private readonly userRepo: UserRepositoryPort,
+  ) {}
+
+  async execute(query: FindUserByIdQuery): Promise<Result<User, string>> {
+    return this.userRepo.findById(query.id);
+  }
+}
+```
+
+#### Exemple de Port :
+
+```typescript
+// user.repository.port.ts
+import { User } from "../domain/user.entity";
+import { Result } from "@libs/result";
+
+export const USER_REPOSITORY_PORT = Symbol("UserRepository");
+
+export interface UserRepositoryPort {
+  save(user: User): Promise<Result<User, string>>;
+  findById(id: string): Promise<Result<User, string>>;
+  findByUsername(username: string): Promise<Result<User, string>>;
+  findByEmail(email: string): Promise<Result<User, string>>;
+}
+```
+
+#### Container des Use Cases :
+
+```typescript
+// user.use-cases.ts
+import { userQueriesContainer } from "./queries/user.queries";
+import { userCommandsContainer } from "./commands/user.commands";
+
+export const userUseCases = [
+  ...userQueriesContainer,
+  ...userCommandsContainer,
+];
+```
+
+#### Tests des Use Cases (TDD) :
+
+```typescript
+// create-project.command.spec.ts
+describe('CreateProjectCommandHandler', () => {
+  let handler: CreateProjectCommandHandler;
+  let projectRepo: ProjectRepositoryPort;
+  let techStackRepo: TechStackRepositoryPort;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        CreateProjectCommandHandler,
+        {
+          provide: PROJECT_REPOSITORY_PORT,
+          useClass: InMemoryProjectRepository,
+        },
+        {
+          provide: TECHSTACK_REPOSITORY_PORT,
+          useClass: InMemoryTechStackRepository,
+        },
+      ],
+    }).compile();
+
+    handler = module.get<CreateProjectCommandHandler>(CreateProjectCommandHandler);
+    projectRepo = module.get<ProjectRepositoryPort>(PROJECT_REPOSITORY_PORT);
+    techStackRepo = module.get<TechStackRepositoryPort>(TECHSTACK_REPOSITORY_PORT);
+  });
+
+  describe('Success', () => {
+    it('should create and save a project successfully', async () => {
+      const props: ProjectPrimitive = {
+        ownerId: '1',
+        title: 'Test Project',
+        description: 'Test Description',
+        difficulty: 'easy',
+        githubLink: 'https://github.com/test',
+        techStacks: [
+          { id: '1', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' }
+        ],
+        projectRoles: [
+          { title: 'Developer', description: 'Frontend developer role' }
+        ],
+        projectMembers: [],
+      };
+
+      await setupTechStacksInMemory(techStackRepo);
+      const command = new CreateProjectCommand(props);
+      const result = await handler.execute(command);
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.value).toBeInstanceOf(Project);
+      }
+    });
+  });
+
+  describe('Failures', () => {
+    it('should return error when tech stacks not found', async () => {
+      const props = getProjectProps({
+        techStacks: [
+          { id: '999', name: 'nonexistent', iconUrl: 'https://test.com' }
+        ],
+      });
+
+      const command = new CreateProjectCommand(props);
+      const result = await handler.execute(command);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toBe('Tech stacks not found');
+      }
+    });
+
+    it('should return error when project title already exists', async () => {
+      // Arrange - Create existing project
+      const existingProject = Project.create(getProjectProps({ title: 'Existing' }));
+      await projectRepo.create(existingProject.value);
+
+      // Act - Try to create project with same title
+      const command = new CreateProjectCommand(getProjectProps({ title: 'Existing' }));
+      const result = await handler.execute(command);
+
+      // Assert
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error).toBe('Project with this title already exists');
+      }
+    });
+  });
+});
+```
+
+**✳️ Principes des tests TDD :**
+
+- **Arrange-Act-Assert** : Structure claire des tests
+- **Test paramétrés** : `it.each()` pour tester plusieurs cas de validation
+- **Mocks en mémoire** : Implémentations en mémoire des repositories pour les tests
+- **Setup/Teardown** : Création et nettoyage des données de test
+- **Tests des échecs** : Autant d'importance que les tests de succès
+- **Isolation** : Chaque test est indépendant
+
+### `src/<context_name>/infrastructure/`
+
+Contient les implémentations concrètes et les contrôleurs (anciennement dans `/presentation`).
+
+```
+infrastructure/
+├── controllers/
+│   └── user.controller.ts
+├── repositories/
+│   └── prisma.user.repository.ts
+└── user.infrastructure.ts
+```
+
+#### Exemple de Contrôleur :
+
+```typescript
+// controllers/user.controller.ts
+import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CreateUserCommand } from '../use-cases/commands/create-user.command';
+
+@Controller('users')
+export class UserController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Post()
+  async createUser(@Body() dto: CreateUserDto) {
+    const command = new CreateUserCommand(dto.username, dto.email);
+    const result = await this.commandBus.execute(command);
+    
+    if (result.isFailure) {
+      throw new BadRequestException(result.error);
+    }
+    
+    return result.value;
+  }
+}
+```
+
+#### Module d'Infrastructure :
+
+```typescript
+// user.infrastructure.ts
+import { Module } from '@nestjs/common';
+import { userUseCases } from '../use-cases/user.use-cases';
+import { UserController } from './controllers/user.controller';
+import { PrismaUserRepository } from './repositories/prisma.user.repository';
+import { USER_REPOSITORY_PORT } from '../use-cases/ports/user.repository.port';
+import { PrismaService } from '@/orm/prisma/prisma.service';
+
+@Module({
+  imports: [],
+  providers: [
+    PrismaService,
+    {
+      provide: USER_REPOSITORY_PORT,
+      useClass: PrismaUserRepository,
+    },
+    ...userUseCases,
+  ],
+  controllers: [UserController],
+  exports: [...userUseCases],
+})
+export class UserInfrastructure {}
+```
+
+---
+
+## 📁 Services transversaux
+
+### `src/auth/`
+
+Service transversal d'authentification (SuperTokens) utilisé par tous les contextes.
+
+### `src/orm/`
+
+Configuration ORM (Prisma) et migrations, utilisé par tous les contextes.
+
+### `src/libs/`
+
+Contient tout ce qui est réutilisable globalement (anciennement `/shared`) :
+
+- `result.ts` : Implémentation du **Result Pattern**
+- `test-utils.ts` : Utilitaires de test
+- `time/` : Services de gestion du temps
+
+### `src/examples/`
+
+Template pour créer de nouveaux contextes en respectant les conventions :
+
+```
+examples/
+├── domain/
+│   ├── example.entity.ts
+│   └── example.vo.ts
+├── use-cases/
+│   ├── commands/
+│   ├── queries/
+│   ├── ports/
+│   └── example.use-cases.ts
+└── infrastructure/
+    ├── controllers/
+    ├── repositories/
+    └── example.infrastructure.ts
+```
+
+---
+
+## 🔗 Module principal
+
+### `src/contexts.module.ts`
+
+Module principal qui remplace le système de wiring actuel et importe tous les contextes :
+
+```typescript
+// contexts.module.ts
+import { Module } from '@nestjs/common';
+import { UserInfrastructure } from './user/infrastructure/user.infrastructure';
+import { ProjectInfrastructure } from './project/infrastructure/project.infrastructure';
+import { ProfileInfrastructure } from './profile/infrastructure/profile.infrastructure';
+import { ProjectRoleInfrastructure } from './project-role/infrastructure/project-role.infrastructure';
+import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
+import { TechStackInfrastructure } from './techstack/infrastructure/techstack.infrastructure';
+
+@Module({
+  imports: [
+    UserInfrastructure,
+    ProjectInfrastructure,
+    ProfileInfrastructure,
+    ProjectRoleInfrastructure,
+    GithubInfrastructure,
+    TechStackInfrastructure,
+  ],
+})
+export class ContextsModule {}
+```
+
+---
+
+## 🔁 Flux de traitement typique
+
+1. Le contrôleur (dans `/infrastructure/controllers/`) reçoit une requête HTTP
+2. Il utilise le `CommandBus` ou `QueryBus` pour déclencher l'action
+3. Le handler CQRS (dans `/use-cases/`) intercepte la commande/query
+4. Le Use Case applique la logique métier et utilise les ports
+5. L'implémentation concrète du port (dans `/infrastructure/repositories/`) exécute l'action
+6. Un objet `Result` est retourné au contrôleur, qui le transforme en réponse HTTP
+
+---
+
+## 🎯 Avantages de cette nouvelle architecture
+
+- **Navigation simplifiée** : Toutes les préoccupations d'un contexte sont regroupées
+- **Cohésion renforcée** : Les développeurs peuvent travailler sur un contexte sans naviguer entre plusieurs dossiers éloignés
+- **Maintenabilité** : Ajout/suppression de contextes plus facile
+- **Onboarding** : Plus facile pour de nouveaux développeurs de comprendre la structure
+- **Respect des principes** : Conservation de la Clean Architecture et du découplage
+- **Template** : Le dossier `/examples` facilite la création de nouveaux contextes en respectant les conventions
+
+---
+
+## 🧪 Approche TDD (Test-Driven Development)
+
+### Stratégie de test par couche
+
+#### 1. Tests unitaires du domaine
+- **Entités** : Validation des règles métier, constructeurs, méthodes métier
+- **Value Objects** : Validation des contraintes, immutabilité
+- **Factories** : Logique de création d'objets complexes
+
+```typescript
+// Exemple : project.entity.spec.ts
+describe('Project Entity', () => {
+  it.each([
+    ['title', '', { title: 'Title is required' }],
+    ['title', 'a'.repeat(101), { title: 'Title must be less than 100 characters' }],
+    ['description', '', { description: 'Description is required' }],
+    ['difficulty', undefined, { difficulty: 'Difficulty is required' }],
+    ['techStacks', [], { techStacks: 'Tech stacks are required' }],
+  ])('should fail validation if %s is invalid', (field, value, expectedError) => {
+    const props = getValidProjectProps({ [field]: value });
+    const result = Project.create(props);
+    
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toEqual(expectedError);
+    }
+  });
+});
+```
+
+#### 2. Tests d'intégration des Use Cases
+- **Commands** : Logique métier applicative, interactions avec les ports
+- **Queries** : Récupération de données, filtrage, pagination
+- **Handlers** : Orchestration des appels, gestion d'erreurs
+
+```typescript
+// Exemple : create-project.command.spec.ts
+describe('CreateProjectCommandHandler', () => {
+  beforeEach(async () => {
+    // Setup du module de test avec mocks
+    const module = await Test.createTestingModule({
+      providers: [
+        CreateProjectCommandHandler,
+        { provide: PROJECT_REPOSITORY_PORT, useClass: InMemoryProjectRepository },
+        { provide: TECHSTACK_REPOSITORY_PORT, useClass: InMemoryTechStackRepository },
+      ],
+    }).compile();
+  });
+  
+  it('should create project when all dependencies are valid', async () => {
+    // Arrange
+    await setupValidTechStacks();
+    const command = new CreateProjectCommand(validProjectData);
+    
+    // Act
+    const result = await handler.execute(command);
+    
+    // Assert
+    expect(result.success).toBe(true);
+    expect(result.value).toBeInstanceOf(Project);
+  });
+});
+```
+
+#### 3. Tests end-to-end des contrôleurs
+- **Endpoints** : Requêtes HTTP, validation des DTOs, réponses
+- **Authentification** : Vérification des permissions, tokens
+- **Sérialisation** : Format des réponses JSON
+
+### Conventions et bonnes pratiques TDD
+
+#### Nommage des tests
+- **Describe** : Nom de la classe/méthode testée
+- **It** : Comportement attendu en langage naturel
+- **Contexte** : `describe('when user is not owner')` pour les contextes spécifiques
+
+#### Structure AAA (Arrange-Act-Assert)
+```typescript
+it('should update project when user is owner', async () => {
+  // Arrange - Préparer les données
+  const existingProject = await createTestProject({ ownerId: 'user123' });
+  const command = new UpdateProjectCommand({ 
+    id: existingProject.id, 
+    userId: 'user123',
+    title: 'Updated Title' 
+  });
+  
+  // Act - Exécuter l'action
+  const result = await handler.execute(command);
+  
+  // Assert - Vérifier le résultat
+  expect(result.success).toBe(true);
+  if (result.success) {
+    expect(result.value.toPrimitive().title).toBe('Updated Title');
+  }
+});
+```
+
+#### Helpers et builders de test
+```typescript
+// Builders pour créer des objets de test valides
+const getValidProjectProps = (overrides = {}) => ({
+  title: 'Default Project',
+  description: 'Default description',
+  difficulty: 'easy',
+  ownerId: 'user123',
+  techStacks: [{ id: '1', name: 'React', iconUrl: 'react.svg' }],
+  projectRoles: [{ title: 'Developer', description: 'Dev role' }],
+  ...overrides,
+});
+
+// Setup helpers pour les dépendances
+const setupValidTechStacks = async () => {
+  const techStack = TechStack.create({ name: 'React', iconUrl: 'react.svg' });
+  await techStackRepo.create(techStack.value);
+};
+```
+
+#### Implémentations en mémoire
+```typescript
+// InMemoryProjectRepository pour les tests
+export class InMemoryProjectRepository implements ProjectRepositoryPort {
+  private projects: Map<string, Project> = new Map();
+  
+  async create(project: Project): Promise<Result<Project, string>> {
+    const id = crypto.randomUUID();
+    const projectWithId = Project.reconstitute({
+      ...project.toPrimitive(),
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    
+    if (projectWithId.success) {
+      this.projects.set(id, projectWithId.value);
+      return Result.ok(projectWithId.value);
+    }
+    
+    return Result.fail('Failed to create project');
+  }
+  
+  async findById(id: string): Promise<Result<Project, string>> {
+    const project = this.projects.get(id);
+    return project 
+      ? Result.ok(project) 
+      : Result.fail('Project not found');
+  }
+  
+  // ... autres méthodes
+}
+```
+
+### Outils de test utilisés
+
+- **Jest** : Framework de test principal
+- **@nestjs/testing** : Module de test pour NestJS avec injection de dépendances
+- **Test paramétrés** : `it.each()` pour éviter la duplication de code
+- **Mocks** : Implémentations en mémoire des repositories et services externes
+- **Clock Mocking** : Pour tester les comportements liés au temps (`MockClock`)
+
+- **@nestjs/testing** : Module de test pour NestJS avec injection de dépendances
+- **Test paramétrés** : `it.each()` pour éviter la duplication de code
+- **Mocks** : Implémentations en mémoire des repositories et services externes
+- **Clock Mocking** : Pour tester les comportements liés au temps (`MockClock`)
+
+- **@nestjs/testing** : Module de test pour NestJS avec injection de dépendances
+- **Test paramétrés** : `it.each()` pour éviter la duplication de code
+- **Mocks** : Implémentations en mémoire des repositories et services externes
+- **Clock Mocking** : Pour tester les comportements liés au temps (`MockClock`)
+## 📊 Statut de la migration (Dernière MAJ: [DATE])
+
+### ✅ **Terminé**
+- Migration `shared/` → `libs/` 
+- Correction de tous les imports (`@shared/*` → `@/libs/*`)
+- Structure contextes conforme à l'architecture
+- Module principal `contexts.module.ts` fonctionnel
+
+### ⚠️ **Dossiers obsolètes à nettoyer**
+- `src/application/` : Contient encore des DTOs et logique obsolète  
+- `src/infrastructures/` : Contient des services API et wiring à migrer
+
+### 🎯 **Prochaines étapes**
+- Supprimer `/application` après migration complète des DTOs vers les contextes
+- Supprimer `/infrastructures` après migration des services vers les contextes appropriés
+- Nettoyer `/github-temp` (dossier temporaire)

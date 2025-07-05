@@ -1,4 +1,4 @@
-import { TechStackDto } from '@/presentation/project/dto/TechStackDto.request';
+import { TechStackDto } from '@/contexts/project/infrastructure/controllers/dto/TechStackDto.request';
 
 export class CreateTeamMemberCommand {
   constructor(

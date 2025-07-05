@@ -1,0 +1,369 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Project Domain Layer Rules
+
+## Entity Structure
+- **Project** est l'agrégat racine qui coordonne ProjectRoles et TechStacks
+- Constructeur privé + méthodes statiques `create()` et `reconstitute()`
+- Pattern unifié avec type `ProjectData` pour création/reconstitution/serialization
+
+## Value Objects (6 VOs)
+```typescript
+// Core VOs
+Title.create(value: string)           // 3-100 chars, pas vide
+Description.create(value: string)     // 10-1000 chars, pas vide  
+ShortDescription.create(value: string) // 10-200 chars, pas vide
+
+// Difficulty VOs (legacy - à nettoyer)
+Difficulty.create(value: string)           // 'easy' | 'medium' | 'hard'
+ProjectDifficulty.create(value: string)    // Même logique, doublon
+```
+
+## Validation Pattern
+```typescript
+// Pattern standard pour validation multiple VOs
+const voValidationResults = {
+  title: Title.create(props.title),
+  description: Description.create(props.description),
+  shortDescription: ShortDescription.create(props.shortDescription),
+  techStacks: TechStack.reconstituteMany(props.techStacks),
+};
+
+// Extraction des erreurs
+Object.entries(voValidationResults).forEach(([key, result]) => {
+  if (!result.success)
+    validationErrors[key] = result.error;
+});
+```
+
+## Business Rules
+- **TechStacks** : Au moins 1 TechStack obligatoire
+- **Owner permissions** : Seul le owner peut modifier les ProjectRoles
+- **ProjectRole creation** : Passer par `project.createProjectRole()` pour cohérence
+- **ExternalLinks** : Type + URL, GitHub auto-ajouté lors de création repo
+
+## Entity Methods
+```typescript
+// Factory methods
+static create(props: ProjectData): Result<Project, ValidationErrors>
+static reconstitute(props: ProjectData): Result<Project, ValidationErrors>
+
+// Business methods  
+createProjectRole(props): Result<ProjectRole, string>
+addProjectRole(role: ProjectRole): Result<void, string>
+addProjectRoles(roles: ProjectRole[]): Result<void, string>
+addExternalLink(link: {type: string, url: string}): Result<void, string>
+
+// Query methods
+hasOwnerId(userId: string): boolean
+canUserModifyRoles(userId: string): boolean
+```
+
+## Testing Patterns
+- Tests paramétrés avec `it.each()` pour tous les VOs
+- Builder pattern : `getValidProjectProps(overrides = {})`
+- Validation atomique : échec d'un VO = échec total
+- Immutabilité : tester que les getters retournent des copies
+
+## Error Types
+```typescript
+export type ProjectValidationErrors = {
+  ownerId?: string;
+  title?: string; 
+  description?: string;
+  shortDescription?: string;
+  techStacks?: TechStackValidationErrors | string;
+  projectRoles?: ProjectRoleValidationErrors | string;
+};
+```
+```
+
+## 🏭 **2. Project Infrastructure Rules**
+
+```markdown
+# Project Infrastructure Layer Rules
+
+## Repository Pattern
+- **PrismaProjectRepository** implémente `ProjectRepositoryPort`
+- **Mapper** sépare la transformation Prisma ↔ Domain
+- **Relations Prisma** : techStacks, projectRoles, teamMembers via foreign keys
+
+## Controller Structure
+```typescript
+@Controller('projects')
+export class ProjectController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+  
+  // Pattern standard : DTO → Command → Result → Response
+  @Post()
+  async createProject(@Body() dto: CreateProjectDtoRequest, @Session() session) {
+    const command = new CreateProjectCommand({...dto, ownerId: session.getUserId()});
+    const result = await this.commandBus.execute(command);
+    
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    
+    return CreateProjectResponseDto.toResponse(result.value);
+  }
+}
+```
+
+## DTOs & Validation
+```typescript
+// Request DTOs avec class-validator
+export class CreateProjectDtoRequest {
+  @IsString() @IsNotEmpty()
+  title: string;
+  
+  @IsString() @IsNotEmpty() 
+  description: string;
+  
+  @IsArray()
+  techStacks: { id: string; name: string; iconUrl: string }[];
+  
+  @IsArray()
+  projectRoles: {
+    title: string;
+    description: string; 
+    isFilled: boolean;
+    techStacks: { id: string; name: string; iconUrl: string }[];
+  }[];
+}
+
+// Response DTOs via static methods
+export class CreateProjectResponseDto {
+  public static toResponse(project: Project): ProjectData {
+    return project.toPrimitive();
+  }
+}
+```
+
+## Prisma Mapping Patterns
+```typescript
+// PrismaProjectMapper.toDomain()
+export class PrismaProjectMapper {
+  static toDomain(prismaData: PrismaProjectWithRelations): Project {
+    // 1. Reconstituer les TechStacks
+    const techStacks = prismaData.techStacks.map(ts => 
+      TechStack.reconstitute({id: ts.id, name: ts.name, iconUrl: ts.iconUrl})
+    );
+    
+    // 2. Reconstituer les ProjectRoles
+    const projectRoles = prismaData.projectRoles.map(pr =>
+      ProjectRole.reconstitute({...pr, projectId: prismaData.id})
+    );
+    
+    // 3. Reconstituer le Project
+    return Project.reconstitute({
+      id: prismaData.id,
+      ownerId: prismaData.ownerId,
+      // ... autres champs
+      techStacks: techStacks.map(ts => ts.toPrimitive()),
+      projectRoles: projectRoles.map(pr => pr.toPrimitive()),
+    });
+  }
+  
+  static toPrisma(project: Project) {
+    const primitive = project.toPrimitive();
+    return {
+      id: primitive.id,
+      ownerId: primitive.ownerId,
+      title: primitive.title,
+      // ... séparation des relations
+    };
+  }
+}
+```
+
+## Infrastructure Module
+```typescript
+@Module({
+  providers: [
+    PrismaService,
+    {provide: PROJECT_REPOSITORY_PORT, useClass: PrismaProjectRepository},
+    {provide: PROJECT_ROLE_REPOSITORY_PORT, useClass: PrismaProjectRoleRepository},
+    {provide: TECHSTACK_REPOSITORY_PORT, useClass: PrismaTechStackRepository},
+    {provide: GITHUB_REPOSITORY_PORT, useClass: GithubRepository},
+    ...projectUseCases,
+  ],
+  controllers: [ProjectController],
+  exports: [...projectUseCases],
+})
+export class ProjectInfrastructure {}
+```
+
+## Error Handling
+- **Domain errors** → `BadRequestException` (400)
+- **Not found** → `NotFoundException` (404) 
+- **Unauthorized** → Check `session.getUserId()` vs `project.ownerId`
+- **Prisma errors** → Log + convert to generic message
+
+## Dependencies
+- **Required ports** : PROJECT_REPOSITORY_PORT, TECHSTACK_REPOSITORY_PORT, PROJECT_ROLE_REPOSITORY_PORT, GITHUB_REPOSITORY_PORT
+- **External services** : GitHub API via Octokit, SuperTokens pour auth
+- **Database** : PostgreSQL via Prisma avec relations many-to-many
+```
+
+## ⚙️ **3. Project Use Cases Rules**
+
+```markdown
+# Project Use Cases Layer Rules
+
+## Command Pattern (CreateProjectCommand)
+```typescript
+export class CreateProjectCommand implements ICommand {
+  constructor(public readonly props: {
+    ownerId: string;
+    title: string; 
+    shortDescription: string;
+    description: string;
+    techStacks: {id: string, name: string, iconUrl: string}[];
+    externalLinks?: {type: string, url: string}[];
+    projectRoles: {
+      title: string;
+      description: string;
+      isFilled: boolean; 
+      techStacks: {id: string, name: string, iconUrl: string}[];
+    }[];
+    octokit: Octokit; // GitHub integration
+  }) {}
+}
+```
+
+## Orchestration Flow (CreateProjectCommandHandler)
+```typescript
+async execute(command: CreateProjectCommand): Promise<Result<Project, string>> {
+  // 1. Business validation
+  const existingProject = await this.projectRepo.findByTitle(command.props.title);
+  if (existingProject.success) {
+    return Result.fail('Project with same title already exists');
+  }
+  
+  // 2. TechStack validation (projet + rôles)
+  const allTechStackIds = this.extractAllTechStackIds(command.props);
+  const techStacksResult = await this.techStackRepo.findByIds(allTechStackIds);
+  if (!techStacksResult.success || techStacksResult.value.length !== allTechStackIds.length) {
+    return Result.fail('Tech stacks not found');
+  }
+  
+  // 3. Create & persist Project
+  const project = Project.create({...command.props, techStacks: validatedTechStacks});
+  const savedProject = await this.projectRepo.create(project.value);
+  
+  // 4. GitHub repository creation (non-blocking)
+  const githubRepo = await this.githubRepository.createGithubRepository(
+    {title: savedProject.value.title, description: savedProject.value.description},
+    command.props.octokit
+  );
+  
+  if (githubRepo.success) {
+    savedProject.value.addExternalLink({type: 'github', url: githubRepo.value.html_url});
+    await this.projectRepo.update(savedProject.value.id, savedProject.value);
+  }
+  
+  // 5. Create ProjectRoles (atomic)
+  if (command.props.projectRoles.length > 0) {
+    const projectRolesResults = await this.createProjectRoles(savedProject.value, command.props.projectRoles);
+    savedProject.value.addProjectRoles(projectRolesResults);
+  }
+  
+  return Result.ok(savedProject.value);
+}
+```
+
+## Query Pattern
+```typescript
+// FindProjectByIdQuery
+export class FindProjectByIdQuery implements IQuery {
+  constructor(public readonly id: string) {}
+}
+
+@QueryHandler(FindProjectByIdQuery)
+export class FindProjectByIdHandler implements IQueryHandler<FindProjectByIdQuery> {
+  async execute(query: FindProjectByIdQuery): Promise<Result<Project, string>> {
+    return await this.projectRepo.findById(query.id);
+  }
+}
+```
+
+## Port Definitions
+```typescript
+export const PROJECT_REPOSITORY_PORT = Symbol('ProjectRepository');
+export interface ProjectRepositoryPort {
+  create(project: Project): Promise<Result<Project, string>>;
+  findById(id: string): Promise<Result<Project, string>>;
+  findByTitle(title: string): Promise<Result<Project, string>>;
+  update(id: string, project: Project): Promise<Result<Project, string>>;
+  delete(id: string): Promise<Result<boolean, string>>;
+}
+```
+
+## Error Handling Strategy
+- **Validation errors** : Return Result.fail() with specific message
+- **GitHub API failure** : Log but don't fail project creation
+- **TechStack not found** : Fail fast - projects need valid stacks
+- **ProjectRole creation failure** : Fail entire operation (atomicity)
+
+## Testing Strategy
+```typescript
+describe('CreateProjectCommandHandler', () => {
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        CreateProjectCommandHandler,
+        {provide: PROJECT_REPOSITORY_PORT, useClass: InMemoryProjectRepository},
+        {provide: TECHSTACK_REPOSITORY_PORT, useClass: InMemoryTechStackRepository},
+        {provide: PROJECT_ROLE_REPOSITORY_PORT, useClass: InMemoryProjectRoleRepository},
+        {provide: GITHUB_REPOSITORY_PORT, useClass: MockGithubRepository},
+      ],
+    }).compile();
+  });
+  
+  // Test success path
+  it('should create project with GitHub repo and roles', async () => {
+    // Arrange
+    await setupValidTechStacks();
+    const command = new CreateProjectCommand(getValidProjectProps());
+    
+    // Act  
+    const result = await handler.execute(command);
+    
+    // Assert
+    expect(result.success).toBe(true);
+    expect(result.value.toPrimitive().externalLinks).toContainEqual({
+      type: 'github', 
+      url: expect.stringContaining('github.com')
+    });
+  });
+  
+  // Test failure paths
+  it('should fail if title already exists', async () => {
+    // Arrange existing project + command with same title
+    // Act & Assert failure
+  });
+}
+```
+
+## Dependencies & Injection
+- **Required repositories** : ProjectRepository, TechStackRepository, ProjectRoleRepository, GithubRepository
+- **External APIs** : GitHub via Octokit (injected dans command props)
+- **Pattern** : Constructor injection via @Inject() avec les PORT symbols
+
+## Use Case Container
+```typescript
+// project.use-cases.ts
+export const projectUseCases = [
+  ...projectQueriesContainer,    // [FindProjectByIdHandler, GetProjectsHandler]
+  ...projectCommandsContainer,   // [CreateProjectCommandHandler]
+];
+```
+```
+
+Ces 3 cursor rules couvrent exhaustivement le contexte Project avec des patterns réutilisables pour les autres contextes ! 🎯
