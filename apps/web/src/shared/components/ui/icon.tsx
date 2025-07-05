@@ -26,6 +26,8 @@ const iconSizes: Record<IconSize, string> = {
 // List of the available icons based on the existing files
 export type IconName =
   | "github"
+  | "twitter"
+  | "discord"
   | "last-commit"
   | "star"
   | "fork"
@@ -37,10 +39,9 @@ export type IconName =
   | "arrow-up-right"
   | "plus"
   | "cross"
+  | "download"
   | "lock"
   | "link"
-  | "twitter"
-  | "discord"
   | "linkedin"
   | "user"
   | "project"
@@ -61,6 +62,30 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/github.svg",
     filled: "/icons/github.svg",
     outline: "/icons/github.svg",
+  },
+  linkedin: {
+    default: "/icons/linkedin.svg",
+    gray: "/icons/linkedin-gray.svg",
+    white: "/icons/linkedin-white.svg",
+    black: "/icons/linkedin.svg",
+    filled: "/icons/linkedin.svg",
+    outline: "/icons/linkedin.svg",
+  },
+  twitter: {
+    default: "/icons/twitter.svg",
+    gray: "/icons/twitter-gray.svg",
+    white: "/icons/twitter.svg",
+    black: "/icons/x.svg",
+    filled: "/icons/twitter.svg",
+    outline: "/icons/twitter.svg",
+  },
+  discord: {
+    default: "/icons/discord.svg",
+    gray: "/icons/discord-gray.svg",
+    white: "/icons/discord-white.svg",
+    black: "/icons/discord.svg",
+    filled: "/icons/discord.svg",
+    outline: "/icons/discord.svg",
   },
   star: {
     default: "/icons/empty-star.svg",
@@ -142,6 +167,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/cross.svg",
     outline: "/icons/cross.svg",
   },
+  download: {
+    default: "/icons/download.svg",
+    gray: "/icons/download-gray.svg",
+    white: "/icons/download-white.svg",
+    black: "/icons/download.svg",
+    filled: "/icons/download.svg",
+    outline: "/icons/download.svg",
+  },
   lock: {
     default: "/icons/lock.svg",
     gray: "/icons/lock.svg",
@@ -158,30 +191,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/link.svg",
     outline: "/icons/link.svg",
   },
-  twitter: {
-    default: "/icons/twitter.svg",
-    gray: "/icons/twitter-gray.svg",
-    white: "/icons/twitter.svg",
-    black: "/icons/x.svg",
-    filled: "/icons/twitter.svg",
-    outline: "/icons/twitter.svg",
-  },
-  discord: {
-    default: "/icons/discord-icon.svg",
-    gray: "/icons/discord-icon.svg",
-    white: "/icons/discord-white.svg",
-    black: "/icons/discord-icon.svg",
-    filled: "/icons/discord-icon.svg",
-    outline: "/icons/discord-icon.svg",
-  },
-  linkedin: {
-    default: "/icons/linkedin.svg",
-    gray: "/icons/linkedin-gray.svg",
-    white: "/icons/linkedin.svg",
-    black: "/icons/linkedin.svg",
-    filled: "/icons/linkedin.svg",
-    outline: "/icons/linkedin.svg",
-  },
+
   user: {
     default: "/icons/user.svg",
     gray: "/icons/user.svg",
