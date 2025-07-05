@@ -1,6 +1,6 @@
 import { RightSidebar } from "@/shared/components/layout/right-sidebar/right-sidebar";
 
-import { Project } from "../types/project.type";
+import { ExternalLink, Project } from "../types/project.type";
 
 interface ProjectEditSidebarProps {
   project: Project;
@@ -10,8 +10,8 @@ export default function ProjectEditSidebar({
   project,
 }: ProjectEditSidebarProps) {
   const {
-    socialLinks = [],
-    communityStats: { contributors = 0, stars = 0, forks = 0 } = {},
+    externalLinks = [],
+    projectStats: { contributors = 0, stars = 0, forks = 0 } = {},
   } = project;
 
   const sections = [
@@ -28,9 +28,9 @@ export default function ProjectEditSidebar({
           label: "Partager sur X",
           url: "https://x.com/share",
         },
-        ...socialLinks
-          .filter((link) => link.type === "github")
-          .map((link) => ({
+        ...externalLinks
+          .filter((link: ExternalLink) => link.type === "github")
+          .map((link: ExternalLink) => ({
             icon: "/icons/github.svg",
             label: "Voir sur GitHub",
             url: link.url,

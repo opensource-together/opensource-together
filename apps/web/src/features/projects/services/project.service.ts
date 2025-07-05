@@ -49,9 +49,34 @@ export const createProject = async (
     // Create a new project with mock data
     const newProject: Project = {
       id: `project-${Date.now()}`, // Generate a unique ID
-      ...validatedData.data,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      slug: `project-${Date.now()}`,
+      title: validatedData.data.title,
+      shortDescription: validatedData.data.description,
+      longDescription: validatedData.data.longDescription,
+      status: validatedData.data.status,
+      techStacks: validatedData.data.techStacks,
+      roles:
+        validatedData.data.roles?.map((role) => ({
+          id: crypto.randomUUID(),
+          title: role.title,
+          description: role.description,
+          techStacks: [],
+        })) || [],
+      externalLinks:
+        validatedData.data.socialLinks?.map((link) => ({
+          type: link.type,
+          url: link.url,
+        })) || [],
+      keyFeatures: [],
+      projectGoals: [],
+      categories: [],
+      author: {
+        id: "mock-author",
+        name: "Mock Author",
+        avatarUrl: "/icons/empty-project.svg",
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     console.log("New project created:", newProject);
@@ -86,8 +111,24 @@ export const updateProject = async (
     // Merge existing data with new data
     const updatedProject: Project = {
       ...existingProject,
-      ...data,
-      updatedAt: new Date().toISOString(),
+      title: data.title,
+      shortDescription: data.description,
+      longDescription: data.longDescription,
+      status: data.status,
+      techStacks: data.techStacks,
+      roles:
+        data.roles?.map((role) => ({
+          id: crypto.randomUUID(),
+          title: role.title,
+          description: role.description,
+          techStacks: [],
+        })) || existingProject.roles,
+      externalLinks:
+        data.socialLinks?.map((link) => ({
+          type: link.type,
+          url: link.url,
+        })) || existingProject.externalLinks,
+      updatedAt: new Date(),
     };
 
     console.log("Project updated successfully:", updatedProject);

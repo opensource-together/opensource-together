@@ -37,6 +37,7 @@ interface ProjectCreateStore {
   // State
   formData: ProjectFormData;
   currentStep: number;
+  hasHydrated: boolean;
 
   // Actions
   setMethod: (method: ProjectCreateMethod) => void;
@@ -62,6 +63,7 @@ interface ProjectCreateStore {
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 }
 
 const initialFormData: ProjectFormData = {
@@ -85,6 +87,7 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
       (set) => ({
         formData: initialFormData,
         currentStep: 0,
+        hasHydrated: false,
 
         setMethod: (method) =>
           set((state) => ({
@@ -93,9 +96,7 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
           })),
 
         updateProjectInfo: (info) =>
-          set((state) => ({
-            formData: { ...state.formData, ...info },
-          })),
+          set((state) => ({ formData: { ...state.formData, ...info } })),
 
         selectRepository: (repo) =>
           set((state) => ({
@@ -103,25 +104,21 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
           })),
 
         updateRoles: (roles) =>
-          set((state) => ({
-            formData: { ...state.formData, roles },
-          })),
+          set((state) => ({ formData: { ...state.formData, roles } })),
 
         nextStep: () =>
-          set((state) => ({
-            currentStep: state.currentStep + 1,
-          })),
+          set((state) => ({ currentStep: state.currentStep + 1 })),
 
         previousStep: () =>
-          set((state) => ({
-            currentStep: Math.max(0, state.currentStep - 1),
-          })),
+          set((state) => ({ currentStep: Math.max(0, state.currentStep - 1) })),
 
         resetForm: () =>
           set({
             formData: initialFormData,
             currentStep: 0,
           }),
+
+        setHasHydrated: (hasHydrated) => set({ hasHydrated }),
       }),
       {
         name: "project-create-storage",
@@ -129,6 +126,9 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
           formData: state.formData,
           currentStep: state.currentStep,
         }),
+        onRehydrateStorage: () => (state) => {
+          state?.setHasHydrated(true);
+        },
       }
     ),
     {

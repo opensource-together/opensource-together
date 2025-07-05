@@ -20,7 +20,7 @@ import { FormNavigationButtons } from "../../components/stepper/stepper-navigati
 
 export function StepFourForm() {
   const router = useRouter();
-  const { formData, resetForm } = useProjectCreateStore();
+  const { formData } = useProjectCreateStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<StepFourFormData>({
@@ -47,7 +47,7 @@ export function StepFourForm() {
   const handleSubmit = async (data: StepFourFormData) => {
     setIsSubmitting(true);
     try {
-      // Simuler un délai d'API
+      // Simulate API call
       console.log("Début de la création du projet...");
       console.log("Données du projet:", {
         ...formData,
@@ -66,8 +66,7 @@ export function StepFourForm() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       toast.success("Projet créé avec succès !");
 
-      resetForm();
-      router.push("/projects/create/succes");
+      router.push("/projects/create/success");
     } catch (error) {
       console.error("Erreur lors de la création du projet:", error);
     } finally {

@@ -12,10 +12,13 @@ export default function ProjectCreateLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { formData } = useProjectCreateStore();
+  const { formData, hasHydrated } = useProjectCreateStore();
 
   useEffect(() => {
-    // Protection logic: redirect to start if accessing steps without method selection
+    if (!hasHydrated) return;
+
+    if (pathname.includes("/success")) return;
+
     const isStepRoute = pathname.includes("/step");
     const hasMethod = formData.method !== null;
 
@@ -23,7 +26,6 @@ export default function ProjectCreateLayout({
       router.replace("/projects/create");
     }
 
-    // Additional protection: ensure step1 has been completed for later steps
     const isGithubStep2OrLater =
       pathname.includes("/github/step-two") ||
       pathname.includes("/github/step-three");
@@ -44,7 +46,7 @@ export default function ProjectCreateLayout({
     ) {
       router.replace("/projects/create/scratch/step-one");
     }
-  }, [pathname, formData, router]);
+  }, [pathname, formData, router, hasHydrated]);
 
   return <>{children}</>;
 }

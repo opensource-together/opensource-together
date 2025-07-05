@@ -12,7 +12,7 @@ import { useProjectCreateStore } from "../../../stores/project-create.store";
 export default function StepThreeView() {
   const router = useRouter();
   const { resetForm } = useProjectCreateStore();
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showConfirmation] = useState(false);
 
   const handleFinish = () => {
     resetForm();

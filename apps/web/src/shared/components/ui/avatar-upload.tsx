@@ -36,20 +36,20 @@ export function AvatarUpload({
   const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const validateFile = (file: File): string | null => {
-    if (maxSize && file.size > maxSize * 1024 * 1024) {
-      return `File size must be less than ${maxSize}MB`;
-    }
-
-    if (accept === "image/*" && !file.type.startsWith("image/")) {
-      return "Please select an image file";
-    }
-
-    return null;
-  };
-
   const handleFile = useCallback(
     (selectedFile: File) => {
+      const validateFile = (file: File): string | null => {
+        if (maxSize && file.size > maxSize * 1024 * 1024) {
+          return `File size must be less than ${maxSize}MB`;
+        }
+
+        if (accept === "image/*" && !file.type.startsWith("image/")) {
+          return "Please select an image file";
+        }
+
+        return null;
+      };
+
       const validationError = validateFile(selectedFile);
       if (validationError) {
         setError(validationError);

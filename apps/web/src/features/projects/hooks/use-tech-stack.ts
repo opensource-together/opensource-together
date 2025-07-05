@@ -105,7 +105,7 @@ const TECH_STACK_OPTIONS: TechStackOption[] = [
     id: "docker",
     name: "Docker",
     iconUrl:
-      "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
   },
   {
     id: "kubernetes",
@@ -117,7 +117,7 @@ const TECH_STACK_OPTIONS: TechStackOption[] = [
     id: "aws",
     name: "AWS",
     iconUrl:
-      "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original.svg",
+      "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg",
   },
   {
     id: "gcp",
