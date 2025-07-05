@@ -82,7 +82,6 @@ describe('CreateProjectRoleCommandHandler', () => {
 
     const reactResult = await techStackRepo.create(react.value);
     const typescriptResult = await techStackRepo.create(typescript.value);
-    console.log({ reactResult, typescriptResult });
     if (reactResult.success && typescriptResult.success) {
       reactTechStack = reactResult.value;
       typescriptTechStack = typescriptResult.value;
@@ -97,10 +96,6 @@ describe('CreateProjectRoleCommandHandler', () => {
   describe('Success', () => {
     it('should create a project role successfully', async () => {
       // Arrange
-      console.log(
-        reactTechStack.toPrimitive().id,
-        typescriptTechStack.toPrimitive().id,
-      );
       const command = new CreateProjectRoleCommand({
         projectId: 'i39pYIlZKF',
         userId: '123',
@@ -146,7 +141,6 @@ describe('CreateProjectRoleCommandHandler', () => {
       // Act
       const result = await handler.execute(command);
 
-      console.log({ withSingleSkill: result });
       // Assert
       expect(result.success).toBe(true);
       if (result.success) {

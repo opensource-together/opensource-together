@@ -129,7 +129,7 @@ export class ProjectRole {
     if (!props.id) {
       return Result.fail({ id: 'id is required' });
     }
-    console.log('props', props);
+
     if (!props.createdAt || !props.updatedAt) {
       return Result.fail(
         'createdAt and updatedAt are required for the project role reconstitution',
