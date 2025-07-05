@@ -102,45 +102,8 @@ export class ProjectController {
     @Req() req: Request,
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
-    // project: {
-    //   title: string;
-    //   description: string;
-    //   shortDescription: string;
-    //   externalLinks?: string[];
-    //   techStacks: {
-    //     id: string;
-    //     name: string;
-    //     iconUrl: string;
-    //   }[];
-    //   projectRoles: {
-    //     title: string;
-    //     techStacks: {
-    //       id: string;
-    //       name: string;
-    //       iconUrl: string;
-    //     }[];
-    //     description: string;
-    //     isFilled: boolean;
-    //   }[];
-    // },
   ) {
-    // console.log('project', project);
-    // Convertir les DTOs en commandes
-    // const projectRolesCommands =
-    //   project.projectRoles.map((role) => ({
-    //     projectId: '', // Sera défini après la création du projet
-    //     roleTitle: role.roleTitle,
-    //     skillSet: role.skillSet,
-    //     description: role.description,
-    //     isFilled: role.isFilled,
-    //   })) || [];
-
-    // const projectMembersCommands =
-    //   project.projectMembers.map((member) => ({
-    //     projectId: '',
-    //     userId: member.userId,
-    //   })) || [];
-
+    console.log('project', project);
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,
@@ -152,20 +115,12 @@ export class ProjectController {
         //     type: 'github',
         //     url: link,
         //   })) || [],
-        techStacks: project.techStacks.map((techStack) => ({
-          id: techStack.id,
-          name: techStack.name,
-          iconUrl: techStack.iconUrl,
-        })),
+        techStacks: project.techStacks,
         projectRoles: project.projectRoles.map((role) => ({
           title: role.title,
           description: role.description,
           isFilled: role.isFilled,
-          techStacks: role.techStacks.map((techStack) => ({
-            id: techStack.id,
-            name: techStack.name,
-            iconUrl: techStack.iconUrl,
-          })),
+          techStacks: role.techStacks,
         })),
         octokit: octokit,
       }),

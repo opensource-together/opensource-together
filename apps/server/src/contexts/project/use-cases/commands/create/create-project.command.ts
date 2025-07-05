@@ -28,13 +28,13 @@ export class CreateProjectCommand implements ICommand {
       title: string;
       shortDescription: string;
       description: string;
-      techStacks: { id: string; name: string; iconUrl: string }[];
+      techStacks: string[];
       externalLinks?: { type: string; url: string }[];
       projectRoles: {
         title: string;
         description: string;
         isFilled: boolean;
-        techStacks: { id: string; name: string; iconUrl: string }[];
+        techStacks: string[];
       }[];
       octokit: Octokit;
     },
@@ -73,19 +73,18 @@ export class CreateProjectCommandHandler
     if (projectWithSameTitle.success) {
       return Result.fail('Project with same title already exists');
     }
-    const projectTechStackIds = techStacks.map((ts) => ts.id);
-
+    const projectTechStackIds = techStacks;
+    console.log('projectTechStackIds', projectTechStackIds);
     // Récupérer tous les IDs des techStacks des projectRoles
-    const roleTechStackIds = projectRoles.flatMap((role) =>
-      role.techStacks.map((ts) => ts.id),
-    );
-
+    const roleTechStackIds = projectRoles.flatMap((role) => role.techStacks);
+    console.log('roleTechStackIds', roleTechStackIds);
     // Combiner tous les IDs uniques
     const allTechStackIds = [
       ...new Set([...projectTechStackIds, ...roleTechStackIds]),
     ];
     //vérifier si les techStacks existent et son valide
     //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
+    console.log('allTechStackIds', allTechStackIds);
     const techStacksValidation =
       await this.techStackRepo.findByIds(allTechStackIds);
     if (!techStacksValidation.success) {
@@ -104,11 +103,25 @@ export class CreateProjectCommandHandler
       description,
       externalLinks,
       techStacks: allTechStacksValidated.map((ts) => ts.toPrimitive()),
-      projectRoles,
+      projectRoles: projectRoles.map((role) => ({
+        title: role.title,
+        description: role.description,
+        isFilled: role.isFilled,
+        techStacks: role.techStacks.map((ts) => ({
+          id: ts,
+          name: allTechStacksValidated
+            .find((t) => t.toPrimitive().id === ts)
+            ?.toPrimitive().name as string,
+          iconUrl: allTechStacksValidated
+            .find((t) => t.toPrimitive().id === ts)
+            ?.toPrimitive().iconUrl as string,
+        })),
+      })),
     });
     if (!projectResult.success) {
       return Result.fail(projectResult.error);
     }
+    console.log('projectResult', projectResult);
 
     const projectValidated = projectResult.value;
 

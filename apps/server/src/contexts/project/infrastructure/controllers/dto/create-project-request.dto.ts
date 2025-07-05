@@ -1,15 +1,8 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsArray, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Title } from '@/contexts/project/domain/vo/title.vo';
 import { Description } from '@/contexts/project/domain/vo/description.vo';
 import { ShortDescription } from '@/contexts/project/domain/vo/short-description.vo.';
-import { TechStackDto } from './TechStackDto.request';
 
 export class CreateProjectDtoRequest {
   @IsString()
@@ -32,15 +25,14 @@ export class CreateProjectDtoRequest {
   externalLinks: { type: string; url: string }[];
 
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => TechStackDto)
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  @IsNotEmpty()
+  techStacks: string[];
 
   @IsArray()
   projectRoles: {
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: string[];
   }[];
 }

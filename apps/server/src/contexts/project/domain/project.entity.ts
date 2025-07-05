@@ -210,7 +210,7 @@ export class Project {
 
   //pour ajouter un role à un projet existant,
   //utiliser une fois que le project role est créer dans la persistance
-  public addProjectRole(projectRole: ProjectRole): Result<void, string> {
+  public addRole(projectRole: ProjectRole): Result<void, string> {
     if (projectRole.toPrimitive().projectId !== this.id) {
       return Result.fail('Project role does not belong to this project');
     }
@@ -224,11 +224,9 @@ export class Project {
     return Result.ok(undefined);
   }
 
-  //même chose que addProjectRole mais pour en ajouter plusieurs en une fois
-  public addProjectRoles(projectRoles: ProjectRole[]): Result<void, string> {
-    const projectRolesResults = projectRoles.map((pr) =>
-      this.addProjectRole(pr),
-    );
+  //même chose que addRole mais pour en ajouter plusieurs en une fois
+  public addRoles(projectRoles: ProjectRole[]): Result<void, string> {
+    const projectRolesResults = projectRoles.map((pr) => this.addRole(pr));
     if (projectRolesResults.some((r) => !r.success)) {
       return Result.fail(
         projectRolesResults.find((r) => !r.success)?.error as string,
