@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
@@ -14,83 +15,97 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     description = "",
     longDescription,
     keyBenefits = [],
-    // difficulty = "",
-    // authorName = "",
-    // authorImage = "/icons/empty-project.svg",
-    // techStacks = [],
-    projectImages = [],
+    keyFeatures = [],
+    projectGoals = [],
+    image,
+    communityStats,
   } = project;
 
-  // Images par défaut si projectImages est vide
-  const defaultImages = [
-    "/images/gitify-1.png",
-    "/images/gitify-2.png",
-    "/images/gitify-3.png",
-    "/images/gitify-4.png",
-  ];
-
-  // Utiliser les images du projet ou les images par défaut
-  const imagesToDisplay =
-    projectImages.length > 0 ? projectImages : defaultImages;
+  const stars = communityStats?.stars || 0;
 
   return (
     <section className="flex flex-col bg-white">
-      {/* Header */}
-      <div className="mb-6 flex items-start justify-between">
-        <div className="flex gap-5">
-          {/* Project Images */}
-          <div className="flex gap-3">
-            {/* Main large image */}
-            {imagesToDisplay[0] && (
-              <Image
-                src={imagesToDisplay[0]}
-                alt={title}
-                width={520}
-                height={255}
-                className="h-[255px] w-[520px] flex-shrink-0 rounded-lg object-cover"
-              />
-            )}
-
-            {/* Three stacked smaller images */}
-            <div className="flex flex-shrink-0 flex-col gap-2">
-              {imagesToDisplay.slice(1, 4).map((imageUrl, index) => (
-                <Image
-                  key={index}
-                  src={imageUrl}
-                  alt={`${title} - Image ${index + 2}`}
-                  width={141}
-                  height={79}
-                  className="h-[79px] w-[141px] flex-shrink-0 rounded-lg object-cover"
-                />
-              ))}
-            </div>
+      {/* Header with logo and stars */}
+      <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+        {/* Project Icon and Title */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex h-[50px] w-[50px] items-center justify-center rounded-4xl bg-[#F4F4F4] sm:h-[65px] sm:w-[65px]">
+            <Image
+              src={image || "/icons/empty-project.svg"}
+              alt={title}
+              width={50}
+              height={50}
+              className="rounded-4xl sm:h-[65px] sm:w-[65px]"
+            />
           </div>
+          {/* Project Title */}
+          <h1
+            className="text-start text-2xl font-medium text-black sm:text-3xl"
+            style={{ letterSpacing: "-2px" }}
+          >
+            {title}
+          </h1>
         </div>
+
+        {/* Stars button */}
+        <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
+          <span>{stars}</span>
+          <Icon name="star" size="sm" />
+        </button>
       </div>
 
       {/* Description */}
       <div className="mt-2">
-        <h2 className="mb-5 text-lg font-medium">Description</h2>
-        <p className="mb-4 text-sm font-normal text-black/70">{description}</p>
-        <div className="w-[629px]">
+        <p className="mb-0 text-sm font-medium">{description}</p>
+
+        {/* separator */}
+        <div className="my-5 h-[2px] w-full bg-black/3" />
+
+        <div className="w-full max-w-[629px]">
           {keyBenefits.length > 0 && (
             <>
-              <p className="text-sm leading-[16px] font-normal text-black/70">
-                Les avantages clés de notre outil de suivi de l'empreinte
-                carbone incluent:
-              </p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black/70">
+              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {keyBenefits.map((benefit, index) => (
                   <li key={index}>{benefit}</li>
                 ))}
               </ul>
             </>
           )}
-          {!keyBenefits.length && longDescription && (
-            <p className="text-sm font-normal text-black/70">
-              {longDescription}
-            </p>
+
+          {keyFeatures.length > 0 && (
+            <>
+              <h3 className="mb-2 text-sm font-normal text-black">
+                Fonctionnalités clés :
+              </h3>
+              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+                {keyFeatures.map((feature, index) => (
+                  <li key={index}>{feature}</li>
+                ))}
+              </ul>
+            </>
           )}
+
+          {projectGoals.length > 0 && (
+            <>
+              <h3 className="mb-2 text-sm font-normal text-black">
+                Objectifs du projet :
+              </h3>
+              <ul className="mb-6 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+                {projectGoals.map((goal, index) => (
+                  <li key={index}>{goal}</li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {!keyBenefits.length &&
+            !keyFeatures.length &&
+            !projectGoals.length &&
+            longDescription && (
+              <p className="text-sm font-normal text-black/70">
+                {longDescription}
+              </p>
+            )}
         </div>
       </div>
     </section>

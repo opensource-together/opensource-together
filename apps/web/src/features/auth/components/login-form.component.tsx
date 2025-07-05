@@ -5,8 +5,8 @@ export default function LoginForm() {
     <div className="flex items-center">
       <div className="w-full max-w-md">
         <div className="p-4">
-          <div className="mb-8 text-center">
-            <h1 className="mb-3 text-2xl font-medium tracking-tight text-gray-900">
+          <div className="mb-8 text-center tracking-tight">
+            <h1 className="mb-3 text-2xl font-medium text-gray-900">
               Bienvenue sur OpenSource Together
             </h1>
             <p className="text-sm text-black/50">

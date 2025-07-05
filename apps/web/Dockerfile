@@ -40,6 +40,8 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
+RUN apk add --no-cache curl
+
 LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
 
 ENV NODE_ENV=production

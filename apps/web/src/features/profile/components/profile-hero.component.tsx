@@ -1,7 +1,7 @@
-import Image from "next/image";
-
+import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { Icon } from "@/shared/components/ui/icon";
 import { getRoleBadgeVariant } from "@/shared/lib/utils/badges";
 
 import { Profile } from "../types/profile.type";
@@ -11,109 +11,89 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatarUrl, name, joinedAt, bio, skills, experiences, socialLinks } =
-    profile;
+  const {
+    avatarUrl = "",
+    name = "User",
+    joinedAt = "N/A",
+    bio = "",
+    skills = [],
+    socialLinks = [],
+  } = profile;
+
+  const formatJoinDate = (dateString: string) => {
+    const parsedDate = new Date(dateString);
+    return isNaN(parsedDate.getTime())
+      ? "Date inconnue"
+      : parsedDate.toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+  };
 
   return (
-    <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">
-      <div className="relative top-[-15px] flex items-center justify-between">
+    <div>
+      <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <div className="relative top-[-20px] mr-4">
-            <Image
-              src={avatarUrl}
-              alt="Profile"
-              width={120}
-              height={120}
-              className="rounded-full"
-            />
+          <div className="mr-4">
+            <Avatar src={avatarUrl} name={name} alt={name} size="2xl" />
           </div>
           <div>
-            <h2 className="text-2xl font-medium">{name}</h2>
-            <p className="text-[11px] text-black/50">
-              Rejoint le{" "}
-              {joinedAt
-                ? new Date(joinedAt).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })
-                : ""}
+            <h2 className="text-2xl font-medium tracking-tighter">{name}</h2>
+            <p className="text-sm tracking-tighter text-black/50">
+              Rejoint le {formatJoinDate(joinedAt)}
             </p>
           </div>
         </div>
-        {socialLinks && socialLinks.length > 0 && (
+        {socialLinks.length > 0 && (
           <div className="flex items-center justify-end space-x-3">
             <div className="flex items-center space-x-3">
               {socialLinks.map((link) => (
                 <button key={link.type}>
                   <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <Image
-                      src={`/icons/${link.type}.svg`}
-                      alt={link.type}
-                      width={19}
-                      height={19}
+                    <Icon
+                      name={link.type}
+                      size="md"
+                      variant="black"
+                      interactive
                     />
                   </a>
                 </button>
               ))}
             </div>
             <Button className="font-normal">
-              Contact{" "}
-              <Image
-                src="/icons/discord-icon.svg"
-                alt="arrow-right"
-                width={15}
-                height={15}
-              />
+              Contact <Icon name="discord" size="md" variant="white" />
             </Button>
           </div>
         )}
       </div>
 
-      <div className="mb-5 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-black/30">A propos</h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-      <p className="mb-6 text-sm font-medium text-black">{bio}</p>
+      <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>
+      <div className="flex-grow border-t border-black/5" />
 
-      <div className="my-5 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-black/30">Experiences</h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-      <div>
-        {experiences?.map((experience) => (
-          <div key={experience.id} className="mb-4 flex text-sm font-normal">
-            <p className="mr-5 text-black/50">
-              {experience.startDate.slice(0, 4)} -{" "}
-              {experience.endDate.slice(0, 4)}
-            </p>
-            <p className="mr-1">{experience.position}</p>
-            <h4 className="font-medium">@{experience.company}</h4>
+      {skills.map((skill, index) => (
+        <div key={index}>
+          <div className="mt-10 mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-medium tracking-tighter">
+              Compétences techniques
+            </h3>
           </div>
-        ))}
-      </div>
 
-      <div className="my-5 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-black/30">
-          Compétences techniques
-        </h3>
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {skills?.map((skill, index) => (
-          <Badge
-            key={index}
-            style={{
-              color: skill.badges[0].color,
-              backgroundColor: skill.badges[0].bgColor,
-            }}
-            variant={getRoleBadgeVariant(skill.name)}
-            className="text-xs"
-          >
-            {skill.name}
-          </Badge>
-        ))}
-      </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge
+              key={index}
+              style={{
+                color: skill.badges[0].color,
+                backgroundColor: skill.badges[0].bgColor,
+              }}
+              variant={getRoleBadgeVariant(skill.name)}
+              className="text-xs"
+            >
+              {skill.name}
+            </Badge>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

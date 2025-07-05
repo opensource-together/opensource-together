@@ -22,7 +22,10 @@ export default function LoginView() {
           <LoginForm />
         </div>
 
-        <Link href="/" className="absolute bottom-8 left-8 font-medium">
+        <Link
+          href="/"
+          className="absolute bottom-8 left-8 font-medium tracking-tighter text-black/50"
+        >
           Contactez-nous
         </Link>
       </div>

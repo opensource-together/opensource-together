@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/shared/components/ui/button";
+import Icon from "@/shared/components/ui/icon";
 
 import {
   type ProjectCreateMethod,
@@ -36,13 +36,7 @@ export default function StepZeroView() {
           >
             Importer depuis Github{" "}
             <span className="">
-              <Image
-                src="/icons/github.svg"
-                alt="github-icon"
-                width={18}
-                height={18}
-                className="invert"
-              />
+              <Icon name="github" size="md" variant="white" />
             </span>
           </Button>
           <div className="mb-2 text-sm text-black/70">ou</div>

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Icon, IconSize, IconVariant } from "../ui/icon";
 
-interface GithubLinkProps {
+interface LinkedinLinkProps {
   url: string;
   size?: IconSize;
   variant?: IconVariant;
@@ -10,22 +10,22 @@ interface GithubLinkProps {
   interactive?: boolean;
 }
 
-export default function GithubLink({
+export default function LinkedinLink({
   url,
   size = "md",
   variant = "black",
   className = "",
   interactive = true,
-}: GithubLinkProps) {
+}: LinkedinLinkProps) {
   return (
     <Link
       href={url}
       className={`flex items-center gap-1 text-sm tracking-tighter ${className}`}
       target="_blank"
-      aria-label="GitHub"
+      aria-label="LinkedIn"
     >
       <Icon
-        name="github"
+        name="linkedin"
         size={size}
         variant={variant}
         interactive={interactive}

@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
-
 import StackLogo from "@/shared/components/logos/stack-logo";
-import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { ProjectRole, TechStack } from "../types/project.type";
@@ -58,18 +57,20 @@ export default function RoleCard({
 
   return (
     <div
-      className={`min-h-[310px] w-[668px] rounded-lg border border-[black]/5 bg-white p-6 shadow-xs ${className}`}
+      className={`w-full max-w-[668px] rounded-3xl border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
     >
       {/* Role Title */}
-      <h3 className="mb-4 text-lg font-medium text-black">{title}</h3>
+      <h3 className="mb-3 text-lg font-medium tracking-tighter text-black md:mb-4">
+        {title}
+      </h3>
 
       {/* Role Description */}
-      <p className="mb-6 text-sm leading-relaxed text-black/70">
+      <p className="mb-4 text-sm leading-relaxed tracking-tighter text-black/70 md:mb-6">
         {description}
       </p>
 
       {/* Good First Issue Section */}
-      <div
+      {/* <div
         className="mb-7 rounded-lg border border-[black]/5 p-4"
         style={{ backgroundColor: "rgba(250, 250, 250, 0.5)" }}
       >
@@ -86,13 +87,13 @@ export default function RoleCard({
             />
             <span className="text-xs text-black/70">Byron Love</span>
           </div>
-        </div>
+        </div> */}
 
-        {/* Ligne de séparation */}
-        <div className="mb-3 w-full border-t border-dashed border-black/8"></div>
+      {/* Ligne de séparation */}
+      <div className="mb-3 w-full border-t border-dashed border-black/8"></div>
 
-        {/* Issue */}
-        <div className="flex items-start gap-3">
+      {/* Issue */}
+      {/* <div className="flex items-start gap-3">
           <Badge
             className="mt-1 mt-[0.5px] text-xs font-normal"
             style={{ backgroundColor: "#F0FDF4", color: "#00C950" }}
@@ -102,13 +103,13 @@ export default function RoleCard({
           <span className="text-sm text-black">
             Remove m_is_test_chain, use ChainType directly
           </span>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* Bottom Section */}
-      <div className="mt-auto flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
         {/* Tech Badges */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {badges.length > 0 ? (
             badges.map((badge) => (
               <StackLogo
@@ -141,16 +142,10 @@ export default function RoleCard({
         </div>
 
         {/* Apply Button */}
-        <div className="flex items-center gap-1 text-sm">
+        <Button className="w-full md:w-auto">
           Apply for Role
-          <Image
-            src="/icons/arrow-up-right.svg"
-            alt="arrow"
-            width={9}
-            height={9}
-            className="mt-0.5"
-          />
-        </div>
+          <Icon name="arrow-up-right" size="xs" variant="white" />
+        </Button>
       </div>
     </div>
   );

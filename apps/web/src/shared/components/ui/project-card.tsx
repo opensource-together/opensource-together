@@ -114,7 +114,7 @@ const ProjectCardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-lg font-semibold", className)}
+    className={cn("text-lg font-medium tracking-tighter", className)}
     {...props}
   />
 ));
@@ -187,7 +187,10 @@ const ProjectCardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("mt-4 line-clamp-1 text-xs leading-5 font-medium", className)}
+    className={cn(
+      "mt-4 line-clamp-1 text-sm leading-5 font-medium tracking-tighter",
+      className
+    )}
     {...props}
   />
 ));
@@ -301,7 +304,7 @@ const ProjectCardViewLink = React.forwardRef<
     ref={linkRef || ref}
     href={`/projects/${projectId}`}
     className={cn(
-      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-normal tracking-tighter text-black/30 transition-opacity hover:opacity-80",
+      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-medium tracking-tighter text-black/30 transition-opacity hover:opacity-80",
       className
     )}
     {...props}

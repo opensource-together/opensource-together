@@ -175,11 +175,11 @@ export const mockProfile: Profile = {
       url: "https://github.com/byronlove111",
     },
     {
-      type: "blog",
+      type: "link",
       url: "https://byronlove111.dev",
     },
     {
-      type: "x",
+      type: "twitter",
       url: "https://x.com/byronlove111",
     },
     {
@@ -282,7 +282,7 @@ export const mockProfile: Profile = {
   socialLinks: [
     { type: "github", url: "https://github.com/byronlove111" },
     { type: "twitter", url: "https://twitter.com/byronlove111" },
-    { type: "website", url: "https://byronlove111.dev" },
+    { type: "link", url: "https://byronlove111.dev" },
   ],
   experiences: [
     {

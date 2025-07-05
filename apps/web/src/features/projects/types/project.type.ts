@@ -44,6 +44,10 @@ export interface Project {
   socialLinks?: SocialLink[];
   communityStats?: CommunityStats;
   keyBenefits?: string[];
+  keyFeatures?: string[];
+  projectGoals?: string[];
+  categories?: string[];
+  lastCommit?: string; // temporary nullable
   createdAt?: string;
   updatedAt?: string;
 }

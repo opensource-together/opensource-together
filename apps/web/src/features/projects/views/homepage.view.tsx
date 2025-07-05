@@ -1,6 +1,5 @@
 "use client";
 
-import Footer from "@/shared/components/layout/footer";
 import Pagination from "@/shared/components/shared/Pagination";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
@@ -28,9 +27,6 @@ export default function HomepageView() {
         <div className="mt-25 mb-50">
           <Pagination />
         </div>
-      </div>
-      <div>
-        <Footer />
       </div>
     </div>
   );
