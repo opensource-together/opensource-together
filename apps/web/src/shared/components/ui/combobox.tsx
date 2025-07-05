@@ -1,6 +1,5 @@
 "use client";
 
-import { Check, ChevronsUpDown, X } from "lucide-react";
 import * as React from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
@@ -21,6 +20,8 @@ import {
 import { cn } from "@/shared/lib/utils";
 
 import { TechStack } from "@/features/projects/types/project.type";
+
+import Icon from "./icon";
 
 export interface ComboboxOption {
   id: string;
@@ -88,10 +89,10 @@ export function Combobox({
               <button
                 type="button"
                 onClick={() => handleRemove(option.id)}
-                className="ml-1 rounded-full hover:bg-gray-200"
+                className="flex size-4 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200"
                 disabled={disabled}
               >
-                <X className="h-3 w-3" />
+                <Icon name="cross" size="xxs" />
               </button>
             </Badge>
           ))}
@@ -112,7 +113,7 @@ export function Combobox({
                 ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
                 : placeholder}
             </span>
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <Icon name="chevron-down" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0" align="start">
@@ -135,9 +136,12 @@ export function Combobox({
                         isDisabled && "cursor-not-allowed opacity-50"
                       )}
                     >
-                      <Check
+                      <Icon
+                        name="check"
+                        size="xs"
+                        variant="gray"
                         className={cn(
-                          "mr-2 h-4 w-4",
+                          "mr-2",
                           isSelected ? "opacity-100" : "opacity-0"
                         )}
                       />

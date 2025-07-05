@@ -179,7 +179,7 @@ export function StepThreeForm() {
                     className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
                     title="Modifier le rôle"
                   >
-                    <Icon name="pencil" variant="gray" size="xs" />
+                    <Icon name="pencil" variant="gray" size="sm" />
                   </button>
                   <button
                     onClick={() => removeRole(index)}

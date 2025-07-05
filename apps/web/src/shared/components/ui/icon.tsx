@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/shared/lib/utils";
 
 // Type for the icon size
-export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+export type IconSize = "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type IconVariant =
   | "default"
   | "gray"
@@ -15,6 +15,7 @@ export type IconVariant =
 
 // Mapping of the sizes with the Tailwind classes
 const iconSizes: Record<IconSize, string> = {
+  xxs: "w-2 h-2", // 8px
   xs: "w-3 h-3", // 12px
   sm: "w-4 h-4", // 16px
   md: "w-5 h-5", // 20px
@@ -46,7 +47,7 @@ export type IconName =
   | "user"
   | "project"
   | "difficulty-bar"
-  | "validation"
+  | "check"
   | "pencil"
   | "pinned"
   | "joined"
@@ -216,13 +217,13 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/Difficulty-bar-light.svg",
     outline: "/icons/Difficulty-bar-light.svg",
   },
-  validation: {
-    default: "/icons/validation-icon.svg",
-    gray: "/icons/validation-icon.svg",
-    white: "/icons/validation-icon.svg",
-    black: "/icons/validation-icon.svg",
-    filled: "/icons/validation-icon.svg",
-    outline: "/icons/validation-icon.svg",
+  check: {
+    default: "/icons/check.svg",
+    gray: "/icons/check-gray.svg",
+    white: "/icons/check-white.svg",
+    black: "/icons/check.svg",
+    filled: "/icons/check.svg",
+    outline: "/icons/check.svg",
   },
   pencil: {
     default: "/icons/pencil.svg",
