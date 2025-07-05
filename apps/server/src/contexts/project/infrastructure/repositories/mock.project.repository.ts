@@ -4,7 +4,6 @@ import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
 import { CLOCK_PORT, ClockPort } from '@/libs/time';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
 
 type ProjectInMemory = {
   id: string;
@@ -62,13 +61,30 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
         name: tech.name,
         iconUrl: tech.iconUrl,
       })),
-      projectRoles: [],
+      projectRoles: projectPrimitive.projectRoles.map((role) => ({
+        id: '1',
+        title: role.title,
+        description: role.description,
+        isFilled: role.isFilled,
+        techStacks: role.techStacks.map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+          iconUrl: tech.iconUrl,
+        })),
+        projectId: '1',
+        createdAt: this.clock.now(),
+        updatedAt: this.clock.now(),
+      })),
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
     };
     this.projects.push(newProject);
 
     return this.reconstructProject(newProject);
+  }
+
+  private generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
   }
 
   private reconstructProject(

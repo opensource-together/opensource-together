@@ -29,6 +29,7 @@ export type ProjectData = {
   externalLinks?: { type: string; url: string }[];
   techStacks: { id: string; name: string; iconUrl: string }[];
   projectRoles: {
+    projectId?: string;
     id?: string;
     title: string;
     description: string;

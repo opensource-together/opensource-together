@@ -74,17 +74,14 @@ export class CreateProjectCommandHandler
       return Result.fail('Project with same title already exists');
     }
     const projectTechStackIds = techStacks;
-    console.log('projectTechStackIds', projectTechStackIds);
     // Récupérer tous les IDs des techStacks des projectRoles
     const roleTechStackIds = projectRoles.flatMap((role) => role.techStacks);
-    console.log('roleTechStackIds', roleTechStackIds);
     // Combiner tous les IDs uniques
     const allTechStackIds = [
       ...new Set([...projectTechStackIds, ...roleTechStackIds]),
     ];
     //vérifier si les techStacks existent et son valide
     //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
-    console.log('allTechStackIds', allTechStackIds);
     const techStacksValidation =
       await this.techStackRepo.findByIds(allTechStackIds);
     if (!techStacksValidation.success) {
@@ -121,7 +118,6 @@ export class CreateProjectCommandHandler
     if (!projectResult.success) {
       return Result.fail(projectResult.error);
     }
-    console.log('projectResult', projectResult);
 
     const projectValidated = projectResult.value;
 

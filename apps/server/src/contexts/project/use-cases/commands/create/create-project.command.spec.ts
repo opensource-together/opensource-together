@@ -24,6 +24,22 @@ import { PROJECT_VALIDATION_SERVICE_PORT } from '../../ports/project-validation.
 import { ProjectValidationService } from '@/contexts/project/infrastructure/services/project-validation.service';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
 import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
+import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
+import { Octokit } from '@octokit/rest';
+
+// Mock Octokit
+const mockOctokit = {
+  rest: {
+    repos: {
+      create: jest.fn(),
+    },
+  },
+} as unknown as Octokit;
+
+// Mock GitHub Repository
+const mockGithubRepository = {
+  createGithubRepository: jest.fn(),
+};
 
 // Type pour les props du CreateProjectCommand
 type CreateProjectCommandProps = {
@@ -32,14 +48,15 @@ type CreateProjectCommandProps = {
   shortDescription: string;
   description: string;
   externalLinks: { type: string; url: string }[];
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  techStacks: string[];
   projectRoles: {
     id: string;
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: string[];
   }[];
+  octokit: any; // Changé de Octokit à any
 };
 
 describe('CreateProjectCommandHandler', () => {
@@ -50,6 +67,7 @@ describe('CreateProjectCommandHandler', () => {
   const mockClock = new MockClock(new Date('2024-01-01T09:00:00Z'));
   const mockProjectRepo = new InMemoryProjectRepository(mockClock);
   const mockProjectRoleRepo = new InMemoryProjectRoleRepository(mockClock);
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -70,17 +88,25 @@ describe('CreateProjectCommandHandler', () => {
           provide: PROJECT_ROLE_REPOSITORY_PORT,
           useValue: mockProjectRoleRepo,
         },
+        {
+          provide: GITHUB_REPOSITORY_PORT,
+          useValue: mockGithubRepository,
+        },
       ],
     }).compile();
 
-    //command handler
     handler = module.get<CreateProjectCommandHandler>(
       CreateProjectCommandHandler,
     );
-    //repository dependency
     projectRepo = module.get<ProjectRepositoryPort>(PROJECT_REPOSITORY_PORT);
     techStackRepo = module.get<TechStackRepositoryPort>(
       TECHSTACK_REPOSITORY_PORT,
+    );
+
+    // Reset mocks
+    jest.clearAllMocks();
+    mockGithubRepository.createGithubRepository.mockResolvedValue(
+      Result.ok({ html_url: 'https://github.com/test/repo' }),
     );
   });
 
@@ -99,7 +125,12 @@ describe('CreateProjectCommandHandler', () => {
         title: 'minimal project',
         description: 'une description',
         shortDescription: 'une description',
-        externalLinks: [],
+        externalLinks: [
+          {
+            type: 'github',
+            url: 'https://github.com/test/repo',
+          },
+        ],
         projectRoles: [],
         techStacks: [
           {
@@ -116,7 +147,10 @@ describe('CreateProjectCommandHandler', () => {
         throw new Error(JSON.stringify(projectResultExpected.error));
       }
       const minimalPropsNeeded = getMinimalPropsNeeded();
-      const command = new CreateProjectCommand(minimalPropsNeeded);
+      const command = new CreateProjectCommand({
+        ...minimalPropsNeeded,
+        octokit: mockOctokit,
+      });
 
       // createTechStacksInMemory(techStackRepo);
       const result: Result<Project, ProjectValidationErrors | string> =
@@ -147,13 +181,7 @@ describe('CreateProjectCommandHandler', () => {
             title: 'Fullstack Developer',
             description: 'Need a fullstack developer for a new project',
             isFilled: false,
-            techStacks: [
-              {
-                id: '1',
-                name: 'react',
-                iconUrl: 'https://reactjs.org/favicon.ico',
-              },
-            ],
+            techStacks: ['1'],
           },
         ],
       });
@@ -162,9 +190,15 @@ describe('CreateProjectCommandHandler', () => {
         title: 'command props',
         description: 'une description',
         shortDescription: 'une description courte',
-        externalLinks: [],
+        externalLinks: [
+          {
+            type: 'github',
+            url: 'https://github.com/test/repo',
+          },
+        ],
         projectRoles: [
           {
+            projectId: '1',
             id: '1',
             title: 'Fullstack Developer',
             description: 'Need a fullstack developer for a new project',
@@ -194,6 +228,10 @@ describe('CreateProjectCommandHandler', () => {
       if (!projectResultExpected.success) {
         throw new Error(JSON.stringify(projectResultExpected.error));
       }
+      console.log(
+        'projectResultExpected',
+        projectResultExpected.value.toPrimitive(),
+      );
       const command = new CreateProjectCommand({
         title: 'command props',
         description: 'une description',
@@ -204,23 +242,12 @@ describe('CreateProjectCommandHandler', () => {
             title: 'Fullstack Developer',
             description: 'Need a fullstack developer for a new project',
             isFilled: false,
-            techStacks: [
-              {
-                id: '1',
-                name: 'react',
-                iconUrl: 'https://reactjs.org/favicon.ico',
-              },
-            ],
+            techStacks: ['1'],
           },
         ],
-        techStacks: [
-          {
-            id: '1',
-            name: 'react',
-            iconUrl: 'https://reactjs.org/favicon.ico',
-          },
-        ],
+        techStacks: ['1'],
         ownerId: '1',
+        octokit: mockOctokit,
       });
 
       const result: Result<Project, ProjectValidationErrors | string> =
@@ -232,7 +259,6 @@ describe('CreateProjectCommandHandler', () => {
         expect(result.value.toPrimitive()).toMatchObject(
           projectResultExpected.value.toPrimitive(),
         );
-        console.log('result.value', result.value.toPrimitive());
         await projectRepo.delete(result.value.toPrimitive().id as string);
         await deleteTechStacksInMemory(techStackRepo, props.techStacks);
       } else {
@@ -246,20 +272,15 @@ describe('CreateProjectCommandHandler', () => {
       createTechStacksInMemory(techStackRepo);
       const props = getCommandProps({
         techStacks: [
-          {
-            id: '999', // ID qui n'existe pas
-            name: 'nonexistent',
-            iconUrl: 'https://example.com/icon.svg',
-          },
+          '999', // ID qui n'existe pas
         ],
       });
-      console.log('props', props);
       const command = new CreateProjectCommand(props);
       const result = await handler.execute(command);
       if (!result.success) {
-        console.log('result', result.error);
-        expect(result.error).toContain('Tech stacks not found');
+        expect(result.error).toContain('Some tech stacks are not found');
         await deleteTechStacksInMemory(techStackRepo, props.techStacks);
+        // throw new Error(JSON.stringify(result.error));
       } else {
         throw new Error('Test should have failed but succeeded');
       }
@@ -277,10 +298,8 @@ const getCommandProps = (
     description: 'une description',
     externalLinks: [],
     projectRoles: [],
-    techStacks: [
-      { id: '1', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' },
-      { id: '2', name: 'angular', iconUrl: 'https://angular.io/favicon.ico' },
-    ],
+    techStacks: ['1', '2'],
+    octokit: mockOctokit, // Utiliser le mock
     ...override,
   };
 };
@@ -293,9 +312,8 @@ const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
     shortDescription: 'une description',
     externalLinks: [],
     projectRoles: [],
-    techStacks: [
-      { id: '1', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' },
-    ],
+    techStacks: ['1'],
+    octokit: mockOctokit, // Utiliser le mock
   };
 };
 
@@ -324,9 +342,9 @@ const createTechStacksInMemory = async (
 
 const deleteTechStacksInMemory = async (
   techStackRepo: TechStackRepositoryPort,
-  techStacks: { id: string; name: string; iconUrl: string }[],
+  techStacks: string[],
 ) => {
   await Promise.all(
-    techStacks.map((techStack) => techStackRepo.delete(techStack.id)),
+    techStacks.map((techStack) => techStackRepo.delete(techStack)),
   );
 };
