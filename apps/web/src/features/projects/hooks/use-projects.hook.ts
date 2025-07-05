@@ -10,6 +10,7 @@ import {
   getProjects,
   updateProject,
 } from "../services/project.service";
+import { useProjectCreateStore } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
 
 /**
@@ -43,15 +44,17 @@ export function useProject(projectId: string) {
 export function useCreateProject() {
   const router = useRouter();
   const queryClient = getQueryClient();
+  const { resetForm } = useProjectCreateStore();
+
   const mutation = useToastMutation({
     mutationFn: createProject,
     loadingMessage: "Création du projet en cours...",
     successMessage: "Projet créé avec succès",
     errorMessage: "Erreur lors de la création du projet",
     options: {
-      onSuccess: (project) => {
+      onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["projects"] });
-        router.push(`/projects/${project.id}`);
+        router.push("/projects/create/success");
       },
     },
   });
