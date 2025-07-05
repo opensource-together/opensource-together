@@ -45,11 +45,12 @@ export class CreateProjectRoleCommandHandler
 
   async execute(
     command: CreateProjectRoleCommand,
-  ): Promise<Result<ProjectRole, string>> {
+  ): Promise<Result<ProjectRole, ProjectRoleValidationErrors | string>> {
     const { projectId, userId, title, description, isFilled, techStacks } =
       command.props;
 
     const techStacksValidation = await this.techStackRepo.findByIds(techStacks);
+    console.log({ techStacksValidation });
     if (!techStacksValidation.success) {
       return Result.fail(techStacksValidation.error);
     }
@@ -90,11 +91,7 @@ export class CreateProjectRoleCommandHandler
     });
 
     if (!projectRoleResult.success) {
-      return Result.fail(
-        typeof projectRoleResult.error === 'string'
-          ? projectRoleResult.error
-          : JSON.stringify(projectRoleResult.error),
-      );
+      return Result.fail(projectRoleResult.error);
     }
 
     // Sauvegarder le rôle
