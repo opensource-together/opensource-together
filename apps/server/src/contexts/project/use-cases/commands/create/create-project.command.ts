@@ -120,38 +120,39 @@ export class CreateProjectCommandHandler
 
     //si valide alors on enregistre le projet dans la persistance
     const savedProject = await this.projectRepo.create(projectValidated);
-    if (!savedProject.success) return Result.fail(savedProject.error);
+    if (!savedProject.success) return Result.fail('Unable to create project');
 
     //si le projet est valide alors on créer un github repository
-    // const githubRepositoryResult: Result<GithubRepositoryDto, string> =
-    //   await this.githubRepository.createGithubRepository(
-    //     {
-    //       title: savedProject.value.toPrimitive().title,
-    //       description: savedProject.value.toPrimitive().description,
-    //     },
-    //     octokit,
-    //   );
+    const githubRepositoryResult: Result<GithubRepositoryDto, string> =
+      await this.githubRepository.createGithubRepository(
+        {
+          title: savedProject.value.toPrimitive().title,
+          description: savedProject.value.toPrimitive().description,
+        },
+        octokit,
+      );
 
-    // if (githubRepositoryResult.success) {
-    //   //TO DO: Voir si on supprime le projet si on a pas de github repository
-    //   const { html_url } = githubRepositoryResult.value;
+    if (githubRepositoryResult.success) {
+      //TO DO: Voir si on supprime le projet si on a pas de github repository
+      const { html_url } = githubRepositoryResult.value;
 
-    //   if (html_url) {
-    //     //on ajoute le lien github au projet
-    //     savedProject.value.addExternalLink({
-    //       type: 'github',
-    //       url: html_url,
-    //     });
-    //     //on met à jour le projet avec le lien github dans la persistance
-    //     const savedProjectWithGithubLink = await this.projectRepo.update(
-    //       savedProject.value.toPrimitive().id as string,
-    //       savedProject.value,
-    //     );
-    //     if (!savedProjectWithGithubLink.success) {
-    //       return Result.fail(savedProjectWithGithubLink.error);
-    //     }
-    //   }
-    // }
+      if (html_url) {
+        //on ajoute le lien github au projet
+        savedProject.value.addExternalLink({
+          type: 'github',
+          url: html_url,
+        });
+        //on met à jour le projet avec le lien github dans la persistance
+        const savedProjectWithGithubLink = await this.projectRepo.update(
+          savedProject.value.toPrimitive().id as string,
+          savedProject.value,
+        );
+        if (!savedProjectWithGithubLink.success) {
+          //si une erreur survient, on renvoie quand meme le projet créé
+          return Result.ok(savedProject.value);
+        }
+      }
+    }
     //on retourne le projet avec les roles ajoutés
     return Result.ok(savedProject.value);
   }
