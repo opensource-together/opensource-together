@@ -2,9 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
@@ -18,10 +16,14 @@ import {
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 
-export function StepFourForm() {
+interface StepFourFormProps {
+  onSubmit: () => void;
+  isLoading: boolean;
+}
+
+export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
   const router = useRouter();
-  const { formData } = useProjectCreateStore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { formData, updateProjectInfo } = useProjectCreateStore();
 
   const form = useForm<StepFourFormData>({
     resolver: zodResolver(stepFourSchema),
@@ -45,32 +47,44 @@ export function StepFourForm() {
   };
 
   const handleSubmit = async (data: StepFourFormData) => {
-    setIsSubmitting(true);
     try {
-      // Simulate API call
-      console.log("Début de la création du projet...");
-      console.log("Données du projet:", {
-        ...formData,
-        ...data,
-        logo: data.logo
-          ? {
-              name: data.logo.name,
-              size: data.logo.size,
-              type: data.logo.type,
-            }
-          : null,
-        createdAt: new Date().toISOString(),
-        status: "DRAFT",
+      // Update the store with step 4 data
+      const externalLinksArray = [];
+
+      if (data.externalLinks?.github) {
+        externalLinksArray.push({
+          type: "github" as const,
+          url: data.externalLinks.github,
+        });
+      }
+      if (data.externalLinks?.discord) {
+        externalLinksArray.push({
+          type: "discord" as const,
+          url: data.externalLinks.discord,
+        });
+      }
+      if (data.externalLinks?.twitter) {
+        externalLinksArray.push({
+          type: "twitter" as const,
+          url: data.externalLinks.twitter,
+        });
+      }
+      if (data.externalLinks?.website) {
+        externalLinksArray.push({
+          type: "other" as const,
+          url: data.externalLinks.website,
+        });
+      }
+
+      updateProjectInfo({
+        image: data.logo ? URL.createObjectURL(data.logo) : "",
+        externalLinks: externalLinksArray,
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("Projet créé avec succès !");
-
-      router.push("/projects/create/success");
+      // Call the onSubmit function passed from the view
+      onSubmit();
     } catch (error) {
-      console.error("Erreur lors de la création du projet:", error);
-    } finally {
-      setIsSubmitting(false);
+      console.error("Erreur lors de la préparation des données:", error);
     }
   };
 
@@ -152,7 +166,8 @@ export function StepFourForm() {
         onNext={() => form.handleSubmit(handleSubmit)()}
         previousLabel="Retour"
         nextLabel="Publier le projet"
-        isLoading={isSubmitting}
+        isLoading={isLoading}
+        isNextDisabled={false} // No specific disabled state for this step
         nextType="button"
       />
     </form>

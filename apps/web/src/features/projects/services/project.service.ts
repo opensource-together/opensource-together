@@ -1,7 +1,7 @@
 import { mockProjects } from "../mocks/project.mock";
+import { ProjectFormData } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
 import {
-  CreateProjectData,
   CreateProjectSchema,
   UpdateProjectData,
   UpdateProjectSchema,
@@ -34,14 +34,86 @@ export const getProjectDetails = async (
 };
 
 /**
- * Create a new project
+ * Create a new project from store form data
  */
 export const createProject = async (
-  data: CreateProjectData
+  storeData: ProjectFormData
 ): Promise<Project> => {
   try {
+    console.log("=== SERVICE: DONNÉES REÇUES DU STORE ===");
+    console.log("Store data:", storeData);
+
+    // Format external links - they are already in array format in the store
+    const externalLinksArray = storeData.externalLinks.filter(
+      (link) => link.url && link.url.trim() !== ""
+    );
+
+    // Format roles to match ProjectRole interface
+    const formattedRoles = storeData.roles.map((role) => ({
+      id: role.id || crypto.randomUUID(),
+      title: role.title,
+      description: role.description,
+      techStacks: role.techStacks || [],
+    }));
+
+    // Format key features to match KeyFeature interface
+    const formattedKeyFeatures = storeData.keyFeatures.map((feature) => ({
+      id: feature.id || crypto.randomUUID(),
+      title: feature.title,
+    }));
+
+    // Format project goals to match ProjectGoal interface
+    const formattedProjectGoals = storeData.projectGoals.map((goal) => ({
+      id: goal.id || crypto.randomUUID(),
+      goal: goal.goal,
+    }));
+
+    // Create the full project data matching Project interface
+    const projectData = {
+      title: storeData.projectName,
+      shortDescription: storeData.shortDescription,
+      longDescription: "", // Could be added later
+      image: storeData.image,
+      status: "DRAFT" as const,
+      techStacks: storeData.techStack || [],
+      roles: formattedRoles,
+      externalLinks: externalLinksArray,
+      keyFeatures: formattedKeyFeatures,
+      projectGoals: formattedProjectGoals,
+      categories: storeData.categories || [],
+      author: {
+        id: "current-user", // This should come from auth context
+        name: "Current User", // This should come from auth context
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    // Format for the validation schema (CreateProjectData)
+    const createProjectData = {
+      projectId: `project-${Date.now()}`,
+      data: {
+        title: projectData.title,
+        description: projectData.shortDescription,
+        longDescription: projectData.longDescription,
+        status: projectData.status,
+        techStacks: projectData.techStacks,
+        roles: projectData.roles.map((role) => ({
+          title: role.title,
+          description: role.description,
+          badges: [], // Required by schema but not used yet
+          experienceBadge: undefined, // Optional in schema
+        })),
+        socialLinks: projectData.externalLinks,
+        keyBenefits: projectData.keyFeatures.map((feature) => feature.title), // Schema expects keyBenefits
+      },
+    };
+
+    console.log("=== SERVICE: DONNÉES FORMATÉES POUR VALIDATION ===");
+    console.log("Create project data:", createProjectData);
+
     // Validate input data
-    const validatedData = CreateProjectSchema.parse(data);
+    const validatedData = CreateProjectSchema.parse(createProjectData);
 
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 800));
@@ -67,22 +139,20 @@ export const createProject = async (
           type: link.type,
           url: link.url,
         })) || [],
-      keyFeatures: [],
-      projectGoals: [],
-      categories: [],
-      author: {
-        id: "mock-author",
-        name: "Mock Author",
-        avatarUrl: "/icons/empty-project.svg",
-      },
+      keyFeatures: projectData.keyFeatures,
+      projectGoals: projectData.projectGoals,
+      categories: projectData.categories,
+      author: projectData.author,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
+    console.log("=== SERVICE: PROJET CRÉÉ AVEC SUCCÈS ===");
     console.log("New project created:", newProject);
+
     return newProject;
   } catch (error) {
-    console.error("Error while creating the project:", error);
+    console.error("Error while creating project from store:", error);
     throw error;
   }
 };
