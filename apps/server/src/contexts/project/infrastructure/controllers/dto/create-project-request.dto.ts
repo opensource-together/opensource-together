@@ -32,7 +32,6 @@ export class CreateProjectDtoRequest {
   projectRoles: {
     title: string;
     description: string;
-    isFilled: boolean;
     techStacks: string[];
   }[];
 }

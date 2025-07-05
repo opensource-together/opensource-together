@@ -33,7 +33,6 @@ export class CreateProjectCommand implements ICommand {
       projectRoles: {
         title: string;
         description: string;
-        isFilled: boolean;
         techStacks: string[];
       }[];
       octokit: Octokit;
@@ -103,7 +102,7 @@ export class CreateProjectCommandHandler
       projectRoles: projectRoles.map((role) => ({
         title: role.title,
         description: role.description,
-        isFilled: role.isFilled,
+        isFilled: false,
         techStacks: role.techStacks.map((ts) => ({
           id: ts,
           name: allTechStacksValidated

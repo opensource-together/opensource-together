@@ -119,7 +119,6 @@ export class ProjectController {
         projectRoles: project.projectRoles.map((role) => ({
           title: role.title,
           description: role.description,
-          isFilled: role.isFilled,
           techStacks: role.techStacks,
         })),
         octokit: octokit,

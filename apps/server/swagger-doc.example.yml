@@ -129,78 +129,313 @@ paths:
       tags:
         - Projects
       summary: Créer un nouveau projet
-      operationId: createProject
       description: |
-        Crée un nouveau projet sur la plateforme.
-        Nécessite une authentification GitHub valide.
-        L'utilisateur connecté devient automatiquement le propriétaire du projet.
+        Crée un nouveau projet avec ses rôles associés.
+
+        **Comportement détaillé :**
+        - Vérifie qu'aucun projet n'existe déjà avec le même titre
+        - Valide tous les tech stacks (projet + rôles combinés)
+        - Récupère TOUS les tech stacks disponibles et les retourne
+        - Crée automatiquement un repository GitHub privé
+        - Ajoute le lien GitHub aux externalLinks
+        - Crée le projet avec tous ses rôles (isFilled forcé à false)
+        - Retourne le projet complet avec timestamps
+
+        **Authentification requise :** GitHub OAuth + Session
       security:
-        - supertokens_session: []
+        - cookieAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateProjectDtoInput'
-            example:
-              title: 'Mon Nouveau Projet Open Source'
-              description: 'Description détaillée de mon projet innovant'
-              difficulty: 'MEDIUM'
-              link: 'https://example.com/my-project'
-              githubLink: 'https://github.com/user/my-project'
-              techStacks:
-                - id: 'react'
-                - id: 'typescript'
-              projectRoles:
-                - roleTitle: 'Frontend Developer'
-                  description: 'Développeur React expérimenté'
-                  skillSet:
-                    - id: 'react'
-                  isFilled: false
-              projectMembers:
-                [
-                  { 'userId': '9b4d1ac3-a5ca-4d97-988f-3924e52314e7' },
-                  { 'userId': '9b4d1ac3-a5ca-4d97-988f-3924e52314e7' },
-                ]
+              type: object
+              required:
+                - title
+                - description
+                - shortDescription
+                - techStacks
+                - projectRoles
+              properties:
+                title:
+                  type: string
+                  description: Titre du projet (doit être unique)
+                  example: 'test'
+                  minLength: 3
+                  maxLength: 100
+                description:
+                  type: string
+                  description: Description détaillée du projet
+                  example: 'project de test'
+                  minLength: 1
+                  maxLength: 1000
+                shortDescription:
+                  type: string
+                  description: Description courte du projet
+                  example: 'Description courte de mon projet innovant, LEEE '
+                  minLength: 1
+                  maxLength: 100
+                externalLinks:
+                  type: array
+                  description: Liens externes optionnels (en plus du GitHub auto-créé)
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        example: 'website'
+                      url:
+                        type: string
+                        example: 'https://example.com'
+                  required: false
+                techStacks:
+                  type: array
+                  description: Liste des IDs des tech stacks du projet
+                  items:
+                    type: string
+                  example: ['3']
+                  minItems: 1
+                projectRoles:
+                  type: array
+                  description: Liste des rôles nécessaires pour le projet (isFilled sera forcé à false)
+                  items:
+                    type: object
+                    required:
+                      - title
+                      - description
+                      - techStacks
+                    properties:
+                      title:
+                        type: string
+                        description: Titre du rôle
+                        example: 'Frontend Developer'
+                        minLength: 1
+                        maxLength: 100
+                      description:
+                        type: string
+                        description: Description du rôle
+                        example: 'Développeur React expérimenté'
+                        minLength: 1
+                        maxLength: 500
+                      techStacks:
+                        type: array
+                        description: Tech stacks requises pour ce rôle
+                        items:
+                          type: string
+                        example: ['2']
+                        minItems: 1
+                  minItems: 1
+            examples:
+              projet_complet:
+                summary: Projet avec plusieurs rôles
+                value:
+                  title: 'test'
+                  description: 'project de test'
+                  shortDescription: 'Description courte de mon projet innovant, LEEE '
+                  techStacks: ['3']
+                  projectRoles:
+                    - title: 'Frontend Developer'
+                      description: 'Développeur React expérimenté'
+                      techStacks: ['2']
+                    - title: 'Frontend Developer'
+                      description: 'Développeur React junior'
+                      techStacks: ['2']
+                    - title: 'Backend Developer'
+                      description: 'Développeur php junior'
+                      techStacks: ['2']
       responses:
-        '200':
+        '201':
           description: Projet créé avec succès
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectResponseDto'
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: ID unique du projet
+                    example: '5f4cbe9b-1305-43a2-95ca-23d7be707717'
+                  ownerId:
+                    type: string
+                    format: uuid
+                    description: ID du propriétaire du projet
+                    example: 'bedb6486-1cbb-4333-b541-59d4af7da7f5'
+                  title:
+                    type: string
+                    example: 'test'
+                  shortDescription:
+                    type: string
+                    example: 'Description courte de mon projet innovant, LEEE '
+                  description:
+                    type: string
+                    example: 'project de test'
+                  externalLinks:
+                    type: array
+                    description: Liens externes (repository GitHub créé automatiquement)
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: 'github'
+                        url:
+                          type: string
+                          example: 'https://github.com/Lhourquin/test'
+                  techStacks:
+                    type: array
+                    description: TOUS les tech stacks disponibles dans le système
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '2'
+                        name:
+                          type: string
+                          example: 'Next.js'
+                        iconUrl:
+                          type: string
+                          example: 'https://nextjs.org/static/favicon/favicon-32x32.png'
+                  projectRoles:
+                    type: array
+                    description: Rôles créés pour le projet
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: ID unique du rôle
+                          example: '6d9bbab8-a06e-4980-b410-09fe87e69630'
+                        projectId:
+                          type: string
+                          format: uuid
+                          description: ID du projet parent
+                          example: '5f4cbe9b-1305-43a2-95ca-23d7be707717'
+                        title:
+                          type: string
+                          example: 'Frontend Developer'
+                        description:
+                          type: string
+                          example: 'Développeur React expérimenté'
+                        isFilled:
+                          type: boolean
+                          description: Toujours false à la création
+                          example: false
+                        techStacks:
+                          type: array
+                          description: Tech stacks du rôle avec leurs détails
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: '2'
+                              name:
+                                type: string
+                                example: 'Next.js'
+                              iconUrl:
+                                type: string
+                                example: 'https://nextjs.org/static/favicon/favicon-32x32.png'
+                        createdAt:
+                          type: string
+                          format: date-time
+                          example: '2025-07-05T14:59:31.560Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          example: '2025-07-05T14:59:31.560Z'
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2025-07-05T14:59:31.560Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2025-07-05T14:59:31.560Z'
         '400':
-          description: Erreur lors de la création du projet
+          description: Erreur de validation
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
-                    description: Message d'erreur du système de validation ou de création
+                  error:
                     oneOf:
-                      - example: 'Le titre du projet est requis'
-                      - example: 'La description du projet doit comporter au minimum 10 caracteres'
-                      - example: 'Project already exists'
-                      - example: 'Related record not found (e.g., invalid user or tech stack)'
-                      - example: 'Required record not found during creation (e.g., TechStack)'
-                  statusCode:
-                    type: integer
-                    example: 400
+                      - type: string
+                        description: Erreur métier simple
+                        enum:
+                          - 'Project with same title already exists'
+                          - 'Some tech stacks are not found'
+                          - 'Unable to create project'
+                      - type: object
+                        description: Erreurs de validation détaillées des Value Objects
+                        properties:
+                          ownerId:
+                            type: string
+                            example: 'ownerId is required'
+                          title:
+                            type: string
+                            enum:
+                              - 'Title is required'
+                              - 'Title must be at least 3 characters'
+                              - 'Title must be less than 100 characters'
+                          description:
+                            type: string
+                            enum:
+                              - 'Description is required'
+                              - 'Description must be less than 1000 characters'
+                          shortDescription:
+                            type: string
+                            enum:
+                              - 'Short description is required'
+                              - 'Short description must be less than 100 characters'
+                          techStacks:
+                            type: string
+                            example: 'At least one tech stack is required'
+                          projectRoles:
+                            type: string
+                            description: Erreurs de validation des rôles
+                            enum:
+                              - 'Role title is required'
+                              - 'Role title must be less than 100 characters'
+                              - 'Description is required'
+                              - 'Description must be less than 500 characters'
+                              - 'At least one tech stack is required'
+              examples:
+                titre_trop_court:
+                  summary: Titre trop court
+                  value:
+                    error:
+                      title: 'Title must be at least 3 characters'
+                titre_trop_long:
+                  summary: Titre trop long
+                  value:
+                    error:
+                      title: 'Title must be less than 100 characters'
+                description_trop_longue:
+                  summary: Description trop longue
+                  value:
+                    error:
+                      description: 'Description must be less than 1000 characters'
+                techstacks_inexistants:
+                  summary: Tech stacks non trouvés
+                  value:
+                    error: 'Some tech stacks are not found'
+                titre_deja_existant:
+                  summary: Titre déjà utilisé
+                  value:
+                    error: 'Project with same title already exists'
+                role_invalide:
+                  summary: Rôle invalide
+                  value:
+                    error:
+                      projectRoles: 'Role title is required'
         '401':
-          description: Non authentifié - session requise
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'unauthorised'
-                  statusCode:
-                    type: integer
-                    example: 401
+          description: Non authentifié
+        '403':
+          description: Token GitHub manquant ou invalide
   /projects/search:
     get:
       tags:
@@ -490,320 +725,195 @@ paths:
   /projects/{id}/roles:
     post:
       tags:
-        - Projects
-      summary: Créer un nouveau rôle de projet
-      operationId: createProjectRole
+        - Project Roles
+      summary: Ajouter un rôle à un projet existant
       description: |
-        Crée un nouveau rôle pour un projet existant.
-        Nécessite d'être le propriétaire du projet.
+        Ajoute un nouveau rôle à un projet existant.
+
+        **Comportement détaillé :**
+        - Vérifie que le projet existe
+        - Vérifie que l'utilisateur est propriétaire du projet
+        - Valide les tech stacks fournis
+        - Crée le rôle avec isFilled=false (forcé)
+        - Retourne le rôle créé avec timestamps
+
+        **Authentification requise :** Session utilisateur
       security:
-        - supertokens_session: []
+        - cookieAuth: []
       parameters:
-        - name: id
-          in: path
-          description: ID du projet dans lequel créer le rôle
+        - in: path
+          name: projectId
           required: true
           schema:
             type: string
-            example: '123e4567-e89b-12d3-a456-426614174000'
+            format: uuid
+          description: ID du projet
+          example: '5f4cbe9b-1305-43a2-95ca-23d7be707717'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateProjectRoleDto'
-            example:
-              roleTitle: 'Frontend Developer'
-              description: 'Développeur React expérimenté'
-              isFilled: false
-              skillSet:
-                - id: 'react'
-                - id: 'typescript'
+              type: object
+              required:
+                - title
+                - description
+                - techStacks
+              properties:
+                title:
+                  type: string
+                  description: Titre du rôle
+                  example: 'Développeur Mobile'
+                  minLength: 1
+                  maxLength: 100
+                description:
+                  type: string
+                  description: Description détaillée du rôle
+                  example: "Développement de l'application mobile avec React Native"
+                  minLength: 1
+                  maxLength: 500
+                techStacks:
+                  type: array
+                  description: Liste des IDs des tech stacks requises pour ce rôle
+                  items:
+                    type: string
+                  example: ['4', '5']
+                  minItems: 1
+            examples:
+              role_mobile:
+                summary: Rôle développeur mobile
+                value:
+                  title: 'Développeur Mobile'
+                  description: "Développement de l'application mobile avec React Native"
+                  techStacks: ['4', '5']
+              role_devops:
+                summary: Rôle DevOps
+                value:
+                  title: 'Ingénieur DevOps'
+                  description: 'Configuration CI/CD et déploiement sur AWS'
+                  techStacks: ['6', '7', '8']
       responses:
-        '200':
-          description: Rôle de projet créé avec succès
+        '201':
+          description: Rôle créé avec succès
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  id:
                     type: string
-                    example: 'Project role created successfully'
-                  role:
-                    $ref: '#/components/schemas/ProjectRoleResponseDto'
+                    format: uuid
+                    description: ID unique du rôle
+                    example: '987fcdeb-51a2-4c3d-8f9e-1234567890ab'
+                  projectId:
+                    type: string
+                    format: uuid
+                    description: ID du projet parent
+                    example: '5f4cbe9b-1305-43a2-95ca-23d7be707717'
+                  title:
+                    type: string
+                    example: 'Développeur Mobile'
+                  description:
+                    type: string
+                    example: "Développement de l'application mobile avec React Native"
+                  isFilled:
+                    type: boolean
+                    description: Toujours false à la création
+                    example: false
+                  techStacks:
+                    type: array
+                    description: Tech stacks requises avec leurs détails
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '4'
+                        name:
+                          type: string
+                          example: 'React Native'
+                        iconUrl:
+                          type: string
+                          example: 'https://reactnative.dev/img/header_logo.svg'
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2025-07-05T15:30:00.000Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2025-07-05T15:30:00.000Z'
         '400':
-          description: Erreur lors de la création du rôle
+          description: Erreur de validation
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
-                    type: string
-                    description: Message d'erreur spécifique
+                  error:
                     oneOf:
-                      - example: 'Le titre du rôle est requis'
-                      - example: 'Project role already exists'
-                      - example: 'Related record not found (e.g., invalid skill)'
-                      - example: 'One or more techStacks do not exist: tech1, tech2'
-                  statusCode:
-                    type: integer
-                    example: 400
+                      - type: string
+                        description: Erreur métier simple
+                        enum:
+                          - 'Project not found'
+                          - 'You are not allowed to add roles to this project'
+                      - type: object
+                        description: Erreurs de validation détaillées du ProjectRole
+                        properties:
+                          title:
+                            type: string
+                            enum:
+                              - 'Role title is required'
+                              - 'Role title must be less than 100 characters'
+                          description:
+                            type: string
+                            enum:
+                              - 'Description is required'
+                              - 'Description must be less than 500 characters'
+                          techStacks:
+                            type: string
+                            example: 'At least one tech stack is required'
+                          isFilled:
+                            type: string
+                            example: 'isFilled must be a boolean'
+              examples:
+                projet_inexistant:
+                  summary: Projet non trouvé
+                  value:
+                    error: 'Project not found'
+                pas_proprietaire:
+                  summary: Utilisateur non autorisé
+                  value:
+                    error: 'You are not allowed to add roles to this project'
+                titre_vide:
+                  summary: Titre du rôle vide
+                  value:
+                    error:
+                      title: 'Role title is required'
+                titre_trop_long:
+                  summary: Titre du rôle trop long
+                  value:
+                    error:
+                      title: 'Role title must be less than 100 characters'
+                description_vide:
+                  summary: Description vide
+                  value:
+                    error:
+                      description: 'Description is required'
+                description_trop_longue:
+                  summary: Description trop longue
+                  value:
+                    error:
+                      description: 'Description must be less than 500 characters'
+                techstacks_vides:
+                  summary: Aucun tech stack fourni
+                  value:
+                    error:
+                      techStacks: 'At least one tech stack is required'
         '401':
-          description: Non authentifié - session requise
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'unauthorised'
-                  statusCode:
-                    type: integer
-                    example: 401
-        '403':
-          description: Accès interdit - vous n'êtes pas le propriétaire de ce projet
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'You are not allowed to add roles to this project'
-                  statusCode:
-                    type: integer
-                    example: 403
+          description: Non authentifié
         '404':
           description: Projet non trouvé
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Project not found'
-                  statusCode:
-                    type: integer
-                    example: 404
-  /projects/{id}/roles/{roleId}:
-    patch:
-      tags:
-        - Projects
-      summary: Mettre à jour un rôle de projet existant
-      operationId: updateProjectRole
-      description: |
-        Met à jour les informations d'un rôle spécifique dans un projet.
-
-        **🔒 Sécurité :**
-        - Seul le propriétaire du projet peut modifier les rôles
-        - Vérification automatique de propriété côté serveur
-
-        **✏️ Modifications possibles :**
-        - Titre du rôle
-        - Description
-        - Statut (pourvu ou non)
-        - Compétences techniques requises
-      security:
-        - supertokens_session: []
-      parameters:
-        - name: id
-          in: path
-          description: ID du projet contenant le rôle
-          required: true
-          schema:
-            type: string
-            example: '123e4567-e89b-12d3-a456-426614174000'
-        - name: roleId
-          in: path
-          description: ID du rôle à mettre à jour
-          required: true
-          schema:
-            type: string
-            example: '789e4567-e89b-12d3-a456-426614174111'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateProjectRoleDto'
-            example:
-              roleTitle: 'Senior Frontend Developer'
-              description: 'Développeur React expérimenté avec expertise en TypeScript'
-              isFilled: true
-              skillSet:
-                - id: 'react'
-                - id: 'typescript'
-      responses:
-        '200':
-          description: Rôle de projet mis à jour avec succès
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Project role updated successfully'
-        '400':
-          description: Erreur lors de la mise à jour du rôle
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: Message d'erreur spécifique (validation, autorisation, etc.)
-                    oneOf:
-                      - example: 'Le titre du rôle est requis'
-                      - example: 'La description du rôle doit comporter au minimum 10 caractères'
-                  statusCode:
-                    type: integer
-                    example: 400
-        '401':
-          description: Non authentifié - session requise
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'unauthorised'
-                  statusCode:
-                    type: integer
-                    example: 401
-        '403':
-          description: Accès interdit - vous n'êtes pas le propriétaire de ce projet
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'You are not allowed to update this project role'
-                  statusCode:
-                    type: integer
-                    example: 403
-        '404':
-          description: Projet ou rôle non trouvé
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    oneOf:
-                      - example: 'Project not found'
-                      - example: 'Role not found in this project'
-                  statusCode:
-                    type: integer
-                    example: 404
-    delete:
-      tags:
-        - Projects
-      summary: Supprimer un rôle de projet
-      operationId: deleteProjectRole
-      description: |
-        Supprime un rôle spécifique d'un projet.
-
-        **🔒 Sécurité :**
-        - Seul le propriétaire du projet peut supprimer des rôles
-        - Vérification automatique de propriété côté serveur
-
-        **⚠️ Action irréversible :**
-        Cette action supprime définitivement le rôle et ses associations.
-      security:
-        - supertokens_session: []
-      parameters:
-        - name: id
-          in: path
-          description: ID du projet contenant le rôle
-          required: true
-          schema:
-            type: string
-            example: '123e4567-e89b-12d3-a456-426614174000'
-        - name: roleId
-          in: path
-          description: ID du rôle à supprimer
-          required: true
-          schema:
-            type: string
-            example: '789e4567-e89b-12d3-a456-426614174111'
-      responses:
-        '200':
-          description: Rôle de projet supprimé avec succès
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Project role deleted successfully'
-        '400':
-          description: Erreur lors de la suppression du rôle
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: Message d'erreur technique lors de la suppression
-                    oneOf:
-                      - example: 'Unknown error during role deletion'
-                      - example: 'Cannot delete role: it may still be referenced elsewhere'
-                  statusCode:
-                    type: integer
-                    example: 400
-        '401':
-          description: Non authentifié - session requise
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'unauthorised'
-                  statusCode:
-                    type: integer
-                    example: 401
-        '403':
-          description: Accès interdit - vous n'êtes pas le propriétaire de ce projet
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'You are not allowed to delete roles from this project'
-                  statusCode:
-                    type: integer
-                    example: 403
-        '404':
-          description: Projet ou rôle non trouvé
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    oneOf:
-                      - example: 'Project not found'
-                      - example: 'Role not found in this project'
-                  statusCode:
-                    type: integer
-                    example: 404
   /auth/signup:
     post:
       tags:
@@ -1670,7 +1780,7 @@ components:
               example: 'https://avatars.githubusercontent.com/u/123456789'
             html_url:
               type: string
-              description: URL du profil GitHub public
+              description: URL du profil GitHub
               example: 'https://github.com/johndoe'
             bio:
               type: string
