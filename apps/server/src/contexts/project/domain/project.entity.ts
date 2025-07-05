@@ -83,83 +83,13 @@ export class Project {
     this.projectRoles = props.projectRoles;
   }
 
+  //utiliser uniquement pour créer un nouveau projet
   public static create(
     props: ProjectData,
   ): Result<Project, ProjectValidationErrors | string> {
     return Project.validate(props);
   }
-
-  public static validate(
-    props: ProjectData,
-  ): Result<Project, ProjectValidationErrors | string> {
-    const validationErrors: ProjectValidationErrors = {};
-    if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
-    if (!props.techStacks || props.techStacks.length === 0)
-      validationErrors.techStacks = 'At least one tech stack is required';
-
-    const voValidationResults = {
-      title: Title.create(props.title),
-      description: Description.create(props.description),
-      shortDescription: ShortDescription.create(props.shortDescription),
-      techStacks: TechStack.reconstituteMany(props.techStacks),
-    };
-    //extract the error from the validation results
-    Object.entries(voValidationResults).forEach(([key, result]) => {
-      if (!result.success)
-        validationErrors[key as keyof ProjectValidationErrors] =
-          result.error as string;
-    });
-    //reconstitute the object with the value of the validation results
-    const { title, description, shortDescription, techStacks } =
-      Object.fromEntries(
-        Object.entries(voValidationResults).map(([key, result]) => [
-          key,
-          result.success ? result.value : result.error,
-        ]),
-      ) as {
-        title: Title;
-        description: Description;
-        shortDescription: ShortDescription;
-        techStacks: TechStack[];
-      };
-
-    let projectRoles: ProjectRole[] = [];
-    if (props.projectRoles.length > 0) {
-      let validationResults: Result<
-        ProjectRole[],
-        ProjectRoleValidationErrors | string
-      >;
-      if (props.projectRoles.every((pr) => pr.id)) {
-        validationResults = ProjectRole.reconstituteMany(
-          props.projectRoles.map((pr) => ({
-            ...pr,
-            projectId: props.id as string,
-          })),
-        );
-        if (!validationResults.success) {
-          validationErrors.projectRoles =
-            validationResults.error as ProjectRoleValidationErrors;
-        }
-        projectRoles = validationResults.success ? validationResults.value : [];
-      }
-    } else {
-      projectRoles = [];
-    }
-    if (Object.keys(validationErrors).length > 0)
-      return Result.fail(validationErrors);
-
-    return Result.ok(
-      new Project({
-        ...props,
-        title,
-        shortDescription,
-        description,
-        techStacks,
-        projectRoles,
-      }),
-    );
-  }
-
+  //quand un projet existe et est récupérer de la persistance
   public static reconstitute(
     props: ProjectData,
   ): Result<Project, ProjectValidationErrors | string> {
@@ -176,6 +106,57 @@ export class Project {
     }
 
     return Project.validate(props);
+  }
+
+  public static validate(
+    props: ProjectData,
+  ): Result<Project, ProjectValidationErrors | string> {
+    const validationErrors: ProjectValidationErrors = {};
+    if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
+    if (!props.techStacks || props.techStacks.length === 0)
+      validationErrors.techStacks = 'At least one tech stack is required';
+
+    const voValidationResults = {
+      title: Title.create(props.title),
+      description: Description.create(props.description),
+      shortDescription: ShortDescription.create(props.shortDescription),
+      techStacks: TechStack.reconstituteMany(props.techStacks),
+      projectRoles: ProjectRole.createMany(props.projectRoles),
+    };
+    //extract the error from the validation results
+    Object.entries(voValidationResults).forEach(([key, result]) => {
+      if (!result.success)
+        validationErrors[key as keyof ProjectValidationErrors] =
+          result.error as string;
+    });
+    //reconstitute the object with the value of the validation results
+    const { title, description, shortDescription, techStacks, projectRoles } =
+      Object.fromEntries(
+        Object.entries(voValidationResults).map(([key, result]) => [
+          key,
+          result.success ? result.value : result.error,
+        ]),
+      ) as {
+        title: Title;
+        description: Description;
+        shortDescription: ShortDescription;
+        techStacks: TechStack[];
+        projectRoles: ProjectRole[];
+      };
+
+    if (Object.keys(validationErrors).length > 0)
+      return Result.fail(validationErrors);
+
+    return Result.ok(
+      new Project({
+        ...props,
+        title,
+        shortDescription,
+        description,
+        techStacks,
+        projectRoles,
+      }),
+    );
   }
 
   private getTechStacks(): ReadonlyArray<TechStack> {
@@ -211,33 +192,24 @@ export class Project {
     return Result.ok(undefined);
   }
 
-  public createProjectRole(projectRole: {
-    title: string;
-    description: string;
-    isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
-  }): Result<ProjectRole, string> {
-    const techStacks = TechStack.reconstituteMany(projectRole.techStacks);
-    if (!techStacks.success) {
-      return Result.fail(techStacks.error as string);
+  //pour créer un role qui respecte nos regles métier, utiliser uniquement quand un projet existe et est récupérer de la persistance
+  public createRoles(
+    projectRoles: {
+      title: string;
+      description: string;
+      isFilled: boolean;
+      techStacks: { id: string; name: string; iconUrl: string }[];
+    }[],
+  ): Result<ProjectRole[], string> {
+    const projectRolesResults = ProjectRole.createMany(projectRoles);
+    if (!projectRolesResults.success) {
+      return Result.fail(projectRolesResults.error as string);
     }
-    console.log('projectId', this.id);
-    const projectRoleResult = ProjectRole.create({
-      projectId: this.id as string,
-      title: projectRole.title,
-      description: projectRole.description,
-      isFilled: projectRole.isFilled,
-      techStacks: techStacks.value.map((ts) => ts.toPrimitive()),
-    });
-    console.log('projectRoleResult', projectRoleResult);
-    if (!projectRoleResult.success) {
-      return Result.fail(projectRoleResult.error as string);
-    }
-
-    // this.projectRoles?.push(projectRoleResult.value);
-    return Result.ok(projectRoleResult.value);
+    return Result.ok(projectRolesResults.value);
   }
 
+  //pour ajouter un role à un projet existant,
+  //utiliser une fois que le project role est créer dans la persistance
   public addProjectRole(projectRole: ProjectRole): Result<void, string> {
     if (projectRole.toPrimitive().projectId !== this.id) {
       return Result.fail('Project role does not belong to this project');
@@ -252,6 +224,7 @@ export class Project {
     return Result.ok(undefined);
   }
 
+  //même chose que addProjectRole mais pour en ajouter plusieurs en une fois
   public addProjectRoles(projectRoles: ProjectRole[]): Result<void, string> {
     const projectRolesResults = projectRoles.map((pr) =>
       this.addProjectRole(pr),

@@ -7,7 +7,7 @@ import { MockClock } from '@/libs/time/mock-clock';
 
 type ProjectRoleInMemory = {
   id: string;
-  projectId: string;
+  projectId?: string;
   title: string;
   description: string;
   isFilled: boolean;
@@ -24,7 +24,6 @@ export class InMemoryProjectRoleRepository
   private projectRoles: ProjectRoleInMemory[] = [
     {
       id: 'role-1',
-      projectId: '123',
       title: 'Frontend Developer',
       description: 'Responsible for UI development',
       isFilled: false,

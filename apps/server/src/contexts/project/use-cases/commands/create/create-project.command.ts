@@ -13,10 +13,6 @@ import { ICommandHandler } from '@nestjs/cqrs';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
 import { ProjectRoleRepositoryPort } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
 import {
-  ProjectRole,
-  // ProjectRoleValidationErrors,
-} from '@/contexts/project-role/domain/project-role.entity';
-import {
   TECHSTACK_REPOSITORY_PORT,
   TechStackRepositoryPort,
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
@@ -81,9 +77,7 @@ export class CreateProjectCommandHandler
     // Récupérer tous les IDs des techStacks du projet
     // verifier si un project n'existe pas déjà avec le même titre
     const projectWithSameTitle = await this.projectRepo.findByTitle(title);
-    console.log('projectWithSameTitle', projectWithSameTitle);
     if (projectWithSameTitle.success) {
-      // errors.project = 'Project with same title already exists';
       return Result.fail('Project with same title already exists');
     }
     const projectTechStackIds = techStacks.map((ts) => ts.id);
@@ -97,6 +91,7 @@ export class CreateProjectCommandHandler
     const allTechStackIds = [
       ...new Set([...projectTechStackIds, ...roleTechStackIds]),
     ];
+    //vérifier si les techStacks existent et son valide
     const techStacksValidation =
       await this.techStackRepo.findByIds(allTechStackIds);
     if (!techStacksValidation.success) {
@@ -105,114 +100,59 @@ export class CreateProjectCommandHandler
     const allTechStacksValidated = techStacksValidation.value;
 
     if (allTechStacksValidated.length !== allTechStackIds.length)
-      return Result.fail('Tech stacks not found');
-    const project = Project.create({
+      return Result.fail('Some tech stacks are not found');
+
+    //ont créer un project pour valider des regles métier
+    const projectResult = Project.create({
       ownerId,
       title,
       shortDescription,
       description,
       externalLinks,
       techStacks: allTechStacksValidated.map((ts) => ts.toPrimitive()),
-      projectRoles: [],
+      projectRoles,
     });
-    if (!project.success) {
-      return Result.fail(project.error);
+    if (!projectResult.success) {
+      return Result.fail(projectResult.error);
     }
 
-    const savedProject = await this.projectRepo.create(project.value);
+    const projectValidated = projectResult.value;
+
+    //si valide alors on enregistre le projet dans la persistance
+    const savedProject = await this.projectRepo.create(projectValidated);
     if (!savedProject.success) return Result.fail(savedProject.error);
 
-    const githubRepositoryResult: Result<GithubRepositoryDto, string> =
-      await this.githubRepository.createGithubRepository(
-        {
-          title: savedProject.value.toPrimitive().title,
-          description: savedProject.value.toPrimitive().description,
-        },
-        octokit,
-      );
+    //si le projet est valide alors on créer un github repository
+    // const githubRepositoryResult: Result<GithubRepositoryDto, string> =
+    //   await this.githubRepository.createGithubRepository(
+    //     {
+    //       title: savedProject.value.toPrimitive().title,
+    //       description: savedProject.value.toPrimitive().description,
+    //     },
+    //     octokit,
+    //   );
 
-    if (githubRepositoryResult.success) {
-      //TO DO: Voir si on supprime le projet si on a pas de github repository
-      const { html_url } = githubRepositoryResult.value;
+    // if (githubRepositoryResult.success) {
+    //   //TO DO: Voir si on supprime le projet si on a pas de github repository
+    //   const { html_url } = githubRepositoryResult.value;
 
-      console.log('html_url', html_url);
-      if (html_url) {
-        savedProject.value.addExternalLink({
-          type: 'github',
-          url: html_url,
-        });
-        const savedProjectWithGithubLink = await this.projectRepo.update(
-          savedProject.value.toPrimitive().id as string,
-          savedProject.value,
-        );
-        if (!savedProjectWithGithubLink.success) {
-          return Result.fail(savedProjectWithGithubLink.error);
-        }
-      }
-    }
-
-    // errors.githubRepository = githubRepositoryResult.error;
-
-    if (projectRoles.length > 0) {
-      // const roleTechStacks = projectRoles
-      //   .flatMap((role) => {
-      //     return allTechStacksValidated.filter((ts) =>
-      //       role.techStacks.some((rts) => rts.id === ts.toPrimitive().id),
-      //     );
-      //   })
-      //   .map((ts) => ts.toPrimitive());
-      const projectRolesResults = await Promise.all(
-        projectRoles.map(async (role) => {
-          const projectRole = savedProject.value.createProjectRole({
-            title: role.title,
-            description: role.description,
-            isFilled: role.isFilled,
-            techStacks: role.techStacks
-              .map((ts) =>
-                allTechStacksValidated
-                  .find((validated) => validated.toPrimitive().id === ts.id)
-                  ?.toPrimitive(),
-              )
-              .filter(Boolean) as {
-              id: string;
-              name: string;
-              iconUrl: string;
-            }[],
-          });
-
-          if (!projectRole.success) {
-            return Result.fail(projectRole.error);
-          }
-
-          const projectRoleSaved = await this.projectRoleRepo.create(
-            projectRole.value,
-          );
-
-          if (!projectRoleSaved.success) {
-            return Result.fail(projectRoleSaved.error);
-          }
-
-          return Result.ok(projectRoleSaved.value);
-        }),
-      );
-
-      const failedResult = projectRolesResults.find(
-        (result) => !result.success,
-      );
-      if (failedResult) {
-        return Result.fail(failedResult.error);
-      }
-
-      const projectRolesSaved = projectRolesResults
-        .filter((result) => result.success)
-        .map((result) => result.value as ProjectRole);
-      const projectRolesAdded =
-        savedProject.value.addProjectRoles(projectRolesSaved);
-
-      if (!projectRolesAdded.success) {
-        return Result.fail(projectRolesAdded.error);
-      }
-    }
+    //   if (html_url) {
+    //     //on ajoute le lien github au projet
+    //     savedProject.value.addExternalLink({
+    //       type: 'github',
+    //       url: html_url,
+    //     });
+    //     //on met à jour le projet avec le lien github dans la persistance
+    //     const savedProjectWithGithubLink = await this.projectRepo.update(
+    //       savedProject.value.toPrimitive().id as string,
+    //       savedProject.value,
+    //     );
+    //     if (!savedProjectWithGithubLink.success) {
+    //       return Result.fail(savedProjectWithGithubLink.error);
+    //     }
+    //   }
+    // }
+    //on retourne le projet avec les roles ajoutés
     return Result.ok(savedProject.value);
   }
 }

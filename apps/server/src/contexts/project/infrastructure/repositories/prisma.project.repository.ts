@@ -7,7 +7,6 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 import { Prisma } from '@prisma/client';
-
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -306,9 +305,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       return Result.fail(`Unknown error : ${error}`);
     }
   }
-
   async findByTitle(title: string): Promise<Result<Project, string>> {
     try {
+      console.log('title', title);
       const projectPrisma = await this.prisma.project.findFirst({
         where: { title },
         include: {
@@ -320,6 +319,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         },
       });
 
+      console.log('projectPrisma', projectPrisma);
       if (!projectPrisma) return Result.fail('Project not found');
 
       const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
@@ -331,6 +331,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         );
       }
 
+      console.log('domainProject', domainProject.value);
       return Result.ok(domainProject.value);
     } catch (error: any) {
       console.log('error', error);

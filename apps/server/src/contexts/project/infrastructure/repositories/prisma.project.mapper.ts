@@ -83,9 +83,12 @@ export class PrismaProjectMapper {
           name: techStack.name,
           iconUrl: techStack.iconUrl,
         })),
+        createdAt: role.createdAt,
+        updatedAt: role.updatedAt,
       })),
     };
     const project = Project.reconstitute(projectData);
+    console.log('project', project);
     if (!project.success)
       return Result.fail(project.error as ProjectValidationErrors);
     return Result.ok(project.value);

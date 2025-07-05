@@ -4,6 +4,7 @@ import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
 import { CLOCK_PORT, ClockPort } from '@/libs/time';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
+import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
 
 type ProjectInMemory = {
   id: string;

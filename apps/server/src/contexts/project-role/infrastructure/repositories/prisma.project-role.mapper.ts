@@ -8,8 +8,8 @@ import { Prisma, ProjectRole as PrismaProjectRole } from '@prisma/client';
 
 @Injectable()
 export class PrismaProjectRoleMapper {
-  public static toRepo(project: ProjectRole) {
-    const repoProjectRole = project.toPrimitive();
+  public static toRepo(projectRole: ProjectRole) {
+    const repoProjectRole = projectRole.toPrimitive();
     const toRepo: Prisma.ProjectRoleCreateInput = {
       project: {
         connect: {

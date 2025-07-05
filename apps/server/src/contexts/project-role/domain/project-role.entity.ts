@@ -7,7 +7,7 @@ import {
 // Type unifié pour la création et la reconstitution
 export type ProjectRoleData = {
   id?: string;
-  projectId: string;
+  projectId?: string;
   title: string;
   description: string;
   isFilled: boolean;
@@ -34,7 +34,7 @@ export type ProjectRoleValidationErrors = {
 
 export class ProjectRole {
   private readonly id?: string;
-  private readonly projectId: string;
+  private readonly projectId?: string;
   private title: string;
   private description: string;
   private isFilled: boolean;
@@ -44,7 +44,7 @@ export class ProjectRole {
 
   private constructor(props: {
     id?: string;
-    projectId: string;
+    projectId?: string;
     title: string;
     description: string;
     isFilled: boolean;
@@ -66,10 +66,6 @@ export class ProjectRole {
     props: ProjectRoleData,
   ): Result<ProjectRole, ProjectRoleValidationErrors | string> {
     const errors: ProjectRoleValidationErrors = {};
-
-    if (!props.projectId || props.projectId.trim() === '') {
-      errors.projectId = 'Project ID is required';
-    }
 
     if (!props.title || props.title.trim() === '') {
       errors.title = 'Role title is required';
@@ -116,6 +112,15 @@ export class ProjectRole {
     }
     const dataToValidate: ProjectRoleData = { ...props, isFilled: false };
     return this.validate(dataToValidate);
+  }
+
+  public static createMany(
+    props: ProjectRoleCreateProps[],
+  ): Result<ProjectRole[], ProjectRoleValidationErrors | string> {
+    const results = props.map((p) => this.create(p));
+    if (!results.every((r) => r.success))
+      return Result.fail(results.find((r) => !r.success)?.error as string);
+    return Result.ok(results.map((r) => r.value));
   }
 
   public static reconstitute(
