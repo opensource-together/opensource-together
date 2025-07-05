@@ -73,6 +73,7 @@ export const createProject = async (
           description: role.description,
           badges: [], // Required by schema but not used yet
           experienceBadge: undefined, // Optional in schema
+          techStacks: role.techStacks || [], // Include techStacks from store
         })),
         socialLinks: storeData.externalLinks || [],
         keyBenefits: formattedKeyFeatures.map((feature) => feature.title),
@@ -99,7 +100,7 @@ export const createProject = async (
           id: crypto.randomUUID(),
           title: role.title,
           description: role.description,
-          techStacks: [],
+          techStacks: role.techStacks || [],
         })) || [],
       externalLinks: validatedData.data.socialLinks || [],
       keyFeatures: formattedKeyFeatures,
@@ -157,7 +158,7 @@ export const updateProject = async (
           id: crypto.randomUUID(),
           title: role.title,
           description: role.description,
-          techStacks: [],
+          techStacks: role.techStacks || [],
         })) || existingProject.roles,
       externalLinks:
         data.socialLinks?.map((link) => ({
