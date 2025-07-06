@@ -5,6 +5,7 @@ import { SuperTokensAuthGuard } from 'supertokens-nestjs';
 import { AuthModule } from '@/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ContextsModule } from './contexts/contexts.module';
+import { HealthModule } from './health/health.module';
 @Module({
   imports: [
     CqrsModule.forRoot(),
@@ -13,6 +14,7 @@ import { ContextsModule } from './contexts/contexts.module';
     }),
     AuthModule,
     ContextsModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [
