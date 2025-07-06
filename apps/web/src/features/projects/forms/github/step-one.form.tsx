@@ -12,7 +12,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
@@ -135,7 +134,6 @@ export default function StepOneForm() {
           name="selectedRepository"
           render={() => (
             <FormItem>
-              <FormLabel>Sélectionner un repository</FormLabel>
               <FormControl>
                 <div className="relative flex w-full">
                   <div

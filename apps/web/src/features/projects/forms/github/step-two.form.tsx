@@ -23,7 +23,7 @@ export default function StepTwoView() {
           <div className="mb-1 flex items-center gap-1">
             <Label className="text-lg">Nom du repository</Label>
           </div>
-          <div className="text- mt-3 font-normal text-black/50">
+          <div className="mt-2 font-normal text-black/50">
             {formData.selectedRepository?.name}
           </div>
         </div>
@@ -34,7 +34,7 @@ export default function StepTwoView() {
               <Label className="text-lg">README.md</Label>
             </div>
           </div>
-          <div className="mb-3 line-clamp-5 text-xs leading-4 text-black/50">
+          <div className="mb-3 line-clamp-5 text-sm leading-6 text-black/50">
             Nous, membres, contributeurs et leaders, nous nous engageons à faire
             de la participation à notre communauté une expérience sans
             harcèlement pour tous, quelle que soit l'âge, la taille, le handicap
@@ -48,7 +48,7 @@ export default function StepTwoView() {
           <div className="mb-1 flex items-center gap-1">
             <Label className="text-lg">Lien vers le repository</Label>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="mt-2 flex items-center gap-2">
             <Icon name="link" variant="gray" size="sm" />
             <span className="line-clamp-1 text-sm font-normal break-all text-black/50">
               https://github.com/opensource-together/
