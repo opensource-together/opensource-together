@@ -5,8 +5,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/shared/components/ui/form";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
-import { Label } from "@/shared/components/ui/label";
 
 import { useProjectCreateStore } from "@/features/projects/stores/project-create.store";
 import {
@@ -38,12 +45,19 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
     },
   });
 
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting },
+  } = form;
+
   const handlePrevious = () => {
     router.push("/projects/create/scratch/step-three");
   };
 
   const handleLogoSelect = (file: File | null) => {
-    form.setValue("logo", file || undefined);
+    setValue("logo", file || undefined);
   };
 
   // Convert form inputs to ExternalLink array format
@@ -61,7 +75,7 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
       }));
   };
 
-  const handleSubmit = async (data: StepFourFormData) => {
+  const handleFormSubmit = handleSubmit(async (data) => {
     try {
       updateProjectInfo({
         image: data.logo ? URL.createObjectURL(data.logo) : "",
@@ -72,90 +86,111 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
     } catch (error) {
       console.error("Erreur lors de la préparation des données:", error);
     }
-  };
+  });
 
   return (
-    <form
-      onSubmit={form.handleSubmit(handleSubmit)}
-      className="flex w-full flex-col gap-5"
-    >
-      <div>
-        <Label>Choisir un avatar</Label>
-        <AvatarUpload
-          onFileSelect={handleLogoSelect}
-          accept="image/*"
-          maxSize={1}
-          size="xl"
-          name={formData.projectName}
-          fallback={formData.projectName}
-          className="mt-4"
+    <Form {...form}>
+      <form onSubmit={handleFormSubmit} className="flex w-full flex-col gap-5">
+        <FormField
+          control={control}
+          name="logo"
+          render={() => (
+            <FormItem>
+              <FormLabel>Choisir un avatar</FormLabel>
+              <FormControl>
+                <AvatarUpload
+                  onFileSelect={handleLogoSelect}
+                  accept="image/*"
+                  maxSize={1}
+                  size="xl"
+                  name={formData.projectName}
+                  fallback={formData.projectName}
+                  className="mt-4"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="mt-4 flex flex-col gap-4">
-        <Label>Liens externes</Label>
-        <div className="space-y-2">
-          <InputWithIcon
-            icon="github"
-            placeholder="https://github.com/..."
-            {...form.register("externalLinks.github")}
+        <div className="mt-4 flex flex-col gap-4">
+          <FormLabel>Liens externes</FormLabel>
+
+          <FormField
+            control={control}
+            name="externalLinks.github"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputWithIcon
+                    icon="github"
+                    placeholder="https://github.com/..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          {form.formState.errors.externalLinks?.github && (
-            <p className="text-sm text-red-600">
-              {form.formState.errors.externalLinks.github.message}
-            </p>
-          )}
+          <FormField
+            control={control}
+            name="externalLinks.discord"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputWithIcon
+                    icon="discord"
+                    placeholder="https://discord.gg/..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="externalLinks.twitter"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputWithIcon
+                    icon="twitter"
+                    placeholder="https://x.com/..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="externalLinks.website"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputWithIcon
+                    icon="link"
+                    placeholder="https://..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
-        <div className="space-y-2">
-          <InputWithIcon
-            icon="discord"
-            placeholder="https://discord.gg/..."
-            {...form.register("externalLinks.discord")}
-          />
-          {form.formState.errors.externalLinks?.discord && (
-            <p className="text-sm text-red-600">
-              {form.formState.errors.externalLinks.discord.message}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <InputWithIcon
-            icon="twitter"
-            placeholder="https://x.com/..."
-            {...form.register("externalLinks.twitter")}
-          />
-          {form.formState.errors.externalLinks?.twitter && (
-            <p className="text-sm text-red-600">
-              {form.formState.errors.externalLinks.twitter.message}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <InputWithIcon
-            icon="link"
-            placeholder="https://..."
-            {...form.register("externalLinks.website")}
-          />
-          {form.formState.errors.externalLinks?.website && (
-            <p className="text-sm text-red-600">
-              {form.formState.errors.externalLinks.website.message}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <FormNavigationButtons
-        onPrevious={handlePrevious}
-        onNext={() => form.handleSubmit(handleSubmit)()}
-        previousLabel="Retour"
-        nextLabel="Publier le projet"
-        isLoading={isLoading}
-        isNextDisabled={false}
-        nextType="button"
-      />
-    </form>
+        <FormNavigationButtons
+          onPrevious={handlePrevious}
+          previousLabel="Retour"
+          nextLabel="Publier le projet"
+          isLoading={isLoading || isSubmitting}
+          isNextDisabled={false}
+          nextType="submit"
+        />
+      </form>
+    </Form>
   );
 }
