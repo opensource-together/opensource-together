@@ -16,7 +16,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN corepack enable pnpm && \
-    pnpm prisma generate --schema=src/infrastructures/orm/prisma/schema.prisma && \
+    pnpm prisma:generate:local && \
     pnpm run build
 
 
@@ -35,7 +35,7 @@ RUN adduser --system --uid 1001 nestjs
 
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/src/infrastructures/orm/prisma ./schema
+COPY --from=builder --chown=nestjs:nodejs /app/src/orm/prisma ./schema
 COPY --from=builder --chown=nestjs:nodejs /app/swagger-doc.example.yml ./dist/swagger-doc.example.yml
 
 USER nestjs
