@@ -3,11 +3,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
@@ -23,63 +30,52 @@ export function StepOneForm() {
   const [newFeature, setNewFeature] = useState("");
   const [newGoal, setNewGoal] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<StepOneFormData>({
+  const form = useForm<StepOneFormData>({
     resolver: zodResolver(stepOneSchema),
     defaultValues: {
       projectName: formData.projectName || "",
       shortDescription: formData.shortDescription || "",
-      keyFeatures: Array.isArray(formData.keyFeatures)
-        ? formData.keyFeatures
-        : [],
-      projectGoals: Array.isArray(formData.projectGoals)
-        ? formData.projectGoals
-        : [],
+      keyFeatures: formData.keyFeatures || [],
+      projectGoals: formData.projectGoals || [],
     },
   });
 
-  const shortDescription = watch("shortDescription");
-  const keyFeatures = watch("keyFeatures");
-  const projectGoals = watch("projectGoals");
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
 
-  // Ensure arrays are always arrays
-  const safeKeyFeatures = Array.isArray(keyFeatures) ? keyFeatures : [];
-  const safeProjectGoals = Array.isArray(projectGoals) ? projectGoals : [];
+  const {
+    fields: keyFeatureFields,
+    append: appendFeature,
+    remove: removeFeature,
+  } = useFieldArray({
+    control,
+    name: "keyFeatures",
+  });
+
+  const {
+    fields: projectGoalFields,
+    append: appendGoal,
+    remove: removeGoal,
+  } = useFieldArray({
+    control,
+    name: "projectGoals",
+  });
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      setValue("keyFeatures", [
-        ...safeKeyFeatures,
-        { title: newFeature.trim() },
-      ]);
+      appendFeature({ title: newFeature.trim() });
       setNewFeature("");
     }
   };
 
   const addGoal = () => {
     if (newGoal.trim()) {
-      setValue("projectGoals", [...safeProjectGoals, { goal: newGoal.trim() }]);
+      appendGoal({ goal: newGoal.trim() });
       setNewGoal("");
     }
-  };
-
-  const removeFeature = (index: number) => {
-    setValue(
-      "keyFeatures",
-      safeKeyFeatures.filter((_, i) => i !== index)
-    );
-  };
-
-  const removeGoal = (index: number) => {
-    setValue(
-      "projectGoals",
-      safeProjectGoals.filter((_, i) => i !== index)
-    );
   };
 
   const onSubmit = handleSubmit((data) => {
@@ -98,137 +94,146 @@ export function StepOneForm() {
   };
 
   return (
-    <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
-      <div>
-        <Label required>Nom du projet</Label>
-        <Input
-          {...register("projectName")}
-          maxLength={100}
-          placeholder="Nom du projet"
-        />
-        {errors.projectName && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.projectName.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <div className="mr-2 mb-1 flex items-center justify-between">
-          <Label required>Description</Label>
-          <span className="text-xs font-normal text-black/20">
-            {shortDescription?.length || 0}/250
-          </span>
-        </div>
-        <Textarea
-          {...register("shortDescription")}
-          placeholder="Décrivez votre projet"
-          maxLength={250}
-        />
-        {errors.shortDescription && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.shortDescription.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <Label required>Fonctionnalités clés</Label>
-        <div className="flex flex-col gap-2">
-          <div className="relative">
-            <Input
-              value={newFeature}
-              onChange={(e) => setNewFeature(e.target.value)}
-              placeholder="Ajouter une fonctionnalité"
-              className="pr-20"
-            />
-            <Button
-              type="button"
-              onClick={addFeature}
-              variant="secondary"
-              className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
-            >
-              Ajouter
-            </Button>
-          </div>
-          <div className="flex flex-col gap-2">
-            {safeKeyFeatures.map((feature, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="flex-1 rounded-md bg-gray-50 p-2">
-                  {feature.title}
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => removeFeature(index)}
-                >
-                  Supprimer
-                </Button>
-              </div>
-            ))}
-          </div>
-          {errors.keyFeatures && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.keyFeatures.message}
-            </p>
+    <Form {...form}>
+      <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
+        <FormField
+          control={control}
+          name="projectName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Nom du projet</FormLabel>
+              <FormControl>
+                <Input placeholder="Nom du projet" {...field} maxLength={100} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </div>
-      </div>
+        />
 
-      <div>
-        <Label required>Objectifs du projet</Label>
-        <div className="flex flex-col gap-2">
-          <div className="relative">
-            <Input
-              value={newGoal}
-              onChange={(e) => setNewGoal(e.target.value)}
-              placeholder="Ajouter un objectif"
-              className="pr-20"
-            />
-            <Button
-              type="button"
-              onClick={addGoal}
-              variant="secondary"
-              className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
-            >
-              Ajouter
-            </Button>
-          </div>
-          <div className="flex flex-col gap-2">
-            {safeProjectGoals.map((goal, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="flex-1 rounded-md bg-gray-50 p-2">
-                  {goal.goal}
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => removeGoal(index)}
-                >
-                  Supprimer
-                </Button>
-              </div>
-            ))}
-          </div>
-          {errors.projectGoals && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.projectGoals.message}
-            </p>
+        <FormField
+          control={control}
+          name="shortDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Décrivez votre projet"
+                  {...field}
+                  maxLength={250}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </div>
-      </div>
+        />
 
-      <FormNavigationButtons
-        onPrevious={handlePrevious}
-        previousLabel="Retour"
-        nextLabel="Suivant"
-        isLoading={isSubmitting}
-        nextType="submit"
-      />
-    </form>
+        <FormField
+          control={control}
+          name="keyFeatures"
+          render={() => (
+            <FormItem>
+              <FormLabel required>Fonctionnalités clés</FormLabel>
+              <FormControl>
+                <div className="flex flex-col gap-2">
+                  <div className="relative">
+                    <Input
+                      value={newFeature}
+                      onChange={(e) => setNewFeature(e.target.value)}
+                      placeholder="Ajouter une fonctionnalité"
+                      className="pr-20"
+                    />
+                    <Button
+                      type="button"
+                      onClick={addFeature}
+                      variant="secondary"
+                      className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                    >
+                      Ajouter
+                    </Button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {keyFeatureFields.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="flex-1 rounded-md bg-gray-50 p-2">
+                          {feature.title}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => removeFeature(index)}
+                        >
+                          Supprimer
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="projectGoals"
+          render={() => (
+            <FormItem>
+              <FormLabel required>Objectifs du projet</FormLabel>
+              <FormControl>
+                <div className="flex flex-col gap-2">
+                  <div className="relative">
+                    <Input
+                      value={newGoal}
+                      onChange={(e) => setNewGoal(e.target.value)}
+                      placeholder="Ajouter un objectif"
+                      className="pr-20"
+                    />
+                    <Button
+                      type="button"
+                      onClick={addGoal}
+                      variant="secondary"
+                      className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                    >
+                      Ajouter
+                    </Button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {projectGoalFields.map((goal, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="flex-1 rounded-md bg-gray-50 p-2">
+                          {goal.goal}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => removeGoal(index)}
+                        >
+                          Supprimer
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormNavigationButtons
+          onPrevious={handlePrevious}
+          previousLabel="Retour"
+          nextLabel="Suivant"
+          isLoading={isSubmitting}
+          nextType="submit"
+        />
+      </form>
+    </Form>
   );
 }
