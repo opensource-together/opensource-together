@@ -141,7 +141,7 @@ export function StepThreeForm() {
   const handleModalSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onAddRole(e);
+    onAddRole();
   };
 
   const handleRemoveRole = (index: number) => {

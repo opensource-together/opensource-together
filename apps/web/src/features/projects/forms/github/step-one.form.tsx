@@ -117,7 +117,7 @@ export default function StepOneForm() {
     setValue("selectedRepository", repo);
   };
 
-  const handlePrevious = () => router.push("/projects/create/github/step-one");
+  const handlePrevious = () => router.push("/projects/create");
 
   const onSubmit = handleSubmit((data) => {
     if (data.selectedRepository) {
