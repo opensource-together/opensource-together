@@ -118,6 +118,8 @@ export default function StepOneForm() {
     setValue("selectedRepository", repo);
   };
 
+  const handlePrevious = () => router.push("/projects/create/github/step-one");
+
   const onSubmit = handleSubmit((data) => {
     if (data.selectedRepository) {
       selectRepository(data.selectedRepository);
@@ -138,7 +140,7 @@ export default function StepOneForm() {
                 <div className="relative flex w-full">
                   <div
                     ref={scrollRef}
-                    className="mb-4 h-[320px] w-full overflow-y-auto rounded-md border border-black/4"
+                    className="mb-4 h-[350px] w-full overflow-y-auto rounded-md border border-black/4"
                     onScroll={(e) =>
                       setScrollTop((e.target as HTMLDivElement).scrollTop)
                     }
@@ -225,7 +227,7 @@ export default function StepOneForm() {
         <div className="mt-4">
           <FormNavigationButtons
             onNext={onSubmit}
-            onPrevious={() => router.back()}
+            onPrevious={handlePrevious}
             previousLabel="Retour"
             nextLabel="Importer"
             isLoading={isSubmitting}
