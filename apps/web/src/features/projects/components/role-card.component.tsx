@@ -5,6 +5,7 @@ import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
 import { ProjectRole, TechStack } from "../types/project.type";
 
@@ -112,9 +113,11 @@ export default function RoleCard({
 
         {/* Apply Button */}
         {isMaintainer ? (
-          <Button variant="outline" className="w-full md:w-auto">
-            Modifier le rôle
-          </Button>
+          <EditRoleForm role={role} availableTechStacks={techStacks}>
+            <Button variant="outline" className="w-full md:w-auto">
+              Modifier le rôle
+            </Button>
+          </EditRoleForm>
         ) : (
           <RoleApplicationForm
             roleTitle={title}
