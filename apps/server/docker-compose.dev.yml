@@ -1,14 +1,13 @@
 name: ost
 
 services:
-
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
     restart: unless-stopped
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@postgres:5432/${SUPERTOKENS_DB_NAME}
     ports:
-      - "3567:3567"
+      - '3567:3567'
     networks:
       - app_network
     depends_on:
@@ -35,7 +34,7 @@ services:
       - SUPERTOKENS_DB_USER=${SUPERTOKENS_DB_USER}
       - SUPERTOKENS_DB_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - '${POSTGRES_PORT}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../../deploy/docker/init:/docker-entrypoint-initdb.d
@@ -43,23 +42,29 @@ services:
       - app_network
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "pg_isready -U ${POSTGRES_USER} && \
-        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
-        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1"
-      ]
+          'CMD-SHELL',
+          "pg_isready -U ${POSTGRES_USER} && \
+          psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
+          psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   migrate:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     restart: no
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
+    command:
+      [
+        'npx',
+        'prisma',
+        'db',
+        'push',
+        '--schema=/app/schema/schema.prisma',
+        '--skip-generate',
+      ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@postgres:5432/${BUSINESS_DB_NAME}
     depends_on:
