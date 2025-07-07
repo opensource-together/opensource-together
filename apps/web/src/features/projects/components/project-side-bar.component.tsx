@@ -220,6 +220,40 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           </div>
         </div>
       </div>
+      <div className="flex flex-col gap-2">
+        <h2 className="text-md font-medium text-black">Liens</h2>
+        <div className="flex gap-4">
+          <Image
+            src="/icons/x-gray-icon.svg"
+            alt="link"
+            width={22}
+            height={22}
+            className="h-5 w-5"
+          />
+          <Image
+            src="/icons/linkedin-gray-icon.svg"
+            alt="link"
+            width={22}
+            height={22}
+            className="h-5 w-5"
+          />
+          <Image
+            src="/icons/github-gray-icon.svg"
+            alt="link"
+            width={22}
+            height={22}
+            className="h-5 w-5"
+          />
+
+          <Image
+            src="/icons/link-gray-icon.svg"
+            alt="link"
+            width={22}
+            height={22}
+            className="h-5 w-5"
+          />
+        </div>
+      </div>
     </div>
   );
 }
