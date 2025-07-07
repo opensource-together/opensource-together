@@ -19,7 +19,7 @@ export interface ProjectRole {
 }
 
 export interface ExternalLink {
-  type: "github" | "website" | "discord" | "twitter" | "other";
+  type: "github" | "website" | "discord" | "twitter" | "linkedin" | "other";
   url: string;
 }
 

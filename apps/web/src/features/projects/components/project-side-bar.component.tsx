@@ -12,19 +12,40 @@ import {
   BreadcrumbSeparator,
 } from "@/shared/components/ui/breadcrumb";
 import { Button } from "@/shared/components/ui/button";
+import { Combobox } from "@/shared/components/ui/combobox";
 import { Icon } from "@/shared/components/ui/icon";
+import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+import { useTechStack } from "../hooks/use-tech-stack";
 import { Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
   isMaintainer?: boolean;
+  onEditClick?: () => void;
+  isEditing?: boolean;
 }
+
+const CATEGORIES_OPTIONS = [
+  { id: "ai", name: "IA" },
+  { id: "finance", name: "Finance" },
+  { id: "health", name: "Santé" },
+  { id: "education", name: "Education" },
+  { id: "transport", name: "Transport" },
+  { id: "ecommerce", name: "E-commerce" },
+  { id: "security", name: "Sécurité" },
+  { id: "marketing", name: "Marketing" },
+  { id: "sales", name: "Vente" },
+  { id: "management", name: "Gestion" },
+  { id: "other", name: "Autre" },
+];
 
 export default function ProjectSideBar({
   project,
   isMaintainer = false,
+  onEditClick,
+  isEditing = false,
 }: ProjectSideBarProps) {
   const {
     title = "",
@@ -38,6 +59,8 @@ export default function ProjectSideBar({
       contributors: 0,
     },
   } = project;
+
+  const { techStackOptions } = useTechStack();
 
   // Récupérer le lien GitHub
   const githubLink =
@@ -72,8 +95,8 @@ export default function ProjectSideBar({
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (
-          <Button size="lg" className="gap-2">
-            Modifier la page
+          <Button size="lg" className="gap-2" onClick={onEditClick}>
+            {isEditing ? "Confirmer" : "Modifier la page"}
             <Image
               src="/icons/edit-white-icon.svg"
               alt="pencil"
@@ -177,40 +200,61 @@ export default function ProjectSideBar({
       {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
-        {/* Tech Stack */}
-        {techStacks.length > 0 && (
-          <div>
-            <div className="flex flex-wrap gap-2">
-              {techStacks.map((tech, index) => (
-                <StackLogo
-                  key={index}
-                  name={tech.name}
-                  icon={tech.iconUrl || "/icons/empty-project.svg"}
-                  alt={tech.name}
-                />
-              ))}
+        {isEditing ? (
+          <Combobox
+            options={techStackOptions}
+            value={techStacks?.map((tech) => tech.id) || []}
+            onChange={(ids) => console.log("Tech stack changed:", ids)}
+            placeholder="Choose Technologies"
+            searchPlaceholder="Rechercher une technologie..."
+            emptyText="Aucune technologie trouvée."
+          />
+        ) : (
+          techStacks.length > 0 && (
+            <div>
+              <div className="flex flex-wrap gap-2">
+                {techStacks.map((tech, index) => (
+                  <StackLogo
+                    key={index}
+                    name={tech.name}
+                    icon={tech.iconUrl || "/icons/empty-project.svg"}
+                    alt={tech.name}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )
         )}
       </div>
 
       {/* Categories Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
-            >
-              {category.name}
-            </div>
-          ))}
-        </div>
+        {isEditing ? (
+          <Combobox
+            options={CATEGORIES_OPTIONS}
+            value={categories?.map((cat) => cat.id) || []}
+            onChange={(ids) => console.log("Categories changed:", ids)}
+            placeholder="Choose Categories"
+            searchPlaceholder="Rechercher une catégorie..."
+            emptyText="Aucune catégorie trouvée."
+          />
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category, index) => (
+              <div
+                key={index}
+                className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
+              >
+                {category.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Contributors Section */}
-      <div className="flex flex-col">
+      <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">
           Contributeurs Principaux
         </h2>
@@ -236,39 +280,103 @@ export default function ProjectSideBar({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <h2 className="text-md font-medium text-black">Liens</h2>
-        <div className="flex gap-4">
-          <Image
-            src="/icons/x-gray-icon.svg"
-            alt="link"
-            width={22}
-            height={22}
-            className="h-5 w-5"
-          />
-          <Image
-            src="/icons/linkedin-gray-icon.svg"
-            alt="link"
-            width={22}
-            height={22}
-            className="h-5 w-5"
-          />
-          <Image
-            src="/icons/github-gray-icon.svg"
-            alt="link"
-            width={22}
-            height={22}
-            className="h-5 w-5"
-          />
 
-          <Image
-            src="/icons/link-gray-icon.svg"
-            alt="link"
-            width={22}
-            height={22}
-            className="h-5 w-5"
-          />
-        </div>
+      {/* Links Section */}
+      <div className="flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">Liens</h2>
+        {isEditing ? (
+          <div className="space-y-2">
+            <InputWithIcon
+              icon="github"
+              placeholder="https://github.com/..."
+              defaultValue={
+                externalLinks?.find((link) => link.type === "github")?.url || ""
+              }
+            />
+            <InputWithIcon
+              icon="discord"
+              placeholder="https://discord.gg/..."
+              defaultValue={
+                externalLinks?.find((link) => link.type === "discord")?.url ||
+                ""
+              }
+            />
+            <InputWithIcon
+              icon="twitter"
+              placeholder="https://x.com/..."
+              defaultValue={
+                externalLinks?.find((link) => link.type === "twitter")?.url ||
+                ""
+              }
+            />
+            <InputWithIcon
+              icon="linkedin"
+              placeholder="https://linkedin.com/..."
+              defaultValue={
+                externalLinks?.find((link) => link.type === "linkedin")?.url ||
+                ""
+              }
+            />
+            <InputWithIcon
+              icon="link"
+              placeholder="https://..."
+              defaultValue={
+                externalLinks?.find(
+                  (link) => link.type === "other" || link.type === "website"
+                )?.url || ""
+              }
+            />
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {externalLinks.map((link, index) => {
+              let iconSrc = "";
+              let iconAlt = "";
+
+              switch (link.type) {
+                case "github":
+                  iconSrc = "/icons/github-gray-icon.svg";
+                  iconAlt = "GitHub";
+                  break;
+                case "twitter":
+                  iconSrc = "/icons/x-gray-icon.svg";
+                  iconAlt = "Twitter/X";
+                  break;
+                case "linkedin":
+                  iconSrc = "/icons/linkedin-gray-icon.svg";
+                  iconAlt = "LinkedIn";
+                  break;
+                case "discord":
+                  iconSrc = "/icons/discord-gray-icon.svg";
+                  iconAlt = "Discord";
+                  break;
+                case "other":
+                case "website":
+                default:
+                  iconSrc = "/icons/link-gray-icon.svg";
+                  iconAlt = "Website";
+                  break;
+              }
+
+              return (
+                <Link
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src={iconSrc}
+                    alt={iconAlt}
+                    width={20}
+                    height={20}
+                    className="h-5 w-5"
+                  />
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

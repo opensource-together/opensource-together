@@ -1,8 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
+import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/shared/components/ui/input";
+import { Textarea } from "@/shared/components/ui/textarea";
 
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
@@ -21,6 +25,7 @@ export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
+  const [isEditing, setIsEditing] = useState(false);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
   const isMaintainer = true; // Variable temporaire pour le développement
@@ -28,53 +33,175 @@ export default function ProjectDetailView({
   if (isLoading) return <SkeletonProjectDetailView />;
   if (isError || !project) return <ProjectDetailError />;
 
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
   return (
     <>
       <div className="mx-auto mt-12 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40"></div>
       <div className="mx-auto mt-2 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-4 md:px-8 lg:px-24 xl:px-40">
         <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
           <div className="self-start lg:sticky lg:top-[100px] lg:pb-33">
-            <ProjectSideBar project={project} isMaintainer={isMaintainer} />
+            <ProjectSideBar
+              project={project}
+              isMaintainer={isMaintainer}
+              onEditClick={handleEditToggle}
+              isEditing={isEditing}
+            />
           </div>
           <div className="flex w-full flex-col gap-8 lg:max-w-[668px]">
-            <ProjectHero project={project} />
-            <div>
-              <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
-                <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
-                  Rôles Disponibles
-                </p>
-                {isMaintainer ? (
-                  <CreateRoleForm>
-                    <Button>
-                      Créer un rôle
-                      <Image
-                        src="/icons/plus-white.svg"
-                        alt="plus"
-                        width={12}
-                        height={12}
+            {isEditing ? (
+              // Mode édition
+              <>
+                <div className="space-y-8">
+                  {/* Project Photo */}
+                  <div>
+                    <h3 className="mb-3 text-sm font-medium">Project Photo</h3>
+                    <AvatarUpload
+                      onFileSelect={(file) =>
+                        console.log("File selected:", file)
+                      }
+                      accept="image/*"
+                      maxSize={1}
+                      size="xl"
+                      name={project.title}
+                      fallback={project.title}
+                    />
+                  </div>
+
+                  {/* Title */}
+                  <div>
+                    <h3 className="mb-3 text-sm font-medium">Title</h3>
+                    <Input
+                      defaultValue={project.title}
+                      placeholder="Nom du projet"
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <h3 className="mb-3 text-sm font-medium">Description</h3>
+                    <Textarea
+                      defaultValue={
+                        project.longDescription || project.shortDescription
+                      }
+                      placeholder="Description du projet"
+                      className="min-h-[100px]"
+                    />
+                    {/* separator */}
+                    <div className="mt-10 h-[2px] w-full bg-black/3" />
+                  </div>
+
+                  {/* Project Goals */}
+                  <div>
+                    <h3 className="mb-3 text-sm font-medium">Project Goals</h3>
+                    <Textarea
+                      defaultValue={
+                        project.projectGoals
+                          ?.map((goal) => goal.goal)
+                          .join("\n") || ""
+                      }
+                      placeholder="Objectifs du projet"
+                      className="min-h-[100px]"
+                    />
+                  </div>
+
+                  {/* Key Features */}
+                  <div>
+                    <h3 className="mb-3 text-sm font-medium">Key Objectives</h3>
+                    <Textarea
+                      defaultValue={
+                        project.keyFeatures
+                          ?.map((feature) => feature.title)
+                          .join("\n") || ""
+                      }
+                      placeholder="Objectifs clés"
+                      className="min-h-[100px]"
+                    />
+                  </div>
+                </div>
+
+                {/* Rôles disponibles - visible même en mode édition */}
+                <div>
+                  <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
+                    <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
+                      Rôles Disponibles
+                    </p>
+                    {isMaintainer && (
+                      <CreateRoleForm>
+                        <Button>
+                          Créer un rôle
+                          <Image
+                            src="/icons/plus-white.svg"
+                            alt="plus"
+                            width={12}
+                            height={12}
+                          />
+                        </Button>
+                      </CreateRoleForm>
+                    )}
+                  </div>
+                  <div className="mt-6 mb-30 flex flex-col gap-3">
+                    {project.roles?.map((role) => (
+                      <RoleCard
+                        key={role.title}
+                        role={role}
+                        techStacks={project.techStacks}
+                        className="mb-3 lg:max-w-[721.96px]"
+                        isMaintainer={isMaintainer}
                       />
-                    </Button>
-                  </CreateRoleForm>
-                ) : (
-                  <ProjectFilters
-                    filters={[
-                      { label: "", value: "Plus Récent", isSortButton: true },
-                    ]}
-                  />
-                )}
-              </div>
-              <div className="mt-6 mb-30 flex flex-col gap-3">
-                {project.roles?.map((role) => (
-                  <RoleCard
-                    key={role.title}
-                    role={role}
-                    techStacks={project.techStacks}
-                    className="mb-3 lg:max-w-[721.96px]"
-                    isMaintainer={isMaintainer}
-                  />
-                ))}
-              </div>
-            </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              // Mode affichage normal
+              <>
+                <ProjectHero project={project} />
+                <div>
+                  <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
+                    <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
+                      Rôles Disponibles
+                    </p>
+                    {isMaintainer ? (
+                      <CreateRoleForm>
+                        <Button>
+                          Créer un rôle
+                          <Image
+                            src="/icons/plus-white.svg"
+                            alt="plus"
+                            width={12}
+                            height={12}
+                          />
+                        </Button>
+                      </CreateRoleForm>
+                    ) : (
+                      <ProjectFilters
+                        filters={[
+                          {
+                            label: "",
+                            value: "Plus Récent",
+                            isSortButton: true,
+                          },
+                        ]}
+                      />
+                    )}
+                  </div>
+                  <div className="mt-6 mb-30 flex flex-col gap-3">
+                    {project.roles?.map((role) => (
+                      <RoleCard
+                        key={role.title}
+                        role={role}
+                        techStacks={project.techStacks}
+                        className="mb-3 lg:max-w-[721.96px]"
+                        isMaintainer={isMaintainer}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
