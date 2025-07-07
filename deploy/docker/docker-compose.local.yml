@@ -3,7 +3,7 @@ name: ost
 services:
   web:
     build:
-      context: ../web
+      context: ../../apps/web
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -28,7 +28,7 @@ services:
 
   server:
     build:
-      context: .
+      context: ../../apps/server
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
@@ -127,7 +127,7 @@ services:
 
   migrate:
     build: 
-      context: .
+      context: ../../apps/server
       dockerfile: Dockerfile
     restart: no
     command: [
