@@ -10,6 +10,7 @@ import ProjectHero from "../components/project-hero.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
 import SkeletonProjectDetailView from "../components/skeletons/skeleton-project-detail-view.component";
+import CreateRoleForm from "../forms/create-role.form";
 import { useProject } from "../hooks/use-projects.hook";
 
 interface ProjectDetailViewProps {
@@ -43,15 +44,17 @@ export default function ProjectDetailView({
                   Rôles Disponibles
                 </p>
                 {isMaintainer ? (
-                  <Button>
-                    Créer un rôle
-                    <Image
-                      src="/icons/plus-white.svg"
-                      alt="plus"
-                      width={12}
-                      height={12}
-                    />
-                  </Button>
+                  <CreateRoleForm>
+                    <Button>
+                      Créer un rôle
+                      <Image
+                        src="/icons/plus-white.svg"
+                        alt="plus"
+                        width={12}
+                        height={12}
+                      />
+                    </Button>
+                  </CreateRoleForm>
                 ) : (
                   <ProjectFilters
                     filters={[
