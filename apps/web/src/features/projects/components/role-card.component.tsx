@@ -5,6 +5,7 @@ import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
+import RoleApplicationForm from "../forms/role-application.form";
 import { ProjectRole, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
@@ -108,10 +109,16 @@ export default function RoleCard({
         </div>
 
         {/* Apply Button */}
-        <Button className="w-full md:w-auto">
-          Apply for Role
-          <Icon name="arrow-up-right" size="xs" variant="white" />
-        </Button>
+        <RoleApplicationForm
+          roleTitle={title}
+          roleDescription={description}
+          techStacks={roleTechStacks}
+        >
+          <Button className="w-full md:w-auto">
+            Postuler à ce rôle
+            <Icon name="arrow-up-right" size="xs" variant="white" />
+          </Button>
+        </RoleApplicationForm>
       </div>
     </div>
   );
