@@ -19,9 +19,13 @@ import { Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
+  isMaintainer?: boolean;
 }
 
-export default function ProjectSideBar({ project }: ProjectSideBarProps) {
+export default function ProjectSideBar({
+  project,
+  isMaintainer = false,
+}: ProjectSideBarProps) {
   const {
     title = "",
     techStacks = [],
@@ -67,7 +71,19 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
-        <Button size="lg">Rejoindre le projet</Button>
+        {isMaintainer ? (
+          <Button size="lg" className="gap-2">
+            Modifier la page
+            <Image
+              src="/icons/edit-white-icon.svg"
+              alt="pencil"
+              width={12}
+              height={12}
+            />
+          </Button>
+        ) : (
+          <Button size="lg">Rejoindre le projet</Button>
+        )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
           <Button variant="outline" size="lg">
             Voir le Repo

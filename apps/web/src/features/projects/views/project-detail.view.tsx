@@ -1,5 +1,9 @@
 "use client";
 
+import Image from "next/image";
+
+import { Button } from "@/shared/components/ui/button";
+
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
@@ -17,6 +21,9 @@ export default function ProjectDetailView({
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
 
+  // TODO: Remplacer par la vraie logique de vérification du maintainer
+  const isMaintainer = true; // Variable temporaire pour le développement
+
   if (isLoading) return <SkeletonProjectDetailView />;
   if (isError || !project) return <ProjectDetailError />;
 
@@ -26,7 +33,7 @@ export default function ProjectDetailView({
       <div className="mx-auto mt-2 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-4 md:px-8 lg:px-24 xl:px-40">
         <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
           <div className="self-start lg:sticky lg:top-[100px] lg:pb-33">
-            <ProjectSideBar project={project} />
+            <ProjectSideBar project={project} isMaintainer={isMaintainer} />
           </div>
           <div className="flex w-full flex-col gap-8 lg:max-w-[668px]">
             <ProjectHero project={project} />
@@ -35,11 +42,23 @@ export default function ProjectDetailView({
                 <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
                   Rôles Disponibles
                 </p>
-                <ProjectFilters
-                  filters={[
-                    { label: "", value: "Plus Récent", isSortButton: true },
-                  ]}
-                />
+                {isMaintainer ? (
+                  <Button>
+                    Créer un rôle
+                    <Image
+                      src="/icons/plus-white.svg"
+                      alt="plus"
+                      width={12}
+                      height={12}
+                    />
+                  </Button>
+                ) : (
+                  <ProjectFilters
+                    filters={[
+                      { label: "", value: "Plus Récent", isSortButton: true },
+                    ]}
+                  />
+                )}
               </div>
               <div className="mt-6 mb-30 flex flex-col gap-3">
                 {project.roles?.map((role) => (
@@ -48,6 +67,7 @@ export default function ProjectDetailView({
                     role={role}
                     techStacks={project.techStacks}
                     className="mb-3 lg:max-w-[721.96px]"
+                    isMaintainer={isMaintainer}
                   />
                 ))}
               </div>

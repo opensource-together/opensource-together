@@ -12,12 +12,14 @@ interface RoleCardProps {
   role: ProjectRole;
   techStacks?: TechStack[];
   className?: string;
+  isMaintainer?: boolean;
 }
 
 export default function RoleCard({
   role,
   techStacks = [],
   className,
+  isMaintainer = false,
 }: RoleCardProps) {
   const {
     title = "",
@@ -109,16 +111,22 @@ export default function RoleCard({
         </div>
 
         {/* Apply Button */}
-        <RoleApplicationForm
-          roleTitle={title}
-          roleDescription={description}
-          techStacks={roleTechStacks}
-        >
-          <Button className="w-full md:w-auto">
-            Postuler à ce rôle
-            <Icon name="arrow-up-right" size="xs" variant="white" />
+        {isMaintainer ? (
+          <Button variant="outline" className="w-full md:w-auto">
+            Modifier le rôle
           </Button>
-        </RoleApplicationForm>
+        ) : (
+          <RoleApplicationForm
+            roleTitle={title}
+            roleDescription={description}
+            techStacks={roleTechStacks}
+          >
+            <Button className="w-full md:w-auto">
+              Postuler à ce rôle
+              <Icon name="arrow-up-right" size="xs" variant="white" />
+            </Button>
+          </RoleApplicationForm>
+        )}
       </div>
     </div>
   );
