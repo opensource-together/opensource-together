@@ -101,7 +101,7 @@ export class CreateProjectCommandHandler
     const categoriesValidation: Result<Category[], string> =
       await this.categoryRepo.findByIds(categories.map((c) => c.id));
     if (!categoriesValidation.success) {
-      return Result.fail(categoriesValidation.error);
+      return Result.fail('Some categories are not found');
     }
     const allCategoriesValidated = categoriesValidation.value;
 

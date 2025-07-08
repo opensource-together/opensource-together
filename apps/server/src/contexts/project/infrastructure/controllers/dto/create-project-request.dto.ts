@@ -29,6 +29,10 @@ export class CreateProjectDtoRequest {
   techStacks: string[];
 
   @IsArray()
+  @IsNotEmpty()
+  categories: { id: string; name: string }[];
+
+  @IsArray()
   projectRoles: {
     title: string;
     description: string;

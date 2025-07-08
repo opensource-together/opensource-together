@@ -20,6 +20,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         data: repoProject.value,
         include: {
           techStacks: true,
+          categories: true,
           projectRoles: {
             include: {
               techStacks: true,
@@ -115,6 +116,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
               include: { techStacks: true },
             },
             projectMembers: true,
+            categories: true,
           },
         });
 
@@ -217,6 +219,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
         },
       });
 
@@ -252,6 +255,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
         },
       });
 
@@ -281,6 +285,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
         },
       });
 
@@ -316,6 +321,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
         },
       });
 
@@ -377,6 +383,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
         },
       });
 

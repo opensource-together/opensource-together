@@ -121,6 +121,7 @@ export class ProjectController {
           description: role.description,
           techStacks: role.techStacks,
         })),
+        categories: project.categories,
         octokit: octokit,
       }),
     );

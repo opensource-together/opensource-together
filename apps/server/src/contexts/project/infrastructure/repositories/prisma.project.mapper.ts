@@ -11,12 +11,14 @@ import {
   Prisma,
   ProjectRole,
   teamMember,
+  Category,
 } from '@prisma/client';
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
   projectMembers: teamMember[];
   projectRoles: (ProjectRole & { techStacks: TechStack[] })[];
+  categories: Category[];
 };
 
 export class PrismaProjectMapper {
@@ -34,6 +36,11 @@ export class PrismaProjectMapper {
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
           id: techStack.id,
+        })),
+      },
+      categories: {
+        connect: projectData.categories.map((category) => ({
+          id: category.id,
         })),
       },
       projectRoles: {
@@ -71,6 +78,10 @@ export class PrismaProjectMapper {
         id: techStack.id,
         name: techStack.name,
         iconUrl: techStack.iconUrl,
+      })),
+      categories: prismaProject.categories.map((c) => ({
+        id: c.id,
+        name: c.name,
       })),
       projectRoles: prismaProject.projectRoles.map((role) => ({
         id: role.id,

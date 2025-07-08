@@ -64,7 +64,7 @@ model Project {
   techStacks  				TechStack[]
 	projectMembers			teamMember[]
 	projectRoles				ProjectRole[]
-
+  categories					Category[]
   // Index composite pour recherche + tri par date
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
@@ -116,4 +116,10 @@ model UserSocialLink {
 
   // Un utilisateur ne peut avoir qu'un seul lien d'un type donné.
   @@unique([userId, type])
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  projects  Project[]
 }
