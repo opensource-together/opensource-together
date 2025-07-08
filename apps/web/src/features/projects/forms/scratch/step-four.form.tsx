@@ -24,17 +24,9 @@ import {
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 
-interface StepFourFormProps {
-  onSubmit?: () => void; // Rendre optionnel car on gère maintenant via le hook
-  isLoading?: boolean; // Rendre optionnel car on utilise isCreating du hook
-}
-
-export function StepFourForm({
-  onSubmit,
-  isLoading: externalLoading,
-}: StepFourFormProps) {
+export function StepFourForm() {
   const router = useRouter();
-  const { formData, updateProjectInfo, resetForm } = useProjectCreateStore();
+  const { formData, updateProjectInfo } = useProjectCreateStore();
   const { createProject, isCreating } = useCreateProject();
 
   const form = useForm<StepFourFormData>({
@@ -81,42 +73,24 @@ export function StepFourForm({
   };
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    console.log("🚀 SUBMIT TRIGGERED !");
+    // Consolidate all form data including step 4 data
+    const finalFormData = {
+      ...formData,
+      image: data.logo ? URL.createObjectURL(data.logo) : "",
+      externalLinks: convertToExternalLinksArray(data.externalLinks),
+    };
 
-    try {
-      console.log("=== FORM: DÉBUT DU SUBMIT ===");
+    // Update the store with final data
+    updateProjectInfo({
+      image: finalFormData.image,
+      externalLinks: finalFormData.externalLinks,
+    });
 
-      // Mise à jour des données dans le store avec les informations du formulaire
-      updateProjectInfo({
-        image: data.logo ? URL.createObjectURL(data.logo) : "",
-        externalLinks: convertToExternalLinksArray(data.externalLinks),
-      });
-
-      // Vérifier que les données essentielles sont présentes
-      if (!formData.projectName.trim()) {
-        throw new Error("Le nom du projet est requis");
-      }
-
-      if (!formData.shortDescription.trim()) {
-        throw new Error("La description courte est requise");
-      }
-
-      console.log("=== FORM: DONNÉES DU STORE ===");
-      console.log("FormData:", formData);
-
-      console.log("=== FORM: APPEL DE createProject ===");
-
-      // Appel API via le hook (syntaxe correcte pour TanStack Query)
-      createProject(formData);
-
-      console.log("=== FORM: createProject appelé ===");
-    } catch (error) {
-      console.error("Erreur lors de la préparation des données:", error);
-    }
+    // Create project with consolidated data
+    createProject(finalFormData);
   });
 
-  // Utiliser isCreating du hook ou isLoading externe
-  const isLoadingState = isCreating || externalLoading || isSubmitting;
+  const isLoadingState = isCreating || isSubmitting;
 
   return (
     <Form {...form}>

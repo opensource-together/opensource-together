@@ -1,7 +1,12 @@
+import { API_BASE_URL } from "@/config/config";
+
 import { mockProjects } from "../mocks/project.mock";
 import { ProjectFormData } from "../stores/project-create.store";
-import { CreateProjectApiResponse, Project } from "../types/project.type";
-import { createProjectApiSchema } from "../validations/project-stepper.schema";
+import { Project } from "../types/project.type";
+import {
+  createProjectApiSchema,
+  projectStoreToApiSchema,
+} from "../validations/project-stepper.schema";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
@@ -39,60 +44,31 @@ export const getProjectDetails = async (
 export const createProject = async (
   storeData: ProjectFormData
 ): Promise<Project> => {
-  // Préparer et valider les données pour l'API
-  const apiData = createProjectApiSchema.parse({
-    title: storeData.projectName,
-    description: storeData.shortDescription,
-    shortDescription: storeData.shortDescription,
-    techStacks: storeData.techStack?.map((tech) => tech.id) || [],
-    projectRoles: storeData.roles.map((role) => ({
-      title: role.title,
-      description: role.description,
-      techStacks: role.techStacks?.map((tech) => tech.id) || [],
-    })),
-  });
+  try {
+    // Use Zod schema to transform and validate the data
+    const transformedData = projectStoreToApiSchema.parse(storeData);
 
-  console.log("Données préparées pour l'API:", apiData);
+    // Final validation with API schema
+    const validatedData = createProjectApiSchema.parse(transformedData);
 
-  // Appel API direct avec fetch natif
-  const response = await fetch("http://localhost:4000/projects", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include", // Pour inclure les cookies d'authentification
-    body: JSON.stringify(apiData),
-  });
+    const response = await fetch(`${API_BASE_URL}/projects`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(validatedData),
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const message = errorData?.message || response.statusText;
-    throw new Error(`Erreur API: ${response.status} - ${message}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error creating project");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error creating project:", error);
+    throw error;
   }
-
-  const apiResponse: CreateProjectApiResponse = await response.json();
-
-  // Mapper la réponse vers le format Project
-  return {
-    id: apiResponse.id,
-    title: apiResponse.title,
-    shortDescription: apiResponse.shortDescription,
-    longDescription: apiResponse.description,
-    status: "DRAFT",
-    techStacks: apiResponse.techStacks || [],
-    roles: apiResponse.projectRoles || [],
-    externalLinks: apiResponse.externalLinks || storeData.externalLinks || [],
-    keyFeatures: storeData.keyFeatures || [],
-    projectGoals: storeData.projectGoals || [],
-    categories: storeData.categories || [],
-    author: { id: "current-user", name: "Current User" },
-    createdAt: apiResponse.createdAt
-      ? new Date(apiResponse.createdAt)
-      : new Date(),
-    updatedAt: apiResponse.updatedAt
-      ? new Date(apiResponse.updatedAt)
-      : new Date(),
-  };
 };
 
 /**
