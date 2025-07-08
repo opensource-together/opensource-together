@@ -7,6 +7,22 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class PrismaCategoryRepository implements CategoryRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
+
+  async getAll(): Promise<Result<Category[], string>> {
+    try {
+      const categories = await this.prisma.category.findMany();
+      const result = Category.reconstituteMany(
+        categories.map((c) => ({ id: c.id, name: c.name })),
+      );
+      if (!result.success) {
+        return Result.fail(result.error);
+      }
+      return Result.ok(result.value);
+    } catch (error) {
+      console.log('error', error);
+      return Result.fail('Error fetching all categories');
+    }
+  }
   async findById(id: string): Promise<Result<Category, string>> {
     try {
       const category = await this.prisma.category.findUnique({

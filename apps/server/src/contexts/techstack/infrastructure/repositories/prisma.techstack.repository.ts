@@ -8,6 +8,29 @@ import { Result } from '@/libs/result';
 export class PrismaTechStackRepository implements TechStackRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getAll(): Promise<Result<TechStack[], string>> {
+    try {
+      const techStacks = await this.prisma.techStack.findMany();
+      const domainTechStacks = techStacks.map((techStack) =>
+        TechStack.reconstitute(techStack),
+      );
+      const failedTechStacks = domainTechStacks.filter(
+        (domainTechStack) => !domainTechStack.success,
+      );
+      if (failedTechStacks.length > 0)
+        return Result.fail(failedTechStacks[0].error as string);
+      const successTechStacks = domainTechStacks.filter(
+        (domainTechStack) => domainTechStack.success,
+      );
+      return Result.ok(
+        successTechStacks.map((domainTechStack) => domainTechStack.value),
+      );
+    } catch (error) {
+      console.log('error', error);
+      return Result.fail(`Error fetching all tech stacks`);
+    }
+  }
+
   async create(techStack: TechStack): Promise<Result<TechStack, string>> {
     try {
       const techStackCreated = await this.prisma.techStack.create({

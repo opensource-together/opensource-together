@@ -11,6 +11,19 @@ export class MockCategoryRepository implements CategoryRepositoryPort {
     { id: '2', name: 'education' },
     { id: '3', name: 'technology' },
   ];
+
+  async getAll(): Promise<Result<Category[], string>> {
+    try {
+      const result = Category.reconstituteMany(this.categories);
+      if (result.success) {
+        return Promise.resolve(Result.ok(result.value));
+      } else {
+        return Promise.resolve(Result.fail(result.error));
+      }
+    } catch (error) {
+      return Promise.resolve(Result.fail(error as string));
+    }
+  }
   async findById(id: string): Promise<Result<Category, string>> {
     try {
       const result = Category.reconstitute({

@@ -96,12 +96,12 @@ export class CreateProjectCommandHandler
     const allTechStacksValidated = techStacksValidation.value;
 
     if (allTechStacksValidated.length !== allTechStackIds.length)
-      return Result.fail('Some tech stacks are not found');
+      return Result.fail('Some tech stacks are not valid');
 
     const categoriesValidation: Result<Category[], string> =
       await this.categoryRepo.findByIds(categories.map((c) => c.id));
     if (!categoriesValidation.success) {
-      return Result.fail('Some categories are not found');
+      return Result.fail('Some categories are not valid');
     }
     const allCategoriesValidated = categoriesValidation.value;
 

@@ -5,6 +5,7 @@ import { ProfileInfrastructure } from './profile/infrastructure/profile.infrastr
 import { TechStackInfrastructure } from './techstack/infrastructure/techstack.infrastructure';
 import { ProjectRoleInfrastructure } from './project-role/infrastructure/project-role.infrastructure';
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
+import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { GithubInfrastructure } from './github/infrastructure/github.infrastruct
     ProfileInfrastructure,
     TechStackInfrastructure,
     GithubInfrastructure,
+    CategoryInfrastructure,
   ],
   exports: [
     UserInfrastructure,
@@ -22,6 +24,7 @@ import { GithubInfrastructure } from './github/infrastructure/github.infrastruct
     ProfileInfrastructure,
     TechStackInfrastructure,
     GithubInfrastructure,
+    CategoryInfrastructure,
   ],
 })
 export class ContextsModule {}
