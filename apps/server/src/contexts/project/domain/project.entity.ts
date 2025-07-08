@@ -8,6 +8,7 @@ import {
   ProjectRoleValidationErrors,
 } from '@/contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
+import { Category } from '@/contexts/category/domain/category.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -16,6 +17,7 @@ export type ProjectValidationErrors = {
   shortDescription?: string;
   techStacks?: TechStackValidationErrors | string;
   projectRoles?: ProjectRoleValidationErrors | string;
+  categories?: string;
   // collaborators?: string;
 };
 
@@ -26,6 +28,7 @@ export type ProjectData = {
   title: string;
   shortDescription: string;
   description: string;
+  categories: { id: string; name: string }[];
   externalLinks?: { type: string; url: string }[];
   techStacks: { id: string; name: string; iconUrl: string }[];
   projectRoles: {
@@ -55,6 +58,7 @@ export type ProjectProps = {
   externalLinks?: { type: string; url: string }[];
   techStacks: TechStack[];
   projectRoles?: ProjectRole[];
+  categories: Category[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -68,6 +72,7 @@ export class Project {
   private externalLinks?: { type: string; url: string }[] | undefined;
   private techStacks: TechStack[];
   private projectRoles?: ProjectRole[];
+  private categories: Category[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -82,6 +87,7 @@ export class Project {
     this.updatedAt = props.updatedAt;
     this.techStacks = props.techStacks;
     this.projectRoles = props.projectRoles;
+    this.categories = props.categories;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -116,12 +122,15 @@ export class Project {
     if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
     if (!props.techStacks || props.techStacks.length === 0)
       validationErrors.techStacks = 'At least one tech stack is required';
+    if (!props.categories || props.categories.length === 0)
+      validationErrors.categories = 'At least one category is required';
 
     const voValidationResults = {
       title: Title.create(props.title),
       description: Description.create(props.description),
       shortDescription: ShortDescription.create(props.shortDescription),
       techStacks: TechStack.reconstituteMany(props.techStacks),
+      categories: Category.reconstituteMany(props.categories),
       projectRoles: ProjectRole.createMany(props.projectRoles),
     };
     //extract the error from the validation results
@@ -131,19 +140,26 @@ export class Project {
           result.error as string;
     });
     //reconstitute the object with the value of the validation results
-    const { title, description, shortDescription, techStacks, projectRoles } =
-      Object.fromEntries(
-        Object.entries(voValidationResults).map(([key, result]) => [
-          key,
-          result.success ? result.value : result.error,
-        ]),
-      ) as {
-        title: Title;
-        description: Description;
-        shortDescription: ShortDescription;
-        techStacks: TechStack[];
-        projectRoles: ProjectRole[];
-      };
+    const {
+      title,
+      description,
+      shortDescription,
+      techStacks,
+      projectRoles,
+      categories,
+    } = Object.fromEntries(
+      Object.entries(voValidationResults).map(([key, result]) => [
+        key,
+        result.success ? result.value : result.error,
+      ]),
+    ) as {
+      title: Title;
+      description: Description;
+      shortDescription: ShortDescription;
+      techStacks: TechStack[];
+      projectRoles: ProjectRole[];
+      categories: Category[];
+    };
 
     if (Object.keys(validationErrors).length > 0)
       return Result.fail(validationErrors);
@@ -156,6 +172,7 @@ export class Project {
         description,
         techStacks,
         projectRoles,
+        categories,
       }),
     );
   }
@@ -177,6 +194,7 @@ export class Project {
       externalLinks: this.externalLinks,
       techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
       projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
+      categories: this.categories.map((c) => c.toPrimitive()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

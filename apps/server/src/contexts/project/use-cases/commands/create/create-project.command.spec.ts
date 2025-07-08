@@ -26,7 +26,8 @@ import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/
 import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
 import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Octokit } from '@octokit/rest';
-
+import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
+import { MockCategoryRepository } from '@/contexts/category/infrastructure/repositories/mock.category.repository';
 // Mock Octokit
 const mockOctokit = {
   rest: {
@@ -56,6 +57,7 @@ type CreateProjectCommandProps = {
     isFilled: boolean;
     techStacks: string[];
   }[];
+  categories: { id: string; name: string }[];
   octokit: any; // Changé de Octokit à any
 };
 
@@ -67,6 +69,7 @@ describe('CreateProjectCommandHandler', () => {
   const mockClock = new MockClock(new Date('2024-01-01T09:00:00Z'));
   const mockProjectRepo = new InMemoryProjectRepository(mockClock);
   const mockProjectRoleRepo = new InMemoryProjectRoleRepository(mockClock);
+  const mockCategoryRepo = new MockCategoryRepository();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -91,6 +94,10 @@ describe('CreateProjectCommandHandler', () => {
         {
           provide: GITHUB_REPOSITORY_PORT,
           useValue: mockGithubRepository,
+        },
+        {
+          provide: CATEGORY_REPOSITORY_PORT,
+          useValue: mockCategoryRepo,
         },
       ],
     }).compile();
@@ -140,6 +147,12 @@ describe('CreateProjectCommandHandler', () => {
           },
         ],
         ownerId: '1',
+        categories: [
+          {
+            id: '1',
+            name: 'healthcare',
+          },
+        ],
         createdAt: mockClock.now(),
         updatedAt: mockClock.now(),
       });
@@ -222,6 +235,12 @@ describe('CreateProjectCommandHandler', () => {
           },
         ],
         ownerId: '1',
+        categories: [
+          {
+            id: '1',
+            name: 'healthcare',
+          },
+        ],
         createdAt: mockClock.now(),
         updatedAt: mockClock.now(),
       });
@@ -246,6 +265,12 @@ describe('CreateProjectCommandHandler', () => {
         ],
         techStacks: ['1'],
         ownerId: '1',
+        categories: [
+          {
+            id: '1',
+            name: 'healthcare',
+          },
+        ],
         octokit: mockOctokit,
       });
 
@@ -284,6 +309,27 @@ describe('CreateProjectCommandHandler', () => {
         throw new Error('Test should have failed but succeeded');
       }
     });
+    it('should return an error when categories are not found', async () => {
+      createTechStacksInMemory(techStackRepo);
+      const props = getCommandProps({
+        categories: [
+          {
+            id: '999', // ID qui n'existe pas
+            name: 'healthcare',
+          },
+        ],
+      });
+      const command = new CreateProjectCommand(props);
+      const result = await handler.execute(command);
+      if (!result.success) {
+        expect(result.error).toContain('Some categories are not valid');
+        // await deleteTechStacksInMemory(techStackRepo, props.categories);
+        // throw new Error(JSON.stringify(result.error));
+      } else {
+        console.log('result', result.value.toPrimitive());
+        throw new Error('Test should have failed but succeeded');
+      }
+    });
   });
 });
 
@@ -296,6 +342,7 @@ const getCommandProps = (
     shortDescription: 'une description courte',
     description: 'une description',
     externalLinks: [],
+    categories: [{ id: '1', name: 'healthcare' }],
     projectRoles: [],
     techStacks: ['1', '2'],
     octokit: mockOctokit, // Utiliser le mock
@@ -312,6 +359,7 @@ const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
     externalLinks: [],
     projectRoles: [],
     techStacks: ['1'],
+    categories: [{ id: '1', name: 'healthcare' }],
     octokit: mockOctokit, // Utiliser le mock
   };
 };

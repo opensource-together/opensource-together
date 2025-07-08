@@ -20,6 +20,9 @@ import {
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Octokit } from '@octokit/rest';
 import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
+import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
+import { CategoryRepositoryPort } from '@/contexts/category/use-cases/ports/category.repository.port';
+import { Category } from '@/contexts/category/domain/category.entity';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -35,6 +38,7 @@ export class CreateProjectCommand implements ICommand {
         description: string;
         techStacks: string[];
       }[];
+      categories: { id: string; name: string }[];
       octokit: Octokit;
     },
   ) {}
@@ -51,6 +55,8 @@ export class CreateProjectCommandHandler
     private readonly techStackRepo: TechStackRepositoryPort,
     @Inject(GITHUB_REPOSITORY_PORT)
     private readonly githubRepository: GithubRepositoryPort,
+    @Inject(CATEGORY_REPOSITORY_PORT)
+    private readonly categoryRepo: CategoryRepositoryPort,
   ) {}
 
   async execute(
@@ -65,6 +71,7 @@ export class CreateProjectCommandHandler
       externalLinks,
       techStacks,
       projectRoles,
+      categories,
       octokit,
     } = createProjectCommand.props;
     // verifier si un project n'existe pas déjà avec le même titre
@@ -91,6 +98,13 @@ export class CreateProjectCommandHandler
     if (allTechStacksValidated.length !== allTechStackIds.length)
       return Result.fail('Some tech stacks are not found');
 
+    const categoriesValidation: Result<Category[], string> =
+      await this.categoryRepo.findByIds(categories.map((c) => c.id));
+    if (!categoriesValidation.success) {
+      return Result.fail(categoriesValidation.error);
+    }
+    const allCategoriesValidated = categoriesValidation.value;
+
     //ont créer un project pour valider des regles métier
     const projectResult = Project.create({
       ownerId,
@@ -98,6 +112,7 @@ export class CreateProjectCommandHandler
       shortDescription,
       description,
       externalLinks,
+      categories: allCategoriesValidated.map((c) => c.toPrimitive()),
       techStacks: allTechStacksValidated.map((ts) => ts.toPrimitive()),
       projectRoles: projectRoles.map((role) => ({
         title: role.title,
