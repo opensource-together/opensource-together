@@ -74,3 +74,28 @@ export interface Project {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Types pour l'API backend
+export interface CreateProjectApiRequest {
+  title: string;
+  description: string;
+  shortDescription: string;
+  techStacks: string[]; // IDs des tech stacks
+  projectRoles: {
+    title: string;
+    description: string;
+    techStacks: string[]; // IDs des tech stacks
+  }[];
+}
+
+export interface CreateProjectApiResponse {
+  id: string;
+  title: string;
+  description: string;
+  shortDescription: string;
+  techStacks: TechStack[];
+  projectRoles: ProjectRole[];
+  externalLinks: ExternalLink[];
+  createdAt: string;
+  updatedAt: string;
+}

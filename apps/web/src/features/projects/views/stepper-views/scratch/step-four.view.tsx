@@ -11,8 +11,6 @@ export default function StepFourView() {
   const { createProject, isCreating } = useCreateProject();
 
   const handleCreateProject = () => {
-    console.log("=== VIEW: APPEL DU SERVICE ===");
-    console.log("FormData à envoyer:", formData);
     createProject(formData);
   };
 

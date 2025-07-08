@@ -120,6 +120,21 @@ export const stepFourSchema = z.object({
   }),
 });
 
+// Schema pour l'API backend
+export const createProjectApiSchema = z.object({
+  title: z.string().min(1, "Le titre est requis"),
+  description: z.string().min(1, "La description est requise"),
+  shortDescription: z.string().min(1, "La description courte est requise"),
+  techStacks: z.array(z.string()),
+  projectRoles: z.array(
+    z.object({
+      title: z.string().min(1, "Le titre du rôle est requis"),
+      description: z.string().min(1, "La description du rôle est requise"),
+      techStacks: z.array(z.string()),
+    })
+  ),
+});
+
 // Type exports
 export type StepOneFormData = z.infer<typeof stepOneSchema>;
 export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
@@ -127,3 +142,4 @@ export type RoleFormData = z.infer<typeof roleSchema>;
 export type StepThreeFormData = z.infer<typeof stepThreeSchema>;
 export type StepFourFormData = z.infer<typeof stepFourSchema>;
 export type CreateProjectFormData = z.infer<typeof createProjectSchema>;
+export type CreateProjectApiData = z.infer<typeof createProjectApiSchema>;

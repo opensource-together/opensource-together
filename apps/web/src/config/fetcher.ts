@@ -1,18 +1,27 @@
 import { apiConfig } from "./config";
-import { requestInterceptor, responseInterceptor } from "./intereceptors";
 
 /**
  * Fonction unique de fetch utilisée par toutes les méthodes HTTP.
+ * Utilise les cookies SuperTokens pour l'authentification automatique.
  */
 async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
-  // 1) Prépare la requête avec headers + auth
-  const init = requestInterceptor(options);
+  // Utilise le fetch natif avec les bonnes credentials pour SuperTokens
+  const response = await fetch(apiConfig.baseURL + url, {
+    ...options,
+    headers: {
+      ...apiConfig.headers,
+      ...options.headers,
+    },
+    credentials: apiConfig.credentials, // Important pour les cookies SuperTokens
+  });
 
-  // 2) Exécute le fetch
-  const response = await fetch(apiConfig.baseURL + url, init);
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const message = errorData?.message || response.statusText;
+    throw new Error(message);
+  }
 
-  // 3) Applique l'intercepteur de réponse (gestion des erreurs)
-  return responseInterceptor<T>(response);
+  return response.json() as Promise<T>;
 }
 
 /**
