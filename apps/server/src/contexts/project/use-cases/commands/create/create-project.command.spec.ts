@@ -57,7 +57,7 @@ type CreateProjectCommandProps = {
     isFilled: boolean;
     techStacks: string[];
   }[];
-  categories: { id: string; name: string }[];
+  categories: string[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
   octokit: any; // Changé de Octokit à any
@@ -291,12 +291,7 @@ describe('CreateProjectCommandHandler', () => {
         ],
         techStacks: ['1'],
         ownerId: '1',
-        categories: [
-          {
-            id: '1',
-            name: 'healthcare',
-          },
-        ],
+        categories: ['1'],
         keyFeatures: [
           {
             id: '1',
@@ -350,12 +345,7 @@ describe('CreateProjectCommandHandler', () => {
     it('should return an error when categories are not found', async () => {
       createTechStacksInMemory(techStackRepo);
       const props = getCommandProps({
-        categories: [
-          {
-            id: '999', // ID qui n'existe pas
-            name: 'healthcare',
-          },
-        ],
+        categories: ['999'], // ID qui n'existe pas
       });
       const command = new CreateProjectCommand(props);
       const result = await handler.execute(command);
@@ -380,7 +370,7 @@ const getCommandProps = (
     shortDescription: 'une description courte',
     description: 'une description',
     externalLinks: [],
-    categories: [{ id: '1', name: 'healthcare' }],
+    categories: ['1'],
     projectRoles: [],
     techStacks: ['1', '2'],
     keyFeatures: [
@@ -409,7 +399,7 @@ const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
     externalLinks: [],
     projectRoles: [],
     techStacks: ['1'],
-    categories: [{ id: '1', name: 'healthcare' }],
+    categories: ['1'],
     keyFeatures: [
       {
         id: '1',
