@@ -58,6 +58,8 @@ type CreateProjectCommandProps = {
     techStacks: string[];
   }[];
   categories: { id: string; name: string }[];
+  keyFeatures: { id?: string; feature: string }[];
+  projectGoals: { id?: string; goal: string }[];
   octokit: any; // Changé de Octokit à any
 };
 
@@ -153,6 +155,18 @@ describe('CreateProjectCommandHandler', () => {
             name: 'healthcare',
           },
         ],
+        keyFeatures: [
+          {
+            id: '1',
+            feature: 'Test Key Feature',
+          },
+        ],
+        projectGoals: [
+          {
+            id: '1',
+            goal: 'Test Project Goal',
+          },
+        ],
         createdAt: mockClock.now(),
         updatedAt: mockClock.now(),
       });
@@ -241,6 +255,18 @@ describe('CreateProjectCommandHandler', () => {
             name: 'healthcare',
           },
         ],
+        keyFeatures: [
+          {
+            id: '1',
+            feature: 'Test Key Feature',
+          },
+        ],
+        projectGoals: [
+          {
+            id: '1',
+            goal: 'Test Project Goal',
+          },
+        ],
         createdAt: mockClock.now(),
         updatedAt: mockClock.now(),
       });
@@ -269,6 +295,18 @@ describe('CreateProjectCommandHandler', () => {
           {
             id: '1',
             name: 'healthcare',
+          },
+        ],
+        keyFeatures: [
+          {
+            id: '1',
+            feature: 'Test Key Feature',
+          },
+        ],
+        projectGoals: [
+          {
+            id: '1',
+            goal: 'Test Project Goal',
           },
         ],
         octokit: mockOctokit,
@@ -345,6 +383,18 @@ const getCommandProps = (
     categories: [{ id: '1', name: 'healthcare' }],
     projectRoles: [],
     techStacks: ['1', '2'],
+    keyFeatures: [
+      {
+        id: '1',
+        feature: 'Test Key Feature',
+      },
+    ],
+    projectGoals: [
+      {
+        id: '1',
+        goal: 'Test Project Goal',
+      },
+    ],
     octokit: mockOctokit, // Utiliser le mock
     ...override,
   };
@@ -360,6 +410,18 @@ const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
     projectRoles: [],
     techStacks: ['1'],
     categories: [{ id: '1', name: 'healthcare' }],
+    keyFeatures: [
+      {
+        id: '1',
+        feature: 'Test Key Feature',
+      },
+    ],
+    projectGoals: [
+      {
+        id: '1',
+        goal: 'Test Project Goal',
+      },
+    ],
     octokit: mockOctokit, // Utiliser le mock
   };
 };

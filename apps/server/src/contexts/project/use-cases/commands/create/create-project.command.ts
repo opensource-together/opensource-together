@@ -39,6 +39,8 @@ export class CreateProjectCommand implements ICommand {
         techStacks: string[];
       }[];
       categories: { id: string; name: string }[];
+      keyFeatures: { id?: string; feature: string }[];
+      projectGoals: { id?: string; goal: string }[];
       octokit: Octokit;
     },
   ) {}
@@ -72,6 +74,8 @@ export class CreateProjectCommandHandler
       techStacks,
       projectRoles,
       categories,
+      keyFeatures,
+      projectGoals,
       octokit,
     } = createProjectCommand.props;
     // verifier si un project n'existe pas déjà avec le même titre
@@ -128,6 +132,8 @@ export class CreateProjectCommandHandler
             ?.toPrimitive().iconUrl as string,
         })),
       })),
+      keyFeatures,
+      projectGoals,
     });
     if (!projectResult.success) {
       return Result.fail(projectResult.error);

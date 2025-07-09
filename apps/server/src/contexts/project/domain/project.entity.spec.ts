@@ -65,6 +65,18 @@ describe('Domain Project Entity', () => {
         [{ id: '1', name: '' }],
         { categories: 'Some categories are not valid' },
       ],
+      //keyFeatures
+      [
+        'keyFeatures',
+        [],
+        { keyFeatures: 'At least one key feature is required' },
+      ],
+      //projectGoals
+      [
+        'projectGoals',
+        [],
+        { projectGoals: 'At least one project goal is required' },
+      ],
     ])(
       'should fail validation if %s is invalid with value: %j',
       (field, value, expectedError) => {
@@ -449,6 +461,18 @@ const getProjectProps = (
     {
       id: '1',
       name: 'Test Category',
+    },
+  ],
+  keyFeatures: [
+    {
+      id: '1',
+      feature: 'Test Key Feature',
+    },
+  ],
+  projectGoals: [
+    {
+      id: '1',
+      goal: 'Test Project Goal',
     },
   ],
   ...overrides,

@@ -9,6 +9,7 @@ import {
 } from '@/contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
 import { Category } from '@/contexts/category/domain/category.entity';
+import { KeyFeature } from '@/contexts/key-feature/domain/key-feature.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -18,6 +19,8 @@ export type ProjectValidationErrors = {
   techStacks?: TechStackValidationErrors | string;
   projectRoles?: ProjectRoleValidationErrors | string;
   categories?: string;
+  keyFeatures?: string;
+  projectGoals?: string;
   // collaborators?: string;
 };
 
@@ -41,6 +44,8 @@ export type ProjectData = {
     createdAt?: Date;
     updatedAt?: Date;
   }[];
+  keyFeatures: { id?: string; feature: string }[];
+  projectGoals: { id?: string; goal: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -59,6 +64,8 @@ export type ProjectProps = {
   techStacks: TechStack[];
   projectRoles?: ProjectRole[];
   categories: Category[];
+  keyFeatures: KeyFeature[];
+  projectGoals: { id?: string; goal: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -73,6 +80,8 @@ export class Project {
   private techStacks: TechStack[];
   private projectRoles?: ProjectRole[];
   private categories: Category[];
+  private keyFeatures: KeyFeature[];
+  private projectGoals: { id?: string; goal: string }[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -88,6 +97,8 @@ export class Project {
     this.techStacks = props.techStacks;
     this.projectRoles = props.projectRoles;
     this.categories = props.categories;
+    this.keyFeatures = props.keyFeatures;
+    this.projectGoals = props.projectGoals;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -124,6 +135,10 @@ export class Project {
       validationErrors.techStacks = 'At least one tech stack is required';
     if (!props.categories || props.categories.length === 0)
       validationErrors.categories = 'At least one category is required';
+    if (!props.keyFeatures || props.keyFeatures.length === 0)
+      validationErrors.keyFeatures = 'At least one key feature is required';
+    if (!props.projectGoals || props.projectGoals.length === 0)
+      validationErrors.projectGoals = 'At least one project goal is required';
 
     const voValidationResults = {
       title: Title.create(props.title),
@@ -132,6 +147,7 @@ export class Project {
       techStacks: TechStack.reconstituteMany(props.techStacks),
       categories: Category.reconstituteMany(props.categories),
       projectRoles: ProjectRole.createMany(props.projectRoles),
+      keyFeatures: KeyFeature.createMany(props.keyFeatures),
     };
     //extract the error from the validation results
     Object.entries(voValidationResults).forEach(([key, result]) => {
@@ -147,6 +163,7 @@ export class Project {
       techStacks,
       projectRoles,
       categories,
+      keyFeatures,
     } = Object.fromEntries(
       Object.entries(voValidationResults).map(([key, result]) => [
         key,
@@ -159,6 +176,7 @@ export class Project {
       techStacks: TechStack[];
       projectRoles: ProjectRole[];
       categories: Category[];
+      keyFeatures: KeyFeature[];
     };
 
     if (Object.keys(validationErrors).length > 0)
@@ -173,6 +191,7 @@ export class Project {
         techStacks,
         projectRoles,
         categories,
+        keyFeatures,
       }),
     );
   }
@@ -195,6 +214,8 @@ export class Project {
       techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
       projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
       categories: this.categories.map((c) => c.toPrimitive()),
+      keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
+      projectGoals: this.projectGoals,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

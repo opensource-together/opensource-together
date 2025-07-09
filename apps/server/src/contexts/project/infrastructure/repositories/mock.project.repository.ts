@@ -21,6 +21,8 @@ type ProjectInMemory = {
     techStacks: { id: string; name: string; iconUrl: string }[];
   }[];
   categories: { id: string; name: string }[];
+  keyFeatures: { id?: string; feature: string }[];
+  projectGoals: { id?: string; goal: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -44,6 +46,8 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       ],
       projectRoles: [],
       categories: [],
+      keyFeatures: [],
+      projectGoals: [],
       createdAt: new Date('2024-01-01T09:00:00Z'),
       updatedAt: new Date('2024-01-01T10:00:00Z'),
     },
@@ -78,6 +82,8 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
         updatedAt: this.clock.now(),
       })),
       categories: projectPrimitive.categories,
+      keyFeatures: projectPrimitive.keyFeatures,
+      projectGoals: projectPrimitive.projectGoals,
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
     };
@@ -119,6 +125,8 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       techStacks: techStacks.map((ts) => ts.toPrimitive()),
       projectRoles: projectInMemory.projectRoles,
       categories: projectInMemory.categories,
+      keyFeatures: projectInMemory.keyFeatures,
+      projectGoals: projectInMemory.projectGoals,
       createdAt: projectInMemory.createdAt,
       updatedAt: projectInMemory.updatedAt,
     });
@@ -235,6 +243,8 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
         ],
         projectRoles: [],
         categories: [],
+        keyFeatures: [],
+        projectGoals: [],
         createdAt: new Date('2024-01-01T09:00:00Z'),
         updatedAt: new Date('2024-01-01T10:00:00Z'),
       },
