@@ -133,6 +133,12 @@ export const createProjectApiSchema = z.object({
       techStacks: z.array(z.string()),
     })
   ),
+  externalLinks: z.array(
+    z.object({
+      type: z.string(),
+      url: z.string(),
+    })
+  ).optional(),
 });
 
 /**
@@ -202,11 +208,18 @@ export const projectStoreToApiSchema = z
         techStacks: z.array(z.unknown()).optional().default([]),
       })
     ),
+    externalLinks: z.array(
+      z.object({
+        type: z.string(),
+        url: z.string(),
+      })
+    ).optional(),
   })
   .transform((storeData) => ({
     title: storeData.projectName,
     description: storeData.shortDescription,
     shortDescription: storeData.shortDescription,
+    externalLinks: storeData.externalLinks || [],
     techStacks: extractTechStackIds(storeData.techStack),
     projectRoles: storeData.roles.map((role) => ({
       title: role.title,
