@@ -38,7 +38,7 @@ export class CreateProjectCommand implements ICommand {
         description: string;
         techStacks: string[];
       }[];
-      categories: { id: string; name: string }[];
+      categories: string[];
       keyFeatures: { id?: string; feature: string }[];
       projectGoals: { id?: string; goal: string }[];
       octokit: Octokit;
@@ -103,7 +103,7 @@ export class CreateProjectCommandHandler
       return Result.fail('Some tech stacks are not valid');
 
     const categoriesValidation: Result<Category[], string> =
-      await this.categoryRepo.findByIds(categories.map((c) => c.id));
+      await this.categoryRepo.findByIds(categories);
     if (!categoriesValidation.success) {
       return Result.fail('Some categories are not valid');
     }
@@ -132,8 +132,8 @@ export class CreateProjectCommandHandler
             ?.toPrimitive().iconUrl as string,
         })),
       })),
-      keyFeatures,
-      projectGoals,
+      keyFeatures: keyFeatures,
+      projectGoals: projectGoals,
     });
     if (!projectResult.success) {
       return Result.fail(projectResult.error);

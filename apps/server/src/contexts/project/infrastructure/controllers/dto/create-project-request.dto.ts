@@ -30,7 +30,7 @@ export class CreateProjectDtoRequest {
 
   @IsArray()
   @IsNotEmpty()
-  categories: { id: string; name: string }[];
+  categories: string[];
 
   @IsArray()
   keyFeatures: string[];
