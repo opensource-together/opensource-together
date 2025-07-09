@@ -33,6 +33,12 @@ export class CreateProjectDtoRequest {
   categories: { id: string; name: string }[];
 
   @IsArray()
+  keyFeatures: string[];
+
+  @IsArray()
+  projectGoals: string[];
+
+  @IsArray()
   projectRoles: {
     title: string;
     description: string;

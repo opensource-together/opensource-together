@@ -41,6 +41,7 @@ model Profile {
   updatedAt 					DateTime @default(now()) @updatedAt
   user							  User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   socialLinks   UserSocialLink[]
+  projects      Project[]
 }
 
 model UserGitHubCredentials {
@@ -65,6 +66,10 @@ model Project {
 	projectMembers			teamMember[]
 	projectRoles				ProjectRole[]
   categories					Category[]
+  keyFeatures					KeyFeature[]
+  projectGoals				ProjectGoal[]
+  profile						Profile? @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+  profileId						String?
   // Index composite pour recherche + tri par date
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
@@ -122,4 +127,18 @@ model Category {
   id        String   @id @default(uuid())
   name      String
   projects  Project[]
+}
+
+model KeyFeature {
+  id        String   @id @default(uuid())
+  projectId String
+  feature   String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model ProjectGoal {
+  id        String   @id @default(uuid())
+  projectId String
+  goal      String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

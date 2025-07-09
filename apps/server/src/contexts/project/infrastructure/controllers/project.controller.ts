@@ -122,6 +122,12 @@ export class ProjectController {
           techStacks: role.techStacks,
         })),
         categories: project.categories,
+        keyFeatures: project.keyFeatures.map((feature) => ({
+          feature: feature,
+        })),
+        projectGoals: project.projectGoals.map((goal) => ({
+          goal: goal,
+        })),
         octokit: octokit,
       }),
     );

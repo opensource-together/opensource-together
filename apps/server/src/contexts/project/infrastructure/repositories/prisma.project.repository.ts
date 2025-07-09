@@ -27,6 +27,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             },
           },
           projectMembers: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
       const domainProject = PrismaProjectMapper.toDomain(savedProject);
@@ -117,6 +119,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             },
             projectMembers: true,
             categories: true,
+            keyFeatures: true,
+            projectGoals: true,
           },
         });
 
@@ -220,6 +224,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           },
           projectMembers: true,
           categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -256,6 +262,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           },
           projectMembers: true,
           categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -286,6 +294,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           },
           projectMembers: true,
           categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -322,6 +332,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           },
           projectMembers: true,
           categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -384,6 +396,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           },
           projectMembers: true,
           categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
