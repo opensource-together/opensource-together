@@ -4,6 +4,8 @@ import {
   signInAndUp,
 } from "supertokens-web-js/recipe/thirdparty";
 
+import { API_BASE_URL } from "@/config/config";
+
 import { Profile } from "@/features/profile/types/profile.type";
 
 /**
@@ -30,7 +32,7 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
       return null;
     }
 
-    const response = await fetch("http://localhost:4000/profile/me", {
+    const response = await fetch(`${API_BASE_URL}/profile/me`, {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
