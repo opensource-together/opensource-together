@@ -10,6 +10,7 @@ import {
 import { Description, ShortDescription, Title } from './vo';
 import { Category } from '@/contexts/category/domain/category.entity';
 import { KeyFeature } from '@/contexts/key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '@/contexts/project-goals/domain/project-goals.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -65,7 +66,7 @@ export type ProjectProps = {
   projectRoles?: ProjectRole[];
   categories: Category[];
   keyFeatures: KeyFeature[];
-  projectGoals: { id?: string; goal: string }[];
+  projectGoals: ProjectGoals[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -81,7 +82,7 @@ export class Project {
   private projectRoles?: ProjectRole[];
   private categories: Category[];
   private keyFeatures: KeyFeature[];
-  private projectGoals: { id?: string; goal: string }[];
+  private projectGoals: ProjectGoals[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -148,6 +149,7 @@ export class Project {
       categories: Category.reconstituteMany(props.categories),
       projectRoles: ProjectRole.createMany(props.projectRoles),
       keyFeatures: KeyFeature.createMany(props.keyFeatures),
+      projectGoals: ProjectGoals.createMany(props.projectGoals),
     };
     //extract the error from the validation results
     Object.entries(voValidationResults).forEach(([key, result]) => {
@@ -164,6 +166,7 @@ export class Project {
       projectRoles,
       categories,
       keyFeatures,
+      projectGoals,
     } = Object.fromEntries(
       Object.entries(voValidationResults).map(([key, result]) => [
         key,
@@ -177,6 +180,7 @@ export class Project {
       projectRoles: ProjectRole[];
       categories: Category[];
       keyFeatures: KeyFeature[];
+      projectGoals: ProjectGoals[];
     };
 
     if (Object.keys(validationErrors).length > 0)
@@ -192,6 +196,7 @@ export class Project {
         projectRoles,
         categories,
         keyFeatures,
+        projectGoals,
       }),
     );
   }
@@ -215,7 +220,7 @@ export class Project {
       projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
       categories: this.categories.map((c) => c.toPrimitive()),
       keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
-      projectGoals: this.projectGoals,
+      projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
