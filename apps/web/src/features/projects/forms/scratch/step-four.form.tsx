@@ -15,6 +15,7 @@ import {
 } from "@/shared/components/ui/form";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 
+import { useCreateProject } from "@/features/projects/hooks/use-projects.hook";
 import { useProjectCreateStore } from "@/features/projects/stores/project-create.store";
 import {
   type StepFourFormData,
@@ -23,14 +24,10 @@ import {
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 
-interface StepFourFormProps {
-  onSubmit: () => void;
-  isLoading: boolean;
-}
-
-export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
+export function StepFourForm() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
+  const { createProject, isCreating } = useCreateProject();
 
   const form = useForm<StepFourFormData>({
     resolver: zodResolver(stepFourSchema),
@@ -76,17 +73,24 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
   };
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    try {
-      updateProjectInfo({
-        image: data.logo ? URL.createObjectURL(data.logo) : "",
-        externalLinks: convertToExternalLinksArray(data.externalLinks),
-      });
+    // Consolidate all form data including step 4 data
+    const finalFormData = {
+      ...formData,
+      image: data.logo ? URL.createObjectURL(data.logo) : "",
+      externalLinks: convertToExternalLinksArray(data.externalLinks),
+    };
 
-      onSubmit();
-    } catch (error) {
-      console.error("Erreur lors de la préparation des données:", error);
-    }
+    // Update the store with final data
+    updateProjectInfo({
+      image: finalFormData.image,
+      externalLinks: finalFormData.externalLinks,
+    });
+
+    // Create project with consolidated data
+    createProject(finalFormData);
   });
+
+  const isLoadingState = isCreating || isSubmitting;
 
   return (
     <Form {...form}>
@@ -186,7 +190,7 @@ export function StepFourForm({ onSubmit, isLoading }: StepFourFormProps) {
           onPrevious={handlePrevious}
           previousLabel="Retour"
           nextLabel="Publier le projet"
-          isLoading={isLoading || isSubmitting}
+          isLoading={isLoadingState}
           isNextDisabled={false}
           nextType="submit"
         />

@@ -1,14 +1,13 @@
 name: ost
 
 services:
-
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
     restart: unless-stopped
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@postgres:5432/${SUPERTOKENS_DB_NAME}
     ports:
-      - "3567:3567"
+      - '3567:3567'
     networks:
       - app_network
     depends_on:

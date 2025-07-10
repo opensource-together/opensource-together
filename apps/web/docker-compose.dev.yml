@@ -1,7 +1,6 @@
 name: ost
 
 services:
-
   server:
     build:
       context: ../server
