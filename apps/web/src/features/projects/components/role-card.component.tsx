@@ -36,6 +36,8 @@ export default function RoleCard({
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
       JavaScript:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+      TypeScript:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
       Figma:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
       Docker:
@@ -122,7 +124,18 @@ export default function RoleCard({
           <RoleApplicationForm
             roleTitle={title}
             roleDescription={description}
-            techStacks={roleTechStacks}
+            techStacks={roleTechStacks.map((roleTech) => {
+              const fullTechStack = techStacks.find(
+                (tech) =>
+                  tech.name.toLowerCase() === roleTech.name.toLowerCase()
+              );
+              return (
+                fullTechStack || {
+                  ...roleTech,
+                  iconUrl: getTechIcon(roleTech.name),
+                }
+              );
+            })}
           >
             <Button className="w-full md:w-auto">
               Postuler à ce rôle

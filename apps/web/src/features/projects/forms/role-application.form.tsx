@@ -64,28 +64,6 @@ export default function RoleApplicationForm({
     },
   });
 
-  const getTechIcon = (techStackName: string): string => {
-    const specialMappings: Record<string, string> = {
-      React:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
-      Tailwind:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
-      JavaScript:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
-      TypeScript:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
-      Figma:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
-      Docker:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
-      Git: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
-      Markdown:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
-    };
-
-    return specialMappings[techStackName] || "/icons/mongodb.svg";
-  };
-
   const onSubmit = (data: RoleApplicationFormData) => {
     console.log("Application submitted:", data);
     // Ici vous pouvez traiter la soumission du formulaire
@@ -114,11 +92,11 @@ export default function RoleApplicationForm({
           <div>
             <h4 className="mb-3 text-sm font-medium">Exigences techniques</h4>
             <div className="flex flex-wrap gap-2">
-              {techStacks.map((techStack) => (
+              {techStacks.map((techStack, index) => (
                 <StackLogo
-                  key={techStack.id}
+                  key={`${techStack.name}-${index}`}
                   name={techStack.name}
-                  icon={techStack.iconUrl || getTechIcon(techStack.name)}
+                  icon={techStack.iconUrl || "/icons/mongodb.svg"}
                   alt={techStack.name}
                 />
               ))}
