@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -35,7 +36,6 @@ import { TechStack } from "../types/project.type";
 
 const roleApplicationSchema = z.object({
   question1: z.string().min(1, "Cette question est requise"),
-  question2: z.string().min(1, "Cette question est requise"),
   select1: z.string().min(1, "Veuillez faire une sélection"),
 });
 
@@ -60,7 +60,6 @@ export default function RoleApplicationForm({
     resolver: zodResolver(roleApplicationSchema),
     defaultValues: {
       question1: "",
-      question2: "",
       select1: "",
     },
   });
@@ -97,7 +96,7 @@ export default function RoleApplicationForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="h-[580px] w-[541px] max-w-none px-4 py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
         <DialogHeader>
           <DialogTitle className="text-lg font-medium tracking-tighter">
             {roleTitle}
@@ -107,13 +106,13 @@ export default function RoleApplicationForm({
         <div className="space-y-6">
           {/* Description */}
           <div>
-            <h4 className="mb-2 text-sm font-medium">Description</h4>
+            <h4 className="mb-2 text-sm font-medium">Description du rôle</h4>
             <p className="text-sm text-black/70">{roleDescription}</p>
           </div>
 
           {/* Tech Requirements */}
           <div>
-            <h4 className="mb-3 text-sm font-medium">Tech Requirements</h4>
+            <h4 className="mb-3 text-sm font-medium">Exigences techniques</h4>
             <div className="flex flex-wrap gap-2">
               {techStacks.map((techStack) => (
                 <StackLogo
@@ -125,6 +124,9 @@ export default function RoleApplicationForm({
               ))}
             </div>
           </div>
+
+          {/* separator */}
+          <div className="h-[1px] w-full bg-black/5" />
 
           {/* Form */}
           <Form {...form}>
@@ -141,27 +143,8 @@ export default function RoleApplicationForm({
                     <FormControl>
                       <Textarea
                         {...field}
-                        className="max-h-[80px] min-h-[80px] max-w-[460px] resize-none"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Question 2 */}
-              <FormField
-                control={form.control}
-                name="question2"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">
-                      Question 2
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        className="max-h-[80px] min-h-[80px] max-w-[460px] resize-none"
+                        placeholder="Décrivez les prérecquis du role en une phrase"
+                        className="max-h-[80px] min-h-[80px] max-w-[460px] resize-none border-none bg-[#F9F9F9] text-black/70"
                       />
                     </FormControl>
                     <FormMessage />
@@ -176,7 +159,7 @@ export default function RoleApplicationForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium">
-                      Select 1
+                      Sélection 1
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -184,7 +167,7 @@ export default function RoleApplicationForm({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select" />
+                          <SelectValue placeholder="Sélectionner" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -206,10 +189,16 @@ export default function RoleApplicationForm({
                   onClick={() => setOpen(false)}
                   className="px-4 py-2 text-sm"
                 >
-                  Annuler
+                  Retour
                 </Button>
                 <Button type="submit" className="px-4 py-2 text-sm">
-                  Postuler à ce rôle
+                  Envoyer ma candidature
+                  <Image
+                    src="/icons/validation-icon.svg"
+                    alt="validation icon"
+                    width={8}
+                    height={8}
+                  />
                 </Button>
               </div>
             </form>
