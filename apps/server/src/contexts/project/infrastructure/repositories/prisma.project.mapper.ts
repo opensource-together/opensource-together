@@ -11,12 +11,18 @@ import {
   Prisma,
   ProjectRole,
   teamMember,
+  Category,
+  ProjectGoal,
+  KeyFeature,
 } from '@prisma/client';
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
   projectMembers: teamMember[];
   projectRoles: (ProjectRole & { techStacks: TechStack[] })[];
+  categories: Category[];
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
 };
 
 export class PrismaProjectMapper {
@@ -34,6 +40,21 @@ export class PrismaProjectMapper {
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
           id: techStack.id,
+        })),
+      },
+      categories: {
+        connect: projectData.categories.map((category) => ({
+          id: category.id,
+        })),
+      },
+      keyFeatures: {
+        create: projectData.keyFeatures.map((keyFeature) => ({
+          feature: keyFeature.feature,
+        })),
+      },
+      projectGoals: {
+        create: projectData.projectGoals.map((goal) => ({
+          goal: goal.goal,
         })),
       },
       projectRoles: {
@@ -71,6 +92,20 @@ export class PrismaProjectMapper {
         id: techStack.id,
         name: techStack.name,
         iconUrl: techStack.iconUrl,
+      })),
+      categories: prismaProject.categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+      })),
+      keyFeatures: prismaProject.keyFeatures.map((keyFeature) => ({
+        id: keyFeature.id,
+        projectId: prismaProject.id,
+        feature: keyFeature.feature,
+      })),
+      projectGoals: prismaProject.projectGoals.map((goal) => ({
+        id: goal.id,
+        projectId: prismaProject.id,
+        goal: goal.goal,
       })),
       projectRoles: prismaProject.projectRoles.map((role) => ({
         id: role.id,

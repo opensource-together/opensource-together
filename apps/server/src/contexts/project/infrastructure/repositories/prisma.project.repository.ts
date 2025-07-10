@@ -20,12 +20,15 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         data: repoProject.value,
         include: {
           techStacks: true,
+          categories: true,
           projectRoles: {
             include: {
               techStacks: true,
             },
           },
           projectMembers: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
       const domainProject = PrismaProjectMapper.toDomain(savedProject);
@@ -115,6 +118,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
               include: { techStacks: true },
             },
             projectMembers: true,
+            categories: true,
+            keyFeatures: true,
+            projectGoals: true,
           },
         });
 
@@ -217,6 +223,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -252,6 +261,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -281,6 +293,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -316,6 +331,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 
@@ -377,6 +395,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             include: { techStacks: true },
           },
           projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
         },
       });
 

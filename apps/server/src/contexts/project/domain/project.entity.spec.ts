@@ -58,6 +58,25 @@ describe('Domain Project Entity', () => {
       ],
       //techStacks
       ['techStacks', [], { techStacks: 'At least one tech stack is required' }],
+      //categories
+      ['categories', [], { categories: 'At least one category is required' }],
+      [
+        'categories',
+        [{ id: '1', name: '' }],
+        { categories: 'Some categories are not valid' },
+      ],
+      //keyFeatures
+      [
+        'keyFeatures',
+        [],
+        { keyFeatures: 'At least one key feature is required' },
+      ],
+      //projectGoals
+      [
+        'projectGoals',
+        [],
+        { projectGoals: 'At least one project goal is required' },
+      ],
     ])(
       'should fail validation if %s is invalid with value: %j',
       (field, value, expectedError) => {
@@ -438,6 +457,24 @@ const getProjectProps = (
   shortDescription: 'Test Short Description',
   techStacks: [createTechStack('1', 'React', 'https://react.dev/favicon.ico')],
   projectRoles: [],
+  categories: [
+    {
+      id: '1',
+      name: 'Test Category',
+    },
+  ],
+  keyFeatures: [
+    {
+      id: '1',
+      feature: 'Test Key Feature',
+    },
+  ],
+  projectGoals: [
+    {
+      id: '1',
+      goal: 'Test Project Goal',
+    },
+  ],
   ...overrides,
 });
 

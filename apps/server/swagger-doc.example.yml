@@ -155,6 +155,9 @@ paths:
                 - description
                 - shortDescription
                 - techStacks
+                - categories
+                - keyFeatures
+                - projectGoals
                 - projectRoles
               properties:
                 title:
@@ -195,6 +198,30 @@ paths:
                     type: string
                   example: ['3']
                   minItems: 1
+                categories:
+                  type: array
+                  description: Liste des IDs des catégories du projet
+                  items:
+                    type: string
+                  example: ['1']
+                  minItems: 1
+                keyFeatures:
+                  type: array
+                  description: Liste des fonctionnalités clés du projet
+                  items:
+                    type: string
+                  example: ['Défis LeetCode quotidiens automatisés']
+                  minItems: 1
+                projectGoals:
+                  type: array
+                  description: Liste des objectifs du projet
+                  items:
+                    type: string
+                  example:
+                    [
+                      'Aider 1000+ développeurs à améliorer leurs compétences en algorithmie',
+                    ]
+                  minItems: 1
                 projectRoles:
                   type: array
                   description: Liste des rôles nécessaires pour le projet (isFilled sera forcé à false)
@@ -233,6 +260,12 @@ paths:
                   description: 'project de test'
                   shortDescription: 'Description courte de mon projet innovant, LEEE '
                   techStacks: ['3']
+                  categories: ['1']
+                  keyFeatures: ['Défis LeetCode quotidiens automatisés']
+                  projectGoals:
+                    [
+                      'Aider 1000+ développeurs à améliorer leurs compétences en algorithmie',
+                    ]
                   projectRoles:
                     - title: 'Frontend Developer'
                       description: 'Développeur React expérimenté'
@@ -297,6 +330,48 @@ paths:
                         iconUrl:
                           type: string
                           example: 'https://nextjs.org/static/favicon/favicon-32x32.png'
+                  categories:
+                    type: array
+                    description: Catégories du projet
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '1'
+                        name:
+                          type: string
+                          example: 'IA & Machine Learning'
+                  keyFeatures:
+                    type: array
+                    description: Fonctionnalités clés du projet
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 'd9078f0d-9caf-48e5-be54-87d08ce5519e'
+                        projectId:
+                          type: string
+                          example: '01b62143-af23-44c9-94cb-c03670c3d4d4'
+                        feature:
+                          type: string
+                          example: 'Défis LeetCode quotidiens automatisés'
+                  projectGoals:
+                    type: array
+                    description: Objectifs du projet
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '50ab0de1-ef4e-4c77-a37b-788541b5cfb3'
+                        projectId:
+                          type: string
+                          example: '01b62143-af23-44c9-94cb-c03670c3d4d4'
+                        goal:
+                          type: string
+                          example: 'Aider 1000+ développeurs à améliorer leurs compétences en algorithmie'
                   projectRoles:
                     type: array
                     description: Rôles créés pour le projet
@@ -394,6 +469,15 @@ paths:
                           techStacks:
                             type: string
                             example: 'At least one tech stack is required'
+                          categories:
+                            type: string
+                            example: 'At least one category is required'
+                          keyFeatures:
+                            type: string
+                            example: 'At least one key feature is required'
+                          projectGoals:
+                            type: string
+                            example: 'At least one project goal is required'
                           projectRoles:
                             type: string
                             description: Erreurs de validation des rôles
@@ -914,6 +998,129 @@ paths:
           description: Non authentifié
         '404':
           description: Projet non trouvé
+  /techstacks:
+    get:
+      tags:
+        - Tech Stacks
+      summary: Récupérer toutes les technologies disponibles
+      operationId: getAllTechStacks
+      description: |
+        Récupère la liste complète de toutes les technologies/stacks techniques disponibles sur la plateforme.
+        Ces données sont utilisées pour sélectionner les technologies lors de la création de projets et de rôles.
+        Endpoint public - aucune authentification requise.
+      responses:
+        '200':
+          description: Liste de toutes les technologies disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TechStackDto'
+              example:
+                - id: '1'
+                  name: 'React'
+                  iconUrl: 'https://react.dev/logo-og.png'
+                - id: '2'
+                  name: 'Next.js'
+                  iconUrl: 'https://nextjs.org/static/favicon/favicon-32x32.png'
+                - id: '3'
+                  name: 'TypeScript'
+                  iconUrl: 'https://www.typescriptlang.org/static/images/logo.svg'
+                - id: '4'
+                  name: 'Tailwind CSS'
+                  iconUrl: 'https://tailwindcss.com/favicon.ico'
+                - id: '5'
+                  name: 'Prisma'
+                  iconUrl: 'https://www.prisma.io/favicon.ico'
+                - id: '6'
+                  name: 'PostgreSQL'
+                  iconUrl: 'https://www.postgresql.org/favicon.ico'
+                - id: '7'
+                  name: 'Docker'
+                  iconUrl: 'https://www.docker.com/favicon.ico'
+        '500':
+          description: Erreur serveur lors de la récupération des technologies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Internal server error'
+                  statusCode:
+                    type: integer
+                    example: 500
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: Récupérer toutes les catégories de projets
+      operationId: getAllCategories
+      description: |
+        Récupère la liste complète de toutes les catégories de projets disponibles.
+        Ces catégories permettent de classifier et filtrer les projets par domaine d'application.
+        Endpoint public - aucune authentification requise.
+      responses:
+        '200':
+          description: Liste de toutes les catégories disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryDto'
+              example:
+                - id: '1'
+                  name: 'IA & Machine Learning'
+                - id: '2'
+                  name: 'Développement Web'
+                - id: '3'
+                  name: 'Applications Mobile'
+                - id: '4'
+                  name: 'DevOps & Cloud'
+                - id: '5'
+                  name: 'Jeux Vidéo'
+                - id: '6'
+                  name: 'Blockchain & Crypto'
+                - id: '7'
+                  name: 'E-commerce'
+                - id: '8'
+                  name: 'Fintech'
+                - id: '9'
+                  name: 'Santé & Médecine'
+                - id: '10'
+                  name: 'Éducation'
+                - id: '11'
+                  name: 'Réseaux Sociaux'
+                - id: '12'
+                  name: 'Productivité'
+                - id: '13'
+                  name: 'Sécurité & Cybersécurité'
+                - id: '14'
+                  name: 'IoT & Hardware'
+                - id: '15'
+                  name: 'Data Science & Analytics'
+                - id: '16'
+                  name: 'Outils Développeur'
+                - id: '17'
+                  name: 'API & Microservices'
+                - id: '18'
+                  name: 'Open Source Tools'
+        '500':
+          description: Erreur serveur lors de la récupération des catégories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Internal server error'
+                  statusCode:
+                    type: integer
+                    example: 500
   /auth/signup:
     post:
       tags:
@@ -1620,6 +1827,21 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Technologies utilisées dans le projet
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryDto'
+          description: Catégories du projet
+        keyFeatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyFeatureDto'
+          description: Fonctionnalités clés du projet
+        projectGoals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectGoalDto'
+          description: Objectifs du projet
         projectRoles:
           type: array
           items:
@@ -1642,6 +1864,9 @@ components:
         - createdAt
         - updatedAt
         - techStacks
+        - categories
+        - keyFeatures
+        - projectGoals
         - projectRoles
         - projectMembers
     CreateProjectDtoInput:
@@ -1891,6 +2116,58 @@ components:
         - githubUrl
         - createdAt
         - updatedAt
+    CategoryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la catégorie
+          example: '1'
+        name:
+          type: string
+          description: Nom de la catégorie
+          example: 'IA & Machine Learning'
+      required:
+        - id
+        - name
+    KeyFeatureDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de la fonctionnalité
+          example: 'd9078f0d-9caf-48e5-be54-87d08ce5519e'
+        projectId:
+          type: string
+          description: ID du projet auquel appartient la fonctionnalité
+          example: '01b62143-af23-44c9-94cb-c03670c3d4d4'
+        feature:
+          type: string
+          description: Description de la fonctionnalité clé
+          example: 'Défis LeetCode quotidiens automatisés'
+      required:
+        - id
+        - projectId
+        - feature
+    ProjectGoalDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID de l'objectif
+          example: '50ab0de1-ef4e-4c77-a37b-788541b5cfb3'
+        projectId:
+          type: string
+          description: ID du projet auquel appartient l'objectif
+          example: '01b62143-af23-44c9-94cb-c03670c3d4d4'
+        goal:
+          type: string
+          description: Description de l'objectif du projet
+          example: 'Aider 1000+ développeurs à améliorer leurs compétences en algorithmie'
+      required:
+        - id
+        - projectId
+        - goal
   securitySchemes:
     supertokens_session:
       type: apiKey

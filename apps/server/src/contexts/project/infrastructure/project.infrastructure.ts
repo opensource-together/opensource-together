@@ -20,6 +20,8 @@ import { EncryptionService } from '@/contexts/encryption/infrastructure/encrypti
 import { InMemoryProjectRepository } from './repositories/mock.project.repository';
 import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
 import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
+import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
+import { PrismaCategoryRepository } from '@/contexts/category/infrastructure/repositories/prisma.category.repository';
 
 @Module({
   imports: [],
@@ -59,6 +61,10 @@ import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastru
     {
       provide: USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
       useClass: PrismaUserGitHubCredentialsRepository,
+    },
+    {
+      provide: CATEGORY_REPOSITORY_PORT,
+      useClass: PrismaCategoryRepository,
     },
     GithubInfrastructure,
     ...projectUseCases,

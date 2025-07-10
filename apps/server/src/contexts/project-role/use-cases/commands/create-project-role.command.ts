@@ -50,7 +50,6 @@ export class CreateProjectRoleCommandHandler
       command.props;
 
     const techStacksValidation = await this.techStackRepo.findByIds(techStacks);
-    console.log({ techStacksValidation });
     if (!techStacksValidation.success) {
       return Result.fail(techStacksValidation.error);
     }
