@@ -1,12 +1,11 @@
 name: ost
 
 services:
-
   web:
     image: ghcr.io/opensource-together/web:latest
     restart: unless-stopped
     environment:
-      - NEXT_PUBLIC_API_URL=localhost:${API_PORT}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - "${FRONT_PORT}:3000"
     networks:
