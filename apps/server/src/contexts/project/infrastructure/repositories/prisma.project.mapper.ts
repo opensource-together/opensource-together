@@ -16,6 +16,14 @@ import {
   TechStack,
 } from '@prisma/client';
 
+// Type temporaire en attendant la génération du client Prisma
+type ProjectExternalLink = {
+  id: string;
+  projectId: string;
+  type: string;
+  url: string;
+};
+
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
   projectMembers: teamMember[];
@@ -23,6 +31,7 @@ type PrismaProjectWithIncludes = PrismaProject & {
   categories: Category[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
+  externalLinks: ProjectExternalLink[];
 };
 
 export class PrismaProjectMapper {
@@ -32,7 +41,15 @@ export class PrismaProjectMapper {
       title: projectData.title,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
-      externalLinks: projectData.externalLinks || [],
+      externalLinks: {
+        create:
+          projectData.externalLinks
+            ?.filter((link) => link && link.url && link.type)
+            ?.map((link) => ({
+              type: link.type,
+              url: link.url,
+            })) || [],
+      },
       ownerId: projectData.ownerId,
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
@@ -78,10 +95,10 @@ export class PrismaProjectMapper {
       title: prismaProject.title,
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
-      externalLinks: prismaProject.externalLinks as {
-        type: string;
-        url: string;
-      }[],
+      externalLinks: prismaProject.externalLinks.map((link) => ({
+        type: link.type,
+        url: link.url,
+      })),
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,

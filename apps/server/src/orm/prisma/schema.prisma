@@ -59,7 +59,7 @@ model Project {
   title       				String
   description 				String
   shortDescription      String          // ADDED
-	externalLinks       Json            @default("[]")
+	externalLinks       ProjectExternalLink[]
 	createdAt						DateTime				@default(now()) // RENAMED
 	updatedAt						DateTime				@updatedAt
   techStacks  				TechStack[]
@@ -74,6 +74,14 @@ model Project {
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
   @@index([title], name: "idx_title_search")
+}
+
+model ProjectExternalLink {
+  id        String   @id @default(uuid())
+  projectId String
+  type      String
+  url       String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model TechStack {
