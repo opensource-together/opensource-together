@@ -107,8 +107,8 @@ export function StepFourForm() {
                   accept="image/*"
                   maxSize={1}
                   size="xl"
-                  name={formData.projectName}
-                  fallback={formData.projectName}
+                  name={formData.title}
+                  fallback={formData.title}
                   className="mt-4"
                 />
               </FormControl>

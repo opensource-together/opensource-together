@@ -15,7 +15,7 @@ export type ProjectCreateMethod = "github" | "scratch";
 export interface ProjectFormData {
   method: ProjectCreateMethod | null;
   // Data for scratch method
-  projectName: string;
+  title: string;
   shortDescription: string;
   image: string;
   // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
@@ -45,7 +45,7 @@ interface ProjectCreateStore {
     info: Partial<
       Pick<
         ProjectFormData,
-        | "projectName"
+        | "title"
         | "shortDescription"
         | "image"
         // | "status"
@@ -68,7 +68,7 @@ interface ProjectCreateStore {
 
 const initialFormData: ProjectFormData = {
   method: null,
-  projectName: "",
+  title: "",
   shortDescription: "",
   image: "",
   // status: "DRAFT",

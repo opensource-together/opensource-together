@@ -39,7 +39,7 @@ export default function ProjectCreateLayout({
 
     if (
       isScratchStep2OrLater &&
-      (!formData.projectName ||
+      (!formData.title ||
         !formData.shortDescription ||
         !formData.keyFeatures?.length ||
         !formData.projectGoals?.length)
