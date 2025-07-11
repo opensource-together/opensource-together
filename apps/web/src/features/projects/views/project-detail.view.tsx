@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 
@@ -15,7 +16,6 @@ import CreateRoleForm from "../forms/create-role.form";
 import { useProjectEditForm } from "../hooks/use-project-edit-form.hook";
 import { useProject } from "../hooks/use-projects.hook";
 import { useTechStack } from "../hooks/use-tech-stack";
-import { useProjectEditStore } from "../stores/project-edit.store";
 
 interface ProjectDetailViewProps {
   projectId: string;
@@ -25,7 +25,7 @@ export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
-  const { isEditing, setIsEditing } = useProjectEditStore();
+  const [isEditing, setIsEditing] = useState(false);
   const { techStackOptions } = useTechStack();
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
@@ -45,8 +45,10 @@ export default function ProjectDetailView({
     { id: "other", name: "Autre" },
   ];
 
-  // Use the clean hook for form logic
-  const editFormHook = useProjectEditForm(project || ({} as any));
+  // Use the clean hook for form logic with success callback
+  const editFormHook = useProjectEditForm(project || ({} as any), () => {
+    setIsEditing(false); // Exit edit mode on success
+  });
 
   if (isLoading) return <SkeletonProjectDetailView />;
   if (isError || !project) return <ProjectDetailError />;

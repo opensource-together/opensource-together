@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
@@ -23,7 +22,6 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm<ProjectSchema>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
@@ -53,31 +51,6 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     },
   });
 
-  useEffect(() => {
-    if (project) {
-      reset({
-        title: project.title || "Sans titre",
-        description: project.shortDescription || "",
-        longDescription: project.longDescription || "",
-        status: project.status || "DRAFT",
-        techStacks: project.techStacks || [],
-        roles:
-          project.roles?.map((role) => ({
-            title: role.title,
-            description: role.description,
-            badges: [],
-            experienceBadge: undefined,
-          })) || [],
-        keyBenefits: [],
-        socialLinks:
-          project.externalLinks?.map((link) => ({
-            type: link.type,
-            url: link.url,
-          })) || [],
-      });
-    }
-  }, [project, reset]);
-
   const {
     fields: techStackFields,
     append: appendTechStack,
@@ -95,6 +68,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
 
   return (
     <form
+      key={project.id} // Force form reset when project changes
       onSubmit={handleSubmit(onSubmit)}
       className="flex w-[710px] flex-col gap-4 rounded-3xl border border-black/5 bg-white p-10 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
     >

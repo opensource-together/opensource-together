@@ -1,8 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { useProjectEditStore } from "../stores/project-edit.store";
 import { Project } from "../types/project.type";
 import {
   ProjectEditSchema,
@@ -10,21 +8,8 @@ import {
 } from "../validations/project.schema";
 import { useUpdateProjectInline } from "./use-projects.hook";
 
-export function useProjectEditForm(project: Project) {
-  const {
-    formData,
-    setFormData,
-    setOriginalProject,
-    setIsDirty,
-    setIsEditing,
-    resetForm,
-  } = useProjectEditStore();
-
-  const { updateProject, isUpdating } = useUpdateProjectInline(() => {
-    // Exit edit mode and reset form after successful update
-    setIsEditing(false);
-    setIsDirty(false);
-  });
+export function useProjectEditForm(project: Project, onSuccess?: () => void) {
+  const { updateProject, isUpdating } = useUpdateProjectInline(onSuccess);
 
   const form = useForm<ProjectEditSchema>({
     resolver: zodResolver(projectEditSchema),
@@ -94,52 +79,6 @@ export function useProjectEditForm(project: Project) {
     control: form.control,
     name: "categories",
   });
-
-  // Store original project data
-  useEffect(() => {
-    setOriginalProject(project);
-  }, [project, setOriginalProject]);
-
-  // Watch form changes and update store
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      setFormData(value as any);
-      setIsDirty(true);
-    });
-    return () => subscription.unsubscribe();
-  }, [form, setFormData, setIsDirty]);
-
-  // Reset form when project changes
-  useEffect(() => {
-    form.reset({
-      title: project.title || "",
-      description: project.shortDescription || "",
-      longDescription: project.longDescription || "",
-      status: project.status || "DRAFT",
-      techStacks: project.techStacks || [],
-      categories: project.categories || [],
-      keyFeatures: project.keyFeatures || [],
-      projectGoals: project.projectGoals || [],
-      externalLinks: {
-        github:
-          project.externalLinks?.find((link) => link.type === "github")?.url ||
-          "",
-        discord:
-          project.externalLinks?.find((link) => link.type === "discord")?.url ||
-          "",
-        twitter:
-          project.externalLinks?.find((link) => link.type === "twitter")?.url ||
-          "",
-        linkedin:
-          project.externalLinks?.find((link) => link.type === "linkedin")
-            ?.url || "",
-        website:
-          project.externalLinks?.find(
-            (link) => link.type === "website" || link.type === "other"
-          )?.url || "",
-      },
-    });
-  }, [project, form]);
 
   const onSubmit = form.handleSubmit((data) => {
     if (!project.id) return;

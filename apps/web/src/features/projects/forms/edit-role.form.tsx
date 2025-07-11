@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
@@ -26,7 +26,6 @@ import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useUpdateRole } from "../hooks/use-roles.hook";
 import { useTechStack } from "../hooks/use-tech-stack";
-import { useRoleEditStore } from "../stores/role-edit.store";
 import { ProjectRole, TechStack } from "../types/project.type";
 import { UpdateRoleSchema, updateRoleSchema } from "../validations/role.schema";
 
@@ -44,8 +43,11 @@ export default function EditRoleForm({
   availableTechStacks = [],
 }: EditRoleFormProps) {
   const { techStackOptions } = useTechStack();
-  const { isDialogOpen, setDialogOpen, setEditingRole } = useRoleEditStore();
-  const updateRoleMutation = useUpdateRole();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const updateRoleMutation = useUpdateRole(() => {
+    setIsDialogOpen(false); // Close dialog on success
+  });
 
   const form = useForm<UpdateRoleSchema>({
     resolver: zodResolver(updateRoleSchema),
@@ -65,13 +67,6 @@ export default function EditRoleForm({
     });
   }, [role, form]);
 
-  // Set editing role when dialog opens
-  useEffect(() => {
-    if (isDialogOpen) {
-      setEditingRole(role);
-    }
-  }, [isDialogOpen, role, setEditingRole]);
-
   const descriptionValue = form.watch("description");
   const characterCount = descriptionValue?.length || 0;
 
@@ -86,11 +81,10 @@ export default function EditRoleForm({
       roleId: role.id,
       data,
     });
-    form.reset();
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="flex h-[80vh] max-h-[540px] w-[90vw] max-w-[541px] flex-col px-4 py-4 sm:px-6 sm:py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
         <DialogHeader>
@@ -185,7 +179,7 @@ export default function EditRoleForm({
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setDialogOpen(false)}
+                  onClick={() => setIsDialogOpen(false)}
                   className="order-2 w-full px-3 py-2 text-xs sm:order-1 sm:w-auto sm:text-sm"
                 >
                   Retour

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
@@ -25,7 +26,6 @@ import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useCreateRole } from "../hooks/use-roles.hook";
 import { useTechStack } from "../hooks/use-tech-stack";
-import { useRoleCreateStore } from "../stores/role-create.store";
 import { CreateRoleSchema, createRoleSchema } from "../validations/role.schema";
 
 interface CreateRoleFormProps {
@@ -38,8 +38,12 @@ export default function CreateRoleForm({
   projectId,
 }: CreateRoleFormProps) {
   const { techStackOptions } = useTechStack();
-  const { isDialogOpen, setDialogOpen } = useRoleCreateStore();
-  const createRoleMutation = useCreateRole();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const createRoleMutation = useCreateRole(() => {
+    setIsDialogOpen(false); // Close dialog on success
+    form.reset(); // Reset form
+  });
 
   const form = useForm<CreateRoleSchema>({
     resolver: zodResolver(createRoleSchema),
@@ -58,11 +62,10 @@ export default function CreateRoleForm({
       projectId,
       data,
     });
-    form.reset();
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="flex h-[80vh] max-h-[540px] w-[90vw] max-w-[541px] flex-col px-4 py-4 sm:px-6 sm:py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
         <DialogHeader>
@@ -157,7 +160,7 @@ export default function CreateRoleForm({
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setDialogOpen(false)}
+                  onClick={() => setIsDialogOpen(false)}
                   className="order-2 w-full px-3 py-2 text-xs sm:order-1 sm:w-auto sm:text-sm"
                 >
                   Retour
