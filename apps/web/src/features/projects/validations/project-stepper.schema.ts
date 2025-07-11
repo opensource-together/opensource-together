@@ -1,15 +1,5 @@
 import { z } from "zod";
 
-const keyFeatureSchema = z.object({
-  id: z.string().optional(),
-  title: z.string(),
-});
-
-const projectGoalSchema = z.object({
-  id: z.string().optional(),
-  goal: z.string(),
-});
-
 const urlWithDomainCheck = (allowedDomains: string[], errorMsg: string) =>
   z
     .string()
@@ -56,10 +46,18 @@ export const stepOneSchema = z.object({
     .string()
     .min(10, "La description doit contenir au moins 10 caractères"),
   keyFeatures: z
-    .array(keyFeatureSchema)
+    .array(
+      z.object({
+        title: z.string(),
+      })
+    )
     .min(1, "Au moins une fonctionnalité clé est requise"),
   projectGoals: z
-    .array(projectGoalSchema)
+    .array(
+      z.object({
+        goal: z.string(),
+      })
+    )
     .min(1, "Au moins un objectif de projet est requis"),
 });
 
