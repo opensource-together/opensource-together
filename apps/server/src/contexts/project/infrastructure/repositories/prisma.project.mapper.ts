@@ -14,15 +14,10 @@ import {
   ProjectRole,
   teamMember,
   TechStack,
+  ProjectExternalLink,
 } from '@prisma/client';
 
 // Type temporaire en attendant la génération du client Prisma
-type ProjectExternalLink = {
-  id: string;
-  projectId: string;
-  type: string;
-  url: string;
-};
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
