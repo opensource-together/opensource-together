@@ -6,14 +6,14 @@ import {
 } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import {
-  Project as PrismaProject,
-  TechStack,
+  Category,
+  KeyFeature,
   Prisma,
+  Project as PrismaProject,
+  ProjectGoal,
   ProjectRole,
   teamMember,
-  Category,
-  ProjectGoal,
-  KeyFeature,
+  TechStack,
 } from '@prisma/client';
 
 type PrismaProjectWithIncludes = PrismaProject & {
@@ -35,7 +35,7 @@ export class PrismaProjectMapper {
       externalLinks:
         projectData.externalLinks
           ?.filter((link) => link && link.url) // Filtrer les liens invalides
-          ?.map((link) => link.url) || [],
+          ?.map((link) => JSON.stringify(link)) || [],
       ownerId: projectData.ownerId,
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
@@ -81,10 +81,14 @@ export class PrismaProjectMapper {
       title: prismaProject.title,
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
-      externalLinks: prismaProject.externalLinks.map((link) => ({
-        type: 'website',
-        url: link,
-      })),
+      externalLinks: prismaProject.externalLinks.map((link) => {
+        try {
+          return JSON.parse(link);
+        } catch {
+          // Fallback pour les anciens liens stockés comme simples URLs
+          return { type: 'website', url: link };
+        }
+      }),
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
