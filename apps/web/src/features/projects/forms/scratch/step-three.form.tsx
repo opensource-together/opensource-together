@@ -20,6 +20,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import {
   RoleFormData,
@@ -30,13 +31,16 @@ import {
 
 import { TechStackList } from "../../../../shared/components/ui/tech-stack-list.component";
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
-import { useTechStack } from "../../hooks/use-tech-stack";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 
 export function StepThreeForm() {
   const router = useRouter();
   const { formData, updateRoles } = useProjectCreateStore();
-  const { techStackOptions, getTechStacksByIds } = useTechStack();
+  const {
+    techStackOptions,
+    getTechStacksByIds,
+    isLoading: techStacksLoading,
+  } = useTechStack();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [editingRoleIndex, setEditingRoleIndex] = useState<number | null>(null);
 
@@ -285,10 +289,15 @@ export function StepThreeForm() {
                         options={techStackOptions}
                         value={field.value || []}
                         onChange={field.onChange}
-                        placeholder="Sélectionner les technologies..."
+                        placeholder={
+                          techStacksLoading
+                            ? "Chargement des technologies..."
+                            : "Sélectionner les technologies..."
+                        }
                         searchPlaceholder="Rechercher une technologie..."
                         emptyText="Aucune technologie trouvée."
                         maxSelections={6}
+                        disabled={techStacksLoading}
                       />
                     </FormControl>
                     <FormMessage />

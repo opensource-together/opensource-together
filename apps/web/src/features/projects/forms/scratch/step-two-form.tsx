@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { Combobox, ComboboxOption } from "@/shared/components/ui/combobox";
+import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
   FormControl,
@@ -13,33 +13,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
+import { useCategories } from "@/shared/hooks/use-category.hook";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
-import { useTechStack } from "../../hooks/use-tech-stack";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import {
   StepTwoFormData,
   stepTwoSchema,
 } from "../../validations/project-stepper.schema";
 
-const CATEGORIES_OPTIONS: ComboboxOption[] = [
-  { id: "ai", name: "IA" },
-  { id: "finance", name: "Finance" },
-  { id: "health", name: "Santé" },
-  { id: "education", name: "Education" },
-  { id: "transport", name: "Transport" },
-  { id: "ecommerce", name: "E-commerce" },
-  { id: "security", name: "Sécurité" },
-  { id: "marketing", name: "Marketing" },
-  { id: "sales", name: "Vente" },
-  { id: "management", name: "Gestion" },
-  { id: "other", name: "Autre" },
-];
-
 export function StepTwoForm() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
-  const { techStackOptions } = useTechStack();
+  const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const {
+    categoryOptions,
+    getCategoriesByIds,
+    isLoading: categoriesLoading,
+  } = useCategories();
 
   const form = useForm<StepTwoFormData>({
     resolver: zodResolver(stepTwoSchema),
@@ -64,9 +56,7 @@ export function StepTwoForm() {
   };
 
   const onSubmit = handleSubmit((data) => {
-    const selectedCategoriesData = CATEGORIES_OPTIONS.filter((category) =>
-      data.categories.includes(category.id)
-    );
+    const selectedCategoriesData = getCategoriesByIds(data.categories);
 
     updateProjectInfo({
       techStack: techStackOptions.filter((tech) =>
@@ -92,9 +82,14 @@ export function StepTwoForm() {
                   options={techStackOptions}
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Ajouter des technologies..."
+                  placeholder={
+                    techStacksLoading
+                      ? "Chargement des technologies..."
+                      : "Ajouter des technologies..."
+                  }
                   searchPlaceholder="Rechercher une technologie..."
                   emptyText="Aucune technologie trouvée."
+                  disabled={techStacksLoading}
                 />
               </FormControl>
               <FormMessage />
@@ -110,12 +105,17 @@ export function StepTwoForm() {
               <FormLabel required>Catégories</FormLabel>
               <FormControl>
                 <Combobox
-                  options={CATEGORIES_OPTIONS}
+                  options={categoryOptions}
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Ajouter des catégories..."
+                  placeholder={
+                    categoriesLoading
+                      ? "Chargement des catégories..."
+                      : "Ajouter des catégories..."
+                  }
                   searchPlaceholder="Rechercher une catégorie..."
                   emptyText="Aucune catégorie trouvée."
+                  disabled={categoriesLoading}
                 />
               </FormControl>
               <FormMessage />
