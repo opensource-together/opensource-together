@@ -12,3 +12,7 @@ export const createRoleSchema = z.object({
 });
 
 export type CreateRoleSchema = z.infer<typeof createRoleSchema>;
+
+// Update schema - reuses the same validation as create
+export const updateRoleSchema = createRoleSchema;
+export type UpdateRoleSchema = z.infer<typeof updateRoleSchema>;

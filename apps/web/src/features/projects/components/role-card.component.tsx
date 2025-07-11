@@ -14,6 +14,7 @@ interface RoleCardProps {
   techStacks?: TechStack[];
   className?: string;
   isMaintainer?: boolean;
+  projectId?: string; // Add projectId as optional prop
 }
 
 export default function RoleCard({
@@ -21,6 +22,7 @@ export default function RoleCard({
   techStacks = [],
   className,
   isMaintainer = false,
+  projectId = "", // Default empty string
 }: RoleCardProps) {
   const {
     title = "",
@@ -115,7 +117,11 @@ export default function RoleCard({
 
         {/* Apply Button */}
         {isMaintainer ? (
-          <EditRoleForm role={role} availableTechStacks={techStacks}>
+          <EditRoleForm
+            role={role}
+            projectId={projectId}
+            availableTechStacks={techStacks}
+          >
             <Button variant="outline" className="w-full md:w-auto">
               Modifier le rôle
             </Button>

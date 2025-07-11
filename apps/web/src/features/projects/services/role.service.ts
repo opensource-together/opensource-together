@@ -1,5 +1,5 @@
 import { ProjectRole } from "../types/project.type";
-import { CreateRoleSchema } from "../validations/role.schema";
+import { CreateRoleSchema, UpdateRoleSchema } from "../validations/role.schema";
 
 export interface CreateRoleRequest {
   projectId: string;
@@ -12,12 +12,32 @@ export interface CreateRoleResponse {
   message: string;
 }
 
+export interface UpdateRoleRequest {
+  projectId: string;
+  roleId: string;
+  data: UpdateRoleSchema;
+}
+
+export interface UpdateRoleResponse {
+  role: ProjectRole;
+  success: boolean;
+  message: string;
+}
+
 // Mock API service
 export const roleService = {
   createRole: async ({
     projectId,
     data,
   }: CreateRoleRequest): Promise<CreateRoleResponse> => {
+    /*
+     // reminder: example API call
+     return post<CreateRoleResponse, CreateRoleSchema>(
+        `/projects/${projectId}/roles`, 
+        data
+      );
+      */
+
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -44,6 +64,48 @@ export const roleService = {
       role: newRole,
       success: true,
       message: "Rôle créé avec succès",
+    };
+  },
+
+  updateRole: async ({
+    projectId,
+    roleId,
+    data,
+  }: UpdateRoleRequest): Promise<UpdateRoleResponse> => {
+    /*
+     // reminder: example API call
+     return put<UpdateRoleResponse, UpdateRoleSchema>(
+        `/projects/${projectId}/roles/${roleId}`, 
+        data
+      );
+      */
+
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Mock role update
+    const updatedRole: ProjectRole = {
+      id: roleId,
+      title: data.title,
+      description: data.description,
+      techStacks: data.techStackIds.map((id) => ({
+        id,
+        name: `Tech-${id}`, // In real app, would fetch from backend
+        iconUrl: "",
+      })),
+    };
+
+    // Simulate random success/failure (90% success rate)
+    const isSuccess = Math.random() > 0.1;
+
+    if (!isSuccess) {
+      throw new Error("Erreur lors de la modification du rôle");
+    }
+
+    return {
+      role: updatedRole,
+      success: true,
+      message: "Rôle modifié avec succès",
     };
   },
 };

@@ -92,6 +92,7 @@ export default function ProjectDetailView({
                         techStacks={project.techStacks}
                         className="mb-3 lg:max-w-[721.96px]"
                         isMaintainer={isMaintainer}
+                        projectId={projectId}
                       />
                     ))}
                   </div>
