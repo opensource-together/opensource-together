@@ -137,7 +137,7 @@ export const updateProject = async (
     const validatedParams = UpdateProjectSchema.parse(params);
     const { data, projectId } = validatedParams;
 
-    console.log(`Updating project ${projectId}:`, data);
+    // console.log(`Updating project ${projectId}:`, data);
 
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 800));
@@ -168,7 +168,8 @@ export const updateProject = async (
       updatedAt: new Date(),
     };
 
-    console.log("Project updated successfully:", updatedProject);
+    //console.log("Project updated successfully:", updatedProject);
+
     return updatedProject;
   } catch (error) {
     console.error("Error updating project:", error);

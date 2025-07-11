@@ -25,6 +25,22 @@ interface ProjectSideBarProps {
   isMaintainer?: boolean;
   onEditClick?: () => void;
   isEditing?: boolean;
+  // Form integration props
+  onSubmit?: () => void;
+  isSubmitting?: boolean;
+  // Form field props for editing mode
+  techStackValue?: string[];
+  onTechStackChange?: (value: string[]) => void;
+  categoriesValue?: string[];
+  onCategoriesChange?: (value: string[]) => void;
+  externalLinksValue?: {
+    github?: string;
+    discord?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
+  onExternalLinkChange?: (type: string, value: string) => void;
 }
 
 const CATEGORIES_OPTIONS = [
@@ -46,6 +62,15 @@ export default function ProjectSideBar({
   isMaintainer = false,
   onEditClick,
   isEditing = false,
+  // Form integration props
+  onSubmit,
+  isSubmitting = false,
+  techStackValue,
+  onTechStackChange,
+  categoriesValue,
+  onCategoriesChange,
+  externalLinksValue,
+  onExternalLinkChange,
 }: ProjectSideBarProps) {
   const {
     title = "",
@@ -95,8 +120,17 @@ export default function ProjectSideBar({
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (
-          <Button size="lg" className="gap-2" onClick={onEditClick}>
-            {isEditing ? "Confirmer" : "Modifier"}
+          <Button
+            size="lg"
+            className="gap-2"
+            onClick={isEditing ? onSubmit : onEditClick}
+            disabled={isEditing && isSubmitting}
+          >
+            {isSubmitting
+              ? "Enregistrement..."
+              : isEditing
+                ? "Confirmer"
+                : "Modifier"}
             <Image
               src="/icons/edit-white-icon.svg"
               alt="pencil"
@@ -203,8 +237,11 @@ export default function ProjectSideBar({
         {isEditing ? (
           <Combobox
             options={techStackOptions}
-            value={techStacks?.map((tech) => tech.id) || []}
-            onChange={(ids) => console.log("Tech stack changed:", ids)}
+            value={techStackValue || techStacks?.map((tech) => tech.id) || []}
+            onChange={
+              onTechStackChange ||
+              ((ids) => console.log("Tech stack changed:", ids))
+            }
             placeholder="Choose Technologies"
             searchPlaceholder="Rechercher une technologie..."
             emptyText="Aucune technologie trouvée."
@@ -233,8 +270,11 @@ export default function ProjectSideBar({
         {isEditing ? (
           <Combobox
             options={CATEGORIES_OPTIONS}
-            value={categories?.map((cat) => cat.id) || []}
-            onChange={(ids) => console.log("Categories changed:", ids)}
+            value={categoriesValue || categories?.map((cat) => cat.id) || []}
+            onChange={
+              onCategoriesChange ||
+              ((ids) => console.log("Categories changed:", ids))
+            }
             placeholder="Choose Categories"
             searchPlaceholder="Rechercher une catégorie..."
             emptyText="Aucune catégorie trouvée."
@@ -289,41 +329,61 @@ export default function ProjectSideBar({
             <InputWithIcon
               icon="github"
               placeholder="https://github.com/..."
-              defaultValue={
-                externalLinks?.find((link) => link.type === "github")?.url || ""
+              value={
+                externalLinksValue?.github ||
+                externalLinks?.find((link) => link.type === "github")?.url ||
+                ""
               }
+              onChange={(e) => onExternalLinkChange?.("github", e.target.value)}
             />
             <InputWithIcon
               icon="discord"
               placeholder="https://discord.gg/..."
-              defaultValue={
+              value={
+                externalLinksValue?.discord ||
                 externalLinks?.find((link) => link.type === "discord")?.url ||
                 ""
+              }
+              onChange={(e) =>
+                onExternalLinkChange?.("discord", e.target.value)
               }
             />
             <InputWithIcon
               icon="twitter"
               placeholder="https://x.com/..."
-              defaultValue={
+              value={
+                externalLinksValue?.twitter ||
                 externalLinks?.find((link) => link.type === "twitter")?.url ||
                 ""
+              }
+              onChange={(e) =>
+                onExternalLinkChange?.("twitter", e.target.value)
               }
             />
             <InputWithIcon
               icon="linkedin"
               placeholder="https://linkedin.com/..."
-              defaultValue={
+              value={
+                externalLinksValue?.linkedin ||
                 externalLinks?.find((link) => link.type === "linkedin")?.url ||
                 ""
+              }
+              onChange={(e) =>
+                onExternalLinkChange?.("linkedin", e.target.value)
               }
             />
             <InputWithIcon
               icon="link"
               placeholder="https://..."
-              defaultValue={
+              value={
+                externalLinksValue?.website ||
                 externalLinks?.find(
                   (link) => link.type === "other" || link.type === "website"
-                )?.url || ""
+                )?.url ||
+                ""
+              }
+              onChange={(e) =>
+                onExternalLinkChange?.("website", e.target.value)
               }
             />
           </div>

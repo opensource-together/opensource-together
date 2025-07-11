@@ -12,11 +12,35 @@ import RoleCard from "./role-card.component";
 interface ProjectEditModeProps {
   project: Project;
   isMaintainer: boolean;
+  // Form integration props
+  titleValue?: string;
+  onTitleChange?: (value: string) => void;
+  descriptionValue?: string;
+  onDescriptionChange?: (value: string) => void;
+  longDescriptionValue?: string;
+  onLongDescriptionChange?: (value: string) => void;
+  projectGoalsValue?: string;
+  onProjectGoalsChange?: (value: string) => void;
+  keyFeaturesValue?: string;
+  onKeyFeaturesChange?: (value: string) => void;
+  onFileSelect?: (file: File | null) => void;
 }
 
 export default function ProjectEditMode({
   project,
   isMaintainer,
+  // Form integration props
+  titleValue,
+  onTitleChange,
+  descriptionValue,
+  onDescriptionChange,
+  longDescriptionValue,
+  onLongDescriptionChange,
+  projectGoalsValue,
+  onProjectGoalsChange,
+  keyFeaturesValue,
+  onKeyFeaturesChange,
+  onFileSelect,
 }: ProjectEditModeProps) {
   return (
     <>
@@ -25,7 +49,9 @@ export default function ProjectEditMode({
         <div>
           <h3 className="mb-3 text-sm font-medium">Project Photo</h3>
           <AvatarUpload
-            onFileSelect={(file) => console.log("File selected:", file)}
+            onFileSelect={
+              onFileSelect || ((file) => console.log("File selected:", file))
+            }
             accept="image/*"
             maxSize={1}
             size="xl"
@@ -37,14 +63,19 @@ export default function ProjectEditMode({
         {/* Title */}
         <div>
           <h3 className="mb-3 text-sm font-medium">Title</h3>
-          <Input defaultValue={project.title} placeholder="Nom du projet" />
+          <Input
+            value={titleValue || project.title || ""}
+            onChange={(e) => onTitleChange?.(e.target.value)}
+            placeholder="Nom du projet"
+          />
         </div>
 
         {/* Description */}
         <div>
           <h3 className="mb-3 text-sm font-medium">Description</h3>
           <Textarea
-            defaultValue={project.longDescription || project.shortDescription}
+            value={descriptionValue || project.shortDescription || ""}
+            onChange={(e) => onDescriptionChange?.(e.target.value)}
             placeholder="Description du projet"
             className="h-[80px]"
           />
@@ -56,9 +87,12 @@ export default function ProjectEditMode({
         <div>
           <h3 className="mb-3 text-sm font-medium">Project Goals</h3>
           <Textarea
-            defaultValue={
-              project.projectGoals?.map((goal) => goal.goal).join("\n") || ""
+            value={
+              projectGoalsValue ||
+              project.projectGoals?.map((goal) => goal.goal).join("\n") ||
+              ""
             }
+            onChange={(e) => onProjectGoalsChange?.(e.target.value)}
             placeholder="Objectifs du projet"
             className="h-[111px]"
           />
@@ -68,10 +102,12 @@ export default function ProjectEditMode({
         <div>
           <h3 className="mb-3 text-sm font-medium">Key Objectives</h3>
           <Textarea
-            defaultValue={
+            value={
+              keyFeaturesValue ||
               project.keyFeatures?.map((feature) => feature.title).join("\n") ||
               ""
             }
+            onChange={(e) => onKeyFeaturesChange?.(e.target.value)}
             placeholder="Objectifs clés"
             className="h-[177px]"
           />
