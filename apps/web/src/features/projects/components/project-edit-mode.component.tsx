@@ -46,7 +46,7 @@ export default function ProjectEditMode({
           <Textarea
             defaultValue={project.longDescription || project.shortDescription}
             placeholder="Description du projet"
-            className="min-h-[100px]"
+            className="h-[80px]"
           />
           {/* separator */}
           <div className="mt-10 h-[2px] w-full bg-black/3" />
@@ -60,7 +60,7 @@ export default function ProjectEditMode({
               project.projectGoals?.map((goal) => goal.goal).join("\n") || ""
             }
             placeholder="Objectifs du projet"
-            className="min-h-[100px]"
+            className="h-[111px]"
           />
         </div>
 
@@ -73,7 +73,7 @@ export default function ProjectEditMode({
               ""
             }
             placeholder="Objectifs clés"
-            className="min-h-[100px]"
+            className="h-[177px]"
           />
         </div>
       </div>
