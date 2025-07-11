@@ -7,6 +7,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
 import { Prisma } from '@prisma/client';
+
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
@@ -29,6 +30,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           projectMembers: true,
           keyFeatures: true,
           projectGoals: true,
+          externalLinks: true,
         },
       });
       const domainProject = PrismaProjectMapper.toDomain(savedProject);
@@ -78,7 +80,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       // Vérification des permissions
       const project = await this.prisma.project.findUnique({
         where: { id },
-        include: { projectRoles: true },
+        include: { projectRoles: true, externalLinks: true },
       });
       if (!project) return Result.fail('Project not found');
       if (project.ownerId !== ownerId)
@@ -121,6 +123,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             categories: true,
             keyFeatures: true,
             projectGoals: true,
+            externalLinks: true,
           },
         });
 
@@ -226,6 +229,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           categories: true,
           keyFeatures: true,
           projectGoals: true,
+          externalLinks: true,
         },
       });
 
@@ -264,6 +268,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           categories: true,
           keyFeatures: true,
           projectGoals: true,
+          externalLinks: true,
         },
       });
 
@@ -296,6 +301,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           categories: true,
           keyFeatures: true,
           projectGoals: true,
+          externalLinks: true,
         },
       });
 
@@ -320,6 +326,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       return Result.fail(`Unknown error : ${error}`);
     }
   }
+
   async findByTitle(title: string): Promise<Result<Project, string>> {
     try {
       console.log('title', title);
@@ -334,6 +341,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           categories: true,
           keyFeatures: true,
           projectGoals: true,
+          externalLinks: true,
         },
       });
 
@@ -384,10 +392,16 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           title: projectData.title,
           description: projectData.description,
           shortDescription: projectData.shortDescription,
-          externalLinks:
-            projectData.externalLinks
-              ?.filter((link) => link && link.url)
-              ?.map((link) => link.url) || [],
+          externalLinks: {
+            deleteMany: {},
+            create:
+              projectData.externalLinks
+                ?.filter((link) => link && link.url && link.type)
+                ?.map((link) => ({
+                  type: link.type,
+                  url: link.url,
+                })) || [],
+          },
         },
         include: {
           techStacks: true,
@@ -398,6 +412,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           categories: true,
           keyFeatures: true,
           projectGoals: true,
+          externalLinks: true,
         },
       });
 

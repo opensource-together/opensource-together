@@ -3,14 +3,12 @@ import { API_BASE_URL } from "@/config/config";
 import { mockProjects } from "../mocks/project.mock";
 import { ProjectFormData } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
-import {
-  createProjectApiSchema,
-  projectStoreToApiSchema,
-} from "../validations/project-stepper.schema";
+import { createProjectApiSchema } from "../validations/project-stepper.schema";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
 } from "../validations/project.schema";
+import { transformProjectForApi } from "./project-transform.service";
 
 /**
  * Get the list of projects
@@ -45,11 +43,10 @@ export const createProject = async (
   storeData: ProjectFormData
 ): Promise<Project> => {
   try {
-    // Use Zod schema to transform and validate the data
-    const transformedData = projectStoreToApiSchema.parse(storeData);
+    // Transform store data to API format
+    const apiData = transformProjectForApi(storeData);
 
-    // Final validation with API schema
-    const validatedData = createProjectApiSchema.parse(transformedData);
+    const validatedData = createProjectApiSchema.parse(apiData);
 
     const response = await fetch(`${API_BASE_URL}/projects`, {
       method: "POST",
@@ -61,10 +58,11 @@ export const createProject = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error creating project");
+      const error = await response.json();
+      throw new Error(error.message || "Error creating project");
     }
-    return await response.json();
+
+    return response.json();
   } catch (error) {
     console.error("Error creating project:", error);
     throw error;

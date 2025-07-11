@@ -33,7 +33,7 @@ export function StepOneForm() {
   const form = useForm<StepOneFormData>({
     resolver: zodResolver(stepOneSchema),
     defaultValues: {
-      projectName: formData.projectName || "",
+      title: formData.title || "",
       shortDescription: formData.shortDescription || "",
       keyFeatures: formData.keyFeatures || [],
       projectGoals: formData.projectGoals || [],
@@ -80,7 +80,7 @@ export function StepOneForm() {
 
   const onSubmit = handleSubmit((data) => {
     updateProjectInfo({
-      projectName: data.projectName,
+      title: data.title,
       shortDescription: data.shortDescription,
       keyFeatures: data.keyFeatures,
       projectGoals: data.projectGoals,
@@ -98,7 +98,7 @@ export function StepOneForm() {
       <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
         <FormField
           control={control}
-          name="projectName"
+          name="title"
           render={({ field }) => (
             <FormItem>
               <FormLabel required>Nom du projet</FormLabel>

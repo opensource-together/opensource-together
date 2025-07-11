@@ -6,15 +6,18 @@ import {
 } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import {
-  Project as PrismaProject,
-  TechStack,
+  Category,
+  KeyFeature,
   Prisma,
+  Project as PrismaProject,
+  ProjectGoal,
   ProjectRole,
   teamMember,
-  Category,
-  ProjectGoal,
-  KeyFeature,
+  TechStack,
+  ProjectExternalLink,
 } from '@prisma/client';
+
+// Type temporaire en attendant la génération du client Prisma
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
@@ -23,6 +26,7 @@ type PrismaProjectWithIncludes = PrismaProject & {
   categories: Category[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
+  externalLinks: ProjectExternalLink[];
 };
 
 export class PrismaProjectMapper {
@@ -32,10 +36,15 @@ export class PrismaProjectMapper {
       title: projectData.title,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
-      externalLinks:
-        projectData.externalLinks
-          ?.filter((link) => link && link.url) // Filtrer les liens invalides
-          ?.map((link) => link.url) || [],
+      externalLinks: {
+        create:
+          projectData.externalLinks
+            ?.filter((link) => link && link.url && link.type)
+            ?.map((link) => ({
+              type: link.type,
+              url: link.url,
+            })) || [],
+      },
       ownerId: projectData.ownerId,
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
@@ -82,8 +91,8 @@ export class PrismaProjectMapper {
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
       externalLinks: prismaProject.externalLinks.map((link) => ({
-        type: 'website',
-        url: link,
+        type: link.type,
+        url: link.url,
       })),
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,

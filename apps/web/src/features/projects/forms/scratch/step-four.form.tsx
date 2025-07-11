@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
@@ -22,12 +23,16 @@ import {
   stepFourSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
+import { ProjectCreationConfirmDialog } from "../../components/stepper/creation-confirmation-dialog.component";
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 
 export function StepFourForm() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const { createProject, isCreating } = useCreateProject();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [pendingFormData, setPendingFormData] =
+    useState<StepFourFormData | null>(null);
 
   const form = useForm<StepFourFormData>({
     resolver: zodResolver(stepFourSchema),
@@ -73,11 +78,21 @@ export function StepFourForm() {
   };
 
   const handleFormSubmit = handleSubmit(async (data) => {
-    // Consolidate all form data including step 4 data
+    setPendingFormData(data);
+    setShowConfirmation(true);
+  });
+
+  const handleConfirmCreation = async () => {
+    if (!pendingFormData) return;
+
+    setShowConfirmation(false);
+
     const finalFormData = {
       ...formData,
-      image: data.logo ? URL.createObjectURL(data.logo) : "",
-      externalLinks: convertToExternalLinksArray(data.externalLinks),
+      image: pendingFormData.logo
+        ? URL.createObjectURL(pendingFormData.logo)
+        : "",
+      externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
     // Update the store with final data
@@ -88,113 +103,132 @@ export function StepFourForm() {
 
     // Create project with consolidated data
     createProject(finalFormData);
-  });
+  };
+
+  const handleCancelCreation = () => {
+    setShowConfirmation(false);
+    setPendingFormData(null);
+  };
 
   const isLoadingState = isCreating || isSubmitting;
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleFormSubmit} className="flex w-full flex-col gap-5">
-        <FormField
-          control={control}
-          name="logo"
-          render={() => (
-            <FormItem>
-              <FormLabel>Choisir un avatar</FormLabel>
-              <FormControl>
-                <AvatarUpload
-                  onFileSelect={handleLogoSelect}
-                  accept="image/*"
-                  maxSize={1}
-                  size="xl"
-                  name={formData.projectName}
-                  fallback={formData.projectName}
-                  className="mt-4"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={handleFormSubmit}
+          className="flex w-full flex-col gap-5"
+        >
+          <FormField
+            control={control}
+            name="logo"
+            render={() => (
+              <FormItem>
+                <FormLabel>Choisir un avatar</FormLabel>
+                <FormControl>
+                  <AvatarUpload
+                    onFileSelect={handleLogoSelect}
+                    accept="image/*"
+                    maxSize={1}
+                    size="xl"
+                    name={formData.title}
+                    fallback={formData.title}
+                    className="mt-4"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <div className="mt-4 flex flex-col gap-4">
-          <FormLabel>Liens externes</FormLabel>
+          <div className="mt-4 flex flex-col gap-4">
+            <FormLabel>Liens externes</FormLabel>
 
-          <FormField
-            control={control}
-            name="externalLinks.github"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="github"
-                    placeholder="https://github.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.discord"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="discord"
-                    placeholder="https://discord.gg/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.twitter"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="twitter"
-                    placeholder="https://x.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.website"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="link"
-                    placeholder="https://..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+            <FormField
+              control={control}
+              name="externalLinks.github"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="github"
+                      placeholder="https://github.com/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.discord"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="discord"
+                      placeholder="https://discord.gg/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.twitter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="twitter"
+                      placeholder="https://x.com/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.website"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="link"
+                      placeholder="https://..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <FormNavigationButtons
-          onPrevious={handlePrevious}
-          previousLabel="Retour"
-          nextLabel="Publier le projet"
-          isLoading={isLoadingState}
-          isNextDisabled={false}
-          nextType="submit"
-        />
-      </form>
-    </Form>
+          <FormNavigationButtons
+            onPrevious={handlePrevious}
+            previousLabel="Retour"
+            nextLabel="Publier le projet"
+            isLoading={isLoadingState}
+            isNextDisabled={false}
+            nextType="submit"
+          />
+        </form>
+      </Form>
+
+      <ProjectCreationConfirmDialog
+        open={showConfirmation}
+        onOpenChange={setShowConfirmation}
+        projectTitle={formData.title}
+        isCreating={isCreating}
+        onConfirm={handleConfirmCreation}
+        onCancel={handleCancelCreation}
+      />
+    </>
   );
 }
