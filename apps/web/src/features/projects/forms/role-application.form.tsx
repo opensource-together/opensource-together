@@ -74,7 +74,7 @@ export default function RoleApplicationForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="h-[580px] w-[541px] max-w-none px-4 py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
+      <DialogContent className="h-[80vh] max-h-[580px] w-[90vw] max-w-[541px] px-3 py-4 sm:px-4 sm:py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
         <DialogHeader>
           <DialogTitle className="text-lg font-medium tracking-tighter">
             {roleTitle}
@@ -122,7 +122,7 @@ export default function RoleApplicationForm({
                       <Textarea
                         {...field}
                         placeholder="Décrivez les prérecquis du role en une phrase"
-                        className="max-h-[80px] min-h-[80px] max-w-[460px] resize-none border-none bg-[#F9F9F9] text-black/70"
+                        className="max-h-[80px] min-h-[80px] w-full resize-none border-none bg-[#F9F9F9] text-black/70"
                       />
                     </FormControl>
                     <FormMessage />

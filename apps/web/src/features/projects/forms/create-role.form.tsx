@@ -70,16 +70,20 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="flex h-[80vh] max-h-[540px] w-[90vw] max-w-[541px] flex-col px-4 py-4 sm:px-6 sm:py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
         <DialogHeader>
           <DialogTitle className="text-lg font-medium tracking-tighter">
             Créer un rôle
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-1 flex-col overflow-hidden"
+          >
+            {/* Content Section - Scrollable */}
+            <div className="flex-1 space-y-4 overflow-y-auto px-1 sm:space-y-6">
               {/* Role Title */}
               <FormField
                 control={form.control}
@@ -90,7 +94,11 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
                       Titre du rôle
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Ex: Back-End Developer" />
+                      <Input
+                        {...field}
+                        placeholder="Ex: Back-End Developer"
+                        className="w-full border-none bg-[#F9F9F9] text-xs text-black/70 sm:text-sm"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,6 +122,7 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
                         placeholder="Ajouter des technologies"
                         searchPlaceholder="Rechercher une technologie..."
                         emptyText="Aucune technologie trouvée."
+                        className="w-full text-xs sm:text-sm"
                       />
                     </FormControl>
                     <FormMessage />
@@ -127,11 +136,14 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-sm font-medium">
+                      Description
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Textarea
                           {...field}
-                          className="min-h-[120px] resize-none pr-16"
+                          className="min-h-[100px] w-full resize-none border-none bg-[#F9F9F9] pr-16 text-xs text-black/70 sm:min-h-[120px] sm:text-sm"
                           placeholder="Décrivez les responsabilités et attentes pour ce rôle"
                         />
                         <div className="absolute right-3 bottom-3 text-xs text-gray-500">
@@ -143,24 +155,29 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
                   </FormItem>
                 )}
               />
+            </div>
 
-              {/* Buttons */}
-              <div className="flex justify-end gap-3 pt-4">
+            {/* Buttons - Fixed at bottom */}
+            <div className="flex-shrink-0 pt-0">
+              <div className="flex flex-col justify-end gap-2 sm:flex-row sm:gap-3">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-2 text-sm"
+                  className="order-2 w-full px-3 py-2 text-xs sm:order-1 sm:w-auto sm:text-sm"
                 >
-                  Annuler
+                  Retour
                 </Button>
-                <Button type="submit" className="px-4 py-2 text-sm">
-                  Créer le rôle
+                <Button
+                  type="submit"
+                  className="order-1 w-full px-3 py-2 text-xs sm:order-2 sm:w-auto sm:text-sm"
+                >
+                  <span className="sm:inline">Créer le rôle</span>
                 </Button>
               </div>
-            </form>
-          </Form>
-        </div>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

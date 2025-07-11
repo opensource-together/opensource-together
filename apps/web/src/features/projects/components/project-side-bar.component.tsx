@@ -96,7 +96,7 @@ export default function ProjectSideBar({
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (
           <Button size="lg" className="gap-2" onClick={onEditClick}>
-            {isEditing ? "Confirmer" : "Modifier la page"}
+            {isEditing ? "Confirmer" : "Modifier"}
             <Image
               src="/icons/edit-white-icon.svg"
               alt="pencil"
