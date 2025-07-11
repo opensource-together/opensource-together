@@ -3,14 +3,12 @@ import { API_BASE_URL } from "@/config/config";
 import { mockProjects } from "../mocks/project.mock";
 import { ProjectFormData } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
-import {
-  createProjectApiSchema,
-  projectStoreToApiSchema,
-} from "../validations/project-stepper.schema";
+import { createProjectApiSchema } from "../validations/project-stepper.schema";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
 } from "../validations/project.schema";
+import { transformProjectForApi } from "./project-transform.service";
 
 /**
  * Get the list of projects
@@ -45,11 +43,11 @@ export const createProject = async (
   storeData: ProjectFormData
 ): Promise<Project> => {
   try {
-    // Use Zod schema to transform and validate the data
-    const transformedData = projectStoreToApiSchema.parse(storeData);
+    // Transform store data to API format
+    const apiData = transformProjectForApi(storeData);
 
-    // Final validation with API schema
-    const validatedData = createProjectApiSchema.parse(transformedData);
+    // Validate API data
+    const validatedData = createProjectApiSchema.parse(apiData);
 
     const response = await fetch(`${API_BASE_URL}/projects`, {
       method: "POST",
@@ -61,12 +59,36 @@ export const createProject = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (parseError) {
+        const textResponse = await response.text();
+        errorData = { message: `Server error: ${response.status}` };
+        console.error("Server response (non-JSON):", textResponse);
+      }
+
+      console.error("Project creation failed:", {
+        status: response.status,
+        error: errorData,
+        sentData: validatedData,
+      });
+
       throw new Error(errorData.message || "Error creating project");
     }
-    return await response.json();
+
+    const result = await response.json();
+    return result;
   } catch (error) {
-    console.error("Error creating project:", error);
+    if (error instanceof Error && error.name === "ZodError") {
+      console.error("Validation error:", {
+        issues: (error as any).issues,
+        originalData: storeData,
+        transformedData: transformProjectForApi(storeData),
+      });
+    } else {
+      console.error("Error creating project:", error);
+    }
     throw error;
   }
 };
