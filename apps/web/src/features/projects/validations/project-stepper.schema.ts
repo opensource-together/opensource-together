@@ -65,8 +65,14 @@ export const stepOneSchema = z.object({
 
 // Step 2: Tech Stack and Categories
 export const stepTwoSchema = z.object({
-  techStack: z.array(z.string()).min(1, "Au moins une technologie est requise"),
-  categories: z.array(z.string()).min(1, "Au moins une catégorie est requise"),
+  techStack: z
+    .array(z.string())
+    .min(1, "Au moins une technologie est requise")
+    .max(10, "Maximum 10 technologies autorisées"),
+  categories: z
+    .array(z.string())
+    .min(1, "Au moins une catégorie est requise")
+    .max(6, "Maximum 6 catégories autorisées"),
 });
 
 // Step 3: Project Roles

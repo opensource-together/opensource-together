@@ -76,7 +76,7 @@ export function StepTwoForm() {
           name="techStack"
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Technologies</FormLabel>
+              <FormLabel required>Technologies (max 10)</FormLabel>
               <FormControl>
                 <Combobox
                   options={techStackOptions}
@@ -90,6 +90,7 @@ export function StepTwoForm() {
                   searchPlaceholder="Rechercher une technologie..."
                   emptyText="Aucune technologie trouvée."
                   disabled={techStacksLoading}
+                  maxSelections={10}
                 />
               </FormControl>
               <FormMessage />
@@ -102,7 +103,7 @@ export function StepTwoForm() {
           name="categories"
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Catégories</FormLabel>
+              <FormLabel required>Catégories (max 6)</FormLabel>
               <FormControl>
                 <Combobox
                   options={categoryOptions}
@@ -116,6 +117,7 @@ export function StepTwoForm() {
                   searchPlaceholder="Rechercher une catégorie..."
                   emptyText="Aucune catégorie trouvée."
                   disabled={categoriesLoading}
+                  maxSelections={6}
                 />
               </FormControl>
               <FormMessage />

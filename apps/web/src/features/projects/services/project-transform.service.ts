@@ -19,7 +19,7 @@ export const transformProjectForApi = (
     projectRoles: storeData.roles.map((role) => ({
       title: role.title,
       description: role.description,
-      techStacks: role.techStacks?.map((tech) => tech.id) || [],
+      techStacks: role.techStacks?.map((tech) => tech.id),
     })),
   };
 };

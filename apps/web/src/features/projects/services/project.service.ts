@@ -46,7 +46,6 @@ export const createProject = async (
     // Transform store data to API format
     const apiData = transformProjectForApi(storeData);
 
-    // Validate API data
     const validatedData = createProjectApiSchema.parse(apiData);
 
     const response = await fetch(`${API_BASE_URL}/projects`, {
@@ -59,36 +58,13 @@ export const createProject = async (
     });
 
     if (!response.ok) {
-      let errorData;
-      try {
-        errorData = await response.json();
-      } catch (parseError) {
-        const textResponse = await response.text();
-        errorData = { message: `Server error: ${response.status}` };
-        console.error("Server response (non-JSON):", textResponse);
-      }
-
-      console.error("Project creation failed:", {
-        status: response.status,
-        error: errorData,
-        sentData: validatedData,
-      });
-
-      throw new Error(errorData.message || "Error creating project");
+      const error = await response.json();
+      throw new Error(error.message || "Error creating project");
     }
 
-    const result = await response.json();
-    return result;
+    return response.json();
   } catch (error) {
-    if (error instanceof Error && error.name === "ZodError") {
-      console.error("Validation error:", {
-        issues: (error as any).issues,
-        originalData: storeData,
-        transformedData: transformProjectForApi(storeData),
-      });
-    } else {
-      console.error("Error creating project:", error);
-    }
+    console.error("Error creating project:", error);
     throw error;
   }
 };
