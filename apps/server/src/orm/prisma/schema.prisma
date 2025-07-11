@@ -59,7 +59,7 @@ model Project {
   title       				String
   description 				String
   shortDescription      String          // ADDED
-	externalLinks       String[]        @default([])
+	externalLinks       Json            @default("[]")
 	createdAt						DateTime				@default(now()) // RENAMED
 	updatedAt						DateTime				@updatedAt
   techStacks  				TechStack[]

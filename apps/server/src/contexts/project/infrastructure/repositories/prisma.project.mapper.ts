@@ -32,10 +32,7 @@ export class PrismaProjectMapper {
       title: projectData.title,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
-      externalLinks:
-        projectData.externalLinks
-          ?.filter((link) => link && link.url) // Filtrer les liens invalides
-          ?.map((link) => JSON.stringify(link)) || [],
+      externalLinks: projectData.externalLinks || [],
       ownerId: projectData.ownerId,
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
@@ -81,14 +78,10 @@ export class PrismaProjectMapper {
       title: prismaProject.title,
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
-      externalLinks: prismaProject.externalLinks.map((link) => {
-        try {
-          return JSON.parse(link);
-        } catch {
-          // Fallback pour les anciens liens stockés comme simples URLs
-          return { type: 'website', url: link };
-        }
-      }),
+      externalLinks: prismaProject.externalLinks as {
+        type: string;
+        url: string;
+      }[],
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
