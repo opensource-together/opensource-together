@@ -29,7 +29,7 @@ export default function ProjectDetailView({
   const { techStackOptions } = useTechStack();
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = true; // Variable temporaire pour le développement
+  const isMaintainer = false; // Variable temporaire pour le développement
 
   const CATEGORIES_OPTIONS = [
     { id: "ai", name: "IA" },

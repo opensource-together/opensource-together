@@ -78,7 +78,7 @@ export default function RoleCard({
       </p>
 
       {/* Ligne de séparation */}
-      <div className="mb-3 w-full border-t border-dashed border-black/8"></div>
+      <div className="mb-3 w-full border-t border-black/5"></div>
 
       {/* Bottom Section */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
