@@ -20,7 +20,6 @@ export function useTechStack() {
   } = useQuery({
     queryKey: ["techStacks"],
     queryFn: fetchTechStacks,
-    staleTime: 1000 * 60 * 5, // 5 minutes - tech stacks don't change often
   });
 
   const techStackOptions: TechStackOption[] = techStacks.map((tech) => ({

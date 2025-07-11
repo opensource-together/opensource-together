@@ -16,9 +16,7 @@ interface TechStackApiResponse {
  * Fetch tech stacks from the API
  */
 export const fetchTechStacks = async (): Promise<TechStackItem[]> => {
-  const response = await fetch(`${API_BASE_URL}/techstacks`, {
-    credentials: "include",
-  });
+  const response = await fetch(`${API_BASE_URL}/techstacks`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch tech stacks");

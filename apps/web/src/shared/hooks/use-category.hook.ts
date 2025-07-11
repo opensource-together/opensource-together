@@ -18,7 +18,6 @@ export function useCategories() {
   } = useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
-    staleTime: 1000 * 60 * 5, // 5 minutes - categories don't change often
   });
 
   const categoryOptions: CategoryOption[] = categories.map((category) => ({

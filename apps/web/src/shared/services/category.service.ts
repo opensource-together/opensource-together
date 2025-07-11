@@ -14,9 +14,7 @@ interface CategoryApiResponse {
  * Fetch categories from the API
  */
 export const fetchCategories = async (): Promise<CategoryItem[]> => {
-  const response = await fetch(`${API_BASE_URL}/categories`, {
-    credentials: "include",
-  });
+  const response = await fetch(`${API_BASE_URL}/categories`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch categories");
