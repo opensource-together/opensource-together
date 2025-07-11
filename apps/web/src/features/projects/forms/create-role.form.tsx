@@ -1,9 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
@@ -25,30 +23,25 @@ import {
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
 
+import { useCreateRole } from "../hooks/use-roles.hook";
 import { useTechStack } from "../hooks/use-tech-stack";
-
-const createRoleSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  techStackIds: z
-    .array(z.string())
-    .min(1, "Veuillez sélectionner au moins une technologie"),
-  description: z
-    .string()
-    .max(200, "La description ne peut pas dépasser 200 caractères")
-    .min(1, "La description est requise"),
-});
-
-type CreateRoleFormData = z.infer<typeof createRoleSchema>;
+import { useRoleCreateStore } from "../stores/role-create.store";
+import { CreateRoleSchema, createRoleSchema } from "../validations/role.schema";
 
 interface CreateRoleFormProps {
   children: React.ReactNode;
+  projectId: string;
 }
 
-export default function CreateRoleForm({ children }: CreateRoleFormProps) {
-  const [open, setOpen] = useState(false);
+export default function CreateRoleForm({
+  children,
+  projectId,
+}: CreateRoleFormProps) {
   const { techStackOptions } = useTechStack();
+  const { isDialogOpen, setDialogOpen } = useRoleCreateStore();
+  const createRoleMutation = useCreateRole();
 
-  const form = useForm<CreateRoleFormData>({
+  const form = useForm<CreateRoleSchema>({
     resolver: zodResolver(createRoleSchema),
     defaultValues: {
       title: "",
@@ -60,15 +53,16 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
   const descriptionValue = form.watch("description");
   const characterCount = descriptionValue?.length || 0;
 
-  const onSubmit = (data: CreateRoleFormData) => {
-    console.log("Role created:", data);
-    // Ici vous pouvez traiter la création du rôle
-    setOpen(false);
+  const onSubmit = (data: CreateRoleSchema) => {
+    createRoleMutation.mutate({
+      projectId,
+      data,
+    });
     form.reset();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="flex h-[80vh] max-h-[540px] w-[90vw] max-w-[541px] flex-col px-4 py-4 sm:px-6 sm:py-6 [&>button]:flex [&>button]:h-[22px] [&>button]:w-[22px] [&>button]:items-center [&>button]:justify-center [&>button]:rounded-full [&>button]:border [&>button]:border-black/5">
         <DialogHeader>
@@ -163,16 +157,21 @@ export default function CreateRoleForm({ children }: CreateRoleFormProps) {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setOpen(false)}
+                  onClick={() => setDialogOpen(false)}
                   className="order-2 w-full px-3 py-2 text-xs sm:order-1 sm:w-auto sm:text-sm"
                 >
                   Retour
                 </Button>
                 <Button
                   type="submit"
+                  disabled={createRoleMutation.isPending}
                   className="order-1 w-full px-3 py-2 text-xs sm:order-2 sm:w-auto sm:text-sm"
                 >
-                  <span className="sm:inline">Créer le rôle</span>
+                  {createRoleMutation.isPending ? (
+                    <span>Création...</span>
+                  ) : (
+                    <span className="sm:inline">Créer le rôle</span>
+                  )}
                 </Button>
               </div>
             </div>

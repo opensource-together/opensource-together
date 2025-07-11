@@ -61,7 +61,7 @@ export default function ProjectDetailView({
                       Rôles Disponibles
                     </p>
                     {isMaintainer ? (
-                      <CreateRoleForm>
+                      <CreateRoleForm projectId={projectId}>
                         <Button>
                           Créer un rôle
                           <Image

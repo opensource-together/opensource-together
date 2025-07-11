@@ -85,7 +85,7 @@ export default function ProjectEditMode({
             Rôles Disponibles
           </p>
           {isMaintainer && (
-            <CreateRoleForm>
+            <CreateRoleForm projectId={project.id || ""}>
               <Button>
                 Créer un rôle
                 <Image
