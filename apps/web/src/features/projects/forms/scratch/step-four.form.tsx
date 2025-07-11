@@ -23,7 +23,7 @@ import {
   stepFourSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
-import { ProjectCreationConfirmDialog } from "../../components/creation-confirmation-dialog.component";
+import { ProjectCreationConfirmDialog } from "../../components/stepper/creation-confirmation-dialog.component";
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 
 export function StepFourForm() {
