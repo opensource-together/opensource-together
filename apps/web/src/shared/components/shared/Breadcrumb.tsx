@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 import {
@@ -11,7 +12,7 @@ import {
 
 interface BreadcrumbItemProps {
   label: string;
-  href: string;
+  href?: string;
   isActive?: boolean;
 }
 
@@ -25,18 +26,32 @@ export default function BreadcrumbComponent({
   className = "",
 }: BreadcrumbProps) {
   return (
-    <Breadcrumb className={`font-geist ${className}`}>
-      <BreadcrumbList className="mx-2">
+    <Breadcrumb className={className}>
+      <BreadcrumbList className="gap-3 text-sm">
         {items.map((item, index) => (
           <React.Fragment key={index}>
-            {index > 0 && <BreadcrumbSeparator className="mx-1" />}
             <BreadcrumbItem>
               {item.isActive ? (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
-                <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+                <BreadcrumbLink
+                  href={item.href || ""}
+                  className="text-black/50"
+                >
+                  {item.label}
+                </BreadcrumbLink>
               )}
             </BreadcrumbItem>
+            {index < items.length - 1 && (
+              <BreadcrumbSeparator>
+                <Image
+                  src="/icons/breadcrumb-chevron-icon.svg"
+                  alt="chevron"
+                  width={5}
+                  height={5}
+                />
+              </BreadcrumbSeparator>
+            )}
           </React.Fragment>
         ))}
       </BreadcrumbList>
