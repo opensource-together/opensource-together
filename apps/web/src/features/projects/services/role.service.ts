@@ -27,13 +27,13 @@ export interface UpdateRoleResponse {
 // Mock API service
 export const roleService = {
   createRole: async ({
-    projectId,
+    projectId: _projectId,
     data,
   }: CreateRoleRequest): Promise<CreateRoleResponse> => {
     /*
      // reminder: example API call
      return post<CreateRoleResponse, CreateRoleSchema>(
-        `/projects/${projectId}/roles`, 
+        `/projects/${_projectId}/roles`,
         data
       );
       */
@@ -68,14 +68,14 @@ export const roleService = {
   },
 
   updateRole: async ({
-    projectId,
+    projectId: _projectId,
     roleId,
     data,
   }: UpdateRoleRequest): Promise<UpdateRoleResponse> => {
     /*
      // reminder: example API call
      return put<UpdateRoleResponse, UpdateRoleSchema>(
-        `/projects/${projectId}/roles/${roleId}`, 
+        `/projects/${_projectId}/roles/${roleId}`,
         data
       );
       */
