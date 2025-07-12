@@ -1,41 +1,17 @@
 name: ost
 
 services:
-
-  business-db:
-    image: postgres:17
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=${BUSINESS_DB_USER}
-      - POSTGRES_PASSWORD=${BUSINESS_DB_PASSWORD}
-      - POSTGRES_DB=${BUSINESS_DB_NAME}
-    ports:
-      - "${BUSINESS_DB_PORT}:5432"
-    volumes:
-      - business_db_data:/var/lib/postgresql/data
-    networks:
-      - app_network
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${BUSINESS_DB_USER} -d ${BUSINESS_DB_NAME}",
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   supertokens:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
+    restart: unless-stopped
     environment:
-      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@supertokens-db:5432/${SUPERTOKENS_DB_NAME}
+      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@postgres:5432/${SUPERTOKENS_DB_NAME}
     ports:
-      - "3567:3567"
+      - '3567:3567'
     networks:
       - app_network
-    restart: unless-stopped
     depends_on:
-      supertokens-db:
+      postgres:
         condition: service_healthy
     healthcheck:
       test: >
@@ -44,45 +20,55 @@ services:
       timeout: 5s
       retries: 5
 
-  supertokens-db:
+  postgres:
     image: postgres:17
+    restart: unless-stopped
     environment:
-      - POSTGRES_USER=${SUPERTOKENS_DB_USER}
-      - POSTGRES_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
-      - POSTGRES_DB=${SUPERTOKENS_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_NAME}
+      - BUSINESS_DB_NAME=${BUSINESS_DB_NAME}
+      - BUSINESS_DB_USER=${BUSINESS_DB_USER}
+      - BUSINESS_DB_PASSWORD=${BUSINESS_DB_PASSWORD}
+      - SUPERTOKENS_DB_NAME=${SUPERTOKENS_DB_NAME}
+      - SUPERTOKENS_DB_USER=${SUPERTOKENS_DB_USER}
+      - SUPERTOKENS_DB_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
     ports:
-      - "${SUPERTOKENS_DB_PORT}:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ../../deploy/docker/init:/docker-entrypoint-initdb.d
     networks:
       - app_network
-    restart: unless-stopped
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${SUPERTOKENS_DB_USER} -d ${SUPERTOKENS_DB_NAME}",
-        ]
+      test: [
+        "CMD-SHELL",
+        "pg_isready -U ${POSTGRES_USER} && \
+        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
+        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1"
+      ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   migrate:
-    image: ghcr.io/opensource-together/server:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: no
     command: [
       "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
     ]
     environment:
-      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@business-db:5432/${BUSINESS_DB_NAME}?schema=public
+      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@postgres:5432/${BUSINESS_DB_NAME}
     depends_on:
-      business-db:
+      postgres:
         condition: service_healthy
     networks:
       - app_network
 
 volumes:
-  business_db_data:
-  db_data:
+  postgres_data:
 
 networks:
   app_network:

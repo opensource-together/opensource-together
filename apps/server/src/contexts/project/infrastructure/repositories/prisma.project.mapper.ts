@@ -6,17 +6,27 @@ import {
 } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import {
-  Project as PrismaProject,
-  TechStack,
+  Category,
+  KeyFeature,
   Prisma,
+  Project as PrismaProject,
+  ProjectGoal,
   ProjectRole,
   teamMember,
+  TechStack,
+  ProjectExternalLink,
 } from '@prisma/client';
+
+// Type temporaire en attendant la génération du client Prisma
 
 type PrismaProjectWithIncludes = PrismaProject & {
   techStacks: TechStack[];
   projectMembers: teamMember[];
   projectRoles: (ProjectRole & { techStacks: TechStack[] })[];
+  categories: Category[];
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
+  externalLinks: ProjectExternalLink[];
 };
 
 export class PrismaProjectMapper {
@@ -26,14 +36,34 @@ export class PrismaProjectMapper {
       title: projectData.title,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
-      externalLinks:
-        projectData.externalLinks
-          ?.filter((link) => link && link.url) // Filtrer les liens invalides
-          ?.map((link) => link.url) || [],
+      externalLinks: {
+        create:
+          projectData.externalLinks
+            ?.filter((link) => link && link.url && link.type)
+            ?.map((link) => ({
+              type: link.type,
+              url: link.url,
+            })) || [],
+      },
       ownerId: projectData.ownerId,
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
           id: techStack.id,
+        })),
+      },
+      categories: {
+        connect: projectData.categories.map((category) => ({
+          id: category.id,
+        })),
+      },
+      keyFeatures: {
+        create: projectData.keyFeatures.map((keyFeature) => ({
+          feature: keyFeature.feature,
+        })),
+      },
+      projectGoals: {
+        create: projectData.projectGoals.map((goal) => ({
+          goal: goal.goal,
         })),
       },
       projectRoles: {
@@ -61,8 +91,8 @@ export class PrismaProjectMapper {
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
       externalLinks: prismaProject.externalLinks.map((link) => ({
-        type: 'website',
-        url: link,
+        type: link.type,
+        url: link.url,
       })),
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
@@ -71,6 +101,20 @@ export class PrismaProjectMapper {
         id: techStack.id,
         name: techStack.name,
         iconUrl: techStack.iconUrl,
+      })),
+      categories: prismaProject.categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+      })),
+      keyFeatures: prismaProject.keyFeatures.map((keyFeature) => ({
+        id: keyFeature.id,
+        projectId: prismaProject.id,
+        feature: keyFeature.feature,
+      })),
+      projectGoals: prismaProject.projectGoals.map((goal) => ({
+        id: goal.id,
+        projectId: prismaProject.id,
+        goal: goal.goal,
       })),
       projectRoles: prismaProject.projectRoles.map((role) => ({
         id: role.id,

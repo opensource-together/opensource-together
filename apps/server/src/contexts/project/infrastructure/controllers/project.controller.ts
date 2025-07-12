@@ -1,24 +1,24 @@
+import { Project } from '@/contexts/project/domain/project.entity';
+import { Result } from '@/libs/result';
 import {
-  Controller,
-  Post,
   Body,
+  Controller,
   // Get,
   // Param,
   // Query,
   HttpException,
   HttpStatus,
+  Post,
   // Patch,
   // Delete,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/libs/result';
 // import { ProjectResponseDto } from '@/application/dto/adapters/project-response.dto';
 // import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
+import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session } from 'supertokens-nestjs';
-import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 // import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 // import { FindProjectByFiltersQuery } from '@/contexts/project/use-cases/queries/find-by-filters/find-project-by-filters.handler';
 // import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
@@ -27,9 +27,9 @@ import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/crea
 // import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.usecase';
 // import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
 // import { FilterProjectsDto } from './dto/SearchFilterProject.dto';
-import { Octokit } from '@octokit/rest';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
+import { Octokit } from '@octokit/rest';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 // import { CreateGitHubRepositoryCommand } from '@/contexts/github/use-cases/commands/create-github-repository.command';
@@ -110,16 +110,19 @@ export class ProjectController {
         title: project.title,
         description: project.description,
         shortDescription: project.shortDescription,
-        // externalLinks:
-        //   project.externalLinks?.map((link) => ({
-        //     type: 'github',
-        //     url: link,
-        //   })) || [],
+        externalLinks: project.externalLinks || [],
         techStacks: project.techStacks,
         projectRoles: project.projectRoles.map((role) => ({
           title: role.title,
           description: role.description,
           techStacks: role.techStacks,
+        })),
+        categories: project.categories,
+        keyFeatures: project.keyFeatures.map((feature) => ({
+          feature: feature,
+        })),
+        projectGoals: project.projectGoals.map((goal) => ({
+          goal: goal,
         })),
         octokit: octokit,
       }),

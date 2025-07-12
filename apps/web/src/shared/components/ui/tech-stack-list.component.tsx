@@ -1,6 +1,5 @@
 import StackLogo from "@/shared/components/logos/stack-logo";
-
-import { useTechStack } from "@/features/projects/hooks/use-tech-stack";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 interface TechStackListProps {
   techStackIds: string[];

@@ -8,6 +8,9 @@ import {
   ProjectRoleValidationErrors,
 } from '@/contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
+import { Category } from '@/contexts/category/domain/category.entity';
+import { KeyFeature } from '@/contexts/key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '@/contexts/project-goals/domain/project-goals.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -16,6 +19,9 @@ export type ProjectValidationErrors = {
   shortDescription?: string;
   techStacks?: TechStackValidationErrors | string;
   projectRoles?: ProjectRoleValidationErrors | string;
+  categories?: string;
+  keyFeatures?: string;
+  projectGoals?: string;
   // collaborators?: string;
 };
 
@@ -26,6 +32,7 @@ export type ProjectData = {
   title: string;
   shortDescription: string;
   description: string;
+  categories: { id: string; name: string }[];
   externalLinks?: { type: string; url: string }[];
   techStacks: { id: string; name: string; iconUrl: string }[];
   projectRoles: {
@@ -38,6 +45,8 @@ export type ProjectData = {
     createdAt?: Date;
     updatedAt?: Date;
   }[];
+  keyFeatures: { id?: string; feature: string }[];
+  projectGoals: { id?: string; goal: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -55,6 +64,9 @@ export type ProjectProps = {
   externalLinks?: { type: string; url: string }[];
   techStacks: TechStack[];
   projectRoles?: ProjectRole[];
+  categories: Category[];
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoals[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -68,6 +80,9 @@ export class Project {
   private externalLinks?: { type: string; url: string }[] | undefined;
   private techStacks: TechStack[];
   private projectRoles?: ProjectRole[];
+  private categories: Category[];
+  private keyFeatures: KeyFeature[];
+  private projectGoals: ProjectGoals[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -82,6 +97,9 @@ export class Project {
     this.updatedAt = props.updatedAt;
     this.techStacks = props.techStacks;
     this.projectRoles = props.projectRoles;
+    this.categories = props.categories;
+    this.keyFeatures = props.keyFeatures;
+    this.projectGoals = props.projectGoals;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -116,13 +134,22 @@ export class Project {
     if (!props.ownerId) validationErrors.ownerId = 'ownerId is required';
     if (!props.techStacks || props.techStacks.length === 0)
       validationErrors.techStacks = 'At least one tech stack is required';
+    if (!props.categories || props.categories.length === 0)
+      validationErrors.categories = 'At least one category is required';
+    if (!props.keyFeatures || props.keyFeatures.length === 0)
+      validationErrors.keyFeatures = 'At least one key feature is required';
+    if (!props.projectGoals || props.projectGoals.length === 0)
+      validationErrors.projectGoals = 'At least one project goal is required';
 
     const voValidationResults = {
       title: Title.create(props.title),
       description: Description.create(props.description),
       shortDescription: ShortDescription.create(props.shortDescription),
       techStacks: TechStack.reconstituteMany(props.techStacks),
+      categories: Category.reconstituteMany(props.categories),
       projectRoles: ProjectRole.createMany(props.projectRoles),
+      keyFeatures: KeyFeature.createMany(props.keyFeatures),
+      projectGoals: ProjectGoals.createMany(props.projectGoals),
     };
     //extract the error from the validation results
     Object.entries(voValidationResults).forEach(([key, result]) => {
@@ -131,19 +158,30 @@ export class Project {
           result.error as string;
     });
     //reconstitute the object with the value of the validation results
-    const { title, description, shortDescription, techStacks, projectRoles } =
-      Object.fromEntries(
-        Object.entries(voValidationResults).map(([key, result]) => [
-          key,
-          result.success ? result.value : result.error,
-        ]),
-      ) as {
-        title: Title;
-        description: Description;
-        shortDescription: ShortDescription;
-        techStacks: TechStack[];
-        projectRoles: ProjectRole[];
-      };
+    const {
+      title,
+      description,
+      shortDescription,
+      techStacks,
+      projectRoles,
+      categories,
+      keyFeatures,
+      projectGoals,
+    } = Object.fromEntries(
+      Object.entries(voValidationResults).map(([key, result]) => [
+        key,
+        result.success ? result.value : result.error,
+      ]),
+    ) as {
+      title: Title;
+      description: Description;
+      shortDescription: ShortDescription;
+      techStacks: TechStack[];
+      projectRoles: ProjectRole[];
+      categories: Category[];
+      keyFeatures: KeyFeature[];
+      projectGoals: ProjectGoals[];
+    };
 
     if (Object.keys(validationErrors).length > 0)
       return Result.fail(validationErrors);
@@ -156,6 +194,9 @@ export class Project {
         description,
         techStacks,
         projectRoles,
+        categories,
+        keyFeatures,
+        projectGoals,
       }),
     );
   }
@@ -177,6 +218,9 @@ export class Project {
       externalLinks: this.externalLinks,
       techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
       projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
+      categories: this.categories.map((c) => c.toPrimitive()),
+      keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
+      projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

@@ -20,6 +20,9 @@ type ProjectInMemory = {
     isFilled: boolean;
     techStacks: { id: string; name: string; iconUrl: string }[];
   }[];
+  categories: { id: string; name: string }[];
+  keyFeatures: { id?: string; feature: string }[];
+  projectGoals: { id?: string; goal: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -42,6 +45,9 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
         { id: '3', name: 'nodejs', iconUrl: 'https://nodejs.org/favicon.ico' },
       ],
       projectRoles: [],
+      categories: [{ id: '1', name: 'Web Development' }],
+      keyFeatures: [{ id: '1', feature: 'Test Key Feature' }],
+      projectGoals: [{ id: '1', goal: 'Test Project Goal' }],
       createdAt: new Date('2024-01-01T09:00:00Z'),
       updatedAt: new Date('2024-01-01T10:00:00Z'),
     },
@@ -75,6 +81,9 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
         createdAt: this.clock.now(),
         updatedAt: this.clock.now(),
       })),
+      categories: projectPrimitive.categories,
+      keyFeatures: projectPrimitive.keyFeatures,
+      projectGoals: projectPrimitive.projectGoals,
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
     };
@@ -115,6 +124,9 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       externalLinks: projectInMemory.externalLinks,
       techStacks: techStacks.map((ts) => ts.toPrimitive()),
       projectRoles: projectInMemory.projectRoles,
+      categories: projectInMemory.categories,
+      keyFeatures: projectInMemory.keyFeatures,
+      projectGoals: projectInMemory.projectGoals,
       createdAt: projectInMemory.createdAt,
       updatedAt: projectInMemory.updatedAt,
     });
@@ -175,6 +187,9 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
           iconUrl: tech.iconUrl,
         })),
       })),
+      categories: projectPrimitive.categories,
+      keyFeatures: projectPrimitive.keyFeatures,
+      projectGoals: projectPrimitive.projectGoals,
       updatedAt: this.clock.now(),
     };
 
@@ -230,6 +245,9 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
           },
         ],
         projectRoles: [],
+        categories: [{ id: '1', name: 'Web Development' }],
+        keyFeatures: [{ id: '1', feature: 'Test Key Feature' }],
+        projectGoals: [{ id: '1', goal: 'Test Project Goal' }],
         createdAt: new Date('2024-01-01T09:00:00Z'),
         updatedAt: new Date('2024-01-01T10:00:00Z'),
       },
