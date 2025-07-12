@@ -56,8 +56,8 @@ export const projectSchema = z.object({
   roles: z.array(roleSchema).optional(),
   keyBenefits: z.array(z.string()).optional(),
   socialLinks: z.array(socialLinkSchema).optional(),
-  keyFeatures: z.array(keyFeatureSchema).optional(),
-  projectGoals: z.array(projectGoalSchema).optional(),
+  keyFeatures: z.string().optional(),
+  projectGoals: z.string().optional(),
   categories: z.array(categorySchema).optional(),
 });
 
@@ -71,8 +71,8 @@ export const projectEditSchema = z.object({
   }),
   techStacks: z.array(techStackSchema),
   categories: z.array(categorySchema).optional(),
-  keyFeatures: z.array(keyFeatureSchema).optional(),
-  projectGoals: z.array(projectGoalSchema).optional(),
+  keyFeatures: z.string().optional(),
+  projectGoals: z.string().optional(),
   externalLinks: z
     .object({
       github: z.string().optional(),

@@ -65,40 +65,11 @@ export function useCreateProject() {
 }
 
 /**
- * Hook to update a project (redirects after success)
- * @param projectId id of the project to update
- * @returns updateProject, isUpdating, isUpdateError
- */
-export function useUpdateProject() {
-  const router = useRouter();
-  const queryClient = getQueryClient();
-
-  const mutation = useToastMutation({
-    mutationFn: updateProject,
-    loadingMessage: "Mise à jour du projet en cours...",
-    successMessage: "Projet mis à jour avec succès",
-    errorMessage: "Erreur lors de la mise à jour du projet",
-    options: {
-      onSuccess: (project) => {
-        queryClient.invalidateQueries({ queryKey: ["project", project.id] });
-        router.push(`/projects/${project.id}`);
-      },
-    },
-  });
-
-  return {
-    updateProject: mutation.mutate,
-    isUpdating: mutation.isPending,
-    isUpdateError: mutation.isError,
-  };
-}
-
-/**
- * Hook to update a project inline (no redirect, for edit mode)
+ * Hook to update a project
  * @param onSuccess callback called after successful update
  * @returns updateProject, isUpdating, isUpdateError
  */
-export function useUpdateProjectInline(onSuccess?: () => void) {
+export function useUpdateProject(onSuccess?: () => void) {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({

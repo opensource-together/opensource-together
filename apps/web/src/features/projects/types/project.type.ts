@@ -74,3 +74,26 @@ export interface Project {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Type for the project edit form with string-based keyFeatures and projectGoals
+export interface ProjectEditForm {
+  title: string;
+  description: string;
+  longDescription?: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  techStacks: TechStack[];
+  roles?: {
+    title: string;
+    description: string;
+    badges: any[];
+    experienceBadge?: string;
+  }[];
+  keyBenefits?: string[];
+  socialLinks?: {
+    type: "github" | "website" | "discord" | "twitter" | "linkedin" | "other";
+    url: string;
+  }[];
+  keyFeatures?: string;
+  projectGoals?: string;
+  categories?: Category[];
+}

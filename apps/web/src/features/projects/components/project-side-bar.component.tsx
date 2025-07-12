@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -12,66 +13,21 @@ import {
   BreadcrumbSeparator,
 } from "@/shared/components/ui/breadcrumb";
 import { Button } from "@/shared/components/ui/button";
-import { Combobox } from "@/shared/components/ui/combobox";
 import { Icon } from "@/shared/components/ui/icon";
-import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-import { useTechStack } from "../hooks/use-tech-stack";
 import { Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
   isMaintainer?: boolean;
-  onEditClick?: () => void;
-  isEditing?: boolean;
-  // Form integration props
-  onSubmit?: () => void;
-  isSubmitting?: boolean;
-  // Form field props for editing mode
-  techStackValue?: string[];
-  onTechStackChange?: (value: string[]) => void;
-  categoriesValue?: string[];
-  onCategoriesChange?: (value: string[]) => void;
-  externalLinksValue?: {
-    github?: string;
-    discord?: string;
-    twitter?: string;
-    linkedin?: string;
-    website?: string;
-  };
-  onExternalLinkChange?: (type: string, value: string) => void;
 }
-
-const CATEGORIES_OPTIONS = [
-  { id: "ai", name: "IA" },
-  { id: "finance", name: "Finance" },
-  { id: "health", name: "Santé" },
-  { id: "education", name: "Education" },
-  { id: "transport", name: "Transport" },
-  { id: "ecommerce", name: "E-commerce" },
-  { id: "security", name: "Sécurité" },
-  { id: "marketing", name: "Marketing" },
-  { id: "sales", name: "Vente" },
-  { id: "management", name: "Gestion" },
-  { id: "other", name: "Autre" },
-];
 
 export default function ProjectSideBar({
   project,
   isMaintainer = false,
-  onEditClick,
-  isEditing = false,
-  // Form integration props
-  onSubmit,
-  isSubmitting = false,
-  techStackValue,
-  onTechStackChange,
-  categoriesValue,
-  onCategoriesChange,
-  externalLinksValue,
-  onExternalLinkChange,
 }: ProjectSideBarProps) {
+  const router = useRouter();
   const {
     title = "",
     techStacks = [],
@@ -85,13 +41,15 @@ export default function ProjectSideBar({
     },
   } = project;
 
-  const { techStackOptions } = useTechStack();
-
   // Récupérer le lien GitHub
   const githubLink =
     externalLinks.find((link) => link.type === "github")?.url || "";
 
   const collaborators = project.collaborators || [];
+
+  const handleEditClick = () => {
+    router.push(`/projects/${project.id}/edit`);
+  };
 
   return (
     <div className="flex flex-col gap-5 bg-white">
@@ -120,17 +78,8 @@ export default function ProjectSideBar({
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (
-          <Button
-            size="lg"
-            className="gap-2"
-            onClick={isEditing ? onSubmit : onEditClick}
-            disabled={isEditing && isSubmitting}
-          >
-            {isSubmitting
-              ? "Enregistrement..."
-              : isEditing
-                ? "Confirmer"
-                : "Modifier"}
+          <Button size="lg" className="gap-2" onClick={handleEditClick}>
+            Modifier
             <Image
               src="/icons/edit-white-icon.svg"
               alt="pencil"
@@ -151,7 +100,7 @@ export default function ProjectSideBar({
 
       {/* Details Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-1 font-medium text-black">Details</h2>
+        <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
 
         {/* Stars */}
         <div className="flex items-center justify-between py-1">
@@ -234,63 +183,35 @@ export default function ProjectSideBar({
       {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
-        {isEditing ? (
-          <Combobox
-            options={techStackOptions}
-            value={techStackValue || techStacks?.map((tech) => tech.id) || []}
-            onChange={
-              onTechStackChange ||
-              ((ids) => console.log("Tech stack changed:", ids))
-            }
-            placeholder="Choose Technologies"
-            searchPlaceholder="Rechercher une technologie..."
-            emptyText="Aucune technologie trouvée."
-          />
-        ) : (
-          techStacks.length > 0 && (
-            <div>
-              <div className="flex flex-wrap gap-2">
-                {techStacks.map((tech, index) => (
-                  <StackLogo
-                    key={index}
-                    name={tech.name}
-                    icon={tech.iconUrl || "/icons/empty-project.svg"}
-                    alt={tech.name}
-                  />
-                ))}
-              </div>
+        {techStacks.length > 0 && (
+          <div>
+            <div className="flex flex-wrap gap-2">
+              {techStacks.map((tech, index) => (
+                <StackLogo
+                  key={index}
+                  name={tech.name}
+                  icon={tech.iconUrl || "/icons/empty-project.svg"}
+                  alt={tech.name}
+                />
+              ))}
             </div>
-          )
+          </div>
         )}
       </div>
 
       {/* Categories Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
-        {isEditing ? (
-          <Combobox
-            options={CATEGORIES_OPTIONS}
-            value={categoriesValue || categories?.map((cat) => cat.id) || []}
-            onChange={
-              onCategoriesChange ||
-              ((ids) => console.log("Categories changed:", ids))
-            }
-            placeholder="Choose Categories"
-            searchPlaceholder="Rechercher une catégorie..."
-            emptyText="Aucune catégorie trouvée."
-          />
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
-              >
-                {category.name}
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
+            >
+              {category.name}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Contributors Section */}
@@ -298,7 +219,6 @@ export default function ProjectSideBar({
         <h2 className="text-md mb-2 font-medium text-black">
           Contributeurs Principaux
         </h2>
-        {/* Contributors Avatars */}
         <div>
           <div className="flex gap-2">
             {collaborators.slice(0, 5).map((collaborator) => (
@@ -324,119 +244,54 @@ export default function ProjectSideBar({
       {/* Links Section */}
       <div className="flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Liens</h2>
-        {isEditing ? (
-          <div className="space-y-2">
-            <InputWithIcon
-              icon="github"
-              placeholder="https://github.com/..."
-              value={
-                externalLinksValue?.github ||
-                externalLinks?.find((link) => link.type === "github")?.url ||
-                ""
-              }
-              onChange={(e) => onExternalLinkChange?.("github", e.target.value)}
-            />
-            <InputWithIcon
-              icon="discord"
-              placeholder="https://discord.gg/..."
-              value={
-                externalLinksValue?.discord ||
-                externalLinks?.find((link) => link.type === "discord")?.url ||
-                ""
-              }
-              onChange={(e) =>
-                onExternalLinkChange?.("discord", e.target.value)
-              }
-            />
-            <InputWithIcon
-              icon="twitter"
-              placeholder="https://x.com/..."
-              value={
-                externalLinksValue?.twitter ||
-                externalLinks?.find((link) => link.type === "twitter")?.url ||
-                ""
-              }
-              onChange={(e) =>
-                onExternalLinkChange?.("twitter", e.target.value)
-              }
-            />
-            <InputWithIcon
-              icon="linkedin"
-              placeholder="https://linkedin.com/..."
-              value={
-                externalLinksValue?.linkedin ||
-                externalLinks?.find((link) => link.type === "linkedin")?.url ||
-                ""
-              }
-              onChange={(e) =>
-                onExternalLinkChange?.("linkedin", e.target.value)
-              }
-            />
-            <InputWithIcon
-              icon="link"
-              placeholder="https://..."
-              value={
-                externalLinksValue?.website ||
-                externalLinks?.find(
-                  (link) => link.type === "other" || link.type === "website"
-                )?.url ||
-                ""
-              }
-              onChange={(e) =>
-                onExternalLinkChange?.("website", e.target.value)
-              }
-            />
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {externalLinks.map((link, index) => {
-              let iconSrc = "";
-              let iconAlt = "";
+        <div className="flex flex-wrap gap-2">
+          {externalLinks.map((link, index) => {
+            let iconSrc = "";
+            let iconAlt = "";
 
-              switch (link.type) {
-                case "github":
-                  iconSrc = "/icons/github-gray-icon.svg";
-                  iconAlt = "GitHub";
-                  break;
-                case "twitter":
-                  iconSrc = "/icons/x-gray-icon.svg";
-                  iconAlt = "Twitter/X";
-                  break;
-                case "linkedin":
-                  iconSrc = "/icons/linkedin-gray-icon.svg";
-                  iconAlt = "LinkedIn";
-                  break;
-                case "discord":
-                  iconSrc = "/icons/discord-gray-icon.svg";
-                  iconAlt = "Discord";
-                  break;
-                case "other":
-                case "website":
-                default:
-                  iconSrc = "/icons/link-gray-icon.svg";
-                  iconAlt = "Website";
-                  break;
-              }
+            switch (link.type) {
+              case "github":
+                iconSrc = "/icons/github-gray-icon.svg";
+                iconAlt = "GitHub";
+                break;
+              case "twitter":
+                iconSrc = "/icons/x-gray-icon.svg";
+                iconAlt = "Twitter/X";
+                break;
+              case "linkedin":
+                iconSrc = "/icons/linkedin-gray-icon.svg";
+                iconAlt = "LinkedIn";
+                break;
+              case "discord":
+                iconSrc = "/icons/discord-gray-icon.svg";
+                iconAlt = "Discord";
+                break;
+              case "other":
+              case "website":
+              default:
+                iconSrc = "/icons/link-gray-icon.svg";
+                iconAlt = "Website";
+                break;
+            }
 
-              return (
-                <Link
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Image
-                    src={iconSrc}
-                    alt={iconAlt}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5"
-                  />
-                </Link>
-              );
-            })}
-          </div>
-        )}
+            return (
+              <Link
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={iconSrc}
+                  alt={iconAlt}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Controller, UseFormReturn } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
@@ -6,40 +7,20 @@ import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import CreateRoleForm from "../forms/create-role.form";
-import { Project } from "../types/project.type";
+import { Project, ProjectEditForm } from "../types/project.type";
 import RoleCard from "./role-card.component";
 
 interface ProjectEditModeProps {
   project: Project;
+  form: UseFormReturn<ProjectEditForm>;
   isMaintainer: boolean;
-  // Form integration props
-  titleValue?: string;
-  onTitleChange?: (value: string) => void;
-  descriptionValue?: string;
-  onDescriptionChange?: (value: string) => void;
-  longDescriptionValue?: string;
-  onLongDescriptionChange?: (value: string) => void;
-  projectGoalsValue?: string;
-  onProjectGoalsChange?: (value: string) => void;
-  keyFeaturesValue?: string;
-  onKeyFeaturesChange?: (value: string) => void;
   onFileSelect?: (file: File | null) => void;
 }
 
 export default function ProjectEditMode({
   project,
+  form,
   isMaintainer,
-  // Form integration props
-  titleValue,
-  onTitleChange,
-  descriptionValue,
-  onDescriptionChange,
-  longDescriptionValue,
-  onLongDescriptionChange,
-  projectGoalsValue,
-  onProjectGoalsChange,
-  keyFeaturesValue,
-  onKeyFeaturesChange,
   onFileSelect,
 }: ProjectEditModeProps) {
   return (
@@ -63,21 +44,28 @@ export default function ProjectEditMode({
         {/* Title */}
         <div>
           <h3 className="mb-3 text-sm font-medium">Title</h3>
-          <Input
-            value={titleValue || project.title || ""}
-            onChange={(e) => onTitleChange?.(e.target.value)}
-            placeholder="Nom du projet"
+          <Controller
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <Input {...field} placeholder="Nom du projet" />
+            )}
           />
         </div>
 
         {/* Description */}
         <div>
           <h3 className="mb-3 text-sm font-medium">Description</h3>
-          <Textarea
-            value={descriptionValue || project.shortDescription || ""}
-            onChange={(e) => onDescriptionChange?.(e.target.value)}
-            placeholder="Description du projet"
-            className="h-[80px]"
+          <Controller
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <Textarea
+                {...field}
+                placeholder="Description du projet"
+                className="h-[80px]"
+              />
+            )}
           />
           {/* separator */}
           <div className="mt-10 h-[2px] w-full bg-black/3" />
@@ -86,30 +74,34 @@ export default function ProjectEditMode({
         {/* Project Goals */}
         <div>
           <h3 className="mb-3 text-sm font-medium">Project Goals</h3>
-          <Textarea
-            value={
-              projectGoalsValue ||
-              project.projectGoals?.map((goal) => goal.goal).join("\n") ||
-              ""
-            }
-            onChange={(e) => onProjectGoalsChange?.(e.target.value)}
-            placeholder="Objectifs du projet"
-            className="h-[111px]"
+          <Controller
+            control={form.control}
+            name="projectGoals"
+            render={({ field }) => (
+              <Textarea
+                {...field}
+                value={field.value || ""}
+                placeholder="Objectifs du projet (utilisez des sauts de ligne pour séparer les objectifs)"
+                className="h-[111px]"
+              />
+            )}
           />
         </div>
 
         {/* Key Features */}
         <div>
           <h3 className="mb-3 text-sm font-medium">Key Objectives</h3>
-          <Textarea
-            value={
-              keyFeaturesValue ||
-              project.keyFeatures?.map((feature) => feature.title).join("\n") ||
-              ""
-            }
-            onChange={(e) => onKeyFeaturesChange?.(e.target.value)}
-            placeholder="Objectifs clés"
-            className="h-[177px]"
+          <Controller
+            control={form.control}
+            name="keyFeatures"
+            render={({ field }) => (
+              <Textarea
+                {...field}
+                value={field.value || ""}
+                placeholder="Objectifs clés (utilisez des sauts de ligne pour séparer les objectifs)"
+                className="h-[177px]"
+              />
+            )}
           />
         </div>
       </div>
