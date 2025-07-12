@@ -18,16 +18,19 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
   if (isError || !project) return <ProjectDetailError />;
 
   return (
-    <>
-      <div className="mx-auto mt-12 max-w-[1300px]">
-        <div className="mx-auto mt-2 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-4 md:px-8 lg:px-24 xl:px-40">
-          <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
+    <div className="mx-auto mt-12 max-w-[1300px]">
+      <div className="mx-auto mt-2 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
+        {/* Layout Grid : sidebar | main content */}
+        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[350px_1fr] lg:gap-16">
+          {/* ProjectEditForm va être splité via CSS */}
+          <div className="lg:contents">
             <ProjectEditForm project={project} />
           </div>
-          {/* Roles Section */}
-          <div className="flex flex-col justify-end gap-8 lg:max-w-2xl">
-            <div className="my-3 flex items-center justify-between lg:max-w-[668px]">
-              <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
+
+          {/* Roles Section - Dans la colonne du main content */}
+          <div className="mt-8 flex flex-col gap-6 lg:col-start-2">
+            <div className="flex items-center justify-between">
+              <p className="flex gap-1 text-lg font-medium tracking-tighter">
                 Rôles Disponibles
               </p>
               <CreateRoleForm projectId={project.id || ""}>
@@ -42,14 +45,14 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
                 </Button>
               </CreateRoleForm>
             </div>
-            <div className="mt-6 mb-30 flex flex-col gap-3">
+            <div className="flex flex-col gap-3">
               {project.roles?.map((role) => (
                 <RoleCard
                   key={role.title}
                   role={role}
                   techStacks={project.techStacks}
                   projectGoals={project.projectGoals}
-                  className="mb-3 lg:max-w-[721.96px]"
+                  className="mb-3"
                   isMaintainer={true}
                 />
               ))}
@@ -57,6 +60,6 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
