@@ -18,8 +18,7 @@ import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
-
-import { useTechStack } from "@/features/projects/hooks/use-tech-stack";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useCreateRole } from "../hooks/use-role.hook";
 import { CreateRoleSchema, createRoleSchema } from "../validations/role.schema";

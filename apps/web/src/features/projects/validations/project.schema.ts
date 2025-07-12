@@ -23,51 +23,35 @@ const socialLinkSchema = z.object({
   url: z.string().url("URL invalide"),
 });
 
-const _keyFeatureSchema = z.object({
-  id: z.string().optional(),
-  title: z.string().min(1, "Le titre de la fonctionnalité est requis"),
-});
-
-const _projectGoalSchema = z.object({
-  id: z.string().optional(),
-  goal: z.string().min(1, "L'objectif est requis"),
-});
-
 const categorySchema = z.object({
   id: z.string(),
-  name: z.string().min(1, "Le nom de la catégorie est requis"),
+  name: z.string().min(1, "Nom de catégorie requis"),
 });
 
 export const projectSchema = z.object({
-  image: z.instanceof(File).optional(),
+  image: z.string().optional(),
   title: z.string().min(1, "Le titre du projet est requis"),
   description: z.string().min(1, "Une courte description est requise"),
   longDescription: z.string().optional(),
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], {
-    errorMap: () => ({ message: "Statut invalide" }),
-  }),
   techStacks: z.array(techStackSchema),
   roles: z.array(roleSchema).optional(),
   keyBenefits: z.array(z.string()).optional(),
   socialLinks: z.array(socialLinkSchema).optional(),
-  keyFeatures: z.string().optional(),
-  projectGoals: z.string().optional(),
+  keyFeatures: z.array(z.string()).optional(),
+  projectGoals: z.array(z.string()).optional(),
   categories: z.array(categorySchema).optional(),
 });
 
 // Schema for the unified edit form
 export const projectEditSchema = z.object({
-  image: z.instanceof(File).optional(),
+  image: z.string().optional(),
   title: z.string().min(1, "Le titre du projet est requis"),
   shortDescription: z.string().min(1, "Une courte description est requise"),
   longDescription: z.string().optional(),
-  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], {
-    errorMap: () => ({ message: "Statut invalide" }),
-  }),
   techStacks: z.array(techStackSchema),
   categories: z.array(categorySchema).optional(),
-  keyFeatures: z.string().optional(),
-  projectGoals: z.string().optional(),
+  keyFeatures: z.array(z.string()).optional(),
+  projectGoals: z.array(z.string()).optional(),
   externalLinks: z
     .object({
       github: z.string().optional(),

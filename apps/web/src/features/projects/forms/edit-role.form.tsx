@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
@@ -18,11 +18,10 @@ import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
-
-import { useTechStack } from "@/features/projects/hooks/use-tech-stack";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useUpdateRole } from "../hooks/use-role.hook";
-import { ProjectRole, TechStack } from "../types/project.type";
+import { ProjectRole } from "../types/project.type";
 import { UpdateRoleSchema, updateRoleSchema } from "../validations/role.schema";
 
 interface EditRoleFormProps {
@@ -41,50 +40,14 @@ export default function EditRoleForm({
 
   const { updateRole, isUpdating } = useUpdateRole();
 
-  // Helper function to get tech stack IDs from role data
-  const getTechStackIds = useCallback(
-    (roleTechStacks: TechStack[] = []) => {
-      if (!roleTechStacks || roleTechStacks.length === 0) return [];
-
-      return roleTechStacks
-        .map((tech) => {
-          // Si le tech stack a déjà un ID qui correspond aux options, l'utiliser
-          if (
-            tech.id &&
-            techStackOptions.find((option) => option.id === tech.id)
-          ) {
-            return tech.id;
-          }
-
-          // Sinon, essayer de trouver l'ID par nom
-          const matchingOption = techStackOptions.find(
-            (option) => option.name.toLowerCase() === tech.name.toLowerCase()
-          );
-
-          return matchingOption?.id || tech.id || tech.name;
-        })
-        .filter(Boolean);
-    },
-    [techStackOptions]
-  );
-
   const form = useForm<UpdateRoleSchema>({
     resolver: zodResolver(updateRoleSchema),
     defaultValues: {
       title: role.title || "",
-      techStackIds: getTechStackIds(role.techStacks),
+      techStackIds: role.techStacks?.map((tech) => tech.id) || [],
       description: role.description || "",
     },
   });
-
-  // Reset form when role changes
-  useEffect(() => {
-    form.reset({
-      title: role.title || "",
-      techStackIds: getTechStackIds(role.techStacks),
-      description: role.description || "",
-    });
-  }, [role, form, getTechStackIds]);
 
   const descriptionValue = form.watch("description");
   const characterCount = descriptionValue?.length || 0;

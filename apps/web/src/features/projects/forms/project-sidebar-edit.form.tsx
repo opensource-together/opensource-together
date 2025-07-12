@@ -8,23 +8,10 @@ import { Combobox } from "@/shared/components/ui/combobox";
 import { Form, FormField } from "@/shared/components/ui/form";
 import { Icon } from "@/shared/components/ui/icon";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
+import { useCategories } from "@/shared/hooks/use-category.hook";
 
 import { Project } from "../types/project.type";
 import { ProjectSchema } from "../validations/project.schema";
-
-const CATEGORIES_OPTIONS = [
-  { id: "ai", name: "IA" },
-  { id: "finance", name: "Finance" },
-  { id: "health", name: "Santé" },
-  { id: "education", name: "Education" },
-  { id: "transport", name: "Transport" },
-  { id: "ecommerce", name: "E-commerce" },
-  { id: "security", name: "Sécurité" },
-  { id: "marketing", name: "Marketing" },
-  { id: "sales", name: "Vente" },
-  { id: "management", name: "Gestion" },
-  { id: "other", name: "Autre" },
-];
 
 interface ProjectSidebarEditFormProps {
   project: Project;
@@ -42,6 +29,7 @@ export default function ProjectSidebarEditForm({
   techStackOptions,
 }: ProjectSidebarEditFormProps) {
   const { control } = form;
+  const { categoryOptions } = useCategories();
 
   return (
     <>
@@ -197,12 +185,12 @@ export default function ProjectSidebarEditForm({
             name="categories"
             render={({ field }) => (
               <Combobox
-                options={CATEGORIES_OPTIONS}
+                options={categoryOptions}
                 value={field.value?.map((cat) => cat.id) || []}
                 onChange={(selectedIds) => {
                   const selectedCategories = selectedIds
                     .map((id) => {
-                      const category = CATEGORIES_OPTIONS.find(
+                      const category = categoryOptions.find(
                         (option) => option.id === id
                       );
                       return category
@@ -223,49 +211,44 @@ export default function ProjectSidebarEditForm({
         {/* Contributors Section - Informative */}
         <div className="mb-3 flex flex-col">
           <h2 className="text-md mb-2 font-medium text-black">
-            Contributeurs Principaux
+            Contributeurs ({project.collaborators?.length || 0})
           </h2>
-          <div>
-            <div className="flex gap-2">
-              {project.collaborators
-                ?.slice(0, 5)
-                .map((collaborator) => (
-                  <Avatar
-                    key={collaborator.id}
-                    src={collaborator.avatarUrl}
-                    name={collaborator.name}
-                    alt={collaborator.name}
-                    size="sm"
-                  />
-                ))}
-
-              {/* Indicateur "+X autres" si plus de 5 collaborateurs */}
-              {project.collaborators && project.collaborators.length > 5 && (
-                <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                  +{project.collaborators.length - 5}
+          <div className="flex flex-col gap-2">
+            {project.collaborators?.slice(0, 5).map((collaborator) => (
+              <div key={collaborator.id} className="flex items-center gap-2">
+                <Avatar
+                  src={collaborator.avatarUrl}
+                  alt={collaborator.name}
+                  size="sm"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-black">
+                    {collaborator.name}
+                  </span>
+                  <span className="text-xs text-black/50">
+                    {collaborator.role}
+                  </span>
                 </div>
-              )}
-
-              {/* Message si aucun collaborateur */}
-              {(!project.collaborators ||
-                project.collaborators.length === 0) && (
-                <span className="text-sm text-black/50">
-                  Aucun contributeur pour le moment
-                </span>
-              )}
-            </div>
+              </div>
+            ))}
+            {(project.collaborators?.length || 0) > 5 && (
+              <span className="text-xs text-black/50">
+                +{(project.collaborators?.length || 0) - 5} autres
+              </span>
+            )}
           </div>
         </div>
 
-        {/* External Links */}
-        <div className="mb-0 flex flex-col">
-          <h2 className="text-md mb-2 font-medium text-black">Liens</h2>
-          <div className="space-y-2">
+        {/* Links */}
+        <div className="mb-3 flex flex-col">
+          <h2 className="text-md mb-2 font-medium text-black">Liens sociaux</h2>
+          <div className="flex flex-col gap-2">
             <FormField
               control={control}
               name="socialLinks"
               render={({ field }) => {
                 const links = field.value || [];
+
                 const updateLink = (
                   type:
                     | "github"
