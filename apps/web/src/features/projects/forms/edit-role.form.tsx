@@ -44,11 +44,12 @@ export default function EditRoleForm({
     resolver: zodResolver(updateRoleSchema),
     defaultValues: {
       title: role.title || "",
-      techStackIds: role.techStacks?.map((tech) => tech.id) || [],
+      techStack: role.techStacks?.map((tech) => tech.id) || [],
       description: role.description || "",
     },
   });
 
+  const { control } = form;
   const descriptionValue = form.watch("description");
   const characterCount = descriptionValue?.length || 0;
 
@@ -74,7 +75,7 @@ export default function EditRoleForm({
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-6">
             <FormField
-              control={form.control}
+              control={control}
               name="title"
               render={({ field }) => (
                 <FormItem>
@@ -88,8 +89,8 @@ export default function EditRoleForm({
             />
 
             <FormField
-              control={form.control}
-              name="techStackIds"
+              control={control}
+              name="techStack"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel required>Technologies</FormLabel>
@@ -109,7 +110,7 @@ export default function EditRoleForm({
             />
 
             <FormField
-              control={form.control}
+              control={control}
               name="description"
               render={({ field }) => (
                 <FormItem>

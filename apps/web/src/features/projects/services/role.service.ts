@@ -46,7 +46,7 @@ export const roleService = {
       id: Date.now().toString(),
       title: data.title,
       description: data.description,
-      techStacks: data.techStackIds.map((id) => ({
+      techStacks: data.techStack.map((id) => ({
         id,
         name: `Tech-${id}`, // In real app, would fetch from backend
         iconUrl: "",
@@ -88,7 +88,7 @@ export const roleService = {
       id: roleId,
       title: data.title,
       description: data.description,
-      techStacks: data.techStackIds.map((id) => ({
+      techStacks: data.techStack.map((id) => ({
         id,
         name: `Tech-${id}`, // In real app, would fetch from backend
         iconUrl: "",
