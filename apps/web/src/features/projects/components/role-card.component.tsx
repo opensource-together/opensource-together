@@ -3,7 +3,6 @@
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
-import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
@@ -15,7 +14,7 @@ interface RoleCardProps {
   projectGoals?: ProjectGoal[];
   className?: string;
   isMaintainer?: boolean;
-  projectId?: string; // Add projectId as optional prop
+  projectId?: string;
 }
 
 export default function RoleCard({
@@ -24,7 +23,7 @@ export default function RoleCard({
   projectGoals = [],
   className,
   isMaintainer = false,
-  projectId = "", // Default empty string
+  projectId = "",
 }: RoleCardProps) {
   const {
     title = "",
@@ -119,14 +118,8 @@ export default function RoleCard({
 
         {/* Apply Button */}
         {isMaintainer ? (
-          <EditRoleForm
-            role={role}
-            projectId={projectId}
-            availableTechStacks={techStacks}
-          >
-            <Button variant="outline" className="w-full md:w-auto">
-              Modifier le rôle
-            </Button>
+          <EditRoleForm role={role} projectId={projectId}>
+            <Button variant="outline">Modifier le rôle</Button>
           </EditRoleForm>
         ) : (
           <RoleApplicationForm
@@ -146,54 +139,12 @@ export default function RoleCard({
               );
             })}
           >
-            <Button className="w-full md:w-auto">
+            <Button>
               Postuler à ce rôle
               <Icon name="arrow-up-right" size="xs" variant="white" />
             </Button>
           </RoleApplicationForm>
         )}
-      </div>
-    </div>
-  );
-}
-
-export function SkeletonRoleCard() {
-  return (
-    <div className="mb-6 flex min-h-[310px] w-[668px] flex-col rounded-lg border border-[black]/10 bg-white p-6 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
-      {/* Title skeleton */}
-      <Skeleton className="mb-4 h-6 w-48" />
-
-      {/* Description skeleton */}
-      <div className="mb-6">
-        <Skeleton className="mb-2 h-4 w-full" />
-        <Skeleton className="mb-2 h-4 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-      </div>
-
-      {/* Good first issue section skeleton */}
-      <div className="mb-4">
-        <div className="mb-3 flex items-center justify-between">
-          <Skeleton className="h-4 w-32" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="h-6 w-6 rounded-full" />
-            <Skeleton className="h-3 w-20" />
-          </div>
-        </div>
-        <div className="mb-6 flex items-start gap-3">
-          <Skeleton className="h-4 w-12" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-      </div>
-
-      {/* Bottom section skeleton */}
-      <div className="mt-auto flex items-center justify-between">
-        <div className="flex gap-2">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-6 w-16" />
-          ))}
-        </div>
-        <Skeleton className="h-10 w-32" />
       </div>
     </div>
   );

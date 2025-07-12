@@ -14,11 +14,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
+import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 
-import { useCreateRole } from "../hooks/use-roles.hook";
+import { useCreateRole } from "../hooks/use-role.hook";
 import { useTechStack } from "../hooks/use-tech-stack";
 import { CreateRoleSchema, createRoleSchema } from "../validations/role.schema";
 
@@ -34,10 +35,7 @@ export default function CreateRoleForm({
   const { techStackOptions } = useTechStack();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const createRoleMutation = useCreateRole(() => {
-    setIsDialogOpen(false); // Close dialog on success
-    form.reset(); // Reset form
-  });
+  const { createRole, isCreating } = useCreateRole();
 
   const form = useForm<CreateRoleSchema>({
     resolver: zodResolver(createRoleSchema),
@@ -52,10 +50,9 @@ export default function CreateRoleForm({
   const characterCount = descriptionValue?.length || 0;
 
   const onSubmit = (data: CreateRoleSchema) => {
-    createRoleMutation.mutate({
-      projectId,
-      data,
-    });
+    createRole({ projectId, data });
+    form.reset();
+    setIsDialogOpen(false);
   };
 
   return (
@@ -65,45 +62,30 @@ export default function CreateRoleForm({
       title="Créer un rôle"
       trigger={children}
       size="lg"
-      className="flex h-[80vh] max-h-[540px] w-[90vw] max-w-[541px] flex-col px-4 py-4 sm:px-6 sm:py-6"
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-1 flex-col overflow-hidden"
-        >
-          {/* Content Section - Scrollable */}
-          <div className="flex-1 space-y-4 overflow-y-auto px-1 sm:space-y-6">
-            {/* Role Title */}
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-6">
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    Titre du rôle
-                  </FormLabel>
+                  <FormLabel required>Titre du rôle</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Ex: Back-End Developer"
-                      className="w-full border-none bg-[#F9F9F9] text-xs text-black/70 sm:text-sm"
-                    />
+                    <Input {...field} placeholder="Ex: Développeur Backend" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            {/* Tech Stack */}
             <FormField
               control={form.control}
               name="techStackIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    Technologies
-                  </FormLabel>
+                  <FormLabel required>Technologies</FormLabel>
                   <FormControl>
                     <Combobox
                       options={techStackOptions}
@@ -112,7 +94,6 @@ export default function CreateRoleForm({
                       placeholder="Ajouter des technologies"
                       searchPlaceholder="Rechercher une technologie..."
                       emptyText="Aucune technologie trouvée."
-                      className="w-full text-xs sm:text-sm"
                     />
                   </FormControl>
                   <FormMessage />
@@ -120,20 +101,16 @@ export default function CreateRoleForm({
               )}
             />
 
-            {/* Description */}
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">
-                    Description
-                  </FormLabel>
+                  <FormLabel required>Description</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Textarea
                         {...field}
-                        className="min-h-[100px] w-full resize-none border-none bg-[#F9F9F9] pr-16 text-xs text-black/70 sm:min-h-[120px] sm:text-sm"
                         placeholder="Décrivez les responsabilités et attentes pour ce rôle"
                       />
                       <div className="absolute right-3 bottom-3 text-xs text-gray-500">
@@ -147,27 +124,18 @@ export default function CreateRoleForm({
             />
           </div>
 
-          {/* Buttons - Fixed at bottom */}
-          <div className="flex-shrink-0 pt-0">
+          <div className="mt-10 flex-shrink-0">
             <div className="flex flex-col justify-end gap-2 sm:flex-row sm:gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
-                className="order-2 w-full px-3 py-2 text-xs sm:order-1 sm:w-auto sm:text-sm"
               >
                 Retour
               </Button>
-              <Button
-                type="submit"
-                disabled={createRoleMutation.isPending}
-                className="order-1 w-full px-3 py-2 text-xs sm:order-2 sm:w-auto sm:text-sm"
-              >
-                {createRoleMutation.isPending ? (
-                  <span>Création...</span>
-                ) : (
-                  <span className="sm:inline">Créer le rôle</span>
-                )}
+              <Button type="submit" disabled={isCreating}>
+                {isCreating ? "Création..." : "Créer le rôle"}
+                <Icon name="plus" size="xs" variant="white" />
               </Button>
             </div>
           </div>
