@@ -1,24 +1,25 @@
 name: ost
 
 services:
+
   server:
     build:
       context: ../server
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      - CONNECTION_URI=http://supertokens:3567
-      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@postgres:5432/${BUSINESS_DB_NAME}
-      - APP_NAME=${APP_NAME}
-      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
-      - API_DOMAIN=${API_DOMAIN}
-      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+      - CONNECTION_URI=${CONNECTION_URI:-http://supertokens:3567}
+      - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}
+      - APP_NAME=${APP_NAME:-OST}
+      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN:-http://localhost} 
+      - API_DOMAIN=${API_DOMAIN:-http://localhost}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN:-localhost}
       - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     ports:
-      - "${API_PORT}:3000"
+      - "${API_PORT:-4000}:3000"
     networks:
       - app_network
     depends_on:
@@ -41,9 +42,9 @@ services:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
     restart: unless-stopped
     environment:
-      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@postgres:5432/${SUPERTOKENS_DB_NAME}
+      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER:-supertokens_user}:${SUPERTOKENS_DB_PASSWORD:-supertokens_password}@postgres:5432/${SUPERTOKENS_DB_NAME:-supertokens}
     ports:
-      - "3567:3567"
+      - '3567:3567'
     networks:
       - app_network
     depends_on:
@@ -60,17 +61,20 @@ services:
     image: postgres:17
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_NAME}
-      - BUSINESS_DB_NAME=${BUSINESS_DB_NAME}
-      - BUSINESS_DB_USER=${BUSINESS_DB_USER}
-      - BUSINESS_DB_PASSWORD=${BUSINESS_DB_PASSWORD}
-      - SUPERTOKENS_DB_NAME=${SUPERTOKENS_DB_NAME}
-      - SUPERTOKENS_DB_USER=${SUPERTOKENS_DB_USER}
-      - SUPERTOKENS_DB_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
+      # Postgres
+      - POSTGRES_DB=${POSTGRES_NAME:-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres_password}
+      # Business DB
+      - BUSINESS_DB_NAME=${BUSINESS_DB_NAME:-business}
+      - BUSINESS_DB_USER=${BUSINESS_DB_USER:-business_user}
+      - BUSINESS_DB_PASSWORD=${BUSINESS_DB_PASSWORD:-business_password}
+      # SuperTokens DB
+      - SUPERTOKENS_DB_NAME=${SUPERTOKENS_DB_NAME:-supertokens}
+      - SUPERTOKENS_DB_USER=${SUPERTOKENS_DB_USER:-supertokens_user}
+      - SUPERTOKENS_DB_PASSWORD=${SUPERTOKENS_DB_PASSWORD:-supertokens_password}
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../../deploy/docker/init:/docker-entrypoint-initdb.d
@@ -79,9 +83,9 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "pg_isready -U ${POSTGRES_USER} && \
-        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
-        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1"
+        "pg_isready -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} && \
+        psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME:-supertokens}'\" | grep -q 1 && \
+        psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME:-business}'\" | grep -q 1"
       ]
       interval: 5s
       timeout: 5s
@@ -96,7 +100,7 @@ services:
       "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
     ]
     environment:
-      - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@postgres:5432/${BUSINESS_DB_NAME}
+      - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}
     depends_on:
       postgres:
         condition: service_healthy

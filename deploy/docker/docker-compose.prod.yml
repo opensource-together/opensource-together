@@ -2,7 +2,7 @@ name: ost
 
 services:
   web:
-    image: ghcr.io/opensource-together/web:latest
+    image: ghcr.io/opensource-together/web:${VERSION_TAG}
     restart: unless-stopped
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -23,7 +23,7 @@ services:
       retries: 5
 
   server:
-    image: ghcr.io/opensource-together/server:latest
+    image: ghcr.io/opensource-together/server:${VERSION_TAG}
     restart: unless-stopped
     environment:
       - CONNECTION_URI=http://supertokens:3567
@@ -98,7 +98,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "pg_isready -U ${POSTGRES_USER} && \
+        "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_NAME} && \
         psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
         psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1"
       ]
@@ -107,7 +107,7 @@ services:
       retries: 5
 
   migrate:
-    image: ghcr.io/opensource-together/server:latest
+    image: ghcr.io/opensource-together/server:${VERSION_TAG}
     restart: no
     command: [
       "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
