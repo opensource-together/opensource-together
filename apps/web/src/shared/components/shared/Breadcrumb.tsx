@@ -12,7 +12,7 @@ import {
 
 interface BreadcrumbItemProps {
   label: string;
-  href: string;
+  href?: string;
   isActive?: boolean;
 }
 
@@ -34,7 +34,10 @@ export default function BreadcrumbComponent({
               {item.isActive ? (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               ) : (
-                <BreadcrumbLink href={item.href} className="text-black/50">
+                <BreadcrumbLink
+                  href={item.href || ""}
+                  className="text-black/50"
+                >
                   {item.label}
                 </BreadcrumbLink>
               )}

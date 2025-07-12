@@ -52,7 +52,6 @@ export default function ProjectSideBar({
     },
     {
       label: title,
-      href: `#`,
       isActive: true,
     },
   ];
