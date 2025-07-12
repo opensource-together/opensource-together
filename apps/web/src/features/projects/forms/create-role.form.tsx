@@ -19,8 +19,9 @@ import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 
+import { useTechStack } from "@/features/projects/hooks/use-tech-stack";
+
 import { useCreateRole } from "../hooks/use-role.hook";
-import { useTechStack } from "../hooks/use-tech-stack";
 import { CreateRoleSchema, createRoleSchema } from "../validations/role.schema";
 
 interface CreateRoleFormProps {

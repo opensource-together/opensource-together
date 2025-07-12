@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 
 import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 
+import { useTechStack } from "@/features/projects/hooks/use-tech-stack";
+
 import { useUpdateProject } from "../hooks/use-projects.hook";
-import { useTechStack } from "../hooks/use-tech-stack";
 import { Project } from "../types/project.type";
 import { ProjectSchema, projectSchema } from "../validations/project.schema";
 import ProjectMainEditForm from "./project-main-edit.form";
