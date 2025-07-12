@@ -247,12 +247,12 @@ export default function ProjectSidebarEditForm({
               )}
 
               {/* Message si aucun collaborateur */}
-              {!project.collaborators ||
-                (project.collaborators.length === 0 && (
-                  <span className="text-sm text-black/50">
-                    Aucun contributeur pour le moment
-                  </span>
-                ))}
+              {(!project.collaborators ||
+                project.collaborators.length === 0) && (
+                <span className="text-sm text-black/50">
+                  Aucun contributeur pour le moment
+                </span>
+              )}
             </div>
           </div>
         </div>
