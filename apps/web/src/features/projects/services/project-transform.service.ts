@@ -9,7 +9,6 @@ export const transformProjectForApi = (
 ): CreateProjectApiData => {
   return {
     title: storeData.title,
-    description: storeData.shortDescription,
     shortDescription: storeData.shortDescription,
     externalLinks: storeData.externalLinks || [],
     techStacks: storeData.techStack.map((tech) => tech.id),

@@ -36,12 +36,8 @@ export function StepTwoForm() {
   const form = useForm<StepTwoFormData>({
     resolver: zodResolver(stepTwoSchema),
     defaultValues: {
-      techStack: Array.isArray(formData.techStack)
-        ? formData.techStack.map((tech) => tech.id)
-        : [],
-      categories: Array.isArray(formData.categories)
-        ? formData.categories.map((cat) => cat.id)
-        : [],
+      techStack: formData.techStack.map((tech) => tech.id) || [],
+      categories: formData.categories.map((cat) => cat.id) || [],
     },
   });
 

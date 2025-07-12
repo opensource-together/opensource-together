@@ -42,6 +42,7 @@ export function StepFourForm() {
         github: "",
         discord: "",
         twitter: "",
+        linkedin: "",
         website: "",
       },
     },
@@ -66,15 +67,17 @@ export function StepFourForm() {
   const convertToExternalLinksArray = (
     formLinks: StepFourFormData["externalLinks"]
   ) => {
+    if (!formLinks) return [];
+
     return Object.entries(formLinks)
       .filter(([_, url]) => typeof url === "string" && url.trim())
       .map(([type, url]) => ({
-        type:
-          type === "website"
-            ? ("other" as const)
-            : (type as "github" | "discord" | "twitter"),
+        type: type === "website" ? "other" : type,
         url: url as string,
-      }));
+      })) as Array<{
+      type: "github" | "discord" | "twitter" | "linkedin" | "other";
+      url: string;
+    }>;
   };
 
   const handleFormSubmit = handleSubmit(async (data) => {
@@ -185,6 +188,22 @@ export function StepFourForm() {
                     <InputWithIcon
                       icon="twitter"
                       placeholder="https://x.com/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.linkedin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="linkedin"
+                      placeholder="https://linkedin.com/..."
                       {...field}
                     />
                   </FormControl>

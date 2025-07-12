@@ -90,25 +90,61 @@ export const updateProject = async (
     // Get existing project
     const existingProject = await getProjectDetails(projectId);
 
+    // Convert externalLinks object to array format
+    const convertExternalLinksToArray = (externalLinks: {
+      [key: string]: string | undefined;
+    }) => {
+      return Object.entries(externalLinks)
+        .filter(([_, url]) => typeof url === "string" && url.trim())
+        .map(([type, url]) => ({
+          type: type === "website" ? "other" : type,
+          url: url as string,
+        })) as Array<{
+        type: "github" | "discord" | "twitter" | "linkedin" | "other";
+        url: string;
+      }>;
+    };
+
     // Merge existing data with new data
     const updatedProject: Project = {
       ...existingProject,
       title: data.title,
-      shortDescription: data.description,
-      longDescription: data.longDescription,
-      techStacks: data.techStacks,
+      shortDescription: data.shortDescription,
+      keyFeatures: data.keyFeatures.map((feature) => ({
+        id: crypto.randomUUID(),
+        title: feature.title,
+      })),
+      projectGoals: data.projectGoals.map((goal) => ({
+        id: crypto.randomUUID(),
+        goal: goal.goal,
+      })),
+      techStacks: data.techStack.map((techId) => {
+        const existingTech = existingProject.techStacks.find(
+          (t) => t.id === techId
+        );
+        return existingTech || { id: techId, name: techId };
+      }),
+      categories: data.categories.map((categoryId) => {
+        const existingCategory = existingProject.categories.find(
+          (c) => c.id === categoryId
+        );
+        return existingCategory || { id: categoryId, name: categoryId };
+      }),
       roles:
-        data.roles?.map((role) => ({
+        data.projectRoles?.map((role) => ({
           id: crypto.randomUUID(),
           title: role.title,
           description: role.description,
-          techStacks: role.techStacks || [],
+          techStacks: role.techStack.map((techId) => {
+            const existingTech = existingProject.techStacks.find(
+              (t) => t.id === techId
+            );
+            return existingTech || { id: techId, name: techId };
+          }),
         })) || existingProject.roles,
-      externalLinks:
-        data.socialLinks?.map((link) => ({
-          type: link.type,
-          url: link.url,
-        })) || existingProject.externalLinks,
+      externalLinks: data.externalLinks
+        ? convertExternalLinksToArray(data.externalLinks)
+        : existingProject.externalLinks,
       updatedAt: new Date(),
     };
 
