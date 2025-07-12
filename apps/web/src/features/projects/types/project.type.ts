@@ -16,6 +16,7 @@ export interface ProjectRole {
   description: string;
   techStacks: TechStack[];
   roleCount?: number;
+  projectGoal?: ProjectGoal[];
 }
 
 export interface ExternalLink {
@@ -85,7 +86,6 @@ export interface ProjectEditForm {
   roles?: {
     title: string;
     description: string;
-    badges: any[];
     experienceBadge?: string;
   }[];
   keyBenefits?: string[];

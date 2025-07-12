@@ -7,11 +7,12 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
-import { ProjectRole, TechStack } from "../types/project.type";
+import { ProjectGoal, ProjectRole, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
   techStacks?: TechStack[];
+  projectGoals?: ProjectGoal[];
   className?: string;
   isMaintainer?: boolean;
   projectId?: string; // Add projectId as optional prop
@@ -20,6 +21,7 @@ interface RoleCardProps {
 export default function RoleCard({
   role,
   techStacks = [],
+  projectGoals = [],
   className,
   isMaintainer = false,
   projectId = "", // Default empty string
@@ -130,6 +132,7 @@ export default function RoleCard({
           <RoleApplicationForm
             roleTitle={title}
             roleDescription={description}
+            projectGoals={projectGoals}
             techStacks={roleTechStacks.map((roleTech) => {
               const fullTechStack = techStacks.find(
                 (tech) =>

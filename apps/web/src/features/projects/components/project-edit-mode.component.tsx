@@ -132,6 +132,7 @@ export default function ProjectEditMode({
               key={role.title}
               role={role}
               techStacks={project.techStacks}
+              projectGoals={project.projectGoals}
               className="mb-3 lg:max-w-[721.96px]"
               isMaintainer={isMaintainer}
               projectId={project.id || ""}

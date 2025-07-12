@@ -73,6 +73,7 @@ export default function ProjectDetailView({
                     key={role.title}
                     role={role}
                     techStacks={project.techStacks}
+                    projectGoals={project.projectGoals}
                     className="mb-3 lg:max-w-[721.96px]"
                     isMaintainer={isMaintainer}
                     projectId={projectId}
