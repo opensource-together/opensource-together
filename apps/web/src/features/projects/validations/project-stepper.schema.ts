@@ -112,6 +112,7 @@ export const createProjectSchema = z.object({
 // API schema - what the backend expects
 export const createProjectApiSchema = z.object({
   title: z.string().min(3, "Le titre du projet est requis"),
+  description: z.string().min(10, "Une description est requise"),
   shortDescription: z.string().min(10, "Une description est requise"),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
