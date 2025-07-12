@@ -16,10 +16,11 @@ export interface ProjectRole {
   description: string;
   techStacks: TechStack[];
   roleCount?: number;
+  projectGoal?: ProjectGoal[];
 }
 
 export interface ExternalLink {
-  type: "github" | "website" | "discord" | "twitter" | "other";
+  type: "github" | "website" | "discord" | "twitter" | "linkedin" | "other";
   url: string;
 }
 
@@ -73,4 +74,29 @@ export interface Project {
   lastCommitAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+// Type for the project edit form with string-based keyFeatures and projectGoals
+export interface ProjectEditForm {
+  image?: File;
+  title: string;
+  description: string;
+  longDescription?: string;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  techStacks: TechStack[];
+  roles?: {
+    title: string;
+    description: string;
+    experienceBadge?: string;
+    badges?: string[];
+    techStacks?: TechStack[];
+  }[];
+  keyBenefits?: string[];
+  socialLinks?: {
+    type: "github" | "website" | "discord" | "twitter" | "linkedin" | "other";
+    url: string;
+  }[];
+  keyFeatures?: string;
+  projectGoals?: string;
+  categories?: Category[];
 }
