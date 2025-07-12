@@ -1,67 +1,83 @@
 import { z } from "zod";
 
-const techStackSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, "Nom de technologie requis"),
-  iconUrl: z.string().optional(),
-});
+import { urlWithDomainCheck } from "@/shared/validations/url-with-domain-check.schema";
 
-const roleSchema = z.object({
-  title: z.string().min(1, "Titre du rôle requis"),
-  description: z.string().min(1, "Description du rôle requise"),
-  experienceBadge: z.string().optional(),
-  techStacks: z.array(techStackSchema).optional(),
-});
+// ========================================
+// MAIN PROJECT SCHEMAS
+// ========================================
 
-const socialLinkSchema = z.object({
-  type: z.enum(
-    ["github", "website", "discord", "twitter", "linkedin", "other"],
-    {
-      errorMap: () => ({ message: "Type de lien social invalide" }),
-    }
-  ),
-  url: z.string().url("URL invalide"),
-});
-
-const categorySchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, "Nom de catégorie requis"),
-});
-
+// Full Project Schema (for editing existing projects)
 export const projectSchema = z.object({
+  title: z
+    .string()
+    .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
+  shortDescription: z
+    .string()
+    .min(10, "La description doit contenir au moins 10 caractères"),
+  keyFeatures: z
+    .array(
+      z.object({
+        title: z.string(),
+      })
+    )
+    .min(1, "Au moins une fonctionnalité clé est requise"),
+  projectGoals: z
+    .array(
+      z.object({
+        goal: z.string(),
+      })
+    )
+    .min(1, "Au moins un objectif est requis"),
+  techStack: z
+    .array(z.string())
+    .min(1, "Au moins une technologie est requise")
+    .max(10, "Maximum 10 technologies autorisées"),
+  categories: z
+    .array(z.string())
+    .min(1, "Au moins une catégorie est requise")
+    .max(6, "Maximum 6 catégories autorisées"),
+  projectRoles: z.array(
+    z.object({
+      title: z
+        .string()
+        .min(3, "Le titre du rôle doit contenir au moins 3 caractères"),
+      techStack: z
+        .array(z.string())
+        .min(1, "Au moins une technologie est requise")
+        .max(6, "Maximum 6 technologies autorisées"),
+      description: z
+        .string()
+        .min(10, "La description doit contenir au moins 10 caractères")
+        .max(250, "La description ne peut pas dépasser 250 caractères"),
+    })
+  ),
   image: z.string().optional(),
-  title: z.string().min(1, "Le titre du projet est requis"),
-  description: z.string().min(1, "Une courte description est requise"),
-  longDescription: z.string().optional(),
-  techStacks: z.array(techStackSchema),
-  roles: z.array(roleSchema).optional(),
-  keyBenefits: z.array(z.string()).optional(),
-  socialLinks: z.array(socialLinkSchema).optional(),
-  keyFeatures: z.array(z.string()).optional(),
-  projectGoals: z.array(z.string()).optional(),
-  categories: z.array(categorySchema).optional(),
-});
-
-// Schema for the unified edit form
-export const projectEditSchema = z.object({
-  image: z.string().optional(),
-  title: z.string().min(1, "Le titre du projet est requis"),
-  shortDescription: z.string().min(1, "Une courte description est requise"),
-  longDescription: z.string().optional(),
-  techStacks: z.array(techStackSchema),
-  categories: z.array(categorySchema).optional(),
-  keyFeatures: z.array(z.string()).optional(),
-  projectGoals: z.array(z.string()).optional(),
   externalLinks: z
     .object({
-      github: z.string().optional(),
-      discord: z.string().optional(),
-      twitter: z.string().optional(),
-      linkedin: z.string().optional(),
-      website: z.string().optional(),
+      github: urlWithDomainCheck(
+        ["github.com"],
+        "URL GitHub invalide (doit contenir github.com)"
+      ),
+      discord: urlWithDomainCheck(
+        ["discord.gg", "discord.com"],
+        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+      ),
+      twitter: urlWithDomainCheck(
+        ["twitter.com", "x.com"],
+        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+      ),
+      linkedin: urlWithDomainCheck(
+        ["linkedin.com"],
+        "URL LinkedIn invalide (doit contenir linkedin.com)"
+      ),
+      website: urlWithDomainCheck([], "URL du site web invalide"),
     })
     .optional(),
 });
+
+// ========================================
+// WRAPPER SCHEMAS
+// ========================================
 
 export const CreateProjectSchema = z.object({
   projectId: z.string().min(1),
@@ -73,7 +89,13 @@ export const UpdateProjectSchema = z.object({
   data: projectSchema,
 });
 
+// ========================================
+// BASE TYPE EXPORTS
+// ========================================
+
+// Main project types
 export type ProjectSchema = z.infer<typeof projectSchema>;
-export type ProjectEditSchema = z.infer<typeof projectEditSchema>;
+
+// Wrapper types
 export type CreateProjectData = z.infer<typeof CreateProjectSchema>;
 export type UpdateProjectData = z.infer<typeof UpdateProjectSchema>;

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
-import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useUpdateProject } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
@@ -15,13 +14,11 @@ interface ProjectEditFormProps {
 }
 
 export default function ProjectEditForm({ project }: ProjectEditFormProps) {
-  const { techStackOptions } = useTechStack();
   const { updateProject, isUpdating } = useUpdateProject();
   const {
     image,
     title,
     shortDescription,
-    longDescription,
     techStacks,
     roles,
     keyFeatures,
@@ -34,13 +31,32 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     defaultValues: {
       image: image || undefined,
       title: title || "",
-      description: shortDescription || "",
-      longDescription: longDescription || "",
-      techStacks: techStacks || [],
-      roles: roles || [],
-      keyFeatures: keyFeatures?.map((feature) => feature.title) || [],
-      projectGoals: projectGoals?.map((goal) => goal.goal) || [],
-      categories: categories || [],
+      shortDescription: shortDescription || "",
+      keyFeatures: keyFeatures || [],
+      projectGoals: projectGoals || [],
+      techStack: techStacks?.map((tech) => tech.id) || [],
+      categories: categories?.map((category) => category.id) || [],
+      projectRoles:
+        roles?.map((role) => ({
+          title: role.title,
+          description: role.description,
+          techStack: role.techStacks?.map((tech) => tech.id) || [],
+        })) || [],
+      externalLinks:
+        project.externalLinks?.reduce(
+          (acc, link) => {
+            const linkType = link.type === "other" ? "website" : link.type;
+            acc[linkType as keyof typeof acc] = link.url;
+            return acc;
+          },
+          {} as {
+            github?: string;
+            discord?: string;
+            twitter?: string;
+            linkedin?: string;
+            website?: string;
+          }
+        ) || {},
     },
   });
 
@@ -52,12 +68,11 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (!project?.id) return;
-
     console.log("Form submission data:", data);
 
     updateProject({
-      data,
       projectId: project.id,
+      data,
     });
   });
 
@@ -90,7 +105,6 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
           form={form}
           onSubmit={onSubmit}
           isSubmitting={isUpdating}
-          techStackOptions={techStackOptions}
         />
       </div>
 

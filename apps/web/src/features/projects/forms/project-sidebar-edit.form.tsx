@@ -5,10 +5,18 @@ import { UseFormReturn } from "react-hook-form";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
-import { Form, FormField } from "@/shared/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/shared/components/ui/form";
 import { Icon } from "@/shared/components/ui/icon";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { useCategories } from "@/shared/hooks/use-category.hook";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { Project } from "../types/project.type";
 import { ProjectSchema } from "../validations/project.schema";
@@ -18,7 +26,6 @@ interface ProjectSidebarEditFormProps {
   form: UseFormReturn<ProjectSchema>;
   onSubmit: () => void;
   isSubmitting: boolean;
-  techStackOptions: { id: string; name: string; iconUrl?: string }[];
 }
 
 export default function ProjectSidebarEditForm({
@@ -26,10 +33,10 @@ export default function ProjectSidebarEditForm({
   form,
   onSubmit,
   isSubmitting,
-  techStackOptions,
 }: ProjectSidebarEditFormProps) {
+  const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const { categoryOptions, isLoading: categoriesLoading } = useCategories();
   const { control } = form;
-  const { categoryOptions } = useCategories();
 
   return (
     <>
@@ -139,183 +146,183 @@ export default function ProjectSidebarEditForm({
         </div>
       </div>
 
-      <Form {...form}>
-        {/* Tech Stack */}
-        <div className="mb-3 flex flex-col">
-          <h2 className="text-md mb-2 font-medium text-black">
-            Stack Technique
-          </h2>
+      {/* Form */}
+      <div className="flex flex-col space-y-6">
+        <Form {...form}>
+          {/* Tech Stack */}
           <FormField
             control={control}
-            name="techStacks"
+            name="techStack"
             render={({ field }) => (
-              <Combobox
-                options={techStackOptions}
-                value={field.value?.map((tech) => tech.id) || []}
-                onChange={(selectedIds) => {
-                  const selectedTechStacks = selectedIds
-                    .map((id) => {
-                      const tech = techStackOptions.find(
-                        (option) => option.id === id
-                      );
-                      return tech
-                        ? {
-                            id: tech.id,
-                            name: tech.name,
-                            iconUrl: tech.iconUrl || "",
-                          }
-                        : null;
-                    })
-                    .filter(Boolean);
-                  field.onChange(selectedTechStacks);
-                }}
-                placeholder="Choisir les technologies"
-                searchPlaceholder="Rechercher..."
-                emptyText="Aucune technologie trouvée."
-              />
+              <FormItem>
+                <FormLabel required>Technologies (max 10)</FormLabel>
+                <FormControl>
+                  <Combobox
+                    options={techStackOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={
+                      techStacksLoading
+                        ? "Chargement des technologies..."
+                        : "Ajouter des technologies..."
+                    }
+                    searchPlaceholder="Rechercher une technologie..."
+                    emptyText="Aucune technologie trouvée."
+                    disabled={techStacksLoading}
+                    maxSelections={10}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        {/* Categories */}
-        <div className="mb-3 flex flex-col">
-          <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
+          {/* Categories */}
           <FormField
             control={control}
             name="categories"
             render={({ field }) => (
-              <Combobox
-                options={categoryOptions}
-                value={field.value?.map((cat) => cat.id) || []}
-                onChange={(selectedIds) => {
-                  const selectedCategories = selectedIds
-                    .map((id) => {
-                      const category = categoryOptions.find(
-                        (option) => option.id === id
-                      );
-                      return category
-                        ? { id: category.id, name: category.name }
-                        : null;
-                    })
-                    .filter(Boolean);
-                  field.onChange(selectedCategories);
-                }}
-                placeholder="Choisir les catégories"
-                searchPlaceholder="Rechercher..."
-                emptyText="Aucune catégorie trouvée."
-              />
+              <FormItem>
+                <FormLabel required>Catégories (max 6)</FormLabel>
+                <FormControl>
+                  <Combobox
+                    options={categoryOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder={
+                      categoriesLoading
+                        ? "Chargement des catégories..."
+                        : "Ajouter des catégories..."
+                    }
+                    searchPlaceholder="Rechercher une catégorie..."
+                    emptyText="Aucune catégorie trouvée."
+                    disabled={categoriesLoading}
+                    maxSelections={6}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        {/* Contributors Section - Informative */}
-        <div className="mb-3 flex flex-col">
-          <h2 className="text-md mb-2 font-medium text-black">
-            Contributeurs ({project.collaborators?.length || 0})
-          </h2>
-          <div className="flex flex-col gap-2">
-            {project.collaborators?.slice(0, 5).map((collaborator) => (
-              <div key={collaborator.id} className="flex items-center gap-2">
-                <Avatar
-                  src={collaborator.avatarUrl}
-                  alt={collaborator.name}
-                  size="sm"
-                />
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-black">
-                    {collaborator.name}
-                  </span>
-                  <span className="text-xs text-black/50">
-                    {collaborator.role}
-                  </span>
+          {/* Contributors Section - Informative */}
+          <div className="mb-3 flex flex-col">
+            <h2 className="text-md mb-2 font-medium text-black">
+              Contributeurs ({project.collaborators?.length || 0})
+            </h2>
+            <div className="flex flex-col gap-2">
+              {project.collaborators?.slice(0, 5).map((collaborator) => (
+                <div key={collaborator.id} className="flex items-center gap-2">
+                  <Avatar
+                    src={collaborator.avatarUrl}
+                    alt={collaborator.name}
+                    size="sm"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-black">
+                      {collaborator.name}
+                    </span>
+                    <span className="text-xs text-black/50">
+                      {collaborator.role}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {(project.collaborators?.length || 0) > 5 && (
-              <span className="text-xs text-black/50">
-                +{(project.collaborators?.length || 0) - 5} autres
-              </span>
-            )}
+              ))}
+              {(project.collaborators?.length || 0) > 5 && (
+                <span className="text-xs text-black/50">
+                  +{(project.collaborators?.length || 0) - 5} autres
+                </span>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Links */}
-        <div className="mb-3 flex flex-col">
-          <h2 className="text-md mb-2 font-medium text-black">Liens sociaux</h2>
-          <div className="flex flex-col gap-2">
+          {/* Links */}
+          <div className="flex flex-col gap-4">
+            <FormLabel>Liens sociaux</FormLabel>
+
             <FormField
               control={control}
-              name="socialLinks"
-              render={({ field }) => {
-                const links = field.value || [];
-
-                const updateLink = (
-                  type:
-                    | "github"
-                    | "website"
-                    | "discord"
-                    | "twitter"
-                    | "linkedin"
-                    | "other",
-                  url: string
-                ) => {
-                  const newLinks = links.filter((link) => link.type !== type);
-                  if (url.trim()) {
-                    newLinks.push({ type, url });
-                  }
-                  field.onChange(newLinks);
-                };
-
-                return (
-                  <>
+              name="externalLinks.github"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
                     <InputWithIcon
                       icon="github"
                       placeholder="https://github.com/..."
-                      value={
-                        links.find((link) => link.type === "github")?.url || ""
-                      }
-                      onChange={(e) => updateLink("github", e.target.value)}
+                      {...field}
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.discord"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
                     <InputWithIcon
                       icon="discord"
                       placeholder="https://discord.gg/..."
-                      value={
-                        links.find((link) => link.type === "discord")?.url || ""
-                      }
-                      onChange={(e) => updateLink("discord", e.target.value)}
+                      {...field}
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.twitter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
                     <InputWithIcon
                       icon="twitter"
                       placeholder="https://x.com/..."
-                      value={
-                        links.find((link) => link.type === "twitter")?.url || ""
-                      }
-                      onChange={(e) => updateLink("twitter", e.target.value)}
+                      {...field}
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.linkedin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
                     <InputWithIcon
                       icon="linkedin"
                       placeholder="https://linkedin.com/..."
-                      value={
-                        links.find((link) => link.type === "linkedin")?.url ||
-                        ""
-                      }
-                      onChange={(e) => updateLink("linkedin", e.target.value)}
+                      {...field}
                     />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="externalLinks.website"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
                     <InputWithIcon
                       icon="link"
-                      placeholder="https://website.com..."
-                      value={
-                        links.find((link) => link.type === "website")?.url || ""
-                      }
-                      onChange={(e) => updateLink("website", e.target.value)}
+                      placeholder="https://..."
+                      {...field}
                     />
-                  </>
-                );
-              }}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </div>
-        </div>
-      </Form>
+        </Form>
+      </div>
     </>
   );
 }
