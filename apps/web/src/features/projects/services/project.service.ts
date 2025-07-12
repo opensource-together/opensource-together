@@ -96,7 +96,6 @@ export const updateProject = async (
       title: data.title,
       shortDescription: data.description,
       longDescription: data.longDescription,
-      status: data.status,
       techStacks: data.techStacks,
       roles:
         data.roles?.map((role) => ({
