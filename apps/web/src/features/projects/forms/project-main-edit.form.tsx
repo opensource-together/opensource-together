@@ -39,7 +39,7 @@ export default function ProjectMainEditForm({
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      setValue("keyFeatures", [...keyFeatures, newFeature.trim()]);
+      setValue("keyFeatures", [...keyFeatures, { title: newFeature.trim() }]);
       setNewFeature("");
     }
   };
@@ -53,7 +53,7 @@ export default function ProjectMainEditForm({
 
   const addGoal = () => {
     if (newGoal.trim()) {
-      setValue("projectGoals", [...projectGoals, newGoal.trim()]);
+      setValue("projectGoals", [...projectGoals, { goal: newGoal.trim() }]);
       setNewGoal("");
     }
   };
@@ -109,7 +109,7 @@ export default function ProjectMainEditForm({
           {/* Description */}
           <FormField
             control={control}
-            name="description"
+            name="shortDescription"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
@@ -157,7 +157,7 @@ export default function ProjectMainEditForm({
                       {keyFeatures.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
                           <div className="flex-1 rounded-md bg-gray-50 p-2 text-sm">
-                            {feature}
+                            {feature.title}
                           </div>
                           <Button
                             type="button"
@@ -206,7 +206,7 @@ export default function ProjectMainEditForm({
                       {projectGoals.map((goal, index) => (
                         <div key={index} className="flex items-center gap-2">
                           <div className="flex-1 rounded-md bg-gray-50 p-2 text-sm">
-                            {goal}
+                            {goal.goal}
                           </div>
                           <Button
                             type="button"
