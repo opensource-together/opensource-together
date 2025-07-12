@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
+import { Button } from "@/shared/components/ui/button";
 import {
   Form,
   FormControl,
@@ -28,7 +30,40 @@ export default function ProjectMainEditForm({
   onSubmit,
   onImageSelect,
 }: ProjectMainEditFormProps) {
-  const { control } = form;
+  const { control, watch, setValue } = form;
+  const [newFeature, setNewFeature] = useState("");
+  const [newGoal, setNewGoal] = useState("");
+
+  const keyFeatures = watch("keyFeatures") || [];
+  const projectGoals = watch("projectGoals") || [];
+
+  const addFeature = () => {
+    if (newFeature.trim()) {
+      setValue("keyFeatures", [...keyFeatures, newFeature.trim()]);
+      setNewFeature("");
+    }
+  };
+
+  const removeFeature = (index: number) => {
+    setValue(
+      "keyFeatures",
+      keyFeatures.filter((_, i) => i !== index)
+    );
+  };
+
+  const addGoal = () => {
+    if (newGoal.trim()) {
+      setValue("projectGoals", [...projectGoals, newGoal.trim()]);
+      setNewGoal("");
+    }
+  };
+
+  const removeGoal = (index: number) => {
+    setValue(
+      "projectGoals",
+      projectGoals.filter((_, i) => i !== index)
+    );
+  };
 
   return (
     <div className="flex w-full flex-col gap-8 lg:max-w-xl">
@@ -93,40 +128,99 @@ export default function ProjectMainEditForm({
           {/* separator */}
           <div className="mt-10 h-[2px] w-full bg-black/3" />
 
-          {/* Project Goals */}
+          {/* Key Features */}
           <FormField
             control={control}
-            name="projectGoals"
-            render={({ field }) => (
+            name="keyFeatures"
+            render={() => (
               <FormItem>
-                <FormLabel>Project Goals</FormLabel>
+                <FormLabel>Fonctionnalités Clés</FormLabel>
                 <FormControl>
-                  <Textarea
-                    {...field}
-                    value={field.value || ""}
-                    placeholder="Objectifs du projet (utilisez des sauts de ligne pour séparer les objectifs)"
-                    className="h-[111px]"
-                  />
+                  <div className="flex flex-col gap-2">
+                    <div className="relative">
+                      <Input
+                        value={newFeature}
+                        onChange={(e) => setNewFeature(e.target.value)}
+                        placeholder="Ajouter une fonctionnalité"
+                        className="pr-20"
+                      />
+                      <Button
+                        type="button"
+                        onClick={addFeature}
+                        variant="secondary"
+                        className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                      >
+                        Ajouter
+                      </Button>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {keyFeatures.map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div className="flex-1 rounded-md bg-gray-50 p-2 text-sm">
+                            {feature}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => removeFeature(index)}
+                          >
+                            Supprimer
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          {/* Key Features */}
+          {/* Project Goals */}
           <FormField
             control={control}
-            name="keyFeatures"
-            render={({ field }) => (
+            name="projectGoals"
+            render={() => (
               <FormItem>
-                <FormLabel>Key Objectives</FormLabel>
+                <FormLabel>Objectifs du projet</FormLabel>
                 <FormControl>
-                  <Textarea
-                    {...field}
-                    value={field.value || ""}
-                    placeholder="Objectifs clés (utilisez des sauts de ligne pour séparer les objectifs)"
-                    className="h-[177px]"
-                  />
+                  <div className="flex flex-col gap-2">
+                    <div className="relative">
+                      <Input
+                        value={newGoal}
+                        onChange={(e) => setNewGoal(e.target.value)}
+                        placeholder="Ajouter un objectif"
+                        className="pr-20"
+                      />
+                      <Button
+                        type="button"
+                        onClick={addGoal}
+                        variant="secondary"
+                        className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                      >
+                        Ajouter
+                      </Button>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {projectGoals.map((goal, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div className="flex-1 rounded-md bg-gray-50 p-2 text-sm">
+                            {goal}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => removeGoal(index)}
+                          >
+                            Supprimer
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

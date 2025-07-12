@@ -25,7 +25,7 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
           </div>
 
           {/* Roles Section */}
-          <div className="-mt-52 flex flex-col gap-6 lg:col-start-2">
+          <div className="flex flex-col gap-6 lg:col-start-2">
             <div className="flex items-center justify-between">
               <p className="flex gap-1 text-lg font-medium tracking-tighter">
                 Rôles Disponibles
