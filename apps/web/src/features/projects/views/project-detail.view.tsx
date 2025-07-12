@@ -23,7 +23,7 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError } = useProject(projectId);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = true; // Variable temporaire pour le développement
+  const isMaintainer = false; // Variable temporaire pour le développement
 
   if (isLoading) return <SkeletonProjectDetailView />;
   if (isError || !project) return <ProjectDetailError />;
