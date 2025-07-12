@@ -1,16 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/shared/components/ui/breadcrumb";
+import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 
 import { useUpdateProject } from "../hooks/use-projects.hook";
 import { useTechStack } from "../hooks/use-tech-stack";
@@ -103,46 +95,29 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     });
   });
 
+  const breadcrumbItems = [
+    {
+      label: "Accueil",
+      href: "/",
+      isActive: false,
+    },
+    {
+      label: project.title || "",
+      href: `/projects/${project.id}`,
+      isActive: false,
+    },
+    {
+      label: "Édition",
+      href: "#",
+      isActive: true,
+    },
+  ];
+
   return (
     <>
       <div className="self-start lg:sticky lg:top-[100px] lg:pb-33">
         {/* Breadcrumb */}
-        <Breadcrumb className="mb-3">
-          <BreadcrumbList className="gap-3 text-xs">
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/" className="text-black/50">
-                Accueil
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Image
-                src="/icons/breadcrumb-chevron-icon.svg"
-                alt="chevron"
-                width={5}
-                height={5}
-              />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                href={`/projects/${project.id}`}
-                className="text-black/50"
-              >
-                {project.title}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Image
-                src="/icons/breadcrumb-chevron-icon.svg"
-                alt="chevron"
-                width={5}
-                height={5}
-              />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>Édition</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
 
         <ProjectSidebarEditForm
           project={project}

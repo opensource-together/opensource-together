@@ -3,16 +3,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
+import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/shared/components/ui/breadcrumb";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 
@@ -51,29 +44,23 @@ export default function ProjectSideBar({
     router.push(`/projects/${project.id}/edit`);
   };
 
+  const breadcrumbItems = [
+    {
+      label: "Accueil",
+      href: "/",
+      isActive: false,
+    },
+    {
+      label: title,
+      href: `#`,
+      isActive: true,
+    },
+  ];
+
   return (
-    <div className="flex flex-col gap-5 bg-white">
+    <div className="flex flex-col gap-5">
       {/* Breadcrumb */}
-      <Breadcrumb className="mb-3">
-        <BreadcrumbList className="gap-3 text-xs">
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="text-black/50">
-              Accueil
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <Image
-              src="/icons/breadcrumb-chevron-icon.svg"
-              alt="chevron"
-              width={5}
-              height={5}
-            />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
 
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
