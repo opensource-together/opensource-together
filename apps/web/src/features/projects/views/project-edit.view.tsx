@@ -3,14 +3,14 @@
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectEditMode from "../components/project-edit-mode.component";
 import ProjectSideBarEdit from "../components/project-side-bar-edit.component";
-import SkeletonProjectDetailView from "../components/skeletons/skeleton-project-detail-view.component";
+import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import ProjectEditForm from "../forms/project-edit.form";
 import { useProject } from "../hooks/use-projects.hook";
 
 export default function ProjectEditView({ projectId }: { projectId: string }) {
   const { data: project, isLoading, isError } = useProject(projectId);
 
-  if (isLoading) return <SkeletonProjectDetailView />;
+  if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
 
   return (

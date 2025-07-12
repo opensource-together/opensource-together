@@ -1,7 +1,5 @@
 import { SkeletonProjectFilters } from "../project-filters.component";
 import { SkeletonProjectHero } from "../project-hero.component";
-import { SkeletonProjectSideBar } from "../project-side-bar.component";
-import { SkeletonRoleCard } from "../role-card.component";
 
 export default function SkeletonProjectDetail() {
   return (
@@ -10,16 +8,10 @@ export default function SkeletonProjectDetail() {
         <div className="w-full lg:max-w-[721.96px]">
           <SkeletonProjectHero />
         </div>
-        <SkeletonProjectSideBar />
       </div>
       <div>
         <div className="mb-3 h-5 w-40 rounded bg-gray-200"></div>
         <SkeletonProjectFilters count={1} />
-        <div className="mt-6 mb-30 flex flex-col gap-3">
-          <SkeletonRoleCard />
-          <SkeletonRoleCard />
-          <SkeletonRoleCard />
-        </div>
       </div>
     </div>
   );

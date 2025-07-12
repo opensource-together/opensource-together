@@ -1,15 +1,14 @@
 "use client";
 
-import Image from "next/image";
-
 import { Button } from "@/shared/components/ui/button";
+import Icon from "@/shared/components/ui/icon";
 
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
-import SkeletonProjectDetailView from "../components/skeletons/skeleton-project-detail-view.component";
+import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import CreateRoleForm from "../forms/create-role.form";
 import { useProject } from "../hooks/use-projects.hook";
 
@@ -23,9 +22,9 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError } = useProject(projectId);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = false; // Variable temporaire pour le développement
+  const isMaintainer = true; // Variable temporaire pour le développement
 
-  if (isLoading) return <SkeletonProjectDetailView />;
+  if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
 
   return (
@@ -47,12 +46,7 @@ export default function ProjectDetailView({
                   <CreateRoleForm projectId={projectId}>
                     <Button>
                       Créer un rôle
-                      <Image
-                        src="/icons/plus-white.svg"
-                        alt="plus"
-                        width={12}
-                        height={12}
-                      />
+                      <Icon name="plus" size="xs" variant="white" />
                     </Button>
                   </CreateRoleForm>
                 ) : (
@@ -76,7 +70,6 @@ export default function ProjectDetailView({
                     projectGoals={project.projectGoals}
                     className="mb-3 lg:max-w-[721.96px]"
                     isMaintainer={isMaintainer}
-                    projectId={projectId}
                   />
                 ))}
               </div>

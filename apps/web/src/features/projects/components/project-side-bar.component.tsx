@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
+import { Badge } from "@/shared/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,7 +15,6 @@ import {
 } from "@/shared/components/ui/breadcrumb";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
-import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
 
@@ -80,12 +80,7 @@ export default function ProjectSideBar({
         {isMaintainer ? (
           <Button size="lg" className="gap-2" onClick={handleEditClick}>
             Modifier
-            <Image
-              src="/icons/edit-white-icon.svg"
-              alt="pencil"
-              width={12}
-              height={12}
-            />
+            <Icon name="pencil" size="xs" variant="white" />
           </Button>
         ) : (
           <Button size="lg">Rejoindre le projet</Button>
@@ -204,12 +199,12 @@ export default function ProjectSideBar({
         <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
-            <div
+            <Badge
               key={index}
               className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
             >
               {category.name}
-            </div>
+            </Badge>
           ))}
         </div>
       </div>
@@ -291,48 +286,6 @@ export default function ProjectSideBar({
               </Link>
             );
           })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function SkeletonProjectSideBar() {
-  return (
-    <div className="flex w-[270px] flex-col gap-6 rounded-2xl border border-[black]/10 bg-white p-6 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
-      {/* Project Image Skeleton */}
-      <Skeleton className="h-[252px] w-[252px] self-center rounded-[16px]" />
-
-      {/* Title Skeleton */}
-      <Skeleton className="h-8 w-32 self-center" />
-
-      {/* Stats Skeleton */}
-      <div className="flex items-center justify-center gap-4">
-        <Skeleton className="h-4 w-8" />
-        <Skeleton className="h-4 w-8" />
-        <Skeleton className="h-4 w-8" />
-      </div>
-
-      {/* Buttons Skeleton */}
-      <div className="flex gap-2">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-      </div>
-
-      {/* Tech Stack Skeleton */}
-      <div className="flex flex-wrap gap-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-[28px] w-[60px]" />
-        ))}
-      </div>
-
-      {/* Contributors Skeleton */}
-      <div>
-        <Skeleton className="mb-2 h-4 w-24" />
-        <div className="flex gap-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 w-8 rounded-full" />
-          ))}
         </div>
       </div>
     </div>
