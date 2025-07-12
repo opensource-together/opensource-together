@@ -78,6 +78,7 @@ export interface Project {
 
 // Type for the project edit form with string-based keyFeatures and projectGoals
 export interface ProjectEditForm {
+  image?: File;
   title: string;
   description: string;
   longDescription?: string;
@@ -87,6 +88,8 @@ export interface ProjectEditForm {
     title: string;
     description: string;
     experienceBadge?: string;
+    badges?: string[];
+    techStacks?: TechStack[];
   }[];
   keyBenefits?: string[];
   socialLinks?: {

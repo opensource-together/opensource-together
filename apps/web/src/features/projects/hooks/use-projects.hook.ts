@@ -66,10 +66,10 @@ export function useCreateProject() {
 
 /**
  * Hook to update a project
- * @param onSuccess callback called after successful update
  * @returns updateProject, isUpdating, isUpdateError
  */
-export function useUpdateProject(onSuccess?: () => void) {
+export function useUpdateProject() {
+  const router = useRouter();
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
@@ -80,8 +80,7 @@ export function useUpdateProject(onSuccess?: () => void) {
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
-        onSuccess?.();
+        router.push(`/projects/${project.id}`);
       },
     },
   });

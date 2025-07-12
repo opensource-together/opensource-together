@@ -39,6 +39,7 @@ const categorySchema = z.object({
 });
 
 export const projectSchema = z.object({
+  image: z.instanceof(File).optional(),
   title: z.string().min(1, "Le titre du projet est requis"),
   description: z.string().min(1, "Une courte description est requise"),
   longDescription: z.string().optional(),
@@ -56,8 +57,9 @@ export const projectSchema = z.object({
 
 // Schema for the unified edit form
 export const projectEditSchema = z.object({
+  image: z.instanceof(File).optional(),
   title: z.string().min(1, "Le titre du projet est requis"),
-  description: z.string().min(1, "Une courte description est requise"),
+  shortDescription: z.string().min(1, "Une courte description est requise"),
   longDescription: z.string().optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], {
     errorMap: () => ({ message: "Statut invalide" }),
