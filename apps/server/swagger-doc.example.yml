@@ -13,11 +13,11 @@ info:
     ### Pour les développeurs Frontend
 
     **Processus de connexion :**
-    1. Rediriger vers `/auth/authorize/github` pour initier la connexion
+    1. Rediriger vers `/v1/auth/authorize/github` pour initier la connexion
     2. L'utilisateur est redirigé vers GitHub pour autoriser l'application
-    3. GitHub redirige vers `/auth/callback/github` avec le code d'autorisation
+    3. GitHub redirige vers `/v1/auth/callback/github` avec le code d'autorisation
     4. Les cookies de session sont automatiquement définis
-    5. Utiliser `/auth/session` pour récupérer les infos utilisateur (équivalent `/me`)
+    5. Utiliser `/v1/auth/session` pour récupérer les infos utilisateur (équivalent `/me`)
 
     **Cookies de session :**
     - `sAccessToken` : Token d'accès principal
@@ -27,17 +27,17 @@ info:
     **Routes protégées :**
     Les routes nécessitant une authentification sont marquées avec le symbole 🔒.
 
-    **Base URL :** `http://localhost:4000`
+    **Base URL :** `http://localhost:4000/v1`
   version: 1.0.0
 servers:
-  - url: http://localhost:4000
+  - url: http://localhost:4000/v1
 tags:
   - name: Projects
     description: Opérations liées aux projets open source
   - name: Authentication
     description: Opérations liées à l'authentification utilisateur
 paths:
-  /profile/me:
+  /v1/profile/me:
     get:
       tags:
         - Profile
@@ -92,7 +92,7 @@ paths:
                 message: 'Utilisateur non trouvé.'
                 error: 'Not Found'
                 statusCode: 404
-  /projects:
+  /v1/projects:
     get:
       tags:
         - Projects
@@ -520,7 +520,7 @@ paths:
           description: Non authentifié
         '403':
           description: Token GitHub manquant ou invalide
-  /projects/search:
+  /v1/projects/search:
     get:
       tags:
         - Projects
@@ -615,7 +615,7 @@ paths:
                   statusCode:
                     type: integer
                     example: 400
-  /projects/{id}:
+  /v1/projects/{id}:
     get:
       tags:
         - Projects
@@ -806,7 +806,7 @@ paths:
                   statusCode:
                     type: integer
                     example: 400
-  /projects/{id}/roles:
+  /v1/projects/{id}/roles:
     post:
       tags:
         - Project Roles
@@ -998,7 +998,7 @@ paths:
           description: Non authentifié
         '404':
           description: Projet non trouvé
-  /techstacks:
+  /v1/techstacks:
     get:
       tags:
         - Tech Stacks
@@ -1052,7 +1052,7 @@ paths:
                   statusCode:
                     type: integer
                     example: 500
-  /categories:
+  /v1/categories:
     get:
       tags:
         - Categories
@@ -1121,7 +1121,7 @@ paths:
                   statusCode:
                     type: integer
                     example: 500
-  /auth/signup:
+  /v1/auth/signup:
     post:
       tags:
         - Authentication
@@ -1193,7 +1193,7 @@ paths:
                     oneOf:
                       - example: 'La création du compte a échoué. Veuillez réessayer.'
                       - example: 'Please provide a string input.'
-  /auth/signin:
+  /v1/auth/signin:
     post:
       tags:
         - Authentication
@@ -1254,8 +1254,8 @@ paths:
                     example: GENERAL_ERROR
                   message:
                     type: string
-                    example: Identifiants incorrects.
-  /auth/authorize/github:
+                    example: Identifiants incorrets.
+  /v1/auth/authorize/github:
     get:
       tags:
         - Authentication
@@ -1289,7 +1289,7 @@ paths:
                 example: https://github.com/login/oauth/authorize?client_id=...
         '500':
           description: Erreur serveur lors de l'initialisation OAuth
-  /auth/callback/github:
+  /v1/auth/callback/github:
     get:
       tags:
         - Authentication
@@ -1367,7 +1367,7 @@ paths:
                   message:
                     type: string
                     example: 'Missing user info during authentication'
-  /auth/session:
+  /v1/auth/session:
     get:
       tags:
         - Authentication
@@ -1442,7 +1442,7 @@ paths:
                   message:
                     type: string
                     example: 'unauthorised'
-  /auth/signout:
+  /v1/auth/signout:
     post:
       tags:
         - Authentication
@@ -1480,7 +1480,7 @@ paths:
                   - sRefreshToken=; HttpOnly; Secure; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT
         '401':
           description: Utilisateur non connecté - aucune session active
-  /auth/session/refresh:
+  /v1/auth/session/refresh:
     post:
       tags:
         - Authentication
@@ -1520,7 +1520,7 @@ paths:
                   - sAccessToken=newToken...; HttpOnly; Secure; SameSite=Lax
         '401':
           description: Token de rafraîchissement invalide ou expiré
-  /auth/session/verify:
+  /v1/auth/session/verify:
     get:
       tags:
         - Authentication
@@ -1534,9 +1534,9 @@ paths:
         - Middleware de protection des routes
         - Checks de sécurité avant actions sensibles
 
-        **Différence avec `/auth/session` :**
-        - `/auth/session/verify` : Vérification seule (léger)
-        - `/auth/session` : Vérification + données utilisateur (complet)
+        **Différence avec `/v1/auth/session` :**
+        - `/v1/auth/session/verify` : Vérification seule (léger)
+        - `/v1/auth/session` : Vérification + données utilisateur (complet)
       security:
         - supertokens_session: []
       responses:
@@ -1552,7 +1552,7 @@ paths:
                     example: 'OK'
         '401':
           description: Session invalide ou expirée
-  /auth/user/password/reset:
+  /v1/auth/user/password/reset:
     post:
       tags:
         - Authentication
@@ -1615,7 +1615,7 @@ paths:
                   message:
                     type: string
                     description: Message d'erreur de SuperTokens
-  /auth/user/password/reset/token:
+  /v1/auth/user/password/reset/token:
     post:
       tags:
         - Authentication

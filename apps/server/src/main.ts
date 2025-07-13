@@ -2,13 +2,15 @@ import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
-import { RootModule } from './root.module';
-import * as YAML from 'yamljs';
 import * as swaggerUi from 'swagger-ui-express';
+import * as YAML from 'yamljs';
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
+import { RootModule } from './root.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
+
+  app.setGlobalPrefix('v1');
 
   // Configuration CORS
   app.enableCors({
@@ -35,7 +37,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV !== 'PRODUCTION') {
     const document: object = YAML.load('swagger-doc.example.yml') as object;
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(document));
+    app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(document));
   }
 
   await app.listen(process.env.PORT ?? 4000);
