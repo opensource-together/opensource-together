@@ -1,9 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
 
 import { Avatar } from "@/shared/components/ui/avatar";
-import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -24,15 +21,11 @@ import { ProjectSchema } from "../validations/project.schema";
 interface ProjectSidebarEditFormProps {
   project: Project;
   form: UseFormReturn<ProjectSchema>;
-  onSubmit: () => void;
-  isSubmitting: boolean;
 }
 
 export default function ProjectSidebarEditForm({
   project,
   form,
-  onSubmit,
-  isSubmitting,
 }: ProjectSidebarEditFormProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
   const { categoryOptions, isLoading: categoriesLoading } = useCategories();
@@ -40,29 +33,6 @@ export default function ProjectSidebarEditForm({
 
   return (
     <>
-      {/* Action Buttons */}
-      <div className="mb-3 flex gap-2">
-        <Button
-          size="lg"
-          className="gap-2"
-          onClick={onSubmit}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Enregistrement..." : "Confirmer"}
-          <Image
-            src="/icons/edit-white-icon.svg"
-            alt="pencil"
-            width={12}
-            height={12}
-          />
-        </Button>
-        <Link href={`/projects/${project.id}`}>
-          <Button variant="outline" size="lg" disabled={isSubmitting}>
-            Annuler
-          </Button>
-        </Link>
-      </div>
-
       {/* Details Section - Informative */}
       <div className="mb-3 flex flex-col">
         <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
@@ -155,7 +125,12 @@ export default function ProjectSidebarEditForm({
             name="techStack"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (max 10)</FormLabel>
+                <FormLabel
+                  required
+                  tooltip="Sélectionnez les technologies, langages de programmation et outils utilisés dans votre projet. Cela aide les développeurs à identifier les projets correspondant à leurs compétences."
+                >
+                  Technologies (max 10)
+                </FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}
@@ -183,7 +158,12 @@ export default function ProjectSidebarEditForm({
             name="categories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Catégories (max 6)</FormLabel>
+                <FormLabel
+                  required
+                  tooltip="Choisissez les domaines ou secteurs d'activité auxquels votre projet se rapporte. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
+                >
+                  Catégories (max 6)
+                </FormLabel>
                 <FormControl>
                   <Combobox
                     options={categoryOptions}
@@ -238,7 +218,9 @@ export default function ProjectSidebarEditForm({
 
           {/* Links */}
           <div className="flex flex-col gap-4">
-            <FormLabel>Liens sociaux</FormLabel>
+            <FormLabel tooltip="Partagez les liens vers vos réseaux sociaux, repository GitHub, serveur Discord ou site web. Ces liens aident les contributeurs à en savoir plus et à vous contacter.">
+              Liens sociaux
+            </FormLabel>
 
             <FormField
               control={control}

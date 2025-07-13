@@ -133,7 +133,12 @@ export function StepOneForm() {
           name="keyFeatures"
           render={() => (
             <FormItem>
-              <FormLabel required>Fonctionnalités clés</FormLabel>
+              <FormLabel
+                required
+                tooltip="Listez les principales fonctionnalités que votre projet propose ou proposera. Ex: Authentification utilisateurs, API REST, Dashboard administrateur, Notifications en temps réel..."
+              >
+                Fonctionnalités clés
+              </FormLabel>
               <FormControl>
                 <div className="flex flex-col gap-2">
                   <div className="relative">
@@ -182,7 +187,12 @@ export function StepOneForm() {
           name="projectGoals"
           render={() => (
             <FormItem>
-              <FormLabel required>Objectifs du projet</FormLabel>
+              <FormLabel
+                required
+                tooltip="Décrivez les buts et résultats attendus de votre projet. Ex: Faciliter la collaboration entre développeurs, Automatiser les tâches répétitives, Créer une solution open source accessible..."
+              >
+                Objectifs du projet
+              </FormLabel>
               <FormControl>
                 <div className="flex flex-col gap-2">
                   <div className="relative">

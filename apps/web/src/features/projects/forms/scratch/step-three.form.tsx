@@ -200,7 +200,7 @@ export function StepThreeForm() {
                   {roleFields.map((role, index) => (
                     <div
                       key={role.id}
-                      className="group relative overflow-hidden rounded-3xl border border-black/5 p-4 shadow-xs md:p-6"
+                      className="group relative overflow-hidden rounded-[20px] border border-black/5 p-4 shadow-xs md:p-6"
                     >
                       <div className="flex items-start justify-between">
                         <h3 className="text-xl font-medium tracking-tighter text-black">
@@ -266,7 +266,12 @@ export function StepThreeForm() {
                 name="title"
                 render={({ field }) => (
                   <FormItem className="mt-6">
-                    <FormLabel required>Titre du rôle</FormLabel>
+                    <FormLabel
+                      required
+                      tooltip="Donnez un nom clair au poste recherché. Cela aide les contributeurs à comprendre rapidement s'ils correspondent au profil."
+                    >
+                      Titre du rôle
+                    </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -283,7 +288,12 @@ export function StepThreeForm() {
                 name="techStack"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Technologies (max 6)</FormLabel>
+                    <FormLabel
+                      required
+                      tooltip="Sélectionnez les technologies spécifiques que le contributeur devra maîtriser pour ce rôle. Cela permet un matching précis entre compétences et besoins."
+                    >
+                      Technologies (max 6)
+                    </FormLabel>
                     <FormControl>
                       <Combobox
                         options={techStackOptions}
@@ -310,7 +320,12 @@ export function StepThreeForm() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Description</FormLabel>
+                    <FormLabel
+                      required
+                      tooltip="Décrivez en détail les missions, responsabilités et attentes pour ce rôle. Plus c'est précis, plus vous attirerez les bons profils."
+                    >
+                      Description
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}

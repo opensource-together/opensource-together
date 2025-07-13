@@ -79,7 +79,12 @@ export default function EditRoleForm({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Titre du rôle</FormLabel>
+                  <FormLabel
+                    required
+                    tooltip="Donnez un nom clair au poste recherché. Cela aide les contributeurs à comprendre rapidement s'ils correspondent au profil."
+                  >
+                    Titre du rôle
+                  </FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="Ex: Back-End Developer" />
                   </FormControl>
@@ -93,7 +98,12 @@ export default function EditRoleForm({
               name="techStack"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Technologies</FormLabel>
+                  <FormLabel
+                    required
+                    tooltip="Sélectionnez les technologies spécifiques que le contributeur devra maîtriser pour ce rôle. Cela permet un matching précis entre compétences et besoins."
+                  >
+                    Technologies
+                  </FormLabel>
                   <FormControl>
                     <Combobox
                       options={techStackOptions}
@@ -114,7 +124,12 @@ export default function EditRoleForm({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Description</FormLabel>
+                  <FormLabel
+                    required
+                    tooltip="Décrivez en détail les missions, responsabilités et attentes pour ce rôle. Plus c'est précis, plus vous attirerez les bons profils."
+                  >
+                    Description
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Textarea
