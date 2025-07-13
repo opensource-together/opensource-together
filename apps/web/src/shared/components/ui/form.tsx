@@ -90,14 +90,19 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 function FormLabel({
   className,
   required,
+  tooltip,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root> & { required?: boolean }) {
+}: React.ComponentProps<typeof LabelPrimitive.Root> & {
+  required?: boolean;
+  tooltip?: string;
+}) {
   const { error, formItemId } = useFormField();
 
   return (
     <Label
       data-slot="form-label"
       required={required}
+      tooltip={tooltip}
       data-error={!!error}
       className={cn("mb-2", className)}
       htmlFor={formItemId}
