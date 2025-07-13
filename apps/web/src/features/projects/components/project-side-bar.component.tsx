@@ -1,27 +1,26 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
+import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 import { Avatar } from "@/shared/components/ui/avatar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/shared/components/ui/breadcrumb";
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
-import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
+  isMaintainer?: boolean;
 }
 
-export default function ProjectSideBar({ project }: ProjectSideBarProps) {
+export default function ProjectSideBar({
+  project,
+  isMaintainer = false,
+}: ProjectSideBarProps) {
+  const router = useRouter();
   const {
     title = "",
     techStacks = [],
@@ -41,33 +40,37 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   const collaborators = project.collaborators || [];
 
+  const handleEditClick = () => {
+    router.push(`/projects/${project.id}/edit`);
+  };
+
+  const breadcrumbItems = [
+    {
+      label: "Accueil",
+      href: "/",
+      isActive: false,
+    },
+    {
+      label: title,
+      isActive: true,
+    },
+  ];
+
   return (
-    <div className="flex flex-col gap-5 bg-white">
+    <div className="flex flex-col gap-5">
       {/* Breadcrumb */}
-      <Breadcrumb className="mb-3">
-        <BreadcrumbList className="gap-3 text-xs">
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="text-black/50">
-              Accueil
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <Image
-              src="/icons/breadcrumb-chevron-icon.svg"
-              alt="chevron"
-              width={5}
-              height={5}
-            />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
 
       {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
-        <Button size="lg">Rejoindre le projet</Button>
+        {isMaintainer ? (
+          <Button size="lg" className="gap-2" onClick={handleEditClick}>
+            Modifier
+            <Icon name="pencil" size="xs" variant="white" />
+          </Button>
+        ) : (
+          <Button size="lg">Rejoindre le projet</Button>
+        )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
           <Button variant="outline" size="lg">
             Voir le Repo
@@ -78,7 +81,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
       {/* Details Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-1 font-medium text-black">Details</h2>
+        <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
 
         {/* Stars */}
         <div className="flex items-center justify-between py-1">
@@ -161,7 +164,6 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
-        {/* Tech Stack */}
         {techStacks.length > 0 && (
           <div>
             <div className="flex flex-wrap gap-2">
@@ -183,22 +185,21 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
-            <div
+            <Badge
               key={index}
               className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
             >
               {category.name}
-            </div>
+            </Badge>
           ))}
         </div>
       </div>
 
       {/* Contributors Section */}
-      <div className="flex flex-col">
+      <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium text-black">
           Contributeurs Principaux
         </h2>
-        {/* Contributors Avatars */}
         <div>
           <div className="flex gap-2">
             {collaborators.slice(0, 5).map((collaborator) => (
@@ -220,46 +221,57 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-export function SkeletonProjectSideBar() {
-  return (
-    <div className="flex w-[270px] flex-col gap-6 rounded-2xl border border-[black]/10 bg-white p-6 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
-      {/* Project Image Skeleton */}
-      <Skeleton className="h-[252px] w-[252px] self-center rounded-[16px]" />
+      {/* Links Section */}
+      <div className="flex flex-col">
+        <h2 className="text-md mb-2 font-medium text-black">Liens</h2>
+        <div className="flex flex-wrap gap-2">
+          {externalLinks.map((link, index) => {
+            let iconSrc = "";
+            let iconAlt = "";
 
-      {/* Title Skeleton */}
-      <Skeleton className="h-8 w-32 self-center" />
+            switch (link.type) {
+              case "github":
+                iconSrc = "/icons/github-gray-icon.svg";
+                iconAlt = "GitHub";
+                break;
+              case "twitter":
+                iconSrc = "/icons/x-gray-icon.svg";
+                iconAlt = "Twitter/X";
+                break;
+              case "linkedin":
+                iconSrc = "/icons/linkedin-gray-icon.svg";
+                iconAlt = "LinkedIn";
+                break;
+              case "discord":
+                iconSrc = "/icons/discord-gray-icon.svg";
+                iconAlt = "Discord";
+                break;
+              case "other":
+              case "website":
+              default:
+                iconSrc = "/icons/link-gray-icon.svg";
+                iconAlt = "Website";
+                break;
+            }
 
-      {/* Stats Skeleton */}
-      <div className="flex items-center justify-center gap-4">
-        <Skeleton className="h-4 w-8" />
-        <Skeleton className="h-4 w-8" />
-        <Skeleton className="h-4 w-8" />
-      </div>
-
-      {/* Buttons Skeleton */}
-      <div className="flex gap-2">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-      </div>
-
-      {/* Tech Stack Skeleton */}
-      <div className="flex flex-wrap gap-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-[28px] w-[60px]" />
-        ))}
-      </div>
-
-      {/* Contributors Skeleton */}
-      <div>
-        <Skeleton className="mb-2 h-4 w-24" />
-        <div className="flex gap-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 w-8 rounded-full" />
-          ))}
+            return (
+              <Link
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={iconSrc}
+                  alt={iconAlt}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5"
+                />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

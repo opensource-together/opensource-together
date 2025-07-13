@@ -66,7 +66,6 @@ export function useCreateProject() {
 
 /**
  * Hook to update a project
- * @param projectId id of the project to update
  * @returns updateProject, isUpdating, isUpdateError
  */
 export function useUpdateProject() {

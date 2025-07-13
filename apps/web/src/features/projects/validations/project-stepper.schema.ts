@@ -1,41 +1,10 @@
 import { z } from "zod";
 
-const urlWithDomainCheck = (allowedDomains: string[], errorMsg: string) =>
-  z
-    .string()
-    .trim()
-    .transform((val) => {
-      if (!val) return ""; // accept empty fields
-      return val.startsWith("http://") || val.startsWith("https://")
-        ? val
-        : `https://${val}`;
-    })
-    .refine(
-      (val) => {
-        if (val === "") return true;
+import { urlWithDomainCheck } from "@/shared/validations/url-with-domain-check.schema";
 
-        try {
-          const parsed = new URL(val);
-
-          // The hostname must contain a dot (.)
-          if (!parsed.hostname.includes(".")) return false;
-
-          // If no specific domains, a valid URL is enough
-          if (allowedDomains.length === 0) return true;
-
-          return allowedDomains.some(
-            (domain) =>
-              parsed.hostname === domain ||
-              parsed.hostname.endsWith(`.${domain}`)
-          );
-        } catch {
-          return false;
-        }
-      },
-      { message: errorMsg }
-    )
-    .optional()
-    .or(z.literal(""));
+// ========================================
+// STEPPER FORM SCHEMAS
+// ========================================
 
 // Step 1: Basic Project Information
 export const stepOneSchema = z.object({
@@ -73,9 +42,11 @@ export const stepTwoSchema = z.object({
     .max(6, "Maximum 6 catégories autorisées"),
 });
 
-// Step 3: Project Roles
+// Step 3: Project Roles (reuse base role validation logic)
 export const roleSchema = z.object({
-  title: z.string().min(1, "Le titre du rôle est requis"),
+  title: z
+    .string()
+    .min(3, "Le titre du rôle doit contenir au moins 3 caractères"),
   techStack: z
     .array(z.string())
     .min(1, "Au moins une technologie est requise")
@@ -90,26 +61,37 @@ export const stepThreeSchema = z.object({
   roles: z.array(roleSchema).min(1, "Au moins un rôle est requis"),
 });
 
+// Step 4: External Links and Logo (with domain validation)
 export const stepFourSchema = z.object({
   logo: z.instanceof(File).optional(),
-  externalLinks: z.object({
-    github: urlWithDomainCheck(
-      ["github.com"],
-      "URL GitHub invalide (doit contenir github.com)"
-    ),
-    discord: urlWithDomainCheck(
-      ["discord.gg", "discord.com"],
-      "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-    ),
-    twitter: urlWithDomainCheck(
-      ["twitter.com", "x.com"],
-      "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-    ),
-    website: urlWithDomainCheck([], "URL du site web invalide"),
-  }),
+  externalLinks: z
+    .object({
+      github: urlWithDomainCheck(
+        ["github.com"],
+        "URL GitHub invalide (doit contenir github.com)"
+      ),
+      discord: urlWithDomainCheck(
+        ["discord.gg", "discord.com"],
+        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+      ),
+      twitter: urlWithDomainCheck(
+        ["twitter.com", "x.com"],
+        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+      ),
+      linkedin: urlWithDomainCheck(
+        ["linkedin.com"],
+        "URL LinkedIn invalide (doit contenir linkedin.com)"
+      ),
+      website: urlWithDomainCheck([], "URL du site web invalide"),
+    })
+    .optional(),
 });
 
-// Combined schemas
+// ========================================
+// COMBINED SCHEMAS
+// ========================================
+
+// Create Project Schema (for stepper form)
 export const createProjectSchema = z.object({
   method: z.enum(["github", "scratch"]).nullable(),
   ...stepOneSchema.shape,
@@ -123,15 +105,21 @@ export const createProjectSchema = z.object({
     .nullable(),
 });
 
+// ========================================
+// API SCHEMAS (FOR BACKEND)
+// ========================================
+
 // API schema - what the backend expects
 export const createProjectApiSchema = z.object({
-  title: z.string().min(1, "Le titre est requis"),
-  description: z.string().min(1, "La description est requise"),
-  shortDescription: z.string().min(1, "La description courte est requise"),
+  title: z.string().min(3, "Le titre du projet est requis"),
+  description: z.string().min(10, "Une description est requise"),
+  shortDescription: z.string().min(10, "Une description est requise"),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
-  keyFeatures: z.array(z.string()),
-  projectGoals: z.array(z.string()),
+  keyFeatures: z
+    .array(z.string())
+    .min(1, "Au moins une fonctionnalité clé est requise"),
+  projectGoals: z.array(z.string()).min(1, "Au moins un objectif est requis"),
   projectRoles: z.array(
     z.object({
       title: z.string().min(1, "Le titre du rôle est requis"),
@@ -149,7 +137,10 @@ export const createProjectApiSchema = z.object({
     .optional(),
 });
 
-// Type exports
+// ========================================
+// TYPE EXPORTS
+// ========================================
+
 export type StepOneFormData = z.infer<typeof stepOneSchema>;
 export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
 export type RoleFormData = z.infer<typeof roleSchema>;

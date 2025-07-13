@@ -3,20 +3,27 @@
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
-import { Skeleton } from "@/shared/components/ui/skeleton";
 
-import { ProjectRole, TechStack } from "../types/project.type";
+import EditRoleForm from "../forms/edit-role.form";
+import RoleApplicationForm from "../forms/role-application.form";
+import { ProjectGoal, ProjectRole, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
   techStacks?: TechStack[];
+  projectGoals?: ProjectGoal[];
   className?: string;
+  isMaintainer?: boolean;
+  projectId?: string;
 }
 
 export default function RoleCard({
   role,
   techStacks = [],
+  projectGoals = [],
   className,
+  isMaintainer = false,
+  projectId = "",
 }: RoleCardProps) {
   const {
     title = "",
@@ -32,6 +39,8 @@ export default function RoleCard({
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
       JavaScript:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+      TypeScript:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
       Figma:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
       Docker:
@@ -70,7 +79,7 @@ export default function RoleCard({
       </p>
 
       {/* Ligne de séparation */}
-      <div className="mb-3 w-full border-t border-dashed border-black/8"></div>
+      <div className="mb-3 w-full border-t border-black/5"></div>
 
       {/* Bottom Section */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
@@ -108,52 +117,34 @@ export default function RoleCard({
         </div>
 
         {/* Apply Button */}
-        <Button className="w-full md:w-auto">
-          Apply for Role
-          <Icon name="arrow-up-right" size="xs" variant="white" />
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-export function SkeletonRoleCard() {
-  return (
-    <div className="mb-6 flex min-h-[310px] w-[668px] flex-col rounded-lg border border-[black]/10 bg-white p-6 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
-      {/* Title skeleton */}
-      <Skeleton className="mb-4 h-6 w-48" />
-
-      {/* Description skeleton */}
-      <div className="mb-6">
-        <Skeleton className="mb-2 h-4 w-full" />
-        <Skeleton className="mb-2 h-4 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-      </div>
-
-      {/* Good first issue section skeleton */}
-      <div className="mb-4">
-        <div className="mb-3 flex items-center justify-between">
-          <Skeleton className="h-4 w-32" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="h-6 w-6 rounded-full" />
-            <Skeleton className="h-3 w-20" />
-          </div>
-        </div>
-        <div className="mb-6 flex items-start gap-3">
-          <Skeleton className="h-4 w-12" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-      </div>
-
-      {/* Bottom section skeleton */}
-      <div className="mt-auto flex items-center justify-between">
-        <div className="flex gap-2">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-6 w-16" />
-          ))}
-        </div>
-        <Skeleton className="h-10 w-32" />
+        {isMaintainer ? (
+          <EditRoleForm role={role} projectId={projectId}>
+            <Button variant="outline">Modifier le rôle</Button>
+          </EditRoleForm>
+        ) : (
+          <RoleApplicationForm
+            roleTitle={title}
+            roleDescription={description}
+            projectGoals={projectGoals}
+            techStacks={roleTechStacks.map((roleTech) => {
+              const fullTechStack = techStacks.find(
+                (tech) =>
+                  tech.name.toLowerCase() === roleTech.name.toLowerCase()
+              );
+              return (
+                fullTechStack || {
+                  ...roleTech,
+                  iconUrl: getTechIcon(roleTech.name),
+                }
+              );
+            })}
+          >
+            <Button>
+              Postuler à ce rôle
+              <Icon name="arrow-up-right" size="xs" variant="white" />
+            </Button>
+          </RoleApplicationForm>
+        )}
       </div>
     </div>
   );
