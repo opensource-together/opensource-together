@@ -1,227 +1,119 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import { useEffect } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/components/ui/button";
+import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 
 import { useUpdateProject } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
 import { ProjectSchema, projectSchema } from "../validations/project.schema";
+import ProjectMainEditForm from "./project-main-edit.form";
+import ProjectSidebarEditForm from "./project-sidebar-edit.form";
 
 interface ProjectEditFormProps {
   project: Project;
 }
 
 export default function ProjectEditForm({ project }: ProjectEditFormProps) {
-  const { image, title, shortDescription } = project;
-
-  const { updateProject, isUpdating, isUpdateError } = useUpdateProject();
-
+  const { updateProject, isUpdating } = useUpdateProject();
   const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-    reset,
-  } = useForm<ProjectSchema>({
+    image,
+    title,
+    shortDescription,
+    techStacks,
+    roles,
+    keyFeatures,
+    projectGoals,
+    categories,
+  } = project;
+
+  const form = useForm<ProjectSchema>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      title: title || "Sans titre",
-      description: shortDescription || "",
-      longDescription: project.longDescription || "",
-      status: project.status || "DRAFT",
-      techStacks:
-        project.techStacks?.map((tech) => ({
-          id: tech.id || String(Math.random()),
-          name: tech.name || "",
-          iconUrl: tech.iconUrl || "",
-        })) || [],
-      roles:
-        project.roles?.map((role) => ({
+      image: image || undefined,
+      title: title || "",
+      shortDescription: shortDescription || "",
+      keyFeatures: keyFeatures || [],
+      projectGoals: projectGoals || [],
+      techStack: techStacks?.map((tech) => tech.id) || [],
+      categories: categories?.map((category) => category.id) || [],
+      projectRoles:
+        roles?.map((role) => ({
           title: role.title,
           description: role.description,
-          badges: [],
-          experienceBadge: undefined,
+          techStack: role.techStacks?.map((tech) => tech.id) || [],
         })) || [],
-      keyBenefits: [],
-      socialLinks:
-        project.externalLinks?.map((link) => ({
-          type: link.type,
-          url: link.url,
-        })) || [],
+      externalLinks:
+        project.externalLinks?.reduce(
+          (acc, link) => {
+            const linkType = link.type === "other" ? "website" : link.type;
+            acc[linkType as keyof typeof acc] = link.url;
+            return acc;
+          },
+          {} as {
+            github?: string;
+            discord?: string;
+            twitter?: string;
+            linkedin?: string;
+            website?: string;
+          }
+        ) || {},
     },
   });
 
-  useEffect(() => {
-    if (project) {
-      reset({
-        title: project.title || "Sans titre",
-        description: project.shortDescription || "",
-        longDescription: project.longDescription || "",
-        status: project.status || "DRAFT",
-        techStacks: project.techStacks || [],
-        roles:
-          project.roles?.map((role) => ({
-            title: role.title,
-            description: role.description,
-            badges: [],
-            experienceBadge: undefined,
-          })) || [],
-        keyBenefits: [],
-        socialLinks:
-          project.externalLinks?.map((link) => ({
-            type: link.type,
-            url: link.url,
-          })) || [],
-      });
-    }
-  }, [project, reset]);
+  const { setValue } = form;
 
-  const {
-    fields: techStackFields,
-    append: appendTechStack,
-    remove: removeTechStack,
-  } = useFieldArray({
-    control,
-    name: "techStacks",
-  });
-
-  const onSubmit = (data: ProjectSchema) => {
-    updateProject({ data, projectId: project.id! });
+  const handleImageSelect = (file: File | null) => {
+    setValue("image", file?.name || "");
   };
 
-  console.log("Current form values:", control._formValues);
+  const onSubmit = form.handleSubmit(async (data) => {
+    if (!project?.id) return;
+    console.log("Form submission data:", data);
+
+    updateProject({
+      projectId: project.id,
+      data,
+    });
+  });
+
+  const breadcrumbItems = [
+    {
+      label: "Accueil",
+      href: "/",
+      isActive: false,
+    },
+    {
+      label: project.title || "",
+      href: `/projects/${project.id}`,
+      isActive: false,
+    },
+    {
+      label: "Édition",
+      href: "#",
+      isActive: true,
+    },
+  ];
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex w-[710px] flex-col gap-4 rounded-3xl border border-black/5 bg-white p-10 shadow-[0_2px_5px_rgba(0,0,0,0.03)]"
-    >
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Image
-              src={image || "/icons/empty-project.svg"}
-              alt={title || "project icon"}
-              width={80}
-              height={80}
-              className="rounded-sm"
-            />
-            <h2 className="text-2xl font-medium tracking-tighter">{title}</h2>
-          </div>
-          <div className="flex cursor-pointer items-center gap-1.5">
-            <p className="text-sm font-medium tracking-tighter">
-              Add Repository
-            </p>
-            <span className="font-medium text-black">+</span>
-          </div>
-        </div>
-      </div>
+    <>
+      <div className="self-start lg:sticky lg:top-[100px] lg:mb-36">
+        {/* Breadcrumb */}
+        <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
 
-      <input type="hidden" {...register("title")} />
-
-      <div className="mt-4">
-        <label className="mb-6 block font-medium">Project Description</label>
-        <textarea
-          {...register("description")}
-          className="h-[269px] w-[643px] rounded-lg border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
+        <ProjectSidebarEditForm
+          project={project}
+          form={form}
+          onSubmit={onSubmit}
+          isSubmitting={isUpdating}
         />
-        {errors.description && (
-          <p className="mt-1 text-[13px] text-red-500">
-            {errors.description.message}
-          </p>
-        )}
       </div>
 
-      {/* Ligne en pointillés */}
-      <div className="mt-4 mb-2 w-full border-t border-dashed border-black/10"></div>
-      <div>
-        <label className="mb-1 block text-[15px] font-medium">Status</label>
-        <select
-          {...register("status")}
-          className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
-        >
-          <option value="DRAFT">Draft</option>
-          <option value="PUBLISHED">Published</option>
-          <option value="ARCHIVED">Archived</option>
-        </select>
-        {errors.status && (
-          <p className="mt-1 text-[13px] text-red-500">
-            {errors.status.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <label className="mb-4 block font-medium tracking-tighter">
-          Technical Stack
-        </label>
-        {techStackFields.map((field, index) => (
-          <div key={field.id} className="mb-2 flex items-center gap-2">
-            <Controller
-              control={control}
-              name={`techStacks.${index}.name`}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  className="w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:ring-2 focus:ring-black/10 focus:outline-none"
-                  placeholder="e.g. React"
-                />
-              )}
-            />
-            <button
-              type="button"
-              onClick={() => removeTechStack(index)}
-              className="rounded-sm border border-black/10 p-2 hover:bg-gray-50"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() =>
-            appendTechStack({
-              id: String(techStackFields.length + 1),
-              name: "",
-              iconUrl: "",
-            })
-          }
-          className="mt-1 flex items-center gap-1.5 text-sm font-normal text-black"
-        >
-          <div className="flex size-6 items-center justify-center rounded-xs border border-black/10">
-            <Image
-              src="/icons/cross-icon.svg"
-              alt="add"
-              width={10}
-              height={10}
-              className="invert"
-            />
-          </div>
-          Add technology
-        </button>
-      </div>
-
-      <Button type="submit" className="mt-4 self-end" disabled={isUpdating}>
-        {isUpdating ? "En cours..." : "Enregistrer"}
-      </Button>
-
-      {isUpdateError && (
-        <div className="font-medium text-red-600">
-          Erreur lors de la mise à jour du projet. Veuillez réessayer.
-        </div>
-      )}
-    </form>
+      <ProjectMainEditForm
+        project={project}
+        form={form}
+        onSubmit={onSubmit}
+        onImageSelect={handleImageSelect}
+      />
+    </>
   );
 }
