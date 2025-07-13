@@ -1,7 +1,6 @@
 name: ost
 
 services:
-
   server:
     build:
       context: ../server
@@ -11,7 +10,7 @@ services:
       - CONNECTION_URI=${CONNECTION_URI:-http://supertokens:3567}
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}
       - APP_NAME=${APP_NAME:-OST}
-      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN:-http://localhost} 
+      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN:-http://localhost}
       - API_DOMAIN=${API_DOMAIN:-http://localhost}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN:-localhost}
       - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
@@ -30,10 +29,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: [
-        "CMD-SHELL", 
-        "curl -f http://localhost:3000/health || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -44,7 +40,7 @@ services:
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER:-supertokens_user}:${SUPERTOKENS_DB_PASSWORD:-supertokens_password}@postgres:5432/${SUPERTOKENS_DB_NAME:-supertokens}
     ports:
-      - '3567:3567'
+      - "3567:3567"
     networks:
       - app_network
     depends_on:
@@ -82,23 +78,29 @@ services:
       - app_network
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "pg_isready -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} && \
-        psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME:-supertokens}'\" | grep -q 1 && \
-        psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME:-business}'\" | grep -q 1"
-      ]
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} && \
+          psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME:-supertokens}'\" | grep -q 1 && \
+          psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME:-business}'\" | grep -q 1",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   migrate:
-    build: 
+    build:
       context: ../server
       dockerfile: Dockerfile
     restart: no
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
+    command:
+      [
+        "npx",
+        "prisma",
+        "db",
+        "push",
+        "--schema=/app/schema/schema.prisma",
+        "--skip-generate",
+      ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}
     depends_on:

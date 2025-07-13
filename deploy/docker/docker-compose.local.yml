@@ -1,7 +1,6 @@
 name: ost
 
 services:
-
   web:
     build:
       context: ../../apps/web
@@ -14,13 +13,10 @@ services:
     networks:
       - app_network
     depends_on:
-      server: 
+      server:
         condition: service_healthy
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:3000/ || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -53,10 +49,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: [
-        "CMD-SHELL", 
-        "curl -f http://localhost:3000/health || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -105,23 +98,29 @@ services:
       - app_network
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "pg_isready -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} && \
-        psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME:-supertokens}'\" | grep -q 1 && \
-        psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME:-supertokens}'\" | grep -q 1"
-      ]
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} && \
+          psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME:-supertokens}'\" | grep -q 1 && \
+          psql -U ${POSTGRES_USER:-postgres_user} -d ${POSTGRES_NAME:-postgres} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME:-supertokens}'\" | grep -q 1",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   migrate:
-    build: 
+    build:
       context: ../../apps/server
       dockerfile: Dockerfile
     restart: no
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
+    command:
+      [
+        "npx",
+        "prisma",
+        "db",
+        "push",
+        "--schema=/app/schema/schema.prisma",
+        "--skip-generate",
+      ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}
     depends_on:

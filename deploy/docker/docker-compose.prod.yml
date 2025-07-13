@@ -9,13 +9,10 @@ services:
     networks:
       - app_network
     depends_on:
-      server: 
+      server:
         condition: service_healthy
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:3000/ || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -46,10 +43,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: [
-        "CMD-SHELL", 
-        "curl -f http://localhost:3000/health || exit 1"
-      ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -95,11 +89,11 @@ services:
       - app_network
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_NAME} && \
-        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
-        psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1"
-      ]
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_NAME} && \
+          psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
+          psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -107,9 +101,15 @@ services:
   migrate:
     image: ghcr.io/opensource-together/server:${VERSION_TAG}
     restart: no
-    command: [
-      "npx", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate"
-    ]
+    command:
+      [
+        "npx",
+        "prisma",
+        "db",
+        "push",
+        "--schema=/app/schema/schema.prisma",
+        "--skip-generate",
+      ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@postgres:5432/${BUSINESS_DB_NAME}
     depends_on:
