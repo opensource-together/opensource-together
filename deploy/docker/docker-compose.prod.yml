@@ -4,8 +4,6 @@ services:
   web:
     image: ghcr.io/opensource-together/web:${VERSION_TAG}
     restart: unless-stopped
-    environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - "${FRONT_PORT}:3000"
     networks:

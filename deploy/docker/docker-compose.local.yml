@@ -6,9 +6,9 @@ services:
     build:
       context: ../../apps/web
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000}
     restart: unless-stopped
-    environment:
-    - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000}
     ports:
       - "${FRONT_PORT:-3000}:3000"
     networks:
