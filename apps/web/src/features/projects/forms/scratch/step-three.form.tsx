@@ -200,7 +200,7 @@ export function StepThreeForm() {
                   {roleFields.map((role, index) => (
                     <div
                       key={role.id}
-                      className="group relative overflow-hidden rounded-3xl border border-black/5 p-4 shadow-xs md:p-6"
+                      className="group relative overflow-hidden rounded-[20px] border border-black/5 p-4 shadow-xs md:p-6"
                     >
                       <div className="flex items-start justify-between">
                         <h3 className="text-xl font-medium tracking-tighter text-black">

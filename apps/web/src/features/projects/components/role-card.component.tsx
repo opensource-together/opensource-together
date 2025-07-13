@@ -66,7 +66,7 @@ export default function RoleCard({
 
   return (
     <div
-      className={`w-full max-w-[668px] rounded-3xl border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
+      className={`w-full max-w-[668px] rounded-[20px] border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
     >
       {/* Role Title */}
       <h3 className="mb-3 text-lg font-medium tracking-tighter text-black md:mb-4">

@@ -97,15 +97,8 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   return (
     <>
       <div className="self-start lg:sticky lg:top-[100px] lg:mb-36">
-        {/* Breadcrumb */}
         <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
-
-        <ProjectSidebarEditForm
-          project={project}
-          form={form}
-          onSubmit={onSubmit}
-          isSubmitting={isUpdating}
-        />
+        <ProjectSidebarEditForm project={project} form={form} />
       </div>
 
       <ProjectMainEditForm
@@ -113,6 +106,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
         form={form}
         onSubmit={onSubmit}
         onImageSelect={handleImageSelect}
+        isUpdating={isUpdating}
       />
     </>
   );
