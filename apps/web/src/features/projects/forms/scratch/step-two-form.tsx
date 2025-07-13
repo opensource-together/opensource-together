@@ -72,7 +72,12 @@ export function StepTwoForm() {
           name="techStack"
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Technologies (max 10)</FormLabel>
+              <FormLabel
+                required
+                tooltip="Sélectionnez les technologies, langages de programmation et outils utilisés dans votre projet. Cela aide les développeurs à identifier les projets correspondant à leurs compétences."
+              >
+                Technologies (max 10)
+              </FormLabel>
               <FormControl>
                 <Combobox
                   options={techStackOptions}
@@ -99,7 +104,12 @@ export function StepTwoForm() {
           name="categories"
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Catégories (max 6)</FormLabel>
+              <FormLabel
+                required
+                tooltip="Choisissez les domaines ou secteurs d'activité auxquels votre projet se rapporte. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
+              >
+                Catégories (max 6)
+              </FormLabel>
               <FormControl>
                 <Combobox
                   options={categoryOptions}

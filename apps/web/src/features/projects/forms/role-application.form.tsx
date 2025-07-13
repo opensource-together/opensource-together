@@ -105,7 +105,12 @@ export default function RoleApplicationForm({
               name="question1"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Votre contribution</FormLabel>
+                  <FormLabel
+                    required
+                    tooltip="Expliquez comment vous pouvez contribuer concrètement au projet et quelles valeurs ajoutées vous apportez avec vos compétences."
+                  >
+                    Votre contribution
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
@@ -122,7 +127,12 @@ export default function RoleApplicationForm({
               name="projectGoal"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Objectif du projet</FormLabel>
+                  <FormLabel
+                    required
+                    tooltip="Choisissez l'objectif du projet qui vous motive le plus. Cela aide l'équipe à comprendre vos motivations et votre alignement avec la vision du projet."
+                  >
+                    Objectif du projet
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}

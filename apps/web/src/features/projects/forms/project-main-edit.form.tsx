@@ -100,7 +100,7 @@ export default function ProjectMainEditForm({
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Titre</FormLabel>
+                <FormLabel required>Titre</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Nom du projet" />
                 </FormControl>
@@ -115,7 +115,7 @@ export default function ProjectMainEditForm({
             name="shortDescription"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel required>Description</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
@@ -137,7 +137,12 @@ export default function ProjectMainEditForm({
             name="keyFeatures"
             render={() => (
               <FormItem>
-                <FormLabel>Fonctionnalités Clés</FormLabel>
+                <FormLabel
+                  required
+                  tooltip="Listez les principales fonctionnalités que votre projet propose ou proposera. Cela aide les développeurs à identifier les projets correspondant à leurs compétences."
+                >
+                  Fonctionnalités Clés
+                </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
                     <div className="relative">
@@ -186,7 +191,12 @@ export default function ProjectMainEditForm({
             name="projectGoals"
             render={() => (
               <FormItem>
-                <FormLabel>Objectifs du projet</FormLabel>
+                <FormLabel
+                  required
+                  tooltip="Décrivez les buts et résultats attendus de votre projet. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
+                >
+                  Objectifs du projet
+                </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
                     <div className="relative">

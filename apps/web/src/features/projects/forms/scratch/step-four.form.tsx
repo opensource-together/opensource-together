@@ -145,7 +145,9 @@ export function StepFourForm() {
           />
 
           <div className="mt-4 flex flex-col gap-4">
-            <FormLabel>Liens externes</FormLabel>
+            <FormLabel tooltip="Partagez les liens vers vos réseaux sociaux, repository GitHub, serveur Discord ou site web. Ces liens aident les contributeurs à en savoir plus et à vous contacter.">
+              Liens externes
+            </FormLabel>
 
             <FormField
               control={control}
