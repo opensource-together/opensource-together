@@ -40,7 +40,7 @@ function SelectTrigger({
         "gap-x-2 px-3 py-1.5",
         "border border-[black]/5",
         "rounded-sm",
-        "bg-white hover:bg-[#F9F9F9]",
+        "bg-white hover:bg-gray-50",
         "text-[13px]",
         "whitespace-nowrap",
         "cursor-pointer transition-colors",

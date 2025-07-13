@@ -97,7 +97,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   return (
     <>
       <div className="self-start lg:sticky lg:top-[100px] lg:mb-36">
-        <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
+        <BreadcrumbComponent items={breadcrumbItems} className="mb-12" />
         <ProjectSidebarEditForm project={project} form={form} />
       </div>
 
