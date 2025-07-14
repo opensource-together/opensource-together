@@ -10,11 +10,12 @@ import {
   HttpStatus,
   Post,
   // Patch,
-  // Delete,
+  Delete,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
+import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session, PublicAccess } from 'supertokens-nestjs';
 import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
@@ -155,27 +156,29 @@ export class ProjectController {
   //     return toProjectResponseDto(projectRes.value);
   //   }
 
-  //   @Delete(':id')
-  //   async deleteProject(
-  //     @Session('userId') ownerId: string,
-  //     @Param('id') id: string,
-  //   ) {
-  //     const result: Result<boolean> = await this.commandBus.execute(
-  //       new DeleteProjectCommand(id, ownerId),
-  //     );
+  // Route privée pour supprimer un projet
+  @Delete(':id')
+  @UseGuards(GithubAuthGuard)
+  async deleteProject(
+    @Session('userId') ownerId: string,
+    @Param('id') id: string,
+  ) {
+    const result: Result<boolean> = await this.commandBus.execute(
+      new DeleteProjectCommand(id, ownerId),
+    );
 
-  //     if (!result.success) {
-  //       if (result.error === 'Project not found') {
-  //         throw new HttpException(result.error, HttpStatus.NOT_FOUND);
-  //       }
-  //       if (result.error === 'You are not allowed to delete this project') {
-  //         throw new HttpException(result.error, HttpStatus.FORBIDDEN);
-  //       }
-  //       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-  //     }
+    if (!result.success) {
+      if (result.error === 'Project not found') {
+        throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+      }
+      if (result.error === 'You are not allowed to delete this project') {
+        throw new HttpException(result.error, HttpStatus.FORBIDDEN);
+      }
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
 
-  //     return { message: 'Project deleted successfully' };
-  //   }
+    return { message: 'Project deleted successfully' };
+  }
 
   //   //endpoint pour tester la création d'un repository GitHub
   //   @Post('github')

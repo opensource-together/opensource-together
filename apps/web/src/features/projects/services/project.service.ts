@@ -156,3 +156,32 @@ export const updateProject = async (
     throw error;
   }
 };
+
+/**
+ * Delete a project by ID
+ * @param projectId ID of the project to delete
+ * @returns Promise<void>
+ */
+export const deleteProject = async (projectId: string): Promise<void> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de la suppression du projet"
+      );
+    }
+
+    // No need to return anything for DELETE
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    throw error;
+  }
+};

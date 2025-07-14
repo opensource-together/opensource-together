@@ -22,12 +22,28 @@ export class DeleteProjectCommandHandler
     private readonly projectRepo: ProjectRepositoryPort,
   ) {}
 
-  async execute(command: DeleteProjectCommand): Promise<Result<boolean>> {
-    const { id } = command;
-    const result = await this.projectRepo.delete(id);
+  async execute(
+    command: DeleteProjectCommand,
+  ): Promise<Result<boolean, string>> {
+    const { id, ownerId } = command;
 
-    if (!result.success) {
-      return Result.fail(result.error);
+    // Vérifier que le projet existe et récupérer ses détails
+    const projectResult = await this.projectRepo.findById(id);
+    if (!projectResult.success) {
+      return Result.fail('Project not found');
+    }
+
+    const project = projectResult.value;
+
+    // Vérifier que l'utilisateur est bien le propriétaire du projet
+    if (!project.hasOwnerId(ownerId)) {
+      return Result.fail('You are not allowed to delete this project');
+    }
+
+    // Supprimer le projet
+    const deleteResult = await this.projectRepo.delete(id);
+    if (!deleteResult.success) {
+      return Result.fail(deleteResult.error);
     }
 
     return Result.ok(true);
