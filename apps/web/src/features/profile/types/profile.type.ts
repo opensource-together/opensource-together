@@ -1,5 +1,7 @@
 import { IconName } from "@/shared/components/ui/icon";
 
+import { Author, ProjectStats } from "@/features/projects/types/project.type";
+
 export type ProfileSocialLink = {
   type: IconName;
   url: string;
@@ -55,6 +57,8 @@ export type ProfileProject = {
   pushed_at?: string;
   image?: string;
   techStacks?: ProfileTechStack[];
+  author: Author;
+  projectStats: ProjectStats;
 };
 
 // Correspond to GitHub User format

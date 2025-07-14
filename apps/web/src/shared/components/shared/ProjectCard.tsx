@@ -46,7 +46,7 @@ export default function ProjectCardComponent({
   className = "",
   image = "",
   author = {
-    id: "",
+    ownerId: "",
     name: "",
     avatarUrl: "",
   },
@@ -54,6 +54,7 @@ export default function ProjectCardComponent({
     forks: 0,
     contributors: 0,
     stars: 0,
+    lastCommitAt: new Date(),
   },
 }: ProjectCardProps) {
   return (

@@ -250,6 +250,17 @@ export const mockProfile: Profile = {
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
         },
       ],
+      author: {
+        ownerId: "1",
+        name: "LeetGrind",
+        avatarUrl: "https://github.com/LeetGrind.png",
+      },
+      projectStats: {
+        contributors: 10,
+        stars: 100,
+        forks: 10,
+        lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      },
     },
     {
       id: "2",
@@ -277,6 +288,17 @@ export const mockProfile: Profile = {
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
         },
       ],
+      author: {
+        ownerId: "1",
+        name: "devcord",
+        avatarUrl: "https://github.com/devcord-bot.png",
+      },
+      projectStats: {
+        contributors: 10,
+        stars: 100,
+        forks: 10,
+        lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      },
     },
   ],
   socialLinks: [

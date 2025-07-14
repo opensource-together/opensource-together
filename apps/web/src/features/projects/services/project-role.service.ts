@@ -1,5 +1,8 @@
 import { ProjectRole } from "../types/project.type";
-import { CreateRoleSchema, UpdateRoleSchema } from "../validations/role.schema";
+import {
+  CreateRoleSchema,
+  UpdateRoleSchema,
+} from "../validations/project-role.schema";
 
 export interface CreateRoleRequest {
   projectId: string;

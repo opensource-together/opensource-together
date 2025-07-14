@@ -14,7 +14,7 @@ export const transformProjectForApi = (
     externalLinks: storeData.externalLinks || [],
     techStacks: storeData.techStack.map((tech) => tech.id),
     categories: storeData.categories.map((cat) => cat.id),
-    keyFeatures: storeData.keyFeatures.map((feature) => feature.title),
+    keyFeatures: storeData.keyFeatures.map((feature) => feature.feature),
     projectGoals: storeData.projectGoals.map((goal) => goal.goal),
     projectRoles: storeData.roles.map((role) => ({
       title: role.title,

@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
-import { roleService } from "../services/role.service";
+import { roleService } from "../services/project-role.service";
 
 /**
  * Hook to create a role

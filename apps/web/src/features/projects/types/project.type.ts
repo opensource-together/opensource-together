@@ -1,5 +1,5 @@
 export interface Author {
-  id: string;
+  ownerId: string;
   name: string;
   avatarUrl?: string;
 }
@@ -28,6 +28,7 @@ export interface ProjectStats {
   contributors?: number;
   stars?: number;
   forks?: number;
+  lastCommitAt?: Date;
 }
 
 export interface Category {
@@ -46,11 +47,13 @@ export interface Collaborator {
 
 export interface KeyFeature {
   id?: string;
-  title: string;
+  projectId?: string;
+  feature: string;
 }
 
 export interface ProjectGoal {
   id?: string;
+  projectId?: string;
   goal: string;
 }
 
@@ -71,7 +74,6 @@ export interface Project {
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
   categories: Category[];
-  lastCommitAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }

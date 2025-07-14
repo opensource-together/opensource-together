@@ -68,7 +68,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
               </h3>
               <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {keyFeatures.map((feature, index) => (
-                  <li key={index}>{feature.title}</li>
+                  <li key={index}>{feature.feature}</li>
                 ))}
               </ul>
             </>
