@@ -34,7 +34,7 @@ export const mockProjects: Project[] = [
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
 
     author: {
-      id: "1",
+      ownerId: "1",
       name: "y2_dev",
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
@@ -125,13 +125,14 @@ export const mockProjects: Project[] = [
       contributors: 4,
       stars: 8,
       forks: 0,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Défis LeetCode quotidiens automatisés" },
-      { id: "2", title: "Système de classement compétitif" },
-      { id: "3", title: "Canal d'entraide communautaire" },
-      { id: "4", title: "Interface Discord intuitive" },
-      { id: "5", title: "Suivi des progrès personnalisé" },
+      { id: "1", feature: "Défis LeetCode quotidiens automatisés" },
+      { id: "2", feature: "Système de classement compétitif" },
+      { id: "3", feature: "Canal d'entraide communautaire" },
+      { id: "4", feature: "Interface Discord intuitive" },
+      { id: "5", feature: "Suivi des progrès personnalisé" },
     ],
     projectGoals: [
       {
@@ -180,7 +181,7 @@ export const mockProjects: Project[] = [
       { id: "3", name: "Challenges" },
     ],
     author: {
-      id: "1",
+      ownerId: "1",
       name: "69Killian",
       avatarUrl: "/icons/killiancodes-icon.jpg",
     },
@@ -251,13 +252,14 @@ export const mockProjects: Project[] = [
       contributors: 4,
       stars: 52,
       forks: 0,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Système de challenges open source" },
-      { id: "2", title: "techStacks de progression personnalisés" },
-      { id: "3", title: "Notifications GitHub intégrées" },
-      { id: "4", title: "Suivi des pull requests" },
-      { id: "5", title: "Interface moderne et intuitive" },
+      { id: "1", feature: "Système de challenges open source" },
+      { id: "2", feature: "techStacks de progression personnalisés" },
+      { id: "3", feature: "Notifications GitHub intégrées" },
+      { id: "4", feature: "Suivi des pull requests" },
+      { id: "5", feature: "Interface moderne et intuitive" },
     ],
     projectGoals: [
       { id: "1", goal: "Gamifier la contribution à l'open source" },
@@ -298,7 +300,7 @@ export const mockProjects: Project[] = [
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
@@ -372,10 +374,11 @@ export const mockProjects: Project[] = [
       contributors: 1,
       stars: 52,
       forks: 10,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Commandes de formatage de code intégrées" },
-      { id: "5", title: "Support Discord et Slack" },
+      { id: "1", feature: "Commandes de formatage de code intégrées" },
+      { id: "5", feature: "Support Discord et Slack" },
     ],
     projectGoals: [
       {
@@ -398,7 +401,7 @@ export const mockProjects: Project[] = [
       { id: "3", name: "Snippets" },
     ],
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Spectre",
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
@@ -473,13 +476,14 @@ export const mockProjects: Project[] = [
       contributors: 5,
       stars: 42,
       forks: 8,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Stockage et organisation de snippets" },
-      { id: "2", title: "Hub communautaire de partage" },
-      { id: "3", title: "Recherche avancée par tags et langages" },
-      { id: "4", title: "Intégration IDE via extensions" },
-      { id: "5", title: "Système de notation et commentaires" },
+      { id: "1", feature: "Stockage et organisation de snippets" },
+      { id: "2", feature: "Hub communautaire de partage" },
+      { id: "3", feature: "Recherche avancée par tags et langages" },
+      { id: "4", feature: "Intégration IDE via extensions" },
+      { id: "5", feature: "Système de notation et commentaires" },
     ],
     projectGoals: [
       { id: "1", goal: "Devenir la référence pour le stockage de snippets" },
@@ -495,7 +499,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Byron Love",
       avatarUrl: "exemplebyronIcon.svg",
     },
@@ -574,13 +578,14 @@ export const mockProjects: Project[] = [
       contributors: 3,
       stars: 28,
       forks: 5,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Alternative légère à Storybook" },
-      { id: "2", title: "Support natif des Server Components" },
-      { id: "3", title: "Optimisation des images Next.js" },
-      { id: "4", title: "Hot-reload intelligent" },
-      { id: "5", title: "Intégration routing Next.js" },
+      { id: "1", feature: "Alternative légère à Storybook" },
+      { id: "2", feature: "Support natif des Server Components" },
+      { id: "3", feature: "Optimisation des images Next.js" },
+      { id: "4", feature: "Hot-reload intelligent" },
+      { id: "5", feature: "Intégration routing Next.js" },
     ],
     projectGoals: [
       {
@@ -605,7 +610,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
@@ -670,13 +675,14 @@ export const mockProjects: Project[] = [
       contributors: 3,
       stars: 15,
       forks: 2,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Interface terminal façon k9s" },
-      { id: "2", title: "Monitoring temps réel des conteneurs" },
-      { id: "3", title: "Architecture modulaire (serveur/agent/TUI)" },
-      { id: "4", title: "Métriques système détaillées" },
-      { id: "5", title: "Auto-hébergement et open source" },
+      { id: "1", feature: "Interface terminal façon k9s" },
+      { id: "2", feature: "Monitoring temps réel des conteneurs" },
+      { id: "3", feature: "Architecture modulaire (serveur/agent/TUI)" },
+      { id: "4", feature: "Métriques système détaillées" },
+      { id: "5", feature: "Auto-hébergement et open source" },
     ],
     projectGoals: [
       {
@@ -700,7 +706,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Olyxz16",
       avatarUrl:
         "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
@@ -769,13 +775,14 @@ export const mockProjects: Project[] = [
       contributors: 2,
       stars: 6,
       forks: 0,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Chiffrement zero-trust des données" },
-      { id: "2", title: "Partage collaboratif en équipe" },
-      { id: "3", title: "Interface CLI et web intuitive" },
-      { id: "4", title: "Gestion des environnements multiples" },
-      { id: "5", title: "Synchronisation automatique" },
+      { id: "1", feature: "Chiffrement zero-trust des données" },
+      { id: "2", feature: "Partage collaboratif en équipe" },
+      { id: "3", feature: "Interface CLI et web intuitive" },
+      { id: "4", feature: "Gestion des environnements multiples" },
+      { id: "5", feature: "Synchronisation automatique" },
     ],
     projectGoals: [
       {
@@ -802,7 +809,7 @@ export const mockProjects: Project[] = [
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Shyybi",
       avatarUrl: "/icons/shyybi-icon.png",
     },
@@ -870,13 +877,14 @@ export const mockProjects: Project[] = [
       contributors: 4,
       stars: 37,
       forks: 5,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Pages bio stylées et animées" },
-      { id: "2", title: "Thèmes personnalisables" },
-      { id: "3", title: "Centralisation de tous tes liens" },
-      { id: "4", title: "Design responsive optimisé" },
-      { id: "5", title: "Analyses de trafic intégrées" },
+      { id: "1", feature: "Pages bio stylées et animées" },
+      { id: "2", feature: "Thèmes personnalisables" },
+      { id: "3", feature: "Centralisation de tous tes liens" },
+      { id: "4", feature: "Design responsive optimisé" },
+      { id: "5", feature: "Analyses de trafic intégrées" },
     ],
     projectGoals: [
       { id: "1", goal: "Devenir l'alternative moderne à Linktree" },
@@ -897,7 +905,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Sarah Miller",
       avatarUrl: "exemplebyronIcon.svg",
     },
@@ -959,13 +967,14 @@ export const mockProjects: Project[] = [
       contributors: 8,
       stars: 156,
       forks: 23,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Environnements cloud instantanés" },
-      { id: "2", title: "Configuration automatisée" },
-      { id: "3", title: "Partage d'environnements en équipe" },
-      { id: "4", title: "Intégration Docker/Kubernetes" },
-      { id: "5", title: "Templates prêts à l'emploi" },
+      { id: "1", feature: "Environnements cloud instantanés" },
+      { id: "2", feature: "Configuration automatisée" },
+      { id: "3", feature: "Partage d'environnements en équipe" },
+      { id: "4", feature: "Intégration Docker/Kubernetes" },
+      { id: "5", feature: "Templates prêts à l'emploi" },
     ],
     projectGoals: [
       {
@@ -989,7 +998,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Emma Wilson",
       avatarUrl: "exemplebyronIcon.svg",
     },
@@ -1051,13 +1060,14 @@ export const mockProjects: Project[] = [
       contributors: 5,
       stars: 112,
       forks: 18,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
-      { id: "1", title: "Éditeur Markdown collaboratif" },
-      { id: "2", title: "Versioning Git natif" },
-      { id: "3", title: "Templates de documentation" },
-      { id: "4", title: "Recherche avancée" },
-      { id: "5", title: "Intégration outils développement" },
+      { id: "1", feature: "Éditeur Markdown collaboratif" },
+      { id: "2", feature: "Versioning Git natif" },
+      { id: "3", feature: "Templates de documentation" },
+      { id: "4", feature: "Recherche avancée" },
+      { id: "5", feature: "Intégration outils développement" },
     ],
     projectGoals: [
       { id: "1", goal: "Devenir la référence pour la documentation technique" },

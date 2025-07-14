@@ -51,14 +51,15 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
               })) ?? []
             }
             author={{
-              id: project.full_name?.split("/")[0] || "unknown",
-              name: project.full_name?.split("/")[0] || "Unknown",
-              avatarUrl: "",
+              ownerId: project.author.ownerId,
+              name: project.author.name,
+              avatarUrl: project.author.avatarUrl,
             }}
             projectStats={{
-              forks: project.forks_count || 0,
-              contributors: 0, // Not available in ProfileProject
-              stars: project.stargazers_count || 0,
+              forks: project.projectStats?.forks || 0,
+              contributors: project.projectStats?.contributors || 0,
+              stars: project.projectStats?.stars || 0,
+              lastCommitAt: project.projectStats?.lastCommitAt || new Date(),
             }}
             className="w-full max-w-[731px] bg-white"
           />
