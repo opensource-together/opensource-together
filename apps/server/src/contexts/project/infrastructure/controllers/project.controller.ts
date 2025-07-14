@@ -9,13 +9,14 @@ import {
   HttpException,
   HttpStatus,
   Post,
-  // Patch,
+  Patch,
   Delete,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
+import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session, PublicAccess } from 'supertokens-nestjs';
 import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
@@ -27,6 +28,8 @@ import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
+import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
+import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
 
 @Controller('projects')
 export class ProjectController {
@@ -103,7 +106,6 @@ export class ProjectController {
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
-    console.log('project', project);
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,
@@ -127,34 +129,46 @@ export class ProjectController {
         octokit: octokit,
       }),
     );
-    console.log('projectRes', projectRes);
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }
     return CreateProjectResponseDto.toResponse(projectRes.value);
   }
 
-  //   @Patch(':id') async updateProject(
-  //     @Session('userId') ownerId: string,
-  //     @Param('id') id: string,
-  //     @Body() project: UpdateProjectDtoRequest,
-  //   ) {
-  //     const projectRes: Result<Project> = await this.commandBus.execute(
-  //       new UpdateProjectCommand(
-  //         id,
-  //         project.title,
-  //         project.description,
-  //         project.link,
-  //         project.projectRoles,
-  //         project.techStacks,
-  //         ownerId,
-  //       ),
-  //     );
-  //     if (!projectRes.success) {
-  //       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
-  //     }
-  //     return toProjectResponseDto(projectRes.value);
-  //   }
+  // Route privée pour mettre à jour un projet
+  @Patch(':id')
+  @UseGuards(GithubAuthGuard)
+  async updateProject(
+    @Session('userId') ownerId: string,
+    @Param('id') id: string,
+    @Body() project: UpdateProjectDtoRequest,
+  ) {
+    const projectRes: Result<Project> = await this.commandBus.execute(
+      new UpdateProjectCommand(id, ownerId, {
+        title: project.title,
+        description: project.description,
+        shortDescription: project.shortDescription,
+        externalLinks: project.externalLinks,
+        techStacks: project.techStacks,
+        categories: project.categories,
+        keyFeatures: project.keyFeatures,
+        projectGoals: project.projectGoals,
+        projectRoles: project.projectRoles,
+      }),
+    );
+
+    if (!projectRes.success) {
+      if (projectRes.error === 'Project not found') {
+        throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
+      }
+      if (projectRes.error === 'You are not allowed to update this project') {
+        throw new HttpException(projectRes.error, HttpStatus.FORBIDDEN);
+      }
+      throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
+    }
+
+    return UpdateProjectResponseDto.toResponse(projectRes.value);
+  }
 
   // Route privée pour supprimer un projet
   @Delete(':id')
