@@ -43,7 +43,7 @@ export class InMemoryProjectRoleRepository
   async create(projectRole: ProjectRole): Promise<Result<ProjectRole, string>> {
     const primitive = projectRole.toPrimitive();
     const newRole: ProjectRoleInMemory = {
-      id: '1',
+      id: this.generateId(),
       projectId: primitive.projectId,
       title: primitive.title,
       description: primitive.description,

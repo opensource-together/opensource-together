@@ -1181,6 +1181,374 @@ paths:
           description: Non authentifié
         '404':
           description: Projet non trouvé
+  /projects/{projectId}/roles/{roleId}:
+    patch:
+      tags:
+        - Project Roles
+      summary: Mettre à jour un rôle de projet existant
+      description: |
+        Met à jour un rôle de projet existant avec de nouvelles informations.
+
+        **Comportement détaillé :**
+        - Vérifie que le rôle existe et appartient au projet spécifié
+        - Vérifie que l'utilisateur est propriétaire du projet
+        - Valide les nouveaux tech stacks si fournis
+        - Met à jour uniquement les champs fournis (mise à jour partielle)
+        - Conserve les autres champs inchangés
+        - Retourne le rôle mis à jour avec timestamps
+
+        **Authentification requise :** Session utilisateur
+      security:
+        - supertokens_session: []
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID du projet
+          example: '3c2ee6b8-559e-42be-beb9-1807984270f3'
+        - in: path
+          name: roleId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID du rôle à mettre à jour
+          example: '6c65cc5b-cfe5-4f48-86f7-6efffd6d3916'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Nouveau titre du rôle (optionnel)
+                  example: 'Backend Developer'
+                  minLength: 1
+                  maxLength: 100
+                description:
+                  type: string
+                  description: Nouvelle description du rôle (optionnel)
+                  example: 'Développeur backend responsable du développement des APIs et de la logique métier'
+                  minLength: 1
+                  maxLength: 500
+                techStacks:
+                  type: array
+                  description: Nouveaux tech stacks requis pour ce rôle (optionnel)
+                  items:
+                    type: string
+                  example: ['2', '3']
+                  minItems: 1
+              description: |
+                Tous les champs sont optionnels. Seuls les champs fournis seront mis à jour.
+                Les autres champs conserveront leurs valeurs actuelles.
+            examples:
+              update_title_only:
+                summary: Mise à jour du titre uniquement
+                value:
+                  title: 'Senior Backend Developer'
+              update_all_fields:
+                summary: Mise à jour complète
+                value:
+                  title: 'Backend Developer'
+                  description: 'Développeur backend responsable du développement des APIs et de la logique métier'
+                  techStacks: ['2', '3']
+              update_techstacks_only:
+                summary: Mise à jour des tech stacks uniquement
+                value:
+                  techStacks: ['4', '5', '6']
+      responses:
+        '200':
+          description: Rôle mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: ID unique du rôle
+                    example: '6c65cc5b-cfe5-4f48-86f7-6efffd6d3916'
+                  projectId:
+                    type: string
+                    format: uuid
+                    description: ID du projet parent
+                    example: '3c2ee6b8-559e-42be-beb9-1807984270f3'
+                  title:
+                    type: string
+                    example: 'Backend Developer'
+                  description:
+                    type: string
+                    example: 'Développeur backend responsable du développement des APIs et de la logique métier'
+                  isFilled:
+                    type: boolean
+                    description: État du rôle (toujours conservé)
+                    example: false
+                  techStacks:
+                    type: array
+                    description: Tech stacks mis à jour avec leurs détails
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: '2'
+                        name:
+                          type: string
+                          example: 'Next.js'
+                        iconUrl:
+                          type: string
+                          example: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg'
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: Date de création (inchangée)
+                    example: '2025-07-14T12:35:08.064Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: Date de mise à jour (nouvellement définie)
+                    example: '2025-07-14T14:11:31.539Z'
+        '400':
+          description: Erreur de validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    oneOf:
+                      - type: string
+                        description: Erreur métier simple
+                        enum:
+                          - 'Project role not found'
+                          - 'Project role does not belong to this project'
+                          - 'Project not found'
+                          - 'You are not allowed to update roles in this project'
+                      - type: object
+                        description: Erreurs de validation détaillées du ProjectRole
+                        properties:
+                          title:
+                            type: string
+                            enum:
+                              - 'Role title is required'
+                              - 'Role title must be less than 100 characters'
+                          description:
+                            type: string
+                            enum:
+                              - 'Description is required'
+                              - 'Description must be less than 500 characters'
+                          techStacks:
+                            type: string
+                            example: 'At least one tech stack is required'
+              examples:
+                role_not_found:
+                  summary: Rôle non trouvé
+                  value:
+                    error: 'Project role not found'
+                role_wrong_project:
+                  summary: Rôle n'appartient pas au projet
+                  value:
+                    error: 'Project role does not belong to this project'
+                project_not_found:
+                  summary: Projet non trouvé
+                  value:
+                    error: 'Project not found'
+                not_authorized:
+                  summary: Utilisateur non autorisé
+                  value:
+                    error: 'You are not allowed to update roles in this project'
+                title_required:
+                  summary: Titre requis
+                  value:
+                    error:
+                      title: 'Role title is required'
+                title_too_long:
+                  summary: Titre trop long
+                  value:
+                    error:
+                      title: 'Role title must be less than 100 characters'
+                description_required:
+                  summary: Description requise
+                  value:
+                    error:
+                      description: 'Description is required'
+                description_too_long:
+                  summary: Description trop longue
+                  value:
+                    error:
+                      description: 'Description must be less than 500 characters'
+                techstacks_required:
+                  summary: Tech stacks requis
+                  value:
+                    error:
+                      techStacks: 'At least one tech stack is required'
+        '401':
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
+        '403':
+          description: Accès interdit - vous n'êtes pas le propriétaire du projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not allowed to update roles in this project'
+                  statusCode:
+                    type: integer
+                    example: 403
+        '404':
+          description: Rôle ou projet non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    oneOf:
+                      - example: 'Project role not found'
+                      - example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 404
+    delete:
+      tags:
+        - Project Roles
+      summary: Supprimer un rôle de projet existant
+      description: |
+        Supprime définitivement un rôle de projet existant.
+
+        **Comportement détaillé :**
+        - Vérifie que le rôle existe et appartient au projet spécifié
+        - Vérifie que l'utilisateur est propriétaire du projet
+        - Supprime définitivement le rôle de la base de données
+        - Retourne un message de confirmation
+
+        **⚠️ Action irréversible :**
+        Cette action supprime définitivement le rôle et ne peut pas être annulée.
+
+        **Authentification requise :** Session utilisateur
+      security:
+        - supertokens_session: []
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID du projet
+          example: '3c2ee6b8-559e-42be-beb9-1807984270f3'
+        - in: path
+          name: roleId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID du rôle à supprimer
+          example: '6c65cc5b-cfe5-4f48-86f7-6efffd6d3916'
+      responses:
+        '200':
+          description: Rôle supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project role deleted successfully'
+        '400':
+          description: Erreur de validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Erreur métier
+                    enum:
+                      - 'Project role not found'
+                      - 'Project role does not belong to this project'
+                      - 'Project not found'
+                      - 'You are not allowed to delete roles in this project'
+              examples:
+                role_not_found:
+                  summary: Rôle non trouvé
+                  value:
+                    error: 'Project role not found'
+                role_wrong_project:
+                  summary: Rôle n'appartient pas au projet
+                  value:
+                    error: 'Project role does not belong to this project'
+                project_not_found:
+                  summary: Projet non trouvé
+                  value:
+                    error: 'Project not found'
+                not_authorized:
+                  summary: Utilisateur non autorisé
+                  value:
+                    error: 'You are not allowed to delete roles in this project'
+        '401':
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
+        '403':
+          description: Accès interdit - vous n'êtes pas le propriétaire du projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not allowed to delete roles in this project'
+                  statusCode:
+                    type: integer
+                    example: 403
+        '404':
+          description: Rôle ou projet non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    oneOf:
+                      - example: 'Project role not found'
+                      - example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 404
   /techstacks:
     get:
       tags:
@@ -2143,10 +2511,10 @@ components:
               url:
                 type: string
                 description: URL du lien externe
-                example: 'https://github.com/user/my-updated-project'
-            required:
-              - type
-              - url
+          required:
+            - type
+            - url
+          example: 'https://github.com/user/my-updated-project'
         techStacks:
           type: array
           description: Liste mise à jour des IDs des technologies utilisées (optionnel)
@@ -2189,17 +2557,17 @@ components:
                 example: 'Développeur React expérimenté avec TypeScript'
                 minLength: 1
                 maxLength: 500
-              techStacks:
-                type: array
-                description: IDs des technologies requises pour ce rôle
-                items:
-                  type: string
-                example: ['1', '2']
-                minItems: 1
-            required:
-              - title
-              - description
-              - techStacks
+        techStacks:
+          type: array
+          description: IDs des technologies requises pour ce rôle
+          items:
+            type: string
+          example: ['1', '2']
+          minItems: 1
+      required:
+        - title
+        - description
+        - techStacks
       description: |
         Tous les champs sont optionnels. Seuls les champs fournis seront mis à jour.
         Les arrays (techStacks, categories, keyFeatures, projectGoals, projectRoles) 
