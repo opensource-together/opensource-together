@@ -3,13 +3,11 @@
 import { useState } from "react";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
-import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import EditRoleForm from "../forms/edit-role.form";
-import RoleApplicationForm from "../forms/role-application.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
 import { ProjectRole } from "../types/project-role.type";
 import { ProjectGoal, TechStack } from "../types/project.type";
@@ -100,7 +98,7 @@ export default function RoleCard({
             ))}
         </div>
 
-        {/* Apply Button */}
+        {/* Apply Button
         {isMaintainer ? (
           <EditRoleForm role={role} projectId={projectId}>
             <Button variant="outline">Modifier le rôle</Button>
@@ -130,7 +128,7 @@ export default function RoleCard({
               <Icon name="arrow-up-right" size="xs" variant="white" />
             </Button>
           </RoleApplicationForm>
-        )}
+        )} */}
       </div>
     </div>
   );
