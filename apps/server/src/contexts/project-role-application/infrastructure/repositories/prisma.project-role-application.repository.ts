@@ -1,55 +1,42 @@
 import { PrismaClient } from '@prisma/client';
 import { ProjectRoleApplicationRepositoryPort } from '../../use-cases/ports/project-role-application.repository.port';
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
+import { Result } from '@/libs/result';
 
 export class PrismaProjectRoleApplicationRepository
   implements ProjectRoleApplicationRepositoryPort
 {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async findByProjectRoleId(
+  async create(
+    application: ProjectRoleApplication,
+  ): Promise<Result<ProjectRoleApplication, string>> {
+    try {
+      const toRepo = application.toPrimitive();
+      const projectRoleApplication =
+        await this.prisma.projectRoleApplication.create({
+          data: toRepo,
+        });
+      return Result.ok(application);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Une erreur est survenur');
+    }
+  }
+
+  async existsPendingApplication(
+    userId: string,
     projectRoleId: string,
-  ): Promise<ProjectRoleApplication[]> {
-    const projectRoleApplications =
-      await this.prisma.projectRoleApplication.findMany({
-        where: { projectRoleId },
-      });
-    return projectRoleApplications.map((projectRoleApplication) =>
-      ProjectRoleApplication.reconstitute(projectRoleApplication),
-    );
-  }
-
-  async findByUserId(userId: string): Promise<ProjectRoleApplication[]> {
-    const projectRoleApplications =
-      await this.prisma.projectRoleApplication.findMany({
-        where: { userId },
-      });
-    return projectRoleApplications.map((projectRoleApplication) =>
-      ProjectRoleApplication.reconstitute(projectRoleApplication),
-    );
-  }
-
-  async findById(id: string): Promise<ProjectRoleApplication | null> {
-    const projectRoleApplication =
-      await this.prisma.projectRoleApplication.findUnique({
-        where: { id },
-      });
-    return projectRoleApplication
-      ? ProjectRoleApplication.reconstitute(projectRoleApplication)
-      : null;
-  }
-
-  async save(projectRoleApplication: ProjectRoleApplication): Promise<void> {
-    await this.prisma.projectRoleApplication.upsert({
-      where: { id: projectRoleApplication.id },
-      update: projectRoleApplication.toPrimitive(),
-      create: projectRoleApplication.toPrimitive(),
-    });
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.prisma.projectRoleApplication.delete({
-      where: { id },
-    });
+  ): Promise<Result<boolean, string>> {
+    try {
+      const projectRoleApplication =
+        await this.prisma.projectRoleApplication.findFirst({
+          where: { userId, projectRoleId, status: 'PENDING' },
+        });
+      return Result.ok(!!projectRoleApplication);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Une erreur est survenur');
+    }
   }
 }

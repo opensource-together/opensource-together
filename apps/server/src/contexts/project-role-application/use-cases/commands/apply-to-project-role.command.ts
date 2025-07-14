@@ -111,10 +111,7 @@ export class ApplyToProjectRoleCommandHandler
         userId,
         projectRoleId,
       );
-    if (!existingApplicationCheck.success) {
-      return Result.fail(existingApplicationCheck.error);
-    }
-    if (existingApplicationCheck.value) {
+    if (existingApplicationCheck.success) {
       return Result.fail(
         'You already have a pending application for this role',
       );
@@ -128,6 +125,7 @@ export class ApplyToProjectRoleCommandHandler
     // 8. Créer la candidature
     const applicationResult = ProjectRoleApplication.create({
       userId,
+      projectId: projectData.id!,
       projectRoleId,
       selectedKeyFeatures,
       selectedProjectGoals,

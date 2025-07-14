@@ -5,6 +5,7 @@ export type ApplicationStatus = 'PENDING' | 'APPROVAL' | 'REJECTED';
 export type ProjectRoleApplicationData = {
   id?: string;
   userId: string;
+  projectId: string;
   projectRoleId: string;
   status: ApplicationStatus;
   motivationLetter?: string;
@@ -27,21 +28,23 @@ export type ProjectRoleApplicationValidationErrors = {
 };
 
 export class ProjectRoleApplication {
-  private readonly id?: string;
-  private readonly userId: string;
-  private readonly projectRoleId: string;
-  private status: ApplicationStatus;
-  private readonly motivationLetter?: string;
-  private readonly selectedKeyFeatures: string[];
-  private readonly selectedProjectGoals: string[];
-  private rejectionReason?: string;
-  private readonly appliedAt: Date;
-  private decidedAt?: Date;
-  private decidedBy?: string;
+  public readonly id?: string;
+  public readonly userId: string;
+  public readonly projectId: string;
+  public readonly projectRoleId: string;
+  public status: ApplicationStatus;
+  public readonly motivationLetter?: string;
+  public readonly selectedKeyFeatures: string[];
+  public readonly selectedProjectGoals: string[];
+  public rejectionReason?: string;
+  public readonly appliedAt: Date;
+  public decidedAt?: Date;
+  public decidedBy?: string;
 
   private constructor(props: {
     id?: string;
     userId: string;
+    projectId: string;
     projectRoleId: string;
     status: ApplicationStatus;
     motivationLetter?: string;
@@ -54,6 +57,7 @@ export class ProjectRoleApplication {
   }) {
     this.id = props.id;
     this.userId = props.userId;
+    this.projectId = props.projectId;
     this.projectRoleId = props.projectRoleId;
     this.status = props.status;
     this.motivationLetter = props.motivationLetter;
@@ -192,6 +196,7 @@ export class ProjectRoleApplication {
     return {
       id: this.id,
       userId: this.userId,
+      projectId: this.projectId,
       projectRoleId: this.projectRoleId,
       status: this.status,
       motivationLetter: this.motivationLetter,
