@@ -3,6 +3,7 @@ import { ProjectRoleApplicationRepositoryPort } from '../../use-cases/ports/proj
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
+import { PrismaProjectRoleApplicationMapper } from './prisma.project-role-application.mapper';
 
 @Injectable()
 export class PrismaProjectRoleApplicationRepository
@@ -44,6 +45,43 @@ export class PrismaProjectRoleApplicationRepository
     } catch (error) {
       console.error(error);
       return Result.fail('Une erreur est survenur');
+    }
+  }
+
+  async findAll(
+    projectId: string,
+  ): Promise<Result<ProjectRoleApplication[], string>> {
+    try {
+      const applications = await this.prisma.projectRoleApplication.findMany({
+        where: { projectId: { equals: projectId } },
+        include: {
+          user: true,
+          projectRole: true,
+          project: true,
+        },
+      });
+      if (!applications) {
+        return Result.ok([]);
+      }
+
+      const projectRoleApplications: ProjectRoleApplication[] = [];
+
+      for (const application of applications) {
+        const domainApplication =
+          PrismaProjectRoleApplicationMapper.toDomain(application);
+        if (!domainApplication.success) {
+          return Result.fail(
+            'Une erreur est survenue lors de la récupération des candidatures',
+          );
+        }
+        projectRoleApplications.push(domainApplication.value);
+      }
+      return Result.ok(projectRoleApplications);
+    } catch (error) {
+      console.error(error);
+      return Result.fail(
+        'Une erreur est survenue lors de la récupération des candidatures',
+      );
     }
   }
 }

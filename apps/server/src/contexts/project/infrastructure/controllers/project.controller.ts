@@ -30,6 +30,8 @@ import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
+import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
+import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 
 @Controller('projects')
 export class ProjectController {
@@ -194,24 +196,15 @@ export class ProjectController {
     return { message: 'Project deleted successfully' };
   }
 
-  //   //endpoint pour tester la création d'un repository GitHub
-  //   @Post('github')
-  //   async createGitHubRepository(
-  //     @Session('userId') ownerId: string,
-  //     @Body()
-  //     project: { name: string; description?: string; isPrivate?: boolean },
-  //   ) {
-  //     const projectRes: Result<Project> = await this.commandBus.execute(
-  //       new CreateGitHubRepositoryCommand(
-  //         ownerId,
-  //         project.name,
-  //         project.description,
-  //         project.isPrivate,
-  //       ),
-  //     );
-  //     if (!projectRes.success) {
-  //       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
-  //     }
-  //     return projectRes.value;
-  //   }
+  @Get(':projectId/applications')
+  async getProjectApplications(@Param('projectId') projectId: string) {
+    const applications: Result<ProjectRoleApplication[]> =
+      await this.queryBus.execute(
+        new GetAllProjectApplicationsQuery(projectId),
+      );
+    if (!applications.success) {
+      throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
+    }
+    return applications.value;
+  }
 }

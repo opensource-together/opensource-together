@@ -59,4 +59,9 @@ export interface ProjectRoleApplicationRepositoryPort {
     userId: string,
     projectRoleId: string,
   ): Promise<Result<boolean, string>>;
+
+  /**
+   * Trouve toutes les candidatures pour un projet
+   */
+  findAll(projectId: string): Promise<Result<ProjectRoleApplication[], string>>;
 }
