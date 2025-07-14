@@ -5,7 +5,6 @@ import { useState } from "react";
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
-import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import EditRoleForm from "../forms/edit-role.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
@@ -23,17 +22,17 @@ interface RoleCardProps {
 
 export default function RoleCard({
   role,
-  techStacks = [],
-  projectGoals = [],
+  // techStacks = [],
+  // projectGoals = [],
   className,
-  isMaintainer = false,
+  // isMaintainer = false,
   projectId = "",
 }: RoleCardProps) {
-  const { techStackOptions } = useTechStack();
+  // const { techStackOptions } = useTechStack();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { deleteRole, isDeleting } = useDeleteRole(projectId, role.id);
   const {
-    title = "",
+    // title = "",
     description = "",
     techStacks: roleTechStacks = [],
   } = role;
