@@ -94,26 +94,32 @@ export class ApplyToProjectRoleCommandHandler
     const project = projectResult.value;
     const projectData = project.toPrimitive();
 
-    // 4. Valider que les keyFeatures sélectionnées appartiennent au projet
-    const projectKeyFeatureIds = projectData.keyFeatures.map((kf) => kf.id!);
-    const invalidKeyFeatures = selectedKeyFeatures.filter(
-      (id) => !projectKeyFeatureIds.includes(id),
-    );
-    if (invalidKeyFeatures.length > 0) {
-      return Result.fail(
-        'Some selected key features do not belong to this project',
+    // 4. Valider et récupérer les keyFeatures sélectionnées
+    const validKeyFeatures: string[] = [];
+    for (const selectedId of selectedKeyFeatures) {
+      const keyFeature = projectData.keyFeatures.find(
+        (kf) => kf.id === selectedId,
       );
+      if (!keyFeature) {
+        return Result.fail(
+          'Some selected key features do not belong to this project',
+        );
+      }
+      validKeyFeatures.push(keyFeature.feature);
     }
 
-    // 5. Valider que les projectGoals sélectionnés appartiennent au projet
-    const projectGoalIds = projectData.projectGoals.map((pg) => pg.id!);
-    const invalidProjectGoals = selectedProjectGoals.filter(
-      (id) => !projectGoalIds.includes(id),
-    );
-    if (invalidProjectGoals.length > 0) {
-      return Result.fail(
-        'Some selected project goals do not belong to this project',
+    // 5. Valider et récupérer les projectGoals sélectionnés
+    const validProjectGoals: string[] = [];
+    for (const selectedId of selectedProjectGoals) {
+      const projectGoal = projectData.projectGoals.find(
+        (pg) => pg.id === selectedId,
       );
+      if (!projectGoal) {
+        return Result.fail(
+          'Some selected project goals do not belong to this project',
+        );
+      }
+      validProjectGoals.push(projectGoal.goal);
     }
 
     // 6. Vérifier qu'il n'y a pas déjà une candidature PENDING pour ce couple utilisateur/rôle
@@ -141,8 +147,8 @@ export class ApplyToProjectRoleCommandHandler
       userId,
       projectId: projectData.id!,
       projectRoleId,
-      selectedKeyFeatures,
-      selectedProjectGoals,
+      selectedKeyFeatures: validKeyFeatures,
+      selectedProjectGoals: validProjectGoals,
       motivationLetter,
     });
 
