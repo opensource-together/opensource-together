@@ -30,7 +30,7 @@ import { ProjectGoal, TechStack } from "../types/project.type";
 import {
   RoleApplicationSchema,
   roleApplicationSchema,
-} from "../validations/role.schema";
+} from "../validations/project-role.schema";
 
 interface RoleApplicationFormProps {
   children: React.ReactNode;

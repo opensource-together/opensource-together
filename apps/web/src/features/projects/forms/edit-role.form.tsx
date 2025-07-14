@@ -20,9 +20,12 @@ import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { useUpdateRole } from "../hooks/use-role.hook";
+import { useUpdateRole } from "../hooks/use-project-role.hook";
 import { ProjectRole } from "../types/project.type";
-import { UpdateRoleSchema, updateRoleSchema } from "../validations/role.schema";
+import {
+  UpdateRoleSchema,
+  updateRoleSchema,
+} from "../validations/project-role.schema";
 
 interface EditRoleFormProps {
   children: React.ReactNode;

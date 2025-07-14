@@ -20,8 +20,11 @@ import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { useCreateRole } from "../hooks/use-role.hook";
-import { CreateRoleSchema, createRoleSchema } from "../validations/role.schema";
+import { useCreateRole } from "../hooks/use-project-role.hook";
+import {
+  CreateRoleSchema,
+  createRoleSchema,
+} from "../validations/project-role.schema";
 
 interface CreateRoleFormProps {
   children: React.ReactNode;
