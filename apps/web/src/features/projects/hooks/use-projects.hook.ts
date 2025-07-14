@@ -13,8 +13,9 @@ import {
 import { Project } from "../types/project.type";
 
 /**
- * Hook to get the list of projects
- * @returns projects
+ * Fetches the list of all projects.
+ *
+ * @returns A React Query result containing the list of projects.
  */
 export function useProjects() {
   return useQuery<Project[]>({
@@ -24,9 +25,10 @@ export function useProjects() {
 }
 
 /**
- * Hook to fetch project details by projectId
- * @param projectId id of the project to fetch
- * @returns project
+ * Fetches the details of a specific project by ID.
+ *
+ * @param projectId - The ID of the project to retrieve.
+ * @returns A React Query result containing the project details.
  */
 export function useProject(projectId: string) {
   return useQuery<Project>({
@@ -37,8 +39,12 @@ export function useProject(projectId: string) {
 }
 
 /**
- * Hook to create a project
- * @returns createProject, isCreating, isCreateError
+ * Handles the creation of a new project.
+ *
+ * @returns An object containing:
+ * - createProject: function to trigger the project creation
+ * - isCreating: boolean indicating if the creation is in progress
+ * - isCreateError: boolean indicating if an error occurred
  */
 export function useCreateProject() {
   const router = useRouter();
@@ -65,8 +71,12 @@ export function useCreateProject() {
 }
 
 /**
- * Hook to update a project
- * @returns updateProject, isUpdating, isUpdateError
+ * Handles the update of an existing project.
+ *
+ * @returns An object containing:
+ * - updateProject: function to trigger the project update
+ * - isUpdating: boolean indicating if the update is in progress
+ * - isUpdateError: boolean indicating if an error occurred
  */
 export function useUpdateProject() {
   const router = useRouter();

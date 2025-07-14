@@ -2,7 +2,10 @@ import { ProjectFormData } from "../stores/project-create.store";
 import { CreateProjectApiData } from "../validations/project-stepper.schema";
 
 /**
- * Transform store data to API format
+ * Transforms store data to API format.
+ *
+ * @param storeData - The data from the store.
+ * @returns The transformed data for the API.
  */
 export const transformProjectForApi = (
   storeData: ProjectFormData
