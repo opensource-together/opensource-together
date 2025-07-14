@@ -6,6 +6,7 @@ export type ProjectRoleApplicationData = {
   id?: string;
   userId: string;
   projectId: string;
+  projectRoleTitle: string;
   projectRoleId: string;
   status: ApplicationStatus;
   motivationLetter?: string;
@@ -31,6 +32,7 @@ export class ProjectRoleApplication {
   public readonly id?: string;
   public readonly userId: string;
   public readonly projectId: string;
+  public readonly projectRoleTitle: string;
   public readonly projectRoleId: string;
   public status: ApplicationStatus;
   public readonly motivationLetter?: string;
@@ -45,6 +47,7 @@ export class ProjectRoleApplication {
     id?: string;
     userId: string;
     projectId: string;
+    projectRoleTitle: string;
     projectRoleId: string;
     status: ApplicationStatus;
     motivationLetter?: string;
@@ -58,6 +61,7 @@ export class ProjectRoleApplication {
     this.id = props.id;
     this.userId = props.userId;
     this.projectId = props.projectId;
+    this.projectRoleTitle = props.projectRoleTitle;
     this.projectRoleId = props.projectRoleId;
     this.status = props.status;
     this.motivationLetter = props.motivationLetter;
@@ -197,6 +201,7 @@ export class ProjectRoleApplication {
       id: this.id,
       userId: this.userId,
       projectId: this.projectId,
+      projectRoleTitle: this.projectRoleTitle,
       projectRoleId: this.projectRoleId,
       status: this.status,
       motivationLetter: this.motivationLetter,

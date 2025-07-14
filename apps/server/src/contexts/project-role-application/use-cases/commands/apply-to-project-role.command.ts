@@ -146,6 +146,7 @@ export class ApplyToProjectRoleCommandHandler
     const applicationResult = ProjectRoleApplication.create({
       userId,
       projectId: projectData.id!,
+      projectRoleTitle: projectRole.toPrimitive().title,
       projectRoleId,
       selectedKeyFeatures: validKeyFeatures,
       selectedProjectGoals: validProjectGoals,

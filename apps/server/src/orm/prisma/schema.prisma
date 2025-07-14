@@ -125,6 +125,7 @@ model ProjectRoleApplication {
   userId        String
   projectId     String
   projectRoleId String
+  projectRoleTitle String
   status        String
   motivationLetter String?
   selectedKeyFeatures String[]
