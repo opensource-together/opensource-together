@@ -2232,6 +2232,95 @@ paths:
                   message:
                     type: string
                     description: Message d'erreur SuperTokens pour token invalide ou mot de passe incorrect
+  /projects/{roleId}/apply:
+    post:
+      tags:
+        - Project Roles
+      summary: Appliquer à un rôle de projet
+      description: |
+        Permet à un utilisateur de postuler pour un rôle de projet spécifique.
+        L'utilisateur doit fournir les fonctionnalités clés et les objectifs de projet sélectionnés.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyFeatures:
+                  type: array
+                  items:
+                    type: string
+                  description: Liste des ID des fonctionnalités clés sélectionnées.
+                projectGoals:
+                  type: array
+                  items:
+                    type: string
+                  description: Liste des ID des objectifs de projet sélectionnés.
+              required:
+                - keyFeatures
+                - projectGoals
+      responses:
+        '200':
+          description: Application réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    description: ID de l'utilisateur ayant postulé.
+                    example: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                  projectId:
+                    type: string
+                    description: ID du projet.
+                    example: '108da791-6e48-47de-9a2b-b88f739e08a2'
+                  projectRoleId:
+                    type: string
+                    description: ID du rôle de projet.
+                    example: '6262e74b-24f0-4c7b-a03c-5ac853a512ab'
+                  status:
+                    type: string
+                    description: Statut de la candidature.
+                    example: 'PENDING'
+                  selectedKeyFeatures:
+                    type: array
+                    items:
+                      type: string
+                    description: Liste des ID des fonctionnalités clés sélectionnées.
+                  selectedProjectGoals:
+                    type: array
+                    items:
+                      type: string
+                    description: Liste des ID des objectifs de projet sélectionnés.
+                  appliedAt:
+                    type: string
+                    format: date-time
+                    description: Date à laquelle la candidature a été soumise.
+                    example: '2025-07-14T20:25:07.722Z'
+        '400':
+          description: Erreur lors de la candidature
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: 'You already have a pending application for this role'
+                oneOf:
+                  - properties:
+                      message:
+                        enum:
+                          - 'You already have a pending application for this role'
+                  - properties:
+                      message:
+                        enum:
+                          - 'You cannot apply to your own project'
 components:
   schemas:
     ProjectRoleResponseDto:
@@ -2262,7 +2351,13 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Compétences techniques requises pour ce rôle
-
+      required:
+        - id
+        - projectId
+        - roleTitle
+        - description
+        - isFilled
+        - skillSet
     CreateProjectRoleDto:
       type: object
       properties:
@@ -2288,7 +2383,6 @@ components:
         - description
         - isFilled
         - skillSet
-
     UpdateProjectRoleDto:
       type: object
       properties:
@@ -2309,7 +2403,11 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Compétences techniques requises pour ce rôle
-
+      required:
+        - roleTitle
+        - description
+        - skillSet
+        - isFilled
     TechStackDto:
       type: object
       properties:
