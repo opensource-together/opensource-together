@@ -10,7 +10,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Result } from '@/libs/result';
 import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
 import { ApplyToProjectRoleCommand } from '@/contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
-// import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
+import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
 import { ApplyToRoleRequestDto } from './dto/apply-to-role-request.dto';
 
 @Controller('projects/:projectId/roles')
@@ -106,7 +106,7 @@ export class ProjectRolesController {
   }
 
   @Post(':roleId/apply')
-  applyToProjectRole(
+  async applyToProjectRole(
     @Session('userId') userId: string,
     @Param('roleId') roleId: string,
     @Body() body: ApplyToRoleRequestDto,
@@ -121,13 +121,13 @@ export class ProjectRolesController {
     });
     console.log('command', command);
 
-    // const result: Result<ProjectRoleApplication, string> =
-    //   await this.commandBus.execute(command);
+    const result: Result<ProjectRoleApplication, string> =
+      await this.commandBus.execute(command);
 
-    // if (!result.success) {
-    //   throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-    // }
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
 
-    // return result.value;
+    return result.value;
   }
 }

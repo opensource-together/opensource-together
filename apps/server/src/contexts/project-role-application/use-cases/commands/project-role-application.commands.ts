@@ -1,5 +1,5 @@
-import { ApplyToProjectRoleCommand } from './apply-to-project-role.command';
+import { ApplyToProjectRoleCommandHandler } from './apply-to-project-role.command';
 
-export const ProjectRoleApplicationCommands = {
-  ApplyToProjectRole: ApplyToProjectRoleCommand,
-};
+export const projectRoleApplicationCommandsContainer = [
+  ApplyToProjectRoleCommandHandler,
+];

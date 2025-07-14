@@ -111,7 +111,10 @@ export class ApplyToProjectRoleCommandHandler
         userId,
         projectRoleId,
       );
-    if (existingApplicationCheck.success) {
+    if (
+      existingApplicationCheck.success &&
+      existingApplicationCheck.value == true
+    ) {
       return Result.fail(
         'You already have a pending application for this role',
       );

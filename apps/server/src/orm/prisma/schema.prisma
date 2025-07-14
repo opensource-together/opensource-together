@@ -69,6 +69,7 @@ model Project {
   categories       Category[]
   keyFeatures      KeyFeature[]
   projectGoals     ProjectGoal[]
+  projectRoleApplication ProjectRoleApplication[]
   profile          Profile?              @relation(fields: [profileId], references: [userId], onDelete: Cascade)
   profileId        String?
 
@@ -122,6 +123,7 @@ model ProjectRole {
 model ProjectRoleApplication {
   id            String       @id @default(uuid())
   userId        String
+  projectId     String
   projectRoleId String
   status        String
   motivationLetter String?
@@ -133,6 +135,7 @@ model ProjectRoleApplication {
   updatedAt     DateTime     @updatedAt
   projectRole   ProjectRole  @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
   user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model UserSocialLink {

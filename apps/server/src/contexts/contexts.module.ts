@@ -6,7 +6,7 @@ import { TechStackInfrastructure } from './techstack/infrastructure/techstack.in
 import { ProjectRoleInfrastructure } from './project-role/infrastructure/project-role.infrastructure';
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
 import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
-import { PrismaProjectRoleApplicationRepository } from './project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
+import { ProjectRoleApplicationInfrastructure } from './project-role-application/infrastructure/project-role-application.infrastructure';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { PrismaProjectRoleApplicationRepository } from './project-role-applicati
     TechStackInfrastructure,
     GithubInfrastructure,
     CategoryInfrastructure,
-    PrismaProjectRoleApplicationRepository,
+    ProjectRoleApplicationInfrastructure,
   ],
   exports: [
     UserInfrastructure,
@@ -27,7 +27,7 @@ import { PrismaProjectRoleApplicationRepository } from './project-role-applicati
     TechStackInfrastructure,
     GithubInfrastructure,
     CategoryInfrastructure,
-    PrismaProjectRoleApplicationRepository,
+    ProjectRoleApplicationInfrastructure,
   ],
 })
 export class ContextsModule {}

@@ -11,11 +11,15 @@ import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/proj
 import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
 import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
 import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
+import { projectRoleApplicationUseCases } from '@/contexts/project-role-application/use-cases/project-role-application.use-cases';
+import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
+import { PrismaProjectRoleApplicationRepository } from '@/contexts/project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
 
 @Module({
   providers: [
     PrismaService,
     ...projectRoleUseCases,
+    ...projectRoleApplicationUseCases,
     {
       provide: TECHSTACK_REPOSITORY_PORT,
       useClass:
@@ -36,6 +40,10 @@ import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastru
         process.env.NODE_ENV === 'test'
           ? InMemoryProjectRoleRepository
           : PrismaProjectRoleRepository,
+    },
+    {
+      provide: PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+      useClass: PrismaProjectRoleApplicationRepository,
     },
   ],
   controllers: [ProjectRolesController],
