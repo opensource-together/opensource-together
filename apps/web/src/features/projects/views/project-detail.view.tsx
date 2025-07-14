@@ -62,7 +62,7 @@ export default function ProjectDetailView({
                 )}
               </div>
               <div className="mt-6 mb-30 flex flex-col gap-3">
-                {project.roles?.map((role) => (
+                {project.projectRoles?.map((role) => (
                   <RoleCard
                     key={role.title}
                     role={role}
@@ -70,6 +70,7 @@ export default function ProjectDetailView({
                     projectGoals={project.projectGoals}
                     className="mb-3 lg:max-w-[721.96px]"
                     isMaintainer={isMaintainer}
+                    projectId={projectId}
                   />
                 ))}
               </div>

@@ -22,8 +22,8 @@ import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useCreateRole } from "../hooks/use-project-role.hook";
 import {
-  CreateRoleSchema,
-  createRoleSchema,
+  CreateProjectRoleSchema,
+  createProjectRoleSchema,
 } from "../validations/project-role.schema";
 
 interface CreateRoleFormProps {
@@ -38,13 +38,13 @@ export default function CreateRoleForm({
   const { techStackOptions } = useTechStack();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { createRole, isCreating } = useCreateRole();
+  const { createRole, isCreating } = useCreateRole(projectId);
 
-  const form = useForm<CreateRoleSchema>({
-    resolver: zodResolver(createRoleSchema),
+  const form = useForm<CreateProjectRoleSchema>({
+    resolver: zodResolver(createProjectRoleSchema),
     defaultValues: {
       title: "",
-      techStack: [],
+      techStacks: [],
       description: "",
     },
   });
@@ -53,8 +53,8 @@ export default function CreateRoleForm({
   const descriptionValue = form.watch("description");
   const characterCount = descriptionValue?.length || 0;
 
-  const onSubmit = (data: CreateRoleSchema) => {
-    createRole({ projectId, data });
+  const onSubmit = (data: CreateProjectRoleSchema) => {
+    createRole(data);
     form.reset();
     setIsDialogOpen(false);
   };
@@ -91,7 +91,7 @@ export default function CreateRoleForm({
 
             <FormField
               control={control}
-              name="techStack"
+              name="techStacks"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel

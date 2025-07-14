@@ -1,3 +1,5 @@
+import { ProjectRole } from "./project-role.type";
+
 export interface Author {
   ownerId: string;
   name: string;
@@ -8,15 +10,6 @@ export interface TechStack {
   id: string;
   name: string;
   iconUrl?: string;
-}
-
-export interface ProjectRole {
-  id?: string;
-  title: string;
-  description: string;
-  techStacks: TechStack[];
-  roleCount?: number;
-  projectGoal?: ProjectGoal[];
 }
 
 export interface ExternalLink {
@@ -68,7 +61,7 @@ export interface Project {
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   collaborators?: Collaborator[];
   techStacks: TechStack[];
-  roles: ProjectRole[];
+  projectRoles: ProjectRole[];
   externalLinks?: ExternalLink[];
   projectStats?: ProjectStats;
   keyFeatures: KeyFeature[];

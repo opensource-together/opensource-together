@@ -84,9 +84,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "1",
         title: "Développeur·se Frontend",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
@@ -97,6 +98,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "1",
         title: "UI/UX Designer",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
@@ -107,6 +109,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "3",
+        projectId: "1",
         title: "Développeur·se Backend",
         description:
           "Nous recherchons un·e développeur·se Nest.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
@@ -218,9 +221,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "7",
         title: "Développeur·se Frontend",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
@@ -231,6 +235,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "7",
         title: "Développeur·se Backend",
         description:
           "Nous recherchons un·e développeur·se Next.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
@@ -343,9 +348,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2025-01-15"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "2",
         title: "Contributeur·rice Documentation",
         description:
           "Participez à la rédaction de la documentation officielle (https://docs.devcord.app) pour rendre DevCord encore plus accessible à la communauté.",
@@ -356,6 +362,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "2",
         title: "Développeur·se Backend",
         description:
           "Aidez-nous à améliorer le cœur du bot : parsing intelligent, génération dynamique de commandes, gestion des formats, et plus encore. Une bonne connaissance de Go est attendue.",
@@ -445,9 +452,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "6",
         title: "UI/UX Designer",
         description:
           "Conçois l'interface utilisateur de CodeSnippet et améliore l'expérience de développement des composants.",
@@ -458,6 +466,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "6",
         title: "Développeur·se Backend",
         description:
           "Développe l'API et le système de stockage des snippets, avec un focus sur la performance et la scalabilité.",
@@ -542,9 +551,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "5",
         title: "Développeur·se Core",
         description:
           "Participe au développement du cœur de NextSandbox : système de rendu des composants, hot-reload, et intégration avec Next.js.",
@@ -555,6 +565,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "5",
         title: "Designer UI/UX",
         description:
           "Conçois l'interface utilisateur de NextSandbox et améliore l'expérience de développement des composants.",
@@ -641,9 +652,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2025-05-19"),
     updatedAt: new Date("2025-05-19"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "4",
         title: "Développeur·se Backend Go",
         description:
           "Travaille sur l'API, la gestion des agents et le stockage des métriques serveur. Bonne connaissance de Go, REST, et des performances système requise.",
@@ -654,6 +666,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "4",
         title: "Contributeur·rice TUI (CLI)",
         description:
           "Développe l'interface en terminal façon k9s/vim. Connaissances appréciées en curses/tcell et design UX dans le terminal.",
@@ -744,9 +757,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "8",
         title: "Développeur·se Backend",
         description:
           "Nous recherchons un·e développeur·se Golang pour ajouter des fonctionnalités à Sherpa : Chiffrement, gestion des équipes ...",
@@ -757,6 +771,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "8",
         title: "Développeur·se Frontend",
         description:
           "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
@@ -846,9 +861,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2025-04-10"),
     updatedAt: new Date("2025-05-19"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "3",
         title: "Développeur·se Fullstack",
         description:
           "Participe au développement de Liltea avec Next.js, Fastify et TailwindCSS. Ton rôle inclara la création de composants UI, la gestion des APIs et l'optimisation des performances.",
@@ -859,6 +875,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "3",
         title: "Designer UI/UX",
         description:
           "Aide-nous à concevoir des interfaces élégantes et intuitives pour les pages de profil. Une sensibilité pour les designs minimalistes et responsives est un plus.",
@@ -936,10 +953,11 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
-        title: "Développeur·se Backend",
+        projectId: "9",
+        title: "Développeur·se Backend Go ",
         description:
           "Développe le cœur de la plateforme en Go, avec un focus sur la gestion des conteneurs et l'orchestration.",
         techStacks: [
@@ -949,6 +967,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "9",
         title: "DevOps Engineer",
         description:
           "Gère l'infrastructure cloud et l'automatisation des déploiements.",
@@ -1029,9 +1048,10 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    roles: [
+    projectRoles: [
       {
         id: "1",
+        projectId: "10",
         title: "Développeur·se Fullstack",
         description:
           "Développe les fonctionnalités de la plateforme, de l'éditeur Markdown à l'intégration Git.",
@@ -1042,6 +1062,7 @@ export const mockProjects: Project[] = [
       },
       {
         id: "2",
+        projectId: "10",
         title: "Développeur·se Backend",
         description:
           "Gère le stockage et la versioning de la documentation, avec un focus sur la performance.",

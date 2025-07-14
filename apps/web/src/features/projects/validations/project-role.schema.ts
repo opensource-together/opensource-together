@@ -4,9 +4,11 @@ import { z } from "zod";
 // CREATE ROLE SCHEMA
 // ========================================
 
-export const createRoleSchema = z.object({
-  title: z.string().min(1, "Le titre du rôle est requis"),
-  techStack: z
+export const projectRoleSchema = z.object({
+  title: z
+    .string()
+    .min(5, "Le titre du rôle doit contenir au moins 5 caractères"),
+  techStacks: z
     .array(z.string())
     .min(1, "Au moins une technologie est requise")
     .max(6, "Maximum 6 technologies autorisées"),
@@ -16,7 +18,9 @@ export const createRoleSchema = z.object({
     .max(250, "La description ne peut pas dépasser 250 caractères"),
 });
 
-export const updateRoleSchema = createRoleSchema;
+export const createProjectRoleSchema = projectRoleSchema;
+
+export const updateProjectRoleSchema = projectRoleSchema;
 
 // ========================================
 // ROLE APPLICATION SCHEMA
@@ -34,6 +38,7 @@ export const roleApplicationSchema = z.object({
 // TYPE EXPORTS
 // ========================================
 
-export type CreateRoleSchema = z.infer<typeof createRoleSchema>;
-export type UpdateRoleSchema = z.infer<typeof updateRoleSchema>;
+export type ProjectRoleSchema = z.infer<typeof projectRoleSchema>;
+export type CreateProjectRoleSchema = z.infer<typeof createProjectRoleSchema>;
+export type UpdateProjectRoleSchema = z.infer<typeof updateProjectRoleSchema>;
 export type RoleApplicationSchema = z.infer<typeof roleApplicationSchema>;

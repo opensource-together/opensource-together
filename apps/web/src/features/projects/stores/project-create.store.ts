@@ -1,12 +1,12 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
+import { ProjectRole } from "../types/project-role.type";
 import {
   Category,
   ExternalLink,
   KeyFeature,
   ProjectGoal,
-  ProjectRole,
   TechStack,
 } from "../types/project.type";
 
