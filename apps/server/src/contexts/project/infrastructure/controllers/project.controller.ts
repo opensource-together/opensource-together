@@ -3,7 +3,7 @@ import { Result } from '@/libs/result';
 import {
   Body,
   Controller,
-  // Get,
+  Get,
   // Param,
   // Query,
   HttpException,
@@ -14,26 +14,17 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-// import { ProjectResponseDto } from '@/application/dto/adapters/project-response.dto';
-// import { toProjectResponseDto } from '@/application/dto/adapters/project-response.adapter';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Session } from 'supertokens-nestjs';
-// import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
-// import { FindProjectByFiltersQuery } from '@/contexts/project/use-cases/queries/find-by-filters/find-project-by-filters.handler';
-// import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
-// import { CreateProjectDtoRequest } from './dto/CreateaProjectDtoRequest';
-// import { UpdateProjectDtoRequest } from './dto/UpdateProjectDto.request';
-// import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.usecase';
-// import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
-// import { FilterProjectsDto } from './dto/SearchFilterProject.dto';
+import { Session, PublicAccess } from 'supertokens-nestjs';
+import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import { Octokit } from '@octokit/rest';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
-// import { CreateGitHubRepositoryCommand } from '@/contexts/github/use-cases/commands/create-github-repository.command';
-@UseGuards(GithubAuthGuard)
+import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
+
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -41,16 +32,18 @@ export class ProjectController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  //   @Get()
-  //   async getProjects(): Promise<ProjectResponseDto[]> {
-  //     const projects: Result<Project[]> = await this.queryBus.execute(
-  //       new GetProjectsQuery(),
-  //     );
-  //     if (!projects.success) {
-  //       throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
-  //     }
-  //     return projects.value.map((project: Project) => toProjectResponseDto(project));
-  //   }
+  // Route publique pour récupérer tous les projets
+  @PublicAccess()
+  @Get()
+  async getProjects() {
+    const projects: Result<Project[]> = await this.queryBus.execute(
+      new GetProjectsQuery(),
+    );
+    if (!projects.success) {
+      throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
+    }
+    return GetProjectsResponseDto.toResponse(projects.value);
+  }
 
   //   @Get('search')
   //   async getProjectsFiltered(
@@ -96,7 +89,9 @@ export class ProjectController {
   //     return toProjectResponseDto(projectRes.value);
   //   }
 
+  // Route privée pour créer un projet (nécessite authentification GitHub)
   @Post()
+  @UseGuards(GithubAuthGuard)
   async createProject(
     @Session('userId') ownerId: string,
     @Req() req: Request,

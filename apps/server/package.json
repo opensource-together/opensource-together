@@ -27,6 +27,7 @@
     "prisma:reset:local": "pnpm prisma migrate reset --schema=src/orm/prisma/schema.prisma",
     "prisma:generate:local": "pnpm prisma generate --schema=src/orm/prisma/schema.prisma",
     "prisma:migrate:dev:local": "pnpm prisma migrate dev --schema=src/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/orm/prisma/schema.prisma",
+    "prisma:push:local": "pnpm prisma db push --schema=src/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/orm/prisma/schema.prisma",
     "prisma:migrate:deploy:local": "pnpm prisma migrate deploy --schema=src/orm/prisma/schema.prisma",
     "prisma:migrate:reset:local": "pnpm prisma migrate reset --schema=src/orm/prisma/schema.prisma",
     "prisma:studio:local": "pnpm prisma studio --schema=src/orm/prisma/schema.prisma"
