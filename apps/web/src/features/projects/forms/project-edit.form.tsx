@@ -20,7 +20,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     title,
     shortDescription,
     techStacks,
-    roles,
+    projectRoles,
     keyFeatures,
     projectGoals,
     categories,
@@ -37,7 +37,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
       techStack: techStacks?.map((tech) => tech.id) || [],
       categories: categories?.map((category) => category.id) || [],
       projectRoles:
-        roles?.map((role) => ({
+        projectRoles?.map((role) => ({
           title: role.title,
           description: role.description,
           techStack: role.techStacks?.map((tech) => tech.id) || [],
