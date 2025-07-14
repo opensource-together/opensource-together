@@ -42,7 +42,7 @@ export default function ProjectMainEditForm({
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      setValue("keyFeatures", [...keyFeatures, { title: newFeature.trim() }]);
+      setValue("keyFeatures", [...keyFeatures, { feature: newFeature.trim() }]);
       setNewFeature("");
     }
   };
@@ -165,7 +165,7 @@ export default function ProjectMainEditForm({
                       {keyFeatures.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
                           <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm">
-                            {feature.title}
+                            {feature.feature}
                           </div>
                           <Button
                             type="button"

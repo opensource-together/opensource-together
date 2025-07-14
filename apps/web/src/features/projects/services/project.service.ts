@@ -129,7 +129,7 @@ export const updateProject = async (
         : [],
       techStacks: data.techStack || [],
       categories: data.categories || [],
-      keyFeatures: data.keyFeatures?.map((feature) => feature.title) || [],
+      keyFeatures: data.keyFeatures?.map((feature) => feature.feature) || [],
       projectGoals: data.projectGoals?.map((goal) => goal.goal) || [],
       projectRoles:
         data.projectRoles?.map((role) => ({

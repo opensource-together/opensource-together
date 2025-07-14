@@ -127,11 +127,11 @@ export const mockProjects: Project[] = [
       forks: 0,
     },
     keyFeatures: [
-      { id: "1", title: "Défis LeetCode quotidiens automatisés" },
-      { id: "2", title: "Système de classement compétitif" },
-      { id: "3", title: "Canal d'entraide communautaire" },
-      { id: "4", title: "Interface Discord intuitive" },
-      { id: "5", title: "Suivi des progrès personnalisé" },
+      { id: "1", feature: "Défis LeetCode quotidiens automatisés" },
+      { id: "2", feature: "Système de classement compétitif" },
+      { id: "3", feature: "Canal d'entraide communautaire" },
+      { id: "4", feature: "Interface Discord intuitive" },
+      { id: "5", feature: "Suivi des progrès personnalisé" },
     ],
     projectGoals: [
       {
@@ -253,11 +253,11 @@ export const mockProjects: Project[] = [
       forks: 0,
     },
     keyFeatures: [
-      { id: "1", title: "Système de challenges open source" },
-      { id: "2", title: "techStacks de progression personnalisés" },
-      { id: "3", title: "Notifications GitHub intégrées" },
-      { id: "4", title: "Suivi des pull requests" },
-      { id: "5", title: "Interface moderne et intuitive" },
+      { id: "1", feature: "Système de challenges open source" },
+      { id: "2", feature: "techStacks de progression personnalisés" },
+      { id: "3", feature: "Notifications GitHub intégrées" },
+      { id: "4", feature: "Suivi des pull requests" },
+      { id: "5", feature: "Interface moderne et intuitive" },
     ],
     projectGoals: [
       { id: "1", goal: "Gamifier la contribution à l'open source" },
@@ -374,8 +374,8 @@ export const mockProjects: Project[] = [
       forks: 10,
     },
     keyFeatures: [
-      { id: "1", title: "Commandes de formatage de code intégrées" },
-      { id: "5", title: "Support Discord et Slack" },
+      { id: "1", feature: "Commandes de formatage de code intégrées" },
+      { id: "5", feature: "Support Discord et Slack" },
     ],
     projectGoals: [
       {
@@ -475,11 +475,11 @@ export const mockProjects: Project[] = [
       forks: 8,
     },
     keyFeatures: [
-      { id: "1", title: "Stockage et organisation de snippets" },
-      { id: "2", title: "Hub communautaire de partage" },
-      { id: "3", title: "Recherche avancée par tags et langages" },
-      { id: "4", title: "Intégration IDE via extensions" },
-      { id: "5", title: "Système de notation et commentaires" },
+      { id: "1", feature: "Stockage et organisation de snippets" },
+      { id: "2", feature: "Hub communautaire de partage" },
+      { id: "3", feature: "Recherche avancée par tags et langages" },
+      { id: "4", feature: "Intégration IDE via extensions" },
+      { id: "5", feature: "Système de notation et commentaires" },
     ],
     projectGoals: [
       { id: "1", goal: "Devenir la référence pour le stockage de snippets" },
@@ -576,11 +576,11 @@ export const mockProjects: Project[] = [
       forks: 5,
     },
     keyFeatures: [
-      { id: "1", title: "Alternative légère à Storybook" },
-      { id: "2", title: "Support natif des Server Components" },
-      { id: "3", title: "Optimisation des images Next.js" },
-      { id: "4", title: "Hot-reload intelligent" },
-      { id: "5", title: "Intégration routing Next.js" },
+      { id: "1", feature: "Alternative légère à Storybook" },
+      { id: "2", feature: "Support natif des Server Components" },
+      { id: "3", feature: "Optimisation des images Next.js" },
+      { id: "4", feature: "Hot-reload intelligent" },
+      { id: "5", feature: "Intégration routing Next.js" },
     ],
     projectGoals: [
       {
@@ -672,11 +672,11 @@ export const mockProjects: Project[] = [
       forks: 2,
     },
     keyFeatures: [
-      { id: "1", title: "Interface terminal façon k9s" },
-      { id: "2", title: "Monitoring temps réel des conteneurs" },
-      { id: "3", title: "Architecture modulaire (serveur/agent/TUI)" },
-      { id: "4", title: "Métriques système détaillées" },
-      { id: "5", title: "Auto-hébergement et open source" },
+      { id: "1", feature: "Interface terminal façon k9s" },
+      { id: "2", feature: "Monitoring temps réel des conteneurs" },
+      { id: "3", feature: "Architecture modulaire (serveur/agent/TUI)" },
+      { id: "4", feature: "Métriques système détaillées" },
+      { id: "5", feature: "Auto-hébergement et open source" },
     ],
     projectGoals: [
       {
@@ -771,11 +771,11 @@ export const mockProjects: Project[] = [
       forks: 0,
     },
     keyFeatures: [
-      { id: "1", title: "Chiffrement zero-trust des données" },
-      { id: "2", title: "Partage collaboratif en équipe" },
-      { id: "3", title: "Interface CLI et web intuitive" },
-      { id: "4", title: "Gestion des environnements multiples" },
-      { id: "5", title: "Synchronisation automatique" },
+      { id: "1", feature: "Chiffrement zero-trust des données" },
+      { id: "2", feature: "Partage collaboratif en équipe" },
+      { id: "3", feature: "Interface CLI et web intuitive" },
+      { id: "4", feature: "Gestion des environnements multiples" },
+      { id: "5", feature: "Synchronisation automatique" },
     ],
     projectGoals: [
       {
@@ -872,11 +872,11 @@ export const mockProjects: Project[] = [
       forks: 5,
     },
     keyFeatures: [
-      { id: "1", title: "Pages bio stylées et animées" },
-      { id: "2", title: "Thèmes personnalisables" },
-      { id: "3", title: "Centralisation de tous tes liens" },
-      { id: "4", title: "Design responsive optimisé" },
-      { id: "5", title: "Analyses de trafic intégrées" },
+      { id: "1", feature: "Pages bio stylées et animées" },
+      { id: "2", feature: "Thèmes personnalisables" },
+      { id: "3", feature: "Centralisation de tous tes liens" },
+      { id: "4", feature: "Design responsive optimisé" },
+      { id: "5", feature: "Analyses de trafic intégrées" },
     ],
     projectGoals: [
       { id: "1", goal: "Devenir l'alternative moderne à Linktree" },
@@ -961,11 +961,11 @@ export const mockProjects: Project[] = [
       forks: 23,
     },
     keyFeatures: [
-      { id: "1", title: "Environnements cloud instantanés" },
-      { id: "2", title: "Configuration automatisée" },
-      { id: "3", title: "Partage d'environnements en équipe" },
-      { id: "4", title: "Intégration Docker/Kubernetes" },
-      { id: "5", title: "Templates prêts à l'emploi" },
+      { id: "1", feature: "Environnements cloud instantanés" },
+      { id: "2", feature: "Configuration automatisée" },
+      { id: "3", feature: "Partage d'environnements en équipe" },
+      { id: "4", feature: "Intégration Docker/Kubernetes" },
+      { id: "5", feature: "Templates prêts à l'emploi" },
     ],
     projectGoals: [
       {
@@ -1053,11 +1053,11 @@ export const mockProjects: Project[] = [
       forks: 18,
     },
     keyFeatures: [
-      { id: "1", title: "Éditeur Markdown collaboratif" },
-      { id: "2", title: "Versioning Git natif" },
-      { id: "3", title: "Templates de documentation" },
-      { id: "4", title: "Recherche avancée" },
-      { id: "5", title: "Intégration outils développement" },
+      { id: "1", feature: "Éditeur Markdown collaboratif" },
+      { id: "2", feature: "Versioning Git natif" },
+      { id: "3", feature: "Templates de documentation" },
+      { id: "4", feature: "Recherche avancée" },
+      { id: "5", feature: "Intégration outils développement" },
     ],
     projectGoals: [
       { id: "1", goal: "Devenir la référence pour la documentation technique" },

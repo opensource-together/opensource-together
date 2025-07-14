@@ -46,11 +46,13 @@ export interface Collaborator {
 
 export interface KeyFeature {
   id?: string;
-  title: string;
+  projectId?: string;
+  feature: string;
 }
 
 export interface ProjectGoal {
   id?: string;
+  projectId?: string;
   goal: string;
 }
 

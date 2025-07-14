@@ -66,7 +66,7 @@ export function StepOneForm() {
 
   const addFeature = () => {
     if (newFeature.trim()) {
-      appendFeature({ title: newFeature.trim() });
+      appendFeature({ feature: newFeature.trim() });
       setNewFeature("");
     }
   };
@@ -161,7 +161,7 @@ export function StepOneForm() {
                     {keyFeatureFields.map((feature, index) => (
                       <div key={index} className="flex items-center gap-2">
                         <div className="flex-1 rounded-md bg-gray-50 p-2">
-                          {feature.title}
+                          {feature.feature}
                         </div>
                         <Button
                           type="button"
