@@ -29,6 +29,7 @@ model User {
   updatedAt         DateTime               @updatedAt
   githubCredentials UserGitHubCredentials?
   profile           Profile?
+  projectRoleApplication ProjectRoleApplication[]
 }
 
 model Profile {
@@ -113,9 +114,25 @@ model ProjectRole {
   project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-
+  projectRoleApplication ProjectRoleApplication[]
   // Index pour recherche par projet et rôle
   @@index([projectId, title], name: "idx_project_roles") // UPDATED
+}
+
+model ProjectRoleApplication {
+  id            String       @id @default(uuid())
+  userId        String
+  projectRoleId String
+  status        String
+  motivationLetter String?
+  selectedKeyFeatures String[]
+  selectedProjectGoals String[]
+  rejectionReason String?
+  appliedAt DateTime @default(now())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  projectRole   ProjectRole  @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserSocialLink {
