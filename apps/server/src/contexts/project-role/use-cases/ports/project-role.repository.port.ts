@@ -12,12 +12,12 @@ export interface ProjectRoleRepositoryPort {
   /**
    * Met à jour un rôle de projet existant
    */
-  // update(projectRole: ProjectRole): Promise<Result<ProjectRole, string>>;
+  update(projectRole: ProjectRole): Promise<Result<ProjectRole, string>>;
 
   /**
    * Trouve un rôle de projet par son ID
    */
-  // findById(id: string): Promise<Result<ProjectRole, string>>;
+  findById(id: string): Promise<Result<ProjectRole, string>>;
 
   /**
    * Trouve tous les rôles d'un projet
