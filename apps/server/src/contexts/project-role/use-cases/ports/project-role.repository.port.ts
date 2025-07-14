@@ -35,7 +35,7 @@ export interface ProjectRoleRepositoryPort {
   /**
    * Supprime un rôle de projet
    */
-  // delete(id: string): Promise<Result<boolean, string>>;
+  delete(id: string): Promise<Result<boolean, string>>;
 
   /**
    * Vérifie si un rôle existe dans un projet

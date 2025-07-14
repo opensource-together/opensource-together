@@ -1429,6 +1429,126 @@ paths:
                   statusCode:
                     type: integer
                     example: 404
+    delete:
+      tags:
+        - Project Roles
+      summary: Supprimer un rôle de projet existant
+      description: |
+        Supprime définitivement un rôle de projet existant.
+
+        **Comportement détaillé :**
+        - Vérifie que le rôle existe et appartient au projet spécifié
+        - Vérifie que l'utilisateur est propriétaire du projet
+        - Supprime définitivement le rôle de la base de données
+        - Retourne un message de confirmation
+
+        **⚠️ Action irréversible :**
+        Cette action supprime définitivement le rôle et ne peut pas être annulée.
+
+        **Authentification requise :** Session utilisateur
+      security:
+        - supertokens_session: []
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID du projet
+          example: '3c2ee6b8-559e-42be-beb9-1807984270f3'
+        - in: path
+          name: roleId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID du rôle à supprimer
+          example: '6c65cc5b-cfe5-4f48-86f7-6efffd6d3916'
+      responses:
+        '200':
+          description: Rôle supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Project role deleted successfully'
+        '400':
+          description: Erreur de validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Erreur métier
+                    enum:
+                      - 'Project role not found'
+                      - 'Project role does not belong to this project'
+                      - 'Project not found'
+                      - 'You are not allowed to delete roles in this project'
+              examples:
+                role_not_found:
+                  summary: Rôle non trouvé
+                  value:
+                    error: 'Project role not found'
+                role_wrong_project:
+                  summary: Rôle n'appartient pas au projet
+                  value:
+                    error: 'Project role does not belong to this project'
+                project_not_found:
+                  summary: Projet non trouvé
+                  value:
+                    error: 'Project not found'
+                not_authorized:
+                  summary: Utilisateur non autorisé
+                  value:
+                    error: 'You are not allowed to delete roles in this project'
+        '401':
+          description: Non authentifié - session requise
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'unauthorised'
+                  statusCode:
+                    type: integer
+                    example: 401
+        '403':
+          description: Accès interdit - vous n'êtes pas le propriétaire du projet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'You are not allowed to delete roles in this project'
+                  statusCode:
+                    type: integer
+                    example: 403
+        '404':
+          description: Rôle ou projet non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    oneOf:
+                      - example: 'Project role not found'
+                      - example: 'Project not found'
+                  statusCode:
+                    type: integer
+                    example: 404
   /techstacks:
     get:
       tags:

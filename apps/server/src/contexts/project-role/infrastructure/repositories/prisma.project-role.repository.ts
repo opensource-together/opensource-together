@@ -89,4 +89,15 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepositoryPort {
       return Result.fail(`Error updating project role: ${error}`);
     }
   }
+
+  async delete(id: string): Promise<Result<boolean, string>> {
+    try {
+      await this.prisma.projectRole.delete({
+        where: { id },
+      });
+      return Result.ok(true);
+    } catch (error) {
+      return Result.fail(`Error deleting project role: ${error}`);
+    }
+  }
 }
