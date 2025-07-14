@@ -2,15 +2,14 @@ name: ci.yml
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
   pull_request:
-    branches: ['main']
+    branches: ["main"]
 
 permissions:
   contents: read
 
 jobs:
-  
   ci-back:
     runs-on: ubuntu-latest
     defaults:
@@ -31,7 +30,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node_version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
           cache-dependency-path: ./apps/server/pnpm-lock.yaml
 
       - name: Install dependencies
@@ -54,6 +53,10 @@ jobs:
     defaults:
       run:
         working-directory: ./apps/web
+    environment:
+      name: CI
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
 
     steps:
       - name: Checkout branch
@@ -69,7 +72,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node_version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
           cache-dependency-path: ./apps/web/pnpm-lock.yaml
 
       - name: Install dependencies
