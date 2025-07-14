@@ -4,7 +4,7 @@ import {
   Body,
   Controller,
   Get,
-  // Param,
+  Param,
   // Query,
   HttpException,
   HttpStatus,
@@ -18,12 +18,14 @@ import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/crea
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Session, PublicAccess } from 'supertokens-nestjs';
 import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
+import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import { Octokit } from '@octokit/rest';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
+import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
 
 @Controller('projects')
 export class ProjectController {
@@ -43,6 +45,19 @@ export class ProjectController {
       throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
     }
     return GetProjectsResponseDto.toResponse(projects.value);
+  }
+
+  // Route publique pour récupérer un projet par son ID
+  @PublicAccess()
+  @Get(':id')
+  async getProject(@Param('id') id: string) {
+    const projectRes: Result<Project, string> = await this.queryBus.execute(
+      new FindProjectByIdQuery(id),
+    );
+    if (!projectRes.success) {
+      throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
+    }
+    return GetProjectByIdResponseDto.toResponse(projectRes.value);
   }
 
   //   @Get('search')
@@ -76,17 +91,6 @@ export class ProjectController {
   //     return projectsFiltered.value.map((project: Project) =>
   //       toProjectResponseDto(project),
   //     );
-  //   }
-
-  //   @Get(':id')
-  //   async getProject(@Param('id') id: string) {
-  //     const projectRes: Result<Project> = await this.queryBus.execute(
-  //       new FindProjectByIdQuery(id),
-  //     );
-  //     if (!projectRes.success) {
-  //       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
-  //     }
-  //     return toProjectResponseDto(projectRes.value);
   //   }
 
   // Route privée pour créer un projet (nécessite authentification GitHub)
