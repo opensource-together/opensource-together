@@ -327,6 +327,54 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
+  async findProjectsByUserId(
+    userId: string,
+  ): Promise<Result<Project[], string>> {
+    try {
+      const projectsPrisma = await this.prisma.project.findMany({
+        where: {
+          OR: [
+            // Projets où l'utilisateur est propriétaire
+            { ownerId: userId },
+            // Projets où l'utilisateur est membre
+            { projectMembers: { some: { userId } } },
+          ],
+        },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { techStacks: true },
+          },
+          projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
+          externalLinks: true,
+        },
+      });
+
+      if (!projectsPrisma || projectsPrisma.length === 0) return Result.ok([]);
+
+      const domainProjects: Project[] = [];
+
+      for (const projectPrisma of projectsPrisma) {
+        const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
+        if (!domainProject.success) {
+          return Result.fail(
+            typeof domainProject.error === 'string'
+              ? domainProject.error
+              : JSON.stringify(domainProject.error),
+          );
+        }
+        domainProjects.push(domainProject.value);
+      }
+
+      return Result.ok(domainProjects);
+    } catch (error) {
+      return Result.fail(`Unknown error : ${error}`);
+    }
+  }
+
   async findByTitle(title: string): Promise<Result<Project, string>> {
     try {
       console.log('title', title);
