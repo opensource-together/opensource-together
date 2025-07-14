@@ -10,6 +10,10 @@ import {
   GetProjectsHandler,
   GetProjectsQuery,
 } from './get-all/get-projects.handler';
+import {
+  FindProjectsByUserIdHandler,
+  FindProjectsByUserIdQuery,
+} from './find-by-user-id/find-projects-by-user-id.handler';
 
 export const projectQueriesContainer = [
   // FindProjectByFiltersHandler,
@@ -18,4 +22,6 @@ export const projectQueriesContainer = [
   FindProjectByIdQuery,
   GetProjectsHandler,
   GetProjectsQuery,
+  FindProjectsByUserIdHandler,
+  FindProjectsByUserIdQuery,
 ];

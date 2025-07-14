@@ -9,6 +9,7 @@ export interface ProjectRepositoryPort {
   update(id: string, project: Project): Promise<Result<Project, string>>;
   findById(id: string): Promise<Result<Project, string>>;
   getAllProjects(): Promise<Result<Project[], string>>;
+  findProjectsByUserId(userId: string): Promise<Result<Project[], string>>;
   // findProjectByFilters(filters: ProjectFilterInputsDto): Promise<Result<Project[], string>>;
   // updateProjectById(
   //   id: string,
