@@ -201,6 +201,12 @@ export class ProjectController {
     @Session('userId') userId: string,
     @Param('projectId') projectId: string,
   ) {
+    const projectResult: Result<Project> = await this.queryBus.execute(
+      new FindProjectByIdQuery(projectId),
+    );
+    if (!projectResult.success) {
+      throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
+    }
     const applications: Result<ProjectRoleApplication[]> =
       await this.queryBus.execute(
         new GetAllProjectApplicationsQuery({ projectId, userId }),
