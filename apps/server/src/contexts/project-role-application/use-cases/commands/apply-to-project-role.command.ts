@@ -18,6 +18,13 @@ import {
   ProjectRoleApplicationValidationErrors,
 } from '../../domain/project-role-application.entity';
 import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
+import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
+import {
+  MAILING_SERVICE_PORT,
+  MailingServicePort,
+  SendEmailPayload,
+} from '@/mailing/ports/mailing.service.port';
 
 export class ApplyToProjectRoleCommand implements ICommand {
   constructor(
@@ -36,12 +43,16 @@ export class ApplyToProjectRoleCommandHandler
   implements ICommandHandler<ApplyToProjectRoleCommand>
 {
   constructor(
+    @Inject(USER_REPOSITORY_PORT)
+    private readonly userRepo: UserRepositoryPort,
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
     private readonly applicationRepo: ProjectRoleApplicationRepositoryPort,
     @Inject(PROJECT_ROLE_REPOSITORY_PORT)
     private readonly projectRoleRepo: ProjectRoleRepositoryPort,
     @Inject(PROJECT_REPOSITORY_PORT)
     private readonly projectRepo: ProjectRepositoryPort,
+    @Inject(MAILING_SERVICE_PORT)
+    private readonly mailingService: MailingServicePort,
   ) {}
 
   async execute(
@@ -146,6 +157,27 @@ export class ApplyToProjectRoleCommandHandler
     if (!savedApplication.success) {
       return Result.fail('Unable to create application');
     }
+    // 10. Envoyer un email au propriétaire du projet
+    const projectOwner = await this.userRepo.findById(projectData.ownerId);
+    if (!projectOwner.success) {
+      return Result.fail('Unable to find project owner');
+    }
+    const projectOwnerData = projectOwner.value.toPrimitive();
+    const projectOwnerEmail = projectOwnerData.email;
+    const projectOwnerUsername = projectOwnerData.username;
+
+    const emailPayload: SendEmailPayload = {
+      to: projectOwnerEmail,
+      subject: `Nouvelle candidature pour le rôle ${projectRole.toPrimitive().title} dans le projet ${projectData.title}`,
+      html: `
+        <p>Salut ${projectOwnerUsername},</p>
+        <p>Une nouvelle candidature a été soumise pour le rôle ${projectRole.toPrimitive().title} dans votre projet ${projectData.title}.</p>
+        <p>Vous pouvez la consulter <a href="${process.env.FRONTEND_URL}/projects/${projectData.id}/applications">ici</a>.</p>
+        <p>Cordialement,</p>
+        <p>L'équipe Open Source Together</p>
+      `,
+    };
+    await this.mailingService.sendEmail(emailPayload);
 
     return Result.ok(savedApplication.value);
   }

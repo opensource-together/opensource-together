@@ -7,6 +7,10 @@ import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/
 import { PrismaProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/prisma.project-role.repository';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repositories/prisma.project.repository';
+import { MAILING_SERVICE_PORT } from '@/mailing/ports/mailing.service.port';
+import { ResendMailingService } from '@/mailing/infrastructure/resend.mailing.service';
+import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
+import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 
 @Module({
   providers: [
@@ -23,6 +27,14 @@ import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repos
     {
       provide: PROJECT_REPOSITORY_PORT,
       useClass: PrismaProjectRepository,
+    },
+    {
+      provide: MAILING_SERVICE_PORT,
+      useClass: ResendMailingService,
+    },
+    {
+      provide: USER_REPOSITORY_PORT,
+      useClass: PrismaUserRepository,
     },
   ],
   exports: [

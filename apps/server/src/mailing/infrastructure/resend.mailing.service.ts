@@ -13,15 +13,17 @@ export class ResendMailingService implements MailingServicePort {
 
   async sendEmail(payload: SendEmailPayload): Promise<Result<void, string>> {
     try {
-      await this.resend.emails.send({
+      const resendResponse = await this.resend.emails.send({
         from: payload.from ?? process.env.RESEND_FROM!, // ex: "noreply@opensourcetogether.dev"
         to: payload.to,
         subject: payload.subject,
         html: payload.html,
         text: payload.text,
       });
+      console.log(resendResponse);
       return Result.ok(undefined);
     } catch (err: any) {
+      console.error(err);
       this.logger.error('Failed to send email', err);
       return Result.fail('MAIL_SEND_FAILED');
     }
