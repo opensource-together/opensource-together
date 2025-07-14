@@ -4,6 +4,7 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
 import {
   createProjectRole,
+  deleteProjectRole,
   updateProjectRole,
 } from "../services/project-role.service";
 import {
@@ -73,5 +74,37 @@ export const useUpdateRole = (projectId: string, roleId: string) => {
     updateRole: mutation.mutate,
     isUpdating: mutation.isPending,
     isUpdateError: mutation.isError,
+  };
+};
+
+/**
+ * Handles the deletion of a project role.
+ *
+ * @param projectId - The ID of the project containing the role.
+ * @param roleId - The ID of the role to delete.
+ * @returns An object containing:
+ * - deleteRole: function to trigger the role deletion
+ * - isDeleting: boolean indicating if the deletion is in progress
+ * - isDeleteError: boolean indicating if an error occurred
+ */
+export const useDeleteRole = (projectId: string, roleId: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: () => deleteProjectRole(projectId, roleId),
+    loadingMessage: "Suppression du rôle en cours...",
+    successMessage: "Rôle supprimé avec succès",
+    errorMessage: "Erreur lors de la suppression du rôle",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      },
+    },
+  });
+
+  return {
+    deleteRole: mutation.mutate,
+    isDeleting: mutation.isPending,
+    isDeleteError: mutation.isError,
   };
 };

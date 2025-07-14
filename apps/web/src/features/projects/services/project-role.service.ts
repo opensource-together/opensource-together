@@ -79,6 +79,38 @@ export const updateProjectRole = async (
   }
 };
 
+/**
+ * Delete a project role.
+ *
+ * @param projectId - The ID of the project containing the role.
+ * @param roleId - The ID of the role to delete.
+ */
+export const deleteProjectRole = async (
+  projectId: string,
+  roleId: string
+): Promise<void> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/projects/${projectId}/roles/${roleId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error deleting project role");
+    }
+  } catch (error) {
+    console.error("Error deleting project role:", error);
+    throw error;
+  }
+};
+
 // // Mock API service
 // export const roleService = {
 //   createRole: async ({
