@@ -48,7 +48,7 @@ export class PrismaProjectRoleApplicationRepository
     }
   }
 
-  async findAll(
+  async findAllByProjectId(
     projectId: string,
   ): Promise<Result<ProjectRoleApplication[], string>> {
     try {

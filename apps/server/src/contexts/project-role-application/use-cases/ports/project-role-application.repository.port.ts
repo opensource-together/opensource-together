@@ -63,5 +63,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   /**
    * Trouve toutes les candidatures pour un projet
    */
-  findAll(projectId: string): Promise<Result<ProjectRoleApplication[], string>>;
+  findAllByProjectId(
+    projectId: string,
+  ): Promise<Result<ProjectRoleApplication[], string>>;
 }

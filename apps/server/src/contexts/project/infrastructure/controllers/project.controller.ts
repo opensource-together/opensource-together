@@ -197,10 +197,13 @@ export class ProjectController {
   }
 
   @Get(':projectId/applications')
-  async getProjectApplications(@Param('projectId') projectId: string) {
+  async getProjectApplications(
+    @Session('userId') userId: string,
+    @Param('projectId') projectId: string,
+  ) {
     const applications: Result<ProjectRoleApplication[]> =
       await this.queryBus.execute(
-        new GetAllProjectApplicationsQuery(projectId),
+        new GetAllProjectApplicationsQuery({ projectId, userId }),
       );
     if (!applications.success) {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
