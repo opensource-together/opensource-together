@@ -6,6 +6,7 @@ import { TechStackInfrastructure } from './techstack/infrastructure/techstack.in
 import { ProjectRoleInfrastructure } from './project-role/infrastructure/project-role.infrastructure';
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
 import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
+import { MailingModule } from '@/mailing/infrastructure/mailing.infrastructure';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CategoryInfrastructure } from './category/infrastructure/category.infra
     TechStackInfrastructure,
     GithubInfrastructure,
     CategoryInfrastructure,
+    MailingModule,
   ],
   exports: [
     UserInfrastructure,
