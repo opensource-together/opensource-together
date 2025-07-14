@@ -12,12 +12,12 @@ export interface ProjectRoleRepositoryPort {
   /**
    * Met à jour un rôle de projet existant
    */
-  // update(projectRole: ProjectRole): Promise<Result<ProjectRole, string>>;
+  update(projectRole: ProjectRole): Promise<Result<ProjectRole, string>>;
 
   /**
    * Trouve un rôle de projet par son ID
    */
-  // findById(id: string): Promise<Result<ProjectRole, string>>;
+  findById(id: string): Promise<Result<ProjectRole, string>>;
 
   /**
    * Trouve tous les rôles d'un projet
@@ -35,7 +35,7 @@ export interface ProjectRoleRepositoryPort {
   /**
    * Supprime un rôle de projet
    */
-  // delete(id: string): Promise<Result<boolean, string>>;
+  delete(id: string): Promise<Result<boolean, string>>;
 
   /**
    * Vérifie si un rôle existe dans un projet
