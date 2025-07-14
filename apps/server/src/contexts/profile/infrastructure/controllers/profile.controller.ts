@@ -32,7 +32,6 @@ export class ProfileController {
     return this.getProfileById(userId);
   }
 
-  // Route publique pour récupérer tous les projets d'un profil (AVANT la route générale :id)
   @PublicAccess()
   @Get(':profileId/projects')
   @ApiOperation({ summary: 'Get all projects for a specific profile' })

@@ -92,6 +92,189 @@ paths:
                 message: 'Utilisateur non trouvé.'
                 error: 'Not Found'
                 statusCode: 404
+  /profile/{id}:
+    get:
+      tags:
+        - Profile
+      summary: Récupérer un profil par son ID
+      description: |
+        Retourne le profil d'un utilisateur spécifique par son ID.
+        Nécessite une authentification pour accéder aux informations de profil.
+      security:
+        - supertokens_session: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID de l'utilisateur dont on veut récupérer le profil
+          example: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+      responses:
+        '200':
+          description: Profil utilisateur retourné avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponseDto'
+              example:
+                id: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+                name: 'John Doe'
+                avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4'
+                bio: "Fullstack Developer | \r\nExpress & React | \r\nBuilding @awesome-project "
+                location: 'Paris, France'
+                company: 'Tech Corp'
+                socialLinks:
+                  - type: 'github'
+                    url: 'https://github.com/johndoe'
+                  - type: 'twitter'
+                    url: 'https://twitter.com/johndoe'
+                  - type: 'linkedin'
+                    url: 'https://www.linkedin.com/in/johndoe/'
+                  - type: 'website'
+                    url: 'https://johndoe.com'
+                skills: []
+                experiences: []
+                projects: []
+                joinedAt: '2025-04-16T15:47:31.633Z'
+                profileUpdatedAt: '2025-04-16T15:47:31.633Z'
+        '404':
+          description: Profil non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile not found
+                  error:
+                    type: string
+                    example: Not Found
+                  statusCode:
+                    type: integer
+                    example: 404
+              example:
+                message: 'Profile not found'
+                error: 'Not Found'
+                statusCode: 404
+        '401':
+          description: Non authentifié
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: unauthorised
+                  statusCode:
+                    type: integer
+                    example: 401
+  /profile/{profileId}/projects:
+    get:
+      tags:
+        - Profile
+      summary: Récupérer tous les projets d'un profil
+      description: |
+        Retourne la liste de tous les projets créés par un utilisateur spécifique.
+        Endpoint public - aucune authentification requise.
+
+        **Inclut :**
+        - Projets dont l'utilisateur est propriétaire
+        - Projets où l'utilisateur est membre
+      parameters:
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+          description: ID du profil dont on veut récupérer les projets
+          example: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+      responses:
+        '200':
+          description: Liste des projets du profil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectResponseDto'
+                    description: Liste des projets associés au profil
+              example:
+                projects:
+                  - id: '123e4567-e89b-12d3-a456-426614174000'
+                    title: 'Projet E-commerce'
+                    description: 'Application e-commerce moderne avec React'
+                    shortDescription: 'E-commerce avec React et Node.js'
+                    ownerId: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+                    techStacks:
+                      - id: '1'
+                        name: 'React'
+                        iconUrl: 'https://reactjs.org/logo.svg'
+                      - id: '2'
+                        name: 'Node.js'
+                        iconUrl: 'https://nodejs.org/logo.svg'
+                    categories:
+                      - id: '2'
+                        name: 'Développement Web'
+                    keyFeatures:
+                      - id: 'feature1'
+                        projectId: '123e4567-e89b-12d3-a456-426614174000'
+                        feature: 'Panier dynamique'
+                    projectGoals:
+                      - id: 'goal1'
+                        projectId: '123e4567-e89b-12d3-a456-426614174000'
+                        goal: 'Créer une expérience utilisateur fluide'
+                    projectRoles:
+                      - id: 'role1'
+                        projectId: '123e4567-e89b-12d3-a456-426614174000'
+                        title: 'Frontend Developer'
+                        description: 'Développeur React expérimenté'
+                        isFilled: false
+                        techStacks:
+                          - id: '1'
+                            name: 'React'
+                            iconUrl: 'https://reactjs.org/logo.svg'
+                        createdAt: '2025-01-15T10:30:00.000Z'
+                        updatedAt: '2025-01-15T10:30:00.000Z'
+                    externalLinks:
+                      - type: 'github'
+                        url: 'https://github.com/johndoe/ecommerce-project'
+                    createdAt: '2025-01-15T10:30:00.000Z'
+                    updatedAt: '2025-01-20T14:45:00.000Z'
+        '400':
+          description: Erreur lors de la récupération des projets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error retrieving projects for profile
+                  statusCode:
+                    type: integer
+                    example: 400
+              example:
+                message: 'Error retrieving projects for profile'
+                statusCode: 400
+        '404':
+          description: Profil non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile not found
+                  statusCode:
+                    type: integer
+                    example: 404
   /projects:
     get:
       tags:
@@ -1931,31 +2114,96 @@ components:
       properties:
         title:
           type: string
-          description: Nouveau titre du projet
+          description: Nouveau titre du projet (optionnel)
           example: 'Mon Super Projet Open Source (Mis à jour)'
+          minLength: 3
+          maxLength: 100
         description:
           type: string
-          description: Nouvelle description du projet
+          description: Nouvelle description du projet (optionnel)
           example: 'Description mise à jour du projet open source.'
-        link:
+          minLength: 1
+          maxLength: 1000
+        shortDescription:
           type: string
-          description: Nouveau lien vers le dépôt ou le site du projet
-          nullable: true
-          example: 'https://github.com/user/my-updated-project'
-        status:
-          type: string
-          description: Nouveau statut du projet
-          example: 'Completed'
+          description: Nouvelle description courte du projet (optionnel)
+          example: 'Description courte mise à jour'
+          minLength: 1
+          maxLength: 100
+        externalLinks:
+          type: array
+          description: Nouveaux liens externes du projet (optionnel)
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type de lien externe
+                example: 'github'
+              url:
+                type: string
+                description: URL du lien externe
+                example: 'https://github.com/user/my-updated-project'
+            required:
+              - type
+              - url
         techStacks:
           type: array
+          description: Liste mise à jour des IDs des technologies utilisées (optionnel)
           items:
-            $ref: '#/components/schemas/TechStackDto'
-          description: Liste mise à jour des stacks techniques utilisées dans le projet
-      required:
-        - title
-        - description
-        - status
-        - techStacks
+            type: string
+          example: ['1', '2', '3']
+        categories:
+          type: array
+          description: Liste mise à jour des IDs des catégories du projet (optionnel)
+          items:
+            type: string
+          example: ['1', '2']
+        keyFeatures:
+          type: array
+          description: Liste mise à jour des fonctionnalités clés (optionnel)
+          items:
+            type: string
+          example: ['Nouvelle fonctionnalité', 'Amélioration UX']
+        projectGoals:
+          type: array
+          description: Liste mise à jour des objectifs du projet (optionnel)
+          items:
+            type: string
+          example: ['Objectif 1 mis à jour', 'Nouvel objectif']
+        projectRoles:
+          type: array
+          description: Liste mise à jour des rôles du projet (optionnel)
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Titre du rôle
+                example: 'Senior Frontend Developer'
+                minLength: 1
+                maxLength: 100
+              description:
+                type: string
+                description: Description du rôle
+                example: 'Développeur React expérimenté avec TypeScript'
+                minLength: 1
+                maxLength: 500
+              techStacks:
+                type: array
+                description: IDs des technologies requises pour ce rôle
+                items:
+                  type: string
+                example: ['1', '2']
+                minItems: 1
+            required:
+              - title
+              - description
+              - techStacks
+      description: |
+        Tous les champs sont optionnels. Seuls les champs fournis seront mis à jour.
+        Les arrays (techStacks, categories, keyFeatures, projectGoals, projectRoles) 
+        remplacent complètement les données existantes s'ils sont fournis.
 
     SessionInfo:
       type: object
@@ -2168,6 +2416,138 @@ components:
         - id
         - projectId
         - goal
+    ProfileResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID unique du profil utilisateur
+          example: '43a39f90-1718-470d-bcef-c7ebeb972c0d'
+        name:
+          type: string
+          description: Nom complet de l'utilisateur
+          example: 'John Doe'
+        avatarUrl:
+          type: string
+          description: URL de l'avatar GitHub de l'utilisateur
+          example: 'https://avatars.githubusercontent.com/u/45101981?v=4'
+        bio:
+          type: string
+          description: Biographie de l'utilisateur
+          example: "Fullstack Developer | \r\nExpress & React | \r\nBuilding @awesome-project"
+        location:
+          type: string
+          description: Localisation de l'utilisateur
+          example: 'Paris, France'
+        company:
+          type: string
+          description: Entreprise de l'utilisateur
+          example: 'Tech Corp'
+        socialLinks:
+          type: array
+          description: Liens sociaux de l'utilisateur
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type de lien social
+                example: 'github'
+              url:
+                type: string
+                description: URL du lien social
+                example: 'https://github.com/johndoe'
+            required:
+              - type
+              - url
+        skills:
+          type: array
+          description: Compétences techniques de l'utilisateur
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Nom de la compétence
+                example: 'React'
+              level:
+                type: string
+                description: Niveau de maîtrise
+                example: 'Expert'
+        experiences:
+          type: array
+          description: Expériences professionnelles de l'utilisateur
+          items:
+            type: object
+            properties:
+              company:
+                type: string
+                description: Nom de l'entreprise
+                example: 'Tech Corp'
+              position:
+                type: string
+                description: Poste occupé
+                example: 'Senior Developer'
+              startDate:
+                type: string
+                format: date-time
+                description: Date de début
+                example: '2022-01-15T00:00:00.000Z'
+              endDate:
+                type: string
+                format: date-time
+                nullable: true
+                description: Date de fin (null si poste actuel)
+                example: '2024-12-31T23:59:59.999Z'
+            required:
+              - company
+              - position
+              - startDate
+        projects:
+          type: array
+          description: Projets personnels de l'utilisateur
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Nom du projet
+                example: 'Mon Portfolio'
+              description:
+                type: string
+                description: Description du projet
+                example: 'Site web personnel avec React et Node.js'
+              url:
+                type: string
+                description: URL du projet
+                example: 'https://johndoe.com'
+            required:
+              - name
+              - description
+              - url
+        joinedAt:
+          type: string
+          format: date-time
+          description: Date d'inscription de l'utilisateur
+          example: '2025-04-16T15:47:31.633Z'
+        profileUpdatedAt:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour du profil
+          example: '2025-04-16T15:47:31.633Z'
+      required:
+        - id
+        - name
+        - avatarUrl
+        - bio
+        - location
+        - company
+        - socialLinks
+        - skills
+        - experiences
+        - projects
+        - joinedAt
+        - profileUpdatedAt
   securitySchemes:
     supertokens_session:
       type: apiKey
