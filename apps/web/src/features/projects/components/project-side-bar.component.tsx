@@ -26,11 +26,11 @@ export default function ProjectSideBar({
     techStacks = [],
     externalLinks = [],
     categories = [],
-    lastCommitAt = "",
     projectStats = {
       stars: 0,
       forks: 0,
       contributors: 0,
+      lastCommitAt: new Date(),
     },
   } = project;
 
@@ -133,8 +133,8 @@ export default function ProjectSideBar({
             <div className="h-[1px] w-full bg-black/5" />
           </div>
           <span className="text-sm font-medium text-black">
-            {lastCommitAt
-              ? new Date(lastCommitAt).toLocaleDateString("fr-FR")
+            {projectStats.lastCommitAt
+              ? new Date(projectStats.lastCommitAt).toLocaleDateString("fr-FR")
               : "N/A"}
           </span>
         </div>

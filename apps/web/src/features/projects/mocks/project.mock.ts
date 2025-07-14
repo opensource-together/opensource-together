@@ -34,7 +34,7 @@ export const mockProjects: Project[] = [
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
 
     author: {
-      id: "1",
+      ownerId: "1",
       name: "y2_dev",
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
@@ -125,6 +125,7 @@ export const mockProjects: Project[] = [
       contributors: 4,
       stars: 8,
       forks: 0,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Défis LeetCode quotidiens automatisés" },
@@ -180,7 +181,7 @@ export const mockProjects: Project[] = [
       { id: "3", name: "Challenges" },
     ],
     author: {
-      id: "1",
+      ownerId: "1",
       name: "69Killian",
       avatarUrl: "/icons/killiancodes-icon.jpg",
     },
@@ -251,6 +252,7 @@ export const mockProjects: Project[] = [
       contributors: 4,
       stars: 52,
       forks: 0,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Système de challenges open source" },
@@ -298,7 +300,7 @@ export const mockProjects: Project[] = [
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
@@ -372,6 +374,7 @@ export const mockProjects: Project[] = [
       contributors: 1,
       stars: 52,
       forks: 10,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Commandes de formatage de code intégrées" },
@@ -398,7 +401,7 @@ export const mockProjects: Project[] = [
       { id: "3", name: "Snippets" },
     ],
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Spectre",
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
@@ -473,6 +476,7 @@ export const mockProjects: Project[] = [
       contributors: 5,
       stars: 42,
       forks: 8,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Stockage et organisation de snippets" },
@@ -495,7 +499,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Byron Love",
       avatarUrl: "exemplebyronIcon.svg",
     },
@@ -574,6 +578,7 @@ export const mockProjects: Project[] = [
       contributors: 3,
       stars: 28,
       forks: 5,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Alternative légère à Storybook" },
@@ -605,7 +610,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
@@ -670,6 +675,7 @@ export const mockProjects: Project[] = [
       contributors: 3,
       stars: 15,
       forks: 2,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Interface terminal façon k9s" },
@@ -700,7 +706,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Olyxz16",
       avatarUrl:
         "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
@@ -769,6 +775,7 @@ export const mockProjects: Project[] = [
       contributors: 2,
       stars: 6,
       forks: 0,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Chiffrement zero-trust des données" },
@@ -802,7 +809,7 @@ export const mockProjects: Project[] = [
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Shyybi",
       avatarUrl: "/icons/shyybi-icon.png",
     },
@@ -870,6 +877,7 @@ export const mockProjects: Project[] = [
       contributors: 4,
       stars: 37,
       forks: 5,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Pages bio stylées et animées" },
@@ -897,7 +905,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Sarah Miller",
       avatarUrl: "exemplebyronIcon.svg",
     },
@@ -959,6 +967,7 @@ export const mockProjects: Project[] = [
       contributors: 8,
       stars: 156,
       forks: 23,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Environnements cloud instantanés" },
@@ -989,7 +998,7 @@ export const mockProjects: Project[] = [
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
     author: {
-      id: "1",
+      ownerId: "1",
       name: "Emma Wilson",
       avatarUrl: "exemplebyronIcon.svg",
     },
@@ -1051,6 +1060,7 @@ export const mockProjects: Project[] = [
       contributors: 5,
       stars: 112,
       forks: 18,
+      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
     },
     keyFeatures: [
       { id: "1", feature: "Éditeur Markdown collaboratif" },
