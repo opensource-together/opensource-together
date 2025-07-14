@@ -10,7 +10,9 @@ import {
 import { transformProjectForApi } from "./project-transform.service";
 
 /**
- * Get the list of projects
+ * Fetches the list of all projects.
+ *
+ * @returns A promise that resolves to an array of projects.
  */
 export const getProjects = async (): Promise<Project[]> => {
   try {
@@ -37,7 +39,10 @@ export const getProjects = async (): Promise<Project[]> => {
 };
 
 /**
- * Get project details by project ID
+ * Fetches the details of a specific project by its ID.
+ *
+ * @param projectId - The ID of the project to retrieve.
+ * @returns A promise that resolves to the project details.
  */
 export const getProjectDetails = async (
   projectId: string
@@ -69,7 +74,10 @@ export const getProjectDetails = async (
 };
 
 /**
- * Create a new project via API
+ * Creates a new project.
+ *
+ * @param storeData - The data for the new project.
+ * @returns A promise that resolves to the created project.
  */
 export const createProject = async (
   storeData: ProjectFormData
@@ -102,9 +110,10 @@ export const createProject = async (
 };
 
 /**
- * Update a project
- * @param params update project parameters containing data and projectId
- * @returns the updated project
+ * Updates an existing project.
+ *
+ * @param params - The data for the updated project.
+ * @returns A promise that resolves to the updated project.
  */
 export const updateProject = async (
   params: UpdateProjectData
@@ -161,9 +170,10 @@ export const updateProject = async (
 };
 
 /**
- * Delete a project by ID
- * @param projectId ID of the project to delete
- * @returns Promise<void>
+ * Deletes a project by its ID.
+ *
+ * @param projectId - The ID of the project to delete.
+ * @returns A promise that resolves to void.
  */
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
