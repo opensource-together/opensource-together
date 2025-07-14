@@ -335,7 +335,7 @@ describe('CreateProjectCommandHandler', () => {
       const command = new CreateProjectCommand(props);
       const result = await handler.execute(command);
       if (!result.success) {
-        expect(result.error).toContain('Some tech stacks are not valid');
+        expect(result.error).toContain('Some tech stacks are not found');
         await deleteTechStacksInMemory(techStackRepo, props.techStacks);
         // throw new Error(JSON.stringify(result.error));
       } else {

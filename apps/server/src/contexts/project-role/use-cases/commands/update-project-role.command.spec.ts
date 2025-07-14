@@ -261,9 +261,28 @@ describe('UpdateProjectRoleCommandHandler', () => {
     });
 
     it('should fail if project does not exist', async () => {
-      // Arrange
+      // Arrange - Create a role with non-existent project ID
+      const roleWithNonExistentProject = ProjectRole.create({
+        projectId: 'non-existent-project',
+        title: 'Test Role',
+        description: 'Test description',
+        isFilled: false,
+        techStacks: [reactTechStack.toPrimitive()],
+      });
+
+      if (!roleWithNonExistentProject.success) {
+        throw new Error('Failed to create role for test');
+      }
+
+      const savedRole = await projectRoleRepo.create(
+        roleWithNonExistentProject.value,
+      );
+      if (!savedRole.success) {
+        throw new Error('Failed to save role for test');
+      }
+
       const command = new UpdateProjectRoleCommand(
-        existingProjectRole.toPrimitive().id!,
+        savedRole.value.toPrimitive().id!,
         'non-existent-project',
         '123',
         {
