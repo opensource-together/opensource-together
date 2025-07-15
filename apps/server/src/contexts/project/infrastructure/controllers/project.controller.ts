@@ -54,16 +54,32 @@ export class ProjectController {
   }
 
   // Route publique pour récupérer un projet par son ID
-  @PublicAccess()
+  // @PublicAccess()
+  @UseGuards(GithubAuthGuard)
   @Get(':id')
-  async getProject(@Param('id') id: string) {
-    const projectRes: Result<Project, string> = await this.queryBus.execute(
-      new FindProjectByIdQuery(id),
+  async getProject(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
+    const projectRes: Result<
+      {
+        project: Project;
+        projectStats: {
+          forks_count: number;
+          stargazers_count: number;
+          watchers_count: number;
+          open_issues_count: number;
+          commits_count: number;
+        };
+      },
+      string
+    > = await this.queryBus.execute(
+      new FindProjectByIdQuery({ id: id, octokit: octokit }),
     );
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
-    return GetProjectByIdResponseDto.toResponse(projectRes.value);
+    return GetProjectByIdResponseDto.toResponse({
+      project: projectRes.value.project,
+      projectStats: projectRes.value.projectStats,
+    });
   }
 
   //   @Get('search')
@@ -201,12 +217,12 @@ export class ProjectController {
     @Session('userId') userId: string,
     @Param('projectId') projectId: string,
   ) {
-    const projectResult: Result<Project> = await this.queryBus.execute(
-      new FindProjectByIdQuery(projectId),
-    );
-    if (!projectResult.success) {
-      throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
-    }
+    // const projectResult: Result<Project> = await this.queryBus.execute(
+    //   new FindProjectByIdQuery({ id: projectId }),
+    // );
+    // if (!projectResult.success) {
+    //   throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
+    // }
     const applications: Result<ProjectRoleApplication[]> =
       await this.queryBus.execute(
         new GetAllProjectApplicationsQuery({ projectId, userId }),

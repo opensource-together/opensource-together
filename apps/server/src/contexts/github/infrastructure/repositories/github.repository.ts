@@ -30,7 +30,7 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      console.log('response', response);
+      console.log('response createGithubRepository', response);
       return toGithubRepositoryDto(response);
     } catch (e) {
       console.log('e', e);
@@ -53,6 +53,52 @@ export class GithubRepository implements GithubRepositoryPort {
         },
       });
       return toGithubInvitationDto(response);
+    } catch (e) {
+      return Result.fail(e);
+    }
+  }
+
+  async findRepositoryByOwnerAndName(
+    owner: string,
+    name: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<{
+      forks_count: number;
+      stargazers_count: number;
+      watchers_count: number;
+      open_issues_count: number;
+    }>
+  > {
+    try {
+      const response = await octokit.rest.repos.get({
+        owner,
+        repo: name,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      return Result.ok(response.data);
+    } catch (e) {
+      return Result.fail(e);
+    }
+  }
+
+  async findCommitsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<Result<number>> {
+    try {
+      const response = await octokit.rest.repos.listCommits({
+        owner,
+        repo,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      // console.log('response findCommitsByRepository', response.data.length);
+      return Result.ok(response.data.length);
     } catch (e) {
       return Result.fail(e);
     }

@@ -18,4 +18,21 @@ export interface GithubRepositoryPort {
     input: InviteUserToRepoInput,
     octokit: Octokit,
   ): Promise<Result<GithubInvitationDto>>;
+  findRepositoryByOwnerAndName(
+    owner: string,
+    name: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<{
+      forks_count: number;
+      stargazers_count: number;
+      watchers_count: number;
+      open_issues_count: number;
+    }>
+  >;
+  findCommitsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<Result<any>>;
 }
