@@ -53,4 +53,19 @@ export interface GithubRepositoryPort {
       string
     >
   >;
+  findContributorsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<
+      Array<{
+        login: string;
+        avatar_url: string;
+        html_url: string;
+        contributions: number;
+      }>,
+      string
+    >
+  >;
 }

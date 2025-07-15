@@ -30,7 +30,6 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      console.log('response createGithubRepository', response);
       return toGithubRepositoryDto(response);
     } catch (e) {
       console.log('e', e);
@@ -115,7 +114,6 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      console.log('response findCommitsByRepository', response.data);
       const rawCommit = response.data[0];
       const lastCommit = {
         sha: rawCommit.sha,
@@ -137,6 +135,39 @@ export class GithubRepository implements GithubRepositoryPort {
     } catch (e) {
       console.log('e', e);
       return Result.fail('Failed to fetch commits');
+    }
+  }
+
+  async findContributorsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<
+      Array<{
+        login: string;
+        avatar_url: string;
+        html_url: string;
+        contributions: number;
+      }>,
+      string
+    >
+  > {
+    try {
+      const response = await octokit.rest.repos.listContributors({
+        owner,
+        repo,
+      });
+      const contributors = response.data.map((contributor) => ({
+        login: contributor.login as string,
+        avatar_url: contributor.avatar_url as string,
+        html_url: contributor.html_url as string,
+        contributions: contributor.contributions,
+      }));
+      return Result.ok(contributors);
+    } catch (e) {
+      console.log('e', e);
+      return Result.fail('Failed to fetch contributors');
     }
   }
 }

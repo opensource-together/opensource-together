@@ -68,6 +68,12 @@ export class ProjectController {
           open_issues_count: number;
           commits_count: number;
           lastCommit: any;
+          contributors: {
+            login: string;
+            avatar_url: string;
+            html_url: string;
+            contributions: number;
+          }[];
         };
       },
       string

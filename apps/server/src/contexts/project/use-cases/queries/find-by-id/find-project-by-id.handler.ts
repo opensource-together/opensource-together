@@ -47,6 +47,12 @@ export class FindProjectByIdHandler
           open_issues_count: number;
           commits_count: number;
           lastCommit: any;
+          contributors: {
+            login: string;
+            avatar_url: string;
+            html_url: string;
+            contributions: number;
+          }[];
         };
       },
       string
@@ -70,16 +76,29 @@ export class FindProjectByIdHandler
       open_issues_count: 0,
       commits_count: 0,
       lastCommit: null,
+      contributors: [
+        {
+          login: '',
+          avatar_url: '',
+          html_url: '',
+          contributions: 0,
+        },
+      ],
     };
     const username = ownerProjectInfo.value.toPrimitive().username;
     const repoName = project.value.toPrimitive().title;
-    const [commitsNumber, repoInfo] = await Promise.all([
+    const [commitsNumber, repoInfo, contributors] = await Promise.all([
       this.githubRepo.findCommitsByRepository(
         username,
         repoName.replace(/\s+/g, '-'),
         octokit,
       ),
       this.githubRepo.findRepositoryByOwnerAndName(
+        username,
+        repoName.replace(/\s+/g, '-'),
+        octokit,
+      ),
+      this.githubRepo.findContributorsByRepository(
         username,
         repoName.replace(/\s+/g, '-'),
         octokit,
@@ -111,6 +130,24 @@ export class FindProjectByIdHandler
       projectStats.watchers_count = watchers_count;
       projectStats.open_issues_count = open_issues_count;
     }
+    if (!contributors.success) {
+      projectStats.contributors = [
+        {
+          login: '',
+          avatar_url: '',
+          html_url: '',
+          contributions: 0,
+        },
+      ];
+    } else {
+      const contributorsValue = contributors.value.map((contributor) => ({
+        login: contributor.login,
+        avatar_url: contributor.avatar_url,
+        html_url: contributor.html_url,
+        contributions: contributor.contributions,
+      }));
+      projectStats.contributors = [...contributorsValue];
+    }
     return Result.ok({
       project: project.value,
       projectStats: {
@@ -120,6 +157,7 @@ export class FindProjectByIdHandler
         open_issues_count: projectStats.open_issues_count,
         commits_count: projectStats.commits_count,
         lastCommit: projectStats.lastCommit,
+        contributors: projectStats.contributors,
       },
     });
   }
