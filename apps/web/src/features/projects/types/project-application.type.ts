@@ -1,12 +1,12 @@
-export interface ProjectRoleApplication {
+export interface ProjectRoleApplicationType {
   id: string;
   userId: string;
   projectId: string;
   projectRoleId: string;
   projectRoleTitle: string;
-  selectedKeyFeatures: string[]; // Array des features sélectionnées
-  selectedProjectGoals: string[]; // Array des goals sélectionnés
-  motivationLetter?: string; // Lettre de motivation optionnelle
+  selectedKeyFeatures: string[];
+  selectedProjectGoals: string[];
+  motivationLetter: string;
   status: "PENDING" | "ACCEPTED" | "REJECTED";
   appliedAt: string;
   userProfile: {
