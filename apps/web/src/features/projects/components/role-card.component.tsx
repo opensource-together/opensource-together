@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
+
 import StackLogo from "@/shared/components/logos/stack-logo";
-import { Button } from "@/shared/components/ui/button";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 
 import EditRoleForm from "../forms/edit-role.form";
-import RoleApplicationForm from "../forms/role-application.form";
-import { ProjectGoal, ProjectRole, TechStack } from "../types/project.type";
+import { useDeleteRole } from "../hooks/use-project-role.hook";
+import { ProjectRole } from "../types/project-role.type";
+import { ProjectGoal, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
@@ -19,59 +22,57 @@ interface RoleCardProps {
 
 export default function RoleCard({
   role,
-  techStacks = [],
-  projectGoals = [],
+  // techStacks = [],
+  // projectGoals = [],
   className,
-  isMaintainer = false,
+  // isMaintainer = false,
   projectId = "",
 }: RoleCardProps) {
+  // const { techStackOptions } = useTechStack();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const { deleteRole, isDeleting } = useDeleteRole(projectId, role.id);
   const {
-    title = "",
+    // title = "",
     description = "",
     techStacks: roleTechStacks = [],
   } = role;
-
-  const getTechIcon = (techStackName: string): string => {
-    const specialMappings: Record<string, string> = {
-      React:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
-      Tailwind:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
-      JavaScript:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
-      TypeScript:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
-      Figma:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
-      Docker:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
-      Git: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg",
-      Markdown:
-        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
-    };
-
-    if (specialMappings[techStackName]) {
-      return specialMappings[techStackName];
-    }
-
-    const techStack = techStacks.find(
-      (tech) =>
-        tech.name.toLowerCase() === techStackName.toLowerCase() ||
-        tech.name.toLowerCase().includes(techStackName.toLowerCase()) ||
-        techStackName.toLowerCase().includes(tech.name.toLowerCase())
-    );
-
-    return techStack?.iconUrl || "/icons/mongodb.svg"; // Fallback
-  };
 
   return (
     <div
       className={`w-full max-w-[668px] rounded-[20px] border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
     >
       {/* Role Title */}
-      <h3 className="mb-3 text-lg font-medium tracking-tighter text-black md:mb-4">
-        {title}
-      </h3>
+      <div className="flex items-start justify-between">
+        <h3 className="text-xl font-medium tracking-tighter text-black">
+          {role.title}
+        </h3>
+        <div className="flex items-center gap-1">
+          <EditRoleForm role={role} projectId={projectId}>
+            <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5">
+              <Icon name="pencil" variant="gray" size="sm" />
+            </button>
+          </EditRoleForm>
+
+          <ConfirmDialog
+            open={isConfirmOpen}
+            onOpenChange={setIsConfirmOpen}
+            title="Supprimer le rôle"
+            description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
+            isLoading={isDeleting}
+            onConfirm={() => {
+              deleteRole();
+              setIsConfirmOpen(false);
+            }}
+            onCancel={() => setIsConfirmOpen(false)}
+          />
+          <button
+            onClick={() => setIsConfirmOpen(true)}
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
+          >
+            <Icon name="cross" variant="gray" size="xs" />
+          </button>
+        </div>
+      </div>
 
       {/* Role Description */}
       <p className="mb-4 text-sm leading-relaxed tracking-tighter text-black/70 md:mb-6">
@@ -85,38 +86,18 @@ export default function RoleCard({
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
         {/* Tech Badges */}
         <div className="flex flex-wrap gap-2">
-          {roleTechStacks.length > 0 ? (
+          {roleTechStacks.length > 0 &&
             roleTechStacks.map((techStack: TechStack) => (
               <StackLogo
                 key={`${techStack.id}`}
                 name={techStack.name}
-                icon={techStack.iconUrl || getTechIcon(techStack.name)}
+                icon={techStack.iconUrl || ""}
                 alt={techStack.name}
               />
-            ))
-          ) : (
-            // Default MongoDB badges for demo
-            <>
-              <StackLogo
-                name="MongoDB"
-                icon="/icons/mongodb.svg"
-                alt="MongoDB"
-              />
-              <StackLogo
-                name="MongoDB"
-                icon="/icons/mongodb.svg"
-                alt="MongoDB"
-              />
-              <StackLogo
-                name="MongoDB"
-                icon="/icons/mongodb.svg"
-                alt="MongoDB"
-              />
-            </>
-          )}
+            ))}
         </div>
 
-        {/* Apply Button */}
+        {/* Apply Button
         {isMaintainer ? (
           <EditRoleForm role={role} projectId={projectId}>
             <Button variant="outline">Modifier le rôle</Button>
@@ -126,7 +107,7 @@ export default function RoleCard({
             roleTitle={title}
             roleDescription={description}
             projectGoals={projectGoals}
-            techStacks={roleTechStacks.map((roleTech) => {
+            techStacks={roleTechStacks.map((roleTech: TechStack) => {
               const fullTechStack = techStacks.find(
                 (tech) =>
                   tech.name.toLowerCase() === roleTech.name.toLowerCase()
@@ -134,7 +115,9 @@ export default function RoleCard({
               return (
                 fullTechStack || {
                   ...roleTech,
-                  iconUrl: getTechIcon(roleTech.name),
+                  iconUrl:
+                    techStackOptions.find((tech) => tech.name === roleTech.name)
+                      ?.iconUrl || "",
                 }
               );
             })}
@@ -144,7 +127,7 @@ export default function RoleCard({
               <Icon name="arrow-up-right" size="xs" variant="white" />
             </Button>
           </RoleApplicationForm>
-        )}
+        )} */}
       </div>
     </div>
   );

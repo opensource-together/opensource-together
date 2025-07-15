@@ -21,10 +21,10 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useUpdateRole } from "../hooks/use-project-role.hook";
-import { ProjectRole } from "../types/project.type";
+import { ProjectRole } from "../types/project-role.type";
 import {
-  UpdateRoleSchema,
-  updateRoleSchema,
+  UpdateProjectRoleSchema,
+  updateProjectRoleSchema,
 } from "../validations/project-role.schema";
 
 interface EditRoleFormProps {
@@ -41,13 +41,13 @@ export default function EditRoleForm({
   const { techStackOptions } = useTechStack();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const { updateRole, isUpdating } = useUpdateRole();
+  const { updateRole, isUpdating } = useUpdateRole(projectId, role.id);
 
-  const form = useForm<UpdateRoleSchema>({
-    resolver: zodResolver(updateRoleSchema),
+  const form = useForm<UpdateProjectRoleSchema>({
+    resolver: zodResolver(updateProjectRoleSchema),
     defaultValues: {
-      title: role.title || "",
-      techStack: role.techStacks?.map((tech) => tech.id) || [],
+      title: role?.title || "",
+      techStacks: role.techStacks?.map((tech) => tech.id) || [],
       description: role.description || "",
     },
   });
@@ -56,12 +56,8 @@ export default function EditRoleForm({
   const descriptionValue = form.watch("description");
   const characterCount = descriptionValue?.length || 0;
 
-  const onSubmit = (data: UpdateRoleSchema) => {
-    updateRole({
-      projectId,
-      roleId: role.id || "",
-      data,
-    });
+  const onSubmit = (data: UpdateProjectRoleSchema) => {
+    updateRole(data);
     setIsDialogOpen(false);
     form.reset();
   };
@@ -98,7 +94,7 @@ export default function EditRoleForm({
 
             <FormField
               control={control}
-              name="techStack"
+              name="techStacks"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel

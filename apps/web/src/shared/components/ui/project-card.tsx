@@ -4,7 +4,8 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-import { ProjectRole, TechStack } from "@/features/projects/types/project.type";
+import { ProjectRole } from "@/features/projects/types/project-role.type";
+import { TechStack } from "@/features/projects/types/project.type";
 
 /* ---------------------------------- Root ---------------------------------- */
 const ProjectCard = React.forwardRef<

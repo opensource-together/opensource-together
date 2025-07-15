@@ -32,6 +32,7 @@ import {
 import { TechStackList } from "../../../../shared/components/ui/tech-stack-list.component";
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
+import { TechStack } from "../../types/project.type";
 
 export function StepThreeForm() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export function StepThreeForm() {
         formData.roles?.map((role) => ({
           title: role.title,
           description: role.description,
-          techStack: role.techStacks?.map((tech) => tech.id) || [],
+          techStack: role.techStacks.map((tech: TechStack) => tech.id),
         })) || [],
     },
   });
