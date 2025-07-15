@@ -81,7 +81,7 @@ export default function RoleApplicationForm({
     },
   });
 
-  const onSubmit = (data: RoleApplicationSchema) => {
+  const onSubmit = (_data: RoleApplicationSchema) => {
     setIsConfirmOpen(true);
   };
 
@@ -106,7 +106,7 @@ export default function RoleApplicationForm({
         onOpenChange={setOpen}
         title={roleTitle}
         trigger={children}
-        size="lg"
+        size="xl"
       >
         <div className="space-y-6 overflow-hidden">
           <div className="mt-4">
@@ -144,17 +144,14 @@ export default function RoleApplicationForm({
                       Fonctionnalités qui vous intéressent
                     </FormLabel>
                     <FormControl>
-                      <div className="w-full max-w-full">
-                        <Combobox
-                          options={keyFeatureOptions}
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Sélectionner des fonctionnalités..."
-                          searchPlaceholder="Rechercher une fonctionnalité..."
-                          emptyText="Aucune fonctionnalité trouvée."
-                          className="w-full"
-                        />
-                      </div>
+                      <Combobox
+                        options={keyFeatureOptions}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Sélectionner des fonctionnalités..."
+                        searchPlaceholder="Rechercher une fonctionnalité..."
+                        emptyText="Aucune fonctionnalité trouvée."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -173,17 +170,14 @@ export default function RoleApplicationForm({
                       Objectifs qui vous motivent
                     </FormLabel>
                     <FormControl>
-                      <div className="w-full max-w-full">
-                        <Combobox
-                          options={projectGoalOptions}
-                          value={field.value}
-                          onChange={field.onChange}
-                          placeholder="Sélectionner des objectifs..."
-                          searchPlaceholder="Rechercher un objectif..."
-                          emptyText="Aucun objectif trouvé."
-                          className="w-full"
-                        />
-                      </div>
+                      <Combobox
+                        options={projectGoalOptions}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Sélectionner des objectifs..."
+                        searchPlaceholder="Rechercher un objectif..."
+                        emptyText="Aucun objectif trouvé."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -202,7 +196,6 @@ export default function RoleApplicationForm({
                       <Textarea
                         {...field}
                         placeholder="Je peux aider à structurer l'API REST et gérer la scalabilité..."
-                        className="w-full resize-none"
                       />
                     </FormControl>
                     <FormMessage />

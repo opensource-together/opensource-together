@@ -7,7 +7,7 @@ import {
   getProjectApplications,
   rejectProjectApplication,
 } from "../services/project-apply.service";
-import { ProjectRoleApplication } from "../types/project-application.type";
+import { ProjectRoleApplicationType } from "../types/project-application.type";
 
 /**
  * Fetches the applications for a specific project.
@@ -16,7 +16,7 @@ import { ProjectRoleApplication } from "../types/project-application.type";
  * @returns A React Query result containing the list of project applications.
  */
 export function useProjectApplications(projectId: string) {
-  return useQuery<ProjectRoleApplication[]>({
+  return useQuery<ProjectRoleApplicationType[]>({
     queryKey: ["project-applications", projectId],
     queryFn: () => getProjectApplications(projectId),
     enabled: !!projectId,
@@ -40,7 +40,6 @@ export function useAcceptProjectApplication(projectId: string) {
     errorMessage: "Erreur lors de l'acceptation de la candidature.",
     options: {
       onSuccess: () => {
-        // Invalidate and refetch project applications
         queryClient.invalidateQueries({
           queryKey: ["project-applications", projectId],
         });
