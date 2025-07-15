@@ -3,8 +3,7 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
-import * as YAML from 'yamljs';
-import * as swaggerUi from 'swagger-ui-express';
+
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 

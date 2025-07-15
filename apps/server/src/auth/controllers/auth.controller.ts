@@ -93,7 +93,7 @@ export class AuthController {
       },
     },
   })
-  async signup() {
+  signup() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -176,7 +176,7 @@ export class AuthController {
       },
     },
   })
-  async signin() {
+  signin() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -220,7 +220,7 @@ export class AuthController {
       },
     },
   })
-  async authorizeGithub() {
+  authorizeGithub() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -300,7 +300,7 @@ export class AuthController {
       },
     },
   })
-  async callbackGithub() {
+  callbackGithub() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -359,7 +359,7 @@ export class AuthController {
       },
     },
   })
-  async getSession() {
+  getSession() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -409,7 +409,7 @@ export class AuthController {
       },
     },
   })
-  async signout() {
+  signout() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -472,7 +472,7 @@ export class AuthController {
       },
     },
   })
-  async refreshSession() {
+  refreshSession() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -511,7 +511,7 @@ export class AuthController {
       },
     },
   })
-  async verifySession() {
+  verifySession() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -594,7 +594,7 @@ export class AuthController {
       },
     },
   })
-  async resetPassword() {
+  resetPassword() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
@@ -692,7 +692,7 @@ export class AuthController {
       },
     },
   })
-  async resetPasswordToken() {
+  resetPasswordToken() {
     // Cette méthode ne sera jamais appelée - documentation uniquement
     throw new Error('Cette route est gérée par SuperTokens');
   }
