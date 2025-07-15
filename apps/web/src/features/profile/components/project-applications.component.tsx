@@ -1,12 +1,12 @@
 "use client";
 
+import ApplicationCard from "@/features/projects/components/application-card.component";
 import {
   useAcceptProjectApplication,
   useProjectApplications,
   useRejectProjectApplication,
-} from "../hooks/use-project-applications.hook";
-import { Project } from "../types/project.type";
-import ApplicationCard from "./application-card.component";
+} from "@/features/projects/hooks/use-project-applications.hook";
+import { Project } from "@/features/projects/types/project.type";
 
 interface ProjectApplicationsProps {
   projects: Project[];

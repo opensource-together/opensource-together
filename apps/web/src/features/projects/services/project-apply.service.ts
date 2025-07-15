@@ -8,23 +8,28 @@ export async function applyToProjectRole(
   roleId: string,
   data: ProjectRoleApplicationInput
 ): Promise<void> {
-  const response = await fetch(
-    `${API_BASE_URL}/projects/${projectId}/roles/${roleId}/apply`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    }
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      errorData.message || `Erreur lors de la candidature: ${response.status}`
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/projects/${projectId}/roles/${roleId}/apply`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
     );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error applying to project role");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error applying to project role:", error);
+    throw error;
   }
 }
 
@@ -66,23 +71,27 @@ export async function acceptProjectApplication(
   return Promise.resolve();
 
   // Real implementation would be:
-  // const response = await fetch(
-  //   `${API_BASE_URL}/applications/${applicationId}/accept`,
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     credentials: "include",
-  //   }
-  // );
-  //
-  // if (!response.ok) {
-  //   const errorData = await response.json().catch(() => ({}));
-  //   throw new Error(
-  //     errorData.message ||
-  //       `Erreur lors de l'acceptation de la candidature: ${response.status}`
+  // try {
+  //   const response = await fetch(
+  //     `${API_BASE_URL}/applications/${applicationId}/accept`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       credentials: "include",
+  //     }
   //   );
+  //
+  //   if (!response.ok) {
+  //     const error = await response.json();
+  //     throw new Error(error.message || "Error accepting project application");
+  //   }
+  //
+  //   return response.json();
+  // } catch (error) {
+  //   console.error("Error accepting project application:", error);
+  //   throw error;
   // }
 }
 
@@ -99,22 +108,26 @@ export async function rejectProjectApplication(
   return Promise.resolve();
 
   // Real implementation would be:
-  // const response = await fetch(
-  //   `${API_BASE_URL}/applications/${applicationId}/reject`,
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     credentials: "include",
-  //   }
-  // );
-  //
-  // if (!response.ok) {
-  //   const errorData = await response.json().catch(() => ({}));
-  //   throw new Error(
-  //     errorData.message ||
-  //       `Erreur lors du rejet de la candidature: ${response.status}`
+  // try {
+  //   const response = await fetch(
+  //     `${API_BASE_URL}/applications/${applicationId}/reject`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       credentials: "include",
+  //     }
   //   );
+  //
+  //   if (!response.ok) {
+  //     const error = await response.json();
+  //     throw new Error(error.message || "Error rejecting project application");
+  //   }
+  //
+  //   return response.json();
+  // } catch (error) {
+  //   console.error("Error rejecting project application:", error);
+  //   throw error;
   // }
 }

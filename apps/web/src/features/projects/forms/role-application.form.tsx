@@ -51,7 +51,7 @@ export default function RoleApplicationForm({
 }: RoleApplicationFormProps) {
   const [open, setOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const { mutate: applyToProject, isPending } = useApplyToProject();
+  const { applyToProject, isApplying } = useApplyToProject(projectId, roleId);
 
   // Function to truncate text for display
   const truncateText = (text: string, maxLength: number = 40) => {
@@ -87,23 +87,16 @@ export default function RoleApplicationForm({
 
   const handleConfirmSubmit = () => {
     const formData = form.getValues();
-    applyToProject(
-      {
-        projectId,
-        roleId,
-        data: formData,
+    applyToProject(formData, {
+      onSuccess: () => {
+        setOpen(false);
+        setIsConfirmOpen(false);
+        form.reset();
       },
-      {
-        onSuccess: () => {
-          setOpen(false);
-          setIsConfirmOpen(false);
-          form.reset();
-        },
-        onError: () => {
-          setIsConfirmOpen(false);
-        },
-      }
-    );
+      onError: () => {
+        setIsConfirmOpen(false);
+      },
+    });
   };
 
   return (
@@ -240,7 +233,7 @@ export default function RoleApplicationForm({
         onOpenChange={setIsConfirmOpen}
         title="Confirmer votre candidature"
         description="Êtes-vous sûr de vouloir envoyer votre candidature pour ce rôle ? Cette action ne peut pas être annulée."
-        isLoading={isPending}
+        isLoading={isApplying}
         onConfirm={handleConfirmSubmit}
         onCancel={() => setIsConfirmOpen(false)}
       />

@@ -1,12 +1,12 @@
 "use client";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
-import ProjectApplications from "@/features/projects/components/project-applications.component";
 import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 
 import ProfileError from "../components/error-ui/profile-error.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero from "../components/profile-hero.component";
+import ProjectApplications from "../components/project-applications.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
 export default function ProfileView() {
