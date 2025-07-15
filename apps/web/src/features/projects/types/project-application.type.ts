@@ -6,6 +6,7 @@ export interface ProjectRoleApplication {
   projectRoleTitle: string;
   selectedKeyFeatures: string[]; // Array des features sélectionnées
   selectedProjectGoals: string[]; // Array des goals sélectionnés
+  motivationLetter?: string; // Lettre de motivation optionnelle
   status: "PENDING" | "ACCEPTED" | "REJECTED";
   appliedAt: string;
   userProfile: {

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Badge } from "@/shared/components/ui/badge";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
+import { Modal } from "@/shared/components/ui/modal";
 
 import { ProjectRoleApplication } from "../types/project-application.type";
 import { KeyFeature, ProjectGoal } from "../types/project.type";
@@ -30,6 +31,7 @@ export default function ApplicationCard({
 }: ApplicationCardProps) {
   const [isRejectConfirmOpen, setIsRejectConfirmOpen] = useState(false);
   const [isAcceptConfirmOpen, setIsAcceptConfirmOpen] = useState(false);
+  const [isMotivationModalOpen, setIsMotivationModalOpen] = useState(false);
 
   const {
     id,
@@ -37,6 +39,7 @@ export default function ApplicationCard({
     projectRoleTitle,
     selectedKeyFeatures = [],
     selectedProjectGoals = [],
+    motivationLetter,
     status,
     appliedAt,
   } = application;
@@ -174,10 +177,21 @@ export default function ApplicationCard({
         </div>
 
         {/* Description - exactement comme RoleCard */}
-        <p className="mb-4 text-sm leading-relaxed tracking-tighter text-black/70 md:mb-6">
-          Candidature pour le rôle • {projectRoleTitle || "Rôle inconnu"} •{" "}
-          {formatRelativeTime(appliedAt)}
-        </p>
+        <div className="mb-4 md:mb-6">
+          <p className="text-sm leading-relaxed tracking-tighter text-black/70">
+            Candidature pour le rôle • {projectRoleTitle || "Rôle inconnu"} •{" "}
+            {formatRelativeTime(appliedAt)}
+          </p>
+          <span
+            onClick={() => setIsMotivationModalOpen(true)}
+            className="mt-2 inline-flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40"
+          >
+            <span className="text-sm text-black">
+              Voir la lettre de motivation
+            </span>
+            <Icon name="arrow-up-right" size="xs" />
+          </span>
+        </div>
 
         {/* Ligne de séparation - exactement comme RoleCard */}
         <div className="mb-3 w-full border-t border-black/5"></div>
@@ -205,6 +219,39 @@ export default function ApplicationCard({
           </div>
         </div>
       </div>
+
+      {/* Motivation Letter Modal */}
+      <Modal
+        open={isMotivationModalOpen}
+        onOpenChange={setIsMotivationModalOpen}
+        title={`Lettre de motivation de ${userName || "l'utilisateur"}`}
+        size="xl"
+      >
+        <div className="mt-4">
+          {motivationLetter ? (
+            <p className="text-sm leading-relaxed text-black/80">
+              {motivationLetter}
+            </p>
+          ) : (
+            <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+              <p className="text-sm text-yellow-800">
+                ⚠️ La lettre de motivation existe mais n'est pas renvoyée par
+                l'API.
+                <br />
+                Le champ{" "}
+                <code className="rounded bg-yellow-100 px-1">
+                  motivationLetter
+                </code>{" "}
+                doit être ajouté à la réponse de{" "}
+                <code className="rounded bg-yellow-100 px-1">
+                  GET /projects/{"{projectId}"}/applications
+                </code>
+                .
+              </p>
+            </div>
+          )}
+        </div>
+      </Modal>
 
       {/* Accept confirmation dialog */}
       <ConfirmDialog
