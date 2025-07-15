@@ -46,6 +46,7 @@ export class FindProjectByIdHandler
           watchers_count: number;
           open_issues_count: number;
           commits_count: number;
+          lastCommit: any;
         };
       },
       string
@@ -91,7 +92,8 @@ export class FindProjectByIdHandler
         stargazers_count,
         watchers_count,
         open_issues_count,
-        commits_count: commitsNumber.value as number,
+        commits_count: commitsNumber.value.commitsNumber as number,
+        lastCommit: commitsNumber.value.lastCommit as any,
       },
     });
   }

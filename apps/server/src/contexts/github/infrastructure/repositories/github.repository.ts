@@ -88,7 +88,22 @@ export class GithubRepository implements GithubRepositoryPort {
     owner: string,
     repo: string,
     octokit: Octokit,
-  ): Promise<Result<number>> {
+  ): Promise<
+    Result<{
+      lastCommit: {
+        sha: string;
+        message: string;
+        date: string;
+        url: string;
+        author: {
+          login: string;
+          avatar_url: string;
+          html_url: string;
+        };
+      };
+      commitsNumber: number;
+    }>
+  > {
     try {
       const response = await octokit.rest.repos.listCommits({
         owner,
@@ -97,8 +112,24 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      // console.log('response findCommitsByRepository', response.data.length);
-      return Result.ok(response.data.length);
+      console.log('response findCommitsByRepository', response.data);
+      const rawCommit = response.data[0];
+      const lastCommit = {
+        sha: rawCommit.sha,
+        message: rawCommit.commit.message,
+        date: rawCommit.commit.author?.date as string,
+        url: rawCommit.html_url,
+        author: {
+          login: rawCommit.author?.login as string,
+          avatar_url: rawCommit.author?.avatar_url as string,
+          html_url: rawCommit.author?.html_url as string,
+        },
+      };
+      const commitsNumber = response.data.length;
+      return Result.ok({
+        lastCommit,
+        commitsNumber,
+      });
     } catch (e) {
       return Result.fail(e);
     }

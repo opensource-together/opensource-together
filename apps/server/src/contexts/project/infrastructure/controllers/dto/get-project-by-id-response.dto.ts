@@ -9,6 +9,17 @@ export class GetProjectByIdResponseDto {
       watchers_count: number;
       open_issues_count: number;
       commits_count: number;
+      lastCommit: {
+        sha: string;
+        message: string;
+        date: string;
+        url: string;
+        author: {
+          login: string;
+          avatar_url: string;
+          html_url: string;
+        };
+      };
     };
   }): ProjectData & {
     projectStats: {
@@ -17,6 +28,17 @@ export class GetProjectByIdResponseDto {
       watchers_count: number;
       open_issues_count: number;
       commits_count: number;
+      lastCommit: {
+        sha: string;
+        message: string;
+        date: string;
+        url: string;
+        author: {
+          login: string;
+          avatar_url: string;
+          html_url: string;
+        };
+      };
     };
   } {
     const { project, projectStats } = props;
@@ -28,6 +50,7 @@ export class GetProjectByIdResponseDto {
         watchers_count: projectStats.watchers_count,
         open_issues_count: projectStats.open_issues_count,
         commits_count: projectStats.commits_count,
+        lastCommit: projectStats.lastCommit,
       },
     };
   }

@@ -67,6 +67,7 @@ export class ProjectController {
           watchers_count: number;
           open_issues_count: number;
           commits_count: number;
+          lastCommit: any;
         };
       },
       string
