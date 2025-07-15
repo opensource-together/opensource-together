@@ -15,6 +15,7 @@ import { CreateGitHubRepositoryCommand } from '../../use-cases/commands/create-g
 import { Result } from '@/libs/result';
 import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 import { Session } from 'supertokens-nestjs';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller('github/repository')
 @UseGuards(GithubAuthGuard)
@@ -22,6 +23,7 @@ export class GithubRepositoryController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post('create')
+  @ApiExcludeEndpoint()
   async createRepository(
     @Session('userId') userId: string,
     @Req() req: GithubAuthRequest,
