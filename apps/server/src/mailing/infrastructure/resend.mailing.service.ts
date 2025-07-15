@@ -5,12 +5,17 @@ import {
   SendEmailPayload,
 } from '../ports/mailing.service.port';
 import { Resend } from 'resend';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ResendMailingService implements MailingServicePort {
-  private readonly resend = new Resend(process.env.RESEND_API_KEY!);
-  private readonly logger = new Logger(ResendMailingService.name);
+  private readonly resend: Resend;
 
+  constructor(private readonly configService: ConfigService) {
+    this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
+  }
+
+  private readonly logger = new Logger(ResendMailingService.name);
   async sendEmail(payload: SendEmailPayload): Promise<Result<void, string>> {
     try {
       const resendResponse = await this.resend.emails.send({
