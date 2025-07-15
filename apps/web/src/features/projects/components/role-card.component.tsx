@@ -10,12 +10,13 @@ import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
 import { ProjectRole } from "../types/project-role.type";
-import { ProjectGoal, TechStack } from "../types/project.type";
+import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
   techStacks?: TechStack[];
   projectGoals?: ProjectGoal[];
+  keyFeatures?: KeyFeature[];
   className?: string;
   isMaintainer?: boolean;
   projectId?: string;
@@ -25,6 +26,7 @@ export default function RoleCard({
   role,
   techStacks = [],
   projectGoals = [],
+  keyFeatures = [],
   className,
   isMaintainer = false,
   projectId = "",
@@ -78,7 +80,10 @@ export default function RoleCard({
             roleTitle={title}
             roleDescription={description}
             projectGoals={projectGoals}
+            keyFeatures={keyFeatures}
             techStacks={roleTechStacks}
+            projectId={projectId}
+            roleId={role.id}
           >
             <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
               <span className="text-sm text-black">Candidater à ce rôle</span>
