@@ -34,5 +34,23 @@ export interface GithubRepositoryPort {
     owner: string,
     repo: string,
     octokit: Octokit,
-  ): Promise<Result<any>>;
+  ): Promise<
+    Result<
+      {
+        lastCommit: {
+          sha: string;
+          message: string;
+          date: string;
+          url: string;
+          author: {
+            login: string;
+            avatar_url: string;
+            html_url: string;
+          };
+        };
+        commitsNumber: number;
+      },
+      string
+    >
+  >;
 }

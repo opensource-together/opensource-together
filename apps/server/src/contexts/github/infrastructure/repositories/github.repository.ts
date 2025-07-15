@@ -89,20 +89,23 @@ export class GithubRepository implements GithubRepositoryPort {
     repo: string,
     octokit: Octokit,
   ): Promise<
-    Result<{
-      lastCommit: {
-        sha: string;
-        message: string;
-        date: string;
-        url: string;
-        author: {
-          login: string;
-          avatar_url: string;
-          html_url: string;
+    Result<
+      {
+        lastCommit: {
+          sha: string;
+          message: string;
+          date: string;
+          url: string;
+          author: {
+            login: string;
+            avatar_url: string;
+            html_url: string;
+          };
         };
-      };
-      commitsNumber: number;
-    }>
+        commitsNumber: number;
+      },
+      string
+    >
   > {
     try {
       const response = await octokit.rest.repos.listCommits({
@@ -126,12 +129,14 @@ export class GithubRepository implements GithubRepositoryPort {
         },
       };
       const commitsNumber = response.data.length;
+
       return Result.ok({
         lastCommit,
         commitsNumber,
       });
     } catch (e) {
-      return Result.fail(e);
+      console.log('e', e);
+      return Result.fail('Failed to fetch commits');
     }
   }
 }

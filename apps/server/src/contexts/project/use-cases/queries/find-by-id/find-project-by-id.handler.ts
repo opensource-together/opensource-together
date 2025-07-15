@@ -63,6 +63,14 @@ export class FindProjectByIdHandler
     if (!ownerProjectInfo.success) {
       return Result.fail(ownerProjectInfo.error as string);
     }
+    const projectStats = {
+      forks_count: 0,
+      stargazers_count: 0,
+      watchers_count: 0,
+      open_issues_count: 0,
+      commits_count: 0,
+      lastCommit: null,
+    };
     const username = ownerProjectInfo.value.toPrimitive().username;
     const repoName = project.value.toPrimitive().title;
     const [commitsNumber, repoInfo] = await Promise.all([
@@ -78,22 +86,40 @@ export class FindProjectByIdHandler
       ),
     ]);
     if (!commitsNumber.success) {
-      return Result.fail(commitsNumber.error);
+      projectStats.commits_count = 0;
+      projectStats.lastCommit = null;
     }
     if (!repoInfo.success) {
-      return Result.fail(repoInfo.error);
-    }
-    const { forks_count, stargazers_count, watchers_count, open_issues_count } =
-      repoInfo.value;
-    return Result.ok({
-      project: project.value,
-      projectStats: {
+      projectStats.forks_count = 0;
+      projectStats.stargazers_count = 0;
+      projectStats.watchers_count = 0;
+      projectStats.open_issues_count = 0;
+    } else {
+      const {
         forks_count,
         stargazers_count,
         watchers_count,
         open_issues_count,
-        commits_count: commitsNumber.value.commitsNumber as number,
-        lastCommit: commitsNumber.value.lastCommit as any,
+      } = repoInfo.value as {
+        forks_count: number;
+        stargazers_count: number;
+        watchers_count: number;
+        open_issues_count: number;
+      };
+      projectStats.forks_count = forks_count;
+      projectStats.stargazers_count = stargazers_count;
+      projectStats.watchers_count = watchers_count;
+      projectStats.open_issues_count = open_issues_count;
+    }
+    return Result.ok({
+      project: project.value,
+      projectStats: {
+        forks_count: projectStats.forks_count,
+        stargazers_count: projectStats.stargazers_count,
+        watchers_count: projectStats.watchers_count,
+        open_issues_count: projectStats.open_issues_count,
+        commits_count: projectStats.commits_count,
+        lastCommit: projectStats.lastCommit,
       },
     });
   }
