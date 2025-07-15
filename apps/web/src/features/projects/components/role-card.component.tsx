@@ -81,7 +81,7 @@ export default function RoleCard({
             roleDescription={description}
             projectGoals={projectGoals}
             keyFeatures={keyFeatures}
-            techStacks={roleTechStacks}
+            techStacks={techStacks}
             projectId={projectId}
             roleId={role.id}
           >

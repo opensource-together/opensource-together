@@ -7,11 +7,11 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 import { Modal } from "@/shared/components/ui/modal";
 
-import { ProjectRoleApplication } from "../types/project-application.type";
-import { KeyFeature, ProjectGoal } from "../types/project.type";
+import { ProjectRoleApplicationType } from "../../projects/types/project-application.type";
+import { KeyFeature, ProjectGoal } from "../../projects/types/project.type";
 
 interface ApplicationCardProps {
-  application: ProjectRoleApplication;
+  application: ProjectRoleApplicationType;
   keyFeatures?: KeyFeature[];
   projectGoals?: ProjectGoal[];
   className?: string;
@@ -80,7 +80,7 @@ export default function ApplicationCard({
       const diffInWeeks = Math.floor(diffInDays / 7);
       return `il y a ${diffInWeeks} semaine${diffInWeeks > 1 ? "s" : ""}`;
     } catch (error) {
-      return "Date invalide";
+      return "Date invalide@" + error;
     }
   };
 
