@@ -172,3 +172,13 @@ model ProjectGoal {
   goal      String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
+
+model Notification {
+	id				String	@id @default(uuid())
+	userId		String
+	type			String
+	payload		Json
+	createdAt	DateTime		@default(now())
+	readAt		DateTime?
+	@@index([userId, createdAt])
+}
