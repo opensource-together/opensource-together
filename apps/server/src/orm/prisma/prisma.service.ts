@@ -9,6 +9,7 @@ export class PrismaService
   async onModuleInit(): Promise<void> {
     await this.$connect();
 
+    console.log('Initializing database...');
     await this.seedInitialData();
   }
 

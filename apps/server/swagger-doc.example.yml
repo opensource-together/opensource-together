@@ -2232,6 +2232,203 @@ paths:
                   message:
                     type: string
                     description: Message d'erreur SuperTokens pour token invalide ou mot de passe incorrect
+  /projects/{projectId}/roles/{roleId}/apply:
+    post:
+      tags:
+        - Project Roles
+      summary: Appliquer à un rôle de projet
+      description: |
+        Permet à un utilisateur de postuler pour un rôle de projet spécifique.
+        L'utilisateur doit fournir les fonctionnalités clés et les objectifs de projet sélectionnés.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                keyFeatures:
+                  type: array
+                  items:
+                    type: string
+                  description: Liste des ID des fonctionnalités clés sélectionnées.
+                projectGoals:
+                  type: array
+                  items:
+                    type: string
+                  description: Liste des ID des objectifs de projet sélectionnés.
+              required:
+                - keyFeatures
+                - projectGoals
+      responses:
+        '200':
+          description: Application réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    description: ID de l'utilisateur ayant postulé.
+                    example: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                  projectId:
+                    type: string
+                    description: ID du projet.
+                    example: '108da791-6e48-47de-9a2b-b88f739e08a2'
+                  projectRoleTitle:
+                    type: string
+                    description: Titre du rôle de projet.
+                    example: 'dev front'
+                  projectRoleId:
+                    type: string
+                    description: ID du rôle de projet.
+                    example: '6262e74b-24f0-4c7b-a03c-5ac853a512ab'
+                  status:
+                    type: string
+                    description: Statut de la candidature.
+                    example: 'PENDING'
+                  selectedKeyFeatures:
+                    type: array
+                    items:
+                      type: string
+                    description: Liste des ID des fonctionnalités clés sélectionnées.
+                  selectedProjectGoals:
+                    type: array
+                    items:
+                      type: string
+                    description: Liste des ID des objectifs de projet sélectionnés.
+                  appliedAt:
+                    type: string
+                    format: date-time
+                    description: Date à laquelle la candidature a été soumise.
+                    example: '2025-07-14T22:28:53.441Z'
+              example:
+                userId: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                projectId: '108da791-6e48-47de-9a2b-b88f739e08a2'
+                projectRoleTitle: 'dev front'
+                projectRoleId: '6262e74b-24f0-4c7b-a03c-5ac853a512ab'
+                status: 'PENDING'
+                selectedKeyFeatures: ['test']
+                selectedProjectGoals: ['test']
+                appliedAt: '2025-07-14T22:28:53.441Z'
+        '400':
+          description: Erreur lors de la candidature
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: 'You are not the owner of this project'
+  /projects/{projectId}/applications:
+    get:
+      tags:
+        - Projects
+      summary: Récupérer toutes les candidatures d'un projet
+      description: |
+        Permet au propriétaire d'un projet de récupérer toutes les candidatures reçues pour ce projet.
+        Seul le owner du projet peut accéder à cette route.
+        
+        **Données utilisateur :** Inclut les informations minimales du profile (id, name, avatarUrl).
+        Pour plus de détails, utiliser GET /profile/{userId}.
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: string
+          description: ID du projet
+      responses:
+        '200':
+          description: Liste des candidatures du projet (si owner)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                      example: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                    projectId:
+                      type: string
+                      example: '108da791-6e48-47de-9a2b-b88f739e08a2'
+                    projectRoleTitle:
+                      type: string
+                      example: 'dev front'
+                    projectRoleId:
+                      type: string
+                      example: '6262e74b-24f0-4c7b-a03c-5ac853a512ab'
+                    status:
+                      type: string
+                      example: 'PENDING'
+                    selectedKeyFeatures:
+                      type: array
+                      items:
+                        type: string
+                      example: ['test']
+                    selectedProjectGoals:
+                      type: array
+                      items:
+                        type: string
+                      example: ['test']
+                    appliedAt:
+                      type: string
+                      format: date-time
+                      example: '2025-07-14T22:38:23.644Z'
+                    userProfile:
+                      type: object
+                      nullable: true
+                      properties:
+                        id:
+                          type: string
+                          example: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                        name:
+                          type: string
+                          example: 'John Doe'
+                        avatarUrl:
+                          type: string
+                          nullable: true
+                          example: 'https://avatars.githubusercontent.com/u/123456789'
+                      required:
+                        - id
+                        - name
+              example:
+                - userId: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                  projectId: '108da791-6e48-47de-9a2b-b88f739e08a2'
+                  projectRoleTitle: 'dev front'
+                  projectRoleId: '6262e74b-24f0-4c7b-a03c-5ac853a512ab'
+                  status: 'PENDING'
+                  selectedKeyFeatures: ['test']
+                  selectedProjectGoals: ['test']
+                  appliedAt: '2025-07-14T22:38:23.644Z'
+                  userProfile:
+                    id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                    name: 'John Doe'
+                    avatarUrl: 'https://avatars.githubusercontent.com/u/123456789'
+        '400':
+          description: Accès refusé (si non owner)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: 'You are not the owner of this project'
+              example:
+                statusCode: 400
+                message: 'You are not the owner of this project'
+
 components:
   schemas:
     ProjectRoleResponseDto:
@@ -2262,7 +2459,13 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Compétences techniques requises pour ce rôle
-
+      required:
+        - id
+        - projectId
+        - roleTitle
+        - description
+        - isFilled
+        - skillSet
     CreateProjectRoleDto:
       type: object
       properties:
@@ -2288,7 +2491,6 @@ components:
         - description
         - isFilled
         - skillSet
-
     UpdateProjectRoleDto:
       type: object
       properties:
@@ -2309,7 +2511,11 @@ components:
           items:
             $ref: '#/components/schemas/TechStackDto'
           description: Compétences techniques requises pour ce rôle
-
+      required:
+        - roleTitle
+        - description
+        - skillSet
+        - isFilled
     TechStackDto:
       type: object
       properties:
@@ -2916,6 +3122,49 @@ components:
         - projects
         - joinedAt
         - profileUpdatedAt
+    ApplyProjectRoleResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: ID de l'utilisateur ayant postulé.
+          example: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+        projectId:
+          type: string
+          description: ID du projet.
+          example: '108da791-6e48-47de-9a2b-b88f739e08a2'
+        projectRoleId:
+          type: string
+          description: ID du rôle de projet.
+          example: '6262e74b-24f0-4c7b-a03c-5ac853a512ab'
+        status:
+          type: string
+          description: Statut de la candidature.
+          example: 'PENDING'
+        selectedKeyFeatures:
+          type: array
+          items:
+            type: string
+          description: Liste des ID des fonctionnalités clés sélectionnées.
+        selectedProjectGoals:
+          type: array
+          items:
+            type: string
+          description: Liste des ID des objectifs de projet sélectionnés.
+        appliedAt:
+          type: string
+          format: date-time
+          description: Date à laquelle la candidature a été soumise.
+          example: '2025-07-14T22:28:53.441Z'
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: 'You are not the owner of this project'
   securitySchemes:
     supertokens_session:
       type: apiKey

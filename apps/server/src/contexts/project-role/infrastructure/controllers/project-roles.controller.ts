@@ -9,6 +9,9 @@ import { UpdateProjectRoleDtoRequest } from './dto/update-project-role-request.d
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Result } from '@/libs/result';
 import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+import { ApplyToProjectRoleCommand } from '@/contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
+import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
+import { ApplyToRoleRequestDto } from './dto/apply-to-role-request.dto';
 
 @Controller('projects/:projectId/roles')
 export class ProjectRolesController {
@@ -100,5 +103,31 @@ export class ProjectRolesController {
     }
 
     return { message: 'Project role deleted successfully' };
+  }
+
+  @Post(':roleId/apply')
+  async applyToProjectRole(
+    @Session('userId') userId: string,
+    @Param('roleId') roleId: string,
+    @Body() body: ApplyToRoleRequestDto,
+  ) {
+    const { keyFeatures, projectGoals, motivationLetter } = body;
+    const command = new ApplyToProjectRoleCommand({
+      userId,
+      projectRoleId: roleId,
+      selectedKeyFeatures: keyFeatures,
+      selectedProjectGoals: projectGoals,
+      motivationLetter,
+    });
+    console.log('command', command);
+
+    const result: Result<ProjectRoleApplication, string> =
+      await this.commandBus.execute(command);
+
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+
+    return result.value;
   }
 }
