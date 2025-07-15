@@ -55,7 +55,11 @@ export class PrismaProjectRoleApplicationRepository
       const applications = await this.prisma.projectRoleApplication.findMany({
         where: { projectId: { equals: projectId } },
         include: {
-          user: true,
+          user: {
+            include: {
+              profile: true, // Inclure le profile
+            },
+          },
           projectRole: true,
           project: true,
         },

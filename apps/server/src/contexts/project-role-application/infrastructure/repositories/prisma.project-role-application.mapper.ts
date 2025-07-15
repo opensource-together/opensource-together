@@ -39,7 +39,11 @@ export class PrismaProjectRoleApplicationMapper {
   static toDomain(
     prismaEntity: Prisma.ProjectRoleApplicationGetPayload<{
       include: {
-        user: true;
+        user: {
+          include: {
+            profile: true;
+          };
+        };
         projectRole: true;
         project: true;
       };
@@ -49,6 +53,7 @@ export class PrismaProjectRoleApplicationMapper {
     ProjectRoleApplicationValidationErrors | string
   > {
     const domainEntity = ProjectRoleApplication.reconstitute({
+      id: prismaEntity.id,
       userId: prismaEntity.user.id,
       projectId: prismaEntity.project.id,
       projectRoleId: prismaEntity.projectRole.id,
@@ -57,6 +62,15 @@ export class PrismaProjectRoleApplicationMapper {
       selectedProjectGoals: prismaEntity.selectedProjectGoals,
       rejectionReason: prismaEntity.rejectionReason ?? undefined,
       status: prismaEntity.status as ApplicationStatus,
+      appliedAt: prismaEntity.appliedAt,
+      // Gérer le cas où le profile peut être null et convertir null en undefined
+      userProfile: prismaEntity.user.profile
+        ? {
+            id: prismaEntity.user.id,
+            name: prismaEntity.user.profile.name,
+            avatarUrl: prismaEntity.user.profile.avatarUrl ?? undefined, // Convertir null en undefined
+          }
+        : undefined,
     });
     if (!domainEntity.success) {
       return Result.fail(domainEntity.error);

@@ -16,6 +16,12 @@ export type ProjectRoleApplicationData = {
   appliedAt?: Date;
   decidedAt?: Date;
   decidedBy?: string;
+  // Optionnel - seulement pour la reconstitution
+  userProfile?: {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+  };
 };
 
 export type ProjectRoleApplicationValidationErrors = {
@@ -42,6 +48,11 @@ export class ProjectRoleApplication {
   public readonly appliedAt: Date;
   public decidedAt?: Date;
   public decidedBy?: string;
+  public readonly userProfile?: {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+  };
 
   private constructor(props: {
     id?: string;
@@ -57,6 +68,11 @@ export class ProjectRoleApplication {
     appliedAt?: Date;
     decidedAt?: Date;
     decidedBy?: string;
+    userProfile?: {
+      id: string;
+      name: string;
+      avatarUrl?: string;
+    };
   }) {
     this.id = props.id;
     this.userId = props.userId;
@@ -71,6 +87,7 @@ export class ProjectRoleApplication {
     this.appliedAt = props.appliedAt ?? new Date();
     this.decidedAt = props.decidedAt;
     this.decidedBy = props.decidedBy;
+    this.userProfile = props.userProfile;
   }
 
   private static validate(
@@ -115,6 +132,8 @@ export class ProjectRoleApplication {
       errors.status = 'Status must be PENDING, APPROVAL, or REJECTED';
     }
 
+    // userProfile est optionnel, pas de validation nécessaire
+
     if (Object.keys(errors).length > 0) {
       return Result.fail(errors);
     }
@@ -123,7 +142,7 @@ export class ProjectRoleApplication {
   }
 
   public static create(
-    props: Omit<ProjectRoleApplicationData, 'status'>,
+    props: Omit<ProjectRoleApplicationData, 'status' | 'userProfile'>,
   ): Result<
     ProjectRoleApplication,
     ProjectRoleApplicationValidationErrors | string
@@ -211,6 +230,7 @@ export class ProjectRoleApplication {
       appliedAt: this.appliedAt,
       decidedAt: this.decidedAt,
       decidedBy: this.decidedBy,
+      userProfile: this.userProfile,
     };
   }
 

@@ -2333,6 +2333,9 @@ paths:
       description: |
         Permet au propriétaire d'un projet de récupérer toutes les candidatures reçues pour ce projet.
         Seul le owner du projet peut accéder à cette route.
+        
+        **Données utilisateur :** Inclut les informations minimales du profile (id, name, avatarUrl).
+        Pour plus de détails, utiliser GET /profile/{userId}.
       parameters:
         - in: path
           name: projectId
@@ -2379,6 +2382,23 @@ paths:
                       type: string
                       format: date-time
                       example: '2025-07-14T22:38:23.644Z'
+                    userProfile:
+                      type: object
+                      nullable: true
+                      properties:
+                        id:
+                          type: string
+                          example: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                        name:
+                          type: string
+                          example: 'John Doe'
+                        avatarUrl:
+                          type: string
+                          nullable: true
+                          example: 'https://avatars.githubusercontent.com/u/123456789'
+                      required:
+                        - id
+                        - name
               example:
                 - userId: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
                   projectId: '108da791-6e48-47de-9a2b-b88f739e08a2'
@@ -2388,6 +2408,10 @@ paths:
                   selectedKeyFeatures: ['test']
                   selectedProjectGoals: ['test']
                   appliedAt: '2025-07-14T22:38:23.644Z'
+                  userProfile:
+                    id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d'
+                    name: 'John Doe'
+                    avatarUrl: 'https://avatars.githubusercontent.com/u/123456789'
         '400':
           description: Accès refusé (si non owner)
           content:
