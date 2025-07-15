@@ -6,6 +6,7 @@ import { RootModule } from './root.module';
 import * as YAML from 'yamljs';
 import * as swaggerUi from 'swagger-ui-express';
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
@@ -33,10 +34,17 @@ async function bootstrap() {
     new SuperTokensExceptionFilter(),
   );
 
-  if (process.env.NODE_ENV !== 'PRODUCTION') {
-    const document: object = YAML.load('swagger-doc.example.yml') as object;
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(document));
-  }
+  const config = new DocumentBuilder()
+    .setTitle('OpenSource Together API')
+    .setDescription(
+      "Documentation de l'API pour la plateforme OpenSource Together",
+    )
+    .setVersion('1.0')
+    .addCookieAuth('sAccessToken') // pour la session SuperTokens
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT ?? 4000);
 }
