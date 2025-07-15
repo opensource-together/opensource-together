@@ -53,7 +53,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubInvitationDto(response);
     } catch (e) {
-      return Result.fail(e);
+      return Result.fail('Failed to invite user to repository');
     }
   }
 
@@ -79,7 +79,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return Result.ok(response.data);
     } catch (e) {
-      return Result.fail(e);
+      return Result.fail('Failed to fetch repository');
     }
   }
 
