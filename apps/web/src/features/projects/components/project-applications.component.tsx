@@ -1,6 +1,10 @@
 "use client";
 
-import { useProjectApplications } from "../hooks/use-project-applications.hook";
+import {
+  useAcceptProjectApplication,
+  useProjectApplications,
+  useRejectProjectApplication,
+} from "../hooks/use-project-applications.hook";
 import { Project } from "../types/project.type";
 import ApplicationCard from "./application-card.component";
 
@@ -45,6 +49,20 @@ function ProjectApplicationsList({ project }: ProjectApplicationsListProps) {
     isLoading,
     isError,
   } = useProjectApplications(project.id!);
+
+  // Mutations for accepting/rejecting applications
+  const acceptMutation = useAcceptProjectApplication(project.id!);
+  const rejectMutation = useRejectProjectApplication(project.id!);
+
+  const handleAccept = (applicationId: string) => {
+    acceptMutation.mutate(applicationId);
+  };
+
+  const handleReject = (applicationId: string) => {
+    rejectMutation.mutate(applicationId);
+  };
+
+  const isProcessing = acceptMutation.isPending || rejectMutation.isPending;
 
   if (isLoading) {
     return (
@@ -95,6 +113,9 @@ function ProjectApplicationsList({ project }: ProjectApplicationsListProps) {
               application={application}
               keyFeatures={project.keyFeatures}
               projectGoals={project.projectGoals}
+              onAccept={handleAccept}
+              onReject={handleReject}
+              isProcessing={isProcessing}
             />
           ))}
         </div>
@@ -112,6 +133,9 @@ function ProjectApplicationsList({ project }: ProjectApplicationsListProps) {
               application={application}
               keyFeatures={project.keyFeatures}
               projectGoals={project.projectGoals}
+              onAccept={handleAccept}
+              onReject={handleReject}
+              isProcessing={isProcessing}
             />
           ))}
         </div>
