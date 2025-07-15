@@ -1,14 +1,17 @@
 "use client";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 
 import ProfileError from "../components/error-ui/profile-error.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero from "../components/profile-hero.component";
+import ProjectApplications from "../components/project-applications.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
 export default function ProfileView() {
   const { currentUser, isLoading, isError } = useAuth();
+  const { data: projects = [] } = useProjects();
 
   if (isLoading) return <SkeletonProfileView />;
   if (isError || !currentUser) return <ProfileError />;
@@ -19,9 +22,14 @@ export default function ProfileView() {
         <ProfileHero profile={currentUser} />
       </div>
 
-      {/* Section des projets pinnés en dessous */}
-      <div className="mt-12 mb-30 flex w-full">
+      {/* Section des projets pinnés */}
+      <div className="mt-12 mb-8 flex w-full">
         <PinnedProjects profile={currentUser} />
+      </div>
+
+      {/* Section des candidatures reçues */}
+      <div className="mb-30 flex w-full">
+        <ProjectApplications projects={projects} userId={currentUser.id} />
       </div>
     </div>
   );

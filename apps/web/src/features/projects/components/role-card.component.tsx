@@ -7,14 +7,16 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 
 import EditRoleForm from "../forms/edit-role.form";
+import RoleApplicationForm from "../forms/role-application.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
 import { ProjectRole } from "../types/project-role.type";
-import { ProjectGoal, TechStack } from "../types/project.type";
+import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
   techStacks?: TechStack[];
   projectGoals?: ProjectGoal[];
+  keyFeatures?: KeyFeature[];
   className?: string;
   isMaintainer?: boolean;
   projectId?: string;
@@ -22,17 +24,17 @@ interface RoleCardProps {
 
 export default function RoleCard({
   role,
-  // techStacks = [],
-  // projectGoals = [],
+  techStacks = [],
+  projectGoals = [],
+  keyFeatures = [],
   className,
-  // isMaintainer = false,
+  isMaintainer = false,
   projectId = "",
 }: RoleCardProps) {
-  // const { techStackOptions } = useTechStack();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { deleteRole, isDeleting } = useDeleteRole(projectId, role.id);
   const {
-    // title = "",
+    title = "",
     description = "",
     techStacks: roleTechStacks = [],
   } = role;
@@ -46,32 +48,49 @@ export default function RoleCard({
         <h3 className="text-xl font-medium tracking-tighter text-black">
           {role.title}
         </h3>
-        <div className="flex items-center gap-1">
-          <EditRoleForm role={role} projectId={projectId}>
-            <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5">
-              <Icon name="pencil" variant="gray" size="sm" />
-            </button>
-          </EditRoleForm>
+        {isMaintainer ? (
+          <div className="flex items-center gap-1">
+            <EditRoleForm role={role} projectId={projectId}>
+              <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5">
+                <Icon name="pencil" variant="gray" size="sm" />
+              </button>
+            </EditRoleForm>
 
-          <ConfirmDialog
-            open={isConfirmOpen}
-            onOpenChange={setIsConfirmOpen}
-            title="Supprimer le rôle"
-            description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
-            isLoading={isDeleting}
-            onConfirm={() => {
-              deleteRole();
-              setIsConfirmOpen(false);
-            }}
-            onCancel={() => setIsConfirmOpen(false)}
-          />
-          <button
-            onClick={() => setIsConfirmOpen(true)}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
+            <ConfirmDialog
+              open={isConfirmOpen}
+              onOpenChange={setIsConfirmOpen}
+              title="Supprimer le rôle"
+              description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
+              isLoading={isDeleting}
+              onConfirm={() => {
+                deleteRole();
+                setIsConfirmOpen(false);
+              }}
+              onCancel={() => setIsConfirmOpen(false)}
+            />
+            <button
+              onClick={() => setIsConfirmOpen(true)}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
+            >
+              <Icon name="cross" variant="gray" size="xs" />
+            </button>
+          </div>
+        ) : (
+          <RoleApplicationForm
+            roleTitle={title}
+            roleDescription={description}
+            projectGoals={projectGoals}
+            keyFeatures={keyFeatures}
+            techStacks={techStacks}
+            projectId={projectId}
+            roleId={role.id}
           >
-            <Icon name="cross" variant="gray" size="xs" />
-          </button>
-        </div>
+            <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
+              <span className="text-sm text-black">Candidater à ce rôle</span>
+              <Icon name="arrow-up-right" size="xs" />
+            </div>
+          </RoleApplicationForm>
+        )}
       </div>
 
       {/* Role Description */}
@@ -96,38 +115,6 @@ export default function RoleCard({
               />
             ))}
         </div>
-
-        {/* Apply Button
-        {isMaintainer ? (
-          <EditRoleForm role={role} projectId={projectId}>
-            <Button variant="outline">Modifier le rôle</Button>
-          </EditRoleForm>
-        ) : (
-          <RoleApplicationForm
-            roleTitle={title}
-            roleDescription={description}
-            projectGoals={projectGoals}
-            techStacks={roleTechStacks.map((roleTech: TechStack) => {
-              const fullTechStack = techStacks.find(
-                (tech) =>
-                  tech.name.toLowerCase() === roleTech.name.toLowerCase()
-              );
-              return (
-                fullTechStack || {
-                  ...roleTech,
-                  iconUrl:
-                    techStackOptions.find((tech) => tech.name === roleTech.name)
-                      ?.iconUrl || "",
-                }
-              );
-            })}
-          >
-            <Button>
-              Postuler à ce rôle
-              <Icon name="arrow-up-right" size="xs" variant="white" />
-            </Button>
-          </RoleApplicationForm>
-        )} */}
       </div>
     </div>
   );
