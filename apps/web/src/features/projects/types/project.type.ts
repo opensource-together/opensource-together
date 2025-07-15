@@ -52,6 +52,7 @@ export interface ProjectGoal {
 
 export interface Project {
   id?: string;
+  ownerId?: string;
   slug?: string;
   title: string;
   image?: string;
