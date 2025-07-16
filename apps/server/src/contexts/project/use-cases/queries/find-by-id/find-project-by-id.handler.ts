@@ -1,26 +1,27 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { Inject } from '@nestjs/common';
-import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { Result } from '@/libs/result';
-import { IQuery } from '@nestjs/cqrs';
 import {
-  GithubRepositoryPort,
-  GITHUB_REPOSITORY_PORT,
   Contributor,
+  GITHUB_REPOSITORY_PORT,
+  GithubRepositoryPort,
+  LastCommit,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import {
-  ProfileRepositoryPort,
   PROFILE_REPOSITORY_PORT,
+  ProfileRepositoryPort,
 } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { Octokit } from '@octokit/rest';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { LastCommit } from '@/contexts/github/use-cases/ports/github-repository.port';
+import {
+  PROJECT_REPOSITORY_PORT,
+  ProjectRepositoryPort,
+} from '@/contexts/project/use-cases/ports/project.repository.port';
+import { Result } from '@/libs/result';
+import { Inject } from '@nestjs/common';
+import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Octokit } from '@octokit/rest';
 export class FindProjectByIdQuery implements IQuery {
   constructor(
     public readonly props: {
       id: string;
-      octokit: Octokit;
+      octokit?: Octokit;
     },
   ) {}
 }
@@ -91,23 +92,38 @@ export class FindProjectByIdHandler
     const ownerName = ownerProjectInfo.value.toPrimitive().name;
     const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;
     const repoName = project.value.toPrimitive().title;
-    const [commits, repoInfo, contributors] = await Promise.all([
-      this.githubRepo.findCommitsByRepository(
-        ownerLogin,
-        repoName.replace(/\s+/g, '-'),
-        octokit,
-      ),
-      this.githubRepo.findRepositoryByOwnerAndName(
-        ownerLogin,
-        repoName.replace(/\s+/g, '-'),
-        octokit,
-      ),
-      this.githubRepo.findContributorsByRepository(
-        ownerLogin,
-        repoName.replace(/\s+/g, '-'),
-        octokit,
-      ),
-    ]);
+
+    let commits: Result<
+      { lastCommit: LastCommit; commitsNumber: number },
+      string
+    >;
+    let repoInfo: Result<ProjectStats, string>;
+    let contributors: Result<Contributor[], string>;
+
+    if (octokit) {
+      [commits, repoInfo, contributors] = await Promise.all([
+        this.githubRepo.findCommitsByRepository(
+          ownerLogin,
+          repoName.replace(/\s+/g, '-'),
+          octokit,
+        ),
+        this.githubRepo.findRepositoryByOwnerAndName(
+          ownerLogin,
+          repoName.replace(/\s+/g, '-'),
+          octokit,
+        ),
+        this.githubRepo.findContributorsByRepository(
+          ownerLogin,
+          repoName.replace(/\s+/g, '-'),
+          octokit,
+        ),
+      ]);
+    } else {
+      // Valeurs par défaut si pas d'octokit
+      commits = Result.fail('No authentication');
+      repoInfo = Result.fail('No authentication');
+      contributors = Result.fail('No authentication');
+    }
 
     const defaultProjectStats: ProjectStats = {
       forks: 0,

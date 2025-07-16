@@ -1,51 +1,51 @@
-import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/libs/result';
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  // Query,
-  HttpException,
-  HttpStatus,
-  Post,
-  Patch,
-  Delete,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiBody,
-  ApiResponse,
-  ApiCookieAuth,
-} from '@nestjs/swagger';
-import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
-import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
-import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Session, PublicAccess } from 'supertokens-nestjs';
-import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
-import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
-import { Octokit } from '@octokit/rest';
-import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
-import { CreateProjectResponseDto } from './dto/create-project-response.dto';
-import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
-import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
-import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
-import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
-import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
-import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 import {
   Author,
   Contributor,
   LastCommit,
   ProjectStats,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
+import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
+import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
+import { Project } from '@/contexts/project/domain/project.entity';
+import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
+import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
+import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
+import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
+import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
+import { Result } from '@/libs/result';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  // Query,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Octokit } from '@octokit/rest';
+import { PublicAccess, Session } from 'supertokens-nestjs';
+import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
+import { CreateProjectResponseDto } from './dto/create-project-response.dto';
+import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
+import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
+import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
+import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -217,9 +217,12 @@ export class ProjectController {
     description: 'Projet non trouvé',
     example: { message: 'Project not found', statusCode: 404 },
   })
-  @UseGuards(GithubAuthGuard)
+  @PublicAccess()
   @Get(':id')
-  async getProject(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
+  async getProject(
+    @Param('id') id: string,
+    @GitHubOctokit() octokit?: Octokit,
+  ) {
     const projectRes: Result<
       {
         author: Author;
