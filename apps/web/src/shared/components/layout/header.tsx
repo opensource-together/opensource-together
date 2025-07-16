@@ -52,8 +52,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, currentUser, logout, redirectToLogin, requireAuth } =
-    useAuth();
+  const { isAuthenticated, currentUser, logout, requireAuth } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
