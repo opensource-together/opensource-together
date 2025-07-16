@@ -1,8 +1,12 @@
 import { ProjectFormData } from "../stores/project-create.store";
+import { TechStack } from "../types/project.type";
 import { CreateProjectApiData } from "../validations/project-stepper.schema";
 
 /**
- * Transform store data to API format
+ * Transforms store data to API format.
+ *
+ * @param storeData - The data from the store.
+ * @returns The transformed data for the API.
  */
 export const transformProjectForApi = (
   storeData: ProjectFormData
@@ -14,12 +18,12 @@ export const transformProjectForApi = (
     externalLinks: storeData.externalLinks || [],
     techStacks: storeData.techStack.map((tech) => tech.id),
     categories: storeData.categories.map((cat) => cat.id),
-    keyFeatures: storeData.keyFeatures.map((feature) => feature.title),
+    keyFeatures: storeData.keyFeatures.map((feature) => feature.feature),
     projectGoals: storeData.projectGoals.map((goal) => goal.goal),
     projectRoles: storeData.roles.map((role) => ({
       title: role.title,
       description: role.description,
-      techStacks: role.techStacks?.map((tech) => tech.id),
+      techStacks: role.techStacks?.map((tech: TechStack) => tech.id),
     })),
   };
 };

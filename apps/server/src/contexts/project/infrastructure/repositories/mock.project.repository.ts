@@ -23,6 +23,7 @@ type ProjectInMemory = {
   categories: { id: string; name: string }[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
+  projectMembers: { id: string; userId: string }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -48,8 +49,32 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       categories: [{ id: '1', name: 'Web Development' }],
       keyFeatures: [{ id: '1', feature: 'Test Key Feature' }],
       projectGoals: [{ id: '1', goal: 'Test Project Goal' }],
+      projectMembers: [
+        { id: 'member1', userId: '456' }, // Utilisateur 456 est membre de ce projet
+        { id: 'member2', userId: '789' }, // Utilisateur 789 est membre de ce projet
+      ],
       createdAt: new Date('2024-01-01T09:00:00Z'),
       updatedAt: new Date('2024-01-01T10:00:00Z'),
+    },
+    {
+      id: 'project2',
+      ownerId: '456',
+      title: 'second project',
+      shortDescription: 'A second test project',
+      description: 'Description du deuxième projet',
+      externalLinks: [],
+      techStacks: [
+        { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
+      ],
+      projectRoles: [],
+      categories: [{ id: '1', name: 'Web Development' }],
+      keyFeatures: [{ id: '1', feature: 'Second Key Feature' }],
+      projectGoals: [{ id: '1', goal: 'Second Project Goal' }],
+      projectMembers: [
+        { id: 'member3', userId: '123' }, // Utilisateur 123 est membre de ce projet
+      ],
+      createdAt: new Date('2024-01-02T09:00:00Z'),
+      updatedAt: new Date('2024-01-02T10:00:00Z'),
     },
   ];
 
@@ -84,6 +109,7 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       categories: projectPrimitive.categories,
       keyFeatures: projectPrimitive.keyFeatures,
       projectGoals: projectPrimitive.projectGoals,
+      projectMembers: [],
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
     };
@@ -190,6 +216,7 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
       categories: projectPrimitive.categories,
       keyFeatures: projectPrimitive.keyFeatures,
       projectGoals: projectPrimitive.projectGoals,
+      createdAt: foundProject.createdAt,
       updatedAt: this.clock.now(),
     };
 
@@ -204,20 +231,47 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
     return this.reconstructProject(projectFound);
   }
 
-  getAllProjects(): Promise<Result<Project[], string>> {
+  async getAllProjects(): Promise<Result<Project[], string>> {
     const projectPromises = this.projects.map((project) =>
       this.reconstructProject(project),
     );
 
-    return Promise.all(projectPromises).then((results) => {
-      const failures = results.filter((r) => !r.success);
-      if (failures.length > 0) {
-        return Result.fail('Failed to reconstitute some projects');
-      }
+    const results = await Promise.all(projectPromises);
+    const failures = results.filter((r) => !r.success);
+    if (failures.length > 0) {
+      return Result.fail('Failed to reconstitute some projects');
+    }
 
-      const projects = results.filter((r) => r.success).map((r) => r.value);
-      return Result.ok(projects);
-    });
+    const projects = results.filter((r) => r.success).map((r) => r.value);
+    return Result.ok(projects);
+  }
+
+  async findProjectsByUserId(
+    userId: string,
+  ): Promise<Result<Project[], string>> {
+    // Récupérer les projets où l'utilisateur est propriétaire OU membre
+    const userProjects = this.projects.filter(
+      (p) =>
+        p.ownerId === userId ||
+        p.projectMembers.some((member) => member.userId === userId),
+    );
+
+    if (userProjects.length === 0) {
+      return Result.ok([]);
+    }
+
+    const projectPromises = userProjects.map((project) =>
+      this.reconstructProject(project),
+    );
+
+    const results = await Promise.all(projectPromises);
+    const failures = results.filter((r) => !r.success);
+    if (failures.length > 0) {
+      return Result.fail('Failed to reconstitute some projects');
+    }
+
+    const projects = results.filter((r) => r.success).map((r) => r.value);
+    return Result.ok(projects);
   }
 
   reset(): void {
@@ -248,8 +302,32 @@ export class InMemoryProjectRepository implements ProjectRepositoryPort {
         categories: [{ id: '1', name: 'Web Development' }],
         keyFeatures: [{ id: '1', feature: 'Test Key Feature' }],
         projectGoals: [{ id: '1', goal: 'Test Project Goal' }],
+        projectMembers: [
+          { id: 'member1', userId: '456' },
+          { id: 'member2', userId: '789' },
+        ],
         createdAt: new Date('2024-01-01T09:00:00Z'),
         updatedAt: new Date('2024-01-01T10:00:00Z'),
+      },
+      {
+        id: 'project2',
+        ownerId: '456',
+        title: 'second project',
+        shortDescription: 'A second test project',
+        description: 'Description du deuxième projet',
+        externalLinks: [],
+        techStacks: [
+          { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
+        ],
+        projectRoles: [],
+        categories: [{ id: '1', name: 'Web Development' }],
+        keyFeatures: [{ id: '1', feature: 'Second Key Feature' }],
+        projectGoals: [{ id: '1', goal: 'Second Project Goal' }],
+        projectMembers: [
+          { id: 'member3', userId: '123' }, // Utilisateur 123 est membre de ce projet
+        ],
+        createdAt: new Date('2024-01-02T09:00:00Z'),
+        updatedAt: new Date('2024-01-02T10:00:00Z'),
       },
     ];
   }

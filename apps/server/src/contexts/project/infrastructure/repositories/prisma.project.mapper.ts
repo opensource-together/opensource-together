@@ -132,7 +132,6 @@ export class PrismaProjectMapper {
       })),
     };
     const project = Project.reconstitute(projectData);
-    console.log('project', project);
     if (!project.success)
       return Result.fail(project.error as ProjectValidationErrors);
     return Result.ok(project.value);

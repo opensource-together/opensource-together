@@ -17,7 +17,7 @@ export const stepOneSchema = z.object({
   keyFeatures: z
     .array(
       z.object({
-        title: z.string(),
+        feature: z.string(),
       })
     )
     .min(1, "Au moins une fonctionnalité clé est requise"),

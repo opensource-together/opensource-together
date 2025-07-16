@@ -22,7 +22,7 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError } = useProject(projectId);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = true; // Variable temporaire pour le développement
+  const isMaintainer = false; // Variable temporaire pour le développement
 
   if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
@@ -62,14 +62,16 @@ export default function ProjectDetailView({
                 )}
               </div>
               <div className="mt-6 mb-30 flex flex-col gap-3">
-                {project.roles?.map((role) => (
+                {project.projectRoles?.map((role) => (
                   <RoleCard
                     key={role.title}
                     role={role}
                     techStacks={project.techStacks}
                     projectGoals={project.projectGoals}
+                    keyFeatures={project.keyFeatures}
                     className="mb-3 lg:max-w-[721.96px]"
                     isMaintainer={isMaintainer}
+                    projectId={projectId}
                   />
                 ))}
               </div>

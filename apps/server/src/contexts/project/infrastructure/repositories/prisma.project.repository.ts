@@ -327,9 +327,56 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
+  async findProjectsByUserId(
+    userId: string,
+  ): Promise<Result<Project[], string>> {
+    try {
+      const projectsPrisma = await this.prisma.project.findMany({
+        where: {
+          OR: [
+            // Projets où l'utilisateur est propriétaire
+            { ownerId: userId },
+            // Projets où l'utilisateur est membre
+            { projectMembers: { some: { userId } } },
+          ],
+        },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { techStacks: true },
+          },
+          projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
+          externalLinks: true,
+        },
+      });
+
+      if (!projectsPrisma || projectsPrisma.length === 0) return Result.ok([]);
+
+      const domainProjects: Project[] = [];
+
+      for (const projectPrisma of projectsPrisma) {
+        const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
+        if (!domainProject.success) {
+          return Result.fail(
+            typeof domainProject.error === 'string'
+              ? domainProject.error
+              : JSON.stringify(domainProject.error),
+          );
+        }
+        domainProjects.push(domainProject.value);
+      }
+
+      return Result.ok(domainProjects);
+    } catch (error) {
+      return Result.fail(`Unknown error : ${error}`);
+    }
+  }
+
   async findByTitle(title: string): Promise<Result<Project, string>> {
     try {
-      console.log('title', title);
       const projectPrisma = await this.prisma.project.findFirst({
         where: { title },
         include: {
@@ -345,7 +392,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         },
       });
 
-      console.log('projectPrisma', projectPrisma);
       if (!projectPrisma) return Result.fail('Project not found');
 
       const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
@@ -357,10 +403,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         );
       }
 
-      console.log('domainProject', domainProject.value);
       return Result.ok(domainProject.value);
-    } catch (error: any) {
-      console.log('error', error);
+    } catch {
       return Result.fail(`Unknown error`);
     }
   }
@@ -386,48 +430,133 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     try {
       const projectData = project.toPrimitive();
 
-      const updatedProject = await this.prisma.project.update({
-        where: { id },
-        data: {
-          title: projectData.title,
-          description: projectData.description,
-          shortDescription: projectData.shortDescription,
-          externalLinks: {
-            deleteMany: {},
-            create:
-              projectData.externalLinks
-                ?.filter((link) => link && link.url && link.type)
-                ?.map((link) => ({
-                  type: link.type,
-                  url: link.url,
-                })) || [],
+      // Utilisation d'une transaction pour garantir l'atomicité
+      return await this.prisma.$transaction(async (tx) => {
+        // 1. Mise à jour des informations de base du projet
+        await tx.project.update({
+          where: { id },
+          data: {
+            title: projectData.title,
+            description: projectData.description,
+            shortDescription: projectData.shortDescription,
+            externalLinks: {
+              deleteMany: {},
+              create:
+                projectData.externalLinks
+                  ?.filter((link) => link && link.url && link.type)
+                  ?.map((link) => ({
+                    type: link.type,
+                    url: link.url,
+                  })) || [],
+            },
           },
-        },
-        include: {
-          techStacks: true,
-          projectRoles: {
-            include: { techStacks: true },
+        });
+
+        // 2. Mise à jour des techStacks
+        if (projectData.techStacks && projectData.techStacks.length > 0) {
+          await tx.project.update({
+            where: { id },
+            data: {
+              techStacks: {
+                set: [], // On repart à zéro
+                connect: projectData.techStacks.map((ts) => ({ id: ts.id })),
+              },
+            },
+          });
+        }
+
+        // 3. Mise à jour des categories
+        if (projectData.categories && projectData.categories.length > 0) {
+          await tx.project.update({
+            where: { id },
+            data: {
+              categories: {
+                set: [], // On repart à zéro
+                connect: projectData.categories.map((cat) => ({ id: cat.id })),
+              },
+            },
+          });
+        }
+
+        // 4. Mise à jour des keyFeatures
+        if (projectData.keyFeatures && projectData.keyFeatures.length > 0) {
+          await tx.keyFeature.deleteMany({
+            where: { projectId: id },
+          });
+          await tx.keyFeature.createMany({
+            data: projectData.keyFeatures.map((feature) => ({
+              projectId: id,
+              feature: feature.feature,
+            })),
+          });
+        }
+
+        // 5. Mise à jour des projectGoals
+        if (projectData.projectGoals && projectData.projectGoals.length > 0) {
+          await tx.projectGoal.deleteMany({
+            where: { projectId: id },
+          });
+          await tx.projectGoal.createMany({
+            data: projectData.projectGoals.map((goal) => ({
+              projectId: id,
+              goal: goal.goal,
+            })),
+          });
+        }
+
+        // 6. Mise à jour des projectRoles
+        if (projectData.projectRoles && projectData.projectRoles.length > 0) {
+          // Supprimer tous les rôles existants
+          await tx.projectRole.deleteMany({
+            where: { projectId: id },
+          });
+
+          // Créer les nouveaux rôles
+          for (const role of projectData.projectRoles) {
+            await tx.projectRole.create({
+              data: {
+                projectId: id,
+                title: role.title,
+                description: role.description,
+                isFilled: role.isFilled,
+                techStacks: {
+                  connect: role.techStacks.map((ts) => ({ id: ts.id })),
+                },
+              },
+            });
+          }
+        }
+
+        // 7. Récupération du projet final avec toutes ses relations
+        const finalProject = await tx.project.findUnique({
+          where: { id },
+          include: {
+            techStacks: true,
+            projectRoles: {
+              include: { techStacks: true },
+            },
+            projectMembers: true,
+            categories: true,
+            keyFeatures: true,
+            projectGoals: true,
+            externalLinks: true,
           },
-          projectMembers: true,
-          categories: true,
-          keyFeatures: true,
-          projectGoals: true,
-          externalLinks: true,
-        },
+        });
+
+        if (!finalProject) return Result.fail('Project not found');
+
+        const domainProject = PrismaProjectMapper.toDomain(finalProject);
+        if (!domainProject.success) {
+          return Result.fail(
+            typeof domainProject.error === 'string'
+              ? domainProject.error
+              : JSON.stringify(domainProject.error),
+          );
+        }
+
+        return Result.ok(domainProject.value);
       });
-
-      const domainProject = PrismaProjectMapper.toDomain(updatedProject);
-      if (!domainProject.success) {
-        return Result.fail(
-          typeof domainProject.error === 'string'
-            ? domainProject.error
-            : JSON.stringify(domainProject.error),
-        );
-      }
-
-      return Result.ok(domainProject.value);
-    } catch (error: any) {
-      console.log('error', error);
+    } catch {
       return Result.fail(`Unknown error during project update`);
     }
   }

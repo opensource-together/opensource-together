@@ -11,9 +11,9 @@ import {
   ProjectCardViewLink,
 } from "@/shared/components/ui/project-card";
 
+import { ProjectRole } from "@/features/projects/types/project-role.type";
 import {
   Author,
-  ProjectRole,
   ProjectStats,
   TechStack,
 } from "@/features/projects/types/project.type";
@@ -46,7 +46,7 @@ export default function ProjectCardComponent({
   className = "",
   image = "",
   author = {
-    id: "",
+    ownerId: "",
     name: "",
     avatarUrl: "",
   },
@@ -54,6 +54,7 @@ export default function ProjectCardComponent({
     forks: 0,
     contributors: 0,
     stars: 0,
+    lastCommitAt: new Date(),
   },
 }: ProjectCardProps) {
   return (

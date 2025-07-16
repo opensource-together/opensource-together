@@ -87,8 +87,10 @@ export default function ProjectSidebarEditForm({
               <div className="h-[1px] w-full bg-black/5" />
             </div>
             <span className="text-sm font-medium text-black">
-              {project.lastCommitAt
-                ? new Date(project.lastCommitAt).toLocaleDateString("fr-FR")
+              {project.projectStats?.lastCommitAt
+                ? new Date(
+                    project.projectStats.lastCommitAt
+                  ).toLocaleDateString("fr-FR")
                 : "N/A"}
             </span>
           </div>

@@ -48,6 +48,18 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
   // Implémentation de la méthode de l'interface
   async findByIds(ids: string[]): Promise<Result<TechStack[], string>> {
     const found = this.techStacks.filter((ts) => ids.includes(ts.id));
+
+    // Vérifier si tous les IDs demandés ont été trouvés
+    if (found.length !== ids.length) {
+      const foundIds = found.map((ts) => ts.id);
+      const notFoundIds = ids.filter((id) => !foundIds.includes(id));
+      return Promise.resolve(
+        Result.fail(
+          `Some tech stacks are not found: ${notFoundIds.join(', ')}`,
+        ),
+      );
+    }
+
     const techStacks = found.map((ts) =>
       TechStack.reconstitute({
         id: ts.id,
@@ -55,10 +67,17 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
         iconUrl: ts.iconUrl,
       }),
     );
-    const result = techStacks.map((ts) =>
-      ts.success ? ts.value : (ts.error as string),
-    );
-    return Promise.resolve(Result.ok(result as TechStack[]));
+
+    // Vérifier si toutes les reconstitutions ont réussi
+    const failedReconstitutions = techStacks.filter((ts) => !ts.success);
+    if (failedReconstitutions.length > 0) {
+      return Promise.resolve(Result.fail('Failed to reconstitute tech stacks'));
+    }
+
+    const result = techStacks
+      .map((ts) => (ts.success ? ts.value : null))
+      .filter(Boolean) as TechStack[];
+    return Promise.resolve(Result.ok(result));
   }
 
   async delete(id: string): Promise<Result<boolean, string>> {

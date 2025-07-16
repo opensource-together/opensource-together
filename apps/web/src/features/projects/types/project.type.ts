@@ -1,5 +1,7 @@
+import { ProjectRole } from "./project-role.type";
+
 export interface Author {
-  id: string;
+  ownerId: string;
   name: string;
   avatarUrl?: string;
 }
@@ -8,15 +10,6 @@ export interface TechStack {
   id: string;
   name: string;
   iconUrl?: string;
-}
-
-export interface ProjectRole {
-  id?: string;
-  title: string;
-  description: string;
-  techStacks: TechStack[];
-  roleCount?: number;
-  projectGoal?: ProjectGoal[];
 }
 
 export interface ExternalLink {
@@ -28,6 +21,7 @@ export interface ProjectStats {
   contributors?: number;
   stars?: number;
   forks?: number;
+  lastCommitAt?: Date;
 }
 
 export interface Category {
@@ -46,16 +40,19 @@ export interface Collaborator {
 
 export interface KeyFeature {
   id?: string;
-  title: string;
+  projectId?: string;
+  feature: string;
 }
 
 export interface ProjectGoal {
   id?: string;
+  projectId?: string;
   goal: string;
 }
 
 export interface Project {
   id?: string;
+  ownerId?: string;
   slug?: string;
   title: string;
   image?: string;
@@ -65,13 +62,12 @@ export interface Project {
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   collaborators?: Collaborator[];
   techStacks: TechStack[];
-  roles: ProjectRole[];
+  projectRoles: ProjectRole[];
   externalLinks?: ExternalLink[];
   projectStats?: ProjectStats;
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
   categories: Category[];
-  lastCommitAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }

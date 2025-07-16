@@ -6,6 +6,7 @@ import { createSupertokensConfig } from '@/auth/supertokens.config';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
 import { PrismaService } from '@/orm/prisma/prisma.service';
+import { AuthController } from '@/auth/controllers/auth.controller';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { PrismaService } from '@/orm/prisma/prisma.service';
     }),
   ],
   providers: [PrismaService],
-  controllers: [],
+  controllers: [AuthController],
 })
 export class AuthModule {}
