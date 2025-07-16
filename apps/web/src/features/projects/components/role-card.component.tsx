@@ -6,6 +6,8 @@ import StackLogo from "@/shared/components/logos/stack-logo";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
@@ -33,6 +35,7 @@ export default function RoleCard({
 }: RoleCardProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { deleteRole, isDeleting } = useDeleteRole(projectId, role.id);
+  const { isAuthenticated, redirectToLogin } = useAuth();
   const {
     title = "",
     description = "",
@@ -75,7 +78,7 @@ export default function RoleCard({
               <Icon name="cross" variant="gray" size="xs" />
             </button>
           </div>
-        ) : (
+        ) : isAuthenticated ? (
           <RoleApplicationForm
             roleTitle={title}
             roleDescription={description}
@@ -90,6 +93,14 @@ export default function RoleCard({
               <Icon name="arrow-up-right" size="xs" />
             </div>
           </RoleApplicationForm>
+        ) : (
+          <div
+            onClick={() => redirectToLogin()}
+            className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40"
+          >
+            <span className="text-sm text-black">Candidater à ce rôle</span>
+            <Icon name="arrow-up-right" size="xs" />
+          </div>
         )}
       </div>
 
