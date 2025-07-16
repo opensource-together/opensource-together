@@ -1,11 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 import LoginView from "@/features/auth/views/login.view";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -18,4 +18,12 @@ export default function LoginPage() {
   }, [searchParams]);
 
   return <LoginView />;
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <LoginPageContent />
+    </Suspense>
+  );
 }
