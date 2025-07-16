@@ -1,6 +1,22 @@
 name: ost
 
 services:
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "${GATEWAY_PORT:-80}:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - app_network
+    depends_on:
+      web:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+  
   web:
     image: ghcr.io/opensource-together/web:${VERSION_TAG}
     restart: unless-stopped
