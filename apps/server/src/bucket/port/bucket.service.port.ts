@@ -6,9 +6,4 @@ export interface BucketServicePort {
     key: string,
     contentType: string,
   ): Promise<Result<string, string>>;
-  getUploadSignedUrl(
-    key: string,
-    contentType: string,
-    expiresIn?: number,
-  ): Promise<Result<string, string>>;
 }

@@ -1,13 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  S3Client,
-  ListBucketsCommand,
-  ListObjectsV2Command,
-  GetObjectCommand,
-  PutObjectCommand,
-  PutObjectCommandOutput,
-} from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { BucketServicePort } from '../../port/bucket.service.port';
 import { Result } from '@/libs/result';
@@ -51,25 +43,6 @@ export class BucketR2Service implements BucketServicePort {
       const imageUrl = `${this.url}/${key}`;
       console.log({ imageUrl });
       return Result.ok(imageUrl);
-    } catch (error) {
-      console.error(error);
-      return Result.fail(error as string);
-    }
-  }
-
-  async getUploadSignedUrl(
-    key: string,
-    contentType: string,
-    expiresIn = 3600,
-  ): Promise<Result<string, string>> {
-    const cmd = new PutObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-      ContentType: contentType,
-    });
-    try {
-      const url = await getSignedUrl(this.s3, cmd, { expiresIn });
-      return Result.ok(url as string);
     } catch (error) {
       console.error(error);
       return Result.fail(error as string);
