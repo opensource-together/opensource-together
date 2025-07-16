@@ -16,6 +16,14 @@ services:
         condition: service_healthy
       server:
         condition: service_healthy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nginx.rule=Host(`${API_DOMAIN}`)
+      - traefik.http.routers.nginx.entrypoints=https
+      - traefik.http.routers.nginx.tls=true
+      - traefik.http.routers.nginx.service=nginx-svc
+      - traefik.http.services.nginx-svc.loadbalancer.server.port=80
+      - traefik.http.services.nginx-svc.loadbalancer.server.scheme=http
   
   web:
     image: ghcr.io/opensource-together/web:${VERSION_TAG}
