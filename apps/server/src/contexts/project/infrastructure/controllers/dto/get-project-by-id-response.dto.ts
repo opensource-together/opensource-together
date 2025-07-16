@@ -18,7 +18,8 @@ export class GetProjectByIdResponseDto {
     author: Author;
   } {
     const { project, projectStats, author, lastCommit, contributors } = props;
-    const { ownerId,...projectData } = project.toPrimitive();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { ownerId, ...projectData } = project.toPrimitive();
     return {
       author,
       ...projectData,
