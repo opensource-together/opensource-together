@@ -17,11 +17,33 @@ export interface ExternalLink {
   url: string;
 }
 
+export interface GithubContributor {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  contributions: number;
+}
+
+export interface LastCommit {
+  sha: string;
+  message: string;
+  date: string;
+  url: string;
+  author: {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  };
+}
+
 export interface ProjectStats {
-  contributors?: number;
+  contributors?: GithubContributor[];
   stars?: number;
   forks?: number;
-  lastCommitAt?: Date;
+  watchers?: number;
+  openIssues?: number;
+  commits?: number;
+  lastCommit?: LastCommit;
 }
 
 export interface Category {
@@ -60,7 +82,6 @@ export interface Project {
   shortDescription: string;
   longDescription?: string;
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  collaborators?: Collaborator[];
   techStacks: TechStack[];
   projectRoles: ProjectRole[];
   externalLinks?: ExternalLink[];
