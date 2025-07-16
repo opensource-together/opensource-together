@@ -41,6 +41,7 @@
     "@nestjs/event-emitter": "^3.0.1",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/platform-socket.io": "^11.1.4",
     "@nestjs/swagger": "^11.1.0",
     "@nestjs/terminus": "^11.0.0",
     "@nestjs/websockets": "^11.1.3",
