@@ -10,7 +10,6 @@ import { MediaServicePort } from '../../port/media.service.port';
 import { ApiOperation } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MEDIA_SERVICE_PORT } from '../../port/media.service.port';
-import { PublicAccess } from 'supertokens-nestjs';
 @Controller('media')
 export class MediaController {
   constructor(
@@ -18,7 +17,6 @@ export class MediaController {
     private readonly mediaService: MediaServicePort,
   ) {}
 
-  @PublicAccess()
   @Post('upload/image/public')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload a file to the bucket' })
