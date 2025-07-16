@@ -4,7 +4,7 @@ export const NOTIFICATION_SERVICE_PORT = Symbol('NotificationService');
 
 export type NotificationChannel = 'realtime' | 'email';
 
-export interface NotificationServicePort {
+export interface SendNotificationPayload {
   userId: string;
   type: string;
   payload: Record<string, unknown>;
@@ -13,6 +13,6 @@ export interface NotificationServicePort {
 
 export interface NotificationServicePort {
   sendNotification(
-    notification: NotificationServicePort,
+    notification: SendNotificationPayload,
   ): Promise<Result<void, string>>;
 }
