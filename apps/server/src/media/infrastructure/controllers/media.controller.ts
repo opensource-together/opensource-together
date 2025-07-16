@@ -24,7 +24,9 @@ export class MediaController {
   @ApiOperation({ summary: 'Upload a file to the bucket' })
   async upload(@UploadedFile() file: Express.Multer.File) {
     const key = `${Date.now()}-${file.originalname}`;
-
+    if (!file.mimetype.startsWith('image/')) {
+      return { error: 'Only image files are allowed' };
+    }
     const result = await this.mediaService.upload(
       file.buffer,
       key,

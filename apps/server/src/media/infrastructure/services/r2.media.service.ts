@@ -41,7 +41,6 @@ export class R2MediaService implements MediaServicePort {
         }),
       );
       const imageUrl = `${this.url}/${key}`;
-      console.log({ imageUrl });
       return Result.ok(imageUrl);
     } catch (error) {
       console.error(error);
