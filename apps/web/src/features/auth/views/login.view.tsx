@@ -4,14 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 import AuthIllustration from "../components/auth-illustration.component";
+import AuthRedirectHandler from "../components/auth-redirect-handler.component";
 import LoginForm from "../components/login-form.component";
-import useAuth from "../hooks/use-auth.hook";
 
 export default function LoginView() {
-  useAuth();
-
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
+      {/* Composant qui gère la redirection depuis les search params */}
+      <AuthRedirectHandler />
+
       <div className="relative flex flex-1 flex-col justify-center">
         <Link href="/">
           <Image
