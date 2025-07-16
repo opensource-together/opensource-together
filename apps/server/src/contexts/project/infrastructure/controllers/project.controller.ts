@@ -14,6 +14,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiBody,
+  ApiResponse,
+  ApiCookieAuth,
+} from '@nestjs/swagger';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
 import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
@@ -39,6 +47,7 @@ import {
   ProjectStats,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 
+@ApiTags('Projects')
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -46,9 +55,65 @@ export class ProjectController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  // Route publique pour récupérer tous les projets
   @PublicAccess()
   @Get()
+  @ApiOperation({ summary: 'Récupérer tous les projets' })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste des projets',
+    example: [
+      {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        title: 'E-commerce Platform',
+        description: 'Modern e-commerce app with React',
+        shortDescription: 'E-commerce with React & Node.js',
+        ownerId: 'github_user123',
+        techStacks: [
+          { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+          { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+        ],
+        categories: [{ id: '2', name: 'Développement Web' }],
+        keyFeatures: [
+          {
+            id: 'feature1',
+            projectId: '123e4567-e89b-12d3-a456-426614174000',
+            feature: 'Shopping Cart',
+          },
+        ],
+        projectGoals: [
+          {
+            id: 'goal1',
+            projectId: '123e4567-e89b-12d3-a456-426614174000',
+            goal: 'Create smooth UX',
+          },
+        ],
+        projectRoles: [
+          {
+            id: 'role1',
+            projectId: '123e4567-e89b-12d3-a456-426614174000',
+            title: 'Frontend Developer',
+            description: 'React developer needed',
+            isFilled: false,
+            techStacks: [
+              {
+                id: '1',
+                name: 'React',
+                iconUrl: 'https://reactjs.org/logo.svg',
+              },
+            ],
+            createdAt: '2025-01-15T10:30:00.000Z',
+            updatedAt: '2025-01-15T10:30:00.000Z',
+          },
+        ],
+        externalLinks: [
+          { type: 'github', url: 'https://github.com/user/project' },
+        ],
+        createdAt: '2025-01-15T10:30:00.000Z',
+        updatedAt: '2025-01-20T14:45:00.000Z',
+      },
+    ],
+  })
+  @ApiResponse({ status: 500, description: 'Erreur serveur' })
   async getProjects() {
     const projects: Result<Project[]> = await this.queryBus.execute(
       new GetProjectsQuery(),
@@ -60,7 +125,62 @@ export class ProjectController {
   }
 
   // Route publique pour récupérer un projet par son ID
-  // @PublicAccess()
+  @ApiOperation({ summary: 'Récupérer un projet par ID' })
+  @ApiParam({ name: 'id', description: 'ID du projet' })
+  @ApiResponse({
+    status: 200,
+    description: 'Détails du projet',
+    example: {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      title: 'E-commerce Platform',
+      description: 'Modern e-commerce app with React and Node.js',
+      shortDescription: 'E-commerce with React & Node.js',
+      ownerId: 'github_user123',
+      techStacks: [
+        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+        { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+      ],
+      categories: [{ id: '2', name: 'Développement Web' }],
+      keyFeatures: [
+        {
+          id: 'feature1',
+          projectId: '123e4567-e89b-12d3-a456-426614174000',
+          feature: 'Shopping Cart',
+        },
+      ],
+      projectGoals: [
+        {
+          id: 'goal1',
+          projectId: '123e4567-e89b-12d3-a456-426614174000',
+          goal: 'Create smooth UX',
+        },
+      ],
+      projectRoles: [
+        {
+          id: 'role1',
+          projectId: '123e4567-e89b-12d3-a456-426614174000',
+          title: 'Frontend Developer',
+          description: 'React developer needed',
+          isFilled: false,
+          techStacks: [
+            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+          ],
+          createdAt: '2025-01-15T10:30:00.000Z',
+          updatedAt: '2025-01-15T10:30:00.000Z',
+        },
+      ],
+      externalLinks: [
+        { type: 'github', url: 'https://github.com/user/project' },
+      ],
+      createdAt: '2025-01-15T10:30:00.000Z',
+      updatedAt: '2025-01-20T14:45:00.000Z',
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Projet non trouvé',
+    example: { message: 'Project not found', statusCode: 404 },
+  })
   @UseGuards(GithubAuthGuard)
   @Get(':id')
   async getProject(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
@@ -122,9 +242,125 @@ export class ProjectController {
   //     );
   //   }
 
-  // Route privée pour créer un projet (nécessite authentification GitHub)
   @Post()
   @UseGuards(GithubAuthGuard)
+  @ApiOperation({ summary: 'Créer un nouveau projet' })
+  @ApiCookieAuth('sAccessToken')
+  @ApiBody({
+    description: 'Données du projet',
+    schema: {
+      type: 'object',
+      required: [
+        'title',
+        'description',
+        'shortDescription',
+        'techStacks',
+        'categories',
+        'keyFeatures',
+        'projectGoals',
+        'projectRoles',
+      ],
+      properties: {
+        title: { type: 'string', example: 'Mon Projet' },
+        description: { type: 'string', example: 'Description du projet' },
+        shortDescription: { type: 'string', example: 'Description courte' },
+        techStacks: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['1', '2'],
+        },
+        categories: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['1'],
+        },
+        keyFeatures: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['Feature 1'],
+        },
+        projectGoals: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['Goal 1'],
+        },
+        projectRoles: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              title: { type: 'string', example: 'Developer' },
+              description: { type: 'string', example: 'Role description' },
+              techStacks: {
+                type: 'array',
+                items: { type: 'string' },
+                example: ['1'],
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Projet créé',
+    example: {
+      id: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+      ownerId: 'bedb6486-1cbb-4333-b541-59d4af7da7f5',
+      title: 'Mon Projet',
+      shortDescription: 'Description courte',
+      description: 'Description du projet',
+      externalLinks: [
+        { type: 'github', url: 'https://github.com/user/mon-projet' },
+      ],
+      techStacks: [
+        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+        { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+      ],
+      categories: [{ id: '1', name: 'Développement Web' }],
+      keyFeatures: [
+        {
+          id: 'feature-id',
+          projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+          feature: 'Feature 1',
+        },
+      ],
+      projectGoals: [
+        {
+          id: 'goal-id',
+          projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+          goal: 'Goal 1',
+        },
+      ],
+      projectRoles: [
+        {
+          id: 'role-id',
+          projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+          title: 'Developer',
+          description: 'Role description',
+          isFilled: false,
+          techStacks: [
+            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+          ],
+          createdAt: '2025-07-05T14:59:31.560Z',
+          updatedAt: '2025-07-05T14:59:31.560Z',
+        },
+      ],
+      createdAt: '2025-07-05T14:59:31.560Z',
+      updatedAt: '2025-07-05T14:59:31.560Z',
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erreur de validation',
+    example: { error: 'Title must be at least 3 characters' },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Non authentifié',
+    example: { message: 'unauthorised', statusCode: 401 },
+  })
   async createProject(
     @Session('userId') ownerId: string,
     @Req() req: Request,
@@ -160,9 +396,58 @@ export class ProjectController {
     return CreateProjectResponseDto.toResponse(projectRes.value);
   }
 
-  // Route privée pour mettre à jour un projet
   @Patch(':id')
   @UseGuards(GithubAuthGuard)
+  @ApiOperation({ summary: 'Mettre à jour un projet' })
+  @ApiCookieAuth('sAccessToken')
+  @ApiParam({ name: 'id', description: 'ID du projet' })
+  @ApiBody({
+    description: 'Données de mise à jour',
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string' },
+        shortDescription: { type: 'string' },
+        techStacks: { type: 'array', items: { type: 'string' } },
+        categories: { type: 'array', items: { type: 'string' } },
+        keyFeatures: { type: 'array', items: { type: 'string' } },
+        projectGoals: { type: 'array', items: { type: 'string' } },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Projet mis à jour',
+    example: {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      title: 'Mon Projet (Updated)',
+      description: 'Description mise à jour',
+      shortDescription: 'Description courte mise à jour',
+      ownerId: 'github_user123',
+      techStacks: [
+        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+      ],
+      categories: [{ id: '1', name: 'Développement Web' }],
+      createdAt: '2025-01-15T10:30:00.000Z',
+      updatedAt: '2025-01-20T14:45:00.000Z',
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erreur de validation',
+    example: { message: 'Title is required', statusCode: 400 },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Non authentifié',
+    example: { message: 'unauthorised', statusCode: 401 },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Projet non trouvé',
+    example: { message: 'Project not found', statusCode: 404 },
+  })
   async updateProject(
     @Session('userId') ownerId: string,
     @Param('id') id: string,
@@ -195,9 +480,34 @@ export class ProjectController {
     return UpdateProjectResponseDto.toResponse(projectRes.value);
   }
 
-  // Route privée pour supprimer un projet
   @Delete(':id')
   @UseGuards(GithubAuthGuard)
+  @ApiOperation({ summary: 'Supprimer un projet' })
+  @ApiCookieAuth('sAccessToken')
+  @ApiParam({ name: 'id', description: 'ID du projet' })
+  @ApiResponse({
+    status: 200,
+    description: 'Projet supprimé',
+    example: { message: 'Project deleted successfully' },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Non authentifié',
+    example: { message: 'unauthorised', statusCode: 401 },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Accès interdit',
+    example: {
+      message: 'You are not allowed to delete this project',
+      statusCode: 403,
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Projet non trouvé',
+    example: { message: 'Project not found', statusCode: 404 },
+  })
   async deleteProject(
     @Session('userId') ownerId: string,
     @Param('id') id: string,
@@ -220,6 +530,38 @@ export class ProjectController {
   }
 
   @Get(':projectId/applications')
+  @ApiOperation({ summary: "Récupérer les candidatures d'un projet" })
+  @ApiCookieAuth('sAccessToken')
+  @ApiParam({ name: 'projectId', description: 'ID du projet' })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste des candidatures',
+    example: [
+      {
+        userId: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
+        projectId: '108da791-6e48-47de-9a2b-b88f739e08a2',
+        projectRoleTitle: 'Frontend Developer',
+        projectRoleId: '6262e74b-24f0-4c7b-a03c-5ac853a512ab',
+        status: 'PENDING',
+        selectedKeyFeatures: ['Shopping Cart', 'User Auth'],
+        selectedProjectGoals: ['Create smooth UX', 'Improve performance'],
+        appliedAt: '2025-07-14T22:38:23.644Z',
+        userProfile: {
+          id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
+          name: 'John Doe',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123456789',
+        },
+      },
+    ],
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Accès refusé',
+    example: {
+      message: 'You are not the owner of this project',
+      statusCode: 400,
+    },
+  })
   async getProjectApplications(
     @Session('userId') userId: string,
     @Param('projectId') projectId: string,

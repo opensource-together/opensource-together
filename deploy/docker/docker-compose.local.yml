@@ -69,7 +69,7 @@ services:
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER:-supertokens_user}:${SUPERTOKENS_DB_PASSWORD:-supertokens_password}@postgres:5432/${SUPERTOKENS_DB_NAME:-supertokens}
     ports:
-      - "3567:3567"
+      - "${SUPERTOKENS_PORT:-3567}:3567"
     networks:
       - app_network
     depends_on:
