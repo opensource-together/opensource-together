@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -14,6 +15,16 @@ export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Gérer la sauvegarde de l'URL de redirection depuis les search params
+  useEffect(() => {
+    const redirectUrl = searchParams?.get("redirect");
+    if (redirectUrl) {
+      const decodedRedirectUrl = decodeURIComponent(redirectUrl);
+      sessionStorage.setItem("auth_redirect_url", decodedRedirectUrl);
+    }
+  }, [searchParams]);
 
   // Query to get the current user
   const {

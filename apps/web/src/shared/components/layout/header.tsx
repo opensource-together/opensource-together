@@ -52,35 +52,21 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, currentUser, logout, redirectToLogin } = useAuth();
+  const { isAuthenticated, currentUser, logout, redirectToLogin, requireAuth } =
+    useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
 
-  const handleCreate = () => {
-    if (isAuthenticated) {
-      router.push("/projects/create");
-    } else {
-      redirectToLogin("/projects/create");
-    }
-  };
+  const handleCreate = () =>
+    requireAuth(() => router.push("/projects/create"), "/projects/create");
 
-  const handleProfile = () => {
-    if (isAuthenticated) {
-      router.push("/profile");
-    } else {
-      redirectToLogin("/profile");
-    }
-  };
+  const handleProfile = () =>
+    requireAuth(() => router.push("/profile"), "/profile");
 
-  const handleMyProjects = () => {
-    if (isAuthenticated) {
-      router.push("/my-projects");
-    } else {
-      redirectToLogin("/my-projects");
-    }
-  };
+  const handleMyProjects = () =>
+    requireAuth(() => router.push("/my-projects"), "/my-projects");
 
   const handleLogout = () => {
     logout();
@@ -106,20 +92,32 @@ export default function Header() {
           {/* Navigation pour desktop et tablette */}
           <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
             <NavLink href="/">Accueil</NavLink>
-            <Button
-              variant="ghost"
-              onClick={handleProfile}
-              className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
-            >
-              Profil
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={handleMyProjects}
-              className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
-            >
-              Gestion projet
-            </Button>
+
+            {/* Profil */}
+            {isAuthenticated ? (
+              <NavLink href="/profile">Profil</NavLink>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={handleProfile}
+                className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+              >
+                Profil
+              </Button>
+            )}
+
+            {/* Gestion projet */}
+            {isAuthenticated ? (
+              <NavLink href="/my-projects">Gestion projet</NavLink>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={handleMyProjects}
+                className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+              >
+                Gestion projet
+              </Button>
+            )}
           </nav>
         </section>
 
@@ -148,20 +146,36 @@ export default function Header() {
           <NavLink href="/" className="w-full py-1.5">
             Home
           </NavLink>
-          <Button
-            variant="ghost"
-            onClick={handleProfile}
-            className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
-          >
-            Profile
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={handleMyProjects}
-            className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
-          >
-            My Projects
-          </Button>
+
+          {/* Profile mobile */}
+          {isAuthenticated ? (
+            <NavLink href="/profile" className="w-full py-1.5">
+              Profile
+            </NavLink>
+          ) : (
+            <Button
+              variant="ghost"
+              onClick={handleProfile}
+              className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+            >
+              Profile
+            </Button>
+          )}
+
+          {/* My Projects mobile */}
+          {isAuthenticated ? (
+            <NavLink href="/my-projects" className="w-full py-1.5">
+              My Projects
+            </NavLink>
+          ) : (
+            <Button
+              variant="ghost"
+              onClick={handleMyProjects}
+              className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+            >
+              My Projects
+            </Button>
+          )}
 
           <Link
             href="https://github.com/opensource-together/opensource-together"
@@ -187,11 +201,27 @@ export default function Header() {
             </Button>
           </Link>
 
-          <Button onClick={handleCreate}>
-            <span className="hidden sm:inline">Créer un Projet</span>
-            <span className="inline sm:hidden">Nouveau projet</span>
-            <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
-          </Button>
+          {/* Créer un Projet */}
+          {isAuthenticated ? (
+            <Link href="/projects/create">
+              <Button>
+                <span className="hidden sm:inline">Créer un Projet</span>
+                <span className="inline sm:hidden">Nouveau projet</span>
+                <Icon
+                  name="plus"
+                  size="xs"
+                  variant="white"
+                  className="ml-1.5"
+                />
+              </Button>
+            </Link>
+          ) : (
+            <Button onClick={handleCreate}>
+              <span className="hidden sm:inline">Créer un Projet</span>
+              <span className="inline sm:hidden">Nouveau projet</span>
+              <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
+            </Button>
+          )}
 
           {isAuthenticated && (
             <DropdownMenu>
@@ -235,15 +265,29 @@ export default function Header() {
         {/* Actions mobile affichées dans le menu */}
         {mobileMenuOpen && (
           <div className="mt-3 flex w-full justify-center md:hidden">
-            <Button onClick={handleCreate} className="w-full max-w-[220px]">
-              New Project{" "}
-              <Icon
-                name="plus"
-                size="xs"
-                variant="white"
-                className="ml-0 align-middle"
-              />
-            </Button>
+            {isAuthenticated ? (
+              <Link href="/projects/create" className="w-full max-w-[220px]">
+                <Button className="w-full">
+                  New Project{" "}
+                  <Icon
+                    name="plus"
+                    size="xs"
+                    variant="white"
+                    className="ml-0 align-middle"
+                  />
+                </Button>
+              </Link>
+            ) : (
+              <Button onClick={handleCreate} className="w-full max-w-[220px]">
+                New Project{" "}
+                <Icon
+                  name="plus"
+                  size="xs"
+                  variant="white"
+                  className="ml-0 align-middle"
+                />
+              </Button>
+            )}
           </div>
         )}
       </header>
