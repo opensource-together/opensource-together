@@ -9,6 +9,7 @@ import { SkillLevel } from './profile-skill.vo';
 export class Profile {
   private readonly userId: string;
   private name: string;
+  private login: string;
   private avatarUrl: string;
   private bio: string;
   private location: string;
@@ -23,6 +24,7 @@ export class Profile {
   private constructor(props: {
     userId: string;
     name: string;
+    login: string;
     avatarUrl?: string;
     bio?: string;
     location?: string;
@@ -35,6 +37,7 @@ export class Profile {
   }) {
     this.userId = props.userId;
     this.name = props.name;
+    this.login = props.login;
     this.avatarUrl = props.avatarUrl || '';
     this.bio = props.bio || '';
     this.location = props.location || '';
@@ -49,6 +52,7 @@ export class Profile {
   public static create(props: {
     userId: string;
     name: string;
+    login: string;
     avatarUrl?: string;
     bio?: string;
     location?: string;
@@ -119,6 +123,7 @@ export class Profile {
       new Profile({
         userId: props.userId,
         name: props.name,
+        login: props.login,
         avatarUrl: props.avatarUrl,
         bio: props.bio,
         location: props.location,
@@ -134,6 +139,7 @@ export class Profile {
   public static reconstitute(props: {
     userId: string;
     name: string;
+    login: string;
     avatarUrl?: string;
     bio?: string;
     location?: string;
@@ -177,6 +183,7 @@ export class Profile {
     return {
       userId: this.userId,
       name: this.name,
+      login: this.login,
       avatarUrl: this.avatarUrl,
       bio: this.bio,
       location: this.location,

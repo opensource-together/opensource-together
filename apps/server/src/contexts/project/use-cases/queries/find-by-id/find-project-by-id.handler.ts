@@ -2,12 +2,27 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Inject } from '@nestjs/common';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import { IQuery } from '@nestjs/cqrs';
-
+import {
+  GithubRepositoryPort,
+  GITHUB_REPOSITORY_PORT,
+  Contributor,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
+import {
+  ProfileRepositoryPort,
+  PROFILE_REPOSITORY_PORT,
+} from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import { Octokit } from '@octokit/rest';
+import { Project } from '@/contexts/project/domain/project.entity';
+import { LastCommit } from '@/contexts/github/use-cases/ports/github-repository.port';
 export class FindProjectByIdQuery implements IQuery {
-  constructor(public readonly id: string) {}
+  constructor(
+    public readonly props: {
+      id: string;
+      octokit: Octokit;
+    },
+  ) {}
 }
 
 @QueryHandler(FindProjectByIdQuery)
@@ -17,13 +32,120 @@ export class FindProjectByIdHandler
   constructor(
     @Inject(PROJECT_REPOSITORY_PORT)
     private readonly projectRepo: ProjectRepositoryPort,
+    @Inject(GITHUB_REPOSITORY_PORT)
+    private readonly githubRepo: GithubRepositoryPort,
+    @Inject(PROFILE_REPOSITORY_PORT)
+    private readonly profileRepo: ProfileRepositoryPort,
   ) {}
 
-  async execute(query: FindProjectByIdQuery): Promise<Result<Project, string>> {
-    const result = await this.projectRepo.findById(query.id);
-    if (result.success) {
-      return Result.ok(result.value);
+  async execute(query: FindProjectByIdQuery): Promise<
+    Result<
+      {
+        author: {
+          ownerId: string;
+          name: string;
+          avatarUrl: string;
+        };
+        project: Project;
+        projectStats: {
+          forks: number;
+          stars: number;
+          watchers: number;
+          openIssues: number;
+          commits: number;
+          lastCommit: LastCommit | null;
+          contributors: Contributor[];
+        };
+      },
+      string
+    >
+  > {
+    type ProjectStats = {
+      forks: number;
+      stars: number;
+      watchers: number;
+      openIssues: number;
+      commits: number;
+      lastCommit: LastCommit | null;
+      contributors: {
+        login: string;
+        avatar_url: string;
+        html_url: string;
+        contributions: number;
+      }[];
+    };
+
+    const { id, octokit } = query.props;
+    const project = await this.projectRepo.findById(id);
+    if (!project.success) {
+      return Result.fail(project.error);
     }
-    return Result.fail(result.error);
+    const ownerProjectInfo = await this.profileRepo.findById(
+      project.value.toPrimitive().ownerId,
+    );
+    if (!ownerProjectInfo.success) {
+      return Result.fail(ownerProjectInfo.error);
+    }
+    console.log('ownerProjectInfo', ownerProjectInfo);
+    const ownerLogin = ownerProjectInfo.value.toPrimitive().login;
+    const ownerName = ownerProjectInfo.value.toPrimitive().name;
+    const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;
+    const repoName = project.value.toPrimitive().title;
+    const [commits, repoInfo, contributors] = await Promise.all([
+      this.githubRepo.findCommitsByRepository(
+        ownerLogin,
+        repoName.replace(/\s+/g, '-'),
+        octokit,
+      ),
+      this.githubRepo.findRepositoryByOwnerAndName(
+        ownerLogin,
+        repoName.replace(/\s+/g, '-'),
+        octokit,
+      ),
+      this.githubRepo.findContributorsByRepository(
+        ownerLogin,
+        repoName.replace(/\s+/g, '-'),
+        octokit,
+      ),
+    ]);
+
+    const defaultProjectStats: ProjectStats = {
+      forks: 0,
+      stars: 0,
+      watchers: 0,
+      openIssues: 0,
+      commits: 0,
+      lastCommit: null,
+      contributors: [],
+    };
+
+    const projectStats: ProjectStats = { ...defaultProjectStats };
+
+    if (commits.success) {
+      projectStats.commits = commits.value.commitsNumber;
+      projectStats.lastCommit = commits.value.lastCommit;
+    }
+
+    if (repoInfo.success) {
+      const { forks, stars, watchers, openIssues } = repoInfo.value;
+      projectStats.forks = forks;
+      projectStats.stars = stars;
+      projectStats.watchers = watchers;
+      projectStats.openIssues = openIssues;
+    }
+
+    if (contributors.success) {
+      projectStats.contributors = contributors.value;
+    }
+
+    return Result.ok({
+      author: {
+        ownerId: project.value.toPrimitive().ownerId,
+        name: ownerName,
+        avatarUrl: ownerAvatarUrl,
+      },
+      project: project.value,
+      projectStats,
+    });
   }
 }

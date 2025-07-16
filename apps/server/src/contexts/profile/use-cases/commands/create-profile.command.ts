@@ -8,6 +8,7 @@ import { Inject } from '@nestjs/common';
 export class CreateProfileCommand implements ICommand {
   public readonly userId: string;
   public readonly name: string;
+  public readonly login: string;
   public readonly avatarUrl: string;
   public readonly bio: string;
   public readonly location: string;
@@ -23,6 +24,7 @@ export class CreateProfileCommand implements ICommand {
   constructor(props: {
     userId: string;
     name: string;
+    login: string;
     avatarUrl: string;
     bio: string;
     location: string;
@@ -37,6 +39,7 @@ export class CreateProfileCommand implements ICommand {
   }) {
     this.userId = props.userId;
     this.name = props.name;
+    this.login = props.login;
     this.avatarUrl = props.avatarUrl;
     this.bio = props.bio;
     this.location = props.location;

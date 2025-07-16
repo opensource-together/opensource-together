@@ -16,7 +16,6 @@ import {
   // UserGitHubCredentialsRepositoryPort,
 } from '../use-cases/ports/user-github-credentials.repository.port';
 import { PrismaUserGitHubCredentialsRepository } from './repositories/prisma.user-github-credentials.repository';
-import { GithubRepositoryController } from './controllers/github.controllers';
 
 @Module({
   imports: [HttpModule, ConfigModule],
@@ -38,7 +37,6 @@ import { GithubRepositoryController } from './controllers/github.controllers';
       useClass: EncryptionService,
     },
   ],
-  controllers: [GithubRepositoryController],
   exports: [
     GITHUB_REPOSITORY_PORT,
     USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
