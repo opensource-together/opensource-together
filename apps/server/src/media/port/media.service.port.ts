@@ -1,6 +1,6 @@
 import { Result } from '@/libs/result';
-export const BUCKET_SERVICE_PORT = Symbol('BUCKET_SERVICE');
-export interface BucketServicePort {
+export const MEDIA_SERVICE_PORT = Symbol('MEDIA_SERVICE');
+export interface MediaServicePort {
   upload(
     buffer: Buffer,
     key: string,

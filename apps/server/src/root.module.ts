@@ -6,7 +6,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ContextsModule } from './contexts/contexts.module';
 import { HealthModule } from './health/health.module';
-import { BucketInfrastructure } from './bucket/infrastructure/bucket.infrastructure';
+import { MediaInfrastructure } from './media/infrastructure/media.infrastructure';
 @Module({
   imports: [
     CqrsModule.forRoot(),
@@ -16,7 +16,7 @@ import { BucketInfrastructure } from './bucket/infrastructure/bucket.infrastruct
     AuthModule,
     ContextsModule,
     HealthModule,
-    BucketInfrastructure,
+    MediaInfrastructure,
   ],
   controllers: [],
   providers: [

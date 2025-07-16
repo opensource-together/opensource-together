@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
-import { BucketServicePort } from '../../port/bucket.service.port';
+import { MediaServicePort } from '../../port/media.service.port';
 import { Result } from '@/libs/result';
 
 @Injectable()
-export class BucketR2Service implements BucketServicePort {
+export class R2MediaService implements MediaServicePort {
   private s3: S3Client;
   private bucket: string;
   private url: string;
