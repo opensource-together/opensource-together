@@ -45,7 +45,7 @@ export class R2MediaService implements MediaServicePort {
       return Result.ok(imageUrl);
     } catch (error) {
       console.error(error);
-      return Result.fail(error as string);
+      return Result.fail('Failed to upload media');
     }
   }
 }
