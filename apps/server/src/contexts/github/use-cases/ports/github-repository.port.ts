@@ -5,6 +5,37 @@ import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/reposito
 import { Result } from '@/libs/result';
 import { Octokit } from '@octokit/rest';
 
+export type LastCommit = {
+  sha: string;
+  message: string;
+  date: string;
+  url: string;
+  author: {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  };
+};
+export type Contributor = {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  contributions: number;
+};
+export type Author = {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+};
+export type ProjectStats = {
+  forks: number;
+  stars: number;
+  watchers: number;
+  openIssues: number;
+  commits: number;
+  lastCommit: LastCommit;
+  contributors: Contributor[];
+};
 export const GITHUB_REPOSITORY_PORT = Symbol('GITHUB_REPOSITORY_PORT');
 export interface GithubRepositoryPort {
   createGithubRepository(
@@ -22,14 +53,7 @@ export interface GithubRepositoryPort {
     owner: string,
     name: string,
     octokit: Octokit,
-  ): Promise<
-    Result<{
-      forks_count: number;
-      stargazers_count: number;
-      watchers_count: number;
-      open_issues_count: number;
-    }>
-  >;
+  ): Promise<Result<ProjectStats, string>>;
   findCommitsByRepository(
     owner: string,
     repo: string,
@@ -37,17 +61,7 @@ export interface GithubRepositoryPort {
   ): Promise<
     Result<
       {
-        lastCommit: {
-          sha: string;
-          message: string;
-          date: string;
-          url: string;
-          author: {
-            login: string;
-            avatar_url: string;
-            html_url: string;
-          };
-        };
+        lastCommit: LastCommit;
         commitsNumber: number;
       },
       string
@@ -57,15 +71,5 @@ export interface GithubRepositoryPort {
     owner: string,
     repo: string,
     octokit: Octokit,
-  ): Promise<
-    Result<
-      Array<{
-        login: string;
-        avatar_url: string;
-        html_url: string;
-        contributions: number;
-      }>,
-      string
-    >
-  >;
+  ): Promise<Result<Array<Contributor>, string>>;
 }

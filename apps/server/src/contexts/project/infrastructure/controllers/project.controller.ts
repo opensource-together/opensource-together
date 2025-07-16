@@ -27,14 +27,17 @@ import { Octokit } from '@octokit/rest';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
-import {
-  Author,
-  GetProjectByIdResponseDto,
-} from './dto/get-project-by-id-response.dto';
+import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
 import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
 import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
+import {
+  Author,
+  Contributor,
+  LastCommit,
+  ProjectStats,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
 
 @Controller('projects')
 export class ProjectController {
@@ -65,20 +68,9 @@ export class ProjectController {
       {
         author: Author;
         project: Project;
-        projectStats: {
-          forks_count: number;
-          stargazers_count: number;
-          watchers_count: number;
-          open_issues_count: number;
-          commits_count: number;
-          lastCommit: any;
-          contributors: {
-            login: string;
-            avatar_url: string;
-            html_url: string;
-            contributions: number;
-          }[];
-        };
+        projectStats: ProjectStats;
+        lastCommit: LastCommit;
+        contributors: Contributor[];
       },
       string
     > = await this.queryBus.execute(
@@ -91,6 +83,8 @@ export class ProjectController {
       author: projectRes.value.author,
       project: projectRes.value.project,
       projectStats: projectRes.value.projectStats,
+      lastCommit: projectRes.value.projectStats.lastCommit,
+      contributors: projectRes.value.projectStats.contributors,
     });
   }
 

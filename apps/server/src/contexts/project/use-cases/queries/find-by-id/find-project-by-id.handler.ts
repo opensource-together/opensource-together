@@ -7,6 +7,7 @@ import { IQuery } from '@nestjs/cqrs';
 import {
   GithubRepositoryPort,
   GITHUB_REPOSITORY_PORT,
+  Contributor,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import {
   ProfileRepositoryPort,
@@ -14,6 +15,7 @@ import {
 } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Octokit } from '@octokit/rest';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { LastCommit } from '@/contexts/github/use-cases/ports/github-repository.port';
 export class FindProjectByIdQuery implements IQuery {
   constructor(
     public readonly props: {
@@ -46,23 +48,33 @@ export class FindProjectByIdHandler
         };
         project: Project;
         projectStats: {
-          forks_count: number;
-          stargazers_count: number;
-          watchers_count: number;
-          open_issues_count: number;
-          commits_count: number;
-          lastCommit: any;
-          contributors: {
-            login: string;
-            avatar_url: string;
-            html_url: string;
-            contributions: number;
-          }[];
+          forks: number;
+          stars: number;
+          watchers: number;
+          openIssues: number;
+          commits: number;
+          lastCommit: LastCommit | null;
+          contributors: Contributor[];
         };
       },
       string
     >
   > {
+    type ProjectStats = {
+      forks: number;
+      stars: number;
+      watchers: number;
+      openIssues: number;
+      commits: number;
+      lastCommit: LastCommit | null;
+      contributors: {
+        login: string;
+        avatar_url: string;
+        html_url: string;
+        contributions: number;
+      }[];
+    };
+
     const { id, octokit } = query.props;
     const project = await this.projectRepo.findById(id);
     if (!project.success) {
@@ -74,28 +86,12 @@ export class FindProjectByIdHandler
     if (!ownerProjectInfo.success) {
       return Result.fail(ownerProjectInfo.error);
     }
-    const projectStats = {
-      forks_count: 0,
-      stargazers_count: 0,
-      watchers_count: 0,
-      open_issues_count: 0,
-      commits_count: 0,
-      lastCommit: null,
-      contributors: [
-        {
-          login: '',
-          avatar_url: '',
-          html_url: '',
-          contributions: 0,
-        },
-      ],
-    };
     console.log('ownerProjectInfo', ownerProjectInfo);
     const ownerLogin = ownerProjectInfo.value.toPrimitive().login;
     const ownerName = ownerProjectInfo.value.toPrimitive().name;
     const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;
     const repoName = project.value.toPrimitive().title;
-    const [commitsNumber, repoInfo, contributors] = await Promise.all([
+    const [commits, repoInfo, contributors] = await Promise.all([
       this.githubRepo.findCommitsByRepository(
         ownerLogin,
         repoName.replace(/\s+/g, '-'),
@@ -112,50 +108,36 @@ export class FindProjectByIdHandler
         octokit,
       ),
     ]);
-    if (!commitsNumber.success) {
-      projectStats.commits_count = 0;
-      projectStats.lastCommit = null;
+
+    const defaultProjectStats: ProjectStats = {
+      forks: 0,
+      stars: 0,
+      watchers: 0,
+      openIssues: 0,
+      commits: 0,
+      lastCommit: null,
+      contributors: [],
+    };
+
+    const projectStats: ProjectStats = { ...defaultProjectStats };
+
+    if (commits.success) {
+      projectStats.commits = commits.value.commitsNumber;
+      projectStats.lastCommit = commits.value.lastCommit;
     }
-    if (!repoInfo.success) {
-      projectStats.forks_count = 0;
-      projectStats.stargazers_count = 0;
-      projectStats.watchers_count = 0;
-      projectStats.open_issues_count = 0;
-    } else {
-      const {
-        forks_count,
-        stargazers_count,
-        watchers_count,
-        open_issues_count,
-      } = repoInfo.value as {
-        forks_count: number;
-        stargazers_count: number;
-        watchers_count: number;
-        open_issues_count: number;
-      };
-      projectStats.forks_count = forks_count;
-      projectStats.stargazers_count = stargazers_count;
-      projectStats.watchers_count = watchers_count;
-      projectStats.open_issues_count = open_issues_count;
+
+    if (repoInfo.success) {
+      const { forks, stars, watchers, openIssues } = repoInfo.value;
+      projectStats.forks = forks;
+      projectStats.stars = stars;
+      projectStats.watchers = watchers;
+      projectStats.openIssues = openIssues;
     }
-    if (!contributors.success) {
-      projectStats.contributors = [
-        {
-          login: '',
-          avatar_url: '',
-          html_url: '',
-          contributions: 0,
-        },
-      ];
-    } else {
-      const contributorsValue = contributors.value.map((contributor) => ({
-        login: contributor.login,
-        avatar_url: contributor.avatar_url,
-        html_url: contributor.html_url,
-        contributions: contributor.contributions,
-      }));
-      projectStats.contributors = [...contributorsValue];
+
+    if (contributors.success) {
+      projectStats.contributors = contributors.value;
     }
+
     return Result.ok({
       author: {
         ownerId: project.value.toPrimitive().ownerId,
@@ -163,15 +145,7 @@ export class FindProjectByIdHandler
         avatarUrl: ownerAvatarUrl,
       },
       project: project.value,
-      projectStats: {
-        forks_count: projectStats.forks_count,
-        stargazers_count: projectStats.stargazers_count,
-        watchers_count: projectStats.watchers_count,
-        open_issues_count: projectStats.open_issues_count,
-        commits_count: projectStats.commits_count,
-        lastCommit: projectStats.lastCommit,
-        contributors: projectStats.contributors,
-      },
+      projectStats,
     });
   }
 }

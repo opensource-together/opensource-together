@@ -1,6 +1,9 @@
 import { GithubRepositoryDto } from './dto/github-repository.dto';
 import { toGithubRepositoryDto } from './dto/github-repository.adapter';
-import { GithubRepositoryPort } from '@/contexts/github/use-cases/ports/github-repository.port';
+import {
+  GithubRepositoryPort,
+  ProjectStats,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
@@ -62,14 +65,7 @@ export class GithubRepository implements GithubRepositoryPort {
     owner: string,
     name: string,
     octokit: Octokit,
-  ): Promise<
-    Result<{
-      forks_count: number;
-      stargazers_count: number;
-      watchers_count: number;
-      open_issues_count: number;
-    }>
-  > {
+  ): Promise<Result<ProjectStats, string>> {
     try {
       const response = await octokit.rest.repos.get({
         owner,
@@ -78,7 +74,21 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      return Result.ok(response.data);
+      return Result.ok<ProjectStats>({
+        forks: response.data.forks_count,
+        stars: response.data.stargazers_count,
+        watchers: response.data.watchers_count,
+        openIssues: response.data.open_issues_count,
+        commits: 0,
+        lastCommit: {
+          sha: '',
+          message: '',
+          date: '',
+          url: '',
+          author: { login: '', avatar_url: '', html_url: '' },
+        },
+        contributors: [],
+      });
     } catch (e) {
       console.log('e', e);
       return Result.fail('Failed to fetch repository');
