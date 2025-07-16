@@ -25,12 +25,16 @@ export class R2MediaService implements MediaServicePort {
     this.url = this.configService.get('R2_URL') as string;
   }
 
-  async upload(
-    buffer: Buffer,
+  async uploadPublicImage(
+    file: Express.Multer.File,
     key: string,
     contentType: string,
   ): Promise<Result<string, string>> {
     try {
+      if (!file.mimetype.startsWith('image/')) {
+        return Result.fail('Only image files are allowed');
+      }
+      const buffer = file.buffer;
       await this.s3.send(
         new PutObjectCommand({
           Bucket: this.bucket,

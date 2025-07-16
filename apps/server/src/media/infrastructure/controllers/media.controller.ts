@@ -19,16 +19,13 @@ export class MediaController {
   ) {}
 
   @PublicAccess()
-  @Post('upload/image')
+  @Post('upload/image/public')
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload a file to the bucket' })
-  async upload(@UploadedFile() file: Express.Multer.File) {
+  async uploadPublicImage(@UploadedFile() file: Express.Multer.File) {
     const key = `${Date.now()}-${file.originalname}`;
-    if (!file.mimetype.startsWith('image/')) {
-      return { error: 'Only image files are allowed' };
-    }
-    const result = await this.mediaService.upload(
-      file.buffer,
+    const result = await this.mediaService.uploadPublicImage(
+      file,
       key,
       file.mimetype,
     );
