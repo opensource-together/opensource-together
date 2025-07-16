@@ -56,7 +56,12 @@ export function Combobox({
 
   const selectedOptions = options.filter((option) => value.includes(option.id));
 
-  const handleSelect = (optionId: string) => {
+  const handleSelect = (optionName: string) => {
+    const option = options.find((opt) => opt.name === optionName);
+    if (!option) return;
+
+    const optionId = option.id;
+
     if (value.includes(optionId)) {
       // Remove selection
       onChange(value.filter((id) => id !== optionId));
@@ -129,8 +134,10 @@ export function Combobox({
                   return (
                     <CommandItem
                       key={option.id}
-                      value={option.id}
-                      onSelect={() => !isDisabled && handleSelect(option.id)}
+                      value={option.name}
+                      onSelect={(selectedName) =>
+                        !isDisabled && handleSelect(selectedName)
+                      }
                       className={cn(
                         "cursor-pointer",
                         isDisabled && "cursor-not-allowed opacity-50"
