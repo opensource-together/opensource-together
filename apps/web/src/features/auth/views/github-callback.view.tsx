@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useEffect } from "react";
 
 import AuthIllustration from "../components/auth-illustration.component";
-import AuthRedirectHandler from "../components/auth-redirect-handler.component";
 import useAuth from "../hooks/use-auth.hook";
 
 export default function GithubCallbackView() {
@@ -17,9 +16,6 @@ export default function GithubCallbackView() {
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
-      {/* Composant qui gère la redirection depuis les search params */}
-      <AuthRedirectHandler />
-
       <div className="relative flex min-h-[50vh] w-full items-center justify-center lg:min-h-full lg:w-3/4">
         <Image
           src="/icons/ost-logo-login.svg"

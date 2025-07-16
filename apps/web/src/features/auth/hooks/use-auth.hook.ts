@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -14,6 +15,27 @@ export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
+
+  // Gérer la sauvegarde de l'URL de redirection depuis les search params
+  useEffect(() => {
+    // Seulement sur les pages auth et pas sur callback GitHub
+    if (
+      !pathname?.startsWith("/auth") ||
+      pathname?.includes("/auth/callback")
+    ) {
+      return;
+    }
+
+    // Utiliser window.location.search côté client pour éviter l'erreur Next.js
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrl = urlParams.get("redirect");
+      if (redirectUrl) {
+        const decodedRedirectUrl = decodeURIComponent(redirectUrl);
+        sessionStorage.setItem("auth_redirect_url", decodedRedirectUrl);
+      }
+    }
+  }, [pathname]);
 
   // Query to get the current user
   const {
