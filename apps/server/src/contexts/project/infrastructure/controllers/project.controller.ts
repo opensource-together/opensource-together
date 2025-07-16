@@ -131,11 +131,15 @@ export class ProjectController {
     status: 200,
     description: 'Détails du projet',
     example: {
+      author: {
+        ownerId: '4d9c454e-6932-464a-97fb-f7f64e2dad23',
+        name: 'Lucalhost',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+      },
       id: '123e4567-e89b-12d3-a456-426614174000',
       title: 'E-commerce Platform',
       description: 'Modern e-commerce app with React and Node.js',
       shortDescription: 'E-commerce with React & Node.js',
-      ownerId: 'github_user123',
       techStacks: [
         { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
         { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
@@ -174,6 +178,38 @@ export class ProjectController {
       ],
       createdAt: '2025-01-15T10:30:00.000Z',
       updatedAt: '2025-01-20T14:45:00.000Z',
+      projectStats: {
+        forks: 2,
+        stars: 1,
+        watchers: 1,
+        openIssues: 1,
+        commits: 4,
+        lastCommit: {
+          sha: '4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+          message: 'Merge pull request #2 from Jyzdcs/main\n\ntest',
+          date: '2025-07-15T23:17:16Z',
+          url: 'https://github.com/Lhourquin/projet-os/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+          author: {
+            login: 'Lhourquin',
+            avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            html_url: 'https://github.com/Lhourquin',
+          },
+        },
+        contributors: [
+          {
+            login: 'Lhourquin',
+            avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            html_url: 'https://github.com/Lhourquin',
+            contributions: 3,
+          },
+          {
+            login: 'Jyzdcs',
+            avatar_url: 'https://avatars.githubusercontent.com/u/123254210?v=4',
+            html_url: 'https://github.com/Jyzdcs',
+            contributions: 1,
+          },
+        ],
+      },
     },
   })
   @ApiResponse({
