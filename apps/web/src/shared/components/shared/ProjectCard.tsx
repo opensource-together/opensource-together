@@ -52,9 +52,18 @@ export default function ProjectCardComponent({
   },
   projectStats = {
     forks: 0,
-    contributors: 0,
+    contributors: [],
     stars: 0,
-    lastCommitAt: new Date(),
+    watchers: 0,
+    openIssues: 0,
+    commits: 0,
+    lastCommit: {
+      sha: "",
+      message: "",
+      date: "",
+      url: "",
+      author: { login: "", avatar_url: "", html_url: "" },
+    },
   },
 }: ProjectCardProps) {
   return (
@@ -98,7 +107,7 @@ export default function ProjectCardComponent({
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="people" size="xs" variant="black" />
-                {projectStats.contributors || 0}
+                {projectStats.contributors?.length || 0}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">
                 <Icon name="star" size="xs" variant="black" />

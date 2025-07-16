@@ -8,4 +8,7 @@ export type GithubRepositoryDto = {
   owner: GithubUserDto;
   html_url: string;
   description: string;
+  forks_count: number;
+  subscribers_count: number;
+  stargazers_count: number;
 };

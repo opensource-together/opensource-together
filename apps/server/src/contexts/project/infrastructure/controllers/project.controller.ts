@@ -1,45 +1,51 @@
+import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
+import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
+import {
+  Author,
+  Contributor,
+  LastCommit,
+  ProjectStats,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
+import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
+import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
+import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
+import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
+import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
+import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
 import { Result } from '@/libs/result';
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  Param,
   // Query,
   HttpException,
   HttpStatus,
-  Post,
+  Param,
   Patch,
-  Delete,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
-  ApiTags,
+  ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
-  ApiBody,
   ApiResponse,
-  ApiCookieAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
-import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
-import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Session, PublicAccess } from 'supertokens-nestjs';
-import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
-import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
-import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
-import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import { Octokit } from '@octokit/rest';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
-import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
+import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
-import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
-import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -118,19 +124,22 @@ export class ProjectController {
     return GetProjectsResponseDto.toResponse(projects.value);
   }
 
-  @PublicAccess()
-  @Get(':id')
+  // Route publique pour récupérer un projet par son ID
   @ApiOperation({ summary: 'Récupérer un projet par ID' })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   @ApiResponse({
     status: 200,
     description: 'Détails du projet',
     example: {
+      author: {
+        ownerId: '4d9c454e-6932-464a-97fb-f7f64e2dad23',
+        name: 'Lucalhost',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+      },
       id: '123e4567-e89b-12d3-a456-426614174000',
       title: 'E-commerce Platform',
       description: 'Modern e-commerce app with React and Node.js',
       shortDescription: 'E-commerce with React & Node.js',
-      ownerId: 'github_user123',
       techStacks: [
         { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
         { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
@@ -169,6 +178,38 @@ export class ProjectController {
       ],
       createdAt: '2025-01-15T10:30:00.000Z',
       updatedAt: '2025-01-20T14:45:00.000Z',
+      projectStats: {
+        forks: 2,
+        stars: 1,
+        watchers: 1,
+        openIssues: 1,
+        commits: 4,
+        lastCommit: {
+          sha: '4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+          message: 'Merge pull request #2 from Jyzdcs/main\n\ntest',
+          date: '2025-07-15T23:17:16Z',
+          url: 'https://github.com/Lhourquin/projet-os/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+          author: {
+            login: 'Lhourquin',
+            avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            html_url: 'https://github.com/Lhourquin',
+          },
+        },
+        contributors: [
+          {
+            login: 'Lhourquin',
+            avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            html_url: 'https://github.com/Lhourquin',
+            contributions: 3,
+          },
+          {
+            login: 'Jyzdcs',
+            avatar_url: 'https://avatars.githubusercontent.com/u/123254210?v=4',
+            html_url: 'https://github.com/Jyzdcs',
+            contributions: 1,
+          },
+        ],
+      },
     },
   })
   @ApiResponse({
@@ -176,14 +217,35 @@ export class ProjectController {
     description: 'Projet non trouvé',
     example: { message: 'Project not found', statusCode: 404 },
   })
-  async getProject(@Param('id') id: string) {
-    const projectRes: Result<Project, string> = await this.queryBus.execute(
-      new FindProjectByIdQuery(id),
+  @PublicAccess()
+  @Get(':id')
+  async getProject(
+    @Param('id') id: string,
+    @GitHubOctokit() octokit?: Octokit,
+  ) {
+    const projectRes: Result<
+      {
+        author: Author;
+        project: Project;
+        projectStats: ProjectStats;
+        lastCommit: LastCommit;
+        contributors: Contributor[];
+      },
+      string
+    > = await this.queryBus.execute(
+      new FindProjectByIdQuery({ id: id, octokit: octokit }),
     );
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
-    return GetProjectByIdResponseDto.toResponse(projectRes.value);
+    const { author, project, projectStats } = projectRes.value;
+    return GetProjectByIdResponseDto.toResponse({
+      author,
+      project,
+      projectStats: projectStats,
+      lastCommit: projectStats.lastCommit,
+      contributors: projectStats.contributors,
+    });
   }
 
   //   @Get('search')
@@ -543,12 +605,12 @@ export class ProjectController {
     @Session('userId') userId: string,
     @Param('projectId') projectId: string,
   ) {
-    const projectResult: Result<Project> = await this.queryBus.execute(
-      new FindProjectByIdQuery(projectId),
-    );
-    if (!projectResult.success) {
-      throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
-    }
+    // const projectResult: Result<Project> = await this.queryBus.execute(
+    //   new FindProjectByIdQuery({ id: projectId }),
+    // );
+    // if (!projectResult.success) {
+    //   throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
+    // }
     const applications: Result<ProjectRoleApplication[]> =
       await this.queryBus.execute(
         new GetAllProjectApplicationsQuery({ projectId, userId }),

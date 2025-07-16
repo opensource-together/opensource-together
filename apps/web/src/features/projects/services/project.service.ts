@@ -21,7 +21,6 @@ export const getProjects = async (): Promise<Project[]> => {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -53,7 +52,6 @@ export const getProjectDetails = async (
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
     });
 
     if (!response.ok) {

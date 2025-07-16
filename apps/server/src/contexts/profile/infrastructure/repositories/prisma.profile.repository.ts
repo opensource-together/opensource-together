@@ -14,6 +14,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
   async create(profile: {
     userId: string;
     name: string;
+    login: string;
     avatarUrl: string;
     bio: string;
     location: string;

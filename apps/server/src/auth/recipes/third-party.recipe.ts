@@ -128,6 +128,7 @@ export const thirdPartyRecipe = ({
                   const createProfileCommand = new CreateProfileCommand({
                     userId: id,
                     name: githubUser.name || githubUser.login,
+                    login: githubUser.login,
                     avatarUrl: githubUser.avatar_url,
                     bio: githubUser.bio ?? '',
                     location: githubUser.location ?? '',

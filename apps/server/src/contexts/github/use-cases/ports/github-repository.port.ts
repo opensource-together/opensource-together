@@ -5,6 +5,37 @@ import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/reposito
 import { Result } from '@/libs/result';
 import { Octokit } from '@octokit/rest';
 
+export type LastCommit = {
+  sha: string;
+  message: string;
+  date: string;
+  url: string;
+  author: {
+    login: string;
+    avatar_url: string;
+    html_url: string;
+  };
+};
+export type Contributor = {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  contributions: number;
+};
+export type Author = {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+};
+export type ProjectStats = {
+  forks: number;
+  stars: number;
+  watchers: number;
+  openIssues: number;
+  commits: number;
+  lastCommit: LastCommit;
+  contributors: Contributor[];
+};
 export const GITHUB_REPOSITORY_PORT = Symbol('GITHUB_REPOSITORY_PORT');
 export interface GithubRepositoryPort {
   createGithubRepository(
@@ -18,4 +49,27 @@ export interface GithubRepositoryPort {
     input: InviteUserToRepoInput,
     octokit: Octokit,
   ): Promise<Result<GithubInvitationDto>>;
+  findRepositoryByOwnerAndName(
+    owner: string,
+    name: string,
+    octokit: Octokit,
+  ): Promise<Result<ProjectStats, string>>;
+  findCommitsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<
+      {
+        lastCommit: LastCommit;
+        commitsNumber: number;
+      },
+      string
+    >
+  >;
+  findContributorsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<Result<Array<Contributor>, string>>;
 }

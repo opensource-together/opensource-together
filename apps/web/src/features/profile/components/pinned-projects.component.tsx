@@ -57,9 +57,22 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             }}
             projectStats={{
               forks: project.projectStats?.forks || 0,
-              contributors: project.projectStats?.contributors || 0,
+              contributors: project.projectStats?.contributors || [],
               stars: project.projectStats?.stars || 0,
-              lastCommitAt: project.projectStats?.lastCommitAt || new Date(),
+              lastCommit: project.projectStats?.lastCommit?.date
+                ? {
+                    date: project.projectStats.lastCommit.date,
+                    message: project.projectStats.lastCommit.message,
+                    sha: project.projectStats.lastCommit.sha,
+                    url: project.projectStats.lastCommit.url,
+                    author: {
+                      login: project.projectStats.lastCommit.author.login,
+                      avatar_url:
+                        project.projectStats.lastCommit.author.avatar_url,
+                      html_url: project.projectStats.lastCommit.author.html_url,
+                    },
+                  }
+                : undefined,
             }}
             className="w-full max-w-[731px] bg-white"
           />
