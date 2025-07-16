@@ -22,8 +22,8 @@ import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure
 import { InMemoryProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/mock.project-role.repository';
 import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
 import { PrismaCategoryRepository } from '@/contexts/category/infrastructure/repositories/prisma.category.repository';
-import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
-import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
+import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import { PrismaProfileRepository } from '@/contexts/profile/infrastructure/repositories/prisma.profile.repository';
 
 @Module({
   imports: [],
@@ -69,8 +69,8 @@ import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositorie
       useClass: PrismaCategoryRepository,
     },
     {
-      provide: USER_REPOSITORY_PORT,
-      useClass: PrismaUserRepository,
+      provide: PROFILE_REPOSITORY_PORT,
+      useClass: PrismaProfileRepository,
     },
     GithubInfrastructure,
     ...projectUseCases,

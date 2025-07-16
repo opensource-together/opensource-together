@@ -9,9 +9,9 @@ import {
   GITHUB_REPOSITORY_PORT,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import {
-  UserRepositoryPort,
-  USER_REPOSITORY_PORT,
-} from '@/contexts/user/use-cases/ports/user.repository.port';
+  ProfileRepositoryPort,
+  PROFILE_REPOSITORY_PORT,
+} from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Octokit } from '@octokit/rest';
 import { Project } from '@/contexts/project/domain/project.entity';
 export class FindProjectByIdQuery implements IQuery {
@@ -32,13 +32,18 @@ export class FindProjectByIdHandler
     private readonly projectRepo: ProjectRepositoryPort,
     @Inject(GITHUB_REPOSITORY_PORT)
     private readonly githubRepo: GithubRepositoryPort,
-    @Inject(USER_REPOSITORY_PORT)
-    private readonly userRepo: UserRepositoryPort,
+    @Inject(PROFILE_REPOSITORY_PORT)
+    private readonly profileRepo: ProfileRepositoryPort,
   ) {}
 
   async execute(query: FindProjectByIdQuery): Promise<
     Result<
       {
+        author: {
+          ownerId: string;
+          name: string;
+          avatarUrl: string;
+        };
         project: Project;
         projectStats: {
           forks_count: number;
@@ -63,11 +68,11 @@ export class FindProjectByIdHandler
     if (!project.success) {
       return Result.fail(project.error);
     }
-    const ownerProjectInfo = await this.userRepo.findById(
+    const ownerProjectInfo = await this.profileRepo.findById(
       project.value.toPrimitive().ownerId,
     );
     if (!ownerProjectInfo.success) {
-      return Result.fail(ownerProjectInfo.error as string);
+      return Result.fail(ownerProjectInfo.error);
     }
     const projectStats = {
       forks_count: 0,
@@ -85,21 +90,24 @@ export class FindProjectByIdHandler
         },
       ],
     };
-    const username = ownerProjectInfo.value.toPrimitive().username;
+    console.log('ownerProjectInfo', ownerProjectInfo);
+    const ownerLogin = ownerProjectInfo.value.toPrimitive().login;
+    const ownerName = ownerProjectInfo.value.toPrimitive().name;
+    const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;
     const repoName = project.value.toPrimitive().title;
     const [commitsNumber, repoInfo, contributors] = await Promise.all([
       this.githubRepo.findCommitsByRepository(
-        username,
+        ownerLogin,
         repoName.replace(/\s+/g, '-'),
         octokit,
       ),
       this.githubRepo.findRepositoryByOwnerAndName(
-        username,
+        ownerLogin,
         repoName.replace(/\s+/g, '-'),
         octokit,
       ),
       this.githubRepo.findContributorsByRepository(
-        username,
+        ownerLogin,
         repoName.replace(/\s+/g, '-'),
         octokit,
       ),
@@ -149,6 +157,11 @@ export class FindProjectByIdHandler
       projectStats.contributors = [...contributorsValue];
     }
     return Result.ok({
+      author: {
+        ownerId: project.value.toPrimitive().ownerId,
+        name: ownerName,
+        avatarUrl: ownerAvatarUrl,
+      },
       project: project.value,
       projectStats: {
         forks_count: projectStats.forks_count,

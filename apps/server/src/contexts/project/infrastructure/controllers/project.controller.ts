@@ -27,7 +27,10 @@ import { Octokit } from '@octokit/rest';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
-import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
+import {
+  Author,
+  GetProjectByIdResponseDto,
+} from './dto/get-project-by-id-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
 import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
@@ -60,6 +63,7 @@ export class ProjectController {
   async getProject(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
     const projectRes: Result<
       {
+        author: Author;
         project: Project;
         projectStats: {
           forks_count: number;
@@ -84,6 +88,7 @@ export class ProjectController {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
     return GetProjectByIdResponseDto.toResponse({
+      author: projectRes.value.author,
       project: projectRes.value.project,
       projectStats: projectRes.value.projectStats,
     });

@@ -11,6 +11,17 @@ export type LastCommit = {
     html_url: string;
   };
 };
+export type Contributor = {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  contributions: number;
+};
+export type Author = {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+};
 export type ProjectStats = {
   forks: number;
   stars: number;
@@ -18,15 +29,11 @@ export type ProjectStats = {
   openIssues: number;
   commits: number;
   lastCommit: LastCommit;
-  contributors: {
-    login: string;
-    avatar_url: string;
-    html_url: string;
-    contributions: number;
-  }[];
+  contributors: Contributor[];
 };
 export class GetProjectByIdResponseDto {
   public static toResponse(props: {
+    author: Author;
     project: Project;
     projectStats: {
       forks_count: number;
@@ -54,9 +61,11 @@ export class GetProjectByIdResponseDto {
     };
   }): ProjectData & {
     projectStats: ProjectStats;
+    author: Author;
   } {
-    const { project, projectStats } = props;
+    const { project, projectStats, author } = props;
     return {
+      author,
       ...project.toPrimitive(),
       projectStats: {
         forks: projectStats.forks_count,
