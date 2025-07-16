@@ -49,7 +49,7 @@ async function bootstrap() {
 }
 bootstrap()
   .then(() => {
-    console.log(`Server started !`);
+    console.log(`Server started at ${process.env.PORT ?? 4000}!`);
   })
   .catch((e) => {
     console.log(`Server crashed : ${e}`);

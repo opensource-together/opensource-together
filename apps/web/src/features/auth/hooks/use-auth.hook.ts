@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -13,6 +13,7 @@ import {
 export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
 
   // Query to get the current user
   const {
@@ -45,7 +46,13 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        router.push("/profile");
+
+        // Récupérer l'URL de redirection depuis le sessionStorage
+        const redirectUrl = sessionStorage.getItem("auth_redirect_url");
+        sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
+
+        // Rediriger vers l'URL d'origine ou vers /profile par défaut
+        router.push(redirectUrl || "/profile");
       },
       onError: () => router.push("/auth/login"),
     },
@@ -64,6 +71,26 @@ export default function useAuth() {
     },
   });
 
+  // Helper fonction pour rediriger vers login en sauvegardant l'URL actuelle
+  const redirectToLogin = (customRedirectUrl?: string) => {
+    const redirectUrl = customRedirectUrl || pathname;
+    const encodedRedirectUrl = encodeURIComponent(redirectUrl);
+    router.push(`/auth/login?redirect=${encodedRedirectUrl}`);
+  };
+
+  /**
+   * Fonction qui vérifie l'authentification avant d'exécuter une action
+   * Si l'utilisateur n'est pas connecté, redirige vers login et sauvegarde l'URL actuelle
+   * Si l'utilisateur est connecté, exécute l'action
+   */
+  const requireAuth = (action: () => void, customRedirectUrl?: string) => {
+    if (!currentUser) {
+      redirectToLogin(customRedirectUrl);
+      return;
+    }
+    action();
+  };
+
   return {
     // Data
     currentUser,
@@ -75,6 +102,8 @@ export default function useAuth() {
     signInWithGitHub: githubSignInMutation.mutate,
     redirectAfterGitHub: githubCallbackMutation.mutate,
     logout: logoutMutation.mutate,
+    redirectToLogin, // Fonction helper pour redirection manuelle
+    requireAuth, // Fonction helper pour actions protégées
 
     // Loading states
     isSigningIn: githubSignInMutation.isPending,

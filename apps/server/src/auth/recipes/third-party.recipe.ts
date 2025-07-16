@@ -58,6 +58,25 @@ export const thirdPartyRecipe = ({
       ],
     },
     override: {
+      apis: (originalImplementation) => {
+        return {
+          ...originalImplementation,
+          authorisationUrlGET: async (input) => {
+            if (
+              typeof originalImplementation.authorisationUrlGET !== 'function'
+            ) {
+              throw new Error('authorisationURLGet is not implemented');
+            }
+
+            const response =
+              await originalImplementation.authorisationUrlGET(input);
+            if (response.status === 'OK' && input.provider.id === 'github') {
+              response.urlWithQueryParams += '&prompt=select_account';
+            }
+            return response;
+          },
+        };
+      },
       functions: (originalImplementation) => {
         return {
           ...originalImplementation,

@@ -52,18 +52,18 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, currentUser, logout } = useAuth();
+  const { isAuthenticated, currentUser, logout, redirectToLogin } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
 
   const handleCreate = () => {
-    router.push("/projects/create");
-  };
-
-  const handleLogin = () => {
-    router.push("/auth/login");
+    if (isAuthenticated) {
+      router.push("/projects/create");
+    } else {
+      redirectToLogin("/projects/create");
+    }
   };
 
   const handleProfile = () => {
@@ -152,60 +152,49 @@ export default function Header() {
               Star Us <Icon name="github" size="md" />
             </Button>
           </Link>
-          {isAuthenticated ? (
-            <>
-              <Button onClick={handleCreate}>
-                <span className="hidden sm:inline">Créer un Projet</span>
-                <span className="inline sm:hidden">Nouveau projet</span>
-                <Icon
-                  name="plus"
-                  size="xs"
-                  variant="white"
-                  className="ml-1.5"
-                />
-              </Button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-1 px-2"
-                  >
-                    <Avatar
-                      src={currentUser?.avatarUrl}
-                      name={currentUser?.name}
-                      alt={currentUser?.name}
-                      size="xs"
-                    />
-                    <span className="text-sm font-medium tracking-tighter">
-                      {currentUser?.name}
-                    </span>
-                    <Icon name="chevron-down" size="md" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem
-                    onClick={handleProfile}
-                    className="cursor-pointer"
-                  >
-                    <Icon name="user" size="sm" />
-                    Mon Profil
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="cursor-pointer"
-                  >
-                    <Icon name="logout" size="sm" />
-                    Déconnexion
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
-          ) : (
-            <Button onClick={handleLogin}>
-              <span className="hidden sm:inline">Créer un Projet</span>
-              <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
-            </Button>
+          <Button onClick={handleCreate}>
+            <span className="hidden sm:inline">Créer un Projet</span>
+            <span className="inline sm:hidden">Nouveau projet</span>
+            <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
+          </Button>
+
+          {isAuthenticated && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-1 px-2"
+                >
+                  <Avatar
+                    src={currentUser?.avatarUrl}
+                    name={currentUser?.name}
+                    alt={currentUser?.name}
+                    size="xs"
+                  />
+                  <span className="text-sm font-medium tracking-tighter">
+                    {currentUser?.name}
+                  </span>
+                  <Icon name="chevron-down" size="md" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={handleProfile}
+                  className="cursor-pointer"
+                >
+                  <Icon name="user" size="sm" />
+                  Mon Profil
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="cursor-pointer"
+                >
+                  <Icon name="logout" size="sm" />
+                  Déconnexion
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </section>
 
