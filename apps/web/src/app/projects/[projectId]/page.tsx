@@ -7,12 +7,12 @@ import { getProjectDetails } from "@/features/projects/services/project.service"
 import ProjectDetailView from "@/features/projects/views/project-detail.view";
 
 type Props = {
-  params: { projectId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const projectId = params.projectId;
+  const { projectId } = await params;
   const project = await getProjectDetails(projectId);
 
   return {

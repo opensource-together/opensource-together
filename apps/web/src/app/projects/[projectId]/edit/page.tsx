@@ -4,8 +4,8 @@ import { getProjectDetails } from "@/features/projects/services/project.service"
 import ProjectEditView from "@/features/projects/views/project-edit.view";
 
 type Props = {
-  params: { projectId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ projectId: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
