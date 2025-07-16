@@ -79,12 +79,13 @@ export class ProjectController {
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
+    const { author, project, projectStats } = projectRes.value;
     return GetProjectByIdResponseDto.toResponse({
-      author: projectRes.value.author,
-      project: projectRes.value.project,
-      projectStats: projectRes.value.projectStats,
-      lastCommit: projectRes.value.projectStats.lastCommit,
-      contributors: projectRes.value.projectStats.contributors,
+      author,
+      project,
+      projectStats: projectStats,
+      lastCommit: projectStats.lastCommit,
+      contributors: projectStats.contributors,
     });
   }
 
