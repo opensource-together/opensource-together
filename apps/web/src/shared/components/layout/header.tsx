@@ -67,7 +67,19 @@ export default function Header() {
   };
 
   const handleProfile = () => {
-    router.push("/profile");
+    if (isAuthenticated) {
+      router.push("/profile");
+    } else {
+      redirectToLogin("/profile");
+    }
+  };
+
+  const handleMyProjects = () => {
+    if (isAuthenticated) {
+      router.push("/my-projects");
+    } else {
+      redirectToLogin("/my-projects");
+    }
   };
 
   const handleLogout = () => {
@@ -94,14 +106,28 @@ export default function Header() {
           {/* Navigation pour desktop et tablette */}
           <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
             <NavLink href="/">Accueil</NavLink>
-            <NavLink href="/profile">Profil</NavLink>
-            <NavLink href="/my-projects">Gestion projet</NavLink>
+            <Button
+              variant="ghost"
+              onClick={handleProfile}
+              className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+            >
+              Profil
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={handleMyProjects}
+              className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+            >
+              Gestion projet
+            </Button>
           </nav>
         </section>
 
         {/* Bouton menu mobile */}
-        <button
-          className="flex h-8 w-8 flex-col items-center justify-center md:hidden"
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex h-8 w-8 flex-col items-center justify-center p-0 md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           <span
@@ -113,7 +139,7 @@ export default function Header() {
           <span
             className={`block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
           ></span>
-        </button>
+        </Button>
 
         {/* Menu mobile */}
         <nav
@@ -122,12 +148,20 @@ export default function Header() {
           <NavLink href="/" className="w-full py-1.5">
             Home
           </NavLink>
-          <NavLink href="/profile" className="w-full py-1.5">
+          <Button
+            variant="ghost"
+            onClick={handleProfile}
+            className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+          >
             Profile
-          </NavLink>
-          <NavLink href="/my-projects" className="w-full py-1.5">
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={handleMyProjects}
+            className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+          >
             My Projects
-          </NavLink>
+          </Button>
 
           <Link
             href="https://github.com/opensource-together/opensource-together"
