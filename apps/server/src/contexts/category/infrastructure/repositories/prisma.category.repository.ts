@@ -1,7 +1,7 @@
 import { CategoryRepositoryPort } from '@/contexts/category/use-cases/ports/category.repository.port';
 import { Category } from '../../domain/category.entity';
 import { Result } from '@/libs/result';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

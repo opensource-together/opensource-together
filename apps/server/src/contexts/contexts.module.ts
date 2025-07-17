@@ -7,7 +7,7 @@ import { ProjectRoleInfrastructure } from './project-role/infrastructure/project
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
 import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
 import { ProjectRoleApplicationInfrastructure } from './project-role-application/infrastructure/project-role-application.infrastructure';
-import { MailingModule } from '@/mailing/infrastructure/mailing.infrastructure';
+import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastructure';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { MailingModule } from '@/mailing/infrastructure/mailing.infrastructure';
     GithubInfrastructure,
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
-    MailingModule,
+    MailingInfrastructure,
   ],
   exports: [
     UserInfrastructure,

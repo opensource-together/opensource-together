@@ -35,7 +35,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubRepositoryDto(response);
     } catch (e) {
-      console.log('e', e);
+      console.error('error creating github repository', e);
       return Result.fail('Failed to create github repository');
     }
   }
@@ -56,7 +56,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubInvitationDto(response);
     } catch (e) {
-      console.log('e', e);
+      console.log('error inviting user to repository', e);
       return Result.fail('Failed to invite user to repository');
     }
   }
@@ -83,7 +83,7 @@ export class GithubRepository implements GithubRepositoryPort {
       console.log('repositoryInfo', repositoryInfo);
       return Result.ok<RepositoryInfo>(repositoryInfo);
     } catch (e) {
-      console.log('e', e);
+      console.error('error fetching repository', e);
       return Result.fail('Failed to fetch repository');
     }
   }
@@ -138,7 +138,7 @@ export class GithubRepository implements GithubRepositoryPort {
         commitsNumber,
       });
     } catch (e: any) {
-      console.log('e', e);
+      console.error('error fetching commits', e);
       if (e.status === 409 && e.message.includes('Git Repository is empty')) {
         return Result.ok({
           lastCommit: {
@@ -183,7 +183,7 @@ export class GithubRepository implements GithubRepositoryPort {
         },
       });
       if (!Array.isArray(response.data)) {
-        console.log(
+        console.error(
           'Unexpected response format for contributors',
           response.data,
         );
@@ -198,7 +198,7 @@ export class GithubRepository implements GithubRepositoryPort {
       }));
       return Result.ok(contributors);
     } catch (e: any) {
-      console.log('e', e);
+      console.log('error fetching contributors', e);
       if (e.status === 409 && e.message.includes('Git Repository is empty')) {
         return Result.ok([]);
       }

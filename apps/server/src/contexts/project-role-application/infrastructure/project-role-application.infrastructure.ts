@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { PrismaProjectRoleApplicationRepository } from '@/contexts/project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
 import { projectRoleApplicationUseCases } from '../use-cases/project-role-application.use-cases';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
@@ -13,8 +13,8 @@ import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repos
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 
 @Module({
+  imports: [PersistenceInfrastructure],
   providers: [
-    PrismaService,
     ...projectRoleApplicationUseCases,
     {
       provide: PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,

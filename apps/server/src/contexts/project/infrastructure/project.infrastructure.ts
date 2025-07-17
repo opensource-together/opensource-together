@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { projectUseCases } from '@/contexts/project/use-cases/project.use-cases';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
 import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repositories/prisma.project.repository';
@@ -26,9 +26,9 @@ import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/prof
 import { PrismaProfileRepository } from '@/contexts/profile/infrastructure/repositories/prisma.profile.repository';
 
 @Module({
-  imports: [],
+  imports: [PersistenceInfrastructure],
   providers: [
-    PrismaService,
+    // PrismaService,
     // OctokitProvider,
     // GithubAuthGuard,
     {

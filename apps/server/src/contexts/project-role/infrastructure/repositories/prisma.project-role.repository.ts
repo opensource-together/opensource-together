@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectRoleRepositoryPort } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
 import { PrismaProjectRoleMapper } from '@/contexts/project-role/infrastructure/repositories/prisma.project-role.mapper';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Result } from '@/libs/result';
 import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
 import { Prisma } from '@prisma/client';

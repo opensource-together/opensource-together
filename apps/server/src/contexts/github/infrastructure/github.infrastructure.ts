@@ -6,7 +6,7 @@ import { githubUseCases } from '@/contexts/github/use-cases/github.use-cases';
 // import { RepositoryModule } from '@/infrastructures/repositories/repository.module';
 import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
 import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { ConfigModule } from '@nestjs/config';
 import { OctokitProvider } from './providers/octokit.provider';
 import { GithubRepository } from './repositories/github.repository';
@@ -18,10 +18,10 @@ import {
 import { PrismaUserGitHubCredentialsRepository } from './repositories/prisma.user-github-credentials.repository';
 
 @Module({
-  imports: [HttpModule, ConfigModule],
+  imports: [HttpModule, ConfigModule, PersistenceInfrastructure],
+
   providers: [
     GithubRepository,
-    PrismaService,
     ...githubUseCases,
     OctokitProvider,
     {
