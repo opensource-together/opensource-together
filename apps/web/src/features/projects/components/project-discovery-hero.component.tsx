@@ -4,7 +4,7 @@ import FilterSearchBar from "./filter-search-bar.component";
 
 export default function ProjectDiscoveryHero() {
   return (
-    <div className="relative mx-auto rounded-4xl border border-black/5">
+    <div className="relative mx-auto mb-5 rounded-4xl border border-black/5">
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-muted-foreground mt-6 flex items-center gap-1 text-center text-xs font-normal tracking-tight md:mt-15">
           <Image
