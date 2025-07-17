@@ -8,26 +8,11 @@ import { API_BASE_URL } from "@/config/config";
 
 import { Profile } from "@/features/profile/types/profile.type";
 
-// Global flag to track SuperTokens initialization
-let isInitialized = false;
-
-/**
- * Set SuperTokens as initialized (called from SuperTokensInitializer)
- */
-export const setSuperTokensInitialized = () => {
-  isInitialized = true;
-};
-
 /**
  * Check if session exists
  */
 export const checkSession = async (): Promise<boolean> => {
   try {
-    // Check if SuperTokens is initialized first
-    if (!isInitialized) {
-      return false;
-    }
-
     const sessionExists = await Session.doesSessionExist();
     return sessionExists;
   } catch (error) {
