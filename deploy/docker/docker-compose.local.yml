@@ -48,6 +48,7 @@ services:
       - R2_BUCKET_NAME=${R2_BUCKET_NAME}
       - R2_ENDPOINT=${R2_ENDPOINT}
       - R2_URL=${R2_URL}
+      - GH_TOKEN_OST_PUBLIC=${GH_TOKEN_OST_PUBLIC}
     ports:
       - "${API_PORT:-4000}:3000"
     networks:
