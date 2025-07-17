@@ -5,8 +5,6 @@ import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
-import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
@@ -174,86 +172,86 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
-  async findProjectByFilters(
-    filters: ProjectFilterInputsDto,
-  ): Promise<Result<Project[], string>> {
-    try {
-      // Construction dynamique du where clause
-      const where: Prisma.ProjectWhereInput = {};
+  // async findProjectByFilters(
+  //   filters: ProjectFilterInputsDto,
+  // ): Promise<Result<Project[], string>> {
+  //   try {
+  //     // Construction dynamique du where clause
+  //     const where: Prisma.ProjectWhereInput = {};
 
-      // Filtre par titre
-      if (filters.title && filters.title.trim() !== '') {
-        where.title = {
-          contains: filters.title,
-          mode: 'insensitive',
-        };
-      }
+  //     // Filtre par titre
+  //     if (filters.title && filters.title.trim() !== '') {
+  //       where.title = {
+  //         contains: filters.title,
+  //         mode: 'insensitive',
+  //       };
+  //     }
 
-      // Filtre par rôles
-      if (filters.roles && filters.roles.length > 0) {
-        where.projectRoles = {
-          some: {
-            title: {
-              in: filters.roles,
-              mode: 'insensitive',
-            },
-          },
-        };
-      }
+  //     // Filtre par rôles
+  //     if (filters.roles && filters.roles.length > 0) {
+  //       where.projectRoles = {
+  //         some: {
+  //           title: {
+  //             in: filters.roles,
+  //             mode: 'insensitive',
+  //           },
+  //         },
+  //       };
+  //     }
 
-      // Filtre par technologies
-      if (filters.techStacks && filters.techStacks.length > 0) {
-        where.techStacks = {
-          some: {
-            name: {
-              in: filters.techStacks,
-              mode: 'insensitive',
-            },
-          },
-        };
-      }
+  //     // Filtre par technologies
+  //     if (filters.techStacks && filters.techStacks.length > 0) {
+  //       where.techStacks = {
+  //         some: {
+  //           name: {
+  //             in: filters.techStacks,
+  //             mode: 'insensitive',
+  //           },
+  //         },
+  //       };
+  //     }
 
-      // Configuration du tri
-      const orderBy: Prisma.ProjectOrderByWithRelationInput = {};
-      orderBy.createdAt = filters.sortOrder;
+  //     // Configuration du tri
+  //     const orderBy: Prisma.ProjectOrderByWithRelationInput = {};
+  //     orderBy.createdAt = filters.sortOrder;
 
-      const prismaProjects = await this.prisma.project.findMany({
-        where,
-        orderBy,
-        include: {
-          techStacks: true,
-          projectRoles: {
-            include: { techStacks: true },
-          },
-          projectMembers: true,
-          categories: true,
-          keyFeatures: true,
-          projectGoals: true,
-          externalLinks: true,
-        },
-      });
+  //     const prismaProjects = await this.prisma.project.findMany({
+  //       where,
+  //       orderBy,
+  //       include: {
+  //         techStacks: true,
+  //         projectRoles: {
+  //           include: { techStacks: true },
+  //         },
+  //         projectMembers: true,
+  //         categories: true,
+  //         keyFeatures: true,
+  //         projectGoals: true,
+  //         externalLinks: true,
+  //       },
+  //     });
 
-      if (prismaProjects.length === 0) return Result.ok([]);
+  //     if (prismaProjects.length === 0) return Result.ok([]);
 
-      const domainProjects: Project[] = [];
+  //     const domainProjects: Project[] = [];
 
-      for (const projectPrisma of prismaProjects) {
-        const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
-        if (!domainProject.success) {
-          return Result.fail(
-            typeof domainProject.error === 'string'
-              ? domainProject.error
-              : JSON.stringify(domainProject.error),
-          );
-        }
-        domainProjects.push(domainProject.value);
-      }
+  //     for (const projectPrisma of prismaProjects) {
+  //       const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
+  //       if (!domainProject.success) {
+  //         return Result.fail(
+  //           typeof domainProject.error === 'string'
+  //             ? domainProject.error
+  //             : JSON.stringify(domainProject.error),
+  //         );
+  //       }
+  //       domainProjects.push(domainProject.value);
+  //     }
 
-      return Result.ok(domainProjects);
-    } catch (error) {
-      return Result.fail(`Unknown error : ${error}`);
-    }
-  }
+  //     return Result.ok(domainProjects);
+  //   } catch (error) {
+  //     return Result.fail(`Unknown error : ${error}`);
+  //   }
+  // }
 
   async findById(id: string): Promise<Result<Project, string>> {
     try {
