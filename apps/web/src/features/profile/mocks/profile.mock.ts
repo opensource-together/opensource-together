@@ -256,10 +256,22 @@ export const mockProfile: Profile = {
         avatarUrl: "https://github.com/LeetGrind.png",
       },
       projectStats: {
-        contributors: 10,
+        contributors: [
+          { login: "y2_dev", avatar_url: "", html_url: "", contributions: 10 },
+        ],
         stars: 100,
         forks: 10,
-        lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+        lastCommit: {
+          date: new Date("2024-01-01T00:00:00Z").toISOString(),
+          message: "Initial commit",
+          sha: "1234567890",
+          url: "https://github.com/LeetGrind/LeetGrind/commit/1234567890",
+          author: {
+            login: "y2_dev",
+            avatar_url: "",
+            html_url: "",
+          },
+        },
       },
     },
     {
@@ -294,10 +306,22 @@ export const mockProfile: Profile = {
         avatarUrl: "https://github.com/devcord-bot.png",
       },
       projectStats: {
-        contributors: 10,
+        contributors: [
+          { login: "y2_dev", avatar_url: "", html_url: "", contributions: 10 },
+        ],
         stars: 100,
         forks: 10,
-        lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+        lastCommit: {
+          date: new Date("2024-01-01T00:00:00Z").toISOString(),
+          message: "Initial commit",
+          sha: "1234567890",
+          url: "https://github.com/devcord-bot/devcord/commit/1234567890",
+          author: {
+            login: "y2_dev",
+            avatar_url: "",
+            html_url: "",
+          },
+        },
       },
     },
   ],

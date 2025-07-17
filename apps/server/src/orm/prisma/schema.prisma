@@ -35,6 +35,7 @@ model User {
 model Profile {
   userId      String           @id @unique
   name        String
+  login       String
   avatarUrl   String?
   location    String?
   company     String?

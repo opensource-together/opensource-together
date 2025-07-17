@@ -33,6 +33,7 @@ export class PrismaProfileMapper {
     const profileEntity = Profile.reconstitute({
       userId: raw.userId,
       name: raw.name,
+      login: raw.login,
       avatarUrl: raw.avatarUrl || undefined,
       bio: raw.bio || undefined,
       location: raw.location || undefined,
@@ -53,6 +54,7 @@ export class PrismaProfileMapper {
   public static toRepo(profile: {
     userId: string;
     name: string;
+    login: string;
     avatarUrl: string;
     bio?: string;
     location?: string;
@@ -67,6 +69,7 @@ export class PrismaProfileMapper {
       profileData: {
         userId: profileState.userId,
         name: profileState.name,
+        login: profileState.login,
         avatarUrl: profileState.avatarUrl,
         bio: profileState.bio,
         location: profileState.location,

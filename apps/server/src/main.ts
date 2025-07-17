@@ -44,13 +44,13 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(process.env.PORT ?? 4000);
 }
 bootstrap()
   .then(() => {
-    console.log(`Server started !`);
+    console.log(`Server started at ${process.env.PORT ?? 4000}!`);
   })
   .catch((e) => {
     console.log(`Server crashed : ${e}`);

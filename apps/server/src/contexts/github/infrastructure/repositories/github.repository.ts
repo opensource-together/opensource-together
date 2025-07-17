@@ -1,6 +1,9 @@
 import { GithubRepositoryDto } from './dto/github-repository.dto';
 import { toGithubRepositoryDto } from './dto/github-repository.adapter';
-import { GithubRepositoryPort } from '@/contexts/github/use-cases/ports/github-repository.port';
+import {
+  GithubRepositoryPort,
+  ProjectStats,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
@@ -30,7 +33,6 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      console.log('response', response);
       return toGithubRepositoryDto(response);
     } catch (e) {
       console.log('e', e);
@@ -54,7 +56,130 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubInvitationDto(response);
     } catch (e) {
-      return Result.fail(e);
+      console.log('e', e);
+      return Result.fail('Failed to invite user to repository');
+    }
+  }
+
+  async findRepositoryByOwnerAndName(
+    owner: string,
+    name: string,
+    octokit: Octokit,
+  ): Promise<Result<ProjectStats, string>> {
+    try {
+      const response = await octokit.rest.repos.get({
+        owner,
+        repo: name,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      return Result.ok<ProjectStats>({
+        forks: response.data.forks_count,
+        stars: response.data.stargazers_count,
+        watchers: response.data.watchers_count,
+        openIssues: response.data.open_issues_count,
+        commits: 0,
+        lastCommit: {
+          sha: '',
+          message: '',
+          date: '',
+          url: '',
+          author: { login: '', avatar_url: '', html_url: '' },
+        },
+        contributors: [],
+      });
+    } catch (e) {
+      console.log('e', e);
+      return Result.fail('Failed to fetch repository');
+    }
+  }
+
+  async findCommitsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<
+      {
+        lastCommit: {
+          sha: string;
+          message: string;
+          date: string;
+          url: string;
+          author: {
+            login: string;
+            avatar_url: string;
+            html_url: string;
+          };
+        };
+        commitsNumber: number;
+      },
+      string
+    >
+  > {
+    try {
+      const response = await octokit.rest.repos.listCommits({
+        owner,
+        repo,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      const rawCommit = response.data[0];
+      const lastCommit = {
+        sha: rawCommit.sha,
+        message: rawCommit.commit.message,
+        date: rawCommit.commit.author?.date as string,
+        url: rawCommit.html_url,
+        author: {
+          login: rawCommit.author?.login as string,
+          avatar_url: rawCommit.author?.avatar_url as string,
+          html_url: rawCommit.author?.html_url as string,
+        },
+      };
+      const commitsNumber = response.data.length;
+
+      return Result.ok({
+        lastCommit,
+        commitsNumber,
+      });
+    } catch (e) {
+      console.log('e', e);
+      return Result.fail('Failed to fetch commits');
+    }
+  }
+
+  async findContributorsByRepository(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<
+    Result<
+      Array<{
+        login: string;
+        avatar_url: string;
+        html_url: string;
+        contributions: number;
+      }>,
+      string
+    >
+  > {
+    try {
+      const response = await octokit.rest.repos.listContributors({
+        owner,
+        repo,
+      });
+      const contributors = response.data.map((contributor) => ({
+        login: contributor.login as string,
+        avatar_url: contributor.avatar_url as string,
+        html_url: contributor.html_url as string,
+        contributions: contributor.contributions,
+      }));
+      return Result.ok(contributors);
+    } catch (e) {
+      console.log('e', e);
+      return Result.fail('Failed to fetch contributors');
     }
   }
 }

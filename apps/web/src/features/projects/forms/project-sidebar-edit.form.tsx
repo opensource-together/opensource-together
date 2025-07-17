@@ -87,9 +87,9 @@ export default function ProjectSidebarEditForm({
               <div className="h-[1px] w-full bg-black/5" />
             </div>
             <span className="text-sm font-medium text-black">
-              {project.projectStats?.lastCommitAt
+              {project.projectStats?.lastCommit?.date
                 ? new Date(
-                    project.projectStats.lastCommitAt
+                    project.projectStats.lastCommit.date
                   ).toLocaleDateString("fr-FR")
                 : "N/A"}
             </span>
@@ -112,7 +112,7 @@ export default function ProjectSidebarEditForm({
               <div className="h-[1px] w-full bg-black/5" />
             </div>
             <span className="text-sm font-medium text-black">
-              {project.projectStats?.contributors || 0}
+              {project.projectStats?.contributors?.length || 0}
             </span>
           </div>
         </div>
@@ -190,29 +190,35 @@ export default function ProjectSidebarEditForm({
           {/* Contributors Section - Informative */}
           <div className="mb-3 flex flex-col">
             <h2 className="text-md mb-2 font-medium text-black">
-              Contributeurs ({project.collaborators?.length || 0})
+              Contributeurs ({project.projectStats?.contributors?.length || 0})
             </h2>
             <div className="flex flex-col gap-2">
-              {project.collaborators?.slice(0, 5).map((collaborator) => (
-                <div key={collaborator.id} className="flex items-center gap-2">
-                  <Avatar
-                    src={collaborator.avatarUrl}
-                    alt={collaborator.name}
-                    size="sm"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-black">
-                      {collaborator.name}
-                    </span>
-                    <span className="text-xs text-black/50">
-                      {collaborator.role}
-                    </span>
+              {project.projectStats?.contributors
+                ?.slice(0, 5)
+                .map((contributor) => (
+                  <div
+                    key={contributor.login}
+                    className="flex items-center gap-2"
+                  >
+                    <Avatar
+                      src={contributor.avatar_url}
+                      alt={contributor.login}
+                      size="sm"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-black">
+                        {contributor.login}
+                      </span>
+                      <span className="text-xs text-black/50">
+                        {contributor.contributions}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
-              {(project.collaborators?.length || 0) > 5 && (
+                ))}
+              {(project.projectStats?.contributors?.length || 0) > 5 && (
                 <span className="text-xs text-black/50">
-                  +{(project.collaborators?.length || 0) - 5} autres
+                  +{(project.projectStats?.contributors?.length || 0) - 5}{" "}
+                  autres
                 </span>
               )}
             </div>

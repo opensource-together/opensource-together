@@ -29,8 +29,14 @@ export default function ProjectSideBar({
     projectStats = {
       stars: 0,
       forks: 0,
-      contributors: 0,
-      lastCommitAt: new Date(),
+      contributors: [],
+      lastCommit: {
+        date: "",
+        message: "",
+        sha: "",
+        url: "",
+        author: { login: "", avatar_url: "", html_url: "" },
+      },
     },
   } = project;
 
@@ -38,7 +44,7 @@ export default function ProjectSideBar({
   const githubLink =
     externalLinks.find((link) => link.type === "github")?.url || "";
 
-  const collaborators = project.collaborators || [];
+  const contributors = project.projectStats?.contributors || [];
 
   const handleEditClick = () => {
     router.push(`/projects/${project.id}/edit`);
@@ -133,8 +139,10 @@ export default function ProjectSideBar({
             <div className="h-[1px] w-full bg-black/5" />
           </div>
           <span className="text-sm font-medium text-black">
-            {projectStats.lastCommitAt
-              ? new Date(projectStats.lastCommitAt).toLocaleDateString("fr-FR")
+            {projectStats.lastCommit?.date
+              ? new Date(projectStats.lastCommit.date).toLocaleDateString(
+                  "fr-FR"
+                )
               : "N/A"}
           </span>
         </div>
@@ -156,7 +164,7 @@ export default function ProjectSideBar({
             <div className="h-[1px] w-full bg-black/5" />
           </div>
           <span className="text-sm font-medium text-black">
-            {projectStats.contributors}
+            {projectStats.contributors?.length || 0}
           </span>
         </div>
       </div>
@@ -202,20 +210,20 @@ export default function ProjectSideBar({
         </h2>
         <div>
           <div className="flex gap-2">
-            {collaborators.slice(0, 5).map((collaborator) => (
+            {contributors.slice(0, 5).map((contributor) => (
               <Avatar
-                key={collaborator.id}
-                src={collaborator.avatarUrl}
-                name={collaborator.name}
-                alt={collaborator.name}
+                key={contributor.login}
+                src={contributor.avatar_url}
+                name={contributor.login}
+                alt={contributor.login}
                 size="sm"
               />
             ))}
 
             {/* Indicateur "+X autres" si plus de 5 collaborateurs */}
-            {collaborators.length > 5 && (
+            {contributors.length > 5 && (
               <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                +{collaborators.length - 5}
+                +{contributors.length - 5}
               </div>
             )}
           </div>
