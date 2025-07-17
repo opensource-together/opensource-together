@@ -1,10 +1,10 @@
-import Session from 'supertokens-node/recipe/session';
-import { SuperTokensModuleOptions } from 'supertokens-nestjs/dist/supertokens.types';
 import { emailPasswordRecipe } from '@/auth/recipes/email-password.recipe';
-import EmailVerification from 'supertokens-node/recipe/emailverification';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ConfigService } from '@nestjs/config';
 import { thirdPartyRecipe } from '@/auth/recipes/third-party.recipe';
+import { ConfigService } from '@nestjs/config';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { SuperTokensModuleOptions } from 'supertokens-nestjs/dist/supertokens.types';
+import EmailVerification from 'supertokens-node/recipe/emailverification';
+import Session from 'supertokens-node/recipe/session';
 
 export function createSupertokensConfig(
   queryBus: QueryBus,
@@ -21,8 +21,8 @@ export function createSupertokensConfig(
       appName: configService.get('APP_NAME') as string,
       apiDomain: configService.get('API_DOMAIN') as string,
       websiteDomain: configService.get('WEBSITE_DOMAIN') as string,
-      apiBasePath: '/auth',
-      websiteBasePath: '/auth',
+      apiBasePath: '/v1/auth',
+      websiteBasePath: '/v1/auth',
     },
     recipeList: [
       emailPasswordRecipe(queryBus, commandBus),

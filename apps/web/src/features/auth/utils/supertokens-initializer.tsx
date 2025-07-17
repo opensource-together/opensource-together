@@ -13,7 +13,7 @@ export function SuperTokensInitializer() {
       appInfo: {
         appName: "OST",
         apiDomain: API_BASE_URL,
-        apiBasePath: "/auth",
+        apiBasePath: "/v1/auth",
       },
       recipeList: [Session.init(), ThirdParty.init()],
     });

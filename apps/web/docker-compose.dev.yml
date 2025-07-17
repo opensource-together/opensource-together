@@ -38,7 +38,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -49,7 +49,7 @@ services:
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER:-supertokens_user}:${SUPERTOKENS_DB_PASSWORD:-supertokens_password}@postgres:5432/${SUPERTOKENS_DB_NAME:-supertokens}
     ports:
-      - "${SUPERTOKENS_PORT:-3567}:3567"
+      - "${SUPERTOKENS_EXT_PORT:-3567}:3567"
     networks:
       - app_network
     depends_on:

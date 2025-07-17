@@ -90,7 +90,7 @@ import { Profile } from "../types/profile.type";
 //         pushed_at: "2024-03-19T00:00:00Z",
 //         image:
 //           "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
-//         techStacks: [
+//         techStackss: [
 //           {
 //             id: "1",
 //             name: "TypeScript",
@@ -117,7 +117,7 @@ import { Profile } from "../types/profile.type";
 //         pushed_at: "2024-03-19T00:00:00Z",
 //         image:
 //           "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
-//         techStacks: [
+//         techStackss: [
 //           {
 //             id: "1",
 //             name: "Go",
@@ -194,33 +194,24 @@ export const mockProfile: Profile = {
   company: "Freelance",
   joinedAt: "2025-04-25T00:00:00Z",
   contributionsCount: 1268,
-  skills: [
+  techStacks: [
     {
+      id: "1",
       name: "React",
-      level: "EXPERT",
-      badges: [
-        {
-          label: "React",
-          color: "#7C86FF",
-          bgColor: "#E0E7FF50",
-        },
-      ],
+      iconUrl:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
     },
     {
+      id: "2",
       name: "Figma",
-      level: "ADVANCED",
-      badges: [{ label: "Figma", color: "#FDC700", bgColor: "#FEF9C280" }],
+      iconUrl:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
     },
     {
+      id: "3",
       name: "MongoDB",
-      level: "ADVANCED",
-      badges: [
-        {
-          label: "MongoDB",
-          color: "#00D492",
-          bgColor: "#D0FAE550",
-        },
-      ],
+      iconUrl:
+        "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
     },
   ],
   projects: [
@@ -293,6 +284,12 @@ export const mockProfile: Profile = {
       image:
         "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
       techStacks: [
+        {
+          id: "2",
+          name: "TypeScript",
+          iconUrl:
+            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+        },
         {
           id: "1",
           name: "Go",
