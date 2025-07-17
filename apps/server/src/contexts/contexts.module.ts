@@ -8,6 +8,7 @@ import { GithubInfrastructure } from './github/infrastructure/github.infrastruct
 import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
 import { ProjectRoleApplicationInfrastructure } from './project-role-application/infrastructure/project-role-application.infrastructure';
 import { MailingModule } from '@/mailing/infrastructure/mailing.infrastructure';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailingModule } from '@/mailing/infrastructure/mailing.infrastructure';
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
     MailingModule,
+    EventEmitterModule.forRoot(),
   ],
   exports: [
     UserInfrastructure,
