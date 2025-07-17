@@ -173,7 +173,7 @@ export default function ProjectSideBar({
       {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Stack Technique
+          Technologies
         </h2>
         {techStacks.length > 0 && (
           <div>
@@ -238,7 +238,7 @@ export default function ProjectSideBar({
       {/* Links Section */}
       <div className="flex flex-col">
         <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Liens
+          Liens Sociaux
         </h2>
         <div className="flex flex-wrap gap-2">
           {externalLinks.map((link, index) => {

@@ -69,7 +69,7 @@ export default function ProjectMainEditForm({
   };
 
   return (
-    <div className="flex w-full flex-col gap-8 lg:max-w-xl">
+    <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-8">
           <FormField
