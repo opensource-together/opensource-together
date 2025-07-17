@@ -7,6 +7,8 @@ import ThirdParty from "supertokens-web-js/recipe/thirdparty";
 
 import { API_BASE_URL } from "@/config/config";
 
+import { setSuperTokensInitialized } from "../services/auth.service";
+
 export function SuperTokensInitializer() {
   useEffect(() => {
     SuperTokens.init({
@@ -17,6 +19,9 @@ export function SuperTokensInitializer() {
       },
       recipeList: [Session.init(), ThirdParty.init()],
     });
+
+    // Mark SuperTokens as initialized
+    setSuperTokensInitialized();
   }, []);
 
   return null;

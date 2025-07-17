@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -61,9 +63,12 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
                 </button>
               ))}
             </div>
-            <Button className="font-normal">
-              Contact <Icon name="discord" size="md" variant="white" />
-            </Button>
+            <Link href="/profile/edit">
+              <Button className="font-normal">
+                Modifier le profil{" "}
+                <Icon name="pencil" size="xs" variant="white" />
+              </Button>
+            </Link>
           </div>
         )}
       </div>
