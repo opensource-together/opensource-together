@@ -113,11 +113,23 @@ export class ProjectController {
   })
   @ApiResponse({ status: 500, description: 'Erreur serveur' })
   @PublicAccess()
+  @UseGuards(GithubAuthGuard)
   @Get()
-  async getProjects() {
-    const projects: Result<Project[]> = await this.queryBus.execute(
-      new GetProjectsQuery(),
-    );
+  async getProjects(@GitHubOctokit() octokit?: Octokit) {
+    const projects: Result<
+      (Project & {
+        author: {
+          ownerId: string;
+          name: string;
+          avatarUrl: string;
+        };
+        repositoryInfo: RepositoryInfo;
+        lastCommit: LastCommit;
+        commits: number;
+        contributors: Contributor[];
+        project: Project;
+      })[]
+    > = await this.queryBus.execute(new GetProjectsQuery({ octokit: octokit }));
     if (!projects.success) {
       throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
     }
