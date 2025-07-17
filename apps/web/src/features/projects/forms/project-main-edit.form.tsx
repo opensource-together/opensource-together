@@ -1,3 +1,4 @@
+import NextImage from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -36,6 +37,12 @@ export default function ProjectMainEditForm({
   const { control, watch, setValue } = form;
   const [newFeature, setNewFeature] = useState("");
   const [newGoal, setNewGoal] = useState("");
+  const [editingFeatureIndex, setEditingFeatureIndex] = useState<number | null>(
+    null
+  );
+  const [editingGoalIndex, setEditingGoalIndex] = useState<number | null>(null);
+  const [editingFeatureText, setEditingFeatureText] = useState("");
+  const [editingGoalText, setEditingGoalText] = useState("");
 
   const keyFeatures = watch("keyFeatures") || [];
   const projectGoals = watch("projectGoals") || [];
@@ -66,6 +73,46 @@ export default function ProjectMainEditForm({
       "projectGoals",
       projectGoals.filter((_, i) => i !== index)
     );
+  };
+
+  const startEditingFeature = (index: number, text: string) => {
+    setEditingFeatureIndex(index);
+    setEditingFeatureText(text);
+  };
+
+  const saveEditingFeature = () => {
+    if (editingFeatureIndex !== null) {
+      const updatedFeatures = [...keyFeatures];
+      updatedFeatures[editingFeatureIndex] = { feature: editingFeatureText };
+      setValue("keyFeatures", updatedFeatures);
+      setEditingFeatureIndex(null);
+      setEditingFeatureText("");
+    }
+  };
+
+  const cancelEditingFeature = () => {
+    setEditingFeatureIndex(null);
+    setEditingFeatureText("");
+  };
+
+  const startEditingGoal = (index: number, text: string) => {
+    setEditingGoalIndex(index);
+    setEditingGoalText(text);
+  };
+
+  const saveEditingGoal = () => {
+    if (editingGoalIndex !== null) {
+      const updatedGoals = [...projectGoals];
+      updatedGoals[editingGoalIndex] = { goal: editingGoalText };
+      setValue("projectGoals", updatedGoals);
+      setEditingGoalIndex(null);
+      setEditingGoalText("");
+    }
+  };
+
+  const cancelEditingGoal = () => {
+    setEditingGoalIndex(null);
+    setEditingGoalText("");
   };
 
   return (
@@ -151,18 +198,17 @@ export default function ProjectMainEditForm({
                 </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
-                    <div className="relative">
+                    <div className="flex items-center gap-2">
                       <Input
                         value={newFeature}
                         onChange={(e) => setNewFeature(e.target.value)}
                         placeholder="Ajouter une fonctionnalité"
-                        className="w-full pr-20 lg:w-[668px]"
+                        className="flex-1 lg:w-[566px]"
                       />
                       <Button
                         type="button"
                         onClick={addFeature}
-                        variant="secondary"
-                        className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                        className="h-[40px] w-[90px] rounded-full border border-black/5 bg-white text-black shadow-none hover:bg-gray-50"
                       >
                         Ajouter
                       </Button>
@@ -170,18 +216,84 @@ export default function ProjectMainEditForm({
                     <div className="flex w-full flex-col gap-2 lg:w-[668px]">
                       {keyFeatures.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm leading-relaxed">
-                            {feature.feature}
+                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                            {editingFeatureIndex === index ? (
+                              <div className="flex flex-1 items-center gap-2">
+                                <Input
+                                  value={editingFeatureText}
+                                  onChange={(e) =>
+                                    setEditingFeatureText(e.target.value)
+                                  }
+                                  className="flex-1"
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") saveEditingFeature();
+                                    if (e.key === "Escape")
+                                      cancelEditingFeature();
+                                  }}
+                                />
+                                <button
+                                  onClick={saveEditingFeature}
+                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                >
+                                  <NextImage
+                                    src="/icons/check.svg"
+                                    alt="Sauvegarder"
+                                    width={13}
+                                    height={13}
+                                  />
+                                </button>
+                                <button
+                                  onClick={cancelEditingFeature}
+                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                >
+                                  <NextImage
+                                    src="/icons/cross.svg"
+                                    alt="Annuler"
+                                    width={13}
+                                    height={13}
+                                  />
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                <span>{feature.feature}</span>
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    onClick={() =>
+                                      startEditingFeature(
+                                        index,
+                                        feature.feature
+                                      )
+                                    }
+                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  >
+                                    <NextImage
+                                      src="/icons/edit-black-icon.svg"
+                                      alt="Modifier"
+                                      width={13}
+                                      height={13}
+                                    />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      removeFeature(index);
+                                    }}
+                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  >
+                                    <NextImage
+                                      src="/icons/delete-icon.svg"
+                                      alt="Supprimer"
+                                      width={13}
+                                      height={13}
+                                    />
+                                  </button>
+                                </div>
+                              </>
+                            )}
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => removeFeature(index)}
-                          >
-                            Supprimer
-                          </Button>
                         </div>
                       ))}
                     </div>
@@ -205,18 +317,17 @@ export default function ProjectMainEditForm({
                 </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
-                    <div className="relative">
+                    <div className="flex items-center gap-2">
                       <Input
                         value={newGoal}
                         onChange={(e) => setNewGoal(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="w-full pr-20 lg:w-[668px]"
+                        className="flex-1 lg:w-[566px]"
                       />
                       <Button
                         type="button"
                         onClick={addGoal}
-                        variant="secondary"
-                        className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                        className="h-[40px] w-[90px] rounded-full border border-black/5 bg-white text-black shadow-none hover:bg-gray-50"
                       >
                         Ajouter
                       </Button>
@@ -224,18 +335,80 @@ export default function ProjectMainEditForm({
                     <div className="flex w-full flex-col gap-2 lg:w-[668px]">
                       {projectGoals.map((goal, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm leading-relaxed">
-                            {goal.goal}
+                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                            {editingGoalIndex === index ? (
+                              <div className="flex flex-1 items-center gap-2">
+                                <Input
+                                  value={editingGoalText}
+                                  onChange={(e) =>
+                                    setEditingGoalText(e.target.value)
+                                  }
+                                  className="flex-1"
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") saveEditingGoal();
+                                    if (e.key === "Escape") cancelEditingGoal();
+                                  }}
+                                />
+                                <button
+                                  onClick={saveEditingGoal}
+                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                >
+                                  <NextImage
+                                    src="/icons/check.svg"
+                                    alt="Sauvegarder"
+                                    width={13}
+                                    height={13}
+                                  />
+                                </button>
+                                <button
+                                  onClick={cancelEditingGoal}
+                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                >
+                                  <NextImage
+                                    src="/icons/cross.svg"
+                                    alt="Annuler"
+                                    width={13}
+                                    height={13}
+                                  />
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                <span>{goal.goal}</span>
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    onClick={() =>
+                                      startEditingGoal(index, goal.goal)
+                                    }
+                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  >
+                                    <NextImage
+                                      src="/icons/edit-black-icon.svg"
+                                      alt="Modifier"
+                                      width={13}
+                                      height={13}
+                                    />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      removeGoal(index);
+                                    }}
+                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  >
+                                    <NextImage
+                                      src="/icons/delete-icon.svg"
+                                      alt="Supprimer"
+                                      width={13}
+                                      height={13}
+                                    />
+                                  </button>
+                                </div>
+                              </>
+                            )}
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => removeGoal(index)}
-                          >
-                            Supprimer
-                          </Button>
                         </div>
                       ))}
                     </div>
