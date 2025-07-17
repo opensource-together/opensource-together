@@ -79,15 +79,17 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
-                  <AvatarUpload
-                    onFileSelect={onImageSelect}
-                    accept="image/*"
-                    maxSize={1}
-                    size="xl"
-                    name={project.title}
-                    fallback={project.title}
-                    className="mt-4"
-                  />
+                  <div className="w-full lg:w-[668px]">
+                    <AvatarUpload
+                      onFileSelect={onImageSelect}
+                      accept="image/*"
+                      maxSize={1}
+                      size="xl"
+                      name={project.title}
+                      fallback={project.title}
+                      className="mt-4"
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,7 +104,11 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel required>Titre</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Nom du projet" />
+                  <Input
+                    {...field}
+                    placeholder="Nom du projet"
+                    className="w-full lg:w-[668px]"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +126,7 @@ export default function ProjectMainEditForm({
                   <Textarea
                     {...field}
                     placeholder="Description du projet"
-                    className="h-[80px]"
+                    className="h-[80px] w-full lg:w-[668px]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -150,7 +156,7 @@ export default function ProjectMainEditForm({
                         value={newFeature}
                         onChange={(e) => setNewFeature(e.target.value)}
                         placeholder="Ajouter une fonctionnalité"
-                        className="pr-20"
+                        className="w-full pr-20 lg:w-[668px]"
                       />
                       <Button
                         type="button"
@@ -161,10 +167,10 @@ export default function ProjectMainEditForm({
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex w-full flex-col gap-2 lg:w-[668px]">
                       {keyFeatures.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm">
+                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm leading-relaxed">
                             {feature.feature}
                           </div>
                           <Button
@@ -204,7 +210,7 @@ export default function ProjectMainEditForm({
                         value={newGoal}
                         onChange={(e) => setNewGoal(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="pr-20"
+                        className="w-full pr-20 lg:w-[668px]"
                       />
                       <Button
                         type="button"
@@ -215,10 +221,10 @@ export default function ProjectMainEditForm({
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex w-full flex-col gap-2 lg:w-[668px]">
                       {projectGoals.map((goal, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm">
+                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm leading-relaxed">
                             {goal.goal}
                           </div>
                           <Button
@@ -240,7 +246,7 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <div className="mt-10 flex justify-end gap-2">
+          <div className="mt-10 flex w-full justify-end gap-2 lg:w-[668px]">
             <Link href={`/projects/${project.id}`}>
               <Button variant="outline" disabled={isUpdating}>
                 Annuler

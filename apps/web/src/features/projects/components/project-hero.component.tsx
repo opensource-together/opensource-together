@@ -55,7 +55,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
       {/* Description */}
       <div className="mt-2">
-        <p className="mb-0 text-sm font-medium">{shortDescription}</p>
+        <p className="text-md mb-0 font-medium">{shortDescription}</p>
 
         {/* separator */}
         <div className="my-5 h-[2px] w-full bg-black/3" />
@@ -64,7 +64,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
           {keyFeatures.length > 0 && (
             <>
               <h3 className="mb-2 text-sm font-normal text-black">
-                Fonctionnalités clés :
+                Fonctionnalités clés
               </h3>
               <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {keyFeatures.map((feature, index) => (
@@ -77,7 +77,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
           {projectGoals.length > 0 && (
             <>
               <h3 className="mb-2 text-sm font-normal text-black">
-                Objectifs du projet :
+                Objectifs du projet
               </h3>
               <ul className="mb-6 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {projectGoals.map((goal, index) => (

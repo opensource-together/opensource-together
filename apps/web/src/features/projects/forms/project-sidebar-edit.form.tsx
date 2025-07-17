@@ -34,8 +34,10 @@ export default function ProjectSidebarEditForm({
   return (
     <>
       {/* Details Section - Informative */}
-      <div className="mb-3 flex flex-col">
-        <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
+      <div className="mb-3 flex flex-col md:max-w-[253px]">
+        <h2 className="text-md mb-1 font-medium tracking-tight text-black">
+          Détails
+        </h2>
         <div className="">
           {/* Stars */}
           <div className="flex items-center justify-between py-1">
@@ -119,7 +121,7 @@ export default function ProjectSidebarEditForm({
       </div>
 
       {/* Form */}
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-6 md:max-w-[263px]">
         <Form {...form}>
           {/* Tech Stack */}
           <FormField
@@ -188,8 +190,8 @@ export default function ProjectSidebarEditForm({
           />
 
           {/* Contributors Section - Informative */}
-          <div className="mb-3 flex flex-col">
-            <h2 className="text-md mb-2 font-medium text-black">
+          <div className="mb-3 flex flex-col md:max-w-[263px]">
+            <h2 className="text-md mb-2 font-medium tracking-tight text-black">
               Contributeurs ({project.projectStats?.contributors?.length || 0})
             </h2>
             <div className="flex flex-col gap-2">

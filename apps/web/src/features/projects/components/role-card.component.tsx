@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import { useState } from "react";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
@@ -44,7 +45,7 @@ export default function RoleCard({
 
   return (
     <div
-      className={`w-full max-w-[668px] rounded-[20px] border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
+      className={`w-[668px] rounded-[20px] border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
     >
       {/* Role Title */}
       <div className="flex items-start justify-between">
@@ -54,8 +55,13 @@ export default function RoleCard({
         {isMaintainer ? (
           <div className="flex items-center gap-1">
             <EditRoleForm role={role} projectId={projectId}>
-              <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5">
-                <Icon name="pencil" variant="gray" size="sm" />
+              <button className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5">
+                <NextImage
+                  src="/icons/edit-black-icon.svg"
+                  alt="Modifier"
+                  width={13}
+                  height={13}
+                />
               </button>
             </EditRoleForm>
 
@@ -73,9 +79,14 @@ export default function RoleCard({
             />
             <button
               onClick={() => setIsConfirmOpen(true)}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
+              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
             >
-              <Icon name="cross" variant="gray" size="xs" />
+              <NextImage
+                src="/icons/delete-icon.svg"
+                alt="Supprimer"
+                width={13}
+                height={13}
+              />
             </button>
           </div>
         ) : isAuthenticated ? (

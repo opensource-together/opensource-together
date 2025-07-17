@@ -22,7 +22,7 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError } = useProject(projectId);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = false; // Variable temporaire pour le développement
+  const isMaintainer = true; // Variable temporaire pour le développement
 
   if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
@@ -30,8 +30,8 @@ export default function ProjectDetailView({
   return (
     <>
       <div className="mx-auto mt-12 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40"></div>
-      <div className="mx-auto mt-2 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-4 md:px-8 lg:px-24 xl:px-40">
-        <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-16">
+      <div className="mx-auto mt-2 mb-20 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-4 md:px-8 lg:px-24 xl:px-40">
+        <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:gap-25">
           <div className="self-start lg:sticky lg:top-[100px] lg:pb-33">
             <ProjectSideBar project={project} isMaintainer={isMaintainer} />
           </div>
