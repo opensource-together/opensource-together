@@ -65,17 +65,18 @@ export type ProfileProject = {
 export type Profile = {
   id: string;
   name: string;
-  login: string;
   avatarUrl: string;
+  title?: string;
+  bio?: string;
+  login: string;
+  techStacks?: ProfileTechStack[];
   websiteUrl?: string;
   type: string;
-  bio?: string;
   location?: string;
   blog?: string;
   company?: string;
   joinedAt?: string;
   // updatedAt?: string;
-  skills?: ProfileSkill[];
   projects?: ProfileProject[];
   socialLinks?: ProfileSocialLink[];
   contributionsCount?: number;
