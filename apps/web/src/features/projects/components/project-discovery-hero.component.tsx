@@ -6,7 +6,7 @@ export default function ProjectDiscoveryHero() {
   return (
     <div className="relative mx-auto rounded-4xl border border-black/5">
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-muted-foreground mt-6 flex items-center gap-1 text-center text-xs font-normal tracking-tight md:mt-0">
+        <span className="text-muted-foreground mt-6 flex items-center gap-1 text-center text-xs font-normal tracking-tight md:mt-15">
           <Image
             src="/icons/blue-point-new-icon.svg"
             alt="new-project"
@@ -31,11 +31,11 @@ export default function ProjectDiscoveryHero() {
         </div>
       </div>
       <Image
-        src="/background-homepage.png"
+        src="/background-homepage (2).png"
         alt="billboard"
-        width={1108}
-        height={330}
-        className="h-[200px] w-full md:h-[330px]"
+        width={1094}
+        height={266}
+        className="h-[200px] w-full md:h-[266px]"
       />
     </div>
   );
