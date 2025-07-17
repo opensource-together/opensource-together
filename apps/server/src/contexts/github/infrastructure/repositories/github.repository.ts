@@ -139,23 +139,23 @@ export class GithubRepository implements GithubRepositoryPort {
       });
     } catch (e: any) {
       console.error('error fetching commits', e);
-      if (e.status === 409 && e.message.includes('Git Repository is empty')) {
-        return Result.ok({
-          lastCommit: {
-            sha: '',
-            message: '',
-            date: '',
-            url: '',
-            author: {
-              login: '',
-              avatar_url: '',
-              html_url: '',
-            },
+      // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
+      // }
+      return Result.ok({
+        lastCommit: {
+          sha: '',
+          message: '',
+          date: '',
+          url: '',
+          author: {
+            login: '',
+            avatar_url: '',
+            html_url: '',
           },
-          commitsNumber: 0,
-        });
-      }
-      return Result.fail('Failed to fetch commits');
+        },
+        commitsNumber: 0,
+      });
+      // return Result.fail('Failed to fetch commits');
     }
   }
 
@@ -199,10 +199,10 @@ export class GithubRepository implements GithubRepositoryPort {
       return Result.ok(contributors);
     } catch (e: any) {
       console.log('error fetching contributors', e);
-      if (e.status === 409 && e.message.includes('Git Repository is empty')) {
-        return Result.ok([]);
-      }
-      return Result.fail('Failed to fetch contributors');
+      // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
+      // }
+      return Result.ok([]);
+      // return Result.fail('Failed to fetch contributors');
     }
   }
 }
