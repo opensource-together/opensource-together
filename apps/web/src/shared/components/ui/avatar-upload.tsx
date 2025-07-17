@@ -18,6 +18,7 @@ interface AvatarUploadProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   name?: string; // For fallback initials
   fallback?: string;
+  currentImageUrl?: string;
 }
 
 export function AvatarUpload({
@@ -30,6 +31,7 @@ export function AvatarUpload({
   size = "2xl",
   name,
   fallback,
+  currentImageUrl,
 }: AvatarUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -112,14 +114,6 @@ export function AvatarUpload({
     [handleFile]
   );
 
-  const handleRemoveFile = () => {
-    setFile(null);
-    setPreview(null);
-    setError(null);
-    onFileSelect(null);
-    console.log("File removed, name:", name, "fallback:", fallback);
-  };
-
   return (
     <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between">
@@ -136,38 +130,21 @@ export function AvatarUpload({
             onDragLeave={handleDragLeave}
           >
             <Avatar
-              src={preview}
+              src={preview || currentImageUrl}
               name={name}
               fallback={fallback}
               size={size}
               className={cn(
                 "border-2 transition-all duration-200",
-                preview ? "border-transparent" : "border-black/5",
-                isDragOver && !preview && "border-blue-500 bg-blue-50",
+                preview || currentImageUrl
+                  ? "border-transparent"
+                  : "border-black/5",
+                isDragOver &&
+                  !(preview || currentImageUrl) &&
+                  "border-blue-500 bg-blue-50",
                 error && "border-red-300"
               )}
             />
-
-            {/* Upload overlay when no image */}
-            {!preview && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-full border-black/5 bg-[#F1F1F1]"></div>
-            )}
-
-            {/* Remove button */}
-            {file && (
-              <button
-                onClick={handleRemoveFile}
-                className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-black/80 text-white transition-all hover:scale-110 hover:bg-black"
-                disabled={disabled}
-              >
-                <Icon
-                  name="cross"
-                  size="xs"
-                  variant="white"
-                  className="p-0.5"
-                />
-              </button>
-            )}
           </div>
 
           {file ? (

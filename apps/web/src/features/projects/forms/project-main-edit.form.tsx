@@ -87,6 +87,7 @@ export default function ProjectMainEditForm({
                     name={project.title}
                     fallback={project.title}
                     className="mt-4"
+                    currentImageUrl={project.image}
                   />
                 </FormControl>
                 <FormMessage />
