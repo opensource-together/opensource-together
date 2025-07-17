@@ -4,7 +4,7 @@ import {
   Author,
   Contributor,
   LastCommit,
-  ProjectStats,
+  RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
 import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
@@ -55,8 +55,6 @@ export class ProjectController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @PublicAccess()
-  @Get()
   @ApiOperation({ summary: 'Récupérer tous les projets' })
   @ApiResponse({
     status: 200,
@@ -114,6 +112,8 @@ export class ProjectController {
     ],
   })
   @ApiResponse({ status: 500, description: 'Erreur serveur' })
+  @PublicAccess()
+  @Get()
   async getProjects() {
     const projects: Result<Project[]> = await this.queryBus.execute(
       new GetProjectsQuery(),
@@ -218,6 +218,8 @@ export class ProjectController {
     example: { message: 'Project not found', statusCode: 404 },
   })
   @PublicAccess()
+  @UseGuards(GithubAuthGuard)
+  // @ApiCookieAuth('sAccessToken')
   @Get(':id')
   async getProject(
     @Param('id') id: string,
@@ -227,9 +229,10 @@ export class ProjectController {
       {
         author: Author;
         project: Project;
-        projectStats: ProjectStats;
+        repositoryInfo: RepositoryInfo;
         lastCommit: LastCommit;
         contributors: Contributor[];
+        commits: number;
       },
       string
     > = await this.queryBus.execute(
@@ -238,13 +241,22 @@ export class ProjectController {
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
-    const { author, project, projectStats } = projectRes.value;
+    const {
+      author,
+      project,
+      repositoryInfo,
+      lastCommit,
+      contributors,
+      commits,
+    } = projectRes.value;
+    console.log('projectRes', projectRes.value);
     return GetProjectByIdResponseDto.toResponse({
       author,
       project,
-      projectStats: projectStats,
-      lastCommit: projectStats.lastCommit,
-      contributors: projectStats.contributors,
+      repositoryInfo: repositoryInfo,
+      lastCommit: lastCommit,
+      contributors: contributors,
+      commits: commits,
     });
   }
 

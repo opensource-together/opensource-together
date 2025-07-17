@@ -3,32 +3,44 @@ import {
   Author,
   Contributor,
   LastCommit,
-  ProjectStats,
+  RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 
 export class GetProjectByIdResponseDto {
   public static toResponse(props: {
     author: Author;
     project: Project;
-    projectStats: ProjectStats;
+    repositoryInfo: RepositoryInfo;
+    commits: number;
     lastCommit: LastCommit;
     contributors: Contributor[];
   }): Omit<ProjectData, 'ownerId'> & {
-    projectStats: ProjectStats;
     author: Author;
+    projectStats: RepositoryInfo & {
+      commits: number;
+      lastCommit: LastCommit;
+      contributors: Contributor[];
+    };
   } {
-    const { project, projectStats, author, lastCommit, contributors } = props;
+    const {
+      project,
+      repositoryInfo,
+      author,
+      lastCommit,
+      contributors,
+      commits,
+    } = props;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { ownerId, ...projectData } = project.toPrimitive();
     return {
       author,
       ...projectData,
       projectStats: {
-        forks: projectStats.forks,
-        stars: projectStats.stars,
-        watchers: projectStats.watchers,
-        openIssues: projectStats.openIssues,
-        commits: projectStats.commits,
+        forks: repositoryInfo.forks,
+        stars: repositoryInfo.stars,
+        watchers: repositoryInfo.watchers,
+        openIssues: repositoryInfo.openIssues,
+        commits,
         lastCommit: lastCommit,
         contributors: contributors,
       },

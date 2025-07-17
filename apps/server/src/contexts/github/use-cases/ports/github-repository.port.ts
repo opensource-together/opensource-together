@@ -27,14 +27,11 @@ export type Author = {
   avatar_url: string;
   html_url: string;
 };
-export type ProjectStats = {
+export type RepositoryInfo = {
   forks: number;
   stars: number;
   watchers: number;
   openIssues: number;
-  commits: number;
-  lastCommit: LastCommit;
-  contributors: Contributor[];
 };
 export const GITHUB_REPOSITORY_PORT = Symbol('GITHUB_REPOSITORY_PORT');
 export interface GithubRepositoryPort {
@@ -53,7 +50,7 @@ export interface GithubRepositoryPort {
     owner: string,
     name: string,
     octokit: Octokit,
-  ): Promise<Result<ProjectStats, string>>;
+  ): Promise<Result<RepositoryInfo, string>>;
   findCommitsByRepository(
     owner: string,
     repo: string,

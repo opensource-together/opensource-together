@@ -35,7 +35,13 @@ export class GithubAuthGuard implements CanActivate {
 
     // Vérifier que l'utilisateur est connecté (SuperTokens)
     if (!request.session?.getUserId()) {
-      throw new UnauthorizedException('User not authenticated');
+      // throw new UnauthorizedException('User not authenticated');
+      const octokit = new Octokit({
+        auth: process.env.GH_TOKEN_OST_PUBLIC,
+      });
+      console.log('mode public');
+      request.octokit = octokit;
+      return true;
     }
 
     const userId = request.session.getUserId();
