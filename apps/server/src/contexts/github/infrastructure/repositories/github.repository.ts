@@ -105,7 +105,7 @@ export class GithubRepository implements GithubRepositoryPort {
             avatar_url: string;
             html_url: string;
           };
-        };
+        } | null;
         commitsNumber: number;
       },
       string
@@ -137,8 +137,24 @@ export class GithubRepository implements GithubRepositoryPort {
         lastCommit,
         commitsNumber,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.log('e', e);
+      if (e.status === 409 && e.message.includes('Git Repository is empty')) {
+        return Result.ok({
+          lastCommit: {
+            sha: '',
+            message: '',
+            date: '',
+            url: '',
+            author: {
+              login: '',
+              avatar_url: '',
+              html_url: '',
+            },
+          },
+          commitsNumber: 0,
+        });
+      }
       return Result.fail('Failed to fetch commits');
     }
   }
@@ -162,7 +178,18 @@ export class GithubRepository implements GithubRepositoryPort {
       const response = await octokit.rest.repos.listContributors({
         owner,
         repo,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
       });
+      if (!Array.isArray(response.data)) {
+        console.log(
+          'Unexpected response format for contributors',
+          response.data,
+        );
+        return Result.ok([]);
+      }
+
       const contributors = response.data.map((contributor) => ({
         login: contributor.login as string,
         avatar_url: contributor.avatar_url as string,
@@ -170,8 +197,11 @@ export class GithubRepository implements GithubRepositoryPort {
         contributions: contributor.contributions,
       }));
       return Result.ok(contributors);
-    } catch (e) {
+    } catch (e: any) {
       console.log('e', e);
+      if (e.status === 409 && e.message.includes('Git Repository is empty')) {
+        return Result.ok([]);
+      }
       return Result.fail('Failed to fetch contributors');
     }
   }

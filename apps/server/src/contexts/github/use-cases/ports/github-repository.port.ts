@@ -58,7 +58,7 @@ export interface GithubRepositoryPort {
   ): Promise<
     Result<
       {
-        lastCommit: LastCommit;
+        lastCommit: LastCommit | null;
         commitsNumber: number;
       },
       string

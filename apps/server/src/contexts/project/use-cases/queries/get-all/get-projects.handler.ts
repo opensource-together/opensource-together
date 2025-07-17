@@ -73,7 +73,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
 
         let repoInfo = Result.fail<RepositoryInfo>('No authentication');
         let commits = Result.fail<{
-          lastCommit: LastCommit;
+          lastCommit: LastCommit | null;
           commitsNumber: number;
         }>('No authentication');
         let contributors = Result.fail<Contributor[]>('No authentication');

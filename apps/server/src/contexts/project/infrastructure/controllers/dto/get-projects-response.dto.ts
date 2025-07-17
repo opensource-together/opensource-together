@@ -1,4 +1,4 @@
-import { Project, ProjectData } from '@/contexts/project/domain/project.entity';
+import { Project } from '@/contexts/project/domain/project.entity';
 import { RepositoryInfo } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { LastCommit } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Contributor } from '@/contexts/github/use-cases/ports/github-repository.port';
@@ -23,7 +23,6 @@ export class GetProjectsResponseDto {
       name: string;
       avatarUrl: string;
     };
-    project: ProjectData;
     repositoryInfo: RepositoryInfo;
     lastCommit: LastCommit;
     commits: number;
@@ -37,7 +36,7 @@ export class GetProjectsResponseDto {
           name: project.author.name,
           avatarUrl: project.author.avatarUrl,
         },
-        project: projectData,
+        ...projectData,
         repositoryInfo: project.repositoryInfo,
         lastCommit: project.lastCommit,
         commits: project.commits,

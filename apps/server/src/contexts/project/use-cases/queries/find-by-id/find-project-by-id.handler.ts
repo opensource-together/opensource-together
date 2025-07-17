@@ -50,7 +50,7 @@ export class FindProjectByIdHandler
         };
         project: Project;
         repositoryInfo: RepositoryInfo;
-        lastCommit: LastCommit;
+        lastCommit: LastCommit | null;
         contributors: Contributor[];
         commits: number;
       },
@@ -63,7 +63,7 @@ export class FindProjectByIdHandler
       watchers: number;
       openIssues: number;
       commits: number;
-      lastCommit: LastCommit;
+      lastCommit: LastCommit | null;
       contributors: {
         login: string;
         avatar_url: string;
@@ -90,7 +90,7 @@ export class FindProjectByIdHandler
     const repoName = project.value.toPrimitive().title;
 
     let commits: Result<
-      { lastCommit: LastCommit; commitsNumber: number },
+      { lastCommit: LastCommit | null; commitsNumber: number },
       string
     >;
     let repoInfo: Result<RepositoryInfo, string>;
@@ -141,7 +141,7 @@ export class FindProjectByIdHandler
 
     if (commits.success) {
       projectStats.commits = commits.value.commitsNumber;
-      projectStats.lastCommit = commits.value.lastCommit;
+      projectStats.lastCommit = commits.value.lastCommit || null;
     }
 
     if (repoInfo.success) {
