@@ -55,13 +55,13 @@ export default function RoleCard({
         {isMaintainer ? (
           <div className="flex items-center gap-1">
             <EditRoleForm role={role} projectId={projectId}>
-              <button className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-black/5 p-1.5 transition-colors hover:bg-black/5 sm:h-7 sm:w-7 sm:p-2">
+              <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5 sm:h-9 sm:w-9 sm:p-2.5">
                 <NextImage
                   src="/icons/edit-black-icon.svg"
                   alt="Modifier"
-                  width={13}
-                  height={13}
-                  className="h-3 w-3 sm:h-[13px] sm:w-[13px]"
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 sm:h-[16px] sm:w-[16px]"
                 />
               </button>
             </EditRoleForm>
@@ -77,17 +77,20 @@ export default function RoleCard({
                 setIsConfirmOpen(false);
               }}
               onCancel={() => setIsConfirmOpen(false)}
+              confirmText="Supprimer le rôle"
+              confirmIcon="/icons/delete-white-icon.svg"
+              confirmVariant="destructive"
             />
             <button
               onClick={() => setIsConfirmOpen(true)}
-              className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-black/5 p-1.5 transition-colors hover:bg-black/5 sm:h-7 sm:w-7 sm:p-2"
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5 sm:h-9 sm:w-9 sm:p-2.5"
             >
               <NextImage
                 src="/icons/delete-icon.svg"
                 alt="Supprimer"
-                width={13}
-                height={13}
-                className="h-3 w-3 sm:h-[13px] sm:w-[13px]"
+                width={16}
+                height={16}
+                className="h-4 w-4 sm:h-[16px] sm:w-[16px]"
               />
             </button>
           </div>

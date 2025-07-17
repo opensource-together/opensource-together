@@ -163,6 +163,22 @@ export default function Header() {
             </NavLink>
           )}
 
+          {/* Star Us mobile - visible seulement si pas connecté */}
+          {!isAuthenticated && (
+            <Link
+              href="https://github.com/opensource-together"
+              target="_blank"
+              className="w-full"
+            >
+              <Button
+                variant="outline"
+                className="flex w-full items-center justify-center font-medium shadow-none"
+              >
+                Star Us <Icon name="github" size="md" />
+              </Button>
+            </Link>
+          )}
+
           {/* Déconnexion mobile */}
           {isAuthenticated && (
             <Button
@@ -177,6 +193,18 @@ export default function Header() {
 
         {/* Desktop */}
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
+          {/* Star Us - visible seulement si pas connecté */}
+          {!isAuthenticated && (
+            <Link href="https://github.com/opensource-together" target="_blank">
+              <Button
+                variant="outline"
+                className="flex items-center font-medium shadow-none"
+              >
+                Star Us <Icon name="github" size="md" />
+              </Button>
+            </Link>
+          )}
+
           {/* Créer un Projet */}
           {isAuthenticated ? (
             <Link href="/projects/create">
