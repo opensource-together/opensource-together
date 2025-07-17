@@ -4,7 +4,7 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import ProfileError from "../components/error-ui/profile-error.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
-import ProfileEditForm from "../forms/profile-edit-form.component";
+import ProfileEditForm from "../forms/profile-edit.form";
 
 export default function ProfileEditView() {
   const { currentUser, isLoading, isError } = useAuth();

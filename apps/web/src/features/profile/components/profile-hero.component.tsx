@@ -1,10 +1,8 @@
 import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
-import { getRoleBadgeVariant } from "@/shared/lib/utils/badges";
 
 import { Profile } from "../types/profile.type";
 
@@ -18,7 +16,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
     name = "User",
     joinedAt = "N/A",
     bio = "",
-    skills = [],
+    techStacks = [],
     socialLinks = [],
   } = profile;
 
@@ -76,7 +74,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>
       <div className="flex-grow border-t border-black/5" />
 
-      {skills.map((skill, index) => (
+      {techStacks.map((techStack, index) => (
         <div key={index}>
           <div className="mt-10 mb-4 flex items-center justify-between">
             <h3 className="text-lg font-medium tracking-tighter">
@@ -85,17 +83,17 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Badge
+            {/* <Badge
               key={index}
               style={{
-                color: skill.badges[0].color,
-                backgroundColor: skill.badges[0].bgColor,
+                color: techStack.color,
+                backgroundColor: techStack.bgColor,
               }}
-              variant={getRoleBadgeVariant(skill.name)}
+              variant={getRoleBadgeVariant(techStack.name)}
               className="text-xs"
             >
-              {skill.name}
-            </Badge>
+              {techStack.name}
+            </Badge> */}
           </div>
         </div>
       ))}
