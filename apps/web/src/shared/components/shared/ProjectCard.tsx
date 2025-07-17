@@ -11,6 +11,7 @@ import {
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardTitle,
+  ProjectCardViewText,
 } from "@/shared/components/ui/project-card";
 
 import { ProjectRole } from "@/features/projects/types/project-role.type";
@@ -86,6 +87,7 @@ export default function ProjectCardComponent({
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
+          {showViewProject && <ProjectCardViewText projectId={projectId} />}
         </ProjectCardHeader>
         <ProjectCardContent>
           <ProjectCardDescription>{shortDescription}</ProjectCardDescription>

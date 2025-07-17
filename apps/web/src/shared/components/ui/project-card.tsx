@@ -312,6 +312,36 @@ const ProjectCardViewLink = React.forwardRef<
 ));
 ProjectCardViewLink.displayName = "ProjectCardViewLink";
 
+/* ------------------------------- View Text -------------------------------- */
+interface ProjectCardViewTextProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  projectId?: string;
+}
+
+const ProjectCardViewText = React.forwardRef<
+  HTMLDivElement,
+  ProjectCardViewTextProps
+>(({ className, projectId, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 text-xs font-medium tracking-tighter text-black/30",
+      className
+    )}
+    {...props}
+  >
+    Voir le projet{" "}
+    <Image
+      className=""
+      src="/icons/right-arrow-icon.svg"
+      alt="arrowupright"
+      width={13}
+      height={13}
+    />
+  </div>
+));
+ProjectCardViewText.displayName = "ProjectCardViewText";
+
 export {
   ProjectCard,
   ProjectCardContent,
@@ -328,4 +358,5 @@ export {
   ProjectCardTechStack,
   ProjectCardTitle,
   ProjectCardViewLink,
+  ProjectCardViewText,
 };
