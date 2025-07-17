@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { PrismaProjectRoleRepository } from '@/contexts/project-role/infrastructure/repositories/prisma.project-role.repository';
 import { projectRoleUseCases } from '@/contexts/project-role/use-cases/project-role.use-cases';
 import { ProjectRolesController } from '@/contexts/project-role/infrastructure/controllers/project-roles.controller';
@@ -18,8 +18,8 @@ import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repos
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 
 @Module({
+  imports: [PersistenceInfrastructure],
   providers: [
-    PrismaService,
     ...projectRoleUseCases,
     ...projectRoleApplicationUseCases,
     {

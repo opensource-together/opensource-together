@@ -5,11 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createSupertokensConfig } from '@/auth/supertokens.config';
 import { QueryBus } from '@nestjs/cqrs';
 import { CommandBus } from '@nestjs/cqrs';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { AuthController } from '@/auth/controllers/auth.controller';
 
 @Module({
   imports: [
+    PersistenceInfrastructure,
     // RepositoryModule,
     ConfigModule,
     SuperTokensModule.forRootAsync({
@@ -24,7 +25,7 @@ import { AuthController } from '@/auth/controllers/auth.controller';
       inject: [ConfigService, CommandBus, QueryBus],
     }),
   ],
-  providers: [PrismaService],
+  providers: [],
   controllers: [AuthController],
 })
 export class AuthModule {}

@@ -1,4 +1,4 @@
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { ProjectRoleApplicationRepositoryPort } from '../../use-cases/ports/project-role-application.repository.port';
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 import { Result } from '@/libs/result';

@@ -2,7 +2,7 @@ import { GithubRepositoryDto } from './dto/github-repository.dto';
 import { toGithubRepositoryDto } from './dto/github-repository.adapter';
 import {
   GithubRepositoryPort,
-  ProjectStats,
+  RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
@@ -35,7 +35,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubRepositoryDto(response);
     } catch (e) {
-      console.log('e', e);
+      console.error('error creating github repository', e);
       return Result.fail('Failed to create github repository');
     }
   }
@@ -56,7 +56,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubInvitationDto(response);
     } catch (e) {
-      console.log('e', e);
+      console.log('error inviting user to repository', e);
       return Result.fail('Failed to invite user to repository');
     }
   }
@@ -65,7 +65,7 @@ export class GithubRepository implements GithubRepositoryPort {
     owner: string,
     name: string,
     octokit: Octokit,
-  ): Promise<Result<ProjectStats, string>> {
+  ): Promise<Result<RepositoryInfo, string>> {
     try {
       const response = await octokit.rest.repos.get({
         owner,
@@ -74,23 +74,16 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      return Result.ok<ProjectStats>({
+      const repositoryInfo = {
         forks: response.data.forks_count,
         stars: response.data.stargazers_count,
         watchers: response.data.watchers_count,
         openIssues: response.data.open_issues_count,
-        commits: 0,
-        lastCommit: {
-          sha: '',
-          message: '',
-          date: '',
-          url: '',
-          author: { login: '', avatar_url: '', html_url: '' },
-        },
-        contributors: [],
-      });
+      };
+      console.log('repositoryInfo', repositoryInfo);
+      return Result.ok<RepositoryInfo>(repositoryInfo);
     } catch (e) {
-      console.log('e', e);
+      console.error('error fetching repository', e);
       return Result.fail('Failed to fetch repository');
     }
   }
@@ -112,7 +105,7 @@ export class GithubRepository implements GithubRepositoryPort {
             avatar_url: string;
             html_url: string;
           };
-        };
+        } | null;
         commitsNumber: number;
       },
       string
@@ -144,9 +137,25 @@ export class GithubRepository implements GithubRepositoryPort {
         lastCommit,
         commitsNumber,
       });
-    } catch (e) {
-      console.log('e', e);
-      return Result.fail('Failed to fetch commits');
+    } catch (e: any) {
+      console.error('error fetching commits', e);
+      // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
+      // }
+      return Result.ok({
+        lastCommit: {
+          sha: '',
+          message: '',
+          date: '',
+          url: '',
+          author: {
+            login: '',
+            avatar_url: '',
+            html_url: '',
+          },
+        },
+        commitsNumber: 0,
+      });
+      // return Result.fail('Failed to fetch commits');
     }
   }
 
@@ -169,7 +178,18 @@ export class GithubRepository implements GithubRepositoryPort {
       const response = await octokit.rest.repos.listContributors({
         owner,
         repo,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
       });
+      if (!Array.isArray(response.data)) {
+        console.error(
+          'Unexpected response format for contributors',
+          response.data,
+        );
+        return Result.ok([]);
+      }
+
       const contributors = response.data.map((contributor) => ({
         login: contributor.login as string,
         avatar_url: contributor.avatar_url as string,
@@ -177,9 +197,12 @@ export class GithubRepository implements GithubRepositoryPort {
         contributions: contributor.contributions,
       }));
       return Result.ok(contributors);
-    } catch (e) {
-      console.log('e', e);
-      return Result.fail('Failed to fetch contributors');
+    } catch (e: any) {
+      console.log('error fetching contributors', e);
+      // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
+      // }
+      return Result.ok([]);
+      // return Result.fail('Failed to fetch contributors');
     }
   }
 }
