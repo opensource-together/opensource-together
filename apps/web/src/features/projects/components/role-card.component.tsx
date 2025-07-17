@@ -45,22 +45,23 @@ export default function RoleCard({
 
   return (
     <div
-      className={`w-[668px] rounded-[20px] border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
+      className={`w-full rounded-[20px] border border-[black]/5 p-3 shadow-xs sm:p-4 md:w-[668px] md:p-6 ${className}`}
     >
       {/* Role Title */}
-      <div className="flex items-start justify-between">
-        <h3 className="text-xl font-medium tracking-tighter text-black">
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-lg font-medium tracking-tighter text-black sm:text-xl">
           {role.title}
         </h3>
         {isMaintainer ? (
           <div className="flex items-center gap-1">
             <EditRoleForm role={role} projectId={projectId}>
-              <button className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5">
+              <button className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-black/5 p-1.5 transition-colors hover:bg-black/5 sm:h-7 sm:w-7 sm:p-2">
                 <NextImage
                   src="/icons/edit-black-icon.svg"
                   alt="Modifier"
                   width={13}
                   height={13}
+                  className="h-3 w-3 sm:h-[13px] sm:w-[13px]"
                 />
               </button>
             </EditRoleForm>
@@ -79,13 +80,14 @@ export default function RoleCard({
             />
             <button
               onClick={() => setIsConfirmOpen(true)}
-              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+              className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-black/5 p-1.5 transition-colors hover:bg-black/5 sm:h-7 sm:w-7 sm:p-2"
             >
               <NextImage
                 src="/icons/delete-icon.svg"
                 alt="Supprimer"
                 width={13}
                 height={13}
+                className="h-3 w-3 sm:h-[13px] sm:w-[13px]"
               />
             </button>
           </div>
@@ -100,7 +102,9 @@ export default function RoleCard({
             roleId={role.id}
           >
             <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
-              <span className="text-sm text-black">Candidater à ce rôle</span>
+              <span className="text-xs text-black sm:text-sm">
+                Candidater à ce rôle
+              </span>
               <Icon name="arrow-up-right" size="xs" />
             </div>
           </RoleApplicationForm>
@@ -109,7 +113,9 @@ export default function RoleCard({
             onClick={() => redirectToLogin()}
             className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40"
           >
-            <span className="text-sm text-black">Candidater à ce rôle</span>
+            <span className="text-xs text-black sm:text-sm">
+              Candidater à ce rôle
+            </span>
             <Icon name="arrow-up-right" size="xs" />
           </div>
         )}
