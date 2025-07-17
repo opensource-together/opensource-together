@@ -4,7 +4,7 @@ import FilterSearchBar from "./filter-search-bar.component";
 
 export default function ProjectDiscoveryHero() {
   return (
-    <div className="relative mx-auto mb-5 rounded-4xl border border-black/5">
+    <div className="relative mx-auto mb-5">
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-muted-foreground mt-6 flex items-center gap-1 text-center text-xs font-normal tracking-tight md:mt-15">
           <Image
@@ -19,12 +19,12 @@ export default function ProjectDiscoveryHero() {
           className="mt-3 text-center text-3xl leading-none tracking-tighter md:text-5xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
-          Grandir ensemble <br />
-          grâce à l'open source
+          Construisez votre futur <br />
+          dans l'open source
         </h1>
         <p className="text-muted-foreground mx-7 mt-4 mb-6 max-w-[450px] text-center text-xs md:text-sm">
-          Trouvez des projets, postulez à des rôles, collaborez — construisons,{" "}
-          partageons et grandissons ensemble grâce à l'open source
+          Trouvez des projets, postulez à des rôles, collaborez, <br />
+          partageons et grandissons ensemble grâce à l&apos;open source
         </p>
         <div className="hidden md:block">
           <FilterSearchBar />

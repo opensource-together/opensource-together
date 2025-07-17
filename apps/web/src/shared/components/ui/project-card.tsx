@@ -15,7 +15,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)]",
+      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)]",
       className
     )}
     {...props}
@@ -43,7 +43,7 @@ const ProjectCardLeftGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center gap-4", className)}
+    className={cn("flex items-center gap-3", className)}
     {...props}
   />
 ));
@@ -210,7 +210,7 @@ const ProjectCardFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex w-full items-center gap-2 overflow-hidden text-xs",
+      "flex w-full items-center gap-3 overflow-hidden text-xs",
       className
     )}
     {...props}
@@ -295,18 +295,18 @@ const ProjectCardViewLink = React.forwardRef<
     ref={linkRef || ref}
     href={`/projects/${projectId}`}
     className={cn(
-      "ml-auto flex flex-shrink-0 items-center gap-1 text-xs font-medium tracking-tighter text-black/30 transition-opacity hover:opacity-80",
+      "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 text-xs font-medium tracking-tighter text-black/30 transition-opacity hover:opacity-80",
       className
     )}
     {...props}
   >
     Voir le projet{" "}
     <Image
-      className="opacity-20"
-      src="/icons/arrow-up-right.svg"
+      className=""
+      src="/icons/right-arrow-icon.svg"
       alt="arrowupright"
-      width={10}
-      height={10}
+      width={13}
+      height={13}
     />
   </Link>
 ));

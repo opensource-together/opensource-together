@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import {
   ProjectCard,
   ProjectCardContent,
@@ -102,7 +104,12 @@ export default function ProjectCardComponent({
             </>
             <div className="ml-auto flex items-center justify-between space-x-2">
               <div className="flex items-center justify-center gap-1 text-xs">
-                <Icon name="fork" size="xs" variant="black" />
+                <Image
+                  src="/icons/fork-icon.svg"
+                  alt="fork"
+                  width={10}
+                  height={10}
+                />
                 {projectStats.forks || 0}
               </div>
               <div className="flex items-center justify-center gap-1 text-xs">

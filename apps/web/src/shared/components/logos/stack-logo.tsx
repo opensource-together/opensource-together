@@ -28,7 +28,7 @@ export default function StackLogo({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <div className="flex size-6 items-center justify-center rounded-full bg-black/5 p-1">
         <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
       </div>
