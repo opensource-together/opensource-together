@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { MediaServicePort } from '../../port/media.service.port';
 import { Result } from '@/libs/result';
@@ -48,6 +52,21 @@ export class R2MediaService implements MediaServicePort {
     } catch (error) {
       console.error(error);
       return Result.fail('Failed to upload media');
+    }
+  }
+
+  async deletePublicImage(key: string): Promise<Result<string, string>> {
+    try {
+      console.log('key', key);
+      const result = await this.s3.send(
+        new DeleteObjectCommand({ Bucket: this.bucket, Key: key }),
+      );
+      console.log('result', result);
+      console.log('Image deleted successfully');
+      return Result.ok('Image deleted successfully');
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Failed to delete media');
     }
   }
 }

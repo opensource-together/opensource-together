@@ -7,6 +7,8 @@ import {
   Inject,
   HttpException,
   HttpStatus,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { MediaServicePort } from '../../port/media.service.port';
 import {
@@ -99,5 +101,14 @@ export class MediaController {
       throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return { url: result.value };
+  }
+
+  @Delete('delete/image/public/:key')
+  async deletePublicImage(@Param('key') key: string) {
+    const result = await this.mediaService.deletePublicImage(key);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return { message: 'Image deleted successfully' };
   }
 }
