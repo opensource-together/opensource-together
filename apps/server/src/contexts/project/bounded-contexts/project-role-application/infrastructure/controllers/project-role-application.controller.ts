@@ -13,6 +13,7 @@ import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/proje
 import { ApplyToProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
+import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 
 @Controller('projects/:projectId/roles')
 export class ProjectRoleApplicationController {
@@ -212,6 +213,74 @@ export class ProjectRoleApplicationController {
     > = await this.queryBus.execute(
       new GetAllProjectApplicationsQuery({ projectId, userId }),
     );
+    if (!applications.success) {
+      throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
+    }
+    return applications.value;
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Applications récupérées avec succès',
+    example: [
+      {
+        appplicationId: 'd32ffdab-127c-43cd-b05c-f523003e25f1',
+        projectRoleId: '178210fe-8166-4fa0-824e-d9858072076d',
+        projectRoleTitle: 'Dév web',
+        status: 'PENDING',
+        selectedKeyFeatures: ['test key features'],
+        selectedProjectGoals: ['test project goals'],
+        appliedAt: '2025-07-18T04:48:56.776Z',
+        decidedAt: '2025-07-18T08:40:43.082Z',
+        decidedBy: '',
+        rejectionReason: '',
+        userProfile: {
+          id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
+          name: 'LhourquinPro',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/78709164?v=4',
+        },
+      },
+    ],
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Accès refusé',
+    example: {
+      message: 'You are not the owner of this project',
+      statusCode: 400,
+    },
+  })
+  @Get(':roleId/applications')
+  async getApplicationByRoleId(
+    @Param('roleId') roleId: string,
+    @Param('projectId') projectId: string,
+    @Session('userId') userId: string,
+  ) {
+    console.log('roleId', roleId);
+    console.log('projectId', projectId);
+    console.log('userId', userId);
+    const applications: Result<
+      {
+        appplicationId: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl: string;
+        };
+      }[]
+    > = await this.queryBus.execute(
+      new GetApplicationByRoleIdQuery({ roleId, userId, projectId }),
+    );
+    console.log('applications', applications);
     if (!applications.success) {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
     }

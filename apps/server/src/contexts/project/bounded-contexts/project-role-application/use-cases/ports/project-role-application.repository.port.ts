@@ -85,4 +85,30 @@ export interface ProjectRoleApplicationRepositoryPort {
       string
     >
   >;
+
+  /**
+   * Trouve une candidature par son ID
+   */
+  findByRoleId(roleId: string): Promise<
+    Result<
+      {
+        appplicationId: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl: string;
+        };
+      }[],
+      string
+    >
+  >;
 }
