@@ -8,6 +8,7 @@ import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
+import RolesEmptyState from "../components/roles-empty-state.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import CreateRoleForm from "../forms/create-role.form";
 import { useProject } from "../hooks/use-projects.hook";
@@ -27,6 +28,8 @@ export default function ProjectDetailView({
   if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
 
+  const hasRoles = project.projectRoles && project.projectRoles.length > 0;
+
   return (
     <>
       <div className="mx-auto mt-12 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40"></div>
@@ -42,17 +45,17 @@ export default function ProjectDetailView({
                 <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
                   Rôles Disponibles{" "}
                   <span className="text-sm font-normal text-black/25">
-                    {project.projectRoles?.length}
+                    {project.projectRoles?.length || 0}
                   </span>
                 </p>
-                {isMaintainer ? (
+                {isMaintainer && hasRoles ? (
                   <CreateRoleForm projectId={projectId}>
                     <Button>
                       Créer un rôle
                       <Icon name="plus" size="xs" variant="white" />
                     </Button>
                   </CreateRoleForm>
-                ) : (
+                ) : hasRoles ? (
                   <ProjectFilters
                     filters={[
                       {
@@ -62,21 +65,28 @@ export default function ProjectDetailView({
                       },
                     ]}
                   />
-                )}
+                ) : null}
               </div>
               <div className="mt-6 mb-30 flex flex-col gap-3">
-                {project.projectRoles?.map((role) => (
-                  <RoleCard
-                    key={role.title}
-                    role={role}
-                    techStacks={project.techStacks}
-                    projectGoals={project.projectGoals}
-                    keyFeatures={project.keyFeatures}
-                    className="mb-3 lg:max-w-[721.96px]"
+                {hasRoles ? (
+                  project.projectRoles?.map((role) => (
+                    <RoleCard
+                      key={role.title}
+                      role={role}
+                      techStacks={project.techStacks}
+                      projectGoals={project.projectGoals}
+                      keyFeatures={project.keyFeatures}
+                      className="mb-3 lg:max-w-[721.96px]"
+                      isMaintainer={isMaintainer}
+                      projectId={projectId}
+                    />
+                  ))
+                ) : (
+                  <RolesEmptyState
                     isMaintainer={isMaintainer}
                     projectId={projectId}
                   />
-                ))}
+                )}
               </div>
             </div>
           </div>
