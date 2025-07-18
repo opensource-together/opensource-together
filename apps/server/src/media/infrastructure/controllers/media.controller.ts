@@ -105,7 +105,7 @@ export class MediaController {
 
   @Delete('delete/image/public/:key')
   async deletePublicImage(@Param('key') key: string) {
-    const result = await this.mediaService.deletePublicImage(key);
+    const result = await this.mediaService.delete(key);
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
