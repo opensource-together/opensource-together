@@ -6,8 +6,8 @@ import {
   LastCommit,
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
-import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
-import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
+import { GetAllProjectApplicationsQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';

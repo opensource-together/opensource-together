@@ -8,7 +8,7 @@ import {
 import {
   PROJECT_ROLE_REPOSITORY_PORT,
   ProjectRoleRepositoryPort,
-} from '@/contexts/project-role/use-cases/ports/project-role.repository.port';
+} from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
@@ -17,7 +17,7 @@ import {
   ProjectRoleApplication,
   ProjectRoleApplicationValidationErrors,
 } from '../../domain/project-role-application.entity';
-import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
 import {

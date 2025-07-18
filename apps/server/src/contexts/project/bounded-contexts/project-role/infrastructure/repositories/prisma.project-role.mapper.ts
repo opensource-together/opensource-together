@@ -3,7 +3,7 @@ import { Result } from '@/libs/result';
 import {
   ProjectRole,
   ProjectRoleValidationErrors,
-} from '@/contexts/project-role/domain/project-role.entity';
+} from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { Prisma, ProjectRole as PrismaProjectRole } from '@prisma/client';
 
 @Injectable()
