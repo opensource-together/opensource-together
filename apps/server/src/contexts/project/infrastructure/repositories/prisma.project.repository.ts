@@ -16,7 +16,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       if (!repoProject.success) return Result.fail(repoProject.error);
 
       const savedProject = await this.prisma.project.create({
-        data: repoProject.value,
+        data: {
+          ...repoProject.value,
+        },
         include: {
           techStacks: true,
           categories: true,
@@ -437,6 +439,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             title: projectData.title,
             description: projectData.description,
             shortDescription: projectData.shortDescription,
+            image: projectData.image,
             externalLinks: {
               deleteMany: {},
               create:

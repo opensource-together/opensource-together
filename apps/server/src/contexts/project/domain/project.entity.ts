@@ -47,6 +47,7 @@ export type ProjectData = {
   }[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
+  image?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -67,6 +68,7 @@ export type ProjectProps = {
   categories: Category[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoals[];
+  image?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -83,6 +85,7 @@ export class Project {
   private categories: Category[];
   private keyFeatures: KeyFeature[];
   private projectGoals: ProjectGoals[];
+  private image?: string;
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -100,6 +103,7 @@ export class Project {
     this.categories = props.categories;
     this.keyFeatures = props.keyFeatures;
     this.projectGoals = props.projectGoals;
+    this.image = props.image;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -123,6 +127,7 @@ export class Project {
     if (props.createdAt > props.updatedAt) {
       return Result.fail('createdAt must be before updatedAt');
     }
+    console.log('props', props);
 
     return Project.validate(props);
   }
@@ -221,6 +226,7 @@ export class Project {
       categories: this.categories.map((c) => c.toPrimitive()),
       keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
       projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
+      image: this.image,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

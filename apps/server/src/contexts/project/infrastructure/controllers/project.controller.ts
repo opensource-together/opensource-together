@@ -557,6 +557,7 @@ export class ProjectController {
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
+    console.log({ image: project.image });
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,
@@ -578,6 +579,7 @@ export class ProjectController {
           goal: goal,
         })),
         octokit: octokit,
+        image: project.image,
       }),
     );
     if (!projectRes.success) {
