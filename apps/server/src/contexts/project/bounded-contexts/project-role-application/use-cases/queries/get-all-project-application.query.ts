@@ -1,6 +1,5 @@
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Result } from '@/libs/result';
-import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 import { Inject } from '@nestjs/common';
 import {
   ProjectRoleApplicationRepositoryPort,
@@ -41,8 +40,27 @@ export class GetAllProjectApplicationsQueryHandler
     if (projectData.ownerId !== userId) {
       return Result.fail('You are not the owner of this project');
     }
-    const applications: Result<ProjectRoleApplication[]> =
+    const applications: Result<
+      {
+        appplicationId: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl: string;
+        };
+      }[]
+    > =
       await this.projectRoleApplicationRepository.findAllByProjectId(projectId);
+    console.log('applications !!!!!!!!!!!!!!!!!!!!!!!!!!!!!', applications);
     if (!applications.success) {
       return Result.fail(applications.error);
     }
