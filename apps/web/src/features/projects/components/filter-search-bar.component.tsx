@@ -37,8 +37,15 @@ export default function FilterSearchBar() {
               <FilterItem label="Filtrer par" value="Catégorie" />
               <div className="absolute top-1/2 right-0 h-8 -translate-y-1/2" />
             </div>
-            <div className="">
-              <FilterItem label="Trier par" value="Plus Récent" />
+            <div className="relative">
+              <div className="group flex h-[50px] w-[274px] cursor-pointer flex-col rounded-full px-4 py-[8px] transition-all duration-200 hover:bg-white">
+                <span className="text-[11px] font-normal text-black/50 transition-colors duration-200 group-hover:text-black/70">
+                  Trier par
+                </span>
+                <span className="text-xs font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
+                  Plus Récent
+                </span>
+              </div>
             </div>
           </div>
         </div>

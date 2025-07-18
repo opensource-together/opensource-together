@@ -43,13 +43,23 @@ export default function RoleCard({
     techStacks: roleTechStacks = [],
   } = role;
 
-  return (
+  const handleCardClick = () => {
+    if (!isMaintainer) {
+      if (isAuthenticated) {
+        // Le modal s'ouvrira via le trigger du RoleApplicationForm
+      } else {
+        redirectToLogin();
+      }
+    }
+  };
+
+  const cardContent = (
     <div
-      className={`w-full rounded-[20px] border border-[black]/5 p-3 shadow-xs sm:p-4 md:w-[668px] md:p-6 ${className}`}
+      className={`font-geist w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] md:w-[668px] ${className}`}
     >
       {/* Role Title */}
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-lg font-medium tracking-tighter text-black sm:text-xl">
+      <div className="flex items-start justify-between">
+        <h3 className="text-lg font-medium tracking-tighter text-black">
           {role.title}
         </h3>
         {isMaintainer ? (
@@ -94,28 +104,8 @@ export default function RoleCard({
               />
             </button>
           </div>
-        ) : isAuthenticated ? (
-          <RoleApplicationForm
-            roleTitle={title}
-            roleDescription={description}
-            projectGoals={projectGoals}
-            keyFeatures={keyFeatures}
-            techStacks={techStacks}
-            projectId={projectId}
-            roleId={role.id}
-          >
-            <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
-              <span className="text-xs text-black sm:text-sm">
-                Candidater à ce rôle
-              </span>
-              <Icon name="arrow-up-right" size="xs" />
-            </div>
-          </RoleApplicationForm>
         ) : (
-          <div
-            onClick={() => redirectToLogin()}
-            className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40"
-          >
+          <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
             <span className="text-xs text-black sm:text-sm">
               Candidater à ce rôle
             </span>
@@ -125,28 +115,49 @@ export default function RoleCard({
       </div>
 
       {/* Role Description */}
-      <p className="mb-4 text-sm leading-relaxed tracking-tighter text-black/70 md:mb-6">
+      <p className="mt-4 line-clamp-1 text-sm leading-5 font-medium tracking-tighter text-black/70">
         {description}
       </p>
 
       {/* Ligne de séparation */}
-      <div className="mb-3 w-full border-t border-black/5"></div>
+      <div className="my-4 border-t border-black/3"></div>
 
       {/* Bottom Section */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
+      <div className="flex w-full items-center gap-3 overflow-hidden text-xs">
         {/* Tech Badges */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-3">
           {roleTechStacks.length > 0 &&
             roleTechStacks.map((techStack: TechStack) => (
-              <StackLogo
-                key={`${techStack.id}`}
-                name={techStack.name}
-                icon={techStack.iconUrl || ""}
-                alt={techStack.name}
-              />
+              <div key={`${techStack.id}`} className="relative flex-shrink-0">
+                <StackLogo
+                  name={techStack.name}
+                  icon={techStack.iconUrl || ""}
+                  alt={techStack.name}
+                />
+              </div>
             ))}
         </div>
       </div>
     </div>
   );
+
+  // Si l'utilisateur n'est pas maintainer et est authentifié, wrapper avec RoleApplicationForm
+  if (!isMaintainer && isAuthenticated) {
+    return (
+      <RoleApplicationForm
+        roleTitle={title}
+        roleDescription={description}
+        projectGoals={projectGoals}
+        keyFeatures={keyFeatures}
+        techStacks={roleTechStacks}
+        projectId={projectId}
+        roleId={role.id}
+      >
+        {cardContent}
+      </RoleApplicationForm>
+    );
+  }
+
+  // Sinon, retourner la carte normale
+  return cardContent;
 }
