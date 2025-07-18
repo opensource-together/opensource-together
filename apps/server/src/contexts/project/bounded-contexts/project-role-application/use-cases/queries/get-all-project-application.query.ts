@@ -60,7 +60,6 @@ export class GetAllProjectApplicationsQueryHandler
       }[]
     > =
       await this.projectRoleApplicationRepository.findAllByProjectId(projectId);
-    console.log('applications !!!!!!!!!!!!!!!!!!!!!!!!!!!!!', applications);
     if (!applications.success) {
       return Result.fail(applications.error);
     }

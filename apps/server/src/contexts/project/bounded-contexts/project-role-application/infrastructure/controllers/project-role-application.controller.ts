@@ -93,7 +93,6 @@ export class ProjectRoleApplicationController {
     @Param('roleId') roleId: string,
     @Body() body: ApplyToRoleRequestDto,
   ) {
-    console.log('userId !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11', userId);
     const { keyFeatures, projectGoals, motivationLetter } = body;
     const command = new ApplyToProjectRoleCommand({
       userId,
@@ -102,7 +101,6 @@ export class ProjectRoleApplicationController {
       selectedProjectGoals: projectGoals,
       motivationLetter,
     });
-    console.log('command', command);
 
     const result: Result<ProjectRoleApplication, string> =
       await this.commandBus.execute(command);
@@ -151,17 +149,27 @@ export class ProjectRoleApplicationController {
     @Session('userId') userId: string,
     @Param('projectId') projectId: string,
   ) {
-    console.log('get applications  !!!!!!!!!!');
-    // const projectResult: Result<Project> = await this.queryBus.execute(
-    //   new FindProjectByIdQuery({ id: projectId }),
-    // );
-    // if (!projectResult.success) {
-    //   throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
-    // }
-    const applications: Result<ProjectRoleApplication[]> =
-      await this.queryBus.execute(
-        new GetAllProjectApplicationsQuery({ projectId, userId }),
-      );
+    const applications: Result<
+      {
+        appplicationId: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl: string;
+        };
+      }[]
+    > = await this.queryBus.execute(
+      new GetAllProjectApplicationsQuery({ projectId, userId }),
+    );
     if (!applications.success) {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
     }
