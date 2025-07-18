@@ -51,6 +51,7 @@ export class ProjectRolesController {
       "Récupération des rôles avec succès, si l'utilisateur a appliqué pour un rôle, le champ hasApplied sera true",
     example: [
       {
+        //type de réponse classique pour le visitieur ou l'utilisateur n'ayant pas appliqué pour un rôle
         id: '987fcdeb-51a2-4c3d-8f9e-1234567890ab',
         projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
         title: 'Développeur Mobile',
@@ -67,6 +68,7 @@ export class ProjectRolesController {
         updatedAt: '2025-07-05T15:30:00.000Z',
       },
       {
+        //si l'utilisateur a appliqué pour un rôle, le champ hasApplied sera ajouté avec une valeur true
         id: '987fcdeb-51a2-4c3d-8f9e-1234567890ab',
         projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
         title: 'Développeur Mobile',
