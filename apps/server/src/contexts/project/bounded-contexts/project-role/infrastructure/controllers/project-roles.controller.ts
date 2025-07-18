@@ -47,7 +47,8 @@ export class ProjectRolesController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Récupération des rôles avec succès',
+    description:
+      "Récupération des rôles avec succès, si l'utilisateur a appliqué pour un rôle, le champ hasApplied sera true",
     example: [
       {
         id: '987fcdeb-51a2-4c3d-8f9e-1234567890ab',
@@ -64,6 +65,23 @@ export class ProjectRolesController {
         ],
         createdAt: '2025-07-05T15:30:00.000Z',
         updatedAt: '2025-07-05T15:30:00.000Z',
+      },
+      {
+        id: '987fcdeb-51a2-4c3d-8f9e-1234567890ab',
+        projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+        title: 'Développeur Mobile',
+        description: "Développement de l'application mobile avec React Native",
+        isFilled: false,
+        techStacks: [
+          {
+            id: '4',
+            name: 'React Native',
+            iconUrl: 'https://reactnative.dev/img/header_logo.svg',
+          },
+        ],
+        createdAt: '2025-07-05T15:30:00.000Z',
+        updatedAt: '2025-07-05T15:30:00.000Z',
+        hasApplied: true,
       },
     ],
   })
@@ -87,9 +105,8 @@ export class ProjectRolesController {
     @Param('projectId') projectId: string,
     @OptionalSession() userId?: string,
   ) {
-    console.log('userId', userId);
     const query = new GetProjectRolesQuery({ projectId, userId });
-    const result: Result<ProjectRole[], string> =
+    const result: Result<ProjectRole[] & { hasApplied?: boolean }, string> =
       await this.queryBus.execute(query);
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.NOT_FOUND);
