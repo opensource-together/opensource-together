@@ -17,7 +17,7 @@ export const OptionalSession = createParamDecorator(
     try {
       const session = await getSession(request, response);
       return session.getUserId();
-    } catch (_) {
+    } catch {
       return undefined; // Pas de session : on renvoie undefined
     }
   },
