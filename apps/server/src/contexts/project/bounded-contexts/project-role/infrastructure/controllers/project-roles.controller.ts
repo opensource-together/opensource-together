@@ -1,9 +1,18 @@
-import { Body, Controller, Param, Post, Patch, Delete } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Patch,
+  Delete,
+  Get,
+} from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/create-project-role.command';
 import { UpdateProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/update-project-role.command';
 import { DeleteProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/delete-project-role.command';
-import { Session } from 'supertokens-nestjs';
+import { PublicAccess, Session } from 'supertokens-nestjs';
+import { OptionalSession } from '@/libs/decorators/optional-session.decorator';
 import { CreateProjectRoleDtoRequest } from './dto/create-project-role-request.dto';
 import { UpdateProjectRoleDtoRequest } from './dto/update-project-role-request.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
@@ -17,11 +26,76 @@ import {
   ApiBody,
   ApiResponse,
 } from '@nestjs/swagger';
+import { GetProjectRolesQuery } from '@/contexts/project/bounded-contexts/project-role/use-cases/queries/get-project-roles.query';
 
 @ApiTags('Project Roles')
 @Controller('projects/:projectId/roles')
 export class ProjectRolesController {
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @PublicAccess()
+  @Get()
+  @ApiOperation({ summary: "Récupérer tous les rôles d'un projet" })
+  @ApiCookieAuth('sAccessToken')
+  @ApiParam({
+    name: 'projectId',
+    description: 'ID du projet',
+    example: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Récupération des rôles avec succès',
+    example: [
+      {
+        id: '987fcdeb-51a2-4c3d-8f9e-1234567890ab',
+        projectId: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
+        title: 'Développeur Mobile',
+        description: "Développement de l'application mobile avec React Native",
+        isFilled: false,
+        techStacks: [
+          {
+            id: '4',
+            name: 'React Native',
+            iconUrl: 'https://reactnative.dev/img/header_logo.svg',
+          },
+        ],
+        createdAt: '2025-07-05T15:30:00.000Z',
+        updatedAt: '2025-07-05T15:30:00.000Z',
+      },
+    ],
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Non authentifié',
+    example: {
+      message: 'unauthorised',
+      statusCode: 401,
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Projet non trouvé',
+    example: {
+      message: 'Project not found',
+      statusCode: 404,
+    },
+  })
+  async getProjectRoles(
+    @Param('projectId') projectId: string,
+    @OptionalSession() userId?: string,
+  ) {
+    console.log('userId', userId);
+    const query = new GetProjectRolesQuery({ projectId, userId });
+    const result: Result<ProjectRole[], string> =
+      await this.queryBus.execute(query);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+    }
+    return result.value;
+  }
 
   @Post()
   @ApiOperation({ summary: 'Ajouter un rôle à un projet existant' })

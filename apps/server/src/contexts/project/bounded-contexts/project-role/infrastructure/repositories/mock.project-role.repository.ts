@@ -100,7 +100,7 @@ export class InMemoryProjectRoleRepository
     return this.reconstitute(role);
   }
 
-  async findByProjectId(
+  async findAllByProjectId(
     projectId: string,
   ): Promise<Result<ProjectRole[], string>> {
     const roles = this.projectRoles.filter(

@@ -100,4 +100,27 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepositoryPort {
       return Result.fail(`Error deleting project role: ${error}`);
     }
   }
+
+  async findAllByProjectId(
+    projectId: string,
+  ): Promise<Result<ProjectRole[], string>> {
+    try {
+      const projectRoles = await this.prisma.projectRole.findMany({
+        where: { projectId },
+        include: {
+          techStacks: true,
+        },
+      });
+      const toDomain: ProjectRole[] = [];
+      for (const role of projectRoles) {
+        const toDomainResult = PrismaProjectRoleMapper.toDomain(role);
+        if (toDomainResult.success) {
+          toDomain.push(toDomainResult.value);
+        }
+      }
+      return Result.ok(toDomain);
+    } catch (error) {
+      return Result.fail(`Error finding all project roles: ${error}`);
+    }
+  }
 }

@@ -24,13 +24,13 @@
     "prisma:migrate:deploy": "docker compose --project-directory .. exec backend pnpm prisma migrate deploy --schema=/app/src/orm/prisma/schema.prisma",
     "prisma:migrate:reset": "docker compose --project-directory .. exec backend pnpm prisma migrate reset --schema=/app/src/orm/prisma/schema.prisma",
     "prisma:studio": "pnpm prisma studio --schema=src/orm/prisma/schema.prisma",
-    "prisma:reset:local": "pnpm prisma migrate reset --schema=src/orm/prisma/schema.prisma",
-    "prisma:generate:local": "pnpm prisma generate --schema=src/orm/prisma/schema.prisma",
-    "prisma:migrate:dev:local": "pnpm prisma migrate dev --schema=src/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/orm/prisma/schema.prisma",
-    "prisma:push:local": "pnpm prisma db push --schema=src/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/orm/prisma/schema.prisma",
-    "prisma:migrate:deploy:local": "pnpm prisma migrate deploy --schema=src/orm/prisma/schema.prisma",
-    "prisma:migrate:reset:local": "pnpm prisma migrate reset --schema=src/orm/prisma/schema.prisma",
-    "prisma:studio:local": "pnpm prisma studio --schema=src/orm/prisma/schema.prisma"
+    "prisma:reset:local": "pnpm prisma migrate reset --schema=src/persistence/orm/prisma/schema.prisma",
+    "prisma:generate:local": "pnpm prisma generate --schema=src/persistence/orm/prisma/schema.prisma",
+    "prisma:migrate:dev:local": "pnpm prisma migrate dev --schema=src/persistence/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/persistence/orm/prisma/schema.prisma",
+    "prisma:push:local": "pnpm prisma db push --schema=src/persistence/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/persistence/orm/prisma/schema.prisma",
+    "prisma:migrate:deploy:local": "pnpm prisma migrate deploy --schema=src/persistence/orm/prisma/schema.prisma",
+    "prisma:migrate:reset:local": "pnpm prisma migrate reset --schema=src/persistence/orm/prisma/schema.prisma",
+    "prisma:studio:local": "pnpm prisma studio --schema=src/persistence/orm/prisma/schema.prisma"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.846.0",

@@ -38,6 +38,11 @@ export interface ProjectRoleRepositoryPort {
   delete(id: string): Promise<Result<boolean, string>>;
 
   /**
+   * Trouve tous les rôles d'un projet
+   */
+  findAllByProjectId(projectId: string): Promise<Result<ProjectRole[], string>>;
+
+  /**
    * Vérifie si un rôle existe dans un projet
    */
   // existsByProjectIdAndRoleTitle(
