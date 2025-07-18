@@ -40,7 +40,10 @@ export default function ProjectDetailView({
             <div>
               <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
                 <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
-                  Rôles Disponibles
+                  Rôles Disponibles{" "}
+                  <span className="text-sm font-normal text-black/25">
+                    {project.projectRoles?.length}
+                  </span>
                 </p>
                 {isMaintainer ? (
                   <CreateRoleForm projectId={projectId}>

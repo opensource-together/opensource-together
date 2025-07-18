@@ -63,10 +63,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         <div className="w-full max-w-[629px]">
           {keyFeatures.length > 0 && (
             <>
-              <h3 className="mb-2 text-sm font-normal text-black">
+              <h3 className="mb-3 text-sm font-medium text-black">
                 Fonctionnalités clés
               </h3>
-              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+              <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {keyFeatures.map((feature, index) => (
                   <li key={index}>{feature.feature}</li>
                 ))}
@@ -76,10 +76,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
           {projectGoals.length > 0 && (
             <>
-              <h3 className="mb-2 text-sm font-normal text-black">
+              <h3 className="mb-3 text-sm font-medium text-black">
                 Objectifs du projet
               </h3>
-              <ul className="mb-6 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+              <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
                 {projectGoals.map((goal, index) => (
                   <li key={index}>{goal.goal}</li>
                 ))}
