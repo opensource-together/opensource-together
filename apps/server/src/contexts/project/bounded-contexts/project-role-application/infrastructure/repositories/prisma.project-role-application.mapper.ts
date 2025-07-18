@@ -11,9 +11,9 @@ export class PrismaProjectRoleApplicationMapper {
     domainEntity: ProjectRoleApplication,
   ): Result<Prisma.ProjectRoleApplicationCreateInput, string> {
     const toRepo: Prisma.ProjectRoleApplicationCreateInput = {
-      user: {
+      profile: {
         connect: {
-          id: domainEntity.userId,
+          userId: domainEntity.userProfile.id,
         },
       },
       projectRole: {
@@ -39,9 +39,9 @@ export class PrismaProjectRoleApplicationMapper {
   static toDomain(
     prismaEntity: Prisma.ProjectRoleApplicationGetPayload<{
       include: {
-        user: {
+        profile: {
           include: {
-            profile: true;
+            user: true;
           };
         };
         projectRole: true;
@@ -54,8 +54,7 @@ export class PrismaProjectRoleApplicationMapper {
   > {
     const domainEntity = ProjectRoleApplication.reconstitute({
       id: prismaEntity.id,
-      userId: prismaEntity.user.id,
-      projectId: prismaEntity.project.id,
+      projectId: prismaEntity.projectId,
       projectRoleId: prismaEntity.projectRole.id,
       projectRoleTitle: prismaEntity.projectRole.title,
       selectedKeyFeatures: prismaEntity.selectedKeyFeatures,
@@ -63,14 +62,12 @@ export class PrismaProjectRoleApplicationMapper {
       rejectionReason: prismaEntity.rejectionReason ?? undefined,
       status: prismaEntity.status as ApplicationStatus,
       appliedAt: prismaEntity.appliedAt,
-      // Gérer le cas où le profile peut être null et convertir null en undefined
-      userProfile: prismaEntity.user.profile
-        ? {
-            id: prismaEntity.user.id,
-            name: prismaEntity.user.profile.name,
-            avatarUrl: prismaEntity.user.profile.avatarUrl ?? undefined, // Convertir null en undefined
-          }
-        : undefined,
+      motivationLetter: prismaEntity.motivationLetter ?? undefined,
+      userProfile: {
+        id: prismaEntity.profile.userId,
+        name: prismaEntity.profile.name ?? '',
+        avatarUrl: prismaEntity.profile.avatarUrl ?? undefined,
+      },
     });
     if (!domainEntity.success) {
       return Result.fail(domainEntity.error);

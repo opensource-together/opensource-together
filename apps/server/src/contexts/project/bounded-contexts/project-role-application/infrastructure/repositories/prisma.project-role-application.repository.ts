@@ -15,14 +15,42 @@ export class PrismaProjectRoleApplicationRepository
     application: ProjectRoleApplication,
   ): Promise<Result<ProjectRoleApplication, string>> {
     try {
-      const toRepo = application.toPrimitive();
-      await this.prisma.projectRoleApplication.create({
-        data: toRepo,
+      const toRepo = PrismaProjectRoleApplicationMapper.toRepo(application);
+      if (!toRepo.success) {
+        return Result.fail(
+          typeof toRepo.error === 'string'
+            ? toRepo.error
+            : 'Erreur de validation',
+        );
+      }
+
+      const created = await this.prisma.projectRoleApplication.create({
+        data: toRepo.value,
+        include: {
+          profile: {
+            include: {
+              user: true,
+            },
+          },
+          projectRole: true,
+          project: true,
+        },
       });
-      return Result.ok(application);
+
+      const domainApplication =
+        PrismaProjectRoleApplicationMapper.toDomain(created);
+      if (!domainApplication.success) {
+        return Result.fail(
+          typeof domainApplication.error === 'string'
+            ? domainApplication.error
+            : 'Erreur de conversion',
+        );
+      }
+
+      return Result.ok(domainApplication.value);
     } catch (error) {
       console.error(error);
-      return Result.fail('Une erreur est survenur');
+      return Result.fail('Une erreur est survenue');
     }
   }
 
@@ -34,7 +62,7 @@ export class PrismaProjectRoleApplicationRepository
       const projectRoleApplication =
         await this.prisma.projectRoleApplication.findFirst({
           where: {
-            userId,
+            profileId: userId,
             projectRoleId,
             status: 'PENDING',
           },
@@ -44,7 +72,7 @@ export class PrismaProjectRoleApplicationRepository
       return Result.ok(!!projectRoleApplication);
     } catch (error) {
       console.error(error);
-      return Result.fail('Une erreur est survenur');
+      return Result.fail('Une erreur est survenue');
     }
   }
 
@@ -74,9 +102,9 @@ export class PrismaProjectRoleApplicationRepository
       const applications = await this.prisma.projectRoleApplication.findMany({
         where: { projectId: { equals: projectId } },
         include: {
-          user: {
+          profile: {
             include: {
-              profile: true, // Inclure le profile
+              user: true,
             },
           },
           projectRole: true,
@@ -121,13 +149,13 @@ export class PrismaProjectRoleApplicationRepository
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
           selectedProjectGoals: domainApplication.value.selectedProjectGoals,
           appliedAt: domainApplication.value.appliedAt,
-          decidedAt: domainApplication.value.decidedAt!,
-          decidedBy: domainApplication.value.decidedBy!,
-          rejectionReason: domainApplication.value.rejectionReason!,
+          decidedAt: domainApplication.value.decidedAt || new Date(),
+          decidedBy: domainApplication.value.decidedBy || '',
+          rejectionReason: domainApplication.value.rejectionReason || '',
           userProfile: {
-            id: domainApplication.value.userProfile!.id,
-            name: domainApplication.value.userProfile!.name,
-            avatarUrl: domainApplication.value.userProfile!.avatarUrl!,
+            id: domainApplication.value.userProfile.id,
+            name: domainApplication.value.userProfile.name,
+            avatarUrl: domainApplication.value.userProfile.avatarUrl || '',
           },
         });
       }

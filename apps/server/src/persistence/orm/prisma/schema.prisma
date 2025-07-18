@@ -29,7 +29,6 @@ model User {
   updatedAt         DateTime               @updatedAt
   githubCredentials UserGitHubCredentials?
   profile           Profile?
-  projectRoleApplication ProjectRoleApplication[]
 }
 
 model Profile {
@@ -44,6 +43,7 @@ model Profile {
   user        User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
   socialLinks UserSocialLink[]
   projects    Project[]
+  projectRoleApplication ProjectRoleApplication[]
 }
 
 model UserGitHubCredentials {
@@ -123,7 +123,6 @@ model ProjectRole {
 
 model ProjectRoleApplication {
   id            String       @id @default(uuid())
-  userId        String
   projectId     String
   projectRoleId String
   projectRoleTitle String
@@ -136,7 +135,8 @@ model ProjectRoleApplication {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   projectRole   ProjectRole  @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile          Profile         @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+  profileId String
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 

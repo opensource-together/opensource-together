@@ -144,13 +144,17 @@ export class ApplyToProjectRoleCommandHandler
 
     // 8. Créer la candidature
     const applicationResult = ProjectRoleApplication.create({
-      userId,
       projectId: projectData.id!,
       projectRoleTitle: projectRole.toPrimitive().title,
       projectRoleId,
       selectedKeyFeatures: validKeyFeatures,
       selectedProjectGoals: validProjectGoals,
       motivationLetter,
+      userProfile: {
+        id: userId,
+        name: '', // Sera rempli par le mapper depuis le profile
+        avatarUrl: undefined,
+      },
     });
 
     if (!applicationResult.success) {

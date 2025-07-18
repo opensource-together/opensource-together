@@ -4,7 +4,6 @@ export type ApplicationStatus = 'PENDING' | 'APPROVAL' | 'REJECTED';
 
 export type ProjectRoleApplicationData = {
   id?: string;
-  userId: string;
   projectId: string;
   projectRoleTitle: string;
   projectRoleId: string;
@@ -16,8 +15,7 @@ export type ProjectRoleApplicationData = {
   appliedAt?: Date;
   decidedAt?: Date;
   decidedBy?: string;
-  // Optionnel - seulement pour la reconstitution
-  userProfile?: {
+  userProfile: {
     id: string;
     name: string;
     avatarUrl?: string;
@@ -25,7 +23,6 @@ export type ProjectRoleApplicationData = {
 };
 
 export type ProjectRoleApplicationValidationErrors = {
-  userId?: string;
   projectRoleId?: string;
   selectedKeyFeatures?: string;
   selectedProjectGoals?: string;
@@ -36,7 +33,6 @@ export type ProjectRoleApplicationValidationErrors = {
 
 export class ProjectRoleApplication {
   public readonly id?: string;
-  public readonly userId: string;
   public readonly projectId: string;
   public readonly projectRoleTitle: string;
   public readonly projectRoleId: string;
@@ -48,7 +44,7 @@ export class ProjectRoleApplication {
   public readonly appliedAt: Date;
   public decidedAt?: Date;
   public decidedBy?: string;
-  public readonly userProfile?: {
+  public readonly userProfile: {
     id: string;
     name: string;
     avatarUrl?: string;
@@ -56,7 +52,6 @@ export class ProjectRoleApplication {
 
   private constructor(props: {
     id?: string;
-    userId: string;
     projectId: string;
     projectRoleTitle: string;
     projectRoleId: string;
@@ -68,14 +63,13 @@ export class ProjectRoleApplication {
     appliedAt?: Date;
     decidedAt?: Date;
     decidedBy?: string;
-    userProfile?: {
+    userProfile: {
       id: string;
       name: string;
       avatarUrl?: string;
     };
   }) {
     this.id = props.id;
-    this.userId = props.userId;
     this.projectId = props.projectId;
     this.projectRoleTitle = props.projectRoleTitle;
     this.projectRoleId = props.projectRoleId;
@@ -87,17 +81,13 @@ export class ProjectRoleApplication {
     this.appliedAt = props.appliedAt ?? new Date();
     this.decidedAt = props.decidedAt;
     this.decidedBy = props.decidedBy;
-    this.userProfile = props.userProfile;
+    this.userProfile = props.userProfile!;
   }
 
   private static validate(
     props: ProjectRoleApplicationData,
   ): Result<void, ProjectRoleApplicationValidationErrors | string> {
     const errors: ProjectRoleApplicationValidationErrors = {};
-
-    if (!props.userId || props.userId.trim() === '') {
-      errors.userId = 'User ID is required';
-    }
 
     if (!props.projectRoleId || props.projectRoleId.trim() === '') {
       errors.projectRoleId = 'Project role ID is required';
@@ -142,7 +132,7 @@ export class ProjectRoleApplication {
   }
 
   public static create(
-    props: Omit<ProjectRoleApplicationData, 'status' | 'userProfile'>,
+    props: Omit<ProjectRoleApplicationData, 'status'>,
   ): Result<
     ProjectRoleApplication,
     ProjectRoleApplicationValidationErrors | string
@@ -218,7 +208,6 @@ export class ProjectRoleApplication {
   public toPrimitive(): ProjectRoleApplicationData {
     return {
       id: this.id,
-      userId: this.userId,
       projectId: this.projectId,
       projectRoleTitle: this.projectRoleTitle,
       projectRoleId: this.projectRoleId,
@@ -235,7 +224,7 @@ export class ProjectRoleApplication {
   }
 
   public canUserModify(userId: string): boolean {
-    return this.userId === userId && this.status === 'PENDING';
+    return this.userProfile?.id === userId && this.status === 'PENDING';
   }
 
   public isPending(): boolean {
