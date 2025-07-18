@@ -6,8 +6,6 @@ import {
   LastCommit,
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
-import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
-import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
@@ -719,58 +717,5 @@ export class ProjectController {
     }
 
     return { message: 'Project deleted successfully' };
-  }
-
-  @Get(':projectId/applications')
-  @ApiOperation({ summary: "Récupérer les candidatures d'un projet" })
-  @ApiCookieAuth('sAccessToken')
-  @ApiParam({ name: 'projectId', description: 'ID du projet' })
-  @ApiResponse({
-    status: 200,
-    description: 'Liste des candidatures',
-    example: [
-      {
-        userId: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
-        projectId: '108da791-6e48-47de-9a2b-b88f739e08a2',
-        projectRoleTitle: 'Frontend Developer',
-        projectRoleId: '6262e74b-24f0-4c7b-a03c-5ac853a512ab',
-        status: 'PENDING',
-        selectedKeyFeatures: ['Shopping Cart', 'User Auth'],
-        selectedProjectGoals: ['Create smooth UX', 'Improve performance'],
-        appliedAt: '2025-07-14T22:38:23.644Z',
-        userProfile: {
-          id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
-          name: 'John Doe',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/123456789',
-        },
-      },
-    ],
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Accès refusé',
-    example: {
-      message: 'You are not the owner of this project',
-      statusCode: 400,
-    },
-  })
-  async getProjectApplications(
-    @Session('userId') userId: string,
-    @Param('projectId') projectId: string,
-  ) {
-    // const projectResult: Result<Project> = await this.queryBus.execute(
-    //   new FindProjectByIdQuery({ id: projectId }),
-    // );
-    // if (!projectResult.success) {
-    //   throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
-    // }
-    const applications: Result<ProjectRoleApplication[]> =
-      await this.queryBus.execute(
-        new GetAllProjectApplicationsQuery({ projectId, userId }),
-      );
-    if (!applications.success) {
-      throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
-    }
-    return applications.value;
   }
 }
