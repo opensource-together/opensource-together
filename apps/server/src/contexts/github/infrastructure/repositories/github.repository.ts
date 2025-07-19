@@ -1,5 +1,5 @@
 import { GithubRepositoryDto } from './dto/github-repository.dto';
-import { toGithubRepositoryDto } from './dto/github-repository.adapter';
+import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import {
   GithubRepositoryPort,
   RepositoryInfo,
