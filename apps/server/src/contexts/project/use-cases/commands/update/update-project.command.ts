@@ -36,6 +36,7 @@ export class UpdateProjectCommand implements ICommand {
       categories?: string[];
       keyFeatures?: (string | { id: string; feature: string })[];
       projectGoals?: (string | { id: string; goal: string })[];
+      image?: string;
     },
   ) {}
 }
@@ -188,6 +189,7 @@ export class UpdateProjectCommandHandler
       categories: allCategoriesValidated,
       keyFeatures: updatedKeyFeatures,
       projectGoals: updatedProjectGoals,
+      image: props.image ?? existingData.image,
     };
 
     // Valider les données mises à jour

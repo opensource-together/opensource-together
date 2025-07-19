@@ -39,4 +39,8 @@ export class UpdateProjectDtoRequest {
   @IsArray()
   @IsOptional()
   projectGoals?: (string | { id: string; goal: string })[];
+
+  @IsString()
+  @IsOptional()
+  image?: string;
 }

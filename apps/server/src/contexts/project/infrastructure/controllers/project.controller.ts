@@ -687,6 +687,7 @@ export class ProjectController {
         categories: project.categories,
         keyFeatures: project.keyFeatures,
         projectGoals: project.projectGoals,
+        image: project.image,
       }),
     );
 
