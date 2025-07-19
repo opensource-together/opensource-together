@@ -40,11 +40,32 @@ export default function ProjectSideBar({
     },
   } = project;
 
-  // Récupérer le lien GitHub
   const githubLink =
     externalLinks.find((link) => link.type === "github")?.url || "";
 
   const contributors = project.projectStats?.contributors || [];
+
+  // Create a list that includes the owner first, then the contributors
+  const allContributors = (() => {
+    const ownerContributor = {
+      login: project.author?.name || "Owner",
+      avatar_url: project.author?.avatarUrl || "",
+      html_url: `https://github.com/${project.author?.name}`,
+      contributions: 999, // To ensure it's first
+    };
+
+    // Check if the owner is already in the contributors
+    const isOwnerInContributors = contributors.some(
+      (contributor) => contributor.login === ownerContributor.login
+    );
+
+    // If the owner is not already in the list, add it first
+    if (!isOwnerInContributors && project.author) {
+      return [ownerContributor, ...contributors];
+    }
+
+    return contributors;
+  })();
 
   const handleEditClick = () => {
     router.push(`/projects/${project.id}/edit`);
@@ -165,7 +186,7 @@ export default function ProjectSideBar({
             <div className="h-[1px] w-full bg-black/5" />
           </div>
           <span className="text-sm font-medium text-black">
-            {projectStats.contributors?.length || 0}
+            {allContributors.length}
           </span>
         </div>
       </div>
@@ -213,7 +234,7 @@ export default function ProjectSideBar({
         </h2>
         <div>
           <div className="flex gap-2">
-            {contributors.slice(0, 5).map((contributor) => (
+            {allContributors.slice(0, 5).map((contributor) => (
               <Avatar
                 key={contributor.login}
                 src={contributor.avatar_url}
@@ -223,10 +244,10 @@ export default function ProjectSideBar({
               />
             ))}
 
-            {/* Indicateur "+X autres" si plus de 5 collaborateurs */}
-            {contributors.length > 5 && (
+            {/* Indicator "+X others" if more than 5 contributors */}
+            {allContributors.length > 5 && (
               <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                +{contributors.length - 5}
+                +{allContributors.length - 5}
               </div>
             )}
           </div>
