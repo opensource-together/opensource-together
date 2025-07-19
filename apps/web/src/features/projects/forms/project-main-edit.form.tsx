@@ -126,7 +126,6 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
-                  <div className="w-full lg:w-[668px]">
                   <AvatarUpload
                     onFileSelect={onImageSelect}
                     accept="image/*"
