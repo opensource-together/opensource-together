@@ -98,12 +98,12 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/empty-star.svg",
   },
   fork: {
-    default: "/icons/branch-git-fork.svg",
-    gray: "/icons/branch-git-fork-gray.svg",
-    white: "/icons/branch-git-fork.svg",
-    black: "/icons/branch-git-fork.svg",
-    filled: "/icons/branch-git-fork.svg",
-    outline: "/icons/branch-git-fork.svg",
+    default: "/icons/fork.svg",
+    gray: "/icons/fork-gray.svg",
+    white: "/icons/fork.svg",
+    black: "/icons/fork.svg",
+    filled: "/icons/fork.svg",
+    outline: "/icons/fork.svg",
   },
   people: {
     default: "/icons/people.svg",

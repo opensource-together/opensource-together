@@ -1,4 +1,3 @@
-import NextImage from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -13,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
+import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
 
@@ -208,7 +208,7 @@ export default function ProjectMainEditForm({
                       <Button
                         type="button"
                         onClick={addFeature}
-                        className="h-[40px] w-[90px] rounded-full border border-black/5 bg-white text-black shadow-none hover:bg-gray-50"
+                        variant="outline"
                       >
                         Ajouter
                       </Button>
@@ -231,65 +231,49 @@ export default function ProjectMainEditForm({
                                       cancelEditingFeature();
                                   }}
                                 />
-                                <button
+                                <Button
                                   onClick={saveEditingFeature}
-                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  variant="ghost"
+                                  size="icon"
                                 >
-                                  <NextImage
-                                    src="/icons/check.svg"
-                                    alt="Sauvegarder"
-                                    width={13}
-                                    height={13}
-                                  />
-                                </button>
-                                <button
+                                  <Icon name="check" size="xs" />
+                                </Button>
+                                <Button
                                   onClick={cancelEditingFeature}
-                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  variant="ghost"
+                                  size="icon"
                                 >
-                                  <NextImage
-                                    src="/icons/cross.svg"
-                                    alt="Annuler"
-                                    width={13}
-                                    height={13}
-                                  />
-                                </button>
+                                  <Icon name="cross" size="xs" />
+                                </Button>
                               </div>
                             ) : (
                               <>
                                 <span>{feature.feature}</span>
                                 <div className="flex items-center gap-1">
-                                  <button
+                                  <Button
                                     onClick={() =>
                                       startEditingFeature(
                                         index,
                                         feature.feature
                                       )
                                     }
-                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                    variant="ghost"
+                                    size="icon"
                                   >
-                                    <NextImage
-                                      src="/icons/edit-black-icon.svg"
-                                      alt="Modifier"
-                                      width={13}
-                                      height={13}
-                                    />
-                                  </button>
-                                  <button
+                                    <Icon name="pencil" size="sm" />
+                                  </Button>
+                                  <Button
                                     type="button"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
                                       removeFeature(index);
                                     }}
-                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                    variant="ghost"
+                                    size="icon"
                                   >
-                                    <NextImage
-                                      src="/icons/delete-icon.svg"
-                                      alt="Supprimer"
-                                      width={13}
-                                      height={13}
-                                    />
-                                  </button>
+                                    <Icon name="trash" size="sm" />
+                                  </Button>
                                 </div>
                               </>
                             )}
@@ -324,11 +308,7 @@ export default function ProjectMainEditForm({
                         placeholder="Ajouter un objectif"
                         className="flex-1 lg:w-[566px]"
                       />
-                      <Button
-                        type="button"
-                        onClick={addGoal}
-                        className="h-[40px] w-[90px] rounded-full border border-black/5 bg-white text-black shadow-none hover:bg-gray-50"
-                      >
+                      <Button type="button" onClick={addGoal} variant="outline">
                         Ajouter
                       </Button>
                     </div>
@@ -349,62 +329,46 @@ export default function ProjectMainEditForm({
                                     if (e.key === "Escape") cancelEditingGoal();
                                   }}
                                 />
-                                <button
+                                <Button
                                   onClick={saveEditingGoal}
-                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  variant="ghost"
+                                  size="icon"
                                 >
-                                  <NextImage
-                                    src="/icons/check.svg"
-                                    alt="Sauvegarder"
-                                    width={13}
-                                    height={13}
-                                  />
-                                </button>
-                                <button
+                                  <Icon name="check" size="xs" />
+                                </Button>
+                                <Button
                                   onClick={cancelEditingGoal}
-                                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                  variant="ghost"
+                                  size="icon"
                                 >
-                                  <NextImage
-                                    src="/icons/cross.svg"
-                                    alt="Annuler"
-                                    width={13}
-                                    height={13}
-                                  />
-                                </button>
+                                  <Icon name="cross" size="xs" />
+                                </Button>
                               </div>
                             ) : (
                               <>
                                 <span>{goal.goal}</span>
                                 <div className="flex items-center gap-1">
-                                  <button
+                                  <Button
                                     onClick={() =>
                                       startEditingGoal(index, goal.goal)
                                     }
-                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                    variant="ghost"
+                                    size="icon"
                                   >
-                                    <NextImage
-                                      src="/icons/edit-black-icon.svg"
-                                      alt="Modifier"
-                                      width={13}
-                                      height={13}
-                                    />
-                                  </button>
-                                  <button
+                                    <Icon name="pencil" size="sm" />
+                                  </Button>
+                                  <Button
                                     type="button"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
                                       removeGoal(index);
                                     }}
-                                    className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5"
+                                    variant="ghost"
+                                    size="icon"
                                   >
-                                    <NextImage
-                                      src="/icons/delete-icon.svg"
-                                      alt="Supprimer"
-                                      width={13}
-                                      height={13}
-                                    />
-                                  </button>
+                                    <Icon name="trash" size="sm" />
+                                  </Button>
                                 </div>
                               </>
                             )}

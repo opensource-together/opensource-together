@@ -22,7 +22,6 @@ interface ProjectSidebarEditFormProps {
 }
 
 export default function ProjectSidebarEditForm({
-  project,
   form,
 }: ProjectSidebarEditFormProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
@@ -32,7 +31,7 @@ export default function ProjectSidebarEditForm({
   return (
     <div className="flex flex-col gap-5">
       {/* Form */}
-      <div className="flex flex-col space-y-6 md:max-w-[263px]">
+      <div className="flex flex-col space-y-10 md:max-w-[263px]">
         <Form {...form}>
           {/* Tech Stack */}
           <FormField
@@ -40,12 +39,7 @@ export default function ProjectSidebarEditForm({
             name="techStack"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  required
-                  tooltip="Sélectionnez les technologies, langages de programmation et outils utilisés dans votre projet. Cela aide les développeurs à identifier les projets correspondant à leurs compétences."
-                >
-                  Technologies (max 10)
-                </FormLabel>
+                <FormLabel required>Technologies (max 10)</FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}
@@ -74,12 +68,7 @@ export default function ProjectSidebarEditForm({
             name="categories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  required
-                  tooltip="Choisissez les domaines ou secteurs d'activité auxquels votre projet se rapporte. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
-                >
-                  Catégories (max 6)
-                </FormLabel>
+                <FormLabel required>Catégories (max 6)</FormLabel>
                 <FormControl>
                   <Combobox
                     options={categoryOptions}

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -95,14 +94,16 @@ export default function ProjectCardComponent({
           {showTechStack && (
             <ProjectCardFooter>
               <>
-                {techStacks.slice(0, 3).map((tech, index) => (
-                  <StackLogo
-                    key={tech.id || index}
-                    icon={tech.iconUrl || ""}
-                    alt={tech.name}
-                    name={tech.name}
-                  />
-                ))}
+                <div className="flex gap-5">
+                  {techStacks.slice(0, 3).map((tech, index) => (
+                    <StackLogo
+                      key={tech.id || index}
+                      icon={tech.iconUrl || ""}
+                      alt={tech.name}
+                      name={tech.name}
+                    />
+                  ))}
+                </div>
                 {techStacks.length > 3 && (
                   <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
                     +{techStacks.length - 3}
@@ -111,12 +112,7 @@ export default function ProjectCardComponent({
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
                 <div className="flex items-center justify-center gap-1 text-xs">
-                  <Image
-                    src="/icons/fork-icon.svg"
-                    alt="fork"
-                    width={10}
-                    height={10}
-                  />
+                  <Icon name="fork" size="xs" />
                   {projectStats.forks || 0}
                 </div>
                 <div className="flex items-center justify-center gap-1 text-xs">

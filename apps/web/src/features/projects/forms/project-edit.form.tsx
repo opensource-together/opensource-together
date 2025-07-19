@@ -96,7 +96,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
 
   return (
     <>
-      <div className="">
+      <div>
         <BreadcrumbComponent items={breadcrumbItems} className="mb-7" />
         <ProjectSidebarEditForm project={project} form={form} />
       </div>

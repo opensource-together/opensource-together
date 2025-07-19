@@ -176,17 +176,15 @@ export default function ProjectSideBar({
           Technologies
         </h2>
         {techStacks.length > 0 && (
-          <div>
-            <div className="flex flex-wrap gap-3">
-              {techStacks.map((tech, index) => (
-                <StackLogo
-                  key={index}
-                  name={tech.name}
-                  icon={tech.iconUrl || "/icons/empty-project.svg"}
-                  alt={tech.name}
-                />
-              ))}
-            </div>
+          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+            {techStacks.map((tech, index) => (
+              <StackLogo
+                key={index}
+                name={tech.name}
+                icon={tech.iconUrl || "/icons/empty-project.svg"}
+                alt={tech.name}
+              />
+            ))}
           </div>
         )}
       </div>

@@ -34,11 +34,11 @@ export default function Footer() {
             <div className="space-y-4 lg:col-span-1">
               <div className="space-y-3">
                 <Image
-                  src="/ost-logo.svg"
-                  alt="OpenSource Together"
-                  width={190}
-                  height={40}
-                  className="w-40 md:w-auto"
+                  src="/ost-beta-logo.svg"
+                  alt="ost-logo"
+                  width={207}
+                  height={25}
+                  className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
                 />
                 <p className="mt-4 text-sm md:mt-5 md:text-base">
                   Trouvez des projets, postulez à des rôles, collaborez,

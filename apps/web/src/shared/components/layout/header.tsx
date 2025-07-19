@@ -77,15 +77,13 @@ export default function Header() {
       <header className="font-geist sticky top-0 z-50 flex h-auto min-h-[60px] flex-wrap items-center justify-between bg-white px-4 py-3 text-[13px] font-normal sm:px-6 md:min-h-[70px] md:px-10 md:py-0 lg:h-[81px] lg:px-[73px]">
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
-            <article className="flex items-center gap-2">
-              <Image
-                src="/ost-beta-logo.svg"
-                alt="ost-logo"
-                width={207}
-                height={25}
-                className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
-              />
-            </article>
+            <Image
+              src="/ost-beta-logo.svg"
+              alt="ost-logo"
+              width={207}
+              height={25}
+              className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
+            />
           </Link>
 
           {/* Navigation pour desktop et tablette */}
