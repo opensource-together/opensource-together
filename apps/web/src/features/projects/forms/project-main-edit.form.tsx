@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
+import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
 
@@ -36,6 +37,12 @@ export default function ProjectMainEditForm({
   const { control, watch, setValue } = form;
   const [newFeature, setNewFeature] = useState("");
   const [newGoal, setNewGoal] = useState("");
+  const [editingFeatureIndex, setEditingFeatureIndex] = useState<number | null>(
+    null
+  );
+  const [editingGoalIndex, setEditingGoalIndex] = useState<number | null>(null);
+  const [editingFeatureText, setEditingFeatureText] = useState("");
+  const [editingGoalText, setEditingGoalText] = useState("");
 
   const keyFeatures = watch("keyFeatures") || [];
   const projectGoals = watch("projectGoals") || [];
@@ -68,8 +75,48 @@ export default function ProjectMainEditForm({
     );
   };
 
+  const startEditingFeature = (index: number, text: string) => {
+    setEditingFeatureIndex(index);
+    setEditingFeatureText(text);
+  };
+
+  const saveEditingFeature = () => {
+    if (editingFeatureIndex !== null) {
+      const updatedFeatures = [...keyFeatures];
+      updatedFeatures[editingFeatureIndex] = { feature: editingFeatureText };
+      setValue("keyFeatures", updatedFeatures);
+      setEditingFeatureIndex(null);
+      setEditingFeatureText("");
+    }
+  };
+
+  const cancelEditingFeature = () => {
+    setEditingFeatureIndex(null);
+    setEditingFeatureText("");
+  };
+
+  const startEditingGoal = (index: number, text: string) => {
+    setEditingGoalIndex(index);
+    setEditingGoalText(text);
+  };
+
+  const saveEditingGoal = () => {
+    if (editingGoalIndex !== null) {
+      const updatedGoals = [...projectGoals];
+      updatedGoals[editingGoalIndex] = { goal: editingGoalText };
+      setValue("projectGoals", updatedGoals);
+      setEditingGoalIndex(null);
+      setEditingGoalText("");
+    }
+  };
+
+  const cancelEditingGoal = () => {
+    setEditingGoalIndex(null);
+    setEditingGoalText("");
+  };
+
   return (
-    <div className="flex w-full flex-col gap-8 lg:max-w-xl">
+    <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-8">
           <FormField
@@ -103,7 +150,11 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel required>Titre</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Nom du projet" />
+                  <Input
+                    {...field}
+                    placeholder="Nom du projet"
+                    className="w-full lg:w-[668px]"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,7 +172,7 @@ export default function ProjectMainEditForm({
                   <Textarea
                     {...field}
                     placeholder="Description du projet"
-                    className="h-[80px]"
+                    className="h-[80px] w-full lg:w-[668px]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -146,37 +197,86 @@ export default function ProjectMainEditForm({
                 </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
-                    <div className="relative">
+                    <div className="flex items-center gap-2">
                       <Input
                         value={newFeature}
                         onChange={(e) => setNewFeature(e.target.value)}
                         placeholder="Ajouter une fonctionnalité"
-                        className="pr-20"
+                        className="flex-1 lg:w-[566px]"
                       />
                       <Button
                         type="button"
                         onClick={addFeature}
-                        variant="secondary"
-                        className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
+                        variant="outline"
                       >
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex w-full flex-col gap-2 lg:w-[668px]">
                       {keyFeatures.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm">
-                            {feature.feature}
+                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                            {editingFeatureIndex === index ? (
+                              <div className="flex flex-1 items-center gap-2">
+                                <Input
+                                  value={editingFeatureText}
+                                  onChange={(e) =>
+                                    setEditingFeatureText(e.target.value)
+                                  }
+                                  className="flex-1"
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") saveEditingFeature();
+                                    if (e.key === "Escape")
+                                      cancelEditingFeature();
+                                  }}
+                                />
+                                <Button
+                                  onClick={saveEditingFeature}
+                                  variant="ghost"
+                                  size="icon"
+                                >
+                                  <Icon name="check" size="xs" />
+                                </Button>
+                                <Button
+                                  onClick={cancelEditingFeature}
+                                  variant="ghost"
+                                  size="icon"
+                                >
+                                  <Icon name="cross" size="xs" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <>
+                                <span>{feature.feature}</span>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    onClick={() =>
+                                      startEditingFeature(
+                                        index,
+                                        feature.feature
+                                      )
+                                    }
+                                    variant="ghost"
+                                    size="icon"
+                                  >
+                                    <Icon name="pencil" size="sm" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      removeFeature(index);
+                                    }}
+                                    variant="ghost"
+                                    size="icon"
+                                  >
+                                    <Icon name="trash" size="sm" />
+                                  </Button>
+                                </div>
+                              </>
+                            )}
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => removeFeature(index)}
-                          >
-                            Supprimer
-                          </Button>
                         </div>
                       ))}
                     </div>
@@ -200,37 +300,78 @@ export default function ProjectMainEditForm({
                 </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
-                    <div className="relative">
+                    <div className="flex items-center gap-2">
                       <Input
                         value={newGoal}
                         onChange={(e) => setNewGoal(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="pr-20"
+                        className="flex-1 lg:w-[566px]"
                       />
-                      <Button
-                        type="button"
-                        onClick={addGoal}
-                        variant="secondary"
-                        className="absolute top-1/2 right-1 h-7 -translate-y-1/2"
-                      >
+                      <Button type="button" onClick={addGoal} variant="outline">
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex w-full flex-col gap-2 lg:w-[668px]">
                       {projectGoals.map((goal, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex-1 rounded-md border border-black/5 bg-gray-50 p-2 text-sm">
-                            {goal.goal}
+                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                            {editingGoalIndex === index ? (
+                              <div className="flex flex-1 items-center gap-2">
+                                <Input
+                                  value={editingGoalText}
+                                  onChange={(e) =>
+                                    setEditingGoalText(e.target.value)
+                                  }
+                                  className="flex-1"
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") saveEditingGoal();
+                                    if (e.key === "Escape") cancelEditingGoal();
+                                  }}
+                                />
+                                <Button
+                                  onClick={saveEditingGoal}
+                                  variant="ghost"
+                                  size="icon"
+                                >
+                                  <Icon name="check" size="xs" />
+                                </Button>
+                                <Button
+                                  onClick={cancelEditingGoal}
+                                  variant="ghost"
+                                  size="icon"
+                                >
+                                  <Icon name="cross" size="xs" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <>
+                                <span>{goal.goal}</span>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    onClick={() =>
+                                      startEditingGoal(index, goal.goal)
+                                    }
+                                    variant="ghost"
+                                    size="icon"
+                                  >
+                                    <Icon name="pencil" size="sm" />
+                                  </Button>
+                                  <Button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      removeGoal(index);
+                                    }}
+                                    variant="ghost"
+                                    size="icon"
+                                  >
+                                    <Icon name="trash" size="sm" />
+                                  </Button>
+                                </div>
+                              </>
+                            )}
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs"
-                            onClick={() => removeGoal(index)}
-                          >
-                            Supprimer
-                          </Button>
                         </div>
                       ))}
                     </div>
@@ -241,7 +382,7 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <div className="mt-10 flex justify-end gap-2">
+          <div className="mt-10 flex w-full justify-end gap-2 lg:w-[668px]">
             <Link href={`/projects/${project.id}`}>
               <Button variant="outline" disabled={isUpdating}>
                 Annuler

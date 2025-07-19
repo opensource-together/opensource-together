@@ -77,44 +77,29 @@ export default function Header() {
       <header className="font-geist sticky top-0 z-50 flex h-auto min-h-[60px] flex-wrap items-center justify-between bg-white px-4 py-3 text-[13px] font-normal sm:px-6 md:min-h-[70px] md:px-10 md:py-0 lg:h-[81px] lg:px-[73px]">
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
-            <article className="flex items-center gap-2">
-              <Image
-                src="/ost-logo.svg"
-                alt="ost-logo"
-                width={130}
-                height={26}
-                className="h-auto max-h-[26px] w-auto md:max-h-[30px] lg:max-h-[35px]"
-              />
-            </article>
+            <Image
+              src="/ost-beta-logo.svg"
+              alt="ost-logo"
+              width={207}
+              height={25}
+              className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
+            />
           </Link>
 
           {/* Navigation pour desktop et tablette */}
           <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
-            <NavLink href="/">Accueil</NavLink>
+            <NavLink href="/">Découvrir</NavLink>
 
-            {/* Profil */}
+            {/* Dashboard */}
             {isAuthenticated ? (
-              <NavLink href="/profile">Profil</NavLink>
-            ) : (
-              <Button
-                variant="ghost"
-                onClick={handleProfile}
-                className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
-              >
-                Profil
-              </Button>
-            )}
-
-            {/* Gestion projet */}
-            {isAuthenticated ? (
-              <NavLink href="/my-projects">Gestion projet</NavLink>
+              <NavLink href="/my-projects">Dashboard</NavLink>
             ) : (
               <Button
                 variant="ghost"
                 onClick={handleMyProjects}
                 className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
               >
-                Gestion projet
+                Dashboard
               </Button>
             )}
           </nav>
@@ -122,20 +107,28 @@ export default function Header() {
 
         {/* Bouton menu mobile */}
         <Button
-          variant="ghost"
-          size="sm"
-          className="flex h-8 w-8 flex-col items-center justify-center p-0 md:hidden"
+          variant="outline"
+          size="icon"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-black/5 bg-white p-0 shadow-xs transition-all hover:bg-black/5 md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          <span
-            className={`mb-1 block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "translate-y-1.5 rotate-45" : ""}`}
-          ></span>
-          <span
-            className={`mb-1 block h-0.5 w-5 bg-black transition-opacity ${mobileMenuOpen ? "opacity-0" : ""}`}
-          ></span>
-          <span
-            className={`block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
-          ></span>
+          <div className="flex flex-col items-center justify-center space-y-1">
+            <span
+              className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                mobileMenuOpen ? "translate-y-1.5 rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                mobileMenuOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""
+              }`}
+            />
+          </div>
         </Button>
 
         {/* Menu mobile */}
@@ -146,25 +139,10 @@ export default function Header() {
             Home
           </NavLink>
 
-          {/* Profile mobile */}
-          {isAuthenticated ? (
-            <NavLink href="/profile" className="w-full py-1.5">
-              Profile
-            </NavLink>
-          ) : (
-            <Button
-              variant="ghost"
-              onClick={handleProfile}
-              className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
-            >
-              Profile
-            </Button>
-          )}
-
-          {/* My Projects mobile */}
+          {/* Dashboard mobile */}
           {isAuthenticated ? (
             <NavLink href="/my-projects" className="w-full py-1.5">
-              My Projects
+              Dashboard
             </NavLink>
           ) : (
             <Button
@@ -172,33 +150,58 @@ export default function Header() {
               onClick={handleMyProjects}
               className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
             >
-              My Projects
+              Dashboard
             </Button>
           )}
 
-          <Link
-            href="https://github.com/opensource-together/opensource-together"
-            target="_blank"
-          >
-            <Button
-              variant="outline"
-              className="flex items-center font-medium shadow-none"
+          {/* Profile mobile */}
+          {isAuthenticated && (
+            <NavLink href="/profile" className="w-full py-1.5">
+              Mon Profil
+            </NavLink>
+          )}
+
+          {/* Star Us mobile - visible seulement si pas connecté */}
+          {!isAuthenticated && (
+            <Link
+              href="https://github.com/opensource-together"
+              target="_blank"
+              className="w-full"
             >
-              Star Us <Icon name="github" size="md" />
+              <Button
+                variant="outline"
+                className="flex w-full items-center justify-center font-medium shadow-none"
+              >
+                Star Us <Icon name="github" size="md" />
+              </Button>
+            </Link>
+          )}
+
+          {/* Déconnexion mobile */}
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
+              className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+            >
+              Déconnexion
             </Button>
-          </Link>
+          )}
         </nav>
 
         {/* Desktop */}
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
-          <Link href="https://github.com/opensource-together" target="_blank">
-            <Button
-              variant="outline"
-              className="flex items-center font-medium shadow-none"
-            >
-              Star Us <Icon name="github" size="md" />
-            </Button>
-          </Link>
+          {/* Star Us - visible seulement si pas connecté */}
+          {!isAuthenticated && (
+            <Link href="https://github.com/opensource-together" target="_blank">
+              <Button
+                variant="outline"
+                className="flex items-center font-medium shadow-none"
+              >
+                Star Us <Icon name="github" size="md" />
+              </Button>
+            </Link>
+          )}
 
           {/* Créer un Projet */}
           {isAuthenticated ? (

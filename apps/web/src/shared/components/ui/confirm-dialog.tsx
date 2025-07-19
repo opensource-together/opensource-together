@@ -2,7 +2,6 @@
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -10,6 +9,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
+import { Button } from "@/shared/components/ui/button";
+import Icon, { IconName, IconVariant } from "@/shared/components/ui/icon";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -19,6 +20,16 @@ interface ConfirmDialogProps {
   isLoading: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmText?: string;
+  confirmIcon?: IconName;
+  confirmIconVariant?: IconVariant;
+  confirmVariant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
 }
 
 export function ConfirmDialog({
@@ -29,7 +40,16 @@ export function ConfirmDialog({
   isLoading,
   onConfirm,
   onCancel,
+  confirmText = "Confirmer",
+  confirmIcon = "check",
+  confirmIconVariant = "default",
+  confirmVariant = "default",
 }: ConfirmDialogProps) {
+  const renderIcon = () => {
+    if (!confirmIcon) return null;
+    return <Icon name={confirmIcon} size="xs" variant={confirmIconVariant} />;
+  };
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -45,9 +65,25 @@ export function ConfirmDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Annuler</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} disabled={isLoading}>
-            {isLoading ? "En cours..." : "Confirmer"}
-          </AlertDialogAction>
+          <Button
+            variant={confirmVariant}
+            onClick={onConfirm}
+            disabled={isLoading}
+            className={`flex items-center gap-2 ${
+              confirmVariant === "destructive"
+                ? "bg-red-500 hover:bg-red-600"
+                : ""
+            }`}
+          >
+            {isLoading ? (
+              "En cours..."
+            ) : (
+              <>
+                {confirmText}
+                {renderIcon()}
+              </>
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

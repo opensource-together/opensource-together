@@ -79,15 +79,16 @@ export default function ProjectSideBar({
         )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
           <Button variant="outline" size="lg">
-            Voir le Repo
-            <Icon name="github" size="sm" />
+            Voir Repository
           </Button>
         </Link>
       </div>
 
       {/* Details Section */}
-      <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
+      <div className="mb-2 flex flex-col md:max-w-[263px]">
+        <h2 className="text-md mb-1 font-medium tracking-tight text-black">
+          Détails
+        </h2>
 
         {/* Stars */}
         <div className="flex items-center justify-between py-1">
@@ -171,26 +172,28 @@ export default function ProjectSideBar({
 
       {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+          Technologies
+        </h2>
         {techStacks.length > 0 && (
-          <div>
-            <div className="flex flex-wrap gap-2">
-              {techStacks.map((tech, index) => (
-                <StackLogo
-                  key={index}
-                  name={tech.name}
-                  icon={tech.iconUrl || "/icons/empty-project.svg"}
-                  alt={tech.name}
-                />
-              ))}
-            </div>
+          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+            {techStacks.map((tech, index) => (
+              <StackLogo
+                key={index}
+                name={tech.name}
+                icon={tech.iconUrl || "/icons/empty-project.svg"}
+                alt={tech.name}
+              />
+            ))}
           </div>
         )}
       </div>
 
       {/* Categories Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+          Catégories
+        </h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
             <Badge
@@ -205,7 +208,7 @@ export default function ProjectSideBar({
 
       {/* Contributors Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
           Contributeurs Principaux
         </h2>
         <div>
@@ -232,7 +235,9 @@ export default function ProjectSideBar({
 
       {/* Links Section */}
       <div className="flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">Liens</h2>
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+          Liens Sociaux
+        </h2>
         <div className="flex flex-wrap gap-2">
           {externalLinks.map((link, index) => {
             let iconSrc = "";
