@@ -49,7 +49,7 @@ export default function RoleCard({
 
   const cardContent = (
     <div
-      className={`w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] md:w-[668px] ${className}`}
+      className={`w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] ${className}`}
       onClick={handleCheckClick}
     >
       {/* Role Title */}
@@ -100,7 +100,7 @@ export default function RoleCard({
       </div>
 
       {/* Role Description */}
-      <p className="mt-4 line-clamp-1 text-sm leading-snug font-medium tracking-tighter text-black/70">
+      <p className="mt-4 text-sm leading-snug font-medium tracking-tighter text-black/70">
         {description}
       </p>
 

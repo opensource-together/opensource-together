@@ -6,6 +6,36 @@ import {
 } from "../validations/project-role.schema";
 
 /**
+ * Get all project roles.
+ *
+ * @param projectId - The ID of the project to get the roles for.
+ * @returns A promise that resolves to the project roles.
+ */
+export const getProjectRoles = async (projectId: string) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/projects/${projectId}/roles`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error fetching project roles");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching project roles:", error);
+    throw error;
+  }
+};
+
+/**
  * Create a new project role.
  *
  * @param projectId - The ID of the project to which the role will be added.

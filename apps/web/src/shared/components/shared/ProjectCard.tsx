@@ -73,15 +73,10 @@ export default function ProjectCardComponent({
       <ProjectCard className={className}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
-            <Avatar
-              src={image}
-              name={author.name}
-              alt={author.name}
-              size="lg"
-            />
+            <Avatar src={image} name={title} alt={title} size="lg" />
             <ProjectCardInfo>
               <ProjectCardTitle>{title}</ProjectCardTitle>
-              <p className="text-muted-foreground text-sm tracking-tighter">
+              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
                 by {author.name}
               </p>
             </ProjectCardInfo>

@@ -11,6 +11,7 @@ import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import CreateRoleForm from "../forms/create-role.form";
+import { useGetProjectRoles } from "../hooks/use-project-role.hook";
 import { useProject } from "../hooks/use-projects.hook";
 
 interface ProjectDetailViewProps {
@@ -21,14 +22,16 @@ export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
+  const { data: projectRoles, isLoading: isProjectRolesLoading } =
+    useGetProjectRoles(projectId);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
   const isMaintainer = true; // Variable temporaire pour le développement
 
-  if (isLoading) return <SkeletonProjectDetail />;
+  if (isLoading || isProjectRolesLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
 
-  const hasRoles = project.projectRoles && project.projectRoles.length > 0;
+  const hasRoles = projectRoles && projectRoles.length > 0;
 
   return (
     <>
@@ -45,7 +48,7 @@ export default function ProjectDetailView({
                 <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
                   Rôles Disponibles{" "}
                   <span className="text-sm font-normal text-black/25">
-                    {project.projectRoles?.length || 0}
+                    {projectRoles?.length || 0}
                   </span>
                 </p>
                 {isMaintainer && hasRoles ? (
@@ -55,7 +58,7 @@ export default function ProjectDetailView({
                       <Icon name="plus" size="xs" variant="white" />
                     </Button>
                   </CreateRoleForm>
-                ) : hasRoles ? (
+                ) : !hasRoles ? (
                   <ProjectFilters
                     filters={[
                       {
@@ -69,7 +72,7 @@ export default function ProjectDetailView({
               </div>
               <div className="mt-6 mb-30 flex flex-col gap-3">
                 {hasRoles ? (
-                  project.projectRoles?.map((role) => (
+                  projectRoles?.map((role) => (
                     <RoleCard
                       key={role.title}
                       role={role}

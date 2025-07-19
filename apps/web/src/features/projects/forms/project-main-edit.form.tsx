@@ -118,7 +118,7 @@ export default function ProjectMainEditForm({
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-8">
+        <form onSubmit={onSubmit} className="space-y-8 lg:w-[668px]">
           <FormField
             control={control}
             name="image"
@@ -150,11 +150,7 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel required>Titre</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Nom du projet"
-                    className="w-full lg:w-[668px]"
-                  />
+                  <Input {...field} placeholder="Nom du projet" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -172,7 +168,7 @@ export default function ProjectMainEditForm({
                   <Textarea
                     {...field}
                     placeholder="Description du projet"
-                    className="h-[80px] w-full lg:w-[668px]"
+                    className="h-[80px]"
                   />
                 </FormControl>
                 <FormMessage />
@@ -382,7 +378,7 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <div className="mt-10 flex w-full justify-end gap-2 lg:w-[668px]">
+          <div className="mt-10 flex w-full justify-end gap-2">
             <Link href={`/projects/${project.id}`}>
               <Button variant="outline" disabled={isUpdating}>
                 Annuler
