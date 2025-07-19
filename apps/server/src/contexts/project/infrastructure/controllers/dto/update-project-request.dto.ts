@@ -34,15 +34,11 @@ export class UpdateProjectDtoRequest {
 
   @IsArray()
   @IsOptional()
-  keyFeatures?: {
-    id: string;
-    projectId: string;
-    feature: string;
-  }[];
+  keyFeatures?: (string | { id: string; feature: string })[];
 
   @IsArray()
   @IsOptional()
-  projectGoals?: string[];
+  projectGoals?: (string | { id: string; goal: string })[];
 
   @IsArray()
   @IsOptional()

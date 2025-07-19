@@ -603,8 +603,40 @@ export class ProjectController {
         shortDescription: { type: 'string' },
         techStacks: { type: 'array', items: { type: 'string' } },
         categories: { type: 'array', items: { type: 'string' } },
-        keyFeatures: { type: 'array', items: { type: 'string' } },
-        projectGoals: { type: 'array', items: { type: 'string' } },
+        keyFeatures: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  projectId: { type: 'string' },
+                  feature: { type: 'string' },
+                },
+                required: ['id', 'projectId', 'feature'],
+              },
+            ],
+          },
+        },
+        projectGoals: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  projectId: { type: 'string' },
+                  goal: { type: 'string' },
+                },
+                required: ['id', 'projectId', 'goal'],
+              },
+            ],
+          },
+        },
       },
     },
   })

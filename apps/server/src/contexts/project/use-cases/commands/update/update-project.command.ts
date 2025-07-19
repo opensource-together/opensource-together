@@ -22,11 +22,6 @@ import {
   MEDIA_SERVICE_PORT,
   MediaServicePort,
 } from '@/media/port/media.service.port';
-import {
-  PROJECT_KEY_FEATURE_REPOSITORY_PORT,
-  ProjectKeyFeatureRepositoryPort,
-} from '@/contexts/project/bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
-import { KeyFeature } from '@/contexts/project/bounded-contexts/project-key-feature/domain/key-feature.entity';
 
 export class UpdateProjectCommand implements ICommand {
   constructor(
@@ -39,13 +34,10 @@ export class UpdateProjectCommand implements ICommand {
       externalLinks?: { type: string; url: string }[];
       techStacks?: string[];
       categories?: string[];
-      keyFeatures?: {
-        id: string;
-        projectId: string;
-        feature: string;
-      }[];
-      projectGoals?: string[];
+      keyFeatures?: (string | { id: string; feature: string })[];
+      projectGoals?: (string | { id: string; goal: string })[];
       projectRoles?: {
+        id?: string;
         title: string;
         description: string;
         techStacks: string[];
@@ -65,8 +57,6 @@ export class UpdateProjectCommandHandler
     private readonly techStackRepo: TechStackRepositoryPort,
     @Inject(CATEGORY_REPOSITORY_PORT)
     private readonly categoryRepo: CategoryRepositoryPort,
-    @Inject(PROJECT_KEY_FEATURE_REPOSITORY_PORT)
-    private readonly keyFeatureRepo: ProjectKeyFeatureRepositoryPort,
     @Inject(MEDIA_SERVICE_PORT)
     private readonly mediaService: MediaServicePort,
   ) {}
@@ -129,23 +119,108 @@ export class UpdateProjectCommandHandler
         c.toPrimitive(),
       );
     }
-    // Ajouter les nouvelles keyFeatures si fournies
-    if (props.keyFeatures) {
-      const updateProjectKeyFeaturesResult = existingProject.updateKeyFeatures(
-        props.keyFeatures,
-      );
-      if (!updateProjectKeyFeaturesResult.success) {
-        return Result.fail(updateProjectKeyFeaturesResult.error);
-      }
-      const updateKeyFeatures = await this.keyFeatureRepo.updateMany(
-        updateProjectKeyFeaturesResult.value,
-      );
-      if (!updateKeyFeatures.success)
-        return Result.fail(updateKeyFeatures.error);
-    }
 
     // Préparer les données pour la mise à jour
     const existingData = existingProject.toPrimitive();
+
+    // Gestion incrémentale des keyFeatures
+    let updatedKeyFeatures = existingData.keyFeatures;
+    if (props.keyFeatures) {
+      const existingKeyFeatures = existingData.keyFeatures;
+      const incomingKeyFeatures = props.keyFeatures;
+
+      // Séparer les strings (nouvelles) et les objets (existants à modifier)
+      const newKeyFeatures = incomingKeyFeatures
+        .filter((item): item is string => typeof item === 'string')
+        .map((feature) => ({ feature }));
+
+      const existingKeyFeaturesToUpdate = incomingKeyFeatures.filter(
+        (item): item is { id: string; feature: string } =>
+          typeof item === 'object' && 'id' in item,
+      );
+
+      // Identifier les keyFeatures existantes à conserver (avec ID dans la liste)
+      const keyFeaturesToKeep = existingKeyFeatures.filter((existing) =>
+        existingKeyFeaturesToUpdate.some(
+          (incoming) => incoming.id === existing.id,
+        ),
+      );
+
+      // Mettre à jour les keyFeatures existantes
+      const updatedExistingKeyFeatures = keyFeaturesToKeep.map((existing) => {
+        const update = existingKeyFeaturesToUpdate.find(
+          (incoming) => incoming.id === existing.id,
+        );
+        return update ? { ...existing, feature: update.feature } : existing;
+      });
+
+      updatedKeyFeatures = [...updatedExistingKeyFeatures, ...newKeyFeatures];
+    }
+
+    // Gestion incrémentale des projectGoals
+    let updatedProjectGoals = existingData.projectGoals;
+    if (props.projectGoals) {
+      // Séparer les strings (nouvelles) et les objets (existants à modifier)
+      const newProjectGoals = props.projectGoals
+        .filter((item): item is string => typeof item === 'string')
+        .map((goal) => ({ goal }));
+
+      const existingProjectGoalsToUpdate = props.projectGoals.filter(
+        (item): item is { id: string; goal: string } =>
+          typeof item === 'object' && 'id' in item,
+      );
+
+      // Identifier les projectGoals existantes à conserver (avec ID dans la liste)
+      const projectGoalsToKeep = existingData.projectGoals.filter((existing) =>
+        existingProjectGoalsToUpdate.some(
+          (incoming) => incoming.id === existing.id,
+        ),
+      );
+
+      // Mettre à jour les projectGoals existantes
+      const updatedExistingProjectGoals = projectGoalsToKeep.map((existing) => {
+        const update = existingProjectGoalsToUpdate.find(
+          (incoming) => incoming.id === existing.id,
+        );
+        return update ? { ...existing, goal: update.goal } : existing;
+      });
+
+      updatedProjectGoals = [
+        ...updatedExistingProjectGoals,
+        ...newProjectGoals,
+      ];
+    }
+
+    // Gestion incrémentale des projectRoles
+    let updatedProjectRoles = existingData.projectRoles;
+    if (props.projectRoles) {
+      const existingProjectRoles = existingData.projectRoles;
+      const incomingProjectRoles = props.projectRoles;
+
+      // Identifier les rôles à conserver (avec ID)
+      const rolesToKeep = existingProjectRoles.filter((existing) =>
+        incomingProjectRoles.some((incoming) => incoming.id === existing.id),
+      );
+
+      // Ajouter les nouveaux rôles (sans ID)
+      const newRoles = incomingProjectRoles
+        .filter((incoming) => !incoming.id)
+        .map((role) => ({
+          title: role.title,
+          description: role.description,
+          isFilled: false,
+          techStacks: role.techStacks.map((ts) => ({
+            id: ts,
+            name: allTechStacksValidated.find((t) => t.id === ts)
+              ?.name as string,
+            iconUrl: allTechStacksValidated.find((t) => t.id === ts)
+              ?.iconUrl as string,
+          })),
+        }));
+
+      updatedProjectRoles = [...rolesToKeep, ...newRoles];
+    }
+
     const updatedData = {
       ...existingData,
       title: props.title ?? existingData.title,
@@ -154,24 +229,9 @@ export class UpdateProjectCommandHandler
       externalLinks: props.externalLinks ?? existingData.externalLinks,
       techStacks: allTechStacksValidated,
       categories: allCategoriesValidated,
-      // keyFeatures: existingData.keyFeatures,
-      projectGoals: props.projectGoals
-        ? props.projectGoals.map((goal) => ({ goal }))
-        : existingData.projectGoals,
-      // projectRoles: props.projectRoles
-      //   ? props.projectRoles.map((role) => ({
-      //       title: role.title,
-      //       description: role.description,
-      //       isFilled: false,
-      //       techStacks: role.techStacks.map((ts) => ({
-      //         id: ts,
-      //         name: allTechStacksValidated.find((t) => t.id === ts)
-      //           ?.name as string,
-      //         iconUrl: allTechStacksValidated.find((t) => t.id === ts)
-      //           ?.iconUrl as string,
-      //       })),
-      //     }))
-      //   : existingData.projectRoles,
+      keyFeatures: updatedKeyFeatures,
+      projectGoals: updatedProjectGoals,
+      projectRoles: updatedProjectRoles,
     };
 
     // Valider les données mises à jour
