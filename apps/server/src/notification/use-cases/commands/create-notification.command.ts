@@ -5,7 +5,7 @@ import {
   NOTIFICATION_SERVICE_PORT,
   NotificationServicePort,
   SendNotificationPayload,
-} from '../../ports/notification.service.port';
+} from '../ports/notification.service.port';
 
 /**
  * Commande transportant le payload.

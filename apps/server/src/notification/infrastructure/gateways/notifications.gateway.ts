@@ -6,8 +6,12 @@ import {
   ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Injectable, Logger } from '@nestjs/common';
-import { SendNotificationPayload } from '../../ports/notification.service.port';
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import {
+  NotificationData,
+  NOTIFICATION_SERVICE_PORT,
+  NotificationServicePort,
+} from '@/notification/use-cases/ports/notification.service.port';
 
 /**
  * Gateway WebSocket pour les notifications temps réel.
@@ -17,6 +21,7 @@ import { SendNotificationPayload } from '../../ports/notification.service.port';
  * - Authentifier les utilisateurs via token
  * - Organiser les clients en "rooms" par userId
  * - Émettre des notifications vers les bons utilisateurs
+ * - Envoyer les notifications non lues lors de la reconnexion
  */
 @WebSocketGateway({
   cors: {
@@ -34,9 +39,15 @@ export class NotificationsGateway
 
   private readonly logger = new Logger(NotificationsGateway.name);
 
+  constructor(
+    @Inject(NOTIFICATION_SERVICE_PORT)
+    private readonly notificationService: NotificationServicePort,
+  ) {}
+
   /**
    * Appelé quand un client se connecte au WebSocket.
    * On récupère le userId depuis le token et on join sa room.
+   * On envoie ensuite toutes les notifications non lues.
    */
   async handleConnection(@ConnectedSocket() client: Socket) {
     try {
@@ -61,6 +72,9 @@ export class NotificationsGateway
       client.emit('connected', {
         message: 'Notifications WebSocket connected',
       });
+
+      // 🆕 NOUVEAU : Envoyer automatiquement les notifications non lues
+      await this.sendUnreadNotifications(client, userId);
     } catch (error) {
       this.logger.error('Connection error:', error);
       client.disconnect();
@@ -81,22 +95,112 @@ export class NotificationsGateway
    * Envoie une notification à un utilisateur spécifique.
    * Appelé par le RealtimeNotifierAdapter.
    */
-  async emitToUser(userId: string, notification: SendNotificationPayload) {
-    const roomName = `${userId}`;
+  async emitToUser(notification: NotificationData) {
+    const roomName = `${notification.userId}`;
     console.log('roomName', roomName);
 
+    console.log('Read value', notification.readAt?.toISOString());
     // Émettre vers tous les clients dans la room de cet utilisateur
     // (un user peut avoir plusieurs onglets ouverts)
     this.server.to(roomName).emit('notification', {
-      id: `notif_${Date.now()}`, // ID temporaire
+      id: notification.id, // 🆕 NOUVEAU : Inclure l'ID de la notification
       type: notification.type,
       payload: notification.payload,
-      createdAt: new Date().toISOString(),
+      createdAt: notification.createdAt.toISOString(),
+      readAt: notification.readAt
+        ? notification.readAt.toISOString()
+        : 'unread', // 🆕 NOUVEAU : Inclure l'état de lecture
     });
 
     this.logger.log(
-      `Notification sent to user ${userId}: ${notification.type}`,
+      `Notification sent to user ${notification.userId}: ${notification.type} (ID: ${notification.id})`,
     );
+  }
+
+  /**
+   * 🆕 NOUVEAU : Émet une mise à jour d'état de notification à un utilisateur spécifique.
+   * Utilisé quand une notification est marquée comme lue/non lue.
+   */
+  async emitNotificationUpdate(notification: NotificationData) {
+    const roomName = `${notification.userId}`;
+
+    // Émettre un événement spécifique pour les mises à jour d'état
+    this.server.to(roomName).emit('notification-updated', {
+      id: notification.id,
+      type: notification.type,
+      payload: notification.payload,
+      createdAt: notification.createdAt.toISOString(),
+      readAt: notification.readAt?.toISOString() || null,
+      isRead: notification.readAt !== null,
+    });
+
+    this.logger.log(
+      `Notification update sent to user ${notification.userId}: ${notification.type} (ID: ${notification.id}) - Read: ${notification.readAt !== null}`,
+    );
+  }
+
+  // async markNotificationAsRead(notificationId: string) {
+  //   await this.notificationService.markNotificationAsRead(notificationId);
+  // }
+
+  /**
+   * 🆕 NOUVEAU : Envoie toutes les notifications non lues à un utilisateur qui vient de se connecter.
+   * @param client - Socket du client
+   * @param userId - ID de l'utilisateur
+   */
+  private async sendUnreadNotifications(client: Socket, userId: string) {
+    try {
+      const result =
+        await this.notificationService.getUnreadNotifications(userId);
+
+      if (result.success && result.value.length > 0) {
+        this.logger.log(
+          `Sending ${result.value.length} unread notifications to user ${userId}`,
+        );
+
+        // Envoyer chaque notification non lue individuellement
+        for (const notification of result.value) {
+          client.emit('notification', {
+            id: notification.id,
+            type: notification.type,
+            payload: notification.payload,
+            createdAt: notification.createdAt.toISOString(),
+            readAt: notification.readAt
+              ? notification.readAt.toISOString()
+              : 'unread', // Flag pour indiquer que c'est une notification historique
+            isHistorical: true, // Flag pour indiquer que c'est une notification historique
+          });
+        }
+
+        // Envoyer un événement spécial pour indiquer la fin du chargement des notifications historiques
+        client.emit('notifications-sync-complete', {
+          count: result.value.length,
+          message: `${result.value.length} notification(s) non lue(s) synchronisée(s)`,
+        });
+      } else if (result.success) {
+        // Aucune notification non lue
+        client.emit('notifications-sync-complete', {
+          count: 0,
+          message: 'Aucune notification non lue',
+        });
+      } else {
+        // Erreur lors de la récupération
+        this.logger.error(
+          `Erreur lors de la récupération des notifications pour l'utilisateur ${userId}: ${result.error}`,
+        );
+        client.emit('notifications-sync-error', {
+          message: 'Erreur lors de la synchronisation des notifications',
+        });
+      }
+    } catch (error) {
+      this.logger.error(
+        `Erreur lors de l'envoi des notifications non lues pour l'utilisateur ${userId}:`,
+        error,
+      );
+      client.emit('notifications-sync-error', {
+        message: 'Erreur lors de la synchronisation des notifications',
+      });
+    }
   }
 
   /**

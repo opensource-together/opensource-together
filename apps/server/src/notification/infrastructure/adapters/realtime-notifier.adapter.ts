@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { SendNotificationPayload } from '../../ports/notification.service.port';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { NotificationData } from '../../use-cases/ports/notification.service.port';
 import { NotificationsGateway } from '../gateways/notifications.gateway';
 
 /**
@@ -8,13 +8,24 @@ import { NotificationsGateway } from '../gateways/notifications.gateway';
  */
 @Injectable()
 export class RealtimeNotifierAdapter {
-  constructor(private readonly gateway: NotificationsGateway) {}
+  constructor(
+    @Inject(forwardRef(() => NotificationsGateway))
+    private readonly gateway: NotificationsGateway,
+  ) {}
 
   /**
    * Envoie une notification en temps réel.
-   * @param notification - Payload de la notification
+   * @param notification - Données complètes de la notification avec ID
    */
-  async send(notification: SendNotificationPayload): Promise<void> {
-    await this.gateway.emitToUser(notification.userId, notification);
+  async send(notification: NotificationData): Promise<void> {
+    await this.gateway.emitToUser(notification);
+  }
+
+  /**
+   * 🆕 NOUVEAU : Envoie une mise à jour d'état de notification en temps réel.
+   * @param notification - Données complètes de la notification mise à jour
+   */
+  async sendNotificationUpdate(notification: NotificationData): Promise<void> {
+    await this.gateway.emitNotificationUpdate(notification);
   }
 }
