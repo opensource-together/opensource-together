@@ -29,7 +29,8 @@ type ProjectInMemory = {
 };
 
 @Injectable()
-export class InMemoryProjectRepository implements ProjectRepositoryPort {
+export class InMemoryProjectRepository {
+  // implements ProjectRepositoryPort {
   constructor(@Inject(CLOCK_PORT) private clock: ClockPort) {}
 
   private projects: ProjectInMemory[] = [

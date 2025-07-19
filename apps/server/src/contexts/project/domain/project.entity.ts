@@ -9,7 +9,7 @@ import {
 } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
 import { Category } from '@/contexts/category/domain/category.entity';
-import { KeyFeature } from '@/contexts/project/bounded-contexts/key-feature/domain/key-feature.entity';
+import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
 import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
 
 export type ProjectValidationErrors = {
@@ -320,5 +320,53 @@ export class Project {
   // Authorization and validation methods only
   public canUserModifyRoles(userId: string): boolean {
     return this.hasOwnerId(userId);
+  }
+
+  public updateKeyFeatures(
+    keyFeatures: {
+      id?: string;
+      projectId?: string;
+      feature: string;
+    }[],
+  ): Result<KeyFeature[], string> {
+    const keyFeatureResults = keyFeatures.map((kf) =>
+      KeyFeature.create({
+        ...kf,
+      }),
+    );
+    if (!keyFeatureResults.every((kf) => kf.success)) {
+      return Result.fail(
+        keyFeatureResults.find((kf) => !kf.success)?.error as string,
+      );
+    }
+
+    const validatedKeyFeatures = keyFeatureResults.map((kf) => kf.value);
+    const currentKeyFeatures = this.keyFeatures || [];
+
+    // Identifier les keyFeatures à conserver/modifier et les nouvelles
+    const incomingIds = validatedKeyFeatures
+      .map((kf) => kf.toPrimitive().id)
+      .filter(Boolean);
+
+    // Supprimer les keyFeatures qui ne sont plus dans la liste entrante
+    const remainingKeyFeatures = currentKeyFeatures.filter((kf) => {
+      const id = kf.toPrimitive().id;
+      return id && incomingIds.includes(id);
+    });
+
+    // Mettre à jour les keyFeatures existantes et ajouter les nouvelles
+    const updatedKeyFeatures = validatedKeyFeatures.map((newKf) => {
+      const newKfData = newKf.toPrimitive();
+      if (newKfData.id) {
+        // Keyfeature existante - la remplacer
+        return newKf;
+      } else {
+        // Nouvelle keyfeature
+        return newKf;
+      }
+    });
+
+    this.keyFeatures = [...remainingKeyFeatures, ...updatedKeyFeatures];
+    return Result.ok(this.keyFeatures);
   }
 }

@@ -18,6 +18,15 @@ import {
   CategoryRepositoryPort,
 } from '@/contexts/category/use-cases/ports/category.repository.port';
 import { Category } from '@/contexts/category/domain/category.entity';
+import {
+  MEDIA_SERVICE_PORT,
+  MediaServicePort,
+} from '@/media/port/media.service.port';
+import {
+  PROJECT_KEY_FEATURE_REPOSITORY_PORT,
+  ProjectKeyFeatureRepositoryPort,
+} from '@/contexts/project/bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
+import { KeyFeature } from '@/contexts/project/bounded-contexts/project-key-feature/domain/key-feature.entity';
 
 export class UpdateProjectCommand implements ICommand {
   constructor(
@@ -30,7 +39,11 @@ export class UpdateProjectCommand implements ICommand {
       externalLinks?: { type: string; url: string }[];
       techStacks?: string[];
       categories?: string[];
-      keyFeatures?: string[];
+      keyFeatures?: {
+        id: string;
+        projectId: string;
+        feature: string;
+      }[];
       projectGoals?: string[];
       projectRoles?: {
         title: string;
@@ -52,6 +65,10 @@ export class UpdateProjectCommandHandler
     private readonly techStackRepo: TechStackRepositoryPort,
     @Inject(CATEGORY_REPOSITORY_PORT)
     private readonly categoryRepo: CategoryRepositoryPort,
+    @Inject(PROJECT_KEY_FEATURE_REPOSITORY_PORT)
+    private readonly keyFeatureRepo: ProjectKeyFeatureRepositoryPort,
+    @Inject(MEDIA_SERVICE_PORT)
+    private readonly mediaService: MediaServicePort,
   ) {}
 
   async execute(
@@ -112,6 +129,20 @@ export class UpdateProjectCommandHandler
         c.toPrimitive(),
       );
     }
+    // Ajouter les nouvelles keyFeatures si fournies
+    if (props.keyFeatures) {
+      const updateProjectKeyFeaturesResult = existingProject.updateKeyFeatures(
+        props.keyFeatures,
+      );
+      if (!updateProjectKeyFeaturesResult.success) {
+        return Result.fail(updateProjectKeyFeaturesResult.error);
+      }
+      const updateKeyFeatures = await this.keyFeatureRepo.updateMany(
+        updateProjectKeyFeaturesResult.value,
+      );
+      if (!updateKeyFeatures.success)
+        return Result.fail(updateKeyFeatures.error);
+    }
 
     // Préparer les données pour la mise à jour
     const existingData = existingProject.toPrimitive();
@@ -123,26 +154,24 @@ export class UpdateProjectCommandHandler
       externalLinks: props.externalLinks ?? existingData.externalLinks,
       techStacks: allTechStacksValidated,
       categories: allCategoriesValidated,
-      keyFeatures: props.keyFeatures
-        ? props.keyFeatures.map((feature) => ({ feature }))
-        : existingData.keyFeatures,
+      // keyFeatures: existingData.keyFeatures,
       projectGoals: props.projectGoals
         ? props.projectGoals.map((goal) => ({ goal }))
         : existingData.projectGoals,
-      projectRoles: props.projectRoles
-        ? props.projectRoles.map((role) => ({
-            title: role.title,
-            description: role.description,
-            isFilled: false,
-            techStacks: role.techStacks.map((ts) => ({
-              id: ts,
-              name: allTechStacksValidated.find((t) => t.id === ts)
-                ?.name as string,
-              iconUrl: allTechStacksValidated.find((t) => t.id === ts)
-                ?.iconUrl as string,
-            })),
-          }))
-        : existingData.projectRoles,
+      // projectRoles: props.projectRoles
+      //   ? props.projectRoles.map((role) => ({
+      //       title: role.title,
+      //       description: role.description,
+      //       isFilled: false,
+      //       techStacks: role.techStacks.map((ts) => ({
+      //         id: ts,
+      //         name: allTechStacksValidated.find((t) => t.id === ts)
+      //           ?.name as string,
+      //         iconUrl: allTechStacksValidated.find((t) => t.id === ts)
+      //           ?.iconUrl as string,
+      //       })),
+      //     }))
+      //   : existingData.projectRoles,
     };
 
     // Valider les données mises à jour
