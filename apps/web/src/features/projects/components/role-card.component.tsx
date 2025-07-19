@@ -17,7 +17,6 @@ import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
-  techStacks?: TechStack[];
   projectGoals?: ProjectGoal[];
   keyFeatures?: KeyFeature[];
   className?: string;
@@ -27,7 +26,6 @@ interface RoleCardProps {
 
 export default function RoleCard({
   role,
-  techStacks = [],
   projectGoals = [],
   keyFeatures = [],
   className,

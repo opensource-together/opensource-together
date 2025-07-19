@@ -314,14 +314,12 @@ ProjectCardViewLink.displayName = "ProjectCardViewLink";
 
 /* ------------------------------- View Text -------------------------------- */
 interface ProjectCardViewTextProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  projectId?: string;
-}
+  extends React.HTMLAttributes<HTMLDivElement> {}
 
 const ProjectCardViewText = React.forwardRef<
   HTMLDivElement,
   ProjectCardViewTextProps
->(({ className, projectId, ...props }, ref) => (
+>(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(

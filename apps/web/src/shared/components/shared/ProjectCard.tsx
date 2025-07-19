@@ -86,7 +86,7 @@ export default function ProjectCardComponent({
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
-          {showViewProject && <ProjectCardViewText projectId={projectId} />}
+          {showViewProject && <ProjectCardViewText />}
         </ProjectCardHeader>
         <ProjectCardContent>
           <ProjectCardDescription>{shortDescription}</ProjectCardDescription>
