@@ -36,12 +36,6 @@ export class UpdateProjectCommand implements ICommand {
       categories?: string[];
       keyFeatures?: (string | { id: string; feature: string })[];
       projectGoals?: (string | { id: string; goal: string })[];
-      projectRoles?: {
-        id?: string;
-        title: string;
-        description: string;
-        techStacks: string[];
-      }[];
     },
   ) {}
 }
@@ -82,22 +76,15 @@ export class UpdateProjectCommandHandler
     // Validation des techStacks si fournis
     let allTechStacksValidated = existingProject.toPrimitive().techStacks;
     if (props.techStacks) {
-      // Récupérer tous les IDs des techStacks des projectRoles
-      const roleTechStackIds =
-        props.projectRoles?.flatMap((role) => role.techStacks) || [];
-      // Combiner tous les IDs uniques
-      const allTechStackIds = [
-        ...new Set([...props.techStacks, ...roleTechStackIds]),
-      ];
-
-      const techStacksValidation =
-        await this.techStackRepo.findByIds(allTechStackIds);
+      const techStacksValidation = await this.techStackRepo.findByIds(
+        props.techStacks,
+      );
       if (!techStacksValidation.success) {
         return Result.fail(techStacksValidation.error);
       }
 
       const techStacksValidated = techStacksValidation.value;
-      if (techStacksValidated.length !== allTechStackIds.length) {
+      if (techStacksValidated.length !== props.techStacks.length) {
         return Result.fail('Some tech stacks are not valid');
       }
 
@@ -191,36 +178,6 @@ export class UpdateProjectCommandHandler
       ];
     }
 
-    // Gestion incrémentale des projectRoles
-    let updatedProjectRoles = existingData.projectRoles;
-    if (props.projectRoles) {
-      const existingProjectRoles = existingData.projectRoles;
-      const incomingProjectRoles = props.projectRoles;
-
-      // Identifier les rôles à conserver (avec ID)
-      const rolesToKeep = existingProjectRoles.filter((existing) =>
-        incomingProjectRoles.some((incoming) => incoming.id === existing.id),
-      );
-
-      // Ajouter les nouveaux rôles (sans ID)
-      const newRoles = incomingProjectRoles
-        .filter((incoming) => !incoming.id)
-        .map((role) => ({
-          title: role.title,
-          description: role.description,
-          isFilled: false,
-          techStacks: role.techStacks.map((ts) => ({
-            id: ts,
-            name: allTechStacksValidated.find((t) => t.id === ts)
-              ?.name as string,
-            iconUrl: allTechStacksValidated.find((t) => t.id === ts)
-              ?.iconUrl as string,
-          })),
-        }));
-
-      updatedProjectRoles = [...rolesToKeep, ...newRoles];
-    }
-
     const updatedData = {
       ...existingData,
       title: props.title ?? existingData.title,
@@ -231,7 +188,6 @@ export class UpdateProjectCommandHandler
       categories: allCategoriesValidated,
       keyFeatures: updatedKeyFeatures,
       projectGoals: updatedProjectGoals,
-      projectRoles: updatedProjectRoles,
     };
 
     // Valider les données mises à jour

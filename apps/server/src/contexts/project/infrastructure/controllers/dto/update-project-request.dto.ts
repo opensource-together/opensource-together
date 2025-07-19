@@ -39,12 +39,4 @@ export class UpdateProjectDtoRequest {
   @IsArray()
   @IsOptional()
   projectGoals?: (string | { id: string; goal: string })[];
-
-  @IsArray()
-  @IsOptional()
-  projectRoles?: {
-    title: string;
-    description: string;
-    techStacks: string[];
-  }[];
 }
