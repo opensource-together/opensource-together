@@ -6,11 +6,11 @@ import {
 import {
   ProjectRole,
   ProjectRoleValidationErrors,
-} from '@/contexts/project-role/domain/project-role.entity';
+} from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
 import { Category } from '@/contexts/category/domain/category.entity';
-import { KeyFeature } from '@/contexts/key-feature/domain/key-feature.entity';
-import { ProjectGoals } from '@/contexts/project-goals/domain/project-goals.entity';
+import { KeyFeature } from '@/contexts/project/bounded-contexts/key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;

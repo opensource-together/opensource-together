@@ -10,7 +10,7 @@ export async function applyToProjectRole(
 ): Promise<ProjectRoleApplicationType> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/projects/${projectId}/roles/${roleId}/apply`,
+      `${API_BASE_URL}/projects/${projectId}/roles/${roleId}`,
       {
         method: "POST",
         headers: {

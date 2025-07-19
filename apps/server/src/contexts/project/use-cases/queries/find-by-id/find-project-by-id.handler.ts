@@ -3,6 +3,7 @@ import {
   GITHUB_REPOSITORY_PORT,
   GithubRepositoryPort,
   LastCommit,
+  RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import {
   PROFILE_REPOSITORY_PORT,
@@ -48,15 +49,10 @@ export class FindProjectByIdHandler
           avatarUrl: string;
         };
         project: Project;
-        projectStats: {
-          forks: number;
-          stars: number;
-          watchers: number;
-          openIssues: number;
-          commits: number;
-          lastCommit: LastCommit | null;
-          contributors: Contributor[];
-        };
+        repositoryInfo: RepositoryInfo;
+        lastCommit: LastCommit | null;
+        contributors: Contributor[];
+        commits: number;
       },
       string
     >
@@ -94,10 +90,10 @@ export class FindProjectByIdHandler
     const repoName = project.value.toPrimitive().title;
 
     let commits: Result<
-      { lastCommit: LastCommit; commitsNumber: number },
+      { lastCommit: LastCommit | null; commitsNumber: number },
       string
     >;
-    let repoInfo: Result<ProjectStats, string>;
+    let repoInfo: Result<RepositoryInfo, string>;
     let contributors: Result<Contributor[], string>;
 
     if (octokit) {
@@ -131,7 +127,13 @@ export class FindProjectByIdHandler
       watchers: 0,
       openIssues: 0,
       commits: 0,
-      lastCommit: null,
+      lastCommit: {
+        sha: '',
+        message: '',
+        date: '',
+        url: '',
+        author: { login: '', avatar_url: '', html_url: '' },
+      },
       contributors: [],
     };
 
@@ -139,7 +141,7 @@ export class FindProjectByIdHandler
 
     if (commits.success) {
       projectStats.commits = commits.value.commitsNumber;
-      projectStats.lastCommit = commits.value.lastCommit;
+      projectStats.lastCommit = commits.value.lastCommit || null;
     }
 
     if (repoInfo.success) {
@@ -161,7 +163,10 @@ export class FindProjectByIdHandler
         avatarUrl: ownerAvatarUrl,
       },
       project: project.value,
-      projectStats,
+      repositoryInfo: projectStats,
+      lastCommit: projectStats.lastCommit,
+      contributors: projectStats.contributors,
+      commits: projectStats.commits,
     });
   }
 }

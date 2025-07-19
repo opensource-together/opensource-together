@@ -3,12 +3,13 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
-
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
+
+  app.setGlobalPrefix('v1');
 
   // Configuration CORS
   app.enableCors({

@@ -127,16 +127,16 @@ export default function ProjectMainEditForm({
                 <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
                   <div className="w-full lg:w-[668px]">
-                    <AvatarUpload
-                      onFileSelect={onImageSelect}
-                      accept="image/*"
-                      maxSize={1}
-                      size="xl"
-                      name={project.title}
-                      fallback={project.title}
-                      className="mt-4"
-                    />
-                  </div>
+                  <AvatarUpload
+                    onFileSelect={onImageSelect}
+                    accept="image/*"
+                    maxSize={1}
+                    size="xl"
+                    name={project.title}
+                    fallback={project.title}
+                    className="mt-4"
+                    currentImageUrl={project.image}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
