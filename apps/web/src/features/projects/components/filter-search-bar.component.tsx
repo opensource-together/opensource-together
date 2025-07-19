@@ -8,11 +8,11 @@ interface FilterItemProps {
 
 function FilterItem({ label, value }: FilterItemProps) {
   return (
-    <div className="group flex h-[50px] w-[125px] cursor-pointer flex-col rounded-full px-4 py-[8px] transition-all duration-200 hover:bg-white">
-      <span className="text-[11px] font-normal text-black/50 transition-colors duration-200 group-hover:text-black/70">
+    <div className="group flex h-15 w-36 cursor-pointer flex-col rounded-full px-8 py-3 transition-all duration-200 hover:rounded-full hover:bg-white">
+      <span className="text-xs font-normal text-black/40 transition-colors duration-200">
         {label}
       </span>
-      <span className="text-xs font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
+      <span className="text-sm font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
         {value}
       </span>
     </div>
@@ -21,13 +21,14 @@ function FilterItem({ label, value }: FilterItemProps) {
 
 export default function FilterSearchBar() {
   return (
-    <div className="flex h-[50px] w-[649px] items-center justify-center">
-      <div className="group flex h-full w-full items-center justify-between rounded-full border border-black/5 bg-white px-4 py-1 shadow-md shadow-black/3 backdrop-blur-lg transition-colors duration-200 hover:bg-black/5">
-        <div className="absolute left-[-1px] flex items-center gap-4">
+    <div className="flex h-15 w-[729px] items-center justify-center">
+      <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
+        {/* Zone des filtres avec hover */}
+        <div className="rounded-fulltransition-colors flex h-full w-full items-center gap-4 duration-200 hover:rounded-full hover:bg-black/5">
           <div className="flex items-center">
             <div className="relative">
               <FilterItem label="Filtrer par" value="Technologie" />
-              <div className="absolute top-1/2 right-0 h-12 -translate-y-1/2" />
+              <div className="absolute top-1/2 right-0 h-12 -translate-y-1/2 pl-4" />
             </div>
             <div className="relative">
               <FilterItem label="Filtrer par" value="Role" />
@@ -38,11 +39,11 @@ export default function FilterSearchBar() {
               <div className="absolute top-1/2 right-0 h-8 -translate-y-1/2" />
             </div>
             <div className="relative">
-              <div className="group flex h-[50px] w-[274px] cursor-pointer flex-col rounded-full px-4 py-[8px] transition-all duration-200 hover:bg-white">
-                <span className="text-[11px] font-normal text-black/50 transition-colors duration-200 group-hover:text-black/70">
+              <div className="group flex h-15 w-[300px] cursor-pointer flex-col rounded-full px-4 py-3 transition-all duration-200 hover:rounded-full hover:bg-white">
+                <span className="text-xs font-normal text-black/40 transition-colors duration-200 hover:rounded-full">
                   Trier par
                 </span>
-                <span className="text-xs font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
+                <span className="text-sm font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
                   Plus Récent
                 </span>
               </div>
@@ -50,14 +51,9 @@ export default function FilterSearchBar() {
           </div>
         </div>
 
-        <Button className="absolute right-2 h-[35px] px-4">
-          Chercher un Projet{" "}
-          <Icon
-            name="search"
-            size="xs"
-            variant="white"
-            className="scale-x-[-1]"
-          />
+        {/* Bouton en position absolue, en dehors de la zone hover */}
+        <Button className="pointer-events-auto absolute right-2 h-9 px-4">
+          Chercher un Projet <Icon name="search" size="xs" variant="white" />
         </Button>
       </div>
     </div>
