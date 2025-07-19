@@ -1,9 +1,9 @@
 "use client";
 
-import NextImage from "next/image";
 import { useState } from "react";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
+import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 
@@ -43,19 +43,16 @@ export default function RoleCard({
     techStacks: roleTechStacks = [],
   } = role;
 
-  const handleCardClick = () => {
-    if (!isMaintainer) {
-      if (isAuthenticated) {
-        // Le modal s'ouvrira via le trigger du RoleApplicationForm
-      } else {
-        redirectToLogin();
-      }
+  const handleCheckClick = () => {
+    if (!isMaintainer && !isAuthenticated) {
+      redirectToLogin();
     }
   };
 
   const cardContent = (
     <div
-      className={`font-geist w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] md:w-[668px] ${className}`}
+      className={`w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] md:w-[668px] ${className}`}
+      onClick={handleCheckClick}
     >
       {/* Role Title */}
       <div className="flex items-start justify-between">
@@ -65,15 +62,9 @@ export default function RoleCard({
         {isMaintainer ? (
           <div className="flex items-center gap-1">
             <EditRoleForm role={role} projectId={projectId}>
-              <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5 sm:h-9 sm:w-9 sm:p-2.5">
-                <NextImage
-                  src="/icons/edit-black-icon.svg"
-                  alt="Modifier"
-                  width={16}
-                  height={16}
-                  className="h-4 w-4 sm:h-[16px] sm:w-[16px]"
-                />
-              </button>
+              <Button variant="ghost" size="icon">
+                <Icon name="pencil" size="sm" />
+              </Button>
             </EditRoleForm>
 
             <ConfirmDialog
@@ -88,21 +79,17 @@ export default function RoleCard({
               }}
               onCancel={() => setIsConfirmOpen(false)}
               confirmText="Supprimer le rôle"
-              confirmIcon="/icons/delete-white-icon.svg"
+              confirmIcon="trash"
+              confirmIconVariant="white"
               confirmVariant="destructive"
             />
-            <button
+            <Button
               onClick={() => setIsConfirmOpen(true)}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-black/5 p-2 transition-colors hover:bg-black/5 sm:h-9 sm:w-9 sm:p-2.5"
+              variant="ghost"
+              size="icon"
             >
-              <NextImage
-                src="/icons/delete-icon.svg"
-                alt="Supprimer"
-                width={16}
-                height={16}
-                className="h-4 w-4 sm:h-[16px] sm:w-[16px]"
-              />
-            </button>
+              <Icon name="trash" size="sm" />
+            </Button>
           </div>
         ) : (
           <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
@@ -115,7 +102,7 @@ export default function RoleCard({
       </div>
 
       {/* Role Description */}
-      <p className="mt-4 line-clamp-1 text-sm leading-5 font-medium tracking-tighter text-black/70">
+      <p className="mt-4 line-clamp-1 text-sm leading-snug font-medium tracking-tighter text-black/70">
         {description}
       </p>
 
@@ -141,7 +128,6 @@ export default function RoleCard({
     </div>
   );
 
-  // Si l'utilisateur n'est pas maintainer et est authentifié, wrapper avec RoleApplicationForm
   if (!isMaintainer && isAuthenticated) {
     return (
       <RoleApplicationForm
@@ -158,6 +144,5 @@ export default function RoleCard({
     );
   }
 
-  // Sinon, retourner la carte normale
   return cardContent;
 }

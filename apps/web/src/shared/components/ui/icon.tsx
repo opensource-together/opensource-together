@@ -52,7 +52,8 @@ export type IconName =
   | "pinned"
   | "joined"
   | "logout"
-  | "created-projects";
+  | "created-projects"
+  | "trash";
 
 // Mapping of the icon names to the SVG files
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
@@ -272,6 +273,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/last-commit-icon.svg",
     filled: "/icons/last-commit-icon.svg",
     outline: "/icons/last-commit-icon.svg",
+  },
+  trash: {
+    default: "/icons/trash.svg",
+    gray: "/icons/trash-gray.svg",
+    white: "/icons/trash-white.svg",
+    black: "/icons/trash.svg",
+    filled: "/icons/trash.svg",
+    outline: "/icons/trash.svg",
   },
 };
 

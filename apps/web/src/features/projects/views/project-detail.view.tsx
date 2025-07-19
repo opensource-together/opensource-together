@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import Icon from "@/shared/components/ui/icon";
 
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
@@ -8,7 +9,6 @@ import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
-import RolesEmptyState from "../components/roles-empty-state.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import CreateRoleForm from "../forms/create-role.form";
 import { useProject } from "../hooks/use-projects.hook";
@@ -82,9 +82,31 @@ export default function ProjectDetailView({
                     />
                   ))
                 ) : (
-                  <RolesEmptyState
-                    isMaintainer={isMaintainer}
-                    projectId={projectId}
+                  <EmptyState
+                    title="Aucun Rôle Disponible"
+                    description={
+                      isMaintainer
+                        ? "Aucun rôle n'a été soumis pour ce projet pour le moment. Les rôles apparaîtront ici une fois créés."
+                        : "Ce projet n'a actuellement aucun rôle disponible. Explorez d'autres projets pour trouver des opportunités qui correspondent à vos compétences."
+                    }
+                    action={
+                      isMaintainer ? (
+                        <CreateRoleForm projectId={projectId}>
+                          <Button className="flex items-center gap-2">
+                            Créer un rôle
+                            <Icon name="plus" size="xs" variant="white" />
+                          </Button>
+                        </CreateRoleForm>
+                      ) : (
+                        <Button
+                          className="flex items-center gap-2 px-4"
+                          onClick={() => (window.location.href = "/")}
+                        >
+                          Chercher un Projet
+                          <Icon name="search" size="xs" variant="white" />
+                        </Button>
+                      )
+                    }
                   />
                 )}
               </div>

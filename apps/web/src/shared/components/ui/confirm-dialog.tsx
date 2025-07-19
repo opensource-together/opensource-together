@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,7 +10,7 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
-import Icon from "@/shared/components/ui/icon";
+import Icon, { IconName, IconVariant } from "@/shared/components/ui/icon";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -23,7 +21,8 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
   onCancel: () => void;
   confirmText?: string;
-  confirmIcon?: string;
+  confirmIcon?: IconName;
+  confirmIconVariant?: IconVariant;
   confirmVariant?:
     | "default"
     | "destructive"
@@ -42,27 +41,13 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
   confirmText = "Confirmer",
-  confirmIcon,
+  confirmIcon = "check",
+  confirmIconVariant = "default",
   confirmVariant = "default",
 }: ConfirmDialogProps) {
   const renderIcon = () => {
     if (!confirmIcon) return null;
-
-    // Si c'est un chemin direct (commence par /)
-    if (confirmIcon.startsWith("/")) {
-      return (
-        <Image
-          src={confirmIcon}
-          alt="Icon"
-          width={13}
-          height={13}
-          className="h-3 w-3 sm:h-[13px] sm:w-[13px]"
-        />
-      );
-    }
-
-    // Sinon c'est un nom d'icône du composant Icon
-    return <Icon name={confirmIcon as any} size="xs" variant="black" />;
+    return <Icon name={confirmIcon} size="xs" variant={confirmIconVariant} />;
   };
 
   return (

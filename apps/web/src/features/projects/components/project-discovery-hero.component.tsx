@@ -31,8 +31,8 @@ export default function ProjectDiscoveryHero() {
         </div>
       </div>
       <Image
-        src="/background-homepage (2).png"
-        alt="billboard"
+        src="/background-homepage.png"
+        alt="background-homepage"
         width={1094}
         height={266}
         className="h-[200px] w-full md:h-[266px]"
