@@ -23,7 +23,7 @@ import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositori
 import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
 import { CategoryRepositoryPort } from '@/contexts/category/use-cases/ports/category.repository.port';
 import { Category } from '@/contexts/category/domain/category.entity';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+// import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -61,8 +61,8 @@ export class CreateProjectCommandHandler
     private readonly githubRepository: GithubRepositoryPort,
     @Inject(CATEGORY_REPOSITORY_PORT)
     private readonly categoryRepo: CategoryRepositoryPort,
-    @Inject(EventEmitter2)
-    private readonly eventEmitter: EventEmitter2,
+    // @Inject(EventEmitter2)
+    // private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(
