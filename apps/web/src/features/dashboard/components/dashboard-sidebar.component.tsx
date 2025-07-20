@@ -15,17 +15,17 @@ import Icon from "@/shared/components/ui/icon";
 import { ProjectRoleApplicationType } from "@/features/projects/types/project-application.type";
 import { Project } from "@/features/projects/types/project.type";
 
-interface CollaborationSidebarProps {
+interface DashboardSidebarProps {
   projects?: Project[];
   applications?: ProjectRoleApplicationType[];
   contributions?: any[];
 }
 
-export default function CollaborationSidebar({
+export default function DashboardSidebar({
   projects = [],
   applications = [],
   contributions = [],
-}: CollaborationSidebarProps) {
+}: DashboardSidebarProps) {
   // Mock data for demonstration - replace with real data
   const mockProjects =
     projects.length > 0

@@ -92,7 +92,6 @@ export function StepTwoForm() {
                   emptyText="Aucune technologie trouvée."
                   disabled={techStacksLoading}
                   maxSelections={10}
-                  showTags={false}
                 />
               </FormControl>
               <FormMessage />
@@ -125,7 +124,6 @@ export function StepTwoForm() {
                   emptyText="Aucune catégorie trouvée."
                   disabled={categoriesLoading}
                   maxSelections={6}
-                  showTags={false}
                 />
               </FormControl>
               <FormMessage />
