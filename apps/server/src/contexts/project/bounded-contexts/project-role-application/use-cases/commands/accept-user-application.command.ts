@@ -22,7 +22,6 @@ export class AcceptUserApplicationCommand implements ICommand {
     public readonly props: {
       projectRoleApplicationId: string;
       projectId: string;
-      projectRoleId: string;
       userId: string;
     },
   ) {}
@@ -42,22 +41,16 @@ export class AcceptUserApplicationCommandHandler
   ) {}
 
   async execute(command: AcceptUserApplicationCommand) {
-    const { projectRoleApplicationId, projectId, userId, projectRoleId } =
-      command.props;
+    const { projectRoleApplicationId, projectId, userId } = command.props;
     const project: Result<Project, string> =
       await this.projectRepo.findById(projectId);
+    console.log('project', project);
     if (!project.success) {
       return Result.fail('Project not found');
     }
 
     if (!project.value.hasOwnerId(userId)) {
       return Result.fail('User is not the owner of the project');
-    }
-
-    const projectRole: Result<ProjectRole, string> =
-      await this.projectRoleRepository.findById(projectRoleId);
-    if (!projectRole.success) {
-      return Result.fail(projectRole.error);
     }
 
     const application: Result<ProjectRoleApplication, string> =
@@ -70,6 +63,14 @@ export class AcceptUserApplicationCommandHandler
       return Result.fail(application.error);
     }
 
+    const projectRole: Result<ProjectRole, string> =
+      await this.projectRoleRepository.findById(
+        application.value.projectRoleId,
+      );
+
+    if (!projectRole.success) {
+      return Result.fail(projectRole.error);
+    }
     projectRole.value.markAsFilled();
 
     const updatedProjectRole: Result<ProjectRole, string> =

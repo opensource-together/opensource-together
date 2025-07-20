@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Patch } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation } from '@nestjs/swagger';
 import { ApiParam } from '@nestjs/swagger';
 import { ApiBody } from '@nestjs/swagger';
@@ -288,17 +288,15 @@ export class ProjectRoleApplicationController {
     return applications.value;
   }
 
-  @Post(':roleId/applications/:applicationId/accept')
+  @Patch('applications/:applicationId/accept')
   async acceptApplication(
     @Param('applicationId') applicationId: string,
     @Param('projectId') projectId: string,
-    @Param('roleId') roleId: string,
     @Session('userId') userId: string,
   ) {
     const command = new AcceptUserApplicationCommand({
       projectRoleApplicationId: applicationId,
       projectId,
-      projectRoleId: roleId,
       userId,
     });
     const result: Result<ProjectRoleApplication, string> =

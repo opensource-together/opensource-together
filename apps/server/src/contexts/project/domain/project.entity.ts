@@ -152,7 +152,9 @@ export class Project {
       shortDescription: ShortDescription.create(props.shortDescription),
       techStacks: TechStack.reconstituteMany(props.techStacks),
       categories: Category.reconstituteMany(props.categories),
-      projectRoles: ProjectRole.createMany(props.projectRoles),
+      projectRoles: props.projectRoles.some((pr) => !pr.id)
+        ? ProjectRole.createMany(props.projectRoles)
+        : ProjectRole.reconstituteMany(props.projectRoles),
       keyFeatures: KeyFeature.createMany(props.keyFeatures),
       projectGoals: ProjectGoals.createMany(props.projectGoals),
     };
