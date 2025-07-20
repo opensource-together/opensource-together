@@ -2,17 +2,21 @@ import { Express } from 'express';
 import {
   Controller,
   Post,
+  Patch,
   UseInterceptors,
   UploadedFile,
   Inject,
   HttpException,
   HttpStatus,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { MediaServicePort } from '../../port/media.service.port';
 import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -93,6 +97,73 @@ export class MediaController {
     const result = await this.mediaService.uploadPublicImage(
       image.buffer,
       key,
+      image.mimetype,
+    );
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return { url: result.value };
+  }
+
+  @Delete('delete/image/public/:key')
+  async deletePublicImage(@Param('key') key: string) {
+    const result = await this.mediaService.delete(key);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return { message: 'Image deleted successfully' };
+  }
+
+  @Patch('change/image/public/:oldKey')
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiOperation({ summary: 'Changer une image publique vers R2' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+          description: 'Fichier image à uploader (jpg, png, etc.)',
+        },
+      },
+      required: ['image'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: "L'URL de l'image uploadée",
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            url: {
+              type: 'string',
+              example:
+                'https://pub-9015c9fc95574da98f6e7b9d4555ae24.r2.dev/1752701599288-policier-lol.jpg',
+              description: "URL publique de l'image uploadée",
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiParam({
+    name: 'oldKey',
+    type: String,
+    description: "La clé de l'image à remplacer",
+  })
+  async changePublicImage(
+    @Param('oldKey') oldKey: string,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    const newKey = `${Date.now()}-${image.originalname}`;
+    const result = await this.mediaService.changePublicImage(
+      oldKey,
+      newKey,
+      image.buffer,
       image.mimetype,
     );
     if (!result.success) {

@@ -34,17 +34,13 @@ export class UpdateProjectDtoRequest {
 
   @IsArray()
   @IsOptional()
-  keyFeatures?: string[];
+  keyFeatures?: (string | { id: string; feature: string })[];
 
   @IsArray()
   @IsOptional()
-  projectGoals?: string[];
+  projectGoals?: (string | { id: string; goal: string })[];
 
-  @IsArray()
+  @IsString()
   @IsOptional()
-  projectRoles?: {
-    title: string;
-    description: string;
-    techStacks: string[];
-  }[];
+  image?: string;
 }
