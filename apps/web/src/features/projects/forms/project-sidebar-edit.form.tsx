@@ -82,7 +82,6 @@ export default function ProjectSidebarEditForm({
                     emptyText="Aucune catégorie trouvée."
                     disabled={categoriesLoading}
                     maxSelections={6}
-                    showTags={false}
                   />
                 </FormControl>
                 <FormMessage />
