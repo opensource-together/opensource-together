@@ -1,6 +1,5 @@
 import { UseFormReturn } from "react-hook-form";
 
-import { Avatar } from "@/shared/components/ui/avatar";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -10,7 +9,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import { Icon } from "@/shared/components/ui/icon";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
@@ -24,7 +22,6 @@ interface ProjectSidebarEditFormProps {
 }
 
 export default function ProjectSidebarEditForm({
-  project,
   form,
 }: ProjectSidebarEditFormProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
@@ -32,94 +29,9 @@ export default function ProjectSidebarEditForm({
   const { control } = form;
 
   return (
-    <>
-      {/* Details Section - Informative */}
-      <div className="mb-3 flex flex-col">
-        <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
-        <div className="">
-          {/* Stars */}
-          <div className="flex items-center justify-between py-1">
-            <div className="flex items-center gap-2">
-              <Icon
-                name="star"
-                size="sm"
-                variant="black"
-                className="opacity-50"
-              />
-              <span className="text-sm font-normal text-black/50">Stars</span>
-            </div>
-            <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
-            </div>
-            <span className="text-sm font-medium text-black">
-              {project.projectStats?.stars || 0}
-            </span>
-          </div>
-
-          {/* Forks */}
-          <div className="flex items-center justify-between py-1">
-            <div className="flex items-center gap-2">
-              <Icon
-                name="fork"
-                size="sm"
-                variant="black"
-                className="opacity-50"
-              />
-              <span className="text-sm font-normal text-black/50">Forks</span>
-            </div>
-            <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
-            </div>
-            <span className="text-sm font-medium text-black">
-              {project.projectStats?.forks || 0}
-            </span>
-          </div>
-
-          {/* Last Commit */}
-          <div className="flex items-center justify-between py-1">
-            <div className="flex items-center gap-2">
-              <Icon name="last-commit" size="sm" variant="default" />
-              <span className="text-sm font-normal text-black/50">
-                Last Commit
-              </span>
-            </div>
-            <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
-            </div>
-            <span className="text-sm font-medium text-black">
-              {project.projectStats?.lastCommitAt
-                ? new Date(
-                    project.projectStats.lastCommitAt
-                  ).toLocaleDateString("fr-FR")
-                : "N/A"}
-            </span>
-          </div>
-
-          {/* Contributors */}
-          <div className="flex items-center justify-between py-1">
-            <div className="flex items-center gap-2">
-              <Icon
-                name="people"
-                size="sm"
-                variant="black"
-                className="opacity-50"
-              />
-              <span className="text-sm font-normal text-black/50">
-                Contributors
-              </span>
-            </div>
-            <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
-            </div>
-            <span className="text-sm font-medium text-black">
-              {project.projectStats?.contributors || 0}
-            </span>
-          </div>
-        </div>
-      </div>
-
+    <div className="flex flex-col gap-5">
       {/* Form */}
-      <div className="flex flex-col space-y-6">
+      <div className="flex flex-col space-y-10 md:max-w-[263px]">
         <Form {...form}>
           {/* Tech Stack */}
           <FormField
@@ -127,12 +39,7 @@ export default function ProjectSidebarEditForm({
             name="techStack"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  required
-                  tooltip="Sélectionnez les technologies, langages de programmation et outils utilisés dans votre projet. Cela aide les développeurs à identifier les projets correspondant à leurs compétences."
-                >
-                  Technologies (max 10)
-                </FormLabel>
+                <FormLabel required>Technologies (max 10)</FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}
@@ -147,6 +54,7 @@ export default function ProjectSidebarEditForm({
                     emptyText="Aucune technologie trouvée."
                     disabled={techStacksLoading}
                     maxSelections={10}
+                    showTags={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -160,12 +68,7 @@ export default function ProjectSidebarEditForm({
             name="categories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  required
-                  tooltip="Choisissez les domaines ou secteurs d'activité auxquels votre projet se rapporte. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
-                >
-                  Catégories (max 6)
-                </FormLabel>
+                <FormLabel required>Catégories (max 6)</FormLabel>
                 <FormControl>
                   <Combobox
                     options={categoryOptions}
@@ -180,6 +83,7 @@ export default function ProjectSidebarEditForm({
                     emptyText="Aucune catégorie trouvée."
                     disabled={categoriesLoading}
                     maxSelections={6}
+                    showTags={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -187,42 +91,9 @@ export default function ProjectSidebarEditForm({
             )}
           />
 
-          {/* Contributors Section - Informative */}
-          <div className="mb-3 flex flex-col">
-            <h2 className="text-md mb-2 font-medium text-black">
-              Contributeurs ({project.collaborators?.length || 0})
-            </h2>
-            <div className="flex flex-col gap-2">
-              {project.collaborators?.slice(0, 5).map((collaborator) => (
-                <div key={collaborator.id} className="flex items-center gap-2">
-                  <Avatar
-                    src={collaborator.avatarUrl}
-                    alt={collaborator.name}
-                    size="sm"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-black">
-                      {collaborator.name}
-                    </span>
-                    <span className="text-xs text-black/50">
-                      {collaborator.role}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              {(project.collaborators?.length || 0) > 5 && (
-                <span className="text-xs text-black/50">
-                  +{(project.collaborators?.length || 0) - 5} autres
-                </span>
-              )}
-            </div>
-          </div>
-
           {/* Links */}
           <div className="flex flex-col gap-4">
-            <FormLabel tooltip="Partagez les liens vers vos réseaux sociaux, repository GitHub, serveur Discord ou site web. Ces liens aident les contributeurs à en savoir plus et à vous contacter.">
-              Liens sociaux
-            </FormLabel>
+            <FormLabel>Liens sociaux</FormLabel>
 
             <FormField
               control={control}
@@ -307,6 +178,6 @@ export default function ProjectSidebarEditForm({
           </div>
         </Form>
       </div>
-    </>
+    </div>
   );
 }

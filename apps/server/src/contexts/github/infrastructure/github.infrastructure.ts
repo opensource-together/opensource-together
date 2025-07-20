@@ -6,7 +6,7 @@ import { githubUseCases } from '@/contexts/github/use-cases/github.use-cases';
 // import { RepositoryModule } from '@/infrastructures/repositories/repository.module';
 import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
 import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { ConfigModule } from '@nestjs/config';
 import { OctokitProvider } from './providers/octokit.provider';
 import { GithubRepository } from './repositories/github.repository';
@@ -16,13 +16,12 @@ import {
   // UserGitHubCredentialsRepositoryPort,
 } from '../use-cases/ports/user-github-credentials.repository.port';
 import { PrismaUserGitHubCredentialsRepository } from './repositories/prisma.user-github-credentials.repository';
-import { GithubRepositoryController } from './controllers/github.controllers';
 
 @Module({
-  imports: [HttpModule, ConfigModule],
+  imports: [HttpModule, ConfigModule, PersistenceInfrastructure],
+
   providers: [
     GithubRepository,
-    PrismaService,
     ...githubUseCases,
     OctokitProvider,
     {
@@ -38,7 +37,6 @@ import { GithubRepositoryController } from './controllers/github.controllers';
       useClass: EncryptionService,
     },
   ],
-  controllers: [GithubRepositoryController],
   exports: [
     GITHUB_REPOSITORY_PORT,
     USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,

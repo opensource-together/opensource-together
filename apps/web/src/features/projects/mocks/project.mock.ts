@@ -10,26 +10,28 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Bot" },
       { id: "3", name: "Open Source" },
     ],
-    collaborators: [
-      {
-        id: "1",
-        name: "Byron M",
-        avatarUrl: "/icons/exemplebyronIcon.svg",
-        role: "Lead Developer",
-      },
-      {
-        id: "2",
-        name: "Killian C",
-        avatarUrl: "/icons/killiancodes-icon.jpg",
-        role: "Frontend Developer",
-      },
-      {
-        id: "3",
-        name: "P2aco Dev",
-        avatarUrl: "/icons/p2aco-icon.png",
-        role: "Backend Developer",
-      },
-    ],
+    projectStats: {
+      contributors: [
+        {
+          login: "Byron M",
+          avatar_url: "/icons/exemplebyronIcon.svg",
+          html_url: "https://github.com/Byron M",
+          contributions: 3,
+        },
+        {
+          login: "Killian C",
+          avatar_url: "/icons/killiancodes-icon.jpg",
+          html_url: "https://github.com/Killian C",
+          contributions: 2,
+        },
+        {
+          login: "P2aco Dev",
+          avatar_url: "/icons/p2aco-icon.png",
+          html_url: "https://github.com/P2aco Dev",
+          contributions: 1,
+        },
+      ],
+    },
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
 
@@ -124,12 +126,7 @@ export const mockProjects: Project[] = [
       { type: "website", url: "https://leetgrindbot.com/" },
       { type: "twitter", url: "https://x.com/y2_dev" },
     ],
-    projectStats: {
-      contributors: 4,
-      stars: 8,
-      forks: 0,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
-    },
+
     keyFeatures: [
       { id: "1", feature: "Défis LeetCode quotidiens automatisés" },
       { id: "2", feature: "Système de classement compétitif" },
@@ -157,26 +154,28 @@ export const mockProjects: Project[] = [
     id: "7",
     slug: "gitify",
     title: "Gitify",
-    collaborators: [
-      {
-        id: "1",
-        name: "Byron M",
-        avatarUrl: "/icons/exemplebyronIcon.svg",
-        role: "Lead Developer",
-      },
-      {
-        id: "2",
-        name: "Killian C",
-        avatarUrl: "/icons/killiancodes-icon.jpg",
-        role: "Frontend Developer",
-      },
-      {
-        id: "3",
-        name: "P2aco Dev",
-        avatarUrl: "/icons/p2aco-icon.png",
-        role: "Backend Developer",
-      },
-    ],
+    projectStats: {
+      contributors: [
+        {
+          login: "Byron M",
+          avatar_url: "/icons/exemplebyronIcon.svg",
+          html_url: "https://github.com/Byron M",
+          contributions: 3,
+        },
+        {
+          login: "Killian C",
+          avatar_url: "/icons/killiancodes-icon.jpg",
+          html_url: "https://github.com/Killian C",
+          contributions: 2,
+        },
+        {
+          login: "P2aco Dev",
+          avatar_url: "/icons/p2aco-icon.png",
+          html_url: "https://github.com/P2aco Dev",
+          contributions: 1,
+        },
+      ],
+    },
     image: "/icons/gitifyIcon.png",
     categories: [
       { id: "1", name: "GitHub" },
@@ -253,12 +252,7 @@ export const mockProjects: Project[] = [
       },
       { type: "twitter", url: "https://x.com/y2_dev" },
     ],
-    projectStats: {
-      contributors: 4,
-      stars: 52,
-      forks: 0,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
-    },
+
     keyFeatures: [
       { id: "1", feature: "Système de challenges open source" },
       { id: "2", feature: "techStacks de progression personnalisés" },
@@ -282,26 +276,28 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Bot" },
       { id: "3", name: "Open Source" },
     ],
-    collaborators: [
-      {
-        id: "1",
-        name: "Byron M",
-        avatarUrl: "/icons/exemplebyronIcon.svg",
-        role: "Lead Developer",
-      },
-      {
-        id: "2",
-        name: "Killian C",
-        avatarUrl: "/icons/killiancodes-icon.jpg",
-        role: "Frontend Developer",
-      },
-      {
-        id: "3",
-        name: "P2aco Dev",
-        avatarUrl: "/icons/p2aco-icon.png",
-        role: "Backend Developer",
-      },
-    ],
+    projectStats: {
+      contributors: [
+        {
+          login: "Lhourquin",
+          avatar_url: "https://avatars.githubusercontent.com/u/45101981?v=4",
+          html_url: "https://github.com/Lhourquin",
+          contributions: 3,
+        },
+        {
+          login: "Killian C",
+          avatar_url: "/icons/killiancodes-icon.jpg",
+          html_url: "https://github.com/Killian C",
+          contributions: 2,
+        },
+        {
+          login: "P2aco Dev",
+          avatar_url: "/icons/p2aco-icon.png",
+          html_url: "https://github.com/P2aco Dev",
+          contributions: 1,
+        },
+      ],
+    },
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
     author: {
@@ -377,12 +373,7 @@ export const mockProjects: Project[] = [
       { type: "website", url: "https://docs.devcord.app/introduction" },
       { type: "twitter", url: "https://x.com/theotruvelot" },
     ],
-    projectStats: {
-      contributors: 1,
-      stars: 52,
-      forks: 10,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
-    },
+
     keyFeatures: [
       { id: "1", feature: "Commandes de formatage de code intégrées" },
       { id: "5", feature: "Support Discord et Slack" },
@@ -482,10 +473,18 @@ export const mockProjects: Project[] = [
       { type: "twitter", url: "https://twitter.com/codesnippet" },
     ],
     projectStats: {
-      contributors: 5,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 5 },
+      ],
       stars: 42,
       forks: 8,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Stockage et organisation de snippets" },
@@ -586,10 +585,18 @@ export const mockProjects: Project[] = [
       { id: "3", name: "UI/UX" },
     ],
     projectStats: {
-      contributors: 3,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 3 },
+      ],
       stars: 28,
       forks: 5,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Alternative légère à Storybook" },
@@ -685,10 +692,18 @@ export const mockProjects: Project[] = [
       { type: "twitter", url: "https://twitter.com/g9scli" },
     ],
     projectStats: {
-      contributors: 3,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 3 },
+      ],
       stars: 15,
       forks: 2,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Interface terminal façon k9s" },
@@ -787,10 +802,18 @@ export const mockProjects: Project[] = [
       { type: "twitter", url: "https://x.com/Ox16__" },
     ],
     projectStats: {
-      contributors: 2,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 2 },
+      ],
       stars: 6,
       forks: 0,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Chiffrement zero-trust des données" },
@@ -891,10 +914,18 @@ export const mockProjects: Project[] = [
       { type: "twitter", url: "https://twitter.com/lilteaapp" },
     ],
     projectStats: {
-      contributors: 4,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 4 },
+      ],
       stars: 37,
       forks: 5,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Pages bio stylées et animées" },
@@ -983,10 +1014,18 @@ export const mockProjects: Project[] = [
       { type: "twitter", url: "https://twitter.com/devspace_cloud" },
     ],
     projectStats: {
-      contributors: 8,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 8 },
+      ],
       stars: 156,
       forks: 23,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Environnements cloud instantanés" },
@@ -1078,10 +1117,18 @@ export const mockProjects: Project[] = [
       { type: "twitter", url: "https://twitter.com/techdocs_platform" },
     ],
     projectStats: {
-      contributors: 5,
+      contributors: [
+        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 5 },
+      ],
       stars: 112,
       forks: 18,
-      lastCommitAt: new Date("2024-01-01T00:00:00Z"),
+      lastCommit: {
+        date: new Date("2024-01-01T00:00:00Z").toISOString(),
+        message: "Initial commit",
+        sha: "1234567890",
+        url: "https://github.com/LeetGrindBot/LeetGrindBot/commit/1234567890",
+        author: { login: "y2_dev", avatar_url: "", html_url: "" },
+      },
     },
     keyFeatures: [
       { id: "1", feature: "Éditeur Markdown collaboratif" },

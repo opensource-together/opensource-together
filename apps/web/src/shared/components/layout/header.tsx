@@ -52,23 +52,20 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, currentUser, logout } = useAuth();
+  const { isAuthenticated, currentUser, logout, requireAuth } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
 
-  const handleCreate = () => {
-    router.push("/projects/create");
-  };
+  const handleCreate = () =>
+    requireAuth(() => router.push("/projects/create"), "/projects/create");
 
-  const handleLogin = () => {
-    router.push("/auth/login");
-  };
+  const handleProfile = () =>
+    requireAuth(() => router.push("/profile"), "/profile");
 
-  const handleProfile = () => {
-    router.push("/profile");
-  };
+  const handleMyProjects = () =>
+    requireAuth(() => router.push("/my-projects"), "/my-projects");
 
   const handleLogout = () => {
     logout();
@@ -80,40 +77,59 @@ export default function Header() {
       <header className="font-geist sticky top-0 z-50 flex h-auto min-h-[60px] flex-wrap items-center justify-between bg-white px-4 py-3 text-[13px] font-normal sm:px-6 md:min-h-[70px] md:px-10 md:py-0 lg:h-[81px] lg:px-[73px]">
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
-            <article className="flex items-center gap-2">
-              <Image
-                src="/ost-logo.svg"
-                alt="ost-logo"
-                width={130}
-                height={26}
-                className="h-auto max-h-[26px] w-auto md:max-h-[30px] lg:max-h-[35px]"
-              />
-            </article>
+            <Image
+              src="/ost-beta-logo.svg"
+              alt="ost-logo"
+              width={207}
+              height={25}
+              className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
+            />
           </Link>
 
           {/* Navigation pour desktop et tablette */}
           <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
-            <NavLink href="/">Accueil</NavLink>
-            <NavLink href="/profile">Profil</NavLink>
-            <NavLink href="/my-projects">Gestion projet</NavLink>
+            <NavLink href="/">Découvrir</NavLink>
+
+            {/* Dashboard */}
+            {isAuthenticated ? (
+              <NavLink href="/my-projects">Dashboard</NavLink>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={handleMyProjects}
+                className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+              >
+                Dashboard
+              </Button>
+            )}
           </nav>
         </section>
 
         {/* Bouton menu mobile */}
-        <button
-          className="flex h-8 w-8 flex-col items-center justify-center md:hidden"
+        <Button
+          variant="outline"
+          size="icon"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-black/5 bg-white p-0 shadow-xs transition-all hover:bg-black/5 md:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          <span
-            className={`mb-1 block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "translate-y-1.5 rotate-45" : ""}`}
-          ></span>
-          <span
-            className={`mb-1 block h-0.5 w-5 bg-black transition-opacity ${mobileMenuOpen ? "opacity-0" : ""}`}
-          ></span>
-          <span
-            className={`block h-0.5 w-5 bg-black transition-transform ${mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
-          ></span>
-        </button>
+          <div className="flex flex-col items-center justify-center space-y-1">
+            <span
+              className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                mobileMenuOpen ? "translate-y-1.5 rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                mobileMenuOpen ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""
+              }`}
+            />
+          </div>
+        </Button>
 
         {/* Menu mobile */}
         <nav
@@ -122,39 +138,75 @@ export default function Header() {
           <NavLink href="/" className="w-full py-1.5">
             Home
           </NavLink>
-          <NavLink href="/profile" className="w-full py-1.5">
-            Profile
-          </NavLink>
-          <NavLink href="/my-projects" className="w-full py-1.5">
-            My Projects
-          </NavLink>
 
-          <Link
-            href="https://github.com/opensource-together/opensource-together"
-            target="_blank"
-          >
+          {/* Dashboard mobile */}
+          {isAuthenticated ? (
+            <NavLink href="/my-projects" className="w-full py-1.5">
+              Dashboard
+            </NavLink>
+          ) : (
             <Button
-              variant="outline"
-              className="flex items-center font-medium shadow-none"
+              variant="ghost"
+              onClick={handleMyProjects}
+              className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
             >
-              Star Us <Icon name="github" size="md" />
+              Dashboard
             </Button>
-          </Link>
+          )}
+
+          {/* Profile mobile */}
+          {isAuthenticated && (
+            <NavLink href="/profile" className="w-full py-1.5">
+              Mon Profil
+            </NavLink>
+          )}
+
+          {/* Star Us mobile - visible seulement si pas connecté */}
+          {!isAuthenticated && (
+            <Link
+              href="https://github.com/opensource-together"
+              target="_blank"
+              className="w-full"
+            >
+              <Button
+                variant="outline"
+                className="flex w-full items-center justify-center font-medium shadow-none"
+              >
+                Star Us <Icon name="github" size="md" />
+              </Button>
+            </Link>
+          )}
+
+          {/* Déconnexion mobile */}
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
+              className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
+            >
+              Déconnexion
+            </Button>
+          )}
         </nav>
 
         {/* Desktop */}
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
-          <Link href="https://github.com/opensource-together" target="_blank">
-            <Button
-              variant="outline"
-              className="flex items-center font-medium shadow-none"
-            >
-              Star Us <Icon name="github" size="md" />
-            </Button>
-          </Link>
+          {/* Star Us - visible seulement si pas connecté */}
+          {!isAuthenticated && (
+            <Link href="https://github.com/opensource-together" target="_blank">
+              <Button
+                variant="outline"
+                className="flex items-center font-medium shadow-none"
+              >
+                Star Us <Icon name="github" size="md" />
+              </Button>
+            </Link>
+          )}
+
+          {/* Créer un Projet */}
           {isAuthenticated ? (
-            <>
-              <Button onClick={handleCreate}>
+            <Link href="/projects/create">
+              <Button>
                 <span className="hidden sm:inline">Créer un Projet</span>
                 <span className="inline sm:hidden">Nouveau projet</span>
                 <Icon
@@ -164,63 +216,80 @@ export default function Header() {
                   className="ml-1.5"
                 />
               </Button>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-1 px-2"
-                  >
-                    <Avatar
-                      src={currentUser?.avatarUrl}
-                      name={currentUser?.name}
-                      alt={currentUser?.name}
-                      size="xs"
-                    />
-                    <span className="text-sm font-medium tracking-tighter">
-                      {currentUser?.name}
-                    </span>
-                    <Icon name="chevron-down" size="md" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem
-                    onClick={handleProfile}
-                    className="cursor-pointer"
-                  >
-                    <Icon name="user" size="sm" />
-                    Mon Profil
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="cursor-pointer"
-                  >
-                    <Icon name="logout" size="sm" />
-                    Déconnexion
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+            </Link>
           ) : (
-            <Button onClick={handleLogin}>
+            <Button onClick={handleCreate}>
               <span className="hidden sm:inline">Créer un Projet</span>
+              <span className="inline sm:hidden">Nouveau projet</span>
               <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
             </Button>
+          )}
+
+          {isAuthenticated && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-1 px-2"
+                >
+                  <Avatar
+                    src={currentUser?.avatarUrl}
+                    name={currentUser?.name}
+                    alt={currentUser?.name}
+                    size="xs"
+                  />
+                  <span className="text-sm font-medium tracking-tighter">
+                    {currentUser?.name}
+                  </span>
+                  <Icon name="chevron-down" size="md" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={handleProfile}
+                  className="cursor-pointer"
+                >
+                  <Icon name="user" size="sm" />
+                  Mon Profil
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="cursor-pointer"
+                >
+                  <Icon name="logout" size="sm" />
+                  Déconnexion
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </section>
 
         {/* Actions mobile affichées dans le menu */}
         {mobileMenuOpen && (
           <div className="mt-3 flex w-full justify-center md:hidden">
-            <Button onClick={handleCreate} className="w-full max-w-[220px]">
-              New Project{" "}
-              <Icon
-                name="plus"
-                size="xs"
-                variant="white"
-                className="ml-0 align-middle"
-              />
-            </Button>
+            {isAuthenticated ? (
+              <Link href="/projects/create" className="w-full max-w-[220px]">
+                <Button className="w-full">
+                  New Project{" "}
+                  <Icon
+                    name="plus"
+                    size="xs"
+                    variant="white"
+                    className="ml-0 align-middle"
+                  />
+                </Button>
+              </Link>
+            ) : (
+              <Button onClick={handleCreate} className="w-full max-w-[220px]">
+                New Project{" "}
+                <Icon
+                  name="plus"
+                  size="xs"
+                  variant="white"
+                  className="ml-0 align-middle"
+                />
+              </Button>
+            )}
           </div>
         )}
       </header>

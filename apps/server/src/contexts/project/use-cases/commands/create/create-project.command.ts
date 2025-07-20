@@ -43,6 +43,7 @@ export class CreateProjectCommand implements ICommand {
       keyFeatures: { id?: string; feature: string }[];
       projectGoals: { id?: string; goal: string }[];
       octokit: Octokit;
+      image?: string;
     },
   ) {}
 }
@@ -80,6 +81,7 @@ export class CreateProjectCommandHandler
       keyFeatures,
       projectGoals,
       octokit,
+      image,
     } = createProjectCommand.props;
     // verifier si un project n'existe pas déjà avec le même titre
     const projectWithSameTitle = await this.projectRepo.findByTitle(title);
@@ -113,6 +115,7 @@ export class CreateProjectCommandHandler
     const allCategoriesValidated = categoriesValidation.value;
 
     //ont créer un project pour valider des regles métier
+    console.log('image create project commands', image);
     const projectResult = Project.create({
       ownerId,
       title,
@@ -137,13 +140,13 @@ export class CreateProjectCommandHandler
       })),
       keyFeatures: keyFeatures,
       projectGoals: projectGoals,
+      image,
     });
     if (!projectResult.success) {
       return Result.fail(projectResult.error);
     }
 
     const projectValidated = projectResult.value;
-
     //si valide alors on enregistre le projet dans la persistance
     const savedProject = await this.projectRepo.create(projectValidated);
     if (!savedProject.success) return Result.fail('Unable to create project');

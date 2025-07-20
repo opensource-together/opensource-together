@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Icon } from "@/shared/components/ui/icon";
 
 import { Profile } from "../types/profile.type";
@@ -20,20 +21,18 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
       </h2>
 
       {projects.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed bg-gray-50 py-16 text-center">
-          <h3 className="mb-2 text-base font-medium tracking-tight text-gray-900">
-            Aucun projet rejoint
-          </h3>
-          <p className="mb-6 max-w-sm text-sm text-gray-500">
-            Découvrez des projets open source de la communauté et rejoignez-les.
-          </p>
-          <Link href="/">
-            <Button className="font-medium">
-              Explorer les projets
-              <Icon name="arrow-up-right" size="xs" variant="white" />
-            </Button>
-          </Link>
-        </div>
+        <EmptyState
+          title="Aucun projet rejoint"
+          description="Découvrez des projets open source de la communauté et rejoignez-les."
+          action={
+            <Link href="/">
+              <Button className="font-medium">
+                Explorer les projets
+                <Icon name="arrow-up-right" size="xs" variant="white" />
+              </Button>
+            </Link>
+          }
+        />
       ) : (
         projects.slice(0, 3).map((project) => (
           <ProjectCardComponent
@@ -57,9 +56,22 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             }}
             projectStats={{
               forks: project.projectStats?.forks || 0,
-              contributors: project.projectStats?.contributors || 0,
+              contributors: project.projectStats?.contributors || [],
               stars: project.projectStats?.stars || 0,
-              lastCommitAt: project.projectStats?.lastCommitAt || new Date(),
+              lastCommit: project.projectStats?.lastCommit?.date
+                ? {
+                    date: project.projectStats.lastCommit.date,
+                    message: project.projectStats.lastCommit.message,
+                    sha: project.projectStats.lastCommit.sha,
+                    url: project.projectStats.lastCommit.url,
+                    author: {
+                      login: project.projectStats.lastCommit.author.login,
+                      avatar_url:
+                        project.projectStats.lastCommit.author.avatar_url,
+                      html_url: project.projectStats.lastCommit.author.html_url,
+                    },
+                  }
+                : undefined,
             }}
             className="w-full max-w-[731px] bg-white"
           />

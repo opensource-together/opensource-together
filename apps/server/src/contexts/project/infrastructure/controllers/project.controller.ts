@@ -1,45 +1,49 @@
+import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
+import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
+import {
+  Author,
+  Contributor,
+  LastCommit,
+  RepositoryInfo,
+} from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
+import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
+import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
+import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
 import { Result } from '@/libs/result';
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  Param,
   // Query,
   HttpException,
   HttpStatus,
-  Post,
+  Param,
   Patch,
-  Delete,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
-  ApiTags,
+  ApiBody,
+  ApiCookieAuth,
   ApiOperation,
   ApiParam,
-  ApiBody,
   ApiResponse,
-  ApiCookieAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
-import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
-import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Session, PublicAccess } from 'supertokens-nestjs';
-import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
-import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
-import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
-import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import { Octokit } from '@octokit/rest';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
-import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
+import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
-import { ProjectRoleApplication } from '@/contexts/project-role-application/domain/project-role-application.entity';
-import { GetAllProjectApplicationsQuery } from '@/contexts/project-role-application/use-cases/queries/get-all-project-application.query';
+import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -49,14 +53,17 @@ export class ProjectController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @PublicAccess()
-  @Get()
   @ApiOperation({ summary: 'Récupérer tous les projets' })
   @ApiResponse({
     status: 200,
     description: 'Liste des projets',
     example: [
       {
+        author: {
+          ownerId: 'github_user123',
+          name: 'Lhourquin',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123456789?v=4',
+        },
         id: '123e4567-e89b-12d3-a456-426614174000',
         title: 'E-commerce Platform',
         description: 'Modern e-commerce app with React',
@@ -104,33 +111,174 @@ export class ProjectController {
         ],
         createdAt: '2025-01-15T10:30:00.000Z',
         updatedAt: '2025-01-20T14:45:00.000Z',
+        projectStats: {
+          forks: 2,
+          stars: 1,
+          watchers: 1,
+          openIssues: 1,
+          commits: 4,
+          lastCommit: {
+            sha: '4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+            message: 'Merge pull request #2 from Jyzdcs/main\n\ntest',
+            date: '2025-07-15T23:17:16Z',
+            url: 'https://github.com/Lhourquin/projet-os/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+            author: {
+              login: 'Lhourquin',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/45101981?v=4',
+              html_url: 'https://github.com/Lhourquin',
+            },
+          },
+          contributors: [
+            {
+              login: 'Lhourquin',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/45101981?v=4',
+              html_url: 'https://github.com/Lhourquin',
+              contributions: 3,
+            },
+            {
+              login: 'Jyzdcs',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/123254210?v=4',
+              html_url: 'https://github.com/Jyzdcs',
+              contributions: 1,
+            },
+          ],
+        },
+      },
+      {
+        author: {
+          ownerId: 'github_user123',
+          name: 'Mac-Gyver',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123254210?v=4',
+        },
+        id: '123e4567-e89b-12d3-a456-426614174001',
+        title: 'E-commerce Platform',
+        description: 'Modern e-commerce app with React',
+        shortDescription: 'E-commerce with React & Node.js',
+        ownerId: 'github_user123',
+        techStacks: [
+          { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+          { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+        ],
+        categories: [{ id: '2', name: 'Développement Web' }],
+        keyFeatures: [
+          {
+            id: 'feature1',
+            projectId: '123e4567-e89b-12d3-a456-426614174001',
+            feature: 'Shopping Cart',
+          },
+        ],
+        projectGoals: [
+          {
+            id: 'goal1',
+            projectId: '123e4567-e89b-12d3-a456-426614174001',
+            goal: 'Create smooth UX',
+          },
+        ],
+        projectRoles: [
+          {
+            id: 'role1',
+            projectId: '123e4567-e89b-12d3-a456-426614174001',
+            title: 'Frontend Developer',
+            description: 'React developer needed',
+            isFilled: false,
+            techStacks: [
+              {
+                id: '1',
+                name: 'React',
+                iconUrl: 'https://reactjs.org/logo.svg',
+              },
+            ],
+            createdAt: '2025-01-15T10:30:00.000Z',
+            updatedAt: '2025-01-15T10:30:00.000Z',
+          },
+        ],
+        externalLinks: [
+          { type: 'github', url: 'https://github.com/user/project' },
+        ],
+        createdAt: '2025-01-15T10:30:00.000Z',
+        updatedAt: '2025-01-20T14:45:00.000Z',
+        projectStats: {
+          forks: 2,
+          stars: 1,
+          watchers: 1,
+          openIssues: 1,
+          commits: 4,
+          lastCommit: {
+            sha: '4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+            message: 'Merge pull request #2 from Mac-Gyver/main\n\ntest',
+            date: '2025-07-15T23:17:16Z',
+            url: 'https://github.com/Mac-Gyver/projet-os/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+            author: {
+              login: 'Mac-Gyver',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/45101981?v=4',
+              html_url: 'https://github.com/Lhourquin',
+            },
+          },
+          contributors: [
+            {
+              login: 'Mac-Gyver',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/123254210?v=4',
+              html_url: 'https://github.com/Mac-Gyver',
+              contributions: 3,
+            },
+            {
+              login: 'Jyzdcs',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/123254210?v=4',
+              html_url: 'https://github.com/Jyzdcs',
+              contributions: 1,
+            },
+          ],
+        },
       },
     ],
   })
   @ApiResponse({ status: 500, description: 'Erreur serveur' })
-  async getProjects() {
-    const projects: Result<Project[]> = await this.queryBus.execute(
-      new GetProjectsQuery(),
-    );
+  @PublicAccess()
+  @UseGuards(GithubAuthGuard)
+  @Get()
+  async getProjects(@GitHubOctokit() octokit?: Octokit) {
+    const projects: Result<
+      (Project & {
+        author: {
+          ownerId: string;
+          name: string;
+          avatarUrl: string;
+        };
+        repositoryInfo: RepositoryInfo;
+        lastCommit: LastCommit;
+        commits: number;
+        contributors: Contributor[];
+        project: Project;
+      })[]
+    > = await this.queryBus.execute(new GetProjectsQuery({ octokit: octokit }));
     if (!projects.success) {
       throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
     }
     return GetProjectsResponseDto.toResponse(projects.value);
   }
 
-  @PublicAccess()
-  @Get(':id')
+  // Route publique pour récupérer un projet par son ID
   @ApiOperation({ summary: 'Récupérer un projet par ID' })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   @ApiResponse({
     status: 200,
     description: 'Détails du projet',
     example: {
+      author: {
+        ownerId: '4d9c454e-6932-464a-97fb-f7f64e2dad23',
+        name: 'Lucalhost',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+      },
       id: '123e4567-e89b-12d3-a456-426614174000',
       title: 'E-commerce Platform',
       description: 'Modern e-commerce app with React and Node.js',
       shortDescription: 'E-commerce with React & Node.js',
-      ownerId: 'github_user123',
       techStacks: [
         { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
         { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
@@ -169,6 +317,38 @@ export class ProjectController {
       ],
       createdAt: '2025-01-15T10:30:00.000Z',
       updatedAt: '2025-01-20T14:45:00.000Z',
+      projectStats: {
+        forks: 2,
+        stars: 1,
+        watchers: 1,
+        openIssues: 1,
+        commits: 4,
+        lastCommit: {
+          sha: '4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+          message: 'Merge pull request #2 from Jyzdcs/main\n\ntest',
+          date: '2025-07-15T23:17:16Z',
+          url: 'https://github.com/Lhourquin/projet-os/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+          author: {
+            login: 'Lhourquin',
+            avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            html_url: 'https://github.com/Lhourquin',
+          },
+        },
+        contributors: [
+          {
+            login: 'Lhourquin',
+            avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            html_url: 'https://github.com/Lhourquin',
+            contributions: 3,
+          },
+          {
+            login: 'Jyzdcs',
+            avatar_url: 'https://avatars.githubusercontent.com/u/123254210?v=4',
+            html_url: 'https://github.com/Jyzdcs',
+            contributions: 1,
+          },
+        ],
+      },
     },
   })
   @ApiResponse({
@@ -176,14 +356,47 @@ export class ProjectController {
     description: 'Projet non trouvé',
     example: { message: 'Project not found', statusCode: 404 },
   })
-  async getProject(@Param('id') id: string) {
-    const projectRes: Result<Project, string> = await this.queryBus.execute(
-      new FindProjectByIdQuery(id),
+  @PublicAccess()
+  @UseGuards(GithubAuthGuard)
+  // @ApiCookieAuth('sAccessToken')
+  @Get(':id')
+  async getProject(
+    @Param('id') id: string,
+    @GitHubOctokit() octokit?: Octokit,
+  ) {
+    const projectRes: Result<
+      {
+        author: Author;
+        project: Project;
+        repositoryInfo: RepositoryInfo;
+        lastCommit: LastCommit;
+        contributors: Contributor[];
+        commits: number;
+      },
+      string
+    > = await this.queryBus.execute(
+      new FindProjectByIdQuery({ id: id, octokit: octokit }),
     );
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
-    return GetProjectByIdResponseDto.toResponse(projectRes.value);
+    const {
+      author,
+      project,
+      repositoryInfo,
+      lastCommit,
+      contributors,
+      commits,
+    } = projectRes.value;
+    console.log('projectRes', projectRes.value);
+    return GetProjectByIdResponseDto.toResponse({
+      author,
+      project,
+      repositoryInfo: repositoryInfo,
+      lastCommit: lastCommit,
+      contributors: contributors,
+      commits: commits,
+    });
   }
 
   //   @Get('search')
@@ -344,6 +557,7 @@ export class ProjectController {
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
+    console.log({ image: project.image });
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,
@@ -365,6 +579,7 @@ export class ProjectController {
           goal: goal,
         })),
         octokit: octokit,
+        image: project.image,
       }),
     );
     if (!projectRes.success) {
@@ -388,8 +603,40 @@ export class ProjectController {
         shortDescription: { type: 'string' },
         techStacks: { type: 'array', items: { type: 'string' } },
         categories: { type: 'array', items: { type: 'string' } },
-        keyFeatures: { type: 'array', items: { type: 'string' } },
-        projectGoals: { type: 'array', items: { type: 'string' } },
+        keyFeatures: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  projectId: { type: 'string' },
+                  feature: { type: 'string' },
+                },
+                required: ['id', 'projectId', 'feature'],
+              },
+            ],
+          },
+        },
+        projectGoals: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  projectId: { type: 'string' },
+                  goal: { type: 'string' },
+                },
+                required: ['id', 'projectId', 'goal'],
+              },
+            ],
+          },
+        },
       },
     },
   })
@@ -430,7 +677,7 @@ export class ProjectController {
     @Param('id') id: string,
     @Body() project: UpdateProjectDtoRequest,
   ) {
-    const projectRes: Result<Project> = await this.commandBus.execute(
+    const projectRes: Result<Project, string> = await this.commandBus.execute(
       new UpdateProjectCommand(id, ownerId, {
         title: project.title,
         description: project.description,
@@ -440,7 +687,7 @@ export class ProjectController {
         categories: project.categories,
         keyFeatures: project.keyFeatures,
         projectGoals: project.projectGoals,
-        projectRoles: project.projectRoles,
+        image: project.image,
       }),
     );
 
@@ -489,7 +736,7 @@ export class ProjectController {
     @Session('userId') ownerId: string,
     @Param('id') id: string,
   ) {
-    const result: Result<boolean> = await this.commandBus.execute(
+    const result: Result<Project> = await this.commandBus.execute(
       new DeleteProjectCommand(id, ownerId),
     );
 
@@ -504,58 +751,5 @@ export class ProjectController {
     }
 
     return { message: 'Project deleted successfully' };
-  }
-
-  @Get(':projectId/applications')
-  @ApiOperation({ summary: "Récupérer les candidatures d'un projet" })
-  @ApiCookieAuth('sAccessToken')
-  @ApiParam({ name: 'projectId', description: 'ID du projet' })
-  @ApiResponse({
-    status: 200,
-    description: 'Liste des candidatures',
-    example: [
-      {
-        userId: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
-        projectId: '108da791-6e48-47de-9a2b-b88f739e08a2',
-        projectRoleTitle: 'Frontend Developer',
-        projectRoleId: '6262e74b-24f0-4c7b-a03c-5ac853a512ab',
-        status: 'PENDING',
-        selectedKeyFeatures: ['Shopping Cart', 'User Auth'],
-        selectedProjectGoals: ['Create smooth UX', 'Improve performance'],
-        appliedAt: '2025-07-14T22:38:23.644Z',
-        userProfile: {
-          id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
-          name: 'John Doe',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/123456789',
-        },
-      },
-    ],
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Accès refusé',
-    example: {
-      message: 'You are not the owner of this project',
-      statusCode: 400,
-    },
-  })
-  async getProjectApplications(
-    @Session('userId') userId: string,
-    @Param('projectId') projectId: string,
-  ) {
-    const projectResult: Result<Project> = await this.queryBus.execute(
-      new FindProjectByIdQuery(projectId),
-    );
-    if (!projectResult.success) {
-      throw new HttpException(projectResult.error, HttpStatus.BAD_REQUEST);
-    }
-    const applications: Result<ProjectRoleApplication[]> =
-      await this.queryBus.execute(
-        new GetAllProjectApplicationsQuery({ projectId, userId }),
-      );
-    if (!applications.success) {
-      throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
-    }
-    return applications.value;
   }
 }

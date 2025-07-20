@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   ProjectCard,
   ProjectCardContent,
@@ -8,7 +10,7 @@ import {
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardTitle,
-  ProjectCardViewLink,
+  ProjectCardViewText,
 } from "@/shared/components/ui/project-card";
 
 import { ProjectRole } from "@/features/projects/types/project-role.type";
@@ -52,62 +54,75 @@ export default function ProjectCardComponent({
   },
   projectStats = {
     forks: 0,
-    contributors: 0,
+    contributors: [],
     stars: 0,
-    lastCommitAt: new Date(),
+    watchers: 0,
+    openIssues: 0,
+    commits: 0,
+    lastCommit: {
+      sha: "",
+      message: "",
+      date: "",
+      url: "",
+      author: { login: "", avatar_url: "", html_url: "" },
+    },
   },
 }: ProjectCardProps) {
   return (
-    <ProjectCard className={className}>
-      <ProjectCardHeader>
-        <ProjectCardLeftGroup>
-          <Avatar src={image} name={author.name} alt={author.name} size="lg" />
-          <ProjectCardInfo>
-            <ProjectCardTitle>{title}</ProjectCardTitle>
-            <p className="text-muted-foreground text-sm tracking-tighter">
-              by {author.name}
-            </p>
-          </ProjectCardInfo>
-        </ProjectCardLeftGroup>
-        {showViewProject && <ProjectCardViewLink projectId={projectId} />}
-      </ProjectCardHeader>
-      <ProjectCardContent>
-        <ProjectCardDescription>{shortDescription}</ProjectCardDescription>
-        <ProjectCardDivider />
-        {showTechStack && (
-          <ProjectCardFooter>
-            <>
-              {techStacks.slice(0, 3).map((tech, index) => (
-                <StackLogo
-                  key={tech.id || index}
-                  icon={tech.iconUrl || ""}
-                  alt={tech.name}
-                  name={tech.name}
-                />
-              ))}
-              {techStacks.length > 3 && (
-                <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                  +{techStacks.length - 3}
-                </span>
-              )}
-            </>
-            <div className="ml-auto flex items-center justify-between space-x-2">
-              <div className="flex items-center justify-center gap-1 text-xs">
-                <Icon name="fork" size="xs" variant="black" />
-                {projectStats.forks || 0}
+    <Link href={`/projects/${projectId}`} className="block">
+      <ProjectCard className={className}>
+        <ProjectCardHeader>
+          <ProjectCardLeftGroup>
+            <Avatar src={image} name={title} alt={title} size="lg" />
+            <ProjectCardInfo>
+              <ProjectCardTitle>{title}</ProjectCardTitle>
+              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+                by {author.name}
+              </p>
+            </ProjectCardInfo>
+          </ProjectCardLeftGroup>
+          {showViewProject && <ProjectCardViewText />}
+        </ProjectCardHeader>
+        <ProjectCardContent>
+          <ProjectCardDescription>{shortDescription}</ProjectCardDescription>
+          <ProjectCardDivider />
+          {showTechStack && (
+            <ProjectCardFooter>
+              <>
+                <div className="flex gap-5">
+                  {techStacks.slice(0, 3).map((tech, index) => (
+                    <StackLogo
+                      key={tech.id || index}
+                      icon={tech.iconUrl || ""}
+                      alt={tech.name}
+                      name={tech.name}
+                    />
+                  ))}
+                </div>
+                {techStacks.length > 3 && (
+                  <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                    +{techStacks.length - 3}
+                  </span>
+                )}
+              </>
+              <div className="ml-auto flex items-center justify-between space-x-2">
+                <div className="flex items-center justify-center gap-1 text-xs">
+                  <Icon name="fork" size="xs" />
+                  {projectStats.forks || 0}
+                </div>
+                <div className="flex items-center justify-center gap-1 text-xs">
+                  <Icon name="people" size="xs" variant="black" />
+                  {projectStats.contributors?.length || 0}
+                </div>
+                <div className="flex items-center justify-center gap-1 text-xs">
+                  <Icon name="star" size="xs" variant="black" />
+                  {projectStats.stars || 0}
+                </div>
               </div>
-              <div className="flex items-center justify-center gap-1 text-xs">
-                <Icon name="people" size="xs" variant="black" />
-                {projectStats.contributors || 0}
-              </div>
-              <div className="flex items-center justify-center gap-1 text-xs">
-                <Icon name="star" size="xs" variant="black" />
-                {projectStats.stars || 0}
-              </div>
-            </div>
-          </ProjectCardFooter>
-        )}
-      </ProjectCardContent>
-    </ProjectCard>
+            </ProjectCardFooter>
+          )}
+        </ProjectCardContent>
+      </ProjectCard>
+    </Link>
   );
 }

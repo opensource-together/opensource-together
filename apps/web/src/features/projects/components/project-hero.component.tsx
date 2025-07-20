@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
@@ -29,19 +28,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         {/* Project Icon and Title */}
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex h-[50px] w-[50px] items-center justify-center rounded-4xl bg-[#F4F4F4] sm:h-[65px] sm:w-[65px]">
-            <Image
-              src={image || "/icons/empty-project.svg"}
-              alt={title}
-              width={50}
-              height={50}
-              className="rounded-4xl sm:h-[65px] sm:w-[65px]"
-            />
+            <Avatar src={image} name={title} alt={title} size="xl" />
           </div>
           {/* Project Title */}
-          <h1
-            className="text-start text-2xl font-medium text-black sm:text-3xl"
-            style={{ letterSpacing: "-2px" }}
-          >
+          <h1 className="text-start text-2xl font-medium tracking-tighter text-black sm:text-3xl">
             {title}
           </h1>
         </div>
@@ -55,7 +45,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
       {/* Description */}
       <div className="mt-2">
-        <p className="mb-0 text-sm font-medium">{shortDescription}</p>
+        <p className="text-md mb-0 font-medium">{shortDescription}</p>
 
         {/* separator */}
         <div className="my-5 h-[2px] w-full bg-black/3" />
@@ -63,10 +53,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         <div className="w-full max-w-[629px]">
           {keyFeatures.length > 0 && (
             <>
-              <h3 className="mb-2 text-sm font-normal text-black">
-                Fonctionnalités clés :
+              <h3 className="mb-3 font-medium text-black">
+                Fonctionnalités clés
               </h3>
-              <ul className="mb-2 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+              <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
                 {keyFeatures.map((feature, index) => (
                   <li key={index}>{feature.feature}</li>
                 ))}
@@ -76,10 +66,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
           {projectGoals.length > 0 && (
             <>
-              <h3 className="mb-2 text-sm font-normal text-black">
-                Objectifs du projet :
+              <h3 className="mb-3 font-medium text-black">
+                Objectifs du projet
               </h3>
-              <ul className="mb-6 list-disc space-y-1 pl-5 text-sm leading-[16px] font-normal text-black">
+              <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
                 {projectGoals.map((goal, index) => (
                   <li key={index}>{goal.goal}</li>
                 ))}

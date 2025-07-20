@@ -59,9 +59,14 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
  * Get the GitHub authentication URL
  */
 export async function getGitHubAuthUrl(): Promise<string> {
+  if (typeof window === "undefined") {
+    throw new Error("getGitHubAuthUrl can only be called in the browser");
+  }
+  const url = window.location.origin;
+  console.log(url);
   return getAuthorisationURLWithQueryParamsAndSetState({
     thirdPartyId: "github",
-    frontendRedirectURI: "http://localhost:3000/auth/callback/github",
+    frontendRedirectURI: `${url}/auth/callback/github`,
   });
 }
 

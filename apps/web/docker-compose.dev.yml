@@ -19,6 +19,13 @@ services:
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - RESEND_FROM=${RESEND_FROM}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+      - R2_ENDPOINT=${R2_ENDPOINT}
+      - R2_URL=${R2_URL}
+      - GH_TOKEN_OST_PUBLIC=${GH_TOKEN_OST_PUBLIC}
+
     ports:
       - "${API_PORT:-4000}:3000"
     networks:
@@ -31,7 +38,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -42,7 +49,7 @@ services:
     environment:
       - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER:-supertokens_user}:${SUPERTOKENS_DB_PASSWORD:-supertokens_password}@postgres:5432/${SUPERTOKENS_DB_NAME:-supertokens}
     ports:
-      - "${SUPERTOKENS_PORT:-3567}:3567"
+      - "${SUPERTOKENS_EXT_PORT:-3567}:3567"
     networks:
       - app_network
     depends_on:

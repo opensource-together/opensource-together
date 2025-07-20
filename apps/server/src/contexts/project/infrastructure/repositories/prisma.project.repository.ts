@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
-import { ProjectFilterInputsDto } from '@/application/dto/inputs/filter-project-input';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
@@ -18,7 +16,9 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       if (!repoProject.success) return Result.fail(repoProject.error);
 
       const savedProject = await this.prisma.project.create({
-        data: repoProject.value,
+        data: {
+          ...repoProject.value,
+        },
         include: {
           techStacks: true,
           categories: true,
@@ -174,86 +174,86 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
-  async findProjectByFilters(
-    filters: ProjectFilterInputsDto,
-  ): Promise<Result<Project[], string>> {
-    try {
-      // Construction dynamique du where clause
-      const where: Prisma.ProjectWhereInput = {};
+  // async findProjectByFilters(
+  //   filters: ProjectFilterInputsDto,
+  // ): Promise<Result<Project[], string>> {
+  //   try {
+  //     // Construction dynamique du where clause
+  //     const where: Prisma.ProjectWhereInput = {};
 
-      // Filtre par titre
-      if (filters.title && filters.title.trim() !== '') {
-        where.title = {
-          contains: filters.title,
-          mode: 'insensitive',
-        };
-      }
+  //     // Filtre par titre
+  //     if (filters.title && filters.title.trim() !== '') {
+  //       where.title = {
+  //         contains: filters.title,
+  //         mode: 'insensitive',
+  //       };
+  //     }
 
-      // Filtre par rôles
-      if (filters.roles && filters.roles.length > 0) {
-        where.projectRoles = {
-          some: {
-            title: {
-              in: filters.roles,
-              mode: 'insensitive',
-            },
-          },
-        };
-      }
+  //     // Filtre par rôles
+  //     if (filters.roles && filters.roles.length > 0) {
+  //       where.projectRoles = {
+  //         some: {
+  //           title: {
+  //             in: filters.roles,
+  //             mode: 'insensitive',
+  //           },
+  //         },
+  //       };
+  //     }
 
-      // Filtre par technologies
-      if (filters.techStacks && filters.techStacks.length > 0) {
-        where.techStacks = {
-          some: {
-            name: {
-              in: filters.techStacks,
-              mode: 'insensitive',
-            },
-          },
-        };
-      }
+  //     // Filtre par technologies
+  //     if (filters.techStacks && filters.techStacks.length > 0) {
+  //       where.techStacks = {
+  //         some: {
+  //           name: {
+  //             in: filters.techStacks,
+  //             mode: 'insensitive',
+  //           },
+  //         },
+  //       };
+  //     }
 
-      // Configuration du tri
-      const orderBy: Prisma.ProjectOrderByWithRelationInput = {};
-      orderBy.createdAt = filters.sortOrder;
+  //     // Configuration du tri
+  //     const orderBy: Prisma.ProjectOrderByWithRelationInput = {};
+  //     orderBy.createdAt = filters.sortOrder;
 
-      const prismaProjects = await this.prisma.project.findMany({
-        where,
-        orderBy,
-        include: {
-          techStacks: true,
-          projectRoles: {
-            include: { techStacks: true },
-          },
-          projectMembers: true,
-          categories: true,
-          keyFeatures: true,
-          projectGoals: true,
-          externalLinks: true,
-        },
-      });
+  //     const prismaProjects = await this.prisma.project.findMany({
+  //       where,
+  //       orderBy,
+  //       include: {
+  //         techStacks: true,
+  //         projectRoles: {
+  //           include: { techStacks: true },
+  //         },
+  //         projectMembers: true,
+  //         categories: true,
+  //         keyFeatures: true,
+  //         projectGoals: true,
+  //         externalLinks: true,
+  //       },
+  //     });
 
-      if (prismaProjects.length === 0) return Result.ok([]);
+  //     if (prismaProjects.length === 0) return Result.ok([]);
 
-      const domainProjects: Project[] = [];
+  //     const domainProjects: Project[] = [];
 
-      for (const projectPrisma of prismaProjects) {
-        const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
-        if (!domainProject.success) {
-          return Result.fail(
-            typeof domainProject.error === 'string'
-              ? domainProject.error
-              : JSON.stringify(domainProject.error),
-          );
-        }
-        domainProjects.push(domainProject.value);
-      }
+  //     for (const projectPrisma of prismaProjects) {
+  //       const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
+  //       if (!domainProject.success) {
+  //         return Result.fail(
+  //           typeof domainProject.error === 'string'
+  //             ? domainProject.error
+  //             : JSON.stringify(domainProject.error),
+  //         );
+  //       }
+  //       domainProjects.push(domainProject.value);
+  //     }
 
-      return Result.ok(domainProjects);
-    } catch (error) {
-      return Result.fail(`Unknown error : ${error}`);
-    }
-  }
+  //     return Result.ok(domainProjects);
+  //   } catch (error) {
+  //     return Result.fail(`Unknown error : ${error}`);
+  //   }
+  // }
 
   async findById(id: string): Promise<Result<Project, string>> {
     try {
@@ -439,6 +439,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             title: projectData.title,
             description: projectData.description,
             shortDescription: projectData.shortDescription,
+            image: projectData.image,
             externalLinks: {
               deleteMany: {},
               create:
@@ -478,52 +479,137 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           });
         }
 
-        // 4. Mise à jour des keyFeatures
-        if (projectData.keyFeatures && projectData.keyFeatures.length > 0) {
-          await tx.keyFeature.deleteMany({
-            where: { projectId: id },
-          });
-          await tx.keyFeature.createMany({
-            data: projectData.keyFeatures.map((feature) => ({
-              projectId: id,
-              feature: feature.feature,
-            })),
-          });
-        }
-
-        // 5. Mise à jour des projectGoals
-        if (projectData.projectGoals && projectData.projectGoals.length > 0) {
-          await tx.projectGoal.deleteMany({
-            where: { projectId: id },
-          });
-          await tx.projectGoal.createMany({
-            data: projectData.projectGoals.map((goal) => ({
-              projectId: id,
-              goal: goal.goal,
-            })),
-          });
-        }
-
-        // 6. Mise à jour des projectRoles
-        if (projectData.projectRoles && projectData.projectRoles.length > 0) {
-          // Supprimer tous les rôles existants
-          await tx.projectRole.deleteMany({
+        // 4. Mise à jour incrémentale des keyFeatures
+        if (projectData.keyFeatures) {
+          const existingKeyFeatures = await tx.keyFeature.findMany({
             where: { projectId: id },
           });
 
-          // Créer les nouveaux rôles
-          for (const role of projectData.projectRoles) {
-            await tx.projectRole.create({
-              data: {
-                projectId: id,
-                title: role.title,
-                description: role.description,
-                isFilled: role.isFilled,
-                techStacks: {
-                  connect: role.techStacks.map((ts) => ({ id: ts.id })),
-                },
-              },
+          // Identifier les keyFeatures à supprimer (pas dans la nouvelle liste)
+          const incomingIds = projectData.keyFeatures
+            .map((kf) => kf.id)
+            .filter(Boolean);
+          const toDelete = existingKeyFeatures.filter(
+            (existing) => !incomingIds.includes(existing.id),
+          );
+
+          if (toDelete.length > 0) {
+            await tx.keyFeature.deleteMany({
+              where: { id: { in: toDelete.map((kf) => kf.id) } },
             });
+          }
+
+          // Mettre à jour les keyFeatures existantes et créer les nouvelles
+          for (const keyFeature of projectData.keyFeatures) {
+            if (keyFeature.id) {
+              // Mise à jour
+              await tx.keyFeature.update({
+                where: { id: keyFeature.id },
+                data: { feature: keyFeature.feature },
+              });
+            } else {
+              // Création
+              await tx.keyFeature.create({
+                data: {
+                  projectId: id,
+                  feature: keyFeature.feature,
+                },
+              });
+            }
+          }
+        }
+
+        // 5. Mise à jour incrémentale des projectGoals
+        if (projectData.projectGoals) {
+          const existingProjectGoals = await tx.projectGoal.findMany({
+            where: { projectId: id },
+          });
+
+          // Identifier les projectGoals à supprimer (pas dans la nouvelle liste)
+          const incomingIds = projectData.projectGoals
+            .map((goal) => goal.id)
+            .filter(Boolean);
+          const toDelete = existingProjectGoals.filter(
+            (existing) => !incomingIds.includes(existing.id),
+          );
+
+          if (toDelete.length > 0) {
+            await tx.projectGoal.deleteMany({
+              where: { id: { in: toDelete.map((goal) => goal.id) } },
+            });
+          }
+
+          // Mettre à jour les projectGoals existantes et créer les nouvelles
+          for (const projectGoal of projectData.projectGoals) {
+            if (projectGoal.id) {
+              // Mise à jour
+              await tx.projectGoal.update({
+                where: { id: projectGoal.id },
+                data: { goal: projectGoal.goal },
+              });
+            } else {
+              // Création
+              await tx.projectGoal.create({
+                data: {
+                  projectId: id,
+                  goal: projectGoal.goal,
+                },
+              });
+            }
+          }
+        }
+
+        // 6. Mise à jour incrémentale des projectRoles
+        if (projectData.projectRoles) {
+          const existingProjectRoles = await tx.projectRole.findMany({
+            where: { projectId: id },
+            include: { techStacks: true },
+          });
+
+          // Identifier les rôles à supprimer (pas dans la nouvelle liste)
+          const incomingRoleIds = projectData.projectRoles
+            .map((role) => role.id)
+            .filter(Boolean);
+          const toDelete = existingProjectRoles.filter(
+            (existing) => !incomingRoleIds.includes(existing.id),
+          );
+
+          if (toDelete.length > 0) {
+            await tx.projectRole.deleteMany({
+              where: { id: { in: toDelete.map((role) => role.id) } },
+            });
+          }
+
+          // Mettre à jour les rôles existants et créer les nouveaux
+          for (const role of projectData.projectRoles) {
+            if (role.id) {
+              // Mise à jour
+              await tx.projectRole.update({
+                where: { id: role.id },
+                data: {
+                  title: role.title,
+                  description: role.description,
+                  isFilled: role.isFilled,
+                  techStacks: {
+                    set: [],
+                    connect: role.techStacks.map((ts) => ({ id: ts.id })),
+                  },
+                },
+              });
+            } else {
+              // Création
+              await tx.projectRole.create({
+                data: {
+                  projectId: id,
+                  title: role.title,
+                  description: role.description,
+                  isFilled: role.isFilled,
+                  techStacks: {
+                    connect: role.techStacks.map((ts) => ({ id: ts.id })),
+                  },
+                },
+              });
+            }
           }
         }
 

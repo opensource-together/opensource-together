@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { NOTIFICATION_SERVICE_PORT } from '../use-cases/ports/notification.service.port';
 
 // Services et adapters

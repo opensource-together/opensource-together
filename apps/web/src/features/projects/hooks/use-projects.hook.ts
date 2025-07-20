@@ -56,9 +56,9 @@ export function useCreateProject() {
     successMessage: "Projet créé avec succès",
     errorMessage: "Erreur lors de la création du projet",
     options: {
-      onSuccess: () => {
+      onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["projects"] });
-        router.push("/projects/create/success");
+        router.push(`/projects/create/success?projectId=${project.id}`);
       },
     },
   });

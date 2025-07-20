@@ -32,6 +32,11 @@ export class CreateProjectDtoRequest {
   @IsNotEmpty()
   categories: string[];
 
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  image: string;
+
   @IsArray()
   keyFeatures: string[];
 

@@ -12,4 +12,4 @@ import { MAILING_SERVICE_PORT } from '../ports/mailing.service.port';
   ],
   exports: [MAILING_SERVICE_PORT],
 })
-export class MailingModule {}
+export class MailingInfrastructure {}

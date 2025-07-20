@@ -39,6 +39,7 @@ interface ComboboxProps {
   maxSelections?: number;
   className?: string;
   disabled?: boolean;
+  showTags?: boolean;
 }
 
 export function Combobox({
@@ -51,12 +52,18 @@ export function Combobox({
   maxSelections,
   className,
   disabled = false,
+  showTags = true,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
   const selectedOptions = options.filter((option) => value.includes(option.id));
 
-  const handleSelect = (optionId: string) => {
+  const handleSelect = (optionName: string) => {
+    const option = options.find((opt) => opt.name === optionName);
+    if (!option) return;
+
+    const optionId = option.id;
+
     if (value.includes(optionId)) {
       // Remove selection
       onChange(value.filter((id) => id !== optionId));
@@ -77,7 +84,7 @@ export function Combobox({
   return (
     <div className={cn("flex w-full flex-col gap-3", className)}>
       {/* Selected items display */}
-      {selectedOptions.length > 0 && (
+      {showTags && selectedOptions.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selectedOptions.map((option) => (
             <Badge
@@ -129,8 +136,10 @@ export function Combobox({
                   return (
                     <CommandItem
                       key={option.id}
-                      value={option.id}
-                      onSelect={() => !isDisabled && handleSelect(option.id)}
+                      value={option.name}
+                      onSelect={(selectedName) =>
+                        !isDisabled && handleSelect(selectedName)
+                      }
                       className={cn(
                         "cursor-pointer",
                         isDisabled && "cursor-not-allowed opacity-50"

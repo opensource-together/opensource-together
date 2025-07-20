@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
-import { PrismaService } from '@/orm/prisma/prisma.service';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import { Result } from '@/libs/result';
 

@@ -6,11 +6,11 @@ import {
 import {
   ProjectRole,
   ProjectRoleValidationErrors,
-} from '@/contexts/project-role/domain/project-role.entity';
+} from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { Description, ShortDescription, Title } from './vo';
 import { Category } from '@/contexts/category/domain/category.entity';
-import { KeyFeature } from '@/contexts/key-feature/domain/key-feature.entity';
-import { ProjectGoals } from '@/contexts/project-goals/domain/project-goals.entity';
+import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -47,6 +47,7 @@ export type ProjectData = {
   }[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
+  image?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -67,6 +68,7 @@ export type ProjectProps = {
   categories: Category[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoals[];
+  image?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -83,6 +85,7 @@ export class Project {
   private categories: Category[];
   private keyFeatures: KeyFeature[];
   private projectGoals: ProjectGoals[];
+  private image?: string;
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -100,6 +103,7 @@ export class Project {
     this.categories = props.categories;
     this.keyFeatures = props.keyFeatures;
     this.projectGoals = props.projectGoals;
+    this.image = props.image;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -123,6 +127,7 @@ export class Project {
     if (props.createdAt > props.updatedAt) {
       return Result.fail('createdAt must be before updatedAt');
     }
+    console.log('props', props);
 
     return Project.validate(props);
   }
@@ -221,6 +226,7 @@ export class Project {
       categories: this.categories.map((c) => c.toPrimitive()),
       keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
       projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
+      image: this.image,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
@@ -314,5 +320,53 @@ export class Project {
   // Authorization and validation methods only
   public canUserModifyRoles(userId: string): boolean {
     return this.hasOwnerId(userId);
+  }
+
+  public updateKeyFeatures(
+    keyFeatures: {
+      id?: string;
+      projectId?: string;
+      feature: string;
+    }[],
+  ): Result<KeyFeature[], string> {
+    const keyFeatureResults = keyFeatures.map((kf) =>
+      KeyFeature.create({
+        ...kf,
+      }),
+    );
+    if (!keyFeatureResults.every((kf) => kf.success)) {
+      return Result.fail(
+        keyFeatureResults.find((kf) => !kf.success)?.error as string,
+      );
+    }
+
+    const validatedKeyFeatures = keyFeatureResults.map((kf) => kf.value);
+    const currentKeyFeatures = this.keyFeatures || [];
+
+    // Identifier les keyFeatures à conserver/modifier et les nouvelles
+    const incomingIds = validatedKeyFeatures
+      .map((kf) => kf.toPrimitive().id)
+      .filter(Boolean);
+
+    // Supprimer les keyFeatures qui ne sont plus dans la liste entrante
+    const remainingKeyFeatures = currentKeyFeatures.filter((kf) => {
+      const id = kf.toPrimitive().id;
+      return id && incomingIds.includes(id);
+    });
+
+    // Mettre à jour les keyFeatures existantes et ajouter les nouvelles
+    const updatedKeyFeatures = validatedKeyFeatures.map((newKf) => {
+      const newKfData = newKf.toPrimitive();
+      if (newKfData.id) {
+        // Keyfeature existante - la remplacer
+        return newKf;
+      } else {
+        // Nouvelle keyfeature
+        return newKf;
+      }
+    });
+
+    this.keyFeatures = [...remainingKeyFeatures, ...updatedKeyFeatures];
+    return Result.ok(this.keyFeatures);
   }
 }

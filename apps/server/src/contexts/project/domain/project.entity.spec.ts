@@ -6,7 +6,7 @@ import {
   ProjectValidationErrors,
 } from './project.entity';
 import { User } from '@/contexts/user/domain/user.entity';
-import { ProjectRole } from '@/contexts/project-role/domain/project-role.entity';
+import { ProjectRole } from '../bounded-contexts/project-role/domain/project-role.entity';
 
 describe('Domain Project Entity', () => {
   describe('create', () => {
