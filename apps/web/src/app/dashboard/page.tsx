@@ -1,4 +1,4 @@
-export default function CollaborationPage() {
+export default function DashboardPage() {
   return (
     <>
       <h1 className="text-2xl font-bold">Projet 1</h1>
