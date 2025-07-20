@@ -1,4 +1,3 @@
-import { ProjectRepositoryPort } from '../../use-cases/ports/project.repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
