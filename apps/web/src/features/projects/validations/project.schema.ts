@@ -104,6 +104,7 @@ export const updateProjectApiSchema = z.object({
   keyFeatures: z
     .array(z.string())
     .min(1, "Au moins une fonctionnalité clé est requise"),
+  projectGoals: z.array(z.string()).min(1, "Au moins un objectif est requis"),
   externalLinks: z
     .array(
       z.object({
