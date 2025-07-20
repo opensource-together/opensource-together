@@ -1,13 +1,23 @@
 import { API_BASE_URL } from "@/config/config";
 
+import {
+  safeDeleteMedia,
+  safeReplaceMedia,
+  safeUploadMedia,
+} from "@/shared/services/media.service";
+
 import { ProjectFormData } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
-import { createProjectApiSchema } from "../validations/project-stepper.schema";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
+  createProjectApiSchema,
+  updateProjectApiSchema,
 } from "../validations/project.schema";
-import { transformProjectForApi } from "./project-transform.service";
+import {
+  transformProjectForApi,
+  transformProjectForApiUpdate,
+} from "./project-transform.service";
 
 /**
  * Fetches the list of all projects.
@@ -72,17 +82,32 @@ export const getProjectDetails = async (
 };
 
 /**
- * Creates a new project.
+ * Creates a new project with optional image upload.
  *
  * @param storeData - The data for the new project.
+ * @param imageFile - Optional image file to upload.
  * @returns A promise that resolves to the created project.
  */
 export const createProject = async (
-  storeData: ProjectFormData
+  storeData: ProjectFormData,
+  imageFile?: File
 ): Promise<Project> => {
+  let imageUrl: string | null = null;
+
   try {
+    // Upload image if provided
+    if (imageFile) {
+      imageUrl = await safeUploadMedia(imageFile);
+      if (!imageUrl) {
+        throw new Error("Failed to upload image");
+      }
+    }
+
     // Transform store data to API format
-    const apiData = transformProjectForApi(storeData);
+    const apiData = transformProjectForApi({
+      ...storeData,
+      image: imageUrl || storeData.image,
+    });
 
     const validatedData = createProjectApiSchema.parse(apiData);
 
@@ -102,49 +127,64 @@ export const createProject = async (
 
     return response.json();
   } catch (error) {
-    console.error("Error creating project:", error);
+    // Cleanup uploaded image on failure
+    if (imageUrl) {
+      await safeDeleteMedia(imageUrl);
+    }
     throw error;
   }
 };
 
 /**
- * Updates an existing project.
+ * Updates an existing project with optional image handling.
  *
  * @param params - The data for the updated project.
+ * @param newImageFile - Optional new image file to upload.
+ * @param shouldDeleteImage - Whether to delete the current image.
  * @returns A promise that resolves to the updated project.
  */
 export const updateProject = async (
-  params: UpdateProjectData
+  params: UpdateProjectData,
+  newImageFile?: File,
+  shouldDeleteImage?: boolean
 ): Promise<Project> => {
   try {
     // Validate input parameters
     const validatedParams = UpdateProjectSchema.parse(params);
     const { data, projectId } = validatedParams;
 
+    // Get current project to access current image
+    const currentProject = await getProjectDetails(projectId);
+
+    let imageUrl: string | undefined = currentProject.image;
+
+    // Handle image operations
+    if (shouldDeleteImage && currentProject.image) {
+      await safeDeleteMedia(currentProject.image);
+      imageUrl = undefined;
+    } else if (newImageFile) {
+      if (currentProject.image) {
+        // Replace existing image
+        const newImageUrl = await safeReplaceMedia(
+          currentProject.image,
+          newImageFile
+        );
+        imageUrl = newImageUrl || undefined;
+      } else {
+        // Upload new image
+        const newImageUrl = await safeUploadMedia(newImageFile);
+        imageUrl = newImageUrl || undefined;
+      }
+    }
+
     // Transform data to API format
-    const apiPayload = {
-      title: data.title,
-      description: data.shortDescription,
-      shortDescription: data.shortDescription,
-      externalLinks: data.externalLinks
-        ? Object.entries(data.externalLinks)
-            .filter(([_, url]) => typeof url === "string" && url.trim())
-            .map(([type, url]) => ({
-              type: type === "website" ? "other" : type,
-              url: url as string,
-            }))
-        : [],
-      techStacks: data.techStack || [],
-      categories: data.categories || [],
-      keyFeatures: data.keyFeatures?.map((feature) => feature.feature) || [],
-      projectGoals: data.projectGoals?.map((goal) => goal.goal) || [],
-      projectRoles:
-        data.projectRoles?.map((role) => ({
-          title: role.title,
-          description: role.description,
-          techStacks: role.techStack || [],
-        })) || [],
-    };
+    const apiPayload = transformProjectForApiUpdate({
+      ...data,
+      image: imageUrl,
+    });
+
+    // Validate the API payload
+    const validatedData = updateProjectApiSchema.parse(apiPayload);
 
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
       method: "PATCH",
@@ -152,7 +192,7 @@ export const updateProject = async (
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(apiPayload),
+      body: JSON.stringify(validatedData),
     });
 
     if (!response.ok) {
@@ -168,13 +208,16 @@ export const updateProject = async (
 };
 
 /**
- * Deletes a project by its ID.
+ * Deletes a project by its ID and cleans up associated media.
  *
  * @param projectId - The ID of the project to delete.
  * @returns A promise that resolves to void.
  */
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
+    // Get project details to access image before deletion
+    const project = await getProjectDetails(projectId);
+
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
       method: "DELETE",
       credentials: "include",
@@ -188,6 +231,11 @@ export const deleteProject = async (projectId: string): Promise<void> => {
       throw new Error(
         error.message || "Erreur lors de la suppression du projet"
       );
+    }
+
+    // Clean up associated image after successful project deletion
+    if (project.image) {
+      await safeDeleteMedia(project.image);
     }
 
     // No need to return anything for DELETE
