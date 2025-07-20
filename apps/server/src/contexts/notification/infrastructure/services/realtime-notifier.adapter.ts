@@ -10,22 +10,20 @@ import { NotificationsGateway } from '../gateways/notifications.gateway';
 export class RealtimeNotifierAdapter {
   constructor(
     @Inject(forwardRef(() => NotificationsGateway))
-    private readonly gateway: NotificationsGateway,
+    private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   /**
-   * Envoie une notification en temps réel.
-   * @param notification - Données complètes de la notification avec ID
+   * Envoie une nouvelle notification en temps réel
    */
   async send(notification: NotificationData): Promise<void> {
-    await this.gateway.emitToUser(notification);
+    await this.notificationsGateway.emitToUser(notification);
   }
 
   /**
-   * 🆕 NOUVEAU : Envoie une mise à jour d'état de notification en temps réel.
-   * @param notification - Données complètes de la notification mise à jour
+   * Envoie une mise à jour de notification (ex: marquée comme lue)
    */
   async sendNotificationUpdate(notification: NotificationData): Promise<void> {
-    await this.gateway.emitNotificationUpdate(notification);
+    await this.notificationsGateway.emitNotificationUpdate(notification);
   }
 }

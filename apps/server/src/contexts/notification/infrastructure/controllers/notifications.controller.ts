@@ -8,14 +8,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateNotificationCommand } from '@/notification/use-cases/commands/create-notification.command';
-import { MarkNotificationReadCommand } from '@/notification/use-cases/commands/mark-notification-read.command';
-import { MarkAllNotificationsReadCommand } from '@/notification/use-cases/commands/mark-all-notifications-read.command';
-import { GetUnreadNotificationsQuery } from '@/notification/use-cases/queries/get-unread-notifications.query';
-import { PublicAccess } from 'supertokens-nestjs';
+import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
+import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
+import { MarkAllNotificationsReadCommand } from '../../use-cases/commands/mark-all-notifications-read.command';
+import { GetUnreadNotificationsQuery } from '../../use-cases/queries/get-unread-notifications.query';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 
 interface CreateNotificationDto {
-  userId: string;
   type: string;
   payload: Record<string, unknown>;
   // channels?: ('realtime' | 'email')[]  // optionnel
@@ -31,13 +30,14 @@ export class NotificationsController {
   /**
    * Créer une nouvelle notification (endpoint de test)
    */
-  @PublicAccess()
   @Post()
-  async create(@Body() dto: CreateNotificationDto) {
-    console.log('create notification', dto);
+  async create(
+    @Session('userId') ownerId: string,
+    @Body() dto: CreateNotificationDto,
+  ) {
     await this.commandBus.execute(
       new CreateNotificationCommand({
-        userId: dto.userId,
+        userId: ownerId,
         type: dto.type,
         payload: dto.payload,
         channels: ['realtime'],
@@ -49,15 +49,14 @@ export class NotificationsController {
   /**
    * Récupérer toutes les notifications non lues d'un utilisateur
    */
-  @PublicAccess()
   @Get('unread')
-  async getUnreadNotifications(@Query('userId') userId: string) {
-    if (!userId) {
+  async getUnreadNotifications(@Session('userId') ownerId: string) {
+    if (!ownerId) {
       return { error: 'userId est requis' };
     }
 
     const result = await this.queryBus.execute(
-      new GetUnreadNotificationsQuery(userId),
+      new GetUnreadNotificationsQuery(ownerId),
     );
 
     if (result.success) {
@@ -77,11 +76,13 @@ export class NotificationsController {
   /**
    * Marquer une notification spécifique comme lue
    */
-  @PublicAccess()
   @Patch(':id/read')
-  async markAsRead(@Param('id') notificationId: string) {
+  async markAsRead(
+    @Session('userId') ownerId: string,
+    @Param('id') notificationId: string,
+  ) {
     const result = await this.commandBus.execute(
-      new MarkNotificationReadCommand(notificationId),
+      new MarkNotificationReadCommand(notificationId, ownerId),
     );
 
     if (result.success) {
@@ -94,15 +95,14 @@ export class NotificationsController {
   /**
    * Marquer toutes les notifications d'un utilisateur comme lues
    */
-  @PublicAccess()
   @Patch('read-all')
-  async markAllAsRead(@Body() body: { userId: string }) {
-    if (!body.userId) {
+  async markAllAsRead(@Session('userId') ownerId: string) {
+    if (!ownerId) {
       return { error: 'userId est requis' };
     }
 
     const result = await this.commandBus.execute(
-      new MarkAllNotificationsReadCommand(body.userId),
+      new MarkAllNotificationsReadCommand(ownerId),
     );
 
     if (result.success) {

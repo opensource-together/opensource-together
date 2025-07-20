@@ -86,6 +86,7 @@ export class ProjectListener {
     ownerName: string;
   }) {
     // Notification de confirmation pour le créateur
+    console.log('Notification de confirmation pour le créateur');
     const command = new CreateNotificationCommand({
       userId: event.ownerId,
       type: 'project.created',

@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PrismaService } from '@/orm/prisma/prisma.service';
-import { NOTIFICATION_SERVICE_PORT } from '@/notification/use-cases/ports/notification.service.port';
+import { NOTIFICATION_SERVICE_PORT } from '../use-cases/ports/notification.service.port';
 
 // Services et adapters
-import { NotificationService } from '../notification.service';
-import { RealtimeNotifierAdapter } from './adapters/realtime-notifier.adapter';
+import { NotificationService } from './services/notification.service';
+import { RealtimeNotifierAdapter } from './services/realtime-notifier.adapter';
 
 // Gateway WebSocket
 import { NotificationsGateway } from './gateways/notifications.gateway';
@@ -14,16 +14,11 @@ import { NotificationsGateway } from './gateways/notifications.gateway';
 // Listeners EventEmitter2
 import { ProjectListener } from './listeners/project.listener';
 
-// Commands
-import { CreateNotificationCommandHandler } from '../use-cases/commands/create-notification.command';
-import { MarkNotificationReadCommandHandler } from '../use-cases/commands/mark-notification-read.command';
-import { MarkAllNotificationsReadCommandHandler } from '../use-cases/commands/mark-all-notifications-read.command';
-
-// Queries
-import { GetUnreadNotificationsQueryHandler } from '../use-cases/queries/get-unread-notifications.query';
+// Use cases
+import { notificationUseCases } from '../use-cases/notification.use-cases';
 
 // Controller
-import { NotificationsController } from '@/notification/infrastructure/presentation/notifications.controller';
+import { NotificationsController } from './controllers/notifications.controller';
 
 /**
  * Module d'infrastructure pour les notifications.
@@ -57,13 +52,8 @@ import { NotificationsController } from '@/notification/infrastructure/presentat
     // Listeners EventEmitter2
     ProjectListener,
 
-    // Command handlers CQRS
-    CreateNotificationCommandHandler,
-    MarkNotificationReadCommandHandler,
-    MarkAllNotificationsReadCommandHandler,
-
-    // // Query handlers CQRS
-    GetUnreadNotificationsQueryHandler,
+    // Use cases (commands et queries)
+    ...notificationUseCases,
   ],
   controllers: [NotificationsController],
   exports: [

@@ -4,14 +4,14 @@ import {
   NotificationServicePort,
   SendNotificationPayload,
   NotificationData,
-} from './use-cases/ports/notification.service.port';
+} from '../../use-cases/ports/notification.service.port';
 import { Result } from '@/libs/result';
-import { RealtimeNotifierAdapter } from './infrastructure/adapters/realtime-notifier.adapter';
+import { RealtimeNotifierAdapter } from './realtime-notifier.adapter';
 
 /**
  * Service d'implémentation du port NotificationServicePort.
- * Responsable de l'orchestration entre persistance et livraison.
- * Couche Infrastructure - dépend de Prisma et des adapters.
+ * Responsable de la persistance et de la livraison technique.
+ * Couche Infrastructure - ne gère pas la logique du domaine.
  */
 @Injectable()
 export class NotificationService implements NotificationServicePort {
@@ -29,26 +29,16 @@ export class NotificationService implements NotificationServicePort {
     notification: SendNotificationPayload,
   ): Promise<Result<void, string>> {
     try {
-      // Debug : vérifier que tous les champs sont présents
-      console.log('Sending notification:', {
-        userId: notification.userId,
-        type: notification.type,
-        payload: notification.payload,
-        channels: notification.channels,
-      });
-
-      // 1. Persistance en base de données et récupération de la notification créée avec son ID
+      // 1. Persister en base de données
       const createdNotification = await this.prisma.notification.create({
         data: {
           userId: notification.userId,
           type: notification.type,
-          payload: notification.payload as any, // Cast pour compatibilité Prisma JsonValue
-          // createdAt est automatique via @default(now()) dans le schema
-          // readAt reste null par défaut
+          payload: notification.payload as any,
         },
       });
 
-      // 2. Construire l'objet NotificationData avec l'ID généré
+      // 2. Construire les données brutes pour l'adapter
       const notificationData: NotificationData = {
         id: createdNotification.id,
         userId: createdNotification.userId,
@@ -58,29 +48,27 @@ export class NotificationService implements NotificationServicePort {
         readAt: createdNotification.readAt,
       };
 
-      // 3. Livraison via les canaux demandés (défaut: realtime)
-      const channels = notification.channels ?? ['realtime'];
+      // 3. Envoyer aux canaux appropriés
+      const channels = notification.channels || ['realtime'];
 
-      if (channels.includes('realtime')) {
-        await this.realtimeAdapter.send(notificationData);
+      for (const channel of channels) {
+        if (channel === 'realtime') {
+          await this.realtimeAdapter.send(notificationData);
+        }
+        // TODO: Ajouter d'autres canaux (email, etc.)
       }
-
-      // TODO: Ajouter d'autres canaux (email, push) plus tard
-      // if (channels.includes('email')) {
-      //   await this.emailAdapter.send(notificationData);
-      // }
 
       return Result.ok(undefined);
     } catch (error) {
-      console.error("Erreur lors de l'envoi de la notification:", error);
-      return Result.fail("Erreur technique lors de l'envoi de la notification");
+      console.error('Error sending notification:', error);
+      return Result.fail('Failed to send notification');
     }
   }
 
   /**
    * Récupère toutes les notifications non lues d'un utilisateur.
    * @param userId - ID de l'utilisateur
-   * @returns Result<NotificationData[], string> - Liste des notifications ou erreur
+   * @returns Result<NotificationData[], string> - Données brutes des notifications
    */
   async getUnreadNotifications(
     userId: string,
@@ -88,39 +76,32 @@ export class NotificationService implements NotificationServicePort {
     try {
       const notifications = await this.prisma.notification.findMany({
         where: {
-          userId,
-          readAt: null, // Notifications non lues uniquement
+          userId: userId,
+          readAt: null,
         },
         orderBy: {
-          createdAt: 'desc', // Plus récentes en premier
+          createdAt: 'desc',
         },
       });
 
-      const notificationData: NotificationData[] = notifications.map(
-        (notif) => ({
-          id: notif.id,
-          userId: notif.userId,
-          type: notif.type,
-          payload: notif.payload as Record<string, unknown>,
-          createdAt: notif.createdAt,
-          readAt: notif.readAt,
-        }),
-      );
+      const notificationData: NotificationData[] = notifications.map((n) => ({
+        id: n.id,
+        userId: n.userId,
+        type: n.type,
+        payload: n.payload as Record<string, unknown>,
+        createdAt: n.createdAt,
+        readAt: n.readAt,
+      }));
 
       return Result.ok(notificationData);
     } catch (error) {
-      console.error(
-        'Erreur lors de la récupération des notifications non lues:',
-        error,
-      );
-      return Result.fail(
-        'Erreur technique lors de la récupération des notifications',
-      );
+      console.error('Error fetching unread notifications:', error);
+      return Result.fail('Failed to fetch unread notifications');
     }
   }
 
   /**
-   * Marque une notification spécifique comme lue.
+   * Marque une notification comme lue.
    * @param notificationId - ID de la notification
    * @returns Result<void, string> - Succès ou erreur
    */
@@ -128,13 +109,13 @@ export class NotificationService implements NotificationServicePort {
     notificationId: string,
   ): Promise<Result<void, string>> {
     try {
-      // Mettre à jour la notification et récupérer les données complètes
+      // Mettre à jour la notification
       const updatedNotification = await this.prisma.notification.update({
         where: { id: notificationId },
         data: { readAt: new Date() },
       });
 
-      // Construire l'objet NotificationData avec les nouvelles données
+      // Construire les données pour l'adapter
       const notificationData: NotificationData = {
         id: updatedNotification.id,
         userId: updatedNotification.userId,
@@ -144,18 +125,13 @@ export class NotificationService implements NotificationServicePort {
         readAt: updatedNotification.readAt,
       };
 
-      // 🆕 NOUVEAU : Émettre l'événement de mise à jour en temps réel
+      // Notifier en temps réel
       await this.realtimeAdapter.sendNotificationUpdate(notificationData);
 
       return Result.ok(undefined);
     } catch (error) {
-      console.error(
-        'Erreur lors du marquage de la notification comme lue:',
-        error,
-      );
-      return Result.fail(
-        'Erreur technique lors du marquage de la notification',
-      );
+      console.error('Error marking notification as read:', error);
+      return Result.fail('Failed to mark notification as read');
     }
   }
 
@@ -168,25 +144,29 @@ export class NotificationService implements NotificationServicePort {
     userId: string,
   ): Promise<Result<void, string>> {
     try {
-      // Récupérer d'abord les notifications non lues pour pouvoir les mettre à jour individuellement
+      // Récupérer les notifications non lues pour les notifier individuellement
       const unreadNotifications = await this.prisma.notification.findMany({
         where: {
-          userId,
-          readAt: null, // Seulement celles qui ne sont pas déjà lues
+          userId: userId,
+          readAt: null,
         },
       });
+
+      if (unreadNotifications.length === 0) {
+        return Result.ok(undefined);
+      }
 
       // Marquer toutes comme lues
       const readAt = new Date();
       await this.prisma.notification.updateMany({
         where: {
-          userId,
+          userId: userId,
           readAt: null,
         },
         data: { readAt },
       });
 
-      // 🆕 NOUVEAU : Émettre les événements de mise à jour en temps réel pour chaque notification
+      // Notifier en temps réel pour chaque notification
       for (const notification of unreadNotifications) {
         const notificationData: NotificationData = {
           id: notification.id,
@@ -194,7 +174,7 @@ export class NotificationService implements NotificationServicePort {
           type: notification.type,
           payload: notification.payload as Record<string, unknown>,
           createdAt: notification.createdAt,
-          readAt: readAt, // Utiliser la même date pour toutes
+          readAt: readAt,
         };
 
         await this.realtimeAdapter.sendNotificationUpdate(notificationData);
@@ -202,11 +182,33 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok(undefined);
     } catch (error) {
-      console.error(
-        'Erreur lors du marquage de toutes les notifications comme lues:',
-        error,
-      );
-      return Result.fail('Erreur technique lors du marquage des notifications');
+      console.error('Error marking all notifications as read:', error);
+      return Result.fail('Failed to mark all notifications as read');
+    }
+  }
+
+  async getNotificationById(
+    notificationId: string,
+  ): Promise<Result<NotificationData, string>> {
+    try {
+      const notification = await this.prisma.notification.findUnique({
+        where: { id: notificationId },
+      });
+
+      if (!notification) {
+        return Result.fail('Notification not found');
+      }
+
+      return Result.ok({
+        id: notification.id,
+        userId: notification.userId,
+        type: notification.type,
+        payload: notification.payload as Record<string, unknown>,
+        createdAt: notification.createdAt,
+        readAt: notification.readAt,
+      });
+    } catch (error) {
+      return Result.fail('Failed to fetch notification');
     }
   }
 }

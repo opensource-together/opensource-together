@@ -6,7 +6,6 @@ import { AuthModule } from '@/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ContextsModule } from './contexts/contexts.module';
 import { HealthModule } from './health/health.module';
-import { NotificationInfrastructure } from './notification/infrastructure/notification.infrastructure';
 
 @Module({
   imports: [
@@ -17,7 +16,6 @@ import { NotificationInfrastructure } from './notification/infrastructure/notifi
     AuthModule,
     ContextsModule,
     HealthModule,
-    NotificationInfrastructure,
   ],
   controllers: [],
   providers: [

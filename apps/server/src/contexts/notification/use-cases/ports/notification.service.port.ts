@@ -32,4 +32,8 @@ export interface NotificationServicePort {
   markNotificationAsRead(notificationId: string): Promise<Result<void, string>>;
 
   markAllNotificationsAsRead(userId: string): Promise<Result<void, string>>;
+
+  getNotificationById(
+    notificationId: string,
+  ): Promise<Result<NotificationData, string>>;
 }

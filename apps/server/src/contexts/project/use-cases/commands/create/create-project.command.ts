@@ -185,7 +185,7 @@ export class CreateProjectCommandHandler
     this.eventEmitter.emit('project.created', {
       projectId: savedProject.value.toPrimitive().id,
       projectTitle: savedProject.value.toPrimitive().title,
-      ownerId: 'mock_user_id', // TEMPORAIRE : pour que ça matche avec authenticateSocket
+      ownerId: ownerId,
       ownerName: 'Demo User',
     });
 
