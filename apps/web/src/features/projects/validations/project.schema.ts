@@ -36,21 +36,6 @@ export const projectSchema = z.object({
     .array(z.string())
     .min(1, "Au moins une catégorie est requise")
     .max(6, "Maximum 6 catégories autorisées"),
-  projectRoles: z.array(
-    z.object({
-      title: z
-        .string()
-        .min(3, "Le titre du rôle doit contenir au moins 3 caractères"),
-      techStack: z
-        .array(z.string())
-        .min(1, "Au moins une technologie est requise")
-        .max(6, "Maximum 6 technologies autorisées"),
-      description: z
-        .string()
-        .min(10, "La description doit contenir au moins 10 caractères")
-        .max(250, "La description ne peut pas dépasser 250 caractères"),
-    })
-  ),
   image: z.string().optional(),
   externalLinks: z
     .object({

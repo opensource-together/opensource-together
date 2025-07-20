@@ -138,12 +138,6 @@ export const updateProject = async (
       categories: data.categories || [],
       keyFeatures: data.keyFeatures?.map((feature) => feature.feature) || [],
       projectGoals: data.projectGoals?.map((goal) => goal.goal) || [],
-      projectRoles:
-        data.projectRoles?.map((role) => ({
-          title: role.title,
-          description: role.description,
-          techStacks: role.techStack || [],
-        })) || [],
     };
 
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
