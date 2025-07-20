@@ -1,6 +1,7 @@
 import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import Image from "next/image";
 
 import { Project } from "../types/project.type";
 
