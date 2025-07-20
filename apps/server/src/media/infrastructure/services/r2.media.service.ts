@@ -94,4 +94,32 @@ export class R2MediaService implements MediaServicePort {
       throw error;
     }
   }
+
+  async changePublicImage(
+    oldKey: string,
+    newKey: string,
+    image: Buffer,
+    contentType: string,
+  ): Promise<Result<string, string>> {
+    try {
+      const existsBeforeDelete = await this.exists(oldKey);
+      if (!existsBeforeDelete) {
+        return Result.fail("Image doesn't exist");
+      }
+
+      const uploadResult = await this.uploadPublicImage(
+        image,
+        newKey,
+        contentType,
+      );
+      if (!uploadResult.success) {
+        return Result.fail(uploadResult.error);
+      }
+      await this.delete(oldKey);
+      return Result.ok(uploadResult.value);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Failed to change media');
+    }
+  }
 }

@@ -2,6 +2,7 @@ import { Express } from 'express';
 import {
   Controller,
   Post,
+  Patch,
   UseInterceptors,
   UploadedFile,
   Inject,
@@ -110,5 +111,24 @@ export class MediaController {
       throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return { message: 'Image deleted successfully' };
+  }
+
+  @Patch('change/image/public/:oldKey')
+  @UseInterceptors(FileInterceptor('image'))
+  async changePublicImage(
+    @Param('oldKey') oldKey: string,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    const newKey = `${Date.now()}-${image.originalname}`;
+    const result = await this.mediaService.changePublicImage(
+      oldKey,
+      newKey,
+      image.buffer,
+      image.mimetype,
+    );
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return { url: result.value };
   }
 }
