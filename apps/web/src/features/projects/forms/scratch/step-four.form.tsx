@@ -105,7 +105,9 @@ export function StepFourForm() {
     });
 
     // Create project with consolidated data
-    createProject(finalFormData);
+    createProject({
+      projectData: finalFormData,
+    });
   };
 
   const handleCancelCreation = () => {

@@ -10,6 +10,7 @@ import {
  * Transforms store data to API format.
  *
  * @param storeData - The data from the store.
+ * @param imageFile - The image file for the new project.
  * @returns The transformed data for the API.
  */
 export const transformProjectForApi = (

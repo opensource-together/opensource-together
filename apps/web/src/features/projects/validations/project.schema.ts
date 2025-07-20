@@ -93,7 +93,6 @@ export const createProjectApiSchema = z.object({
     .optional(),
 });
 
-
 // API schema for updates - what the backend expects
 export const updateProjectApiSchema = z.object({
   title: z.string().min(3, "Le titre du projet est requis"),

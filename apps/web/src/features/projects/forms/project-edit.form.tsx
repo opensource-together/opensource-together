@@ -64,8 +64,10 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     console.log("Form submission data:", data);
 
     updateProject({
-      projectId: project.id,
-      data,
+      updateData: {
+        data,
+        projectId: project.id,
+      },
     });
   });
 
