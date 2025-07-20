@@ -42,6 +42,7 @@ export class CreateProjectCommand implements ICommand {
       keyFeatures: { id?: string; feature: string }[];
       projectGoals: { id?: string; goal: string }[];
       octokit: Octokit;
+      method: string;
     },
   ) {}
 }
@@ -77,6 +78,7 @@ export class CreateProjectCommandHandler
       keyFeatures,
       projectGoals,
       octokit,
+      method,
     } = createProjectCommand.props;
     // verifier si un project n'existe pas déjà avec le même titre
     const projectWithSameTitle = await this.projectRepo.findByTitle(title);
@@ -142,16 +144,28 @@ export class CreateProjectCommandHandler
     const projectValidated = projectResult.value;
 
     //si valide alors on enregistre le projet dans la persistance
-    const savedProject = await this.projectRepo.create(projectValidated);
+    let savedProject = await this.projectRepo.create(projectValidated);
     if (!savedProject.success) return Result.fail('Unable to create project');
 
-    //si le projet est valide alors on créer un github repository
-    //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
+    switch (method) {
+      //si le projet est valide alors on créer un github repository
+      //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
+      //on retourne le projet avec les roles ajoutés
+      case 'scratch': savedProject = await this.createGithubRepository(savedProject.value, octokit); break;
+      //si le projet est créé depuis github, on ne fait rien de plus
+      case 'github': savedProject = await this.validateGithubProject(savedProject.value); break;
+      default: break;
+    }
+
+    return savedProject;
+  }
+
+  async createGithubRepository(project: Project, octokit: Octokit): Promise<Result<Project, string>> {
     const githubRepositoryResult: Result<GithubRepositoryDto, string> =
       await this.githubRepository.createGithubRepository(
         {
-          title: savedProject.value.toPrimitive().title,
-          description: savedProject.value.toPrimitive().description,
+          title: project.toPrimitive().title,
+          description: project.toPrimitive().description,
         },
         octokit,
       );
@@ -162,22 +176,49 @@ export class CreateProjectCommandHandler
 
       if (html_url) {
         //on ajoute le lien github au projet
-        savedProject.value.addExternalLink({
-          type: 'github',
-          url: html_url,
-        });
-        //on met à jour le projet avec le lien github dans la persistance
-        const savedProjectWithGithubLink = await this.projectRepo.update(
-          savedProject.value.toPrimitive().id as string,
-          savedProject.value,
-        );
+        const savedProjectWithGithubLink = await this.addUrlToProject(project, html_url);
         if (!savedProjectWithGithubLink.success) {
           //si une erreur survient, on renvoie quand meme le projet créé
-          return Result.ok(savedProject.value);
+          return Result.ok(project);
         }
       }
+      return Result.ok(project);
     }
-    //on retourne le projet avec les roles ajoutés
-    return Result.ok(savedProject.value);
+    return Result.fail('Unable to create GitHub repository : ' + githubRepositoryResult.error);
   }
+
+  async validateGithubProject(project: Project): Promise<Result<Project, string>> {
+    //on vérifie si le projet a un lien github
+    const githubLink = project.toPrimitive().externalLinks?.find(
+      (link) => link.type === 'github',
+    );
+    if (!githubLink || !githubLink.url) {
+      return Result.fail('Project does not have a GitHub link');
+    }
+    if (!githubLink.url.startsWith('https://github.com')) {
+      return Result.fail('Project GitHub link is not a valid repository URL');
+    }
+    return Result.ok(project);
+  }
+
+  async addUrlToProject(
+    project: Project,
+    url?: string,
+  ): Promise<Result<Project, string>> {
+    if (!url) {
+      return Result.fail('No URL provided to add to project');
+    }
+    //on ajoute le lien github au projet
+    project.addExternalLink({
+      type: 'github',
+      url,
+    });
+    //on met à jour le projet avec le lien github dans la persistance
+    const savedProjectWithGithubLink = await this.projectRepo.update(
+      project.toPrimitive().id as string,
+      project,
+    );
+    return savedProjectWithGithubLink;
+  }
+
 }

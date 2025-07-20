@@ -18,7 +18,7 @@ import {
   Controller,
   Delete,
   Get,
-  // Query,
+  Query,
   HttpException,
   HttpStatus,
   Param,
@@ -553,7 +553,7 @@ export class ProjectController {
   })
   async createProject(
     @Session('userId') ownerId: string,
-    @Req() req: Request,
+    @Query('method') method: string,
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
@@ -578,6 +578,7 @@ export class ProjectController {
           goal: goal,
         })),
         octokit: octokit,
+        method: method,
       }),
     );
     if (!projectRes.success) {
