@@ -6,11 +6,14 @@ import { getQueryClient } from "@/shared/lib/query-client";
 
 import {
   createProject,
+  deleteProject,
   getProjectDetails,
   getProjects,
   updateProject,
 } from "../services/project.service";
+import { ProjectFormData } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
+import { UpdateProjectData } from "../validations/project.schema";
 
 /**
  * Fetches the list of all projects.
@@ -51,7 +54,13 @@ export function useCreateProject() {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
-    mutationFn: createProject,
+    mutationFn: ({
+      projectData,
+      imageFile,
+    }: {
+      projectData: ProjectFormData;
+      imageFile?: File;
+    }) => createProject(projectData, imageFile),
     loadingMessage: "Création du projet en cours...",
     successMessage: "Projet créé avec succès",
     errorMessage: "Erreur lors de la création du projet",
@@ -83,7 +92,15 @@ export function useUpdateProject() {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
-    mutationFn: updateProject,
+    mutationFn: ({
+      updateData,
+      newImageFile,
+      shouldDeleteImage,
+    }: {
+      updateData: UpdateProjectData;
+      newImageFile?: File;
+      shouldDeleteImage?: boolean;
+    }) => updateProject(updateData, newImageFile, shouldDeleteImage),
     loadingMessage: "Mise à jour du projet en cours...",
     successMessage: "Projet mis à jour avec succès",
     errorMessage: "Erreur lors de la mise à jour du projet",
@@ -99,5 +116,37 @@ export function useUpdateProject() {
     updateProject: mutation.mutate,
     isUpdating: mutation.isPending,
     isUpdateError: mutation.isError,
+  };
+}
+
+/**
+ * Handles the deletion of a project.
+ *
+ * @returns An object containing:
+ * - deleteProject: function to trigger the project deletion
+ * - isDeleting: boolean indicating if the deletion is in progress
+ * - isDeleteError: boolean indicating if an error occurred
+ */
+export function useDeleteProject() {
+  const router = useRouter();
+  const queryClient = getQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: (projectId: string) => deleteProject(projectId),
+    loadingMessage: "Suppression du projet en cours...",
+    successMessage: "Projet supprimé avec succès",
+    errorMessage: "Erreur lors de la suppression du projet",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+        router.push("/projects");
+      },
+    },
+  });
+
+  return {
+    deleteProject: mutation.mutate,
+    isDeleting: mutation.isPending,
+    isDeleteError: mutation.isError,
   };
 }

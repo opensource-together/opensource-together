@@ -17,7 +17,6 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           shortDescription={project.shortDescription}
           image={project.image}
           techStacks={project.techStacks}
-          roles={project.projectRoles}
           author={project.author}
           projectStats={project.projectStats}
           showViewProject={true}
