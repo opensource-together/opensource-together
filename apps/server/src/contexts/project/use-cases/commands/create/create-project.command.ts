@@ -182,12 +182,12 @@ export class CreateProjectCommandHandler
     }
 
     // Émettre l'événement de création de projet pour déclencher les notifications
-    this.eventEmitter.emit('project.created', {
-      projectId: savedProject.value.toPrimitive().id,
-      projectTitle: savedProject.value.toPrimitive().title,
-      ownerId: ownerId,
-      ownerName: 'Demo User',
-    });
+    // this.eventEmitter.emit('project.created', {
+    //   projectId: savedProject.value.toPrimitive().id,
+    //   projectTitle: savedProject.value.toPrimitive().title,
+    //   ownerId: ownerId,
+    //   ownerName: 'Demo User',
+    // });
 
     //on retourne le projet avec les roles ajoutés
     return Result.ok(savedProject.value);
