@@ -54,22 +54,26 @@ export class PrismaProjectRoleApplicationRepository
     }
   }
 
-  async existsPendingApplication(
+  async existsStatusApplication(
     userId: string,
     projectRoleId: string,
-  ): Promise<Result<boolean, string>> {
+  ): Promise<Result<string | undefined, string>> {
     try {
       const projectRoleApplication =
         await this.prisma.projectRoleApplication.findFirst({
           where: {
             profileId: userId,
             projectRoleId,
-            status: 'PENDING',
+            status: {
+              in: ['PENDING', 'REJECTED'],
+            },
           },
         });
-      console.log('projectRoleApplication', !!projectRoleApplication);
 
-      return Result.ok(!!projectRoleApplication);
+      if (!projectRoleApplication) {
+        return Result.ok(undefined);
+      }
+      return Result.ok(projectRoleApplication.status);
     } catch (error) {
       console.error(error);
       return Result.fail('Une erreur est survenue');

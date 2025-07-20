@@ -49,7 +49,7 @@ export class GetProjectRolesQueryHandler
     for (const role of projectRolesResult.value) {
       const projectRoleEnriched: ProjectRole & { hasApplied?: boolean } = role;
       const projectRoleApplicationsResult =
-        await this.projectRoleApplicationRepo.existsPendingApplication(
+        await this.projectRoleApplicationRepo.existsStatusApplication(
           userId,
           role.toPrimitive().id as string,
         );

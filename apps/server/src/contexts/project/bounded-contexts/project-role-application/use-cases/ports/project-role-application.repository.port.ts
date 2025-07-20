@@ -55,11 +55,15 @@ export interface ProjectRoleApplicationRepositoryPort {
   /**
    * Vérifie si une candidature PENDING existe déjà pour ce couple utilisateur/rôle
    */
-  existsPendingApplication(
+  // existsPendingApplication(
+  //   userId: string,
+  //   projectRoleId: string,
+  // ): Promise<Result<boolean, string>>;
+
+  existsStatusApplication(
     userId: string,
     projectRoleId: string,
-  ): Promise<Result<boolean, string>>;
-
+  ): Promise<Result<string | undefined, string>>;
   /**
    * Trouve toutes les candidatures pour un projet
    */
