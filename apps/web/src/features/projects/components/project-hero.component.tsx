@@ -1,7 +1,6 @@
 import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import Image from "next/image";
 
 import { Project } from "../types/project.type";
 
@@ -29,26 +28,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         {/* Project Icon and Title */}
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex h-[50px] w-[50px] items-center justify-center rounded-4xl bg-[#F4F4F4] sm:h-[65px] sm:w-[65px]">
-            {image?.startsWith("http") ? (
-              <img
-                src={image}
-                alt={title}
-                width={50}
-                height={50}
-                className="rounded-4xl sm:h-[65px] sm:w-[65px]"
-              />
-            ) : (
-              <Image
-                src={image || "/icons/empty-project.svg"}
-                alt={title}
-                width={50}
-                height={50}
-                className="rounded-4xl sm:h-[65px] sm:w-[65px]"
-              />
-            )}
-
-        { /* <Avatar src={image} name={title} alt={title} size="xl" /> */ }
-
+            <Avatar src={image} name={title} alt={title} size="xl" />
           </div>
           {/* Project Title */}
           <h1 className="text-start text-2xl font-medium tracking-tighter text-black sm:text-3xl">
