@@ -11,7 +11,9 @@ import TwitterLink from "../logos/twitter-link";
 export default function Footer() {
   const pathname = usePathname();
   const hideFooter =
-    pathname.startsWith("/auth") || pathname.startsWith("/projects/create");
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/projects/create") ||
+    pathname.startsWith("/collaboration");
 
   const navigationLinks = [
     { name: "Services", href: "/services" },
@@ -27,7 +29,7 @@ export default function Footer() {
 
   return (
     !hideFooter && (
-      <footer className="mx-4 rounded-t-4xl bg-neutral-50 tracking-tighter md:mx-14">
+      <footer className="mx-4 rounded-t-4xl bg-neutral-50 tracking-tighter md:mx-20">
         {/* Main Footer Content */}
         <div className="mx-auto p-8 md:p-12 md:pr-24">
           <div className="flex flex-col gap-8 lg:flex-row lg:justify-between lg:gap-0">

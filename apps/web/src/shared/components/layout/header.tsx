@@ -20,7 +20,7 @@ import Icon from "../ui/icon";
 
 const HeaderBackdrop = () => {
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-[60px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[70px] lg:top-[81px]" />
+    <div className="pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[81px]" />
   );
 };
 
@@ -64,8 +64,8 @@ export default function Header() {
   const handleProfile = () =>
     requireAuth(() => router.push("/profile"), "/profile");
 
-  const handleMyProjects = () =>
-    requireAuth(() => router.push("/my-projects"), "/my-projects");
+  const handleCollaboration = () =>
+    requireAuth(() => router.push("/collaboration"), "/collaboration");
 
   const handleLogout = () => {
     logout();
@@ -74,7 +74,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="font-geist sticky top-0 z-50 flex h-auto min-h-[60px] flex-wrap items-center justify-between bg-white px-4 py-3 text-[13px] font-normal sm:px-6 md:min-h-[70px] md:px-10 md:py-0 lg:h-[81px] lg:px-[73px]">
+      <header className="sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal md:py-6 lg:px-20">
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
             <Image
@@ -87,19 +87,19 @@ export default function Header() {
           </Link>
 
           {/* Navigation pour desktop et tablette */}
-          <nav className="hidden items-center space-x-3 text-sm tracking-tighter md:flex lg:space-x-6">
+          <nav className="hidden items-center space-x-3 tracking-tighter md:flex lg:space-x-6">
             <NavLink href="/">Découvrir</NavLink>
 
             {/* Dashboard */}
             {isAuthenticated ? (
-              <NavLink href="/my-projects">Dashboard</NavLink>
+              <NavLink href="/collaboration">Gestion de projet</NavLink>
             ) : (
               <Button
                 variant="ghost"
-                onClick={handleMyProjects}
+                onClick={handleCollaboration}
                 className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
               >
-                Dashboard
+                Gestion de projet
               </Button>
             )}
           </nav>
@@ -141,13 +141,13 @@ export default function Header() {
 
           {/* Dashboard mobile */}
           {isAuthenticated ? (
-            <NavLink href="/my-projects" className="w-full py-1.5">
+            <NavLink href="/collaboration" className="w-full py-1.5">
               Dashboard
             </NavLink>
           ) : (
             <Button
               variant="ghost"
-              onClick={handleMyProjects}
+              onClick={handleCollaboration}
               className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
             >
               Dashboard
@@ -238,7 +238,7 @@ export default function Header() {
                     alt={currentUser?.name}
                     size="xs"
                   />
-                  <span className="text-sm font-medium tracking-tighter">
+                  <span className="font-medium tracking-tighter">
                     {currentUser?.name}
                   </span>
                   <Icon name="chevron-down" size="md" />
