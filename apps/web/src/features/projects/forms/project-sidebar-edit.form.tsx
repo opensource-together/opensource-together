@@ -54,7 +54,6 @@ export default function ProjectSidebarEditForm({
                     emptyText="Aucune technologie trouvée."
                     disabled={techStacksLoading}
                     maxSelections={10}
-                    showTags={false}
                   />
                 </FormControl>
                 <FormMessage />

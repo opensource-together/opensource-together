@@ -154,7 +154,7 @@ export default function ProjectSideBar({
           <div className="flex items-center gap-2">
             <Icon name="last-commit" size="sm" variant="default" />
             <span className="text-sm font-normal text-black/50">
-              Last Commit
+              Dernier Commit
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
@@ -179,7 +179,7 @@ export default function ProjectSideBar({
               className="opacity-50"
             />
             <span className="text-sm font-normal text-black/50">
-              Contributors
+              Contributeurs
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
@@ -232,80 +232,91 @@ export default function ProjectSideBar({
         <h2 className="text-md mb-3 font-medium tracking-tight text-black">
           Contributeurs Principaux
         </h2>
-        <div>
-          <div className="flex gap-2">
-            {allContributors.slice(0, 5).map((contributor) => (
-              <Avatar
-                key={contributor.login}
-                src={contributor.avatar_url}
-                name={contributor.login}
-                alt={contributor.login}
-                size="sm"
-              />
-            ))}
 
-            {/* Indicator "+X others" if more than 5 contributors */}
-            {allContributors.length > 5 && (
-              <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                +{allContributors.length - 5}
+        <div className="flex flex-col items-start">
+          <div className="ml-3 flex gap-2">
+            {allContributors.slice(0, 5).map((contributor) => (
+              <div
+                key={contributor.login}
+                className="flex items-center gap-2"
+                title={contributor.login}
+              >
+                <Avatar
+                  src={contributor.avatar_url}
+                  name={contributor.login}
+                  alt={contributor.login}
+                  size="sm"
+                  className="-ml-4 border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                />
               </div>
+            ))}
+          </div>
+          <div className="text-muted-foreground mt-3 text-xs">
+            {allContributors
+              .slice(0, 3)
+              .map((contributor) => contributor.login)
+              .join(", ")}
+            {allContributors.length > 3 && (
+              <> &amp; {allContributors.length - 3} autres</>
             )}
           </div>
         </div>
       </div>
 
       {/* Links Section */}
-      <div className="flex flex-col">
-        <h2 className="text-md font-medium tracking-tight">Liens Sociaux</h2>
-        <div className="mt-3 flex flex-wrap gap-3">
-          {externalLinks.map((link, index) => {
-            let iconSrc = "";
-            let iconAlt = "";
+      {externalLinks.length > 0 && (
+        <div className="flex flex-col">
+          <h2 className="text-md font-medium tracking-tight">Liens Sociaux</h2>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {externalLinks.map((link, index) => {
+              let iconSrc = "";
+              let iconAlt = "";
 
-            switch (link.type) {
-              case "github":
-                iconSrc = "/icons/github-gray-icon.svg";
-                iconAlt = "GitHub";
-                break;
-              case "twitter":
-                iconSrc = "/icons/x-gray-icon.svg";
-                iconAlt = "Twitter/X";
-                break;
-              case "linkedin":
-                iconSrc = "/icons/linkedin-gray-icon.svg";
-                iconAlt = "LinkedIn";
-                break;
-              case "discord":
-                iconSrc = "/icons/discord-gray.svg";
-                iconAlt = "Discord";
-                break;
-              case "other":
-              case "website":
-              default:
-                iconSrc = "/icons/link-gray-icon.svg";
-                iconAlt = "Website";
-                break;
-            }
+              switch (link.type) {
+                case "github":
+                  iconSrc = "/icons/github-gray-icon.svg";
+                  iconAlt = "GitHub";
+                  break;
+                case "twitter":
+                  iconSrc = "/icons/x-gray-icon.svg";
+                  iconAlt = "Twitter/X";
+                  break;
+                case "linkedin":
+                  iconSrc = "/icons/linkedin-gray-icon.svg";
+                  iconAlt = "LinkedIn";
+                  break;
+                case "discord":
+                  iconSrc = "/icons/discord-gray.svg";
+                  iconAlt = "Discord";
+                  break;
+                case "other":
+                case "website":
+                default:
+                  iconSrc = "/icons/link-gray-icon.svg";
+                  iconAlt = "Website";
+                  break;
+              }
 
-            return (
-              <Link
-                key={index}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Image
-                  src={iconSrc}
-                  alt={iconAlt}
-                  width={24}
-                  height={24}
-                  className="size-6"
-                />
-              </Link>
-            );
-          })}
+              return (
+                <Link
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src={iconSrc}
+                    alt={iconAlt}
+                    width={24}
+                    height={24}
+                    className="size-6"
+                  />
+                </Link>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
