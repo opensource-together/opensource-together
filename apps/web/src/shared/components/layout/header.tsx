@@ -64,8 +64,8 @@ export default function Header() {
   const handleProfile = () =>
     requireAuth(() => router.push("/profile"), "/profile");
 
-  const handleCollaboration = () =>
-    requireAuth(() => router.push("/collaboration"), "/collaboration");
+  const handleDashboard = () =>
+    requireAuth(() => router.push("/dashboard"), "/dashboard");
 
   const handleLogout = () => {
     logout();
@@ -92,11 +92,11 @@ export default function Header() {
 
             {/* Dashboard */}
             {isAuthenticated ? (
-              <NavLink href="/collaboration">Gestion de projet</NavLink>
+              <NavLink href="/dashboard">Gestion de projet</NavLink>
             ) : (
               <Button
                 variant="ghost"
-                onClick={handleCollaboration}
+                onClick={handleDashboard}
                 className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
               >
                 Gestion de projet
@@ -141,13 +141,13 @@ export default function Header() {
 
           {/* Dashboard mobile */}
           {isAuthenticated ? (
-            <NavLink href="/collaboration" className="w-full py-1.5">
+            <NavLink href="/dashboard" className="w-full py-1.5">
               Dashboard
             </NavLink>
           ) : (
             <Button
               variant="ghost"
-              onClick={handleCollaboration}
+              onClick={handleDashboard}
               className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
             >
               Dashboard
@@ -258,7 +258,7 @@ export default function Header() {
                     </div>
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleCollaboration}>
+                <DropdownMenuItem onClick={handleDashboard}>
                   <div className="flex w-full items-center justify-between">
                     <div className="flex flex-col gap-1">
                       <span className="font-medium">Dashboard</span>
