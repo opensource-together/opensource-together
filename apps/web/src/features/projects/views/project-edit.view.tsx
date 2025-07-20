@@ -13,8 +13,8 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
 
   return (
     <div className="mx-auto mt-12 max-w-[1300px]">
-      <div className="mx-auto mt-2 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
-        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[350px_1fr] lg:gap-16">
+      <div className="mx-auto mt-2 mb-20 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
+        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[350px_1fr] lg:gap-0">
           <div className="lg:contents">
             <ProjectEditForm project={project} />
           </div>

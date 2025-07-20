@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
+import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 
@@ -16,7 +17,6 @@ import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
-  techStacks?: TechStack[];
   projectGoals?: ProjectGoal[];
   keyFeatures?: KeyFeature[];
   className?: string;
@@ -26,7 +26,6 @@ interface RoleCardProps {
 
 export default function RoleCard({
   role,
-  techStacks = [],
   projectGoals = [],
   keyFeatures = [],
   className,
@@ -42,21 +41,28 @@ export default function RoleCard({
     techStacks: roleTechStacks = [],
   } = role;
 
-  return (
+  const handleCheckClick = () => {
+    if (!isMaintainer && !isAuthenticated) {
+      redirectToLogin();
+    }
+  };
+
+  const cardContent = (
     <div
-      className={`w-full max-w-[668px] rounded-[20px] border border-[black]/5 p-4 shadow-xs md:p-6 ${className}`}
+      className={`w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] ${className}`}
+      onClick={handleCheckClick}
     >
       {/* Role Title */}
       <div className="flex items-start justify-between">
-        <h3 className="text-xl font-medium tracking-tighter text-black">
+        <h3 className="text-lg font-medium tracking-tighter text-black">
           {role.title}
         </h3>
         {isMaintainer ? (
           <div className="flex items-center gap-1">
             <EditRoleForm role={role} projectId={projectId}>
-              <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5">
-                <Icon name="pencil" variant="gray" size="sm" />
-              </button>
+              <Button variant="ghost" size="icon">
+                <Icon name="pencil" size="sm" />
+              </Button>
             </EditRoleForm>
 
             <ConfirmDialog
@@ -70,63 +76,71 @@ export default function RoleCard({
                 setIsConfirmOpen(false);
               }}
               onCancel={() => setIsConfirmOpen(false)}
+              confirmText="Supprimer le rôle"
+              confirmIcon="trash"
+              confirmIconVariant="white"
+              confirmVariant="destructive"
             />
-            <button
+            <Button
               onClick={() => setIsConfirmOpen(true)}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
+              variant="ghost"
+              size="icon"
             >
-              <Icon name="cross" variant="gray" size="xs" />
-            </button>
+              <Icon name="trash" size="sm" />
+            </Button>
           </div>
-        ) : isAuthenticated ? (
-          <RoleApplicationForm
-            roleTitle={title}
-            roleDescription={description}
-            projectGoals={projectGoals}
-            keyFeatures={keyFeatures}
-            techStacks={techStacks}
-            projectId={projectId}
-            roleId={role.id}
-          >
-            <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
-              <span className="text-sm text-black">Candidater à ce rôle</span>
-              <Icon name="arrow-up-right" size="xs" />
-            </div>
-          </RoleApplicationForm>
         ) : (
-          <div
-            onClick={() => redirectToLogin()}
-            className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40"
-          >
-            <span className="text-sm text-black">Candidater à ce rôle</span>
+          <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
+            <span className="text-xs text-black sm:text-sm">
+              Candidater à ce rôle
+            </span>
             <Icon name="arrow-up-right" size="xs" />
           </div>
         )}
       </div>
 
       {/* Role Description */}
-      <p className="mb-4 text-sm leading-relaxed tracking-tighter text-black/70 md:mb-6">
+      <p className="mt-4 text-sm leading-snug font-medium tracking-tighter text-black/70">
         {description}
       </p>
 
       {/* Ligne de séparation */}
-      <div className="mb-3 w-full border-t border-black/5"></div>
+      <div className="my-4 border-t border-black/3"></div>
 
       {/* Bottom Section */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
+      <div className="flex w-full items-center gap-3 overflow-hidden text-xs">
         {/* Tech Badges */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-3">
           {roleTechStacks.length > 0 &&
             roleTechStacks.map((techStack: TechStack) => (
-              <StackLogo
-                key={`${techStack.id}`}
-                name={techStack.name}
-                icon={techStack.iconUrl || ""}
-                alt={techStack.name}
-              />
+              <div key={`${techStack.id}`} className="relative flex-shrink-0">
+                <StackLogo
+                  name={techStack.name}
+                  icon={techStack.iconUrl || ""}
+                  alt={techStack.name}
+                />
+              </div>
             ))}
         </div>
       </div>
     </div>
   );
+
+  if (!isMaintainer && isAuthenticated) {
+    return (
+      <RoleApplicationForm
+        roleTitle={title}
+        roleDescription={description}
+        projectGoals={projectGoals}
+        keyFeatures={keyFeatures}
+        techStacks={roleTechStacks}
+        projectId={projectId}
+        roleId={role.id}
+      >
+        {cardContent}
+      </RoleApplicationForm>
+    );
+  }
+
+  return cardContent;
 }

@@ -40,11 +40,32 @@ export default function ProjectSideBar({
     },
   } = project;
 
-  // Récupérer le lien GitHub
   const githubLink =
     externalLinks.find((link) => link.type === "github")?.url || "";
 
   const contributors = project.projectStats?.contributors || [];
+
+  // Create a list that includes the owner first, then the contributors
+  const allContributors = (() => {
+    const ownerContributor = {
+      login: project.author?.name || "Owner",
+      avatar_url: project.author?.avatarUrl || "",
+      html_url: `https://github.com/${project.author?.name}`,
+      contributions: 999, // To ensure it's first
+    };
+
+    // Check if the owner is already in the contributors
+    const isOwnerInContributors = contributors.some(
+      (contributor) => contributor.login === ownerContributor.login
+    );
+
+    // If the owner is not already in the list, add it first
+    if (!isOwnerInContributors && project.author) {
+      return [ownerContributor, ...contributors];
+    }
+
+    return contributors;
+  })();
 
   const handleEditClick = () => {
     router.push(`/projects/${project.id}/edit`);
@@ -79,15 +100,16 @@ export default function ProjectSideBar({
         )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
           <Button variant="outline" size="lg">
-            Voir le Repo
-            <Icon name="github" size="sm" />
+            Voir Repository
           </Button>
         </Link>
       </div>
 
       {/* Details Section */}
-      <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-1 font-medium text-black">Détails</h2>
+      <div className="mb-2 flex flex-col md:max-w-[263px]">
+        <h2 className="text-md mb-1 font-medium tracking-tight text-black">
+          Détails
+        </h2>
 
         {/* Stars */}
         <div className="flex items-center justify-between py-1">
@@ -164,33 +186,35 @@ export default function ProjectSideBar({
             <div className="h-[1px] w-full bg-black/5" />
           </div>
           <span className="text-sm font-medium text-black">
-            {projectStats.contributors?.length || 0}
+            {allContributors.length}
           </span>
         </div>
       </div>
 
       {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">Stack Technique</h2>
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+          Technologies
+        </h2>
         {techStacks.length > 0 && (
-          <div>
-            <div className="flex flex-wrap gap-2">
-              {techStacks.map((tech, index) => (
-                <StackLogo
-                  key={index}
-                  name={tech.name}
-                  icon={tech.iconUrl || "/icons/empty-project.svg"}
-                  alt={tech.name}
-                />
-              ))}
-            </div>
+          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+            {techStacks.map((tech, index) => (
+              <StackLogo
+                key={index}
+                name={tech.name}
+                icon={tech.iconUrl || "/icons/empty-project.svg"}
+                alt={tech.name}
+              />
+            ))}
           </div>
         )}
       </div>
 
       {/* Categories Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">Catégories</h2>
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+          Catégories
+        </h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
             <Badge
@@ -205,12 +229,12 @@ export default function ProjectSideBar({
 
       {/* Contributors Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
           Contributeurs Principaux
         </h2>
         <div>
           <div className="flex gap-2">
-            {contributors.slice(0, 5).map((contributor) => (
+            {allContributors.slice(0, 5).map((contributor) => (
               <Avatar
                 key={contributor.login}
                 src={contributor.avatar_url}
@@ -220,10 +244,10 @@ export default function ProjectSideBar({
               />
             ))}
 
-            {/* Indicateur "+X autres" si plus de 5 collaborateurs */}
-            {contributors.length > 5 && (
+            {/* Indicator "+X others" if more than 5 contributors */}
+            {allContributors.length > 5 && (
               <div className="flex size-8 items-center justify-center rounded-full bg-gray-100 text-xs font-medium text-gray-600">
-                +{contributors.length - 5}
+                +{allContributors.length - 5}
               </div>
             )}
           </div>
@@ -232,7 +256,9 @@ export default function ProjectSideBar({
 
       {/* Links Section */}
       <div className="flex flex-col">
-        <h2 className="text-md mb-2 font-medium text-black">Liens</h2>
+        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+          Liens Sociaux
+        </h2>
         <div className="flex flex-wrap gap-2">
           {externalLinks.map((link, index) => {
             let iconSrc = "";

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { Button } from "@/shared/components/ui/button";
@@ -9,6 +10,8 @@ import { useProjectCreateStore } from "../../stores/project-create.store";
 
 export default function StepSuccessView() {
   const { resetForm } = useProjectCreateStore();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("projectId");
 
   useEffect(() => {
     resetForm();
@@ -25,7 +28,10 @@ export default function StepSuccessView() {
           « Mes projets » et les membres pourront postuler à tous les rôles
           ouverts.{" "}
         </p>
-        <Link href="/" className="w-10/12">
+        <Link
+          href={projectId ? `/projects/${projectId}` : "/"}
+          className="w-10/12"
+        >
           <Button size="lg" className="w-full">
             Voir le projet
           </Button>

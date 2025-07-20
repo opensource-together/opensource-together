@@ -29,9 +29,10 @@ import {
   stepThreeSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
-import { TechStackList } from "../../../../shared/components/ui/tech-stack-list.component";
+import RoleCard from "../../components/role-card.component";
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
+import { ProjectRole } from "../../types/project-role.type";
 import { TechStack } from "../../types/project.type";
 
 export function StepThreeForm() {
@@ -159,6 +160,24 @@ export function StepThreeForm() {
     resetRoleForm();
   };
 
+  // Convert form role data to ProjectRole format for RoleCard
+  const convertToProjectRole = (
+    role: RoleFormData,
+    index: number
+  ): ProjectRole => {
+    const techStacks = getTechStacksByIds(role.techStack);
+    return {
+      id: `temp-role-${index}`,
+      title: role.title,
+      description: role.description,
+      techStacks: techStacks.map((tech) => ({
+        id: tech.id,
+        name: tech.name,
+        iconUrl: tech.iconUrl || "",
+      })),
+    };
+  };
+
   const modalFooter = (
     <div className="mt-10 flex justify-end gap-2">
       <Button variant="outline" onClick={handleCloseModal}>
@@ -198,48 +217,38 @@ export function StepThreeForm() {
                 )}
 
                 <div className="mt-4 flex flex-col gap-6">
-                  {roleFields.map((role, index) => (
-                    <div
-                      key={role.id}
-                      className="group relative overflow-hidden rounded-[20px] border border-black/5 p-4 shadow-xs md:p-6"
-                    >
-                      <div className="flex items-start justify-between">
-                        <h3 className="text-xl font-medium tracking-tighter text-black">
-                          {role.title}
-                        </h3>
-                        <div className="flex items-center gap-1">
-                          <button
+                  {roleFields.map((role, index) => {
+                    const projectRole = convertToProjectRole(role, index);
+                    return (
+                      <div key={role.id} className="relative">
+                        <RoleCard
+                          role={projectRole}
+                          className="mb-3"
+                          isMaintainer={true}
+                          projectId=""
+                        />
+                        {/* Overlay for edit/delete actions */}
+                        <div className="absolute top-4 right-4 flex items-center gap-1 rounded-full bg-white/80 p-1 backdrop-blur-sm">
+                          <Button
                             type="button"
                             onClick={() => openEditModal(index)}
-                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
-                            title="Modifier le rôle"
+                            variant="ghost"
+                            size="icon"
                           >
-                            <Icon name="pencil" variant="gray" size="sm" />
-                          </button>
-                          <button
+                            <Icon name="pencil" size="sm" />
+                          </Button>
+                          <Button
                             type="button"
                             onClick={() => handleRemoveRole(index)}
-                            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full p-2 transition-colors hover:bg-black/5"
-                            title="Supprimer le rôle"
+                            variant="ghost"
+                            size="icon"
                           >
-                            <Icon name="cross" variant="gray" size="xs" />
-                          </button>
+                            <Icon name="trash" size="sm" />
+                          </Button>
                         </div>
                       </div>
-
-                      <div>
-                        <p className="mt-4 text-start text-sm leading-relaxed text-black/70">
-                          {role.description}
-                        </p>
-                      </div>
-
-                      <div className="mt-6 h-px w-full border-t border-black/5"></div>
-
-                      <div className="mt-6">
-                        <TechStackList techStackIds={role.techStack} />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
               <FormMessage />

@@ -1,6 +1,7 @@
 "use client";
 
 import Pagination from "@/shared/components/shared/Pagination";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
@@ -22,11 +23,20 @@ export default function HomepageView() {
       </div>
 
       <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 md:px-8 md:py-8 lg:px-12">
-        <ProjectGrid projects={projects} />
-
-        <div className="mt-25 mb-50">
-          <Pagination />
-        </div>
+        {projects.length === 0 ? (
+          <EmptyState
+            title="Aucun Projet Disponible"
+            description="Aucun projet n'a été trouvé pour le moment. Veuillez réessayer plus tard."
+            className="mb-28"
+          />
+        ) : (
+          <>
+            <ProjectGrid projects={projects} />
+            <div className="mt-25 mb-50">
+              <Pagination />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

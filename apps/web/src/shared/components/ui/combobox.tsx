@@ -39,6 +39,7 @@ interface ComboboxProps {
   maxSelections?: number;
   className?: string;
   disabled?: boolean;
+  showTags?: boolean;
 }
 
 export function Combobox({
@@ -51,6 +52,7 @@ export function Combobox({
   maxSelections,
   className,
   disabled = false,
+  showTags = true,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -82,7 +84,7 @@ export function Combobox({
   return (
     <div className={cn("flex w-full flex-col gap-3", className)}>
       {/* Selected items display */}
-      {selectedOptions.length > 0 && (
+      {showTags && selectedOptions.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selectedOptions.map((option) => (
             <Badge
