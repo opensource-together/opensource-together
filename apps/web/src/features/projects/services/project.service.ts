@@ -1,10 +1,9 @@
 import { API_BASE_URL } from "@/config/config";
 
 import {
-  changeMedia,
-  deleteMedia,
-  extractMediaKey,
-  uploadMedia,
+  safeDeleteMedia,
+  safeReplaceMedia,
+  safeUploadMedia,
 } from "@/shared/services/media.service";
 
 import { ProjectFormData } from "../stores/project-create.store";
@@ -93,13 +92,15 @@ export const createProject = async (
   storeData: ProjectFormData,
   imageFile?: File
 ): Promise<Project> => {
-  try {
-    let imageUrl: string | undefined;
+  let imageUrl: string | null = null;
 
+  try {
     // Upload image if provided
     if (imageFile) {
-      const mediaResponse = await uploadMedia(imageFile);
-      imageUrl = mediaResponse.url;
+      imageUrl = await safeUploadMedia(imageFile);
+      if (!imageUrl) {
+        throw new Error("Failed to upload image");
+      }
     }
 
     // Transform store data to API format
@@ -120,23 +121,16 @@ export const createProject = async (
     });
 
     if (!response.ok) {
-      // If project creation fails and we uploaded an image, clean it up
-      if (imageUrl) {
-        try {
-          const imageKey = extractMediaKey(imageUrl);
-          await deleteMedia(imageKey);
-        } catch (cleanupError) {
-          console.warn("Failed to cleanup uploaded image:", cleanupError);
-        }
-      }
-
       const error = await response.json();
       throw new Error(error.message || "Error creating project");
     }
 
     return response.json();
   } catch (error) {
-    console.error("Error creating project:", error);
+    // Cleanup uploaded image on failure
+    if (imageUrl) {
+      await safeDeleteMedia(imageUrl);
+    }
     throw error;
   }
 };
@@ -161,24 +155,25 @@ export const updateProject = async (
 
     // Get current project to access current image
     const currentProject = await getProjectDetails(projectId);
+
     let imageUrl: string | undefined = currentProject.image;
 
     // Handle image operations
     if (shouldDeleteImage && currentProject.image) {
-      // Delete current image
-      const currentImageKey = extractMediaKey(currentProject.image);
-      await deleteMedia(currentImageKey);
+      await safeDeleteMedia(currentProject.image);
       imageUrl = undefined;
     } else if (newImageFile) {
       if (currentProject.image) {
-        // Change existing image
-        const currentImageKey = extractMediaKey(currentProject.image);
-        const mediaResponse = await changeMedia(currentImageKey, newImageFile);
-        imageUrl = mediaResponse.url;
+        // Replace existing image
+        const newImageUrl = await safeReplaceMedia(
+          currentProject.image,
+          newImageFile
+        );
+        imageUrl = newImageUrl || undefined;
       } else {
         // Upload new image
-        const mediaResponse = await uploadMedia(newImageFile);
-        imageUrl = mediaResponse.url;
+        const newImageUrl = await safeUploadMedia(newImageFile);
+        imageUrl = newImageUrl || undefined;
       }
     }
 
@@ -240,13 +235,7 @@ export const deleteProject = async (projectId: string): Promise<void> => {
 
     // Clean up associated image after successful project deletion
     if (project.image) {
-      try {
-        const imageKey = extractMediaKey(project.image);
-        await deleteMedia(imageKey);
-      } catch (mediaError) {
-        // Log but don't throw - project is already deleted
-        console.warn("Failed to delete project image:", mediaError);
-      }
+      await safeDeleteMedia(project.image);
     }
 
     // No need to return anything for DELETE
