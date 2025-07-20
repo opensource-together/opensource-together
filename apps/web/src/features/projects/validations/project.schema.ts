@@ -61,6 +61,61 @@ export const projectSchema = z.object({
 });
 
 // ========================================
+// API SCHEMAS (FOR BACKEND)
+// ========================================
+
+// API schema - what the backend expects
+export const createProjectApiSchema = z.object({
+  title: z.string().min(3, "Le titre du projet est requis"),
+  description: z.string().min(10, "Une description est requise"),
+  shortDescription: z.string().min(10, "Une description est requise"),
+  image: z.string().optional(),
+  techStacks: z.array(z.string()),
+  categories: z.array(z.string()),
+  keyFeatures: z
+    .array(z.string())
+    .min(1, "Au moins une fonctionnalité clé est requise"),
+  projectGoals: z.array(z.string()).min(1, "Au moins un objectif est requis"),
+  projectRoles: z.array(
+    z.object({
+      title: z.string().min(1, "Le titre du rôle est requis"),
+      description: z.string().min(1, "La description du rôle est requise"),
+      techStacks: z.array(z.string()),
+    })
+  ),
+  externalLinks: z
+    .array(
+      z.object({
+        type: z.string(),
+        url: z.string(),
+      })
+    )
+    .optional(),
+});
+
+
+// API schema for updates - what the backend expects
+export const updateProjectApiSchema = z.object({
+  title: z.string().min(3, "Le titre du projet est requis"),
+  description: z.string().min(10, "Une description est requise"),
+  shortDescription: z.string().min(10, "Une description est requise"),
+  image: z.string().optional(),
+  techStacks: z.array(z.string()),
+  categories: z.array(z.string()),
+  keyFeatures: z
+    .array(z.string())
+    .min(1, "Au moins une fonctionnalité clé est requise"),
+  externalLinks: z
+    .array(
+      z.object({
+        type: z.string(),
+        url: z.string(),
+      })
+    )
+    .optional(),
+});
+
+// ========================================
 // WRAPPER SCHEMAS
 // ========================================
 
@@ -80,6 +135,10 @@ export const UpdateProjectSchema = z.object({
 
 // Main project types
 export type ProjectSchema = z.infer<typeof projectSchema>;
+
+// API types
+export type CreateProjectApiData = z.infer<typeof createProjectApiSchema>;
+export type UpdateProjectApiData = z.infer<typeof updateProjectApiSchema>;
 
 // Wrapper types
 export type CreateProjectData = z.infer<typeof CreateProjectSchema>;

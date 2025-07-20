@@ -2,12 +2,16 @@ import { API_BASE_URL } from "@/config/config";
 
 import { ProjectFormData } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
-import { createProjectApiSchema } from "../validations/project-stepper.schema";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
+  createProjectApiSchema,
+  updateProjectApiSchema,
 } from "../validations/project.schema";
-import { transformProjectForApi } from "./project-transform.service";
+import {
+  transformProjectForApi,
+  transformProjectForApiUpdate,
+} from "./project-transform.service";
 
 /**
  * Fetches the list of all projects.
@@ -122,23 +126,10 @@ export const updateProject = async (
     const { data, projectId } = validatedParams;
 
     // Transform data to API format
-    const apiPayload = {
-      title: data.title,
-      description: data.shortDescription,
-      shortDescription: data.shortDescription,
-      externalLinks: data.externalLinks
-        ? Object.entries(data.externalLinks)
-            .filter(([_, url]) => typeof url === "string" && url.trim())
-            .map(([type, url]) => ({
-              type: type === "website" ? "other" : type,
-              url: url as string,
-            }))
-        : [],
-      techStacks: data.techStack || [],
-      categories: data.categories || [],
-      keyFeatures: data.keyFeatures?.map((feature) => feature.feature) || [],
-      projectGoals: data.projectGoals?.map((goal) => goal.goal) || [],
-    };
+    const apiPayload = transformProjectForApiUpdate(data);
+
+    // Validate the API payload
+    const validatedData = updateProjectApiSchema.parse(apiPayload);
 
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
       method: "PATCH",
@@ -146,7 +137,7 @@ export const updateProject = async (
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(apiPayload),
+      body: JSON.stringify(validatedData),
     });
 
     if (!response.ok) {
