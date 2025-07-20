@@ -47,6 +47,9 @@ export class GetProjectRolesQueryHandler
     // Vérifier si l'utilisateur a deja apply
     const projectRolesEnriched: ProjectRole[] & { hasApplied?: boolean }[] = [];
     for (const role of projectRolesResult.value) {
+      if (role.toPrimitive().isFilled === true) {
+        continue;
+      }
       const projectRoleEnriched: ProjectRole & { hasApplied?: boolean } = role;
       const projectRoleApplicationsResult =
         await this.projectRoleApplicationRepo.existsStatusApplication(
