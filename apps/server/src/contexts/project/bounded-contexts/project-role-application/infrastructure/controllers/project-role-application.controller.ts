@@ -14,6 +14,7 @@ import { ApplyToProjectRoleCommand } from '@/contexts/project/bounded-contexts/p
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
 import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
+import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 
 @Controller('projects/:projectId/roles')
 export class ProjectRoleApplicationController {
@@ -285,5 +286,26 @@ export class ProjectRoleApplicationController {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
     }
     return applications.value;
+  }
+
+  @Post(':roleId/applications/:applicationId/accept')
+  async acceptApplication(
+    @Param('applicationId') applicationId: string,
+    @Param('projectId') projectId: string,
+    @Param('roleId') roleId: string,
+    @Session('userId') userId: string,
+  ) {
+    const command = new AcceptUserApplicationCommand({
+      projectRoleApplicationId: applicationId,
+      projectId,
+      projectRoleId: roleId,
+      userId,
+    });
+    const result: Result<ProjectRoleApplication, string> =
+      await this.commandBus.execute(command);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+    return result.value;
   }
 }

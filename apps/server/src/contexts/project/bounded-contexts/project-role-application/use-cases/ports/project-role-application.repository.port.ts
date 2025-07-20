@@ -111,4 +111,15 @@ export interface ProjectRoleApplicationRepositoryPort {
       string
     >
   >;
+
+  rejectApplication(props: {
+    applicationId: string;
+    rejectionReason: string;
+  }): Promise<Result<ProjectRoleApplication, string>>;
+
+  acceptApplication(props: {
+    applicationId: string;
+    projectId: string;
+    userId: string;
+  }): Promise<Result<ProjectRoleApplication, string>>;
 }
