@@ -59,5 +59,6 @@ export const transformProjectForApiUpdate = (
     techStacks: formData.techStack || [],
     categories: formData.categories || [],
     keyFeatures: formData.keyFeatures?.map((feature) => feature.feature) || [],
+    projectGoals: formData.projectGoals?.map((goal) => goal.goal) || [],
   };
 };
