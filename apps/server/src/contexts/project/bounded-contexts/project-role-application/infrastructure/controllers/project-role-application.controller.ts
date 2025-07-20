@@ -15,6 +15,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
 import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
+import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
 
 @Controller('projects/:projectId/roles')
 export class ProjectRoleApplicationController {
@@ -298,6 +299,27 @@ export class ProjectRoleApplicationController {
       projectRoleApplicationId: applicationId,
       projectId,
       userId,
+    });
+    const result: Result<ProjectRoleApplication, string> =
+      await this.commandBus.execute(command);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+    return result.value;
+  }
+
+  @Patch('applications/:applicationId/reject')
+  async rejectApplication(
+    @Param('applicationId') applicationId: string,
+    @Param('projectId') projectId: string,
+    @Session('userId') userId: string,
+    @Body() body: { rejectionReason?: string },
+  ) {
+    const command = new RejectUserApplicationCommand({
+      projectRoleApplicationId: applicationId,
+      projectId,
+      userId,
+      rejectionReason: body.rejectionReason,
     });
     const result: Result<ProjectRoleApplication, string> =
       await this.commandBus.execute(command);
