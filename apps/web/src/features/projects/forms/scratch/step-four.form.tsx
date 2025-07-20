@@ -92,20 +92,20 @@ export function StepFourForm() {
 
     const finalFormData = {
       ...formData,
-      image: pendingFormData.logo
-        ? URL.createObjectURL(pendingFormData.logo)
-        : "",
+      // Don't put image URL here - it will be handled by the service
       externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
-    // Update the store with final data
+    // Update the store with final data (without image for now)
     updateProjectInfo({
-      image: finalFormData.image,
       externalLinks: finalFormData.externalLinks,
     });
 
-    // Create project with consolidated data
-    createProject(finalFormData);
+    // Create project with consolidated data and pass the file separately
+    createProject({
+      projectData: finalFormData,
+      imageFile: pendingFormData.logo, // Pass the File object directly
+    });
   };
 
   const handleCancelCreation = () => {

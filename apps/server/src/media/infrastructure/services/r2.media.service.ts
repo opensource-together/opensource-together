@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  HeadObjectCommand,
+  NotFound,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { MediaServicePort } from '../../port/media.service.port';
 import { Result } from '@/libs/result';
@@ -48,6 +54,72 @@ export class R2MediaService implements MediaServicePort {
     } catch (error) {
       console.error(error);
       return Result.fail('Failed to upload media');
+    }
+  }
+
+  async delete(key: string): Promise<Result<string, string>> {
+    try {
+      const existsBeforeDelete = await this.exists(key);
+      if (!existsBeforeDelete) {
+        return Result.fail("Image doesn't exist");
+      }
+      const result = await this.s3.send(
+        new DeleteObjectCommand({ Bucket: this.bucket, Key: key }),
+      );
+      if (result.$metadata.httpStatusCode === 204) {
+        const existsAfterDelete = await this.exists(key);
+        if (existsAfterDelete) {
+          return Result.fail('Failed to delete media');
+        }
+        return Result.ok('Image deleted successfully');
+      }
+      return Result.fail('Failed to delete media');
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Failed to delete media');
+    }
+  }
+
+  async exists(key: string): Promise<boolean> {
+    try {
+      const result = await this.s3.send(
+        new HeadObjectCommand({ Bucket: this.bucket, Key: key }),
+      );
+      if (result.$metadata.httpStatusCode !== 200) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      if (error instanceof NotFound) return false;
+      throw error;
+    }
+  }
+
+  async changePublicImage(
+    oldKey: string,
+    newKey: string,
+    image: Buffer,
+    contentType: string,
+  ): Promise<Result<string, string>> {
+    try {
+      const existsBeforeDelete = await this.exists(oldKey);
+      if (!existsBeforeDelete) {
+        return Result.fail("Image doesn't exist");
+      }
+
+      const uploadResult = await this.uploadPublicImage(
+        image,
+        newKey,
+        contentType,
+      );
+      if (!uploadResult.success) {
+        return Result.fail(uploadResult.error);
+      }
+      await this.delete(oldKey);
+      return Result.ok(uploadResult.value);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Failed to change media');
     }
   }
 }

@@ -1,4 +1,3 @@
-import { ProjectRepositoryPort } from '../../use-cases/ports/project.repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
@@ -29,7 +28,8 @@ type ProjectInMemory = {
 };
 
 @Injectable()
-export class InMemoryProjectRepository implements ProjectRepositoryPort {
+export class InMemoryProjectRepository {
+  // implements ProjectRepositoryPort {
   constructor(@Inject(CLOCK_PORT) private clock: ClockPort) {}
 
   private projects: ProjectInMemory[] = [

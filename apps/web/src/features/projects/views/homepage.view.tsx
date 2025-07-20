@@ -17,12 +17,12 @@ export default function HomepageView() {
   if (isError || !projects) return <HomepageError />;
 
   return (
-    <div className="space-y-4 md:space-y-5">
-      <div className="mx-auto mt-8 flex flex-col items-center px-4 sm:px-6 md:px-8 lg:px-0">
+    <div className="mx-6 max-w-6xl space-y-4 md:space-y-5 lg:mx-auto">
+      <div className="mt-8 flex flex-col items-center">
         <ProjectDiscoveryHero />
       </div>
 
-      <div className="mx-auto max-w-[1200px] px-4 py-4 sm:px-6 md:px-8 md:py-8 lg:px-12">
+      <div className="py-4 md:py-8">
         {projects.length === 0 ? (
           <EmptyState
             title="Aucun Projet Disponible"

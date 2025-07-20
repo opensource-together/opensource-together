@@ -86,41 +86,6 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "1",
-        title: "Développeur·se Frontend",
-        description:
-          "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "React" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "1",
-        title: "UI/UX Designer",
-        description:
-          "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "React" },
-        ],
-      },
-      {
-        id: "3",
-        projectId: "1",
-        title: "Développeur·se Backend",
-        description:
-          "Nous recherchons un·e développeur·se Nest.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
-        techStacks: [
-          { id: "1", name: "Nest.js" },
-          { id: "2", name: "PostgreSQL" },
-        ],
-      },
-    ],
     externalLinks: [
       { type: "github", url: "https://github.com/LeetGrindBot" },
       { type: "website", url: "https://leetgrindbot.com/" },
@@ -220,30 +185,6 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "7",
-        title: "Développeur·se Frontend",
-        description:
-          "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "React" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "7",
-        title: "Développeur·se Backend",
-        description:
-          "Nous recherchons un·e développeur·se Next.js pour ajouter des fonctionnalités au bot LeetGrind : Multi-serveur, API publique, intégration Discord...",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "PostgreSQL" },
-        ],
-      },
-    ],
     externalLinks: [
       { type: "github", url: "https://github.com/69killian/Gitify" },
       {
@@ -344,30 +285,6 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2025-01-15"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "2",
-        title: "Contributeur·rice Documentation",
-        description:
-          "Participez à la rédaction de la documentation officielle (https://docs.devcord.app) pour rendre DevCord encore plus accessible à la communauté.",
-        techStacks: [
-          { id: "1", name: "Markdown" },
-          { id: "2", name: "Rédaction technique" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "2",
-        title: "Développeur·se Backend",
-        description:
-          "Aidez-nous à améliorer le cœur du bot : parsing intelligent, génération dynamique de commandes, gestion des formats, et plus encore. Une bonne connaissance de Go est attendue.",
-        techStacks: [
-          { id: "1", name: "Golang" },
-          { id: "2", name: "REST API" },
-        ],
-      },
-    ],
     externalLinks: [
       { type: "github", url: "https://github.com/devcord-bot/devcord" },
       { type: "website", url: "https://docs.devcord.app/introduction" },
@@ -443,30 +360,6 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "6",
-        title: "UI/UX Designer",
-        description:
-          "Conçois l'interface utilisateur de CodeSnippet et améliore l'expérience de développement des composants.",
-        techStacks: [
-          { id: "1", name: "Figma" },
-          { id: "2", name: "Design System" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "6",
-        title: "Développeur·se Backend",
-        description:
-          "Développe l'API et le système de stockage des snippets, avec un focus sur la performance et la scalabilité.",
-        techStacks: [
-          { id: "3", name: "PostgreSQL" },
-          { id: "4", name: "API REST" },
-        ],
-      },
-    ],
     externalLinks: [
       { type: "github", url: "https://github.com/codesnippet/codesnippet" },
       { type: "website", url: "code-snippet-mocha.vercel.app" },
@@ -550,30 +443,7 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "5",
-        title: "Développeur·se Core",
-        description:
-          "Participe au développement du cœur de NextSandbox : système de rendu des composants, hot-reload, et intégration avec Next.js.",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "TypeScript" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "5",
-        title: "Designer UI/UX",
-        description:
-          "Conçois l'interface utilisateur de NextSandbox et améliore l'expérience de développement des composants.",
-        techStacks: [
-          { id: "3", name: "React" },
-          { id: "4", name: "Tailwind" },
-        ],
-      },
-    ],
+
     externalLinks: [
       { type: "github", url: "https://github.com/nextsandbox/nextsandbox" },
       { type: "website", url: "https://nextsandbox.dev" },
@@ -659,30 +529,7 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2025-05-19"),
     updatedAt: new Date("2025-05-19"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "4",
-        title: "Développeur·se Backend Go",
-        description:
-          "Travaille sur l'API, la gestion des agents et le stockage des métriques serveur. Bonne connaissance de Go, REST, et des performances système requise.",
-        techStacks: [
-          { id: "1", name: "Go" },
-          { id: "2", name: "Docker" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "4",
-        title: "Contributeur·rice TUI (CLI)",
-        description:
-          "Développe l'interface en terminal façon k9s/vim. Connaissances appréciées en curses/tcell et design UX dans le terminal.",
-        techStacks: [
-          { id: "3", name: "Terminal UI" },
-          { id: "4", name: "Tcell" },
-        ],
-      },
-    ],
+
     externalLinks: [
       { type: "github", url: "https://github.com/69killian/Gitify" },
       {
@@ -772,31 +619,7 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "8",
-        title: "Développeur·se Backend",
-        description:
-          "Nous recherchons un·e développeur·se Golang pour ajouter des fonctionnalités à Sherpa : Chiffrement, gestion des équipes ...",
-        techStacks: [
-          { id: "1", name: "Golang" },
-          { id: "2", name: "PostgreSQL" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "8",
-        title: "Développeur·se Frontend",
-        description:
-          "Aidez-nous à créer un dashboard web (Next.js) pour suivre les classements, les statistiques des challenges et la personnalisation du bot.",
-        techStacks: [
-          { id: "3", name: "VueJS" },
-          { id: "4", name: "Next.js" },
-          { id: "5", name: "Tailwind" },
-        ],
-      },
-    ],
+
     externalLinks: [
       { type: "github", url: "https://github.com/Olyxz16/sherpa" },
       { type: "twitter", url: "https://x.com/Ox16__" },
@@ -884,30 +707,7 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2025-04-10"),
     updatedAt: new Date("2025-05-19"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "3",
-        title: "Développeur·se Fullstack",
-        description:
-          "Participe au développement de Liltea avec Next.js, Fastify et TailwindCSS. Ton rôle inclara la création de composants UI, la gestion des APIs et l'optimisation des performances.",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "Fastify" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "3",
-        title: "Designer UI/UX",
-        description:
-          "Aide-nous à concevoir des interfaces élégantes et intuitives pour les pages de profil. Une sensibilité pour les designs minimalistes et responsives est un plus.",
-        techStacks: [
-          { id: "3", name: "Figma" },
-          { id: "4", name: "Design System" },
-        ],
-      },
-    ],
+
     externalLinks: [
       { type: "github", url: "https://github.com/liltea-dev/liltea" },
       { type: "website", url: "https://liltea.app" },
@@ -984,30 +784,6 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "9",
-        title: "Développeur·se Backend Go ",
-        description:
-          "Développe le cœur de la plateforme en Go, avec un focus sur la gestion des conteneurs et l'orchestration.",
-        techStacks: [
-          { id: "1", name: "Go" },
-          { id: "2", name: "Docker" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "9",
-        title: "DevOps Engineer",
-        description:
-          "Gère l'infrastructure cloud et l'automatisation des déploiements.",
-        techStacks: [
-          { id: "3", name: "Kubernetes" },
-          { id: "4", name: "CI/CD" },
-        ],
-      },
-    ],
     externalLinks: [
       { type: "github", url: "https://github.com/devspace-platform" },
       { type: "website", url: "https://devspace.cloud" },
@@ -1087,30 +863,7 @@ export const mockProjects: Project[] = [
     ],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2025-05-15"),
-    projectRoles: [
-      {
-        id: "1",
-        projectId: "10",
-        title: "Développeur·se Fullstack",
-        description:
-          "Développe les fonctionnalités de la plateforme, de l'éditeur Markdown à l'intégration Git.",
-        techStacks: [
-          { id: "1", name: "Next.js" },
-          { id: "2", name: "TypeScript" },
-        ],
-      },
-      {
-        id: "2",
-        projectId: "10",
-        title: "Développeur·se Backend",
-        description:
-          "Gère le stockage et la versioning de la documentation, avec un focus sur la performance.",
-        techStacks: [
-          { id: "3", name: "PostgreSQL" },
-          { id: "4", name: "Git" },
-        ],
-      },
-    ],
+
     externalLinks: [
       { type: "github", url: "https://github.com/techdocs-platform" },
       { type: "website", url: "https://techdocs.dev" },
