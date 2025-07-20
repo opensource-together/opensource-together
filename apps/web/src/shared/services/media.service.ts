@@ -4,6 +4,8 @@ export interface MediaUploadResponse {
   url: string;
 }
 
+// ===== PUBLIC CALLS API =====
+
 /**
  * Upload a new image to R2 storage
  * @param file - The image file to upload
@@ -37,7 +39,7 @@ export const uploadMedia = async (file: File): Promise<MediaUploadResponse> => {
  * @param newFile - The new image file
  * @returns Promise with the new image URL
  */
-export const changeMedia = async (
+export const replaceMedia = async (
   oldKey: string,
   newFile: File
 ): Promise<MediaUploadResponse> => {
@@ -96,4 +98,81 @@ export const deleteMedia = async (key: string): Promise<void> => {
  */
 export const extractMediaKey = (mediaUrl: string): string => {
   return mediaUrl.split("/").pop() || "";
+};
+
+// ===== SAFE WRAPPERS =====
+// These functions are used to wrap the public calls and provide a safe way to handle media operations.
+// They will handle the case where the image is not found or the upload fails.
+// They will also handle the case where the image is not found or the upload fails.
+
+/**
+ * Upload a new image (safe by default)
+ * @param file - The image file to upload
+ * @returns Promise with the uploaded image URL, or null if upload failed
+ */
+export const safeUploadMedia = async (file: File): Promise<string | null> => {
+  try {
+    const response = await uploadMedia(file);
+    return response.url;
+  } catch (error) {
+    console.error("Error uploading media:", error);
+    return null;
+  }
+};
+
+/**
+ * Replace an existing image with a new one (safe by default)
+ * @param currentImageUrl - The URL of the current image to replace
+ * @param newFile - The new image file
+ * @returns Promise with the new image URL, or null if replace failed
+ */
+export const safeReplaceMedia = async (
+  currentImageUrl: string,
+  newFile: File
+): Promise<string | null> => {
+  if (!currentImageUrl) {
+    console.warn("No current image URL provided for replacement");
+    return null;
+  }
+
+  const currentImageKey = extractMediaKey(currentImageUrl);
+
+  try {
+    // Try to change existing image
+    const response = await replaceMedia(currentImageKey, newFile);
+    return response.url;
+  } catch (error) {
+    console.warn("Failed to change image, falling back to upload:", error);
+
+    try {
+      // Fallback: upload new image and clean old one
+      const response = await uploadMedia(newFile);
+      await deleteMedia(currentImageKey).catch(() => {
+        // Silent fail - old image cleanup is best effort
+      });
+      return response.url;
+    } catch (uploadError) {
+      console.error("Failed to upload replacement image:", uploadError);
+      return null;
+    }
+  }
+};
+
+/**
+ * Delete an image (safe by default)
+ * @param imageUrl - The URL of the image to delete
+ * @returns Promise that resolves when deletion is complete (or silently fails)
+ */
+export const safeDeleteMedia = async (imageUrl: string): Promise<void> => {
+  if (!imageUrl) return;
+
+  const key = extractMediaKey(imageUrl);
+  if (!key) return;
+
+  try {
+    await deleteMedia(key);
+  } catch (error) {
+    console.warn(`Failed to delete image "${imageUrl}":`, error);
+    // Silent fail - deletion is safe by default
+  }
 };
