@@ -53,7 +53,8 @@ export type IconName =
   | "joined"
   | "logout"
   | "created-projects"
-  | "trash";
+  | "trash"
+  | "bagpack";
 
 // Mapping of the icon names to the SVG files
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
@@ -281,6 +282,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/trash.svg",
     filled: "/icons/trash.svg",
     outline: "/icons/trash.svg",
+  },
+  bagpack: {
+    default: "/icons/bagpack.svg",
+    gray: "/icons/bagpack-gray.svg",
+    white: "/icons/bagpack-white.svg",
+    black: "/icons/bagpack.svg",
+    filled: "/icons/bagpack.svg",
+    outline: "/icons/bagpack.svg",
   },
 };
 

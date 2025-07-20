@@ -229,7 +229,7 @@ export default function ProjectSideBar({
 
       {/* Contributors Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+        <h2 className="text-md mb-3 font-medium tracking-tight text-black">
           Contributeurs Principaux
         </h2>
         <div>
@@ -256,10 +256,8 @@ export default function ProjectSideBar({
 
       {/* Links Section */}
       <div className="flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Liens Sociaux
-        </h2>
-        <div className="flex flex-wrap gap-2">
+        <h2 className="text-md font-medium tracking-tight">Liens Sociaux</h2>
+        <div className="mt-3 flex flex-wrap gap-3">
           {externalLinks.map((link, index) => {
             let iconSrc = "";
             let iconAlt = "";
@@ -278,7 +276,7 @@ export default function ProjectSideBar({
                 iconAlt = "LinkedIn";
                 break;
               case "discord":
-                iconSrc = "/icons/discord-gray-icon.svg";
+                iconSrc = "/icons/discord-gray.svg";
                 iconAlt = "Discord";
                 break;
               case "other":
@@ -299,9 +297,9 @@ export default function ProjectSideBar({
                 <Image
                   src={iconSrc}
                   alt={iconAlt}
-                  width={20}
-                  height={20}
-                  className="h-5 w-5"
+                  width={24}
+                  height={24}
+                  className="size-6"
                 />
               </Link>
             );
