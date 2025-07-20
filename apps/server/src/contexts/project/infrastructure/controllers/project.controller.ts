@@ -8,7 +8,6 @@ import {
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
-import { DeleteProjectCommand } from '@/contexts/project/use-cases/commands/delete/delete-project.command';
 import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
 import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
@@ -44,6 +43,7 @@ import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto'
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
+import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -557,6 +557,7 @@ export class ProjectController {
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
+    console.log({ image: project.image });
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,
@@ -578,6 +579,7 @@ export class ProjectController {
           goal: goal,
         })),
         octokit: octokit,
+        image: project.image,
       }),
     );
     if (!projectRes.success) {
@@ -601,8 +603,40 @@ export class ProjectController {
         shortDescription: { type: 'string' },
         techStacks: { type: 'array', items: { type: 'string' } },
         categories: { type: 'array', items: { type: 'string' } },
-        keyFeatures: { type: 'array', items: { type: 'string' } },
-        projectGoals: { type: 'array', items: { type: 'string' } },
+        keyFeatures: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  projectId: { type: 'string' },
+                  feature: { type: 'string' },
+                },
+                required: ['id', 'projectId', 'feature'],
+              },
+            ],
+          },
+        },
+        projectGoals: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  projectId: { type: 'string' },
+                  goal: { type: 'string' },
+                },
+                required: ['id', 'projectId', 'goal'],
+              },
+            ],
+          },
+        },
       },
     },
   })
@@ -643,7 +677,7 @@ export class ProjectController {
     @Param('id') id: string,
     @Body() project: UpdateProjectDtoRequest,
   ) {
-    const projectRes: Result<Project> = await this.commandBus.execute(
+    const projectRes: Result<Project, string> = await this.commandBus.execute(
       new UpdateProjectCommand(id, ownerId, {
         title: project.title,
         description: project.description,
@@ -653,7 +687,7 @@ export class ProjectController {
         categories: project.categories,
         keyFeatures: project.keyFeatures,
         projectGoals: project.projectGoals,
-        projectRoles: project.projectRoles,
+        image: project.image,
       }),
     );
 
@@ -702,7 +736,7 @@ export class ProjectController {
     @Session('userId') ownerId: string,
     @Param('id') id: string,
   ) {
-    const result: Result<boolean> = await this.commandBus.execute(
+    const result: Result<Project> = await this.commandBus.execute(
       new DeleteProjectCommand(id, ownerId),
     );
 

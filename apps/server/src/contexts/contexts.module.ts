@@ -8,6 +8,7 @@ import { GithubInfrastructure } from './github/infrastructure/github.infrastruct
 import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
 import { ProjectRoleApplicationInfrastructure } from './project/bounded-contexts/project-role-application/infrastructure/project-role-application.infrastructure';
 import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastructure';
+import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/project-key-feature/infrastructure/project-key-feature.infrastructure';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastr
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
     MailingInfrastructure,
+    ProjectKeyFeatureInfrastructure,
   ],
   exports: [
     UserInfrastructure,
@@ -30,6 +32,7 @@ import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastr
     GithubInfrastructure,
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
+    ProjectKeyFeatureInfrastructure,
   ],
 })
 export class ContextsModule {}

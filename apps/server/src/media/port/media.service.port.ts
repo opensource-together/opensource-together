@@ -6,4 +6,12 @@ export interface MediaServicePort {
     key: string,
     contentType: string,
   ): Promise<Result<string, string>>;
+
+  delete(key: string): Promise<Result<string, string>>;
+  changePublicImage(
+    oldKey: string,
+    newKey: string,
+    image: Buffer,
+    contentType: string,
+  ): Promise<Result<string, string>>;
 }
