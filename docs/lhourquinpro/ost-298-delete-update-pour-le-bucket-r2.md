@@ -54,8 +54,11 @@
 - Suppression des anciennes méthodes de gestion des projectRoles dans la commande de projet.
 - Nettoyage des imports, types, schémas, et mappers pour cohérence et robustesse.
 
+### 7. Frontend
+- Refactoring des composants pour utiliser la nouvelle API et les nouveaux types (projectRoles, keyFeatures, projectGoals, image).
+- **Gestion des images dans les composants** : Modification du `project-hero.component.tsx` pour gérer l'affichage des images provenant de R2 vs images locales, évitant les erreurs Next.js Image avec les URLs externes.
 
-### 7. Migrations Prisma
+### 8. Migrations Prisma
 - Ajout du champ `image` dans le modèle Project.
 - Ajout/suppression de clés liées à l'image selon l'évolution du modèle.
 - Migrations pour garantir la cohérence du schéma avec la nouvelle logique métier.
@@ -353,6 +356,51 @@ await fetch(`/v1/projects/${projectId}/key-features`, {
   body: JSON.stringify({ features: ["Feature 1", "Feature 2"] }),
 });
 ```
+
+---
+
+## Modifications frontend pour la gestion des images
+
+### Problème rencontré
+Lors de l'intégration des images R2, le composant `project-hero.component.tsx` rencontrait des erreurs avec le composant `next/image` de Next.js lors de l'affichage d'images provenant d'URLs externes (R2).
+
+### Solution implémentée
+Modification du composant pour gérer deux types d'images :
+
+```typescript
+// Dans project-hero.component.tsx
+{image?.startsWith("http") ? (
+  // Pour les images R2 (URLs externes) - utilisation de <img> standard
+  <img
+    src={image}
+    alt={title}
+    width={50}
+    height={50}
+    className="rounded-4xl sm:h-[65px] sm:w-[65px]"
+  />
+) : (
+  // Pour les images locales - utilisation du composant Next.js Image optimisé
+  <Image
+    src={image || "/icons/empty-project.svg"}
+    alt={title}
+    width={50}
+    height={50}
+    className="rounded-4xl sm:h-[65px] sm:w-[65px]"
+  />
+)}
+```
+
+### Avantages de cette approche
+- **Compatibilité** : Gestion transparente des images R2 et locales
+- **Performance** : Utilisation du composant Next.js Image optimisé pour les images locales
+- **Fallback** : Image par défaut si aucune image n'est fournie
+- **Responsive** : Classes CSS adaptées pour mobile et desktop
+
+### Points d'attention pour les développeurs frontend
+- **URLs R2** : Commencent par "http" et nécessitent l'utilisation de `<img>` standard
+- **Images locales** : Utilisent le composant Next.js `Image` pour l'optimisation
+- **Fallback** : Toujours prévoir une image par défaut pour éviter les erreurs d'affichage
+- **Performance** : Les images R2 ne bénéficient pas de l'optimisation automatique de Next.js
 
 ---
 
