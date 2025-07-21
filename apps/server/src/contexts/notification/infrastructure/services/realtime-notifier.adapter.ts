@@ -16,14 +16,14 @@ export class RealtimeNotifierAdapter {
   /**
    * Envoie une nouvelle notification en temps réel
    */
-  async send(notification: NotificationData): Promise<void> {
-    await this.notificationsGateway.emitToUser(notification);
+  send(notification: NotificationData): void {
+    this.notificationsGateway.emitToUser(notification);
   }
 
   /**
    * Envoie une mise à jour de notification (ex: marquée comme lue)
    */
-  async sendNotificationUpdate(notification: NotificationData): Promise<void> {
-    await this.notificationsGateway.emitNotificationUpdate(notification);
+  sendNotificationUpdate(notification: NotificationData): void {
+    this.notificationsGateway.emitNotificationUpdate(notification);
   }
 }

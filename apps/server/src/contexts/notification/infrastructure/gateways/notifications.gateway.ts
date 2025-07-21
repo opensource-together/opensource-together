@@ -94,7 +94,7 @@ export class NotificationsGateway
   /**
    * Envoie une notification à un utilisateur spécifique.
    */
-  async emitToUser(notification: NotificationData) {
+  emitToUser(notification: NotificationData) {
     console.log('notification', notification);
     const userSocket = this.userSockets.get(notification.userId);
 
@@ -121,7 +121,7 @@ export class NotificationsGateway
   /**
    * Envoie une mise à jour d'état de notification à un utilisateur.
    */
-  async emitNotificationUpdate(notification: NotificationData) {
+  emitNotificationUpdate(notification: NotificationData) {
     const userSocket = this.userSockets.get(notification.userId);
 
     if (userSocket) {
@@ -161,7 +161,7 @@ export class NotificationsGateway
   /**
    * Méthode pour envoyer une notification à tous les utilisateurs connectés.
    */
-  async broadcastToAll(event: string, data: any) {
+  broadcastToAll(event: string, data: any) {
     this.server.emit(event, data);
     this.logger.log(`Broadcast sent to all connected users: ${event}`);
   }
@@ -170,7 +170,7 @@ export class NotificationsGateway
    * Envoie directement une notification basique sans persistance.
    * Utile pour des notifications temporaires ou des alertes système.
    */
-  async sendDirectNotification(
+  sendDirectNotification(
     userId: string,
     type: string,
     payload: Record<string, unknown>,

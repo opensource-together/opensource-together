@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  Patch,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Param } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
 import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
 import { MarkAllNotificationsReadCommand } from '../../use-cases/commands/mark-all-notifications-read.command';
 import { GetUnreadNotificationsQuery } from '../../use-cases/queries/get-unread-notifications.query';
-import { PublicAccess, Session } from 'supertokens-nestjs';
+import { Session } from 'supertokens-nestjs';
 import {
   ApiTags,
   ApiOperation,
@@ -20,6 +12,7 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
+import { Result } from '@/libs/result';
 
 interface CreateNotificationDto {
   type: string;
@@ -152,7 +145,7 @@ export class NotificationsController {
       return { error: 'userId est requis' };
     }
 
-    const result = await this.queryBus.execute(
+    const result: Result<Notification[], string> = await this.queryBus.execute(
       new GetUnreadNotificationsQuery(ownerId),
     );
 
@@ -214,7 +207,7 @@ export class NotificationsController {
     @Session('userId') ownerId: string,
     @Param('id') notificationId: string,
   ) {
-    const result = await this.commandBus.execute(
+    const result: Result<void, string> = await this.commandBus.execute(
       new MarkNotificationReadCommand(notificationId, ownerId),
     );
 
@@ -268,7 +261,7 @@ export class NotificationsController {
       return { error: 'userId est requis' };
     }
 
-    const result = await this.commandBus.execute(
+    const result: Result<void, string> = await this.commandBus.execute(
       new MarkAllNotificationsReadCommand(ownerId),
     );
 

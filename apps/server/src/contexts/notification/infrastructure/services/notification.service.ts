@@ -7,7 +7,7 @@ import {
 } from '../../use-cases/ports/notification.service.port';
 import { Result } from '@/libs/result';
 import { RealtimeNotifierAdapter } from './realtime-notifier.adapter';
-
+import { Prisma } from '@prisma/client';
 /**
  * Service d'implémentation du port NotificationServicePort.
  * Responsable de la persistance et de la livraison technique.
@@ -34,7 +34,7 @@ export class NotificationService implements NotificationServicePort {
         data: {
           userId: notification.userId,
           type: notification.type,
-          payload: notification.payload as any,
+          payload: notification.payload as Prisma.InputJsonValue,
         },
       });
 
@@ -53,7 +53,7 @@ export class NotificationService implements NotificationServicePort {
 
       for (const channel of channels) {
         if (channel === 'realtime') {
-          await this.realtimeAdapter.send(notificationData);
+          this.realtimeAdapter.send(notificationData);
         }
         // TODO: Ajouter d'autres canaux (email, etc.)
       }
@@ -126,7 +126,7 @@ export class NotificationService implements NotificationServicePort {
       };
 
       // Notifier en temps réel
-      await this.realtimeAdapter.sendNotificationUpdate(notificationData);
+      this.realtimeAdapter.sendNotificationUpdate(notificationData);
 
       return Result.ok(undefined);
     } catch (error) {
@@ -177,7 +177,7 @@ export class NotificationService implements NotificationServicePort {
           readAt: readAt,
         };
 
-        await this.realtimeAdapter.sendNotificationUpdate(notificationData);
+        this.realtimeAdapter.sendNotificationUpdate(notificationData);
       }
 
       return Result.ok(undefined);
@@ -208,6 +208,7 @@ export class NotificationService implements NotificationServicePort {
         readAt: notification.readAt,
       });
     } catch (error) {
+      console.error('Error fetching notification:', error);
       return Result.fail('Failed to fetch notification');
     }
   }
