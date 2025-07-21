@@ -1,134 +1,190 @@
-import { OnModuleInit, Logger } from '@nestjs/common';
 import {
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  MessageBody,
-  ConnectedSocket,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { v4 as uuidv4 } from 'uuid';
+import { Inject, Logger } from '@nestjs/common';
+import {
+  NOTIFICATION_SERVICE_PORT,
+  NotificationServicePort,
+  NotificationData,
+} from '../../use-cases/ports/notification.service.port';
 
+/**
+ * Gateway WebSocket pour les notifications en temps réel.
+ * Gère les connexions clients et l'envoi de notifications.
+ */
 @WebSocketGateway({
-  cors: { origin: ['http://localhost:3000'] },
+  cors: {
+    credentials: true,
+    origin: '*',
+  },
+  namespace: 'notifications',
 })
-export class NotificationsGateway implements OnModuleInit {
+export class NotificationsGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
   private readonly logger = new Logger(NotificationsGateway.name);
   private userSockets = new Map<string, Socket>();
-  // Map temporaire : wsToken -> { userId, expiresAt }
-  private static wsTokens = new Map<
-    string,
-    { userId: string; expiresAt: number }
-  >();
-  private static WS_TOKEN_TTL = 6000 * 1000; // 1 minute
 
-  // Méthode à appeler dans un controller HTTP protégé (cookie httpOnly)
-  static generateWsToken(userId: string): string {
-    const token = uuidv4();
-    const expiresAt = Date.now() + NotificationsGateway.WS_TOKEN_TTL;
-    NotificationsGateway.wsTokens.set(token, { userId, expiresAt });
-    console.log('Generated wsToken:', token);
-    const entry = NotificationsGateway.wsTokens.get(token);
-    console.log('Validating wsToken:', token);
-    console.log('Entry:', entry);
-    return token;
-  }
+  constructor(
+    @Inject(NOTIFICATION_SERVICE_PORT)
+    private readonly notificationService: NotificationServicePort,
+  ) {}
 
-  // Validation du ws-token à la connexion WebSocket
-  private static validateWsToken(token: string): string | null {
-    const entry = NotificationsGateway.wsTokens.get(token);
-    console.log('Validating wsToken:', token);
-    console.log('Entry:', entry);
-    if (!entry) return null;
-    if (Date.now() > entry.expiresAt) {
-      NotificationsGateway.wsTokens.delete(token);
-      return null;
-    }
-    // NE SUPPRIME PLUS ICI
-    return entry.userId;
-  }
+  /**
+   * Gère la connexion d'un client WebSocket.
+   * Enregistre le socket pour l'utilisateur et envoie les notifications non lues.
+   */
+  async handleConnection(client: Socket) {
+    try {
+      const userId = client.handshake.query.userId as string;
 
-  onModuleInit() {
-    this.server.use((socket: Socket, next) => {
-      // Le client doit envoyer le ws-token dans la query string ou header
-      const wsToken =
-        (socket.handshake.query['wsToken'] as string) ||
-        socket.handshake.headers['x-ws-token'];
-      if (!wsToken) {
-        return next(new Error('No ws-token provided'));
-      }
-      const userId = NotificationsGateway.validateWsToken(wsToken as string);
       if (!userId) {
-        return next(new Error('Invalid or expired ws-token'));
+        this.logger.warn('Client connecté sans userId, déconnexion...');
+        client.disconnect();
+        return;
       }
-      (socket as Record<string, any>).userId = userId;
-      // On stocke le token sur le socket pour suppression après connexion
-      (socket as Record<string, any>)._wsToken = wsToken;
-      next();
-    });
 
-    this.server.on('connection', (socket: Socket) => {
-      const userId = (socket as Record<string, any>).userId;
-      const wsToken = (socket as Record<string, any>)._wsToken;
-      if (userId) {
-        this.userSockets.set(userId, socket);
-        this.logger.log(`User ${userId} connecté: ${socket.id}`);
-        // SUPPRESSION DU TOKEN APRÈS CONNEXION EFFECTIVE
-        if (wsToken) {
-          NotificationsGateway.wsTokens.delete(wsToken);
-        }
-        socket.on('disconnect', () => {
-          this.userSockets.delete(userId);
-          this.logger.log(`User ${userId} déconnecté`);
-        });
+      // Enregistrer le socket pour cet utilisateur
+      this.userSockets.set(userId, client);
+      this.logger.log(`Utilisateur ${userId} connecté (Socket: ${client.id})`);
+
+      // Envoyer les notifications non lues à l'utilisateur
+      const result =
+        await this.notificationService.getUnreadNotifications(userId);
+
+      if (result.success) {
+        client.emit('unread-notifications', result.value);
+        this.logger.log(
+          `${result.value.length} notification(s) non lue(s) envoyée(s) à l'utilisateur ${userId}`,
+        );
       } else {
-        this.logger.warn(`Connexion sans userId: ${socket.id}`);
+        this.logger.error(
+          `Erreur lors de la récupération des notifications pour l'utilisateur ${userId}: ${result.error}`,
+        );
       }
-    });
-  }
-
-  // Exemple d'endpoint HTTP à placer dans un controller protégé (cookie httpOnly)
-  // @Post('/ws-token')
-  // getWsToken(@Req() req) {
-  //   const userId = req.user.id; // ou req.session.getUserId() selon ton guard
-  //   return { wsToken: NotificationsGateway.generateWsToken(userId) };
-  // }
-
-  @SubscribeMessage('notification')
-  onNotification(@MessageBody() data: any) {
-    this.server.emit('notification', data);
-    this.logger.log(`Broadcast notification: ${JSON.stringify(data)}`);
-  }
-
-  @SubscribeMessage('ping')
-  onPing(@ConnectedSocket() client: Socket) {
-    this.logger.log(`Ping reçu de ${client.id}`);
-    client.emit('pong', {
-      message: 'pong',
-      timestamp: new Date().toISOString(),
-    });
-  }
-
-  emitToUser(userId: string, payload: any) {
-    const socket = this.userSockets.get(userId);
-    if (socket) {
-      socket.emit('notification', payload);
-      this.logger.log(`Notification envoyée à ${userId}`);
-    } else {
-      this.logger.warn(`User ${userId} non connecté`);
+    } catch (error) {
+      this.logger.error('Erreur lors de la connexion:', error);
+      client.disconnect();
     }
   }
 
-  emitNotificationUpdate(userId: string, payload: any) {
-    const socket = this.userSockets.get(userId);
-    if (socket) {
-      socket.emit('notification-update', payload);
-      this.logger.log(`Notification update envoyée à ${userId}`);
+  /**
+   * Gère la déconnexion d'un client WebSocket.
+   */
+  handleDisconnect(client: Socket) {
+    const userId = Array.from(this.userSockets.entries()).find(
+      ([, socket]) => socket.id === client.id,
+    )?.[0];
+
+    if (userId) {
+      this.userSockets.delete(userId);
+      this.logger.log(
+        `Utilisateur ${userId} déconnecté (Socket: ${client.id})`,
+      );
+    }
+  }
+
+  /**
+   * Envoie une notification à un utilisateur spécifique.
+   */
+  async emitToUser(notification: NotificationData) {
+    console.log('notification', notification);
+    const userSocket = this.userSockets.get(notification.userId);
+
+    if (userSocket) {
+      userSocket.emit('new-notification', {
+        id: notification.id,
+        userId: notification.userId,
+        type: notification.type,
+        payload: notification.payload,
+        createdAt: notification.createdAt,
+        readAt: notification.readAt,
+      });
+
+      this.logger.log(
+        `Notification sent to user ${notification.userId}: ${notification.type} (ID: ${notification.id})`,
+      );
     } else {
-      this.logger.warn(`User ${userId} non connecté`);
+      this.logger.warn(
+        `User ${notification.userId} not connected, notification not sent in real-time`,
+      );
+    }
+  }
+
+  /**
+   * Envoie une mise à jour d'état de notification à un utilisateur.
+   */
+  async emitNotificationUpdate(notification: NotificationData) {
+    const userSocket = this.userSockets.get(notification.userId);
+
+    if (userSocket) {
+      userSocket.emit('notification-update', {
+        id: notification.id,
+        userId: notification.userId,
+        type: notification.type,
+        payload: notification.payload,
+        createdAt: notification.createdAt,
+        readAt: notification.readAt,
+      });
+
+      this.logger.log(
+        `Notification update sent to user ${notification.userId}: ${notification.type} (ID: ${notification.id}) - Read: ${notification.readAt !== null}`,
+      );
+    } else {
+      this.logger.warn(
+        `User ${notification.userId} not connected, notification update not sent in real-time`,
+      );
+    }
+  }
+
+  /**
+   * Méthode utilitaire pour obtenir le nombre d'utilisateurs connectés.
+   */
+  getConnectedUsersCount(): number {
+    return this.userSockets.size;
+  }
+
+  /**
+   * Méthode utilitaire pour vérifier si un utilisateur est connecté.
+   */
+  isUserConnected(userId: string): boolean {
+    return this.userSockets.has(userId);
+  }
+
+  /**
+   * Méthode pour envoyer une notification à tous les utilisateurs connectés.
+   */
+  async broadcastToAll(event: string, data: any) {
+    this.server.emit(event, data);
+    this.logger.log(`Broadcast sent to all connected users: ${event}`);
+  }
+
+  /**
+   * Envoie directement une notification basique sans persistance.
+   * Utile pour des notifications temporaires ou des alertes système.
+   */
+  async sendDirectNotification(
+    userId: string,
+    type: string,
+    payload: Record<string, unknown>,
+  ) {
+    const userSocket = this.userSockets.get(userId);
+
+    if (userSocket) {
+      userSocket.emit('direct-notification', {
+        type: type,
+        payload: payload,
+        timestamp: new Date(),
+      });
+
+      this.logger.log(`Direct notification sent to user ${userId}: ${type}`);
     }
   }
 }

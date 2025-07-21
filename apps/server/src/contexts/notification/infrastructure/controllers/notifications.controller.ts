@@ -1,10 +1,18 @@
-import { Body, Controller, Post, Get, Patch, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
 import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
 import { MarkAllNotificationsReadCommand } from '../../use-cases/commands/mark-all-notifications-read.command';
 import { GetUnreadNotificationsQuery } from '../../use-cases/queries/get-unread-notifications.query';
-import { Session } from 'supertokens-nestjs';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 import {
   ApiTags,
   ApiOperation,
@@ -12,8 +20,6 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
-import { Result } from '@/libs/result';
-import { NotificationsGateway } from '../gateways/notifications.gateway';
 
 interface CreateNotificationDto {
   type: string;
@@ -146,7 +152,7 @@ export class NotificationsController {
       return { error: 'userId est requis' };
     }
 
-    const result: Result<Notification[], string> = await this.queryBus.execute(
+    const result = await this.queryBus.execute(
       new GetUnreadNotificationsQuery(ownerId),
     );
 
@@ -208,7 +214,7 @@ export class NotificationsController {
     @Session('userId') ownerId: string,
     @Param('id') notificationId: string,
   ) {
-    const result: Result<void, string> = await this.commandBus.execute(
+    const result = await this.commandBus.execute(
       new MarkNotificationReadCommand(notificationId, ownerId),
     );
 
@@ -262,7 +268,7 @@ export class NotificationsController {
       return { error: 'userId est requis' };
     }
 
-    const result: Result<void, string> = await this.commandBus.execute(
+    const result = await this.commandBus.execute(
       new MarkAllNotificationsReadCommand(ownerId),
     );
 
@@ -274,17 +280,5 @@ export class NotificationsController {
     } else {
       return { success: false, error: result.error };
     }
-  }
-
-  // Endpoint HTTP pour générer un ws-token temporaire (usage unique, TTL court)
-  // À appeler côté client avant d'ouvrir la connexion WebSocket
-  @Post('ws-token')
-  getWsToken(@Session('userId') userId: string) {
-    // Récupère l'userId depuis la session SuperTokens (cookie httpOnly)
-    if (!userId) {
-      return { error: 'Not authenticated' };
-    }
-    const wsToken = NotificationsGateway.generateWsToken(userId);
-    return { wsToken };
   }
 }

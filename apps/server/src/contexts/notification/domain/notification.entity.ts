@@ -88,7 +88,7 @@ export class Notification {
   }
 
   public markAsRead(): void {
-    this.readAt = new Date();
+    (this as any).readAt = new Date();
   }
 
   public isRead(): boolean {

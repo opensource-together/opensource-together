@@ -25,7 +25,6 @@ import {
   MailingServicePort,
   SendEmailPayload,
 } from '@/mailing/ports/mailing.service.port';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class ApplyToProjectRoleCommand implements ICommand {
   constructor(
@@ -54,8 +53,6 @@ export class ApplyToProjectRoleCommandHandler
     private readonly projectRepo: ProjectRepositoryPort,
     @Inject(MAILING_SERVICE_PORT)
     private readonly mailingService: MailingServicePort,
-    @Inject(EventEmitter2)
-    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(
@@ -193,16 +190,6 @@ export class ApplyToProjectRoleCommandHandler
       `,
     };
     await this.mailingService.sendEmail(emailPayload);
-
-    // Émettre l'événement de candidature pour déclencher les notifications
-    this.eventEmitter.emit('project.role.application.created', {
-      projectOwnerId: projectData.ownerId,
-      applicantId: userId,
-      applicantName: savedApplication.value.toPrimitive().userProfile.name,
-      projectId: projectData.id!,
-      projectTitle: projectData.title,
-      roleName: projectRole.toPrimitive().title,
-    });
 
     return Result.ok(savedApplication.value);
   }
