@@ -6,6 +6,7 @@ import { TechStackItem, fetchTechStacks } from "../services/tech-stack.service";
 
 export interface TechStackOption extends ComboboxOption {
   iconUrl: string;
+  type: 'LANGUAGE' | 'TECH';
 }
 
 /**
@@ -22,11 +23,29 @@ export function useTechStack() {
     queryFn: fetchTechStacks,
   });
 
-  const techStackOptions: TechStackOption[] = techStacks.map((tech) => ({
-    id: tech.id,
-    name: tech.name,
-    iconUrl: tech.iconUrl,
-  }));
+  const languageOptions: TechStackOption[] = techStacks
+    .filter((tech) => tech.type === 'LANGUAGE')
+    .map((tech) => ({
+      id: tech.id,
+      name: tech.name,
+      iconUrl: tech.iconUrl,
+      type: tech.type,
+    }));
+
+  const technologyOptions: TechStackOption[] = techStacks
+    .filter((tech) => tech.type === 'TECH')
+    .map((tech) => ({
+      id: tech.id,
+      name: tech.name,
+      iconUrl: tech.iconUrl,
+      type: tech.type,
+    }));
+
+  // Liste groupée pour le combobox (langages d'abord)
+  const techStackOptions: TechStackOption[] = [
+    ...languageOptions,
+    ...technologyOptions,
+  ];
 
   const getTechStackById = (id: string): TechStackItem | null => {
     return techStacks.find((tech) => tech.id === id) || null;
@@ -40,6 +59,8 @@ export function useTechStack() {
 
   return {
     techStackOptions,
+    languageOptions,
+    technologyOptions,
     getTechStackById,
     getTechStacksByIds,
     isLoading,
