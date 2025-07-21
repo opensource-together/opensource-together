@@ -123,7 +123,7 @@ export function AvatarUpload({
             className={cn(
               "relative transition-all duration-200",
               isDragOver && "scale-105",
-              error && "ring-2 ring-red-300"
+              error
             )}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -142,7 +142,7 @@ export function AvatarUpload({
                 isDragOver &&
                   !(preview || currentImageUrl) &&
                   "border-blue-500 bg-blue-50",
-                error && "border-red-300"
+                error && "border-red-400"
               )}
             />
           </div>

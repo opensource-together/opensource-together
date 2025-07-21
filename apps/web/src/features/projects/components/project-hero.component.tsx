@@ -27,9 +27,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         {/* Project Icon and Title */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <div className="flex h-[50px] w-[50px] items-center justify-center rounded-4xl bg-[#F4F4F4] sm:h-[65px] sm:w-[65px]">
-            <Avatar src={image} name={title} alt={title} size="xl" />
-          </div>
+          <Avatar src={image} name={title} alt={title} size="xl" />
           {/* Project Title */}
           <h1 className="text-start text-2xl font-medium tracking-tighter text-black sm:text-3xl">
             {title}

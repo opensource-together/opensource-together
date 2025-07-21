@@ -124,17 +124,18 @@ export class ApplyToProjectRoleCommandHandler
 
     // 6. Vérifier qu'il n'y a pas déjà une candidature PENDING pour ce couple utilisateur/rôle
     const existingApplicationCheck =
-      await this.applicationRepo.existsPendingApplication(
-        userId,
-        projectRoleId,
-      );
-    if (
-      existingApplicationCheck.success &&
-      existingApplicationCheck.value == true
-    ) {
-      return Result.fail(
-        'You already have a pending application for this role',
-      );
+      await this.applicationRepo.existsStatusApplication(userId, projectRoleId);
+    if (existingApplicationCheck.success) {
+      if (existingApplicationCheck.value === 'PENDING') {
+        return Result.fail(
+          'You already have a pending application for this role',
+        );
+      }
+      if (existingApplicationCheck.value === 'REJECTED') {
+        return Result.fail(
+          'You already have a rejected application for this role',
+        );
+      }
     }
 
     // 7. Vérifier que l'utilisateur ne candidate pas à son propre projet

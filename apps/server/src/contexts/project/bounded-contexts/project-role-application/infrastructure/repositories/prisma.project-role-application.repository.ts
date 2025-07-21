@@ -54,22 +54,26 @@ export class PrismaProjectRoleApplicationRepository
     }
   }
 
-  async existsPendingApplication(
+  async existsStatusApplication(
     userId: string,
     projectRoleId: string,
-  ): Promise<Result<boolean, string>> {
+  ): Promise<Result<string | undefined, string>> {
     try {
       const projectRoleApplication =
         await this.prisma.projectRoleApplication.findFirst({
           where: {
             profileId: userId,
             projectRoleId,
-            status: 'PENDING',
+            status: {
+              in: ['PENDING', 'REJECTED'],
+            },
           },
         });
-      console.log('projectRoleApplication', !!projectRoleApplication);
 
-      return Result.ok(!!projectRoleApplication);
+      if (!projectRoleApplication) {
+        return Result.ok(undefined);
+      }
+      return Result.ok(projectRoleApplication.status);
     } catch (error) {
       console.error(error);
       return Result.fail('Une erreur est survenue');
@@ -263,6 +267,101 @@ export class PrismaProjectRoleApplicationRepository
       console.error(error);
       return Result.fail(
         'Une erreur est survenue lors de la récupération des candidatures',
+      );
+    }
+  }
+
+  async rejectApplication(props: {
+    applicationId: string;
+    rejectionReason: string;
+  }): Promise<Result<ProjectRoleApplication, string>> {
+    try {
+      const application = await this.prisma.projectRoleApplication.update({
+        where: { id: props.applicationId },
+        data: {
+          status: 'REJECTED',
+          rejectionReason: props.rejectionReason,
+        },
+        include: {
+          projectRole: true,
+          project: true,
+          profile: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      if (!application) return Result.fail('Application not found');
+
+      const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+        ...application,
+        projectRole: application.projectRole,
+        project: application.project,
+        profile: {
+          ...application.profile,
+          user: application.profile.user,
+        },
+      });
+      if (!domainApplication.success) {
+        return Result.fail(
+          'Une erreur est survenue lors de la récupération de la candidature',
+        );
+      }
+
+      return Result.ok(domainApplication.value);
+    } catch (error) {
+      console.error(error);
+      return Result.fail(
+        'Une erreur est survenue lors de la récupération de la candidature',
+      );
+    }
+  }
+
+  async acceptApplication(props: {
+    applicationId: string;
+    projectId: string;
+    userId: string;
+  }): Promise<Result<ProjectRoleApplication, string>> {
+    try {
+      const application = await this.prisma.projectRoleApplication.update({
+        where: { id: props.applicationId },
+        data: {
+          status: 'APPROVAL',
+        },
+        include: {
+          projectRole: true,
+          project: true,
+          profile: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      if (!application) return Result.fail('Application not found');
+
+      const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+        ...application,
+        projectRole: application.projectRole,
+        project: application.project,
+        profile: {
+          ...application.profile,
+          user: application.profile.user,
+        },
+      });
+      console.log('domainApplication acceptApplication', domainApplication);
+      if (!domainApplication.success) {
+        return Result.fail(
+          'Une erreur est survenue lors de la récupération de la candidature',
+        );
+      }
+
+      return Result.ok(domainApplication.value);
+    } catch (error) {
+      console.error(error);
+      return Result.fail(
+        'Une erreur est survenue lors de la récupération de la candidature',
       );
     }
   }
