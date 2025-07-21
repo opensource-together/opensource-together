@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -14,39 +13,22 @@ import {
   FormItem,
   FormMessage,
 } from "@/shared/components/ui/form";
-import Icon from "@/shared/components/ui/icon";
 
 import FormNavigationButtons from "../../components/stepper/stepper-navigation-buttons.component";
+import { useGithubRepos } from "../../hooks/use-projects.hook";
 import { useProjectCreateStore } from "../../stores/project-create.store";
-
-const repositories = [
-  { name: "OpenSource Together", date: "10/09/25" },
-  { name: "Gitify", date: "10/09/25" },
-  { name: "Leetgrind", date: "10/09/25" },
-  { name: "NextSandbox", date: "10/09/25" },
-  { name: "g9s", date: "10/09/25" },
-  { name: "Code Snippet", date: "10/09/25" },
-  { name: "Linux", date: "10/09/25" },
-  { name: "WSL", date: "10/09/25" },
-];
-
-const repositorySelectionSchema = z.object({
-  selectedRepository: z
-    .object({
-      name: z.string(),
-      date: z.string(),
-    })
-    .nullable(),
-});
-
-type RepositorySelectionFormData = z.infer<typeof repositorySelectionSchema>;
+import { GithubRepoType } from "../../types/project.type";
+import {
+  SelectedRepoFormData,
+  selectedRepoSchema,
+} from "../../validations/project-stepper.schema";
 
 export default function StepOneForm() {
   const router = useRouter();
   const { selectRepository, formData } = useProjectCreateStore();
-
-  const form = useForm<RepositorySelectionFormData>({
-    resolver: zodResolver(repositorySelectionSchema),
+  const { data: githubRepos } = useGithubRepos();
+  const form = useForm<SelectedRepoFormData>({
+    resolver: zodResolver(selectedRepoSchema),
     defaultValues: {
       selectedRepository: formData.selectedRepository,
     },
@@ -70,7 +52,7 @@ export default function StepOneForm() {
   const [dragStartScroll, setDragStartScroll] = useState(0);
 
   const itemHeight = 64; // px
-  const totalCount = repositories.length;
+  const totalCount = githubRepos?.length || 0;
   const totalHeight = itemHeight * totalCount;
   const visibleHeight = 320;
   const scrollbarHeight = Math.max(
@@ -113,7 +95,7 @@ export default function StepOneForm() {
     visibleHeight,
   ]);
 
-  const handleRepositorySelect = (repo: { name: string; date: string }) => {
+  const handleRepositorySelect = (repo: GithubRepoType) => {
     setValue("selectedRepository", repo);
   };
 
@@ -145,36 +127,32 @@ export default function StepOneForm() {
                     style={{ scrollbarWidth: "none" }}
                   >
                     <div className="flex flex-col divide-y divide-black/4">
-                      {repositories.map((repo, idx) => (
+                      {githubRepos?.map((repo, idx) => (
                         <div
                           key={idx}
                           className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
-                            selectedRepository?.name === repo.name
+                            selectedRepository?.title === repo.title
                               ? "bg-black-50"
                               : "hover:bg-gray-50"
                           }`}
                         >
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium text-black">
-                              {repo.name}
+                              {repo.owner} / {repo.title}
                             </span>
-                            <Icon name="lock" size="xs" />
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="flex-shrink-0 text-xs font-normal text-black/20">
-                              {repo.date}
-                            </span>
                             <Button
                               type="button"
                               variant={
-                                selectedRepository?.name === repo.name
+                                selectedRepository?.title === repo.title
                                   ? "default"
                                   : "outline"
                               }
                               size="sm"
                               onClick={() => handleRepositorySelect(repo)}
                             >
-                              {selectedRepository?.name === repo.name
+                              {selectedRepository?.title === repo.title
                                 ? "Sélectionné"
                                 : "Sélectionner"}
                             </Button>
