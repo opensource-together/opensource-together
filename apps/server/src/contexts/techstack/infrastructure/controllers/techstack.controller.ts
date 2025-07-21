@@ -63,7 +63,7 @@ export class TechStackController {
       statusCode: 500,
     },
   })
-  async getAllTechStacks(): Promise<TechStack[] | { error: string }> {
+  async getAllTechStacks(): Promise<{ languages: TechStack[]; technologies: TechStack[] } | { error: string }> {
     const result: Result<TechStack[], string> = await this.queryBus.execute(
       new GetAllTechStacksQuery(),
     );
@@ -72,6 +72,9 @@ export class TechStackController {
       return { error: result.error };
     }
 
-    return result.value;
+    const languages = result.value.filter(ts => ts.toPrimitive().type === 'LANGUAGE');
+    const technologies = result.value.filter(ts => ts.toPrimitive().type === 'TECH');
+
+    return { languages, technologies };
   }
 }
