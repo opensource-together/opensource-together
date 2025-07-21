@@ -45,7 +45,12 @@ export class TechStack {
   private iconUrl: string;
   private type: 'LANGUAGE' | 'TECH';
 
-  private constructor(props: { id: string; name: string; iconUrl: string; type: 'LANGUAGE' | 'TECH' }) {
+  private constructor(props: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }) {
     this.id = props.id;
     this.name = props.name;
     this.iconUrl = props.iconUrl;
@@ -65,7 +70,12 @@ export class TechStack {
   public static validate(
     props: TechStackData,
   ): Result<TechStack, TechStackValidationErrors | string> {
-    const error: { id?: string; name?: string; iconUrl?: string; type?: string } = {};
+    const error: {
+      id?: string;
+      name?: string;
+      iconUrl?: string;
+      type?: string;
+    } = {};
     if (!props.id) {
       error.id = 'Id is required';
     }

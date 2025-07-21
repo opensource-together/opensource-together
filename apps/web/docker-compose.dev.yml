@@ -109,6 +109,7 @@ services:
         "push",
         "--schema=/app/schema/schema.prisma",
         "--skip-generate",
+        "--force-reset",
       ]
     environment:
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}

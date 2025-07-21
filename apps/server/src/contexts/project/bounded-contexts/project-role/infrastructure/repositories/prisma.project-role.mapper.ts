@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Result } from '@/libs/result';
 import {
   ProjectRole,
   ProjectRoleValidationErrors,
 } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
+import { Result } from '@/libs/result';
+import { Injectable } from '@nestjs/common';
 import { Prisma, ProjectRole as PrismaProjectRole } from '@prisma/client';
 
 @Injectable()
@@ -33,6 +33,7 @@ export class PrismaProjectRoleMapper {
         id: string;
         name: string;
         iconUrl: string;
+        type: 'LANGUAGE' | 'TECH';
       }[];
     } & {
       createdAt: Date;
@@ -49,6 +50,7 @@ export class PrismaProjectRoleMapper {
         id: techStack.id,
         name: techStack.name,
         iconUrl: techStack.iconUrl,
+        type: techStack.type,
       })),
       createdAt: projectRoleRepo.createdAt,
       updatedAt: projectRoleRepo.updatedAt,

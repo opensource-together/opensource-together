@@ -218,6 +218,7 @@ describe('Domain Project Entity', () => {
         id: '1',
         name: 'React',
         iconUrl: 'https://react.dev/favicon.ico',
+        type: 'TECH',
       });
       if (!techStack.success) {
         throw new Error(JSON.stringify(techStack.error));
@@ -256,6 +257,7 @@ describe('Domain Project Entity', () => {
         id: '1',
         name: 'React',
         iconUrl: 'https://react.dev/favicon.ico',
+        type: 'TECH',
       });
       if (!techStack.success) {
         throw new Error(JSON.stringify(techStack.error));
@@ -390,6 +392,7 @@ describe('Domain Project Entity', () => {
         id: '2',
         name: 'php',
         iconUrl: 'https://php.net/favicon.ico',
+        type: 'TECH',
       });
       // expect(techStacks).toBeInstanceOf(Array);
       expect(props.techStacks).toHaveLength(1);
@@ -483,6 +486,7 @@ const createTechStack = (id: string, name: string, iconUrl: string) => {
     id,
     name,
     iconUrl,
+    type: 'TECH',
   });
   if (!result.success) {
     throw new Error('Failed to create tech stack');

@@ -141,6 +141,9 @@ export class CreateProjectCommandHandler
           iconUrl: allTechStacksValidated
             .find((t) => t.toPrimitive().id === ts)
             ?.toPrimitive().iconUrl as string,
+          type: allTechStacksValidated
+            .find((t) => t.toPrimitive().id === ts)
+            ?.toPrimitive().type as 'LANGUAGE' | 'TECH',
         })),
       })),
       keyFeatures: keyFeatures,
