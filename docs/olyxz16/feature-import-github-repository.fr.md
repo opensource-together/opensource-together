@@ -19,11 +19,11 @@ Un nouveau module `Github` (`apps/server/src/contexts/github/`) a été créé p
 -   **Fichier :** `apps/server/src/contexts/github/infrastructure/controllers/github.controller.ts`
 -   **Objectif :** Expose de nouveaux points de terminaison pour interagir avec les données GitHub d'un utilisateur.
 
-#### 2.1.2. Nouveau point de terminaison : `GET /api/github/repos`
+#### 2.1.2. Nouveau point de terminaison : `GET /v1/github/repos`
 
 C'est le point de terminaison principal pour que le frontend récupère la liste des dépôts qu'un utilisateur peut importer.
 
--   **URL :** `GET /api/github/repos`
+-   **URL :** `GET /v1/github/repos`
 -   **Méthode HTTP :** `GET`
 -   **Authentification :** C'est un point de terminaison protégé. Il utilise le `GithubAuthGuard`, qui repose sur le cookie `sAccessToken` obtenu lors du flux d'authentification SuperTokens. L'utilisateur doit avoir lié son compte GitHub.
 -   **Description :** Récupère une liste des dépôts GitHub publics de l'utilisateur authentifié.
@@ -38,8 +38,8 @@ Le module `Project` existant a été adapté pour gérer les deux méthodes de c
 
 -   **Fichier :** `apps/server/src/contexts/project/infrastructure/controllers/project.controller.ts`
 -   **Changement :** Le point de terminaison `createProject` accepte désormais un paramètre de requête `method`.
-    -   `POST /api/projects?method=scratch` (Comportement par défaut/hérité)
-    -   `POST /api/projects?method=github` (Nouveau comportement d'importation)
+    -   `POST /v1/projects?method=scratch` (Comportement par défaut/hérité)
+    -   `POST /v1/projects?method=github` (Nouveau comportement d'importation)
 
 #### 2.2.2. `CreateProjectCommandHandler`
 
@@ -58,14 +58,14 @@ Avant qu'un utilisateur puisse importer un dépôt, il doit s'être authentifié
 
 ### Étape 2 : Récupérer les dépôts GitHub de l'utilisateur
 
-Lorsque l'utilisateur accède à la page ou à la modale "Importer depuis GitHub", effectuez une requête `GET` vers le nouveau point de terminaison `/api/github/repos` pour récupérer ses dépôts.
+Lorsque l'utilisateur accède à la page ou à la modale "Importer depuis GitHub", effectuez une requête `GET` vers le nouveau point de terminaison `/v1/github/repos` pour récupérer ses dépôts.
 
 **Exemple de requête avec `fetch` :**
 
 ```javascript
 async function fetchGithubRepos() {
   try {
-    const response = await fetch('/api/github/repos', {
+    const response = await fetch('/v1/github/repos', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ async function fetchGithubRepos() {
 
 ```bash
 # Remplacez VOTRE_COOKIE_DE_SESSION par un jeton valide
-curl -X GET http://localhost:3001/api/github/repos \
+curl -X GET http://localhost:3001/v1/github/repos \
   -H "Cookie: sAccessToken=VOTRE_COOKIE_DE_SESSION"
 ```
 
@@ -125,14 +125,14 @@ curl -X GET http://localhost:3001/api/github/repos \
 
 ### Étape 4 : Soumettre le formulaire de création de projet
 
-Une fois le formulaire rempli, soumettez-le au point de terminaison `POST /api/projects` avec le paramètre de requête `method=github`.
+Une fois le formulaire rempli, soumettez-le au point de terminaison `POST /v1/projects` avec le paramètre de requête `method=github`.
 
 **Exemple de requête avec `fetch` :**
 
 ```javascript
 async function createProjectFromGithub(projectData) {
   try {
-    const response = await fetch('/api/projects?method=github', {
+    const response = await fetch('/v1/projects?method=github', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ createProjectFromGithub(requestBody);
 
 ```bash
 # Remplacez VOTRE_COOKIE_DE_SESSION par un jeton valide
-curl -X POST 'http://localhost:3001/api/projects?method=github' \
+curl -X POST 'http://localhost:3001/v1/projects?method=github' \
 -H "Content-Type: application/json" \
 -H "Cookie: sAccessToken=VOTRE_COOKIE_DE_SESSION" \
 -d '{
