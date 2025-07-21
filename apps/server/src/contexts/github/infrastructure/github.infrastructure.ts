@@ -21,9 +21,7 @@ import { GithubController } from './controllers/github.controller';
 @Module({
   imports: [HttpModule, ConfigModule, PersistenceInfrastructure],
 
-  controllers: [
-    GithubController
-  ],
+  controllers: [GithubController],
   providers: [
     GithubRepository,
     ...githubUseCases,

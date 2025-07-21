@@ -160,16 +160,27 @@ export class CreateProjectCommandHandler
       //si le projet est valide alors on créer un github repository
       //TODO: Voir si on peut déplacer cette logique ailleurs ulterieurement
       //on retourne le projet avec les roles ajoutés
-      case 'scratch': savedProject = await this.createGithubRepository(savedProject.value, octokit); break;
+      case 'scratch':
+        savedProject = await this.createGithubRepository(
+          savedProject.value,
+          octokit,
+        );
+        break;
       //si le projet est créé depuis github, on ne fait rien de plus
-      case 'github': savedProject = await this.validateGithubProject(savedProject.value); break;
-      default: break;
+      case 'github':
+        savedProject = await this.validateGithubProject(savedProject.value);
+        break;
+      default:
+        break;
     }
 
     return savedProject;
   }
 
-  async createGithubRepository(project: Project, octokit: Octokit): Promise<Result<Project, string>> {
+  async createGithubRepository(
+    project: Project,
+    octokit: Octokit,
+  ): Promise<Result<Project, string>> {
     const githubRepositoryResult: Result<GithubRepositoryDto, string> =
       await this.githubRepository.createGithubRepository(
         {
@@ -185,7 +196,10 @@ export class CreateProjectCommandHandler
 
       if (html_url) {
         //on ajoute le lien github au projet
-        const savedProjectWithGithubLink = await this.addUrlToProject(project, html_url);
+        const savedProjectWithGithubLink = await this.addUrlToProject(
+          project,
+          html_url,
+        );
         if (!savedProjectWithGithubLink.success) {
           //si une erreur survient, on renvoie quand meme le projet créé
           return Result.ok(project);
@@ -193,14 +207,18 @@ export class CreateProjectCommandHandler
       }
       return Result.ok(project);
     }
-    return Result.fail('Unable to create GitHub repository : ' + githubRepositoryResult.error);
+    return Result.fail(
+      'Unable to create GitHub repository : ' + githubRepositoryResult.error,
+    );
   }
 
-  async validateGithubProject(project: Project): Promise<Result<Project, string>> {
+  async validateGithubProject(
+    project: Project,
+  ): Promise<Result<Project, string>> {
     //on vérifie si le projet a un lien github
-    const githubLink = project.toPrimitive().externalLinks?.find(
-      (link) => link.type === 'github',
-    );
+    const githubLink = project
+      .toPrimitive()
+      .externalLinks?.find((link) => link.type === 'github');
     if (!githubLink || !githubLink.url) {
       return Result.fail('Project does not have a GitHub link');
     }
@@ -229,5 +247,4 @@ export class CreateProjectCommandHandler
     );
     return savedProjectWithGithubLink;
   }
-
 }

@@ -208,30 +208,32 @@ export class GithubRepository implements GithubRepositoryPort {
     }
   }
 
-  async findRepositoriesOfAuthenticatedUser(octokit: Octokit): Promise<Result<GithubRepoListInput[], string>> {
+  async findRepositoriesOfAuthenticatedUser(
+    octokit: Octokit,
+  ): Promise<Result<GithubRepoListInput[], string>> {
     try {
       const response = await octokit.rest.repos.listForAuthenticatedUser({
-        visibility: "public",
+        visibility: 'public',
         per_page: 50,
         headers: {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
       const repositories = response.data
-      .map((repo) => {
-        const rep = toGithubRepositoryDto(repo);
-        if (rep.success) {
-          return rep.value;
-        }
-      })
-      .filter(v => v !== undefined)
-      .map((repo) => {
-        const rep = toGithubRepoListInput(repo);
-        if (rep.success) {
-          return rep.value;
-        }
-      })
-      .filter(v => v !== undefined);
+        .map((repo) => {
+          const rep = toGithubRepositoryDto(repo);
+          if (rep.success) {
+            return rep.value;
+          }
+        })
+        .filter((v) => v !== undefined)
+        .map((repo) => {
+          const rep = toGithubRepoListInput(repo);
+          if (rep.success) {
+            return rep.value;
+          }
+        })
+        .filter((v) => v !== undefined);
       return Result.ok(repositories);
     } catch (e) {
       return Result.fail('Failed to fetch user repositories');

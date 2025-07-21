@@ -1,9 +1,9 @@
-import { Result } from "@/libs/result";
-import { GithubRepoListInput } from "../inputs/github-repo-list.input";
-import { GithubRepositoryDto } from "../dto/github-repository.dto";
+import { Result } from '@/libs/result';
+import { GithubRepoListInput } from '../inputs/github-repo-list.input';
+import { GithubRepositoryDto } from '../dto/github-repository.dto';
 
 export function toGithubRepoListInput<T extends GithubRepositoryDto>(
-  data: T 
+  data: T,
 ): Result<GithubRepoListInput> {
   try {
     const input: GithubRepoListInput = {

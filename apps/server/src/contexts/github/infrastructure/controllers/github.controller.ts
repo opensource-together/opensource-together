@@ -23,13 +23,16 @@ import { toGithubRepoListInput } from '../repositories/adapters/github-repo-list
 @Controller('github')
 export class GithubController {
   constructor(
-    @Inject(GithubRepository) 
-    private readonly githubRepository: GithubRepository
+    @Inject(GithubRepository)
+    private readonly githubRepository: GithubRepository,
   ) {}
 
   @Get('repos')
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ summary: "Récupérer la liste des repository github de l'utilisateur courant" })
+  @ApiOperation({
+    summary:
+      "Récupérer la liste des repository github de l'utilisateur courant",
+  })
   @ApiCookieAuth('sAccessToken')
   @ApiResponse({
     status: 200,
@@ -39,10 +42,10 @@ export class GithubController {
         {
           owner: 'JohnDoe',
           title: 'SampleProject',
-          description: 'Un projet d\'example',
+          description: "Un projet d'example",
           url: 'https://github.com/JohnDoe/SampleProject',
-       },
-      ]
+        },
+      ],
     },
   })
   @ApiResponse({
@@ -57,9 +60,10 @@ export class GithubController {
   async getMyRepositories(
     @GitHubOctokit() octokit: Octokit,
   ): Promise<GithubRepoListInput[]> {
-    const repos = await this.githubRepository.findRepositoriesOfAuthenticatedUser(octokit);
+    const repos =
+      await this.githubRepository.findRepositoriesOfAuthenticatedUser(octokit);
     if (!repos.success) {
-      throw new HttpException(repos.error, HttpStatus.NOT_FOUND); 
+      throw new HttpException(repos.error, HttpStatus.NOT_FOUND);
     }
     return repos.value;
   }

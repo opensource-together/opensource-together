@@ -7,7 +7,7 @@ export function toGithubRepositoryDto(
   try {
     const repository = data as GithubRepositoryDto;
     if (!repository) {
-      return Result.fail(`Repository casting failed for value : ${data}`)
+      return Result.fail(`Repository casting failed for value : ${data}`);
     }
     return Result.ok(repository);
   } catch (e) {
