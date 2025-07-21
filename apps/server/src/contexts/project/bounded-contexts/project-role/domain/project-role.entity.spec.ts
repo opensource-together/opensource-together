@@ -19,7 +19,7 @@ describe('ProjectRole Entity', () => {
       id: '2',
       name: 'TypeScript',
       iconUrl: 'https://typescriptlang.org/favicon.ico',
-      type: 'TECH',
+      type: 'LANGUAGE',
     });
 
     if (reactResult.success && typescriptResult.success) {
