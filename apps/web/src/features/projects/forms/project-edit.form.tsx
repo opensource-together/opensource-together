@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
@@ -15,12 +16,14 @@ interface ProjectEditFormProps {
 
 export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   const { updateProject, isUpdating } = useUpdateProject();
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
+
   const {
     image,
     title,
     shortDescription,
     techStacks,
-    projectRoles,
     keyFeatures,
     projectGoals,
     categories,
@@ -36,12 +39,6 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
       projectGoals: projectGoals || [],
       techStack: techStacks?.map((tech) => tech.id) || [],
       categories: categories?.map((category) => category.id) || [],
-      projectRoles:
-        projectRoles?.map((role) => ({
-          title: role.title,
-          description: role.description,
-          techStack: role.techStacks?.map((tech) => tech.id) || [],
-        })) || [],
       externalLinks:
         project.externalLinks?.reduce(
           (acc, link) => {
@@ -63,16 +60,28 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   const { setValue } = form;
 
   const handleImageSelect = (file: File | null) => {
-    setValue("image", file?.name || "");
+    if (file) {
+      setSelectedImageFile(file);
+      setShouldDeleteImage(false);
+      setValue("image", "new-image-selected"); // Indicator that new image is selected
+    } else {
+      setSelectedImageFile(null);
+      setShouldDeleteImage(true);
+      setValue("image", ""); // Clear image
+    }
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (!project?.id) return;
-    console.log("Form submission data:", data);
-
     updateProject({
-      projectId: project.id,
-      data,
+      updateData: {
+        data: {
+          ...data,
+          image: shouldDeleteImage ? undefined : data.image, // Let service handle the actual URL
+        },
+        projectId: project.id || "",
+      },
+      newImageFile: selectedImageFile || undefined,
+      shouldDeleteImage,
     });
   });
 

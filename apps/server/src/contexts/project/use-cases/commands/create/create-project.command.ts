@@ -1,29 +1,29 @@
+import { Category } from '@/contexts/category/domain/category.entity';
 import {
-  Project,
-  ProjectValidationErrors,
-} from '@/contexts/project/domain/project.entity';
-import { Result } from '@/libs/result';
-import {
-  PROJECT_REPOSITORY_PORT,
-  ProjectRepositoryPort,
-} from '@/contexts/project/use-cases/ports/project.repository.port';
-import { CommandHandler, ICommand } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { ICommandHandler } from '@nestjs/cqrs';
-import {
-  TECHSTACK_REPOSITORY_PORT,
-  TechStackRepositoryPort,
-} from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+  CATEGORY_REPOSITORY_PORT,
+  CategoryRepositoryPort,
+} from '@/contexts/category/use-cases/ports/category.repository.port';
+import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 import {
   GITHUB_REPOSITORY_PORT,
   GithubRepositoryPort,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
+import {
+  Project,
+  ProjectValidationErrors,
+} from '@/contexts/project/domain/project.entity';
+import {
+  PROJECT_REPOSITORY_PORT,
+  ProjectRepositoryPort,
+} from '@/contexts/project/use-cases/ports/project.repository.port';
+import {
+  TECHSTACK_REPOSITORY_PORT,
+  TechStackRepositoryPort,
+} from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import { Result } from '@/libs/result';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Octokit } from '@octokit/rest';
-import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
-import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
-import { CategoryRepositoryPort } from '@/contexts/category/use-cases/ports/category.repository.port';
-import { Category } from '@/contexts/category/domain/category.entity';
-// import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -91,7 +91,7 @@ export class CreateProjectCommandHandler
     const projectTechStackIds = techStacks;
     // Récupérer tous les IDs des techStacks des projectRoles
     const roleTechStackIds = projectRoles.flatMap((role) => role.techStacks);
-    // Combiner tous les IDs uniques
+    // Combiner tous les IDs uniques pour la validation uniquement
     const allTechStackIds = [
       ...new Set([...projectTechStackIds, ...roleTechStackIds]),
     ];
@@ -106,6 +106,11 @@ export class CreateProjectCommandHandler
 
     if (allTechStacksValidated.length !== allTechStackIds.length)
       return Result.fail('Some tech stacks are not valid');
+
+    // Séparer les technologies du projet et des rôles
+    const projectTechStacks = allTechStacksValidated.filter((tech) =>
+      projectTechStackIds.includes(tech.toPrimitive().id),
+    );
 
     const categoriesValidation: Result<Category[], string> =
       await this.categoryRepo.findByIds(categories);
@@ -123,7 +128,7 @@ export class CreateProjectCommandHandler
       description,
       externalLinks,
       categories: allCategoriesValidated.map((c) => c.toPrimitive()),
-      techStacks: allTechStacksValidated.map((ts) => ts.toPrimitive()),
+      techStacks: projectTechStacks.map((ts) => ts.toPrimitive()),
       projectRoles: projectRoles.map((role) => ({
         title: role.title,
         description: role.description,

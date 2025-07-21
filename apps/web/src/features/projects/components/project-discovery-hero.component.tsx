@@ -35,7 +35,7 @@ export default function ProjectDiscoveryHero() {
         alt="background-homepage"
         width={1094}
         height={266}
-        className="h-[200px] w-full md:h-[266px]"
+        className="h-[200px] w-full md:h-[300px]"
       />
     </div>
   );
