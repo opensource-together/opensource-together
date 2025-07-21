@@ -17,7 +17,6 @@ import { Octokit } from '@octokit/rest';
 import { GithubAuthGuard } from '../guards/github-auth.guard';
 import { GithubRepoListInput } from '../repositories/inputs/github-repo-list.input';
 import { GithubRepository } from '../repositories/github.repository';
-import { toGithubRepoListInput } from '../repositories/adapters/github-repo-list.adapter';
 
 @ApiTags('Github')
 @Controller('github')

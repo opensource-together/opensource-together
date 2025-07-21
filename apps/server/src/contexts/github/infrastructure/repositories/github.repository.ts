@@ -7,7 +7,6 @@ import {
 import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
-// import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
 import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/inputs/invite-user-to-repo.inputs.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
@@ -236,6 +235,7 @@ export class GithubRepository implements GithubRepositoryPort {
         .filter((v) => v !== undefined);
       return Result.ok(repositories);
     } catch (e) {
+      console.error('error fetching user repositories', e);
       return Result.fail('Failed to fetch user repositories');
     }
   }

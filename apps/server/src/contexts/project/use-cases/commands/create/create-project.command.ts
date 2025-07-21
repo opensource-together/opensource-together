@@ -168,7 +168,7 @@ export class CreateProjectCommandHandler
         break;
       //si le projet est créé depuis github, on ne fait rien de plus
       case 'github':
-        savedProject = await this.validateGithubProject(savedProject.value);
+        savedProject = this.validateGithubProject(savedProject.value);
         break;
       default:
         break;
@@ -212,9 +212,7 @@ export class CreateProjectCommandHandler
     );
   }
 
-  async validateGithubProject(
-    project: Project,
-  ): Promise<Result<Project, string>> {
+  validateGithubProject(project: Project): Result<Project, string> {
     //on vérifie si le projet a un lien github
     const githubLink = project
       .toPrimitive()
