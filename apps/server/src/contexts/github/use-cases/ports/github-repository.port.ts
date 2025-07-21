@@ -1,9 +1,10 @@
 import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 import { GithubInvitationDto } from '@/contexts/github/infrastructure/repositories/dto/github-invitation.dto';
 // import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
-import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/dto/invite-user-to-repo.inputs.dto';
+import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/inputs/invite-user-to-repo.inputs.dto';
 import { Result } from '@/libs/result';
 import { Octokit } from '@octokit/rest';
+import { GithubRepoListInput } from '../../infrastructure/repositories/inputs/github-repo-list.input';
 
 export type LastCommit = {
   sha: string;
@@ -69,4 +70,7 @@ export interface GithubRepositoryPort {
     repo: string,
     octokit: Octokit,
   ): Promise<Result<Array<Contributor>, string>>;
+  findRepositoriesOfAuthenticatedUser(
+    octokit: Octokit,
+  ): Promise<Result<GithubRepoListInput[], string>>;
 }

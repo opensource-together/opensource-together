@@ -1,5 +1,5 @@
 import { Result } from '@/libs/result';
-import { GithubRepositoryPermissionsDto } from './github-permissions.dto';
+import { GithubRepositoryPermissionsDto } from '../dto/github-permissions.dto';
 
 export function toPermissionsDto<
   T extends keyof typeof GithubRepositoryPermissionsDto,

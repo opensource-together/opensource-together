@@ -1,5 +1,5 @@
 import { GithubRepositoryDto } from './dto/github-repository.dto';
-import { toGithubRepositoryDto } from './dto/github-repository.adapter';
+import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import {
   GithubRepositoryPort,
   RepositoryInfo,
@@ -7,11 +7,12 @@ import {
 import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
-// import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
-import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/dto/invite-user-to-repo.inputs.dto';
+import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/inputs/invite-user-to-repo.inputs.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
-import { toGithubInvitationDto } from './dto/github-invitation.adapter';
+import { toGithubInvitationDto } from './adapters/github-invitation.adapter';
+import { GithubRepoListInput } from './inputs/github-repo-list.input';
+import { toGithubRepoListInput } from './adapters/github-repo-list.adapter';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
@@ -203,6 +204,39 @@ export class GithubRepository implements GithubRepositoryPort {
       // }
       return Result.ok([]);
       // return Result.fail('Failed to fetch contributors');
+    }
+  }
+
+  async findRepositoriesOfAuthenticatedUser(
+    octokit: Octokit,
+  ): Promise<Result<GithubRepoListInput[], string>> {
+    try {
+      const response = await octokit.rest.repos.listForAuthenticatedUser({
+        visibility: 'public',
+        per_page: 50,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      const repositories = response.data
+        .map((repo) => {
+          const rep = toGithubRepositoryDto(repo);
+          if (rep.success) {
+            return rep.value;
+          }
+        })
+        .filter((v) => v !== undefined)
+        .map((repo) => {
+          const rep = toGithubRepoListInput(repo);
+          if (rep.success) {
+            return rep.value;
+          }
+        })
+        .filter((v) => v !== undefined);
+      return Result.ok(repositories);
+    } catch (e) {
+      console.error('error fetching user repositories', e);
+      return Result.fail('Failed to fetch user repositories');
     }
   }
 }

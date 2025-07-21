@@ -17,13 +17,12 @@ import {
   Controller,
   Delete,
   Get,
-  // Query,
+  Query,
   HttpException,
   HttpStatus,
   Param,
   Patch,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -553,7 +552,7 @@ export class ProjectController {
   })
   async createProject(
     @Session('userId') ownerId: string,
-    @Req() req: Request,
+    @Query('method') method: string,
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
@@ -579,6 +578,7 @@ export class ProjectController {
           goal: goal,
         })),
         octokit: octokit,
+        method: method,
         image: project.image,
       }),
     );

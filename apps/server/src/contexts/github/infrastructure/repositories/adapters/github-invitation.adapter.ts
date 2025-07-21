@@ -1,5 +1,5 @@
 import { Result } from '@/libs/result';
-import { GithubInvitationDto } from './github-invitation.dto';
+import { GithubInvitationDto } from '../dto/github-invitation.dto';
 
 export function toGithubInvitationDto(
   data: unknown,

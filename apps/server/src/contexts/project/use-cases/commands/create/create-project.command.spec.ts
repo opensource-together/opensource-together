@@ -60,6 +60,7 @@ type CreateProjectCommandProps = {
   categories: string[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
+  method: string;
   octokit: any; // Changé de Octokit à any
 };
 
@@ -304,6 +305,7 @@ describe('CreateProjectCommandHandler', () => {
             goal: 'Test Project Goal',
           },
         ],
+        method: 'scratch',
         octokit: mockOctokit,
       });
 
@@ -385,6 +387,7 @@ const getCommandProps = (
         goal: 'Test Project Goal',
       },
     ],
+    method: 'scratch',
     octokit: mockOctokit, // Utiliser le mock
     ...override,
   };
@@ -412,6 +415,7 @@ const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
         goal: 'Test Project Goal',
       },
     ],
+    method: 'scratch',
     octokit: mockOctokit, // Utiliser le mock
   };
 };
