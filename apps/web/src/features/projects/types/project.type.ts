@@ -102,3 +102,14 @@ export interface ProjectEditForm {
   projectGoals: ProjectGoal[];
   categories?: Category[];
 }
+
+export interface GithubRepoType {
+  owner?: string;
+  title: string;
+  description?: string;
+  url: string;
+}
+
+export interface GithubReposResponse {
+  repositories: GithubRepoType[];
+}
