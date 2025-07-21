@@ -3,6 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { NOTIFICATION_SERVICE_PORT } from '../use-cases/ports/notification.service.port';
+import { GatewayModule } from './gateways/gateway.module';
 
 // Services et adapters
 import { NotificationService } from './services/notification.service';
@@ -19,6 +20,7 @@ import { notificationUseCases } from '../use-cases/notification.use-cases';
 
 // Controller
 import { NotificationsController } from './controllers/notifications.controller';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 
 /**
  * Module d'infrastructure pour les notifications.
@@ -34,6 +36,8 @@ import { NotificationsController } from './controllers/notifications.controller'
   imports: [
     CqrsModule, // Pour les command handlers et query handlers
     EventEmitterModule, // Pour les listeners @OnEvent
+    GatewayModule,
+    PersistenceInfrastructure,
   ],
   providers: [
     // Services core
@@ -46,11 +50,11 @@ import { NotificationsController } from './controllers/notifications.controller'
     // Adapters
     RealtimeNotifierAdapter,
 
-    // Gateway WebSocket
     NotificationsGateway,
 
+    // Gateway
     // Listeners EventEmitter2
-    ProjectListener,
+    // ProjectListener,
 
     // Use cases (commands et queries)
     ...notificationUseCases,
@@ -60,6 +64,7 @@ import { NotificationsController } from './controllers/notifications.controller'
     // Exporter le port pour les autres modules
     NOTIFICATION_SERVICE_PORT,
 
+    RealtimeNotifierAdapter,
     // Exporter le gateway si d'autres modules veulent l'utiliser directement
     NotificationsGateway,
   ],

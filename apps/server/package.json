@@ -19,7 +19,6 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:backend:update": "docker compose --project-directory .. exec backend pnpm install",
-
     "prisma:generate": "pnpm prisma generate --schema=src/persistence/orm/prisma/schema.prisma && docker compose --project-directory .. exec backend pnpm prisma generate --schema=/app/src/persistence/orm/prisma/schema.prisma",
     "prisma:migrate:dev": "docker compose --project-directory .. exec backend pnpm prisma migrate dev --schema=/app/src/persistence/orm/prisma/schema.prisma && pnpm prisma generate --schema=src/persistence/orm/prisma/schema.prisma",
     "prisma:migrate:deploy": "docker compose --project-directory .. exec backend pnpm prisma migrate deploy --schema=/app/src/persistence/orm/prisma/schema.prisma",
@@ -42,6 +41,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/cqrs": "^11.0.3",
     "@nestjs/event-emitter": "^3.0.1",
+    "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-socket.io": "^11.1.4",
@@ -65,6 +65,7 @@
     "supertokens-nestjs": "^0.0.2",
     "supertokens-node": "^22.0.1",
     "swagger-ui-express": "^5.0.1",
+    "ws": "^8.18.3",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

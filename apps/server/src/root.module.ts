@@ -7,6 +7,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ContextsModule } from './contexts/contexts.module';
 import { HealthModule } from './health/health.module';
 import { MediaInfrastructure } from './media/infrastructure/media.infrastructure';
+// import { NotificationsGateway } from './contexts/notification/infrastructure/gateways/notifications.gateway';
 @Module({
   imports: [
     CqrsModule.forRoot(),
@@ -24,6 +25,7 @@ import { MediaInfrastructure } from './media/infrastructure/media.infrastructure
       provide: APP_GUARD,
       useClass: SuperTokensAuthGuard,
     },
+    // NotificationsGateway,
   ],
 })
 export class RootModule {}

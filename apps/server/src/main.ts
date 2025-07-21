@@ -5,6 +5,7 @@ import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule);
@@ -26,6 +27,9 @@ async function bootstrap() {
       transform: true, // Transforme automatiquement les types (ex: string vers number)
     }),
   );
+
+  // Configuration WebSocket
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   app.useGlobalFilters(new SuperTokensExceptionFilter());
   const { httpAdapter } = app.get(HttpAdapterHost);

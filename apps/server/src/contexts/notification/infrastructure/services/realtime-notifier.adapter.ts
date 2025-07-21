@@ -11,19 +11,24 @@ export class RealtimeNotifierAdapter {
   constructor(
     @Inject(forwardRef(() => NotificationsGateway))
     private readonly notificationsGateway: NotificationsGateway,
-  ) {}
+  ) {
+    console.log('RealtimeNotifierAdapter initialized');
+  }
 
   /**
    * Envoie une nouvelle notification en temps réel
    */
   send(notification: NotificationData): void {
-    this.notificationsGateway.emitToUser(notification);
+    this.notificationsGateway.emitToUser(notification.userId, notification);
   }
 
   /**
    * Envoie une mise à jour de notification (ex: marquée comme lue)
    */
   sendNotificationUpdate(notification: NotificationData): void {
-    this.notificationsGateway.emitNotificationUpdate(notification);
+    this.notificationsGateway.emitNotificationUpdate(
+      notification.userId,
+      notification,
+    );
   }
 }

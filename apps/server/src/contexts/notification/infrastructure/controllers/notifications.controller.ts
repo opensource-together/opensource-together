@@ -13,6 +13,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { Result } from '@/libs/result';
+import { NotificationsGateway } from '../gateways/notifications.gateway';
 
 interface CreateNotificationDto {
   type: string;
@@ -273,5 +274,17 @@ export class NotificationsController {
     } else {
       return { success: false, error: result.error };
     }
+  }
+
+  // Endpoint HTTP pour générer un ws-token temporaire (usage unique, TTL court)
+  // À appeler côté client avant d'ouvrir la connexion WebSocket
+  @Post('ws-token')
+  getWsToken(@Session('userId') userId: string) {
+    // Récupère l'userId depuis la session SuperTokens (cookie httpOnly)
+    if (!userId) {
+      return { error: 'Not authenticated' };
+    }
+    const wsToken = NotificationsGateway.generateWsToken(userId);
+    return { wsToken };
   }
 }
