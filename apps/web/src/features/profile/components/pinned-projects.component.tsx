@@ -38,6 +38,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
           <ProjectCardComponent
             key={project.id}
             projectId={project.id}
+            slug={project.slug}
             title={project.name}
             shortDescription={project.description || ""}
             image={project.image || ""}

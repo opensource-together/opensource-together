@@ -35,6 +35,7 @@ export class PrismaProjectMapper {
     const projectData = project.toPrimitive();
     const projectCreateInput: Prisma.ProjectCreateInput = {
       title: projectData.title,
+      slug: projectData.slug,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
       image: projectData.image,
@@ -90,6 +91,7 @@ export class PrismaProjectMapper {
     const projectData: ProjectData = {
       id: prismaProject.id,
       title: prismaProject.title,
+      slug: prismaProject.slug,
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
       externalLinks: prismaProject.externalLinks.map((link) => ({

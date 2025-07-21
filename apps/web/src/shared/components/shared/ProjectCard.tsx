@@ -26,6 +26,7 @@ import { Icon } from "../ui/icon";
 
 interface ProjectCardProps {
   projectId?: string;
+  slug?: string;
   title?: string;
   shortDescription?: string;
   techStacks?: TechStack[];
@@ -40,6 +41,7 @@ interface ProjectCardProps {
 
 export default function ProjectCardComponent({
   projectId = "1",
+  slug,
   title = "",
   shortDescription = "",
   techStacks = [],
@@ -69,7 +71,7 @@ export default function ProjectCardComponent({
   },
 }: ProjectCardProps) {
   return (
-    <Link href={`/projects/${projectId}`} className="block">
+    <Link href={slug ? `/${slug}` : `/projects/${projectId}`} className="block">
       <ProjectCard className={className}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>

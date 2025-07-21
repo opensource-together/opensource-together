@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${project.title} | OpenSource Together`,
       description: project.shortDescription,
       images: [project.image || ""],
-      url: `https://opensourcetogether.com/projects/${projectId}`,
+      url: project.slug ? `https://opensourcetogether.com/${project.slug}` : `https://opensourcetogether.com/projects/${projectId}`,
       type: "website",
       siteName: "OpenSource Together",
       locale: "fr_FR",

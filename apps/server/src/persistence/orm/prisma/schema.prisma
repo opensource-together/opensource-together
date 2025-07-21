@@ -59,6 +59,7 @@ model Project {
   id               String                @id @default(uuid())
   ownerId          String
   title            String
+  slug             String                @unique
   description      String
   shortDescription String // ADDED
   externalLinks    ProjectExternalLink[]
@@ -78,6 +79,8 @@ model Project {
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
   @@index([title], name: "idx_title_search")
+  // Index pour recherche par slug
+  @@index([slug], name: "idx_slug_search")
 }
 
 model ProjectExternalLink {

@@ -67,7 +67,7 @@ export default function DashboardSidebar({
             {mockProjects.map((project) => (
               <Link
                 key={project.id}
-                href={`/projects/${project.slug}`}
+                href={`/${project.slug}`}
                 className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
               >
                 <Avatar className="h-6 w-6">

@@ -107,7 +107,7 @@ export function useUpdateProject() {
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
-        router.push(`/projects/${project.id}`);
+        router.push(project.slug ? `/${project.slug}` : `/projects/${project.id}`);
       },
     },
   });

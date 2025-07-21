@@ -7,6 +7,19 @@ const authRoutes = ["/auth/login", "/auth/register"];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Redirection des anciennes URLs vers les nouvelles
+  if (pathname.startsWith("/projects/") && !pathname.startsWith("/projects/create")) {
+    const projectId = pathname.split("/projects/")[1];
+    
+    // Si c'est un UUID (format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (uuidRegex.test(projectId)) {
+      // Pour l'instant, on redirige vers la page d'accueil
+      // Dans un cas réel, on devrait faire une requête API pour obtenir le slug
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+  
   // Check presence of SuperTokens session cookies
   const hasSessionCookies =
     request.cookies.has("sFrontToken") ||

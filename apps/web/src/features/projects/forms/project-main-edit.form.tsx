@@ -379,7 +379,7 @@ export default function ProjectMainEditForm({
           />
 
           <div className="mt-10 flex w-full justify-end gap-2">
-            <Link href={`/projects/${project.id}`}>
+                                <Link href={project.slug ? `/${project.slug}` : `/projects/${project.id}`}>
               <Button variant="outline" disabled={isUpdating}>
                 Annuler
               </Button>
