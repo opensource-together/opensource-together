@@ -178,9 +178,9 @@ export class ProfileController {
     return GetProjectsByUserIdResponseDto.toResponse(result.value);
   }
 
+  @PublicAccess()
   @Get(':id')
   @ApiOperation({ summary: 'Récupérer un profil par son ID' })
-  @ApiCookieAuth('sAccessToken')
   @ApiParam({
     name: 'id',
     description: "ID de l'utilisateur dont on veut récupérer le profil",
@@ -216,14 +216,6 @@ export class ProfileController {
       message: 'Profile not found',
       error: 'Not Found',
       statusCode: 404,
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Non authentifié',
-    example: {
-      message: 'unauthorised',
-      statusCode: 401,
     },
   })
   async getProfileById(@Param('id') id: string): Promise<ProfileResponseDto> {
