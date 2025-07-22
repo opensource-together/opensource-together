@@ -2,56 +2,19 @@
 
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 
-import useAuth from "@/features/auth/hooks/use-auth.hook";
-import { useProjects } from "@/features/projects/hooks/use-projects.hook";
-
-import DashboardSidebar from "../components/dashboard-sidebar.component";
 import ProjectApplicationsList from "../components/project-applications-list.component";
+import { useDashboardProject } from "../context/dashboard-project.context";
 
 export default function DashboardView() {
-  const { data: projects, isLoading: isProjectsLoading } = useProjects();
-  const { currentUser, isLoading: isUserLoading } = useAuth();
-  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const { userProjects, selectedProject } = useDashboardProject();
 
-  if (isProjectsLoading || isUserLoading) {
-    return <div>Chargement...</div>;
-  }
-
-  if (!projects || projects.length === 0) {
+  if (!userProjects || userProjects.length === 0) {
     return (
       <div className="flex h-[calc(100vh-65px)] overflow-hidden md:h-[calc(100vh-85px)]">
-        <DashboardSidebar projects={[]} />
-        <main className="flex flex-1 items-center justify-center overflow-y-auto px-14 pt-12">
-          <div className="flex flex-col items-center gap-4">
-            <div className="text-lg text-black">
-              Vous n'avez aucun projet dont vous êtes le créateur.
-            </div>
-            <Link href="/projects/create">
-              <Button>
-                Créer un projet <PlusIcon className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  // Filtrer les projets dont l'utilisateur courant est owner
-  const userProjects = projects.filter((project) => {
-    const ownerId = project.ownerId || project.author?.ownerId;
-    return currentUser && ownerId && currentUser.id === ownerId;
-  });
-
-  if (userProjects.length === 0) {
-    return (
-      <div className="flex h-[calc(100vh-65px)] overflow-hidden md:h-[calc(100vh-85px)]">
-        <DashboardSidebar projects={[]} />
-        <main className="flex flex-1 items-center justify-center overflow-y-auto px-14 pt-12">
+        <main className="flex flex-1 items-center justify-center overflow-y-auto">
           <div className="flex flex-col items-center gap-4">
             <div className="text-lg text-black">
               Vous n'avez aucun projet dont vous êtes le créateur.
@@ -72,11 +35,7 @@ export default function DashboardView() {
 
   return (
     <div className="flex h-[calc(100vh-65px)] overflow-hidden md:h-[calc(100vh-85px)]">
-      <DashboardSidebar
-        projects={userProjects}
-        onProjectSelect={setSelectedProject}
-      />
-      <main className="flex-1 overflow-y-auto px-14 pt-12">
+      <main className="flex-1 overflow-y-auto">
         <div className="mb-4 flex items-center gap-6">
           {projectToShow.image && (
             <img

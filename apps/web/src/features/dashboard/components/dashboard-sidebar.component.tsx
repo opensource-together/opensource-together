@@ -2,7 +2,6 @@
 
 import { FolderIcon, GitBranchIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 
 import {
   Avatar,
@@ -13,9 +12,10 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 
-import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 import { ProjectRoleApplicationType } from "@/features/projects/types/project-application.type";
 import { Project } from "@/features/projects/types/project.type";
+
+import { useDashboardProject } from "../context/dashboard-project.context";
 
 interface DashboardSidebarProps {
   projects?: Project[];
@@ -24,20 +24,14 @@ interface DashboardSidebarProps {
 }
 
 export default function DashboardSidebar({
-  projects = [],
   applications = [],
   contributions = [],
-  onProjectSelect,
-}: DashboardSidebarProps & { onProjectSelect?: (project: Project) => void }) {
-  // Utiliser les vrais projets de l'utilisateur
-  const { data: userProjects = [], isLoading } = useProjects();
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
-    null
-  );
+}: Omit<DashboardSidebarProps, "projects">) {
+  const { userProjects, selectedProject, setSelectedProject } =
+    useDashboardProject();
 
   const handleProjectClick = (project: Project) => {
-    setSelectedProjectId(project.id || null);
-    onProjectSelect?.(project);
+    setSelectedProject(project);
   };
 
   return (
@@ -50,16 +44,12 @@ export default function DashboardSidebar({
             Dashboard
           </h3>
           <div className="space-y-1">
-            {isLoading ? (
-              <div className="px-3 py-2 text-sm text-gray-500">
-                Chargement...
-              </div>
-            ) : projects.length > 0 ? (
-              projects.map((project) => (
+            {userProjects.length > 0 ? (
+              userProjects.map((project) => (
                 <button
                   key={project.id}
                   onClick={() => handleProjectClick(project)}
-                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50 ${selectedProjectId === project.id ? "bg-gray-100" : ""}`}
+                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50 ${selectedProject?.id === project.id ? "bg-gray-100" : ""}`}
                 >
                   <Avatar className="h-6 w-6">
                     <AvatarImage src={project.image} alt={project.title} />
