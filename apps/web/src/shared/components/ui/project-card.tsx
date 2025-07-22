@@ -284,16 +284,17 @@ ProjectCardRolesList.displayName = "ProjectCardRolesList";
 interface ProjectCardViewLinkProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Link>, "href"> {
   projectId: string;
+  projectSlug?: string;
   linkRef?: React.Ref<HTMLAnchorElement>;
 }
 
 const ProjectCardViewLink = React.forwardRef<
   HTMLAnchorElement,
   ProjectCardViewLinkProps
->(({ className, projectId, linkRef, ...props }, ref) => (
+>(({ className, projectId, projectSlug, linkRef, ...props }, ref) => (
   <Link
     ref={linkRef || ref}
-    href={`/projects/${projectId}`}
+    href={projectSlug ? `/${projectSlug}` : `/projects/${projectId}`}
     className={cn(
       "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 text-xs font-medium tracking-tighter text-black/30 transition-opacity hover:opacity-80",
       className

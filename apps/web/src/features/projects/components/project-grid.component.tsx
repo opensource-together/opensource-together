@@ -13,6 +13,7 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
         <ProjectCard
           key={project.id}
           projectId={project.id}
+          slug={project.slug}
           title={project.title}
           shortDescription={project.shortDescription}
           image={project.image}

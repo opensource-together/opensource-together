@@ -11,10 +11,12 @@ import { Description, ShortDescription, Title } from './vo';
 import { Category } from '@/contexts/category/domain/category.entity';
 import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
 import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
+import { generateSlug } from '@/libs/utils/slug.utils';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
   title?: string;
+  slug?: string;
   description?: string;
   shortDescription?: string;
   techStacks?: TechStackValidationErrors | string;
@@ -30,6 +32,7 @@ export type ProjectData = {
   id?: string;
   ownerId: string;
   title: string;
+  slug?: string;
   shortDescription: string;
   description: string;
   categories: { id: string; name: string }[];
@@ -60,6 +63,7 @@ export type ProjectProps = {
   id?: string;
   ownerId: string;
   title: Title;
+  slug: string;
   shortDescription: ShortDescription;
   description: Description;
   externalLinks?: { type: string; url: string }[];
@@ -77,6 +81,7 @@ export class Project {
   private readonly id?: string;
   private ownerId: string;
   private title: Title;
+  private slug: string;
   private shortDescription: ShortDescription;
   private description: Description;
   private externalLinks?: { type: string; url: string }[] | undefined;
@@ -93,6 +98,7 @@ export class Project {
     this.id = props.id;
     this.ownerId = props.ownerId;
     this.title = props.title;
+    this.slug = props.slug;
     this.shortDescription = props.shortDescription;
     this.description = props.description;
     this.externalLinks = props.externalLinks;
@@ -193,9 +199,13 @@ export class Project {
     if (Object.keys(validationErrors).length > 0)
       return Result.fail(validationErrors);
 
+    // Générer le slug si non fourni
+    const slug = props.slug || generateSlug(props.title);
+
     return Result.ok(
       new Project({
         ...props,
+        slug,
         title,
         shortDescription,
         description,
@@ -220,6 +230,7 @@ export class Project {
       id: this.id,
       ownerId: this.ownerId,
       title: this.title.getTitle(),
+      slug: this.slug,
       shortDescription: this.shortDescription.getShortDescription(),
       description: this.description.getDescription(),
       externalLinks: this.externalLinks,

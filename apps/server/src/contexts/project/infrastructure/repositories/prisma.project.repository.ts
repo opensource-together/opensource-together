@@ -409,6 +409,40 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
     }
   }
 
+  async findBySlug(slug: string): Promise<Result<Project, string>> {
+    try {
+      const projectPrisma = await this.prisma.project.findFirst({
+        where: { slug },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { techStacks: true },
+          },
+          projectMembers: true,
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
+          externalLinks: true,
+        },
+      });
+
+      if (!projectPrisma) return Result.fail('Project not found');
+
+      const domainProject = PrismaProjectMapper.toDomain(projectPrisma);
+      if (!domainProject.success) {
+        return Result.fail(
+          typeof domainProject.error === 'string'
+            ? domainProject.error
+            : JSON.stringify(domainProject.error),
+        );
+      }
+
+      return Result.ok(domainProject.value);
+    } catch {
+      return Result.fail(`Unknown error`);
+    }
+  }
+
   async delete(id: string): Promise<Result<boolean, string>> {
     try {
       await this.prisma.project.delete({

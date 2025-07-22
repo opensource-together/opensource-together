@@ -93,7 +93,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     },
     {
       label: project.title || "",
-      href: `/projects/${project.id}`,
+              href: project.slug ? `/${project.slug}` : `/projects/${project.id}`,
       isActive: false,
     },
     {

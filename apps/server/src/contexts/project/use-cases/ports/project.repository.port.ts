@@ -5,6 +5,7 @@ export const PROJECT_REPOSITORY_PORT = Symbol('PROJECT_REPOSITORY_PORT');
 export interface ProjectRepositoryPort {
   create(project: Project): Promise<Result<Project, string>>;
   findByTitle(title: string): Promise<Result<Project, string>>;
+  findBySlug(slug: string): Promise<Result<Project, string>>;
   delete(id: string): Promise<Result<boolean, string>>;
   update(id: string, project: Project): Promise<Result<Project, string>>;
   findById(id: string): Promise<Result<Project, string>>;

@@ -24,6 +24,7 @@ import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Octokit } from '@octokit/rest';
+import { generateUniqueSlug } from '@/libs/utils/slug.utils';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -119,11 +120,21 @@ export class CreateProjectCommandHandler
     }
     const allCategoriesValidated = categoriesValidation.value;
 
+    // Récupérer tous les projets pour vérifier l'unicité du slug
+    const allProjectsResult = await this.projectRepo.getAllProjects();
+    if (!allProjectsResult.success) {
+      return Result.fail('Failed to fetch existing projects');
+    }
+    
+    const existingSlugs = allProjectsResult.value.map(p => p.toPrimitive().slug).filter(Boolean) as string[];
+    const slug = generateUniqueSlug(title, existingSlugs);
+
     //ont créer un project pour valider des regles métier
     console.log('image create project commands', image);
     const projectResult = Project.create({
       ownerId,
       title,
+      slug,
       shortDescription,
       description,
       externalLinks,

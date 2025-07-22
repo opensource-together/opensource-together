@@ -82,6 +82,35 @@ export const getProjectDetails = async (
 };
 
 /**
+ * Fetches the details of a specific project by its slug.
+ *
+ * @param slug - The slug of the project to retrieve.
+ * @returns A promise that resolves to the project details.
+ */
+export const getProjectBySlug = async (
+  slug: string
+): Promise<Project> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/projects/slug/${slug}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error fetching project details");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching project by slug:", error);
+    throw error;
+  }
+};
+
+/**
  * Creates a new project with optional image upload.
  *
  * @param storeData - The data for the new project.

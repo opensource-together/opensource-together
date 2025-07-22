@@ -43,6 +43,7 @@ import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
 import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
+import { FindProjectBySlugQuery } from '@/contexts/project/use-cases/queries/find-by-slug/find-project-by-slug.handler';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -396,6 +397,44 @@ export class ProjectController {
       contributors: contributors,
       commits: commits,
     });
+  }
+
+  // Route publique pour récupérer un projet par son slug
+  @ApiOperation({ summary: 'Récupérer un projet par slug' })
+  @ApiParam({ name: 'slug', description: 'Slug du projet' })
+  @ApiResponse({
+    status: 200,
+    description: 'Détails du projet',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Projet non trouvé',
+    example: { message: 'Project not found', statusCode: 404 },
+  })
+  @PublicAccess()
+  @UseGuards(GithubAuthGuard)
+  @Get('slug/:slug')
+  async getProjectBySlug(
+    @Param('slug') slug: string,
+    @GitHubOctokit() octokit?: Octokit,
+  ) {
+    const projectRes: Result<
+      {
+        author: Author;
+        project: Project;
+        repositoryInfo: RepositoryInfo;
+        lastCommit: LastCommit;
+        contributors: Contributor[];
+        commits: number;
+      },
+      string
+    > = await this.queryBus.execute(
+      new FindProjectBySlugQuery({ slug: slug, octokit: octokit }),
+    );
+    if (!projectRes.success) {
+      throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
+    }
+    return GetProjectByIdResponseDto.toResponse(projectRes.value);
   }
 
   //   @Get('search')
