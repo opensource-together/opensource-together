@@ -130,6 +130,7 @@ model ProjectRole {
 model ProjectRoleApplication {
   id            String       @id @default(uuid())
   projectId     String
+  projectTitle  String
   projectRoleId String
   projectRoleTitle String
   status        String

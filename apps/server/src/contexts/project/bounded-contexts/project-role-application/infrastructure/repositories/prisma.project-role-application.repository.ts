@@ -365,4 +365,92 @@ export class PrismaProjectRoleApplicationRepository
       );
     }
   }
+  async findAllByUserId(userId: string): Promise<
+    Result<
+      {
+        appplicationId: string;
+        projectTitle: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        motivationLetter: string;
+      }[],
+      string
+    >
+  > {
+    try {
+      const applications = await this.prisma.projectRoleApplication.findMany({
+        where: { profileId: { equals: userId } },
+        include: {
+          projectRole: true,
+          project: true,
+          profile: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+      if (!applications) {
+        return Result.ok([]);
+      }
+
+      const projectRoleApplications: {
+        appplicationId: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        projectTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        motivationLetter: string;
+      }[] = [];
+
+      for (const application of applications) {
+        const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+          ...application,
+          profile: {
+            ...application.profile,
+            user: application.profile.user,
+          },
+        });
+        if (!domainApplication.success) {
+          return Result.fail(
+            'Une erreur est survenue lors de la récupération des candidatures',
+          );
+        }
+        projectRoleApplications.push({
+          appplicationId: domainApplication.value.id!,
+          projectRoleId: domainApplication.value.projectRoleId,
+          projectRoleTitle: domainApplication.value.projectRoleTitle,
+          projectTitle: domainApplication.value.projectTitle,
+          status: domainApplication.value.status,
+          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
+          selectedProjectGoals: domainApplication.value.selectedProjectGoals,
+          appliedAt: domainApplication.value.appliedAt,
+          decidedAt: domainApplication.value.decidedAt || new Date(),
+          decidedBy: domainApplication.value.decidedBy || '',
+          rejectionReason: domainApplication.value.rejectionReason || '',
+          motivationLetter: domainApplication.value.motivationLetter || '',
+        });
+      }
+
+      return Result.ok(projectRoleApplications);
+    } catch (error) {
+      console.error(error);
+      return Result.fail(
+        'Une erreur est survenue lors de la récupération des candidatures',
+      );
+    }
+  }
 }

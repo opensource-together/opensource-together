@@ -26,6 +26,7 @@ export class PrismaProjectRoleApplicationMapper {
           id: domainEntity.projectId,
         },
       },
+      projectTitle: domainEntity.projectTitle,
       projectRoleTitle: domainEntity.projectRoleTitle,
       status: domainEntity.status,
       motivationLetter: domainEntity.motivationLetter,
@@ -55,6 +56,7 @@ export class PrismaProjectRoleApplicationMapper {
     const domainEntity = ProjectRoleApplication.reconstitute({
       id: prismaEntity.id,
       projectId: prismaEntity.projectId,
+      projectTitle: prismaEntity.projectTitle,
       projectRoleId: prismaEntity.projectRole.id,
       projectRoleTitle: prismaEntity.projectRole.title,
       selectedKeyFeatures: prismaEntity.selectedKeyFeatures,
