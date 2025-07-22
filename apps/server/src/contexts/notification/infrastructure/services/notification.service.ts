@@ -54,12 +54,20 @@ export class NotificationService implements NotificationServicePort {
 
       // 3. Envoyer aux canaux appropriés
       const channels = notification.channels || ['realtime'];
+      let realtimeError: string | null = null;
 
       for (const channel of channels) {
         if (channel === 'realtime') {
-          this.realtimeAdapter.send(notificationData);
+          realtimeError = await this.realtimeAdapter.send(notificationData);
         }
         // TODO: Ajouter d'autres canaux (email, etc.)
+      }
+
+      // Si il y a une erreur lors de l'envoi en temps réel, la retourner
+      if (realtimeError) {
+        return Result.fail(
+          `Erreur lors de l'envoi en temps réel: ${realtimeError}`,
+        );
       }
 
       return Result.ok(undefined);
@@ -132,7 +140,15 @@ export class NotificationService implements NotificationServicePort {
       };
 
       // Notifier en temps réel
-      this.realtimeAdapter.sendNotificationUpdate(notificationData);
+      const updateError =
+        await this.realtimeAdapter.sendNotificationUpdate(notificationData);
+
+      // Si il y a une erreur lors de l'envoi en temps réel, la retourner
+      if (updateError) {
+        return Result.fail(
+          `Erreur lors de l'envoi de la mise à jour en temps réel: ${updateError}`,
+        );
+      }
 
       return Result.ok(undefined);
     } catch (error) {
@@ -184,7 +200,16 @@ export class NotificationService implements NotificationServicePort {
           readAt: readAt,
         };
 
-        this.realtimeAdapter.sendNotificationUpdate(notificationData);
+        const updateError =
+          await this.realtimeAdapter.sendNotificationUpdate(notificationData);
+
+        // Note: Pour markAllNotificationsAsRead, on ne fait pas échouer toute l'opération
+        // si une notification individuelle ne peut pas être envoyée en temps réel
+        if (updateError) {
+          console.warn(
+            `Avertissement lors de l'envoi de la mise à jour: ${updateError}`,
+          );
+        }
       }
 
       return Result.ok(undefined);

@@ -20,15 +20,19 @@ export class RealtimeNotifierAdapter {
 
   /**
    * Envoie une notification en temps réel à un utilisateur
+   * @returns null si succès, string avec message d'erreur sinon
    */
-  send(notification: NotificationData): void {
-    this.notificationsGateway.sendNotificationToUser(notification);
+  async send(notification: NotificationData): Promise<string | null> {
+    return await this.notificationsGateway.sendNotificationToUser(notification);
   }
 
   /**
    * Envoie une mise à jour de statut de notification
+   * @returns null si succès, string avec message d'erreur sinon
    */
-  sendNotificationUpdate(notification: NotificationData): void {
-    this.notificationsGateway.sendNotificationUpdate(notification);
+  async sendNotificationUpdate(
+    notification: NotificationData,
+  ): Promise<string | null> {
+    return await this.notificationsGateway.sendNotificationUpdate(notification);
   }
 }

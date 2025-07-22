@@ -14,14 +14,13 @@ import {
 } from '@nestjs/swagger';
 import { Result } from '@/libs/result';
 import { WsJwtService } from '@/auth/web-socket/jwt/ws-jwt.service';
-
-interface CreateNotificationDto {
-  receiverId: string;
-  senderId: string;
-  type: string;
-  payload: Record<string, unknown>;
-  // channels?: ('realtime' | 'email')[]  // optionnel
-}
+import { CreateNotificationRequestDto } from './dto/create-notification-request.dto';
+import { CreateNotificationResponseDto } from './dto/create-notification-response.dto';
+import { GetUnreadNotificationsResponseDto } from './dto/get-unread-notifications-response.dto';
+import { MarkNotificationReadResponseDto } from './dto/mark-notification-read-response.dto';
+import { MarkAllNotificationsReadResponseDto } from './dto/mark-all-notifications-read-response.dto';
+import { WsTokenResponseDto } from './dto/ws-token-response.dto';
+import { Notification } from '../../domain/notification.entity';
 
 @ApiTags('Notifications')
 @Controller('notifications')
@@ -48,6 +47,16 @@ export class NotificationsController {
     schema: {
       type: 'object',
       properties: {
+        receiverId: {
+          type: 'string',
+          description: "ID de l'utilisateur qui reçoit la notification",
+          example: 'user-123',
+        },
+        senderId: {
+          type: 'string',
+          description: "ID de l'utilisateur qui envoie la notification",
+          example: 'user-456',
+        },
         type: {
           type: 'string',
           description: 'Type de notification',
@@ -61,8 +70,17 @@ export class NotificationsController {
             message: 'Votre projet a été créé avec succès !',
           },
         },
+        channels: {
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: ['realtime', 'email'],
+          },
+          description: 'Canaux de diffusion (optionnel)',
+          example: ['realtime'],
+        },
       },
-      required: ['type', 'payload'],
+      required: ['receiverId', 'senderId', 'type', 'payload'],
     },
   })
   @ApiResponse({
@@ -72,6 +90,27 @@ export class NotificationsController {
       type: 'object',
       properties: {
         status: { type: 'string', example: 'sent' },
+        message: {
+          type: 'string',
+          example: 'Notification créée et envoyée avec succès',
+        },
+        success: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: "Erreur lors de l'envoi de la notification",
+    schema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', example: 'error' },
+        message: {
+          type: 'string',
+          example:
+            "Erreur lors de l'envoi en temps réel: L'utilisateur user-123 n'existe pas dans le système",
+        },
+        success: { type: 'boolean', example: false },
       },
     },
   })
@@ -79,17 +118,24 @@ export class NotificationsController {
     status: 401,
     description: 'Utilisateur non authentifié',
   })
-  async create(@Body() dto: CreateNotificationDto) {
-    await this.commandBus.execute(
+  async create(
+    @Body() dto: CreateNotificationRequestDto,
+  ): Promise<CreateNotificationResponseDto> {
+    const result = await this.commandBus.execute(
       new CreateNotificationCommand({
         receiverId: dto.receiverId,
         senderId: dto.senderId,
         type: dto.type,
         payload: dto.payload,
-        channels: ['realtime'],
+        channels: dto.channels || ['realtime'],
       }),
     );
-    return { status: 'sent' };
+
+    if (!result.success) {
+      return CreateNotificationResponseDto.error(result.error);
+    }
+
+    return CreateNotificationResponseDto.success();
   }
 
   /**
@@ -118,7 +164,7 @@ export class NotificationsController {
                 example: '550e8400-e29b-41d4-a716-446655440000',
               },
               receiverId: { type: 'string', example: 'user-123' },
-              senderId: { type: 'string', example: 'user-123' },
+              senderId: { type: 'string', example: 'user-456' },
               type: { type: 'string', example: 'project.created' },
               payload: {
                 type: 'object',
@@ -145,9 +191,13 @@ export class NotificationsController {
     status: 401,
     description: 'Utilisateur non authentifié',
   })
-  async getUnreadNotifications(@Session('userId') ownerId: string) {
+  async getUnreadNotifications(
+    @Session('userId') ownerId: string,
+  ): Promise<
+    GetUnreadNotificationsResponseDto | { success: false; error: string }
+  > {
     if (!ownerId) {
-      return { error: 'userId est requis' };
+      return { success: false, error: 'userId est requis' };
     }
 
     const result: Result<Notification[], string> = await this.queryBus.execute(
@@ -155,11 +205,7 @@ export class NotificationsController {
     );
 
     if (result.success) {
-      return {
-        success: true,
-        data: result.value,
-        count: result.value.length,
-      };
+      return GetUnreadNotificationsResponseDto.fromNotifications(result.value);
     } else {
       return {
         success: false,
@@ -211,15 +257,15 @@ export class NotificationsController {
   async markAsRead(
     @Session('userId') ownerId: string,
     @Param('id') notificationId: string,
-  ) {
+  ): Promise<MarkNotificationReadResponseDto> {
     const result: Result<void, string> = await this.commandBus.execute(
       new MarkNotificationReadCommand(notificationId, ownerId),
     );
 
     if (result.success) {
-      return { success: true, message: 'Notification marquée comme lue' };
+      return MarkNotificationReadResponseDto.success();
     } else {
-      return { success: false, error: result.error };
+      return MarkNotificationReadResponseDto.error(result.error);
     }
   }
 
@@ -261,9 +307,11 @@ export class NotificationsController {
     status: 401,
     description: 'Utilisateur non authentifié',
   })
-  async markAllAsRead(@Session('userId') ownerId: string) {
+  async markAllAsRead(
+    @Session('userId') ownerId: string,
+  ): Promise<MarkAllNotificationsReadResponseDto> {
     if (!ownerId) {
-      return { error: 'receiverId est requis' };
+      return MarkAllNotificationsReadResponseDto.error('receiverId est requis');
     }
 
     const result: Result<void, string> = await this.commandBus.execute(
@@ -271,12 +319,9 @@ export class NotificationsController {
     );
 
     if (result.success) {
-      return {
-        success: true,
-        message: 'Toutes les notifications marquées comme lues',
-      };
+      return MarkAllNotificationsReadResponseDto.success();
     } else {
-      return { success: false, error: result.error };
+      return MarkAllNotificationsReadResponseDto.error(result.error);
     }
   }
 
@@ -293,11 +338,15 @@ export class NotificationsController {
       type: 'object',
       properties: {
         wsToken: { type: 'string', description: 'Token JWT pour WebSocket' },
+        expiresIn: { type: 'number', example: 3600 },
+        tokenType: { type: 'string', example: 'Bearer' },
       },
     },
   })
-  async getWsToken(@Session('userId') userId: string) {
+  async getWsToken(
+    @Session('userId') userId: string,
+  ): Promise<WsTokenResponseDto> {
     const wsToken = await this.wsJwtService.generateToken(userId);
-    return { wsToken };
+    return WsTokenResponseDto.create(wsToken);
   }
 }

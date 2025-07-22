@@ -18,6 +18,8 @@ import {
   AuthenticatedSocket,
 } from '@/auth/web-socket/websocket-auth.service';
 import { WebSocketConnectionManager } from './websocket-connection.manager';
+import { QueryBus } from '@nestjs/cqrs';
+import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
 
 /**
  * Gateway WebSocket pour les notifications en temps réel.
@@ -47,6 +49,7 @@ export class NotificationsGateway
     private readonly notificationService: NotificationServicePort,
     private readonly webSocketAuthService: WebSocketAuthService,
     private readonly connectionManager: WebSocketConnectionManager,
+    private readonly queryBus: QueryBus,
   ) {
     console.log('NotificationsGateway constructor called'); // ← mets des logs ici
   }
@@ -114,8 +117,25 @@ export class NotificationsGateway
 
   /**
    * Envoie une notification à un utilisateur spécifique (appelé par RealtimeNotifierAdapter)
+   * @returns null si succès, string avec message d'erreur sinon
    */
-  sendNotificationToUser(notification: NotificationData): void {
+  async sendNotificationToUser(
+    notification: NotificationData,
+  ): Promise<string | null> {
+    // 1. Vérifier que l'utilisateur existe dans le système
+    const userExistsResult = await this.queryBus.execute(
+      new FindUserByIdQuery(notification.receiverId),
+    );
+
+    if (!userExistsResult.success) {
+      const errorMessage = `L'utilisateur ${notification.receiverId} n'existe pas dans le système`;
+      this.logger.error(
+        `❌ Impossible d'envoyer la notification: ${errorMessage}`,
+      );
+      return errorMessage;
+    }
+
+    // 2. Vérifier que l'utilisateur a une socket active
     const userSocket = this.connectionManager.getUserSocket(
       notification.receiverId,
     );
@@ -124,6 +144,7 @@ export class NotificationsGateway
       userSocket.emit('new-notification', {
         id: notification.id,
         receiverId: notification.receiverId,
+        senderId: notification.senderId,
         type: notification.type,
         payload: notification.payload,
         createdAt: notification.createdAt,
@@ -131,19 +152,39 @@ export class NotificationsGateway
       });
 
       this.logger.log(
-        `Notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
+        `✅ Notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
       );
+      return null; // Succès
     } else {
+      const warningMessage = `L'utilisateur ${notification.receiverId} existe mais n'est pas connecté via WebSocket`;
       this.logger.warn(
-        `Utilisateur ${notification.receiverId} non connecté, notification non envoyée en temps réel`,
+        `⚠️ ${warningMessage}. Notification non envoyée en temps réel.`,
       );
+      return warningMessage;
     }
   }
 
   /**
    * Envoie une mise à jour de statut de notification
+   * @returns null si succès, string avec message d'erreur sinon
    */
-  sendNotificationUpdate(notification: NotificationData): void {
+  async sendNotificationUpdate(
+    notification: NotificationData,
+  ): Promise<string | null> {
+    // 1. Vérifier que l'utilisateur existe dans le système
+    const userExistsResult = await this.queryBus.execute(
+      new FindUserByIdQuery(notification.receiverId),
+    );
+
+    if (!userExistsResult.success) {
+      const errorMessage = `L'utilisateur ${notification.receiverId} n'existe pas dans le système`;
+      this.logger.error(
+        `❌ Impossible d'envoyer la mise à jour: ${errorMessage}`,
+      );
+      return errorMessage;
+    }
+
+    // 2. Vérifier que l'utilisateur a une socket active
     const userSocket = this.connectionManager.getUserSocket(
       notification.receiverId,
     );
@@ -152,6 +193,7 @@ export class NotificationsGateway
       userSocket.emit('notification-update', {
         id: notification.id,
         receiverId: notification.receiverId,
+        senderId: notification.senderId,
         type: notification.type,
         payload: notification.payload,
         createdAt: notification.createdAt,
@@ -159,8 +201,15 @@ export class NotificationsGateway
       });
 
       this.logger.log(
-        `Mise à jour de notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
+        `✅ Mise à jour de notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
       );
+      return null; // Succès
+    } else {
+      const warningMessage = `L'utilisateur ${notification.receiverId} existe mais n'est pas connecté via WebSocket`;
+      this.logger.warn(
+        `⚠️ ${warningMessage}. Mise à jour non envoyée en temps réel.`,
+      );
+      return warningMessage;
     }
   }
 
