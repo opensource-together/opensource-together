@@ -38,7 +38,7 @@ export async function getProjectApplications(
 ): Promise<ProjectRoleApplicationType[]> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/projects/${projectId}/applications`,
+      `${API_BASE_URL}/projects/${projectId}/roles/applications`,
       {
         method: "GET",
         headers: {
