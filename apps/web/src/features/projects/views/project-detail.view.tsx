@@ -26,7 +26,7 @@ export default function ProjectDetailView({
     useGetProjectRoles(projectId);
 
   // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = false; // Variable temporaire pour le développement
+  const isMaintainer = true; // Variable temporaire pour le développement
 
   if (isLoading || isProjectRolesLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;

@@ -7,41 +7,10 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
-import {
-  useAcceptProjectRoleApplication,
-  useProjectApplications,
-  useRejectProjectRoleApplication,
-} from "@/features/projects/hooks/use-project-applications.hook";
 import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 
-import ApplicationCard from "../components/application-card.component";
 import DashboardSidebar from "../components/dashboard-sidebar.component";
-
-function ProjectApplicationsList({ project }: { project: any }) {
-  const { data: applications, isLoading } = useProjectApplications(project.id);
-  const acceptMutation = useAcceptProjectRoleApplication(project.id);
-  const rejectMutation = useRejectProjectRoleApplication(project.id);
-
-  if (isLoading) return <div>Chargement des candidatures...</div>;
-  if (!applications || applications.length === 0)
-    return <div>Aucune candidature reçue.</div>;
-
-  return (
-    <div className="space-y-4">
-      {applications.map((application: any) => (
-        <ApplicationCard
-          key={application.id}
-          application={application}
-          keyFeatures={project.keyFeatures}
-          projectGoals={project.projectGoals}
-          onAccept={() => acceptMutation.mutate(application.id)}
-          onReject={() => rejectMutation.mutate(application.id)}
-          isProcessing={acceptMutation.isPending || rejectMutation.isPending}
-        />
-      ))}
-    </div>
-  );
-}
+import ProjectApplicationsList from "../components/project-applications-list.component";
 
 export default function DashboardView() {
   const { data: projects, isLoading: isProjectsLoading } = useProjects();
@@ -109,7 +78,34 @@ export default function DashboardView() {
       />
       <main className="flex-1 overflow-y-auto px-14 pt-12">
         <h2 className="mb-6 text-2xl font-bold">Candidatures reçues</h2>
-        <h3 className="mb-4 text-xl font-semibold">{projectToShow.title}</h3>
+        <div className="mb-4 flex items-center gap-6">
+          {projectToShow.image && (
+            <img
+              src={projectToShow.image}
+              alt={projectToShow.title}
+              className="h-14 w-14 rounded-lg border border-black/10 object-cover"
+            />
+          )}
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-3">
+              <h3 className="text-xl font-medium">{projectToShow.title}</h3>
+            </div>
+            <div className="text-sm text-gray-600">
+              {projectToShow.shortDescription}
+            </div>
+            <Link href={`/projects/${projectToShow.id}`}>
+              <Button variant="default">
+                Voir le projet
+                <img
+                  src="/icons/chevron-right-white.svg"
+                  alt="chevron right"
+                  className="mt-[1px] h-2.5 w-2.5"
+                />
+              </Button>
+            </Link>
+          </div>
+        </div>
+        <div className="my-10 rounded-full border-t-2 border-black/5" />
         <ProjectApplicationsList project={projectToShow} />
       </main>
     </div>
