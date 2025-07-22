@@ -229,7 +229,7 @@ export default function ApplicationCard({
       >
         <div className="mt-4">
           {motivationLetter ? (
-            <p className="text-sm leading-relaxed text-black/80">
+            <p className="rounded-xl border border-black/5 bg-black/5 p-4 text-sm leading-relaxed text-black">
               {motivationLetter}
             </p>
           ) : (
