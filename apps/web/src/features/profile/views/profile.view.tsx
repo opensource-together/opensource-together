@@ -6,7 +6,6 @@ import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 import ProfileError from "../components/error-ui/profile-error.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero from "../components/profile-hero.component";
-import ProjectApplications from "../components/project-applications.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
 export default function ProfileView() {
@@ -28,9 +27,6 @@ export default function ProfileView() {
       </div>
 
       {/* Section des candidatures reçues */}
-      <div className="mb-30 flex w-full">
-        <ProjectApplications projects={projects} userId={currentUser.id} />
-      </div>
     </div>
   );
 }
