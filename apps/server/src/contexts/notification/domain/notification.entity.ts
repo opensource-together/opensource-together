@@ -2,7 +2,8 @@ import { Result } from '@/libs/result';
 
 export type NotificationData = {
   id?: string;
-  userId: string;
+  receiverId: string;
+  senderId: string;
   type: string;
   payload: Record<string, unknown>;
   createdAt?: Date;
@@ -13,7 +14,8 @@ export type NotificationPrimitive = NotificationData;
 
 export class Notification {
   private readonly id?: string;
-  private readonly userId: string;
+  private readonly receiverId: string;
+  private readonly senderId: string;
   private readonly type: string;
   private readonly payload: Record<string, unknown>;
   private readonly createdAt: Date;
@@ -21,14 +23,16 @@ export class Notification {
 
   private constructor(props: {
     id?: string;
-    userId: string;
+    receiverId: string;
+    senderId: string;
     type: string;
     payload: Record<string, unknown>;
     createdAt?: Date;
     readAt?: Date | null;
   }) {
     this.id = props.id;
-    this.userId = props.userId;
+    this.receiverId = props.receiverId;
+    this.senderId = props.senderId;
     this.type = props.type;
     this.payload = props.payload;
     this.createdAt = props.createdAt || new Date();
@@ -36,7 +40,8 @@ export class Notification {
   }
 
   public static create(props: {
-    userId: string;
+    receiverId: string;
+    senderId: string;
     type: string;
     payload: Record<string, unknown>;
   }): Result<Notification, string> {
@@ -56,7 +61,8 @@ export class Notification {
 
   public static reconstitute(props: {
     id: string;
-    userId: string;
+    receiverId: string;
+    senderId: string;
     type: string;
     payload: Record<string, unknown>;
     createdAt: Date;
@@ -71,12 +77,16 @@ export class Notification {
   }
 
   private static validate(props: {
-    userId: string;
+    receiverId: string;
+    senderId: string;
     type: string;
     payload: Record<string, unknown>;
   }): Result<void, string> {
-    if (!props.userId || props.userId.trim() === '') {
-      return Result.fail('userId is required');
+    if (!props.receiverId || props.receiverId.trim() === '') {
+      return Result.fail('receiverId is required');
+    }
+    if (!props.senderId || props.senderId.trim() === '') {
+      return Result.fail('senderId is required');
     }
     if (!props.type || props.type.trim() === '') {
       return Result.fail('type is required');
@@ -102,7 +112,8 @@ export class Notification {
   public toPrimitive(): NotificationPrimitive {
     return {
       id: this.id,
-      userId: this.userId,
+      receiverId: this.receiverId,
+      senderId: this.senderId,
       type: this.type,
       payload: this.payload,
       createdAt: this.createdAt,

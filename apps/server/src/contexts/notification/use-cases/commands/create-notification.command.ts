@@ -35,7 +35,8 @@ export class CreateNotificationCommandHandler
     console.log('command', command);
     // 1. Valider les données avec l'entité du domaine
     const notificationEntity = Notification.create({
-      userId: command.payload.userId,
+      receiverId: command.payload.receiverId,
+      senderId: command.payload.senderId,
       type: command.payload.type,
       payload: command.payload.payload,
     });

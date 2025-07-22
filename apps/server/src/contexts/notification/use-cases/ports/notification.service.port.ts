@@ -5,7 +5,8 @@ export const NOTIFICATION_SERVICE_PORT = Symbol('NOTIFICATION_SERVICE_PORT');
 export type NotificationChannel = 'realtime' | 'email';
 
 export interface SendNotificationPayload {
-  userId: string;
+  receiverId: string;
+  senderId: string;
   type: string;
   payload: Record<string, unknown>;
   channels?: NotificationChannel[];
@@ -13,7 +14,8 @@ export interface SendNotificationPayload {
 
 export interface NotificationData {
   id: string;
-  userId: string;
+  receiverId: string;
+  senderId: string;
   type: string;
   payload: Record<string, unknown>;
   createdAt: Date;

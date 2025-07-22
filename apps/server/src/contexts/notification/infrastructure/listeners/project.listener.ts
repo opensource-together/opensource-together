@@ -20,7 +20,7 @@ export class ProjectListener {
    */
   @OnEvent('project.role.assigned')
   async handleProjectRoleAssigned(event: {
-    userId: string;
+    receiverId: string;
     projectId: string;
     projectTitle: string;
     roleName: string;
@@ -28,7 +28,8 @@ export class ProjectListener {
   }) {
     // Créer une notification pour l'utilisateur qui a reçu le rôle
     const command = new CreateNotificationCommand({
-      userId: event.userId,
+      receiverId: event.receiverId,
+      senderId: event.assignedBy,
       type: 'project.role.assigned',
       payload: {
         projectId: event.projectId,
@@ -58,7 +59,8 @@ export class ProjectListener {
   }) {
     // Notifier le propriétaire du projet
     const command = new CreateNotificationCommand({
-      userId: event.projectOwnerId,
+      receiverId: event.projectOwnerId,
+      senderId: event.applicantId,
       type: 'project.role.application.created',
       payload: {
         applicantId: event.applicantId,
@@ -88,7 +90,8 @@ export class ProjectListener {
     // Notification de confirmation pour le créateur
     console.log('Notification de confirmation pour le créateur');
     const command = new CreateNotificationCommand({
-      userId: event.ownerId,
+      receiverId: event.ownerId,
+      senderId: event.ownerId,
       type: 'project.created',
       payload: {
         projectId: event.projectId,

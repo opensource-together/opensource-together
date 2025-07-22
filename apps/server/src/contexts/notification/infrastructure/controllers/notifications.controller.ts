@@ -16,6 +16,8 @@ import { Result } from '@/libs/result';
 import { WsJwtService } from '@/auth/web-socket/jwt/ws-jwt.service';
 
 interface CreateNotificationDto {
+  receiverId: string;
+  senderId: string;
   type: string;
   payload: Record<string, unknown>;
   // channels?: ('realtime' | 'email')[]  // optionnel
@@ -77,13 +79,11 @@ export class NotificationsController {
     status: 401,
     description: 'Utilisateur non authentifié',
   })
-  async create(
-    @Session('userId') ownerId: string,
-    @Body() dto: CreateNotificationDto,
-  ) {
+  async create(@Body() dto: CreateNotificationDto) {
     await this.commandBus.execute(
       new CreateNotificationCommand({
-        userId: ownerId,
+        receiverId: dto.receiverId,
+        senderId: dto.senderId,
         type: dto.type,
         payload: dto.payload,
         channels: ['realtime'],
@@ -117,7 +117,8 @@ export class NotificationsController {
                 type: 'string',
                 example: '550e8400-e29b-41d4-a716-446655440000',
               },
-              userId: { type: 'string', example: 'user-123' },
+              receiverId: { type: 'string', example: 'user-123' },
+              senderId: { type: 'string', example: 'user-123' },
               type: { type: 'string', example: 'project.created' },
               payload: {
                 type: 'object',
@@ -252,7 +253,7 @@ export class NotificationsController {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: false },
-        error: { type: 'string', example: 'userId est requis' },
+        error: { type: 'string', example: 'receiverId est requis' },
       },
     },
   })
@@ -262,7 +263,7 @@ export class NotificationsController {
   })
   async markAllAsRead(@Session('userId') ownerId: string) {
     if (!ownerId) {
-      return { error: 'userId est requis' };
+      return { error: 'receiverId est requis' };
     }
 
     const result: Result<void, string> = await this.commandBus.execute(

@@ -36,7 +36,8 @@ export class GetUnreadNotificationsQueryHandler
     const notificationEntities = result.value.map((data) =>
       Notification.reconstitute({
         id: data.id,
-        userId: data.userId,
+        receiverId: data.receiverId,
+        senderId: data.senderId,
         type: data.type,
         payload: data.payload,
         createdAt: data.createdAt,

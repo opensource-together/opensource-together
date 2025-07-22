@@ -41,14 +41,15 @@ export class MarkNotificationReadCommandHandler
       return Result.fail(result.error);
     }
 
-    if (command.ownerId !== result.value.userId) {
+    if (command.ownerId !== result.value.receiverId) {
       return Result.fail('You are not the owner of this notification');
     }
 
     // 2. Reconstituer l'entité
     const notificationEntity = Notification.reconstitute({
       id: result.value.id,
-      userId: result.value.userId,
+      receiverId: result.value.receiverId,
+      senderId: result.value.senderId,
       type: result.value.type,
       payload: result.value.payload,
       createdAt: result.value.createdAt,

@@ -23,7 +23,8 @@ export class ProjectRoleNotificationsListener {
     assignedBy: string;
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.userId,
+      receiverId: event.userId,
+      senderId: event.assignedBy,
       type: 'project.role.assigned',
       payload: {
         projectId: event.projectId,
@@ -51,7 +52,8 @@ export class ProjectRoleNotificationsListener {
     roleName: string;
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.projectOwnerId,
+      receiverId: event.projectOwnerId,
+      senderId: event.applicantId,
       type: 'project.role.application.created',
       payload: {
         applicantId: event.applicantId,
@@ -78,7 +80,8 @@ export class ProjectRoleNotificationsListener {
     roleName: string;
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.applicantId,
+      receiverId: event.applicantId,
+      senderId: event.applicantId,
       type: 'project.role.application.accepted',
       payload: {
         projectId: event.projectId,
@@ -103,7 +106,8 @@ export class ProjectRoleNotificationsListener {
     roleName: string;
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.applicantId,
+      receiverId: event.applicantId,
+      senderId: event.applicantId,
       type: 'project.role.application.rejected',
       payload: {
         projectId: event.projectId,

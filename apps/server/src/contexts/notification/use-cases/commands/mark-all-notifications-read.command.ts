@@ -40,7 +40,7 @@ export class MarkAllNotificationsReadCommandHandler
 
     if (
       result.value.some(
-        (notification) => notification.userId !== command.ownerId,
+        (notification) => notification.receiverId !== command.ownerId,
       )
     ) {
       return Result.fail('You are not the owner of this notification');
@@ -50,7 +50,8 @@ export class MarkAllNotificationsReadCommandHandler
     const notificationEntities = result.value.map((data) =>
       Notification.reconstitute({
         id: data.id,
-        userId: data.userId,
+        receiverId: data.receiverId,
+        senderId: data.senderId,
         type: data.type,
         payload: data.payload,
         createdAt: data.createdAt,

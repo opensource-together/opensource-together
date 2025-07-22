@@ -175,11 +175,12 @@ model ProjectGoal {
 }
 
 model Notification {
-	id				String	@id @default(uuid())
-	userId		String
-	type			String
-	payload		Json
-	createdAt	DateTime		@default(now())
-	readAt		DateTime?
-	@@index([userId, createdAt])
+	id						String	@id @default(uuid())
+	senderId			String
+	receiverId		String
+	type					String
+	payload				Json
+	createdAt			DateTime		@default(now())
+	readAt				DateTime?
+	@@index([senderId, createdAt])
 }

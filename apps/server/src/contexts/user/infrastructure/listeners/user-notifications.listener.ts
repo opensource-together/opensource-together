@@ -21,7 +21,8 @@ export class UserNotificationsListener {
     username: string;
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.userId,
+      receiverId: event.userId,
+      senderId: event.userId,
       type: 'user.registered',
       payload: {
         email: event.email,
@@ -43,7 +44,8 @@ export class UserNotificationsListener {
     updatedFields: string[];
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.userId,
+      receiverId: event.userId,
+      senderId: event.userId,
       type: 'user.profile.updated',
       payload: {
         updatedFields: event.updatedFields,
@@ -61,7 +63,8 @@ export class UserNotificationsListener {
   @OnEvent('user.password.changed')
   async handlePasswordChanged(event: { userId: string; email: string }) {
     const command = new CreateNotificationCommand({
-      userId: event.userId,
+      receiverId: event.userId,
+      senderId: event.userId,
       type: 'user.password.changed',
       payload: {
         email: event.email,
@@ -83,7 +86,8 @@ export class UserNotificationsListener {
     location: string;
   }) {
     const command = new CreateNotificationCommand({
-      userId: event.userId,
+      receiverId: event.userId,
+      senderId: event.userId,
       type: 'user.login.new-device',
       payload: {
         deviceInfo: event.deviceInfo,

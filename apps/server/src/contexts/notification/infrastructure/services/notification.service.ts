@@ -8,7 +8,6 @@ import {
 import { Result } from '@/libs/result';
 import { RealtimeNotifierAdapter } from './realtime-notifier.adapter';
 import { Prisma } from '@prisma/client';
-import { NOTIFICATION_GATEWAY_PORT } from '../../use-cases/ports/notification.gateway.port';
 /**
  * Service d'implémentation du port NotificationServicePort.
  * Responsable de la persistance et de la livraison technique.
@@ -18,7 +17,6 @@ import { NOTIFICATION_GATEWAY_PORT } from '../../use-cases/ports/notification.ga
 export class NotificationService implements NotificationServicePort {
   constructor(
     private readonly prisma: PrismaService,
-    @Inject(forwardRef(() => NOTIFICATION_GATEWAY_PORT))
     private readonly realtimeAdapter: RealtimeNotifierAdapter,
   ) {
     console.log('NotificationService constructor called'); // ← mets des logs ici
@@ -36,7 +34,8 @@ export class NotificationService implements NotificationServicePort {
       // 1. Persister en base de données
       const createdNotification = await this.prisma.notification.create({
         data: {
-          userId: notification.userId,
+          receiverId: notification.receiverId,
+          senderId: notification.senderId,
           type: notification.type,
           payload: notification.payload as Prisma.InputJsonValue,
         },
@@ -45,7 +44,8 @@ export class NotificationService implements NotificationServicePort {
       // 2. Construire les données brutes pour l'adapter
       const notificationData: NotificationData = {
         id: createdNotification.id,
-        userId: createdNotification.userId,
+        receiverId: createdNotification.receiverId,
+        senderId: createdNotification.senderId,
         type: createdNotification.type,
         payload: createdNotification.payload as Record<string, unknown>,
         createdAt: createdNotification.createdAt,
@@ -80,7 +80,7 @@ export class NotificationService implements NotificationServicePort {
     try {
       const notifications = await this.prisma.notification.findMany({
         where: {
-          userId: userId,
+          receiverId: userId,
           readAt: null,
         },
         orderBy: {
@@ -90,7 +90,8 @@ export class NotificationService implements NotificationServicePort {
 
       const notificationData: NotificationData[] = notifications.map((n) => ({
         id: n.id,
-        userId: n.userId,
+        receiverId: n.receiverId,
+        senderId: n.senderId,
         type: n.type,
         payload: n.payload as Record<string, unknown>,
         createdAt: n.createdAt,
@@ -122,7 +123,8 @@ export class NotificationService implements NotificationServicePort {
       // Construire les données pour l'adapter
       const notificationData: NotificationData = {
         id: updatedNotification.id,
-        userId: updatedNotification.userId,
+        receiverId: updatedNotification.receiverId,
+        senderId: updatedNotification.senderId,
         type: updatedNotification.type,
         payload: updatedNotification.payload as Record<string, unknown>,
         createdAt: updatedNotification.createdAt,
@@ -151,7 +153,7 @@ export class NotificationService implements NotificationServicePort {
       // Récupérer les notifications non lues pour les notifier individuellement
       const unreadNotifications = await this.prisma.notification.findMany({
         where: {
-          userId: userId,
+          receiverId: userId,
           readAt: null,
         },
       });
@@ -164,7 +166,7 @@ export class NotificationService implements NotificationServicePort {
       const readAt = new Date();
       await this.prisma.notification.updateMany({
         where: {
-          userId: userId,
+          receiverId: userId,
           readAt: null,
         },
         data: { readAt },
@@ -174,7 +176,8 @@ export class NotificationService implements NotificationServicePort {
       for (const notification of unreadNotifications) {
         const notificationData: NotificationData = {
           id: notification.id,
-          userId: notification.userId,
+          receiverId: notification.receiverId,
+          senderId: notification.senderId,
           type: notification.type,
           payload: notification.payload as Record<string, unknown>,
           createdAt: notification.createdAt,
@@ -205,7 +208,8 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok({
         id: notification.id,
-        userId: notification.userId,
+        receiverId: notification.receiverId,
+        senderId: notification.senderId,
         type: notification.type,
         payload: notification.payload as Record<string, unknown>,
         createdAt: notification.createdAt,
