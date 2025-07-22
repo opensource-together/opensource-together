@@ -40,6 +40,7 @@ export class NotificationsGateway
   server: Server;
 
   private readonly logger = new Logger(NotificationsGateway.name);
+  private readonly connectingClients = new Set<string>(); // Pour éviter les connexions multiples
 
   constructor(
     @Inject(NOTIFICATION_SERVICE_PORT)
@@ -54,27 +55,43 @@ export class NotificationsGateway
    * Gère la connexion d'un client WebSocket
    */
   async handleConnection(client: AuthenticatedSocket): Promise<void> {
+    // Éviter les appels multiples pour le même client
+    if (this.connectingClients.has(client.id)) {
+      console.log(
+        `🔄 handleConnection déjà en cours pour ${client.id} - IGNORÉ`,
+      );
+      return;
+    }
+
+    this.connectingClients.add(client.id);
+    console.log(`🆕 handleConnection START pour ${client.id}`);
+
     try {
       const userId = await this.webSocketAuthService.authenticateSocket(client);
 
-      console.log('userId', userId);
       if (!userId) {
-        this.logger.warn('Client non authentifié, déconnexion...');
-        console.log('Client non authentifié, déconnexion...');
+        console.log(`❌ Authentification échouée pour ${client.id}`);
         client.disconnect();
         return;
       }
+
+      console.log(
+        `✅ Authentification réussie: ${client.id} → userId: ${userId}`,
+      );
 
       // Enregistrer la connexion
       this.connectionManager.registerConnection(userId, client);
 
       // Envoyer les notifications non lues
       await this.sendUnreadNotifications(userId, client);
-      console.log('Client authentifié, connexion établie');
+
+      console.log(`🎉 handleConnection TERMINÉ pour ${client.id}`);
     } catch (error) {
-      console.log('Erreur lors de la connexion:', error);
-      this.logger.error('Erreur lors de la connexion:', error);
+      console.log(`💥 Erreur handleConnection ${client.id}:`, error.message);
       client.disconnect();
+    } finally {
+      // Nettoyer le Set après traitement
+      this.connectingClients.delete(client.id);
     }
   }
 
@@ -82,9 +99,15 @@ export class NotificationsGateway
    * Gère la déconnexion d'un client WebSocket
    */
   handleDisconnect(client: AuthenticatedSocket): void {
+    console.log(`🚪 handleDisconnect pour ${client.id}`);
+
+    // Nettoyer le Set des connexions en cours (au cas où)
+    this.connectingClients.delete(client.id);
+
     const userId = this.connectionManager.findUserIdBySocketId(client.id);
     if (userId) {
       this.connectionManager.unregisterConnection(userId);
+      console.log(`👋 Utilisateur ${userId} déconnecté`);
     }
   }
 
@@ -178,22 +201,18 @@ export class NotificationsGateway
       const result =
         await this.notificationService.getUnreadNotifications(userId);
 
-      console.log('result', result);
       if (result.success) {
         client.emit('unread-notifications', result.value);
-        this.logger.log(
-          `${result.value.length} notification(s) non lue(s) envoyée(s) à l'utilisateur ${userId}`,
+        console.log(
+          `📬 ${result.value.length} notification(s) non lue(s) envoyées à ${userId}`,
         );
       } else {
-        this.logger.error(
-          `Erreur lors de la récupération des notifications pour l'utilisateur ${userId}: ${result.error}`,
+        console.log(
+          `❌ Erreur récupération notifications pour ${userId}: ${result.error}`,
         );
       }
     } catch (error) {
-      this.logger.error(
-        "Erreur lors de l'envoi des notifications non lues:",
-        error,
-      );
+      console.log(`💥 Erreur envoi notifications non lues:`, error.message);
     }
   }
 }

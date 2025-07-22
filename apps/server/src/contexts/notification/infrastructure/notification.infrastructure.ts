@@ -48,21 +48,15 @@ import { NOTIFICATION_GATEWAY_PORT } from '../use-cases/ports/notification.gatew
       provide: NOTIFICATION_SERVICE_PORT,
       useClass: NotificationService,
     },
-    NotificationsGateway,
-    RealtimeNotifierAdapter,
-    WebSocketConnectionManager,
-    NotificationsGateway,
-    {
-      provide: NOTIFICATION_SERVICE_PORT,
-      useClass: NotificationService,
-    },
     {
       provide: NOTIFICATION_GATEWAY_PORT,
       useClass: NotificationsGateway,
     },
 
+    // WebSocket services (sans le gateway qui est déjà déclaré ci-dessus)
     WebSocketConnectionManager,
     RealtimeNotifierAdapter,
+
     // Listeners EventEmitter2
     ProjectListener,
 
@@ -72,7 +66,7 @@ import { NOTIFICATION_GATEWAY_PORT } from '../use-cases/ports/notification.gatew
   controllers: [NotificationsController],
   exports: [
     NOTIFICATION_SERVICE_PORT,
-    NotificationsGateway,
+    NOTIFICATION_GATEWAY_PORT,
     RealtimeNotifierAdapter,
   ],
 })

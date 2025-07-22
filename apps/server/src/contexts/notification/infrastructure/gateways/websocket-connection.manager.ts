@@ -20,7 +20,7 @@ export class WebSocketConnectionManager {
     // }
 
     this.userSockets.set(userId, socket);
-    this.logger.log(`Utilisateur ${userId} connecté (Socket: ${socket.id})`);
+    // this.logger.log(`Utilisateur ${userId} connecté (Socket: ${socket.id})`);
   }
 
   /**
@@ -28,7 +28,7 @@ export class WebSocketConnectionManager {
    */
   unregisterConnection(userId: string): void {
     if (this.userSockets.delete(userId)) {
-      this.logger.log(`Utilisateur ${userId} déconnecté`);
+      // this.logger.log(`Utilisateur ${userId} déconnecté`);
     }
   }
 

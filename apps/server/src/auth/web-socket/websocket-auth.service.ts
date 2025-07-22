@@ -17,23 +17,45 @@ export class WebSocketAuthService {
    */
   async authenticateSocket(client: Socket): Promise<string | null> {
     try {
+      // Vérifier si le socket est déjà authentifié
+      const existingUserId = (client as AuthenticatedSocket).userId;
+      if (existingUserId) {
+        console.log(
+          `🔄 Socket ${client.id} déjà authentifié (userId: ${existingUserId})`,
+        );
+        return existingUserId;
+      }
+
       const token = this.extractTokenFromHandshake(client);
+
       if (!token) {
-        this.logger.warn('Token manquant lors de la connexion WebSocket');
+        console.log(`❌ Token manquant pour socket ${client.id}`);
         return null;
       }
 
       const userId = await this.wsJwtService.verifyToken(token);
+      console.log(`🔐 Socket ${client.id} authentifié → userId: ${userId}`);
+
       (client as AuthenticatedSocket).userId = userId;
       return userId;
     } catch (error) {
-      this.logger.error("Erreur d'authentification WebSocket:", error);
+      console.log(`💥 Erreur auth socket ${client.id}:`, error.message);
       return null;
     }
   }
 
   private extractTokenFromHandshake(client: Socket): string | undefined {
-    // Query parameter x-ws-token
+    // 1. D'abord chercher dans les query parameters (priorité)
+    const queryToken = client.handshake?.query?.['x-ws-token'];
+    if (queryToken) {
+      // Gérer le cas où le query param est un array (comportement Socket.IO)
+      const token = Array.isArray(queryToken) ? queryToken[0] : queryToken;
+      if (typeof token === 'string' && token.trim() !== '') {
+        return token;
+      }
+    }
+
+    // 2. Ensuite dans les headers (fallback)
     if (
       client.handshake?.headers?.['x-ws-token'] &&
       typeof client.handshake.headers['x-ws-token'] === 'string'
@@ -41,13 +63,15 @@ export class WebSocketAuthService {
       return client.handshake.headers['x-ws-token'];
     }
 
-    // Authorization header
+    // 3. Authorization header (Bearer token)
     if (
       client.handshake?.headers?.authorization &&
       typeof client.handshake.headers.authorization === 'string'
     ) {
       const [type, token] = client.handshake.headers.authorization.split(' ');
-      return type === 'Bearer' ? token : undefined;
+      if (type === 'Bearer') {
+        return token;
+      }
     }
 
     return undefined;
