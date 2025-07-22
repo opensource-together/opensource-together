@@ -84,4 +84,91 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
       return Result.fail('Erreur technique lors de la recherche du profil.');
     }
   }
+
+  async update(
+    userId: string,
+    profile: {
+      userId: string;
+      name: string;
+      login: string;
+      avatarUrl: string;
+      bio: string;
+      location: string;
+      company: string;
+      socialLinks: SocialLink[];
+      experiences: ProfileExperience[];
+    },
+  ): Promise<Result<Profile, string>> {
+    const { profileData, socialLinksData } =
+      PrismaProfileMapper.toRepo(profile);
+
+    try {
+      const updatedRawProfile = await this.prisma.$transaction(async (tx) => {
+        // Mettre à jour le profil
+        await tx.profile.update({
+          where: { userId },
+          data: {
+            name: profileData.name,
+            avatarUrl: profileData.avatarUrl,
+            bio: profileData.bio,
+            location: profileData.location,
+            company: profileData.company,
+            updatedAt: new Date(),
+          },
+        });
+
+        // Mettre à jour les liens sociaux
+        await tx.userSocialLink.deleteMany({
+          where: { userId },
+        });
+
+        if (socialLinksData.length > 0) {
+          await tx.userSocialLink.createMany({
+            data: socialLinksData.map((link) => ({
+              ...link,
+              userId,
+            })),
+          });
+        }
+
+        return tx.profile.findUnique({
+          where: { userId },
+          include: { socialLinks: true },
+        });
+      });
+
+      if (!updatedRawProfile) {
+        return Result.fail(
+          "Erreur technique : Le profil n'a pas pu être retrouvé après sa mise à jour.",
+        );
+      }
+
+      const domainProfile = PrismaProfileMapper.toDomain(updatedRawProfile);
+      return Result.ok(domainProfile);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Erreur technique lors de la mise à jour du profil.');
+    }
+  }
+
+  async delete(userId: string): Promise<Result<boolean, string>> {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        // Supprimer les liens sociaux associés
+        await tx.userSocialLink.deleteMany({
+          where: { userId },
+        });
+
+        // Supprimer le profil
+        await tx.profile.delete({
+          where: { userId },
+        });
+      });
+
+      return Result.ok(true);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Erreur technique lors de la suppression du profil.');
+    }
+  }
 }

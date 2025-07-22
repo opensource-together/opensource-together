@@ -5,8 +5,11 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Patch,
+  Delete,
+  Body,
 } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
+import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { Session, PublicAccess } from 'supertokens-nestjs';
 import { Result } from '@/libs/result';
 import {
@@ -15,6 +18,7 @@ import {
   ApiResponse,
   ApiCookieAuth,
   ApiParam,
+  ApiBody,
 } from '@nestjs/swagger';
 import {
   FindProfileByIdQuery,
@@ -25,11 +29,17 @@ import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/map
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
 import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { UpdateProfileDto } from './dtos/update-profile.dto';
+import { UpdateProfileCommand } from '@/contexts/profile/use-cases/commands/update-profile.command';
+import { DeleteProfileCommand } from '@/contexts/profile/use-cases/commands/delete-profile.command';
 
 @ApiTags('Profile')
 @Controller('profile')
 export class ProfileController {
-  constructor(private readonly queryBus: QueryBus) {}
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Get('me')
   @ApiOperation({ summary: "Récupérer le profil de l'utilisateur courant" })
@@ -221,5 +231,106 @@ export class ProfileController {
     }
 
     return ProfileMapper.toDto(findProfileByIdQueryResult.value);
+  }
+
+  @Patch('me')
+  @ApiOperation({ summary: "Mettre à jour le profil de l'utilisateur courant" })
+  @ApiCookieAuth('sAccessToken')
+  @ApiBody({ type: UpdateProfileDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Profil mis à jour avec succès',
+    example: {
+      id: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
+      name: 'John Doe Updated',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+      bio: 'Senior Fullstack Developer | React & Node.js expert',
+      location: 'Lyon, France',
+      company: 'New Tech Corp',
+      socialLinks: [
+        { type: 'github', url: 'https://github.com/johndoe' },
+        { type: 'twitter', url: 'https://twitter.com/johndoe' },
+      ],
+      skills: [],
+      experiences: [
+        {
+          company: 'Tech Corp',
+          position: 'Senior Developer',
+          startDate: '2020-01-15',
+          endDate: null,
+        },
+      ],
+      joinedAt: '2025-04-16T15:47:31.633Z',
+      profileUpdatedAt: '2025-04-20T10:30:00.000Z',
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erreur de validation',
+    example: {
+      message: 'Bio must be less than 1000 characters.',
+      statusCode: 400,
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Non authentifié',
+    example: { message: 'unauthorised', statusCode: 401 },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Profil non trouvé',
+    example: { message: 'Profile not found', statusCode: 404 },
+  })
+  async updateProfile(
+    @Session('userId') userId: string,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ): Promise<ProfileResponseDto> {
+    const result = await this.commandBus.execute(
+      new UpdateProfileCommand(userId, updateProfileDto),
+    );
+
+    if (!result.success) {
+      if (result.error === 'Profile not found') {
+        throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+
+    // Récupérer le profil mis à jour pour retourner le DTO complet
+    return this.getProfileById(userId);
+  }
+
+  @Delete('me')
+  @ApiOperation({ summary: "Supprimer le profil de l'utilisateur courant" })
+  @ApiCookieAuth('sAccessToken')
+  @ApiResponse({
+    status: 200,
+    description: 'Profil supprimé avec succès',
+    example: { message: 'Profile deleted successfully' },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Non authentifié',
+    example: { message: 'unauthorised', statusCode: 401 },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Profil non trouvé',
+    example: { message: 'Profile not found', statusCode: 404 },
+  })
+  async deleteProfile(@Session('userId') userId: string) {
+    const result = await this.commandBus.execute(
+      new DeleteProfileCommand(userId),
+    );
+
+    if (!result.success) {
+      if (result.error === 'Profile not found') {
+        throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+
+    return { message: 'Profile deleted successfully' };
   }
 }
