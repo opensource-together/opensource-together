@@ -235,18 +235,7 @@ export default function ApplicationCard({
           ) : (
             <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
               <p className="text-sm text-yellow-800">
-                ⚠️ La lettre de motivation existe mais n'est pas renvoyée par
-                l'API.
-                <br />
-                Le champ{" "}
-                <code className="rounded bg-yellow-100 px-1">
-                  motivationLetter
-                </code>{" "}
-                doit être ajouté à la réponse de{" "}
-                <code className="rounded bg-yellow-100 px-1">
-                  GET /projects/{"{projectId}"}/applications
-                </code>
-                .
+                Il n'y a pas de lettre de motivation pour cette candidature.
               </p>
             </div>
           )}
