@@ -2,6 +2,7 @@
 
 import { FolderIcon, GitBranchIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import {
   Avatar,
@@ -12,6 +13,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 
+import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 import { ProjectRoleApplicationType } from "@/features/projects/types/project-application.type";
 import { Project } from "@/features/projects/types/project.type";
 
@@ -25,34 +27,18 @@ export default function DashboardSidebar({
   projects = [],
   applications = [],
   contributions = [],
-}: DashboardSidebarProps) {
-  // Mock data for demonstration - replace with real data
-  const mockProjects =
-    projects.length > 0
-      ? projects
-      : [
-          {
-            id: "1",
-            title: "Gitify",
-            image: "/icons/gitify-icon.png",
-            slug: "gitify",
-          },
-          {
-            id: "2",
-            title: "Gitify",
-            image: "/icons/gitify-icon.png",
-            slug: "gitify-2",
-          },
-          {
-            id: "3",
-            title: "Gitify",
-            image: "/icons/gitify-icon.png",
-            slug: "gitify-3",
-          },
-        ];
+  onProjectSelect,
+}: DashboardSidebarProps & { onProjectSelect?: (project: Project) => void }) {
+  // Utiliser les vrais projets de l'utilisateur
+  const { data: userProjects = [], isLoading } = useProjects();
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
 
-  const mockApplications = applications.length > 0 ? applications : [];
-  const mockContributions = contributions.length > 0 ? contributions : [];
+  const handleProjectClick = (project: Project) => {
+    setSelectedProjectId(project.id || null);
+    onProjectSelect?.(project);
+  };
 
   return (
     <aside className="mt-5 ml-7 flex h-[95%] w-72 flex-col rounded-2xl border border-[black]/5 bg-white">
@@ -64,21 +50,31 @@ export default function DashboardSidebar({
             Dashboard
           </h3>
           <div className="space-y-1">
-            {mockProjects.map((project) => (
-              <Link
-                key={project.id}
-                href={`/projects/${project.slug}`}
-                className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-              >
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={project.image} alt={project.title} />
-                  <AvatarFallback className="text-xs">
-                    {project.title?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-sm">{project.title}</span>
-              </Link>
-            ))}
+            {isLoading ? (
+              <div className="px-3 py-2 text-sm text-gray-500">
+                Chargement...
+              </div>
+            ) : projects.length > 0 ? (
+              projects.map((project) => (
+                <button
+                  key={project.id}
+                  onClick={() => handleProjectClick(project)}
+                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50 ${selectedProjectId === project.id ? "bg-gray-100" : ""}`}
+                >
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={project.image} alt={project.title} />
+                    <AvatarFallback className="text-xs">
+                      {project.title?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm">{project.title}</span>
+                </button>
+              ))
+            ) : (
+              <div className="px-3 py-2 text-sm text-gray-500">
+                Aucun projet dont vous êtes le créateur
+              </div>
+            )}
           </div>
         </div>
 
@@ -89,8 +85,8 @@ export default function DashboardSidebar({
             My Role Applications
           </h3>
           <div className="space-y-1">
-            {mockApplications.length > 0 ? (
-              mockApplications.map((application) => (
+            {applications.length > 0 ? (
+              applications.map((application: ProjectRoleApplicationType) => (
                 <Link
                   key={application.id}
                   href={`/applications/${application.id}`}
@@ -127,8 +123,8 @@ export default function DashboardSidebar({
             My Contributions
           </h3>
           <div className="space-y-1">
-            {mockContributions.length > 0 ? (
-              mockContributions.map((contribution) => (
+            {contributions.length > 0 ? (
+              contributions.map((contribution: any) => (
                 <Link
                   key={contribution.id}
                   href={`/contributions/${contribution.id}`}
