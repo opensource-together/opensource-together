@@ -18,4 +18,6 @@ export interface ProfileRepositoryPort {
     experiences: ProfileExperience[];
   }): Promise<Result<Profile, string>>;
   findById(id: string): Promise<Result<Profile, string>>;
+  update(userId: string, profile: Profile): Promise<Result<Profile, string>>;
+  delete(userId: string): Promise<Result<boolean, string>>;
 }

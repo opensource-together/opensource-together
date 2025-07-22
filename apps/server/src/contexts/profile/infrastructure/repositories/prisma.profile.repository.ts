@@ -84,4 +84,78 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
       return Result.fail('Erreur technique lors de la recherche du profil.');
     }
   }
+
+  async update(userId: string, profile: Profile): Promise<Result<Profile, string>> {
+    const profileData = profile.toPrimitive();
+    const { profileData: repoData, socialLinksData } = PrismaProfileMapper.toRepo(profileData);
+
+    try {
+      const updatedRawProfile = await this.prisma.$transaction(async (tx) => {
+        // Mettre à jour le profil
+        await tx.profile.update({
+          where: { userId },
+          data: {
+            name: repoData.name,
+            avatarUrl: repoData.avatarUrl,
+            bio: repoData.bio,
+            location: repoData.location,
+            company: repoData.company,
+            updatedAt: new Date(),
+          },
+        });
+
+        // Supprimer les anciens liens sociaux
+        await tx.userSocialLink.deleteMany({
+          where: { userId },
+        });
+
+        // Créer les nouveaux liens sociaux
+        if (socialLinksData.length > 0) {
+          await tx.userSocialLink.createMany({
+            data: socialLinksData.map((link) => ({
+              ...link,
+              userId,
+            })),
+          });
+        }
+
+        // Retourner le profil mis à jour
+        return tx.profile.findUnique({
+          where: { userId },
+          include: { socialLinks: true },
+        });
+      });
+
+      if (!updatedRawProfile) {
+        return Result.fail('Erreur technique : Le profil n\'a pas pu être retrouvé après sa mise à jour.');
+      }
+
+      const domainProfile = PrismaProfileMapper.toDomain(updatedRawProfile);
+      return Result.ok(domainProfile);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Erreur technique lors de la mise à jour du profil.');
+    }
+  }
+
+  async delete(userId: string): Promise<Result<boolean, string>> {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        // Supprimer les liens sociaux d'abord (contrainte de clé étrangère)
+        await tx.userSocialLink.deleteMany({
+          where: { userId },
+        });
+
+        // Supprimer le profil
+        await tx.profile.delete({
+          where: { userId },
+        });
+      });
+
+      return Result.ok(true);
+    } catch (error) {
+      console.error(error);
+      return Result.fail('Erreur technique lors de la suppression du profil.');
+    }
+  }
 }
