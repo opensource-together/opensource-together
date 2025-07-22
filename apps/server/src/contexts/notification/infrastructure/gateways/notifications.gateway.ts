@@ -57,6 +57,7 @@ export class NotificationsGateway
     try {
       const userId = await this.webSocketAuthService.authenticateSocket(client);
 
+      console.log('userId', userId);
       if (!userId) {
         this.logger.warn('Client non authentifié, déconnexion...');
         console.log('Client non authentifié, déconnexion...');
@@ -69,7 +70,9 @@ export class NotificationsGateway
 
       // Envoyer les notifications non lues
       await this.sendUnreadNotifications(userId, client);
+      console.log('Client authentifié, connexion établie');
     } catch (error) {
+      console.log('Erreur lors de la connexion:', error);
       this.logger.error('Erreur lors de la connexion:', error);
       client.disconnect();
     }
@@ -175,6 +178,7 @@ export class NotificationsGateway
       const result =
         await this.notificationService.getUnreadNotifications(userId);
 
+      console.log('result', result);
       if (result.success) {
         client.emit('unread-notifications', result.value);
         this.logger.log(
