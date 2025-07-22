@@ -1,16 +1,16 @@
-import { Result } from '@/libs/result';
-import {
-  TechStack,
-  TechStackValidationErrors,
-} from '@/contexts/techstack/domain/techstack.entity';
+import { Category } from '@/contexts/category/domain/category.entity';
+import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
 import {
   ProjectRole,
   ProjectRoleValidationErrors,
 } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import { Description, ShortDescription, Title } from './vo';
-import { Category } from '@/contexts/category/domain/category.entity';
+import {
+  TechStack,
+  TechStackValidationErrors,
+} from '@/contexts/techstack/domain/techstack.entity';
+import { Result } from '@/libs/result';
 import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
-import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
+import { Description, ShortDescription, Title } from './vo';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -34,14 +34,24 @@ export type ProjectData = {
   description: string;
   categories: { id: string; name: string }[];
   externalLinks?: { type: string; url: string }[];
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  techStacks: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }[];
   projectRoles: {
     projectId?: string;
     id?: string;
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
     createdAt?: Date;
     updatedAt?: Date;
   }[];
@@ -223,7 +233,10 @@ export class Project {
       shortDescription: this.shortDescription.getShortDescription(),
       description: this.description.getDescription(),
       externalLinks: this.externalLinks,
-      techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
+      techStacks: this.techStacks.map((ts) => {
+        const { id, name, iconUrl, type } = ts.toPrimitive();
+        return { id, name, iconUrl, type };
+      }),
       projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
       categories: this.categories.map((c) => c.toPrimitive()),
       keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
@@ -249,7 +262,12 @@ export class Project {
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
   }): Result<ProjectRole, ProjectRoleValidationErrors | string> {
     const projectId = this.id;
     const projectRoleResult = ProjectRole.create({
@@ -267,7 +285,12 @@ export class Project {
       title: string;
       description: string;
       isFilled: boolean;
-      techStacks: { id: string; name: string; iconUrl: string }[];
+      techStacks: {
+        id: string;
+        name: string;
+        iconUrl: string;
+        type: 'LANGUAGE' | 'TECH';
+      }[];
     }[],
   ): Result<ProjectRole[], ProjectRoleValidationErrors | string> {
     const projectRolesResults = ProjectRole.createMany(projectRoles);
