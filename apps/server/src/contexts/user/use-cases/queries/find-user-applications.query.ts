@@ -28,6 +28,7 @@ export class FindUserApplicationsQueryHandler
     const applications: Result<
       {
         appplicationId: string;
+        projectTitle: string;
         projectRoleId: string;
         projectRoleTitle: string;
         status: string;

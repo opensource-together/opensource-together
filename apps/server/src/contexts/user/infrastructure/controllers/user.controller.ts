@@ -65,6 +65,7 @@ export class UserController {
       {
         appplicationId: string;
         projectRoleId: string;
+        projectTitle: string;
         projectRoleTitle: string;
         status: string;
         selectedKeyFeatures: string[];

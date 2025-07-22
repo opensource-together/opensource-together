@@ -369,6 +369,7 @@ export class PrismaProjectRoleApplicationRepository
     Result<
       {
         appplicationId: string;
+        projectTitle: string;
         projectRoleId: string;
         projectRoleTitle: string;
         status: string;
@@ -404,6 +405,7 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectTitle: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -431,6 +433,7 @@ export class PrismaProjectRoleApplicationRepository
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
           projectRoleTitle: domainApplication.value.projectRoleTitle,
+          projectTitle: domainApplication.value.projectTitle,
           status: domainApplication.value.status,
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
           selectedProjectGoals: domainApplication.value.selectedProjectGoals,

@@ -17,6 +17,7 @@ export interface ProjectRoleApplicationRepositoryPort {
     Result<
       {
         appplicationId: string;
+        projectTitle: string;
         projectRoleId: string;
         projectRoleTitle: string;
         status: string;
