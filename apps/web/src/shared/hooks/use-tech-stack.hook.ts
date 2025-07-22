@@ -6,7 +6,7 @@ import { TechStackItem, fetchTechStacks } from "../services/tech-stack.service";
 
 export interface TechStackOption extends ComboboxOption {
   iconUrl: string;
-  type: 'LANGUAGE' | 'TECH';
+  type: "LANGUAGE" | "TECH";
 }
 
 /**
@@ -24,7 +24,7 @@ export function useTechStack() {
   });
 
   const languageOptions: TechStackOption[] = techStacks
-    .filter((tech) => tech.type === 'LANGUAGE')
+    .filter((tech) => tech.type === "LANGUAGE")
     .map((tech) => ({
       id: tech.id,
       name: tech.name,
@@ -33,7 +33,7 @@ export function useTechStack() {
     }));
 
   const technologyOptions: TechStackOption[] = techStacks
-    .filter((tech) => tech.type === 'TECH')
+    .filter((tech) => tech.type === "TECH")
     .map((tech) => ({
       id: tech.id,
       name: tech.name,

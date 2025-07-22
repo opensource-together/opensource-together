@@ -1,34 +1,34 @@
+import { ProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/profile-response.dto';
+import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/mappers/profile.mapper';
+import {
+  FindProfileByIdQuery,
+  FullProfileData,
+} from '@/contexts/profile/use-cases/queries/find-profile-by-id.query';
+import { Project } from '@/contexts/project/domain/project.entity';
+import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
+import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
+import { Result } from '@/libs/result';
 import {
   Controller,
   Get,
-  NotFoundException,
-  Param,
   HttpException,
   HttpStatus,
+  NotFoundException,
+  Param,
   Patch,
   Delete,
   Body,
 } from '@nestjs/common';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
-import { Session, PublicAccess } from 'supertokens-nestjs';
-import { Result } from '@/libs/result';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
   ApiCookieAuth,
+  ApiOperation,
   ApiParam,
+  ApiResponse,
+  ApiTags,
   ApiBody,
 } from '@nestjs/swagger';
-import {
-  FindProfileByIdQuery,
-  FullProfileData,
-} from '@/contexts/profile/use-cases/queries/find-profile-by-id.query';
-import { ProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/profile-response.dto';
-import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/mappers/profile.mapper';
-import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
-import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
-import { Project } from '@/contexts/project/domain/project.entity';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateProfileCommand } from '@/contexts/profile/use-cases/commands/update-profile.command';
 import { DeleteProfileCommand } from '@/contexts/profile/use-cases/commands/delete-profile.command';
@@ -101,11 +101,17 @@ export class ProfileController {
           shortDescription: 'E-commerce avec React et Node.js',
           ownerId: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
           techStacks: [
-            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+            {
+              id: '1',
+              name: 'React',
+              iconUrl: 'https://reactjs.org/logo.svg',
+              type: 'TECH',
+            },
             {
               id: '2',
               name: 'Node.js',
               iconUrl: 'https://nodejs.org/logo.svg',
+              type: 'TECH',
             },
           ],
           categories: [{ id: '2', name: 'Développement Web' }],
@@ -135,6 +141,7 @@ export class ProfileController {
                   id: '1',
                   name: 'React',
                   iconUrl: 'https://reactjs.org/logo.svg',
+                  type: 'TECH',
                 },
               ],
               createdAt: '2025-01-15T10:30:00.000Z',

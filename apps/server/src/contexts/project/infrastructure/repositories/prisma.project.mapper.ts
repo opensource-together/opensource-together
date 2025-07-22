@@ -10,11 +10,11 @@ import {
   KeyFeature,
   Prisma,
   Project as PrismaProject,
+  ProjectExternalLink,
   ProjectGoal,
   ProjectRole,
   teamMember,
   TechStack,
-  ProjectExternalLink,
 } from '@prisma/client';
 
 // Type temporaire en attendant la génération du client Prisma
@@ -103,6 +103,7 @@ export class PrismaProjectMapper {
         id: techStack.id,
         name: techStack.name,
         iconUrl: techStack.iconUrl,
+        type: techStack.type,
       })),
       categories: prismaProject.categories.map((c) => ({
         id: c.id,
@@ -128,6 +129,7 @@ export class PrismaProjectMapper {
           id: techStack.id,
           name: techStack.name,
           iconUrl: techStack.iconUrl,
+          type: techStack.type,
         })),
         createdAt: role.createdAt,
         updatedAt: role.updatedAt,

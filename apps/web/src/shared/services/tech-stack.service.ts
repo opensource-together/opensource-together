@@ -4,7 +4,7 @@ export interface TechStackItem {
   id: string;
   name: string;
   iconUrl: string;
-  type: 'LANGUAGE' | 'TECH';
+  type: "LANGUAGE" | "TECH";
 }
 
 interface TechStackApiGroupResponse {
@@ -23,9 +23,15 @@ export const fetchTechStacks = async (): Promise<TechStackItem[]> => {
   }
 
   const data: TechStackApiGroupResponse = await response.json();
-  // Fusionne les deux groupes, langages d'abord
+
   return [
-    ...data.languages.map(item => ({ ...item, type: 'LANGUAGE' })),
-    ...data.technologies.map(item => ({ ...item, type: 'TECH' })),
+    ...data.languages.map((item) => ({
+      ...item,
+      type: "LANGUAGE" as const,
+    })),
+    ...data.technologies.map((item) => ({
+      ...item,
+      type: "TECH" as const,
+    })),
   ];
 };

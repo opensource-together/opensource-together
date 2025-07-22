@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
 import { Result } from '@/libs/result';
+import { MockClock } from '@/libs/time/mock-clock';
+import { Injectable } from '@nestjs/common';
 import { ProjectRole } from '../../domain/project-role.entity';
 import { ProjectRoleRepositoryPort } from '../../use-cases/ports/project-role.repository.port';
-import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { MockClock } from '@/libs/time/mock-clock';
 
 type ProjectRoleInMemory = {
   id: string;
@@ -11,7 +11,12 @@ type ProjectRoleInMemory = {
   title: string;
   description: string;
   isFilled: boolean;
-  skillSet: { id: string; name: string; iconUrl: string }[];
+  skillSet: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -28,11 +33,17 @@ export class InMemoryProjectRoleRepository
       description: 'Responsible for UI development',
       isFilled: false,
       skillSet: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/favicon.ico' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/favicon.ico',
+          type: 'TECH',
+        },
         {
           id: '2',
           name: 'TypeScript',
           iconUrl: 'https://typescriptlang.org/favicon.ico',
+          type: 'LANGUAGE',
         },
       ],
       createdAt: new Date('2024-01-01T09:00:00Z'),
@@ -52,6 +63,7 @@ export class InMemoryProjectRoleRepository
         id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
+        type: ts.type,
       })),
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
@@ -82,6 +94,7 @@ export class InMemoryProjectRoleRepository
         id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
+        type: ts.type,
       })),
       updatedAt: new Date(),
     };
@@ -166,6 +179,7 @@ export class InMemoryProjectRoleRepository
         id: skillData.id,
         name: skillData.name,
         iconUrl: skillData.iconUrl,
+        type: skillData.type,
       });
 
       if (!techStackResult.success) {
@@ -192,6 +206,7 @@ export class InMemoryProjectRoleRepository
         id: ts.toPrimitive().id,
         name: ts.toPrimitive().name,
         iconUrl: ts.toPrimitive().iconUrl,
+        type: ts.toPrimitive().type,
       })),
       createdAt: roleData.createdAt,
       updatedAt: roleData.updatedAt,
@@ -228,11 +243,13 @@ export class InMemoryProjectRoleRepository
             id: '1',
             name: 'React',
             iconUrl: 'https://reactjs.org/favicon.ico',
+            type: 'TECH',
           },
           {
             id: '2',
             name: 'TypeScript',
             iconUrl: 'https://typescriptlang.org/favicon.ico',
+            type: 'LANGUAGE',
           },
         ],
         createdAt: new Date('2024-01-01T09:00:00Z'),
