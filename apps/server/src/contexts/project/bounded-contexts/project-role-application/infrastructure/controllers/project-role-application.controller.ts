@@ -1,21 +1,15 @@
-import { Controller, Get, Post, Patch } from '@nestjs/common';
-import { ApiCookieAuth, ApiOperation } from '@nestjs/swagger';
-import { ApiParam } from '@nestjs/swagger';
-import { ApiBody } from '@nestjs/swagger';
-import { ApiResponse } from '@nestjs/swagger';
-import { Session } from 'supertokens-nestjs';
-import { Param } from '@nestjs/common';
-import { Body } from '@nestjs/common';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { Result } from '@/libs/result';
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
-import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/dto/apply-to-role-request.dto';
 import { ApplyToProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
+import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/dto/apply-to-role-request.dto';
+import { Result } from '@/libs/result';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
-import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
+import { ApiBody, ApiCookieAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { Session } from 'supertokens-nestjs';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
+import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
+import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 
 @Controller('projects/:projectId/roles')
 export class ProjectRoleApplicationController {

@@ -77,7 +77,6 @@ export default function DashboardView() {
         onProjectSelect={setSelectedProject}
       />
       <main className="flex-1 overflow-y-auto px-14 pt-12">
-        <h2 className="mb-6 text-2xl font-bold">Candidatures reçues</h2>
         <div className="mb-4 flex items-center gap-6">
           {projectToShow.image && (
             <img
