@@ -322,13 +322,13 @@ export class ProjectRoleApplicationController {
     @Param('applicationId') applicationId: string,
     @Param('projectId') projectId: string,
     @Session('userId') userId: string,
-    @Body() body: { rejectionReason?: string },
+    @Body() body?: { rejectionReason?: string },
   ) {
     const command = new RejectUserApplicationCommand({
       projectRoleApplicationId: applicationId,
       projectId,
       userId,
-      rejectionReason: body.rejectionReason,
+      rejectionReason: body?.rejectionReason,
     });
     const result: Result<ProjectRoleApplication, string> =
       await this.commandBus.execute(command);
