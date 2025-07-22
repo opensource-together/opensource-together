@@ -1,53 +1,72 @@
 "use client";
 
-import { useProjectApplications } from "@/features/projects/hooks/use-project-applications.hook";
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import {
-  useProject,
-  useProjects,
-} from "@/features/projects/hooks/use-projects.hook";
+  useAcceptProjectRoleApplication,
+  useProjectApplications,
+  useRejectProjectRoleApplication,
+} from "@/features/projects/hooks/use-project-applications.hook";
+import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 
 import ApplicationCard from "../components/application-card.component";
 
-export default function DashboardView() {
-  // Récupère tous les projets de l'utilisateur (on prend le premier pour la démo)
-  const { data: projects, isLoading: isProjectsLoading } = useProjects();
-  const project = projects?.[0];
-  const projectId = project?.id;
+function ProjectApplicationsList({ project }: { project: any }) {
+  const { data: applications, isLoading } = useProjectApplications(project.id);
+  const acceptMutation = useAcceptProjectRoleApplication(project.id);
+  const rejectMutation = useRejectProjectRoleApplication(project.id);
 
-  // Récupère les détails du projet (keyFeatures, projectGoals)
-  const { data: projectDetails, isLoading: isProjectLoading } = useProject(
-    projectId || ""
+  if (isLoading) return <div>Chargement des candidatures...</div>;
+  if (!applications || applications.length === 0)
+    return <div>Aucune candidature reçue.</div>;
+
+  return (
+    <div className="space-y-4">
+      {applications.map((application: any) => (
+        <ApplicationCard
+          key={application.id}
+          application={application}
+          keyFeatures={project.keyFeatures}
+          projectGoals={project.projectGoals}
+          onAccept={() => acceptMutation.mutate(application.id)}
+          onReject={() => rejectMutation.mutate(application.id)}
+          isProcessing={acceptMutation.isPending || rejectMutation.isPending}
+        />
+      ))}
+    </div>
   );
+}
 
-  // Récupère les candidatures du projet
-  const { data: applications, isLoading: isApplicationsLoading } =
-    useProjectApplications(projectId || "");
+export default function DashboardView() {
+  const { data: projects, isLoading: isProjectsLoading } = useProjects();
+  const { currentUser, isLoading: isUserLoading } = useAuth();
 
-  if (isProjectsLoading || isProjectLoading || isApplicationsLoading) {
+  if (isProjectsLoading || isUserLoading) {
     return <div>Chargement...</div>;
   }
 
-  if (!projectId || !projectDetails) {
+  if (!projects || projects.length === 0) {
     return <div>Aucun projet trouvé.</div>;
   }
 
+  // Filtrer les projets dont l'utilisateur courant est owner
+  const userProjects = projects.filter((project) => {
+    const ownerId = project.ownerId || project.author?.ownerId;
+    return currentUser && ownerId && currentUser.id === ownerId;
+  });
+
+  if (userProjects.length === 0) {
+    return <div>Vous n'avez aucun projet dont vous êtes le créateur.</div>;
+  }
+
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-12">
       <h2 className="text-2xl font-bold">Candidatures reçues</h2>
-      <h1 className="text-1xl font-normal">{projectDetails.title}</h1>
-      {applications && applications.length > 0 ? (
-        applications.map((application) => (
-          <ApplicationCard
-            key={application.id}
-            application={application}
-            keyFeatures={projectDetails.keyFeatures}
-            projectGoals={projectDetails.projectGoals}
-            // TODO: brancher onAccept/onReject sur les hooks de mutation
-          />
-        ))
-      ) : (
-        <div>Aucune candidature reçue.</div>
-      )}
+      {userProjects.map((project) => (
+        <div key={project.id} className="flex flex-col gap-4">
+          <h3 className="text-xl font-semibold">{project.title}</h3>
+          <ProjectApplicationsList project={project} />
+        </div>
+      ))}
     </div>
   );
 }

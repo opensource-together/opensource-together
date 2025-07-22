@@ -56,83 +56,52 @@ export async function getProjectApplications(
       );
     }
 
-    return response.json();
+    const data = await response.json();
+    // Correction du mapping : on mappe appplicationId -> id si présent
+    return data.map((app: any) => ({
+      ...app,
+      id: app.appplicationId || app.id,
+    }));
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
 
-export async function acceptProjectApplication(
+export async function acceptProjectRoleApplication(
+  projectId: string,
   applicationId: string
 ): Promise<void> {
-  // Mock implementation for now
-  console.log(`[MOCK] Accepting application: ${applicationId}`);
-
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Mock success response
-  return Promise.resolve();
-
-  // Real implementation would be:
-  // try {
-  //   const response = await fetch(
-  //     `${API_BASE_URL}/applications/${applicationId}/accept`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       credentials: "include",
-  //     }
-  //   );
-  //
-  //   if (!response.ok) {
-  //     const error = await response.json();
-  //     throw new Error(error.message || "Error accepting project application");
-  //   }
-  //
-  //   return response.json();
-  // } catch (error) {
-  //   console.error("Error accepting project application:", error);
-  //   throw error;
-  // }
+  const response = await fetch(
+    `${API_BASE_URL}/projects/${projectId}/roles/applications/${applicationId}/accept`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(
+      error.message || "Erreur lors de l'acceptation de la candidature."
+    );
+  }
 }
 
-export async function rejectProjectApplication(
+export async function rejectProjectRoleApplication(
+  projectId: string,
   applicationId: string
 ): Promise<void> {
-  // Mock implementation for now
-  console.log(`[MOCK] Rejecting application: ${applicationId}`);
-
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Mock success response
-  return Promise.resolve();
-
-  // Real implementation would be:
-  // try {
-  //   const response = await fetch(
-  //     `${API_BASE_URL}/applications/${applicationId}/reject`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       credentials: "include",
-  //     }
-  //   );
-  //
-  //   if (!response.ok) {
-  //     const error = await response.json();
-  //     throw new Error(error.message || "Error rejecting project application");
-  //   }
-  //
-  //   return response.json();
-  // } catch (error) {
-  //   console.error("Error rejecting project application:", error);
-  //   throw error;
-  // }
+  const response = await fetch(
+    `${API_BASE_URL}/projects/${projectId}/roles/applications/${applicationId}/reject`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  );
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Erreur lors du rejet de la candidature.");
+  }
 }
