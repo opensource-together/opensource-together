@@ -4,5 +4,3 @@ WORKDIR /app
 COPY src/persistence/orm/prisma ./schema
 
 CMD ["npx", "--yes", "prisma", "db", "push", "--schema=/app/schema/schema.prisma", "--skip-generate", "&&", "sleep", "infinity"] 
-
-
