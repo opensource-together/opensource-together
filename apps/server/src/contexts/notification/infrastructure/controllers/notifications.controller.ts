@@ -1,4 +1,16 @@
-import { Body, Controller, Post, Get, Patch, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Param,
+  HttpStatus,
+  HttpException,
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
 import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
@@ -100,42 +112,93 @@ export class NotificationsController {
   })
   @ApiResponse({
     status: 400,
-    description: "Erreur lors de l'envoi de la notification",
+    description:
+      'Données de requête invalides ou utilisateur destinataire inexistant/non connecté',
     schema: {
       type: 'object',
       properties: {
-        status: { type: 'string', example: 'error' },
+        statusCode: { type: 'number', example: 400 },
         message: {
           type: 'string',
-          example:
-            "Erreur lors de l'envoi en temps réel: L'utilisateur user-123 n'existe pas dans le système",
+          example: "L'utilisateur user-123 n'existe pas dans le système",
         },
-        success: { type: 'boolean', example: false },
+        error: { type: 'string', example: 'Bad Request' },
       },
     },
   })
   @ApiResponse({
-    status: 401,
-    description: 'Utilisateur non authentifié',
+    status: 422,
+    description: "Erreur de validation des données d'entrée",
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 422 },
+        message: {
+          type: 'array',
+          items: { type: 'string' },
+          example: [
+            'receiverId should not be empty',
+            'type should not be empty',
+          ],
+        },
+        error: { type: 'string', example: 'Unprocessable Entity' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erreur interne du serveur',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 500 },
+        message: { type: 'string', example: 'Une erreur interne est survenue' },
+        error: { type: 'string', example: 'Internal Server Error' },
+      },
+    },
   })
   async create(
     @Body() dto: CreateNotificationRequestDto,
   ): Promise<CreateNotificationResponseDto> {
-    const result = await this.commandBus.execute(
-      new CreateNotificationCommand({
-        receiverId: dto.receiverId,
-        senderId: dto.senderId,
-        type: dto.type,
-        payload: dto.payload,
-        channels: dto.channels || ['realtime'],
-      }),
-    );
+    try {
+      const result = await this.commandBus.execute(
+        new CreateNotificationCommand({
+          receiverId: dto.receiverId,
+          senderId: dto.senderId,
+          type: dto.type,
+          payload: dto.payload,
+          channels: dto.channels || ['realtime'],
+        }),
+      );
 
-    if (!result.success) {
-      return CreateNotificationResponseDto.error(result.error);
+      if (!result.success) {
+        // Différencier les types d'erreurs
+        if (result.error.includes("n'existe pas dans le système")) {
+          throw new BadRequestException(
+            result.error.replace("Erreur lors de l'envoi en temps réel: ", ''),
+          );
+        } else if (result.error.includes("n'est pas connecté via WebSocket")) {
+          throw new BadRequestException(
+            result.error.replace("Erreur lors de l'envoi en temps réel: ", ''),
+          );
+        } else {
+          throw new HttpException(
+            result.error,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
+
+      return CreateNotificationResponseDto.success();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Une erreur interne est survenue',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    return CreateNotificationResponseDto.success();
   }
 
   /**
@@ -190,27 +253,60 @@ export class NotificationsController {
   @ApiResponse({
     status: 401,
     description: 'Utilisateur non authentifié',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Utilisateur non authentifié' },
+        error: { type: 'string', example: 'Unauthorized' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erreur interne du serveur',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 500 },
+        message: {
+          type: 'string',
+          example:
+            'Une erreur interne est survenue lors de la récupération des notifications',
+        },
+        error: { type: 'string', example: 'Internal Server Error' },
+      },
+    },
   })
   async getUnreadNotifications(
     @Session('userId') ownerId: string,
-  ): Promise<
-    GetUnreadNotificationsResponseDto | { success: false; error: string }
-  > {
+  ): Promise<GetUnreadNotificationsResponseDto> {
     if (!ownerId) {
-      return { success: false, error: 'userId est requis' };
+      throw new UnauthorizedException('Utilisateur non authentifié');
     }
 
-    const result: Result<Notification[], string> = await this.queryBus.execute(
-      new GetUnreadNotificationsQuery(ownerId),
-    );
+    try {
+      const result: Result<Notification[], string> =
+        await this.queryBus.execute(new GetUnreadNotificationsQuery(ownerId));
 
-    if (result.success) {
-      return GetUnreadNotificationsResponseDto.fromNotifications(result.value);
-    } else {
-      return {
-        success: false,
-        error: result.error,
-      };
+      if (result.success) {
+        return GetUnreadNotificationsResponseDto.fromNotifications(
+          result.value,
+        );
+      } else {
+        throw new HttpException(
+          'Une erreur interne est survenue lors de la récupération des notifications',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Une erreur interne est survenue lors de la récupération des notifications',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -241,31 +337,118 @@ export class NotificationsController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Erreur lors du marquage de la notification',
+    description: 'ID de notification invalide',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean', example: false },
-        error: { type: 'string', example: 'Notification not found' },
+        statusCode: { type: 'number', example: 400 },
+        message: { type: 'string', example: 'ID de notification invalide' },
+        error: { type: 'string', example: 'Bad Request' },
       },
     },
   })
   @ApiResponse({
     status: 401,
     description: 'Utilisateur non authentifié',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Utilisateur non authentifié' },
+        error: { type: 'string', example: 'Unauthorized' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Accès refusé - Cette notification ne vous appartient pas',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 403 },
+        message: {
+          type: 'string',
+          example: 'Cette notification ne vous appartient pas',
+        },
+        error: { type: 'string', example: 'Forbidden' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Notification non trouvée',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: { type: 'string', example: 'Notification non trouvée' },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erreur interne du serveur',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 500 },
+        message: { type: 'string', example: 'Une erreur interne est survenue' },
+        error: { type: 'string', example: 'Internal Server Error' },
+      },
+    },
   })
   async markAsRead(
     @Session('userId') ownerId: string,
     @Param('id') notificationId: string,
   ): Promise<MarkNotificationReadResponseDto> {
-    const result: Result<void, string> = await this.commandBus.execute(
-      new MarkNotificationReadCommand(notificationId, ownerId),
-    );
+    if (!ownerId) {
+      throw new UnauthorizedException('Utilisateur non authentifié');
+    }
 
-    if (result.success) {
+    if (!notificationId || notificationId.trim() === '') {
+      throw new BadRequestException('ID de notification invalide');
+    }
+
+    try {
+      const result: Result<void, string> = await this.commandBus.execute(
+        new MarkNotificationReadCommand(notificationId, ownerId),
+      );
+
+      console.log('result', result);
       return MarkNotificationReadResponseDto.success();
-    } else {
-      return MarkNotificationReadResponseDto.error(result.error);
+      // if (result.success) {
+      //   return MarkNotificationReadResponseDto.success();
+      // } else {
+      //   // Différencier les types d'erreurs
+      //   if (
+      //     result.error.includes('not found') ||
+      //     result.error.includes('non trouvée')
+      //   ) {
+      //     throw new NotFoundException('Notification non trouvée');
+      //   } else if (
+      //     result.error.includes('not the owner') ||
+      //     result.error.includes('ne vous appartient pas')
+      //   ) {
+      //     throw new HttpException(
+      //       'Cette notification ne vous appartient pas',
+      //       HttpStatus.FORBIDDEN,
+      //     );
+      //   } else {
+      //     throw new HttpException(
+      //       'Une erreur interne est survenue',
+      //       HttpStatus.INTERNAL_SERVER_ERROR,
+      //     );
+      //   }
+      // }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Une erreur interne est survenue',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -293,35 +476,61 @@ export class NotificationsController {
     },
   })
   @ApiResponse({
-    status: 400,
-    description: 'Erreur lors du marquage des notifications',
+    status: 401,
+    description: 'Utilisateur non authentifié',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean', example: false },
-        error: { type: 'string', example: 'receiverId est requis' },
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Utilisateur non authentifié' },
+        error: { type: 'string', example: 'Unauthorized' },
       },
     },
   })
   @ApiResponse({
-    status: 401,
-    description: 'Utilisateur non authentifié',
+    status: 500,
+    description: 'Erreur interne du serveur',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 500 },
+        message: {
+          type: 'string',
+          example:
+            'Une erreur interne est survenue lors du marquage des notifications',
+        },
+        error: { type: 'string', example: 'Internal Server Error' },
+      },
+    },
   })
   async markAllAsRead(
     @Session('userId') ownerId: string,
   ): Promise<MarkAllNotificationsReadResponseDto> {
     if (!ownerId) {
-      return MarkAllNotificationsReadResponseDto.error('receiverId est requis');
+      throw new UnauthorizedException('Utilisateur non authentifié');
     }
 
-    const result: Result<void, string> = await this.commandBus.execute(
-      new MarkAllNotificationsReadCommand(ownerId),
-    );
+    try {
+      const result: Result<void, string> = await this.commandBus.execute(
+        new MarkAllNotificationsReadCommand(ownerId),
+      );
 
-    if (result.success) {
-      return MarkAllNotificationsReadResponseDto.success();
-    } else {
-      return MarkAllNotificationsReadResponseDto.error(result.error);
+      if (result.success) {
+        return MarkAllNotificationsReadResponseDto.success();
+      } else {
+        throw new HttpException(
+          'Une erreur interne est survenue lors du marquage des notifications',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Une erreur interne est survenue lors du marquage des notifications',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -343,10 +552,49 @@ export class NotificationsController {
       },
     },
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Utilisateur non authentifié',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 401 },
+        message: { type: 'string', example: 'Utilisateur non authentifié' },
+        error: { type: 'string', example: 'Unauthorized' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erreur interne du serveur lors de la génération du token',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 500 },
+        message: {
+          type: 'string',
+          example:
+            'Une erreur interne est survenue lors de la génération du token',
+        },
+        error: { type: 'string', example: 'Internal Server Error' },
+      },
+    },
+  })
   async getWsToken(
     @Session('userId') userId: string,
   ): Promise<WsTokenResponseDto> {
-    const wsToken = await this.wsJwtService.generateToken(userId);
-    return WsTokenResponseDto.create(wsToken);
+    if (!userId) {
+      throw new UnauthorizedException('Utilisateur non authentifié');
+    }
+
+    try {
+      const wsToken = await this.wsJwtService.generateToken(userId);
+      return WsTokenResponseDto.create(wsToken);
+    } catch (error) {
+      throw new HttpException(
+        'Une erreur interne est survenue lors de la génération du token',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

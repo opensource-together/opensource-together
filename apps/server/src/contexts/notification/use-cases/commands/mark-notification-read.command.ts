@@ -62,6 +62,10 @@ export class MarkNotificationReadCommandHandler
       );
     }
 
+    if (notificationEntity.value.getReceiverId() !== command.ownerId) {
+      return Result.fail('You are not the receiver of this notification');
+    }
+
     // 3. Vérifier si déjà lue
     if (notificationEntity.value.isRead()) {
       return Result.fail('Notification is already marked as read');

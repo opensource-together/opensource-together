@@ -109,6 +109,14 @@ export class Notification {
     return this.readAt === null;
   }
 
+  public getReceiverId(): string {
+    return this.receiverId;
+  }
+
+  public getSenderId(): string {
+    return this.senderId;
+  }
+
   public toPrimitive(): NotificationPrimitive {
     return {
       id: this.id,
