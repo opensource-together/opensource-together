@@ -1,6 +1,6 @@
 import { Result } from '@/libs/result';
 
-export const NOTIFICATION_SERVICE_PORT = Symbol('NotificationService');
+export const NOTIFICATION_SERVICE_PORT = Symbol('NOTIFICATION_SERVICE_PORT');
 
 export type NotificationChannel = 'realtime' | 'email';
 

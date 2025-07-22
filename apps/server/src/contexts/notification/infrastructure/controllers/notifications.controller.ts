@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  Patch,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Param } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
 import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
 import { MarkAllNotificationsReadCommand } from '../../use-cases/commands/mark-all-notifications-read.command';
 import { GetUnreadNotificationsQuery } from '../../use-cases/queries/get-unread-notifications.query';
-import { PublicAccess, Session } from 'supertokens-nestjs';
+import { Session } from 'supertokens-nestjs';
 import {
   ApiTags,
   ApiOperation,
@@ -20,6 +12,8 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
+import { Result } from '@/libs/result';
+import { WsJwtService } from '@/auth/web-socket/jwt/ws-jwt.service';
 
 interface CreateNotificationDto {
   type: string;
@@ -33,7 +27,10 @@ export class NotificationsController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-  ) {}
+    private readonly wsJwtService: WsJwtService,
+  ) {
+    console.log('NotificationsController constructor called'); // ← mets des logs ici
+  }
 
   /**
    * Créer une nouvelle notification (endpoint de test)
@@ -152,7 +149,7 @@ export class NotificationsController {
       return { error: 'userId est requis' };
     }
 
-    const result = await this.queryBus.execute(
+    const result: Result<Notification[], string> = await this.queryBus.execute(
       new GetUnreadNotificationsQuery(ownerId),
     );
 
@@ -214,7 +211,7 @@ export class NotificationsController {
     @Session('userId') ownerId: string,
     @Param('id') notificationId: string,
   ) {
-    const result = await this.commandBus.execute(
+    const result: Result<void, string> = await this.commandBus.execute(
       new MarkNotificationReadCommand(notificationId, ownerId),
     );
 
@@ -268,7 +265,7 @@ export class NotificationsController {
       return { error: 'userId est requis' };
     }
 
-    const result = await this.commandBus.execute(
+    const result: Result<void, string> = await this.commandBus.execute(
       new MarkAllNotificationsReadCommand(ownerId),
     );
 
@@ -280,5 +277,26 @@ export class NotificationsController {
     } else {
       return { success: false, error: result.error };
     }
+  }
+
+  @Get('ws-token')
+  @ApiOperation({
+    summary: 'Générer un token WebSocket',
+    description:
+      'Génère un token JWT pour les connexions WebSocket aux notifications',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Token WebSocket généré avec succès',
+    schema: {
+      type: 'object',
+      properties: {
+        wsToken: { type: 'string', description: 'Token JWT pour WebSocket' },
+      },
+    },
+  })
+  async getWsToken(@Session('userId') userId: string) {
+    const wsToken = await this.wsJwtService.generateToken(userId);
+    return { wsToken };
   }
 }

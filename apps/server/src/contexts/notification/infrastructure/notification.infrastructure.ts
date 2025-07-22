@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { NOTIFICATION_SERVICE_PORT } from '../use-cases/ports/notification.service.port';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 
 // Services et adapters
 import { NotificationService } from './services/notification.service';
-import { RealtimeNotifierAdapter } from './services/realtime-notifier.adapter';
 
 // Gateway WebSocket
-import { NotificationsGateway } from './gateways/notifications.gateway';
 
 // Listeners EventEmitter2
 import { ProjectListener } from './listeners/project.listener';
@@ -19,6 +17,12 @@ import { notificationUseCases } from '../use-cases/notification.use-cases';
 
 // Controller
 import { NotificationsController } from './controllers/notifications.controller';
+import { WebSocketAuthModule } from '@/auth/web-socket/websocket-auth.module';
+import { NotificationsGateway } from './gateways/notifications.gateway';
+import { RealtimeNotifierAdapter } from './services/realtime-notifier.adapter';
+import { WebSocketConnectionManager } from './gateways/websocket-connection.manager';
+import { NOTIFICATION_GATEWAY_PORT } from '../use-cases/ports/notification.gateway.port';
+// import { GatewayModule } from './gateways/gateway.module';
 
 /**
  * Module d'infrastructure pour les notifications.
@@ -32,23 +36,33 @@ import { NotificationsController } from './controllers/notifications.controller'
  */
 @Module({
   imports: [
-    CqrsModule, // Pour les command handlers et query handlers
-    EventEmitterModule, // Pour les listeners @OnEvent
+    CqrsModule,
+    EventEmitterModule,
+    PersistenceInfrastructure,
+    WebSocketAuthModule,
+    // GatewayModule,
   ],
   providers: [
     // Services core
-    PrismaService,
     {
       provide: NOTIFICATION_SERVICE_PORT,
       useClass: NotificationService,
     },
-
-    // Adapters
-    RealtimeNotifierAdapter,
-
-    // Gateway WebSocket
     NotificationsGateway,
+    RealtimeNotifierAdapter,
+    WebSocketConnectionManager,
+    NotificationsGateway,
+    {
+      provide: NOTIFICATION_SERVICE_PORT,
+      useClass: NotificationService,
+    },
+    {
+      provide: NOTIFICATION_GATEWAY_PORT,
+      useClass: NotificationsGateway,
+    },
 
+    WebSocketConnectionManager,
+    RealtimeNotifierAdapter,
     // Listeners EventEmitter2
     ProjectListener,
 
@@ -57,11 +71,13 @@ import { NotificationsController } from './controllers/notifications.controller'
   ],
   controllers: [NotificationsController],
   exports: [
-    // Exporter le port pour les autres modules
     NOTIFICATION_SERVICE_PORT,
-
-    // Exporter le gateway si d'autres modules veulent l'utiliser directement
     NotificationsGateway,
+    RealtimeNotifierAdapter,
   ],
 })
-export class NotificationInfrastructure {}
+export class NotificationInfrastructure {
+  constructor() {
+    console.log('NotificationInfrastructure constructor called'); // ← mets des logs ici
+  }
+}

@@ -22,10 +22,10 @@ import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/proj
     GithubInfrastructure,
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
-    NotificationInfrastructure,
     EventEmitterModule.forRoot(),
     MailingInfrastructure,
     ProjectKeyFeatureInfrastructure,
+    NotificationInfrastructure,
   ],
   exports: [
     UserInfrastructure,
@@ -36,8 +36,8 @@ import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/proj
     GithubInfrastructure,
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
-    NotificationInfrastructure,
     ProjectKeyFeatureInfrastructure,
+    NotificationInfrastructure,
   ],
 })
 export class ContextsModule {}

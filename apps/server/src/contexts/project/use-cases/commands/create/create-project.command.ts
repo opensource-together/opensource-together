@@ -24,6 +24,7 @@ import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Octokit } from '@octokit/rest';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class CreateProjectCommand implements ICommand {
   constructor(
@@ -61,8 +62,8 @@ export class CreateProjectCommandHandler
     private readonly githubRepository: GithubRepositoryPort,
     @Inject(CATEGORY_REPOSITORY_PORT)
     private readonly categoryRepo: CategoryRepositoryPort,
-    // @Inject(EventEmitter2)
-    // private readonly eventEmitter: EventEmitter2,
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(
@@ -190,12 +191,12 @@ export class CreateProjectCommandHandler
     }
 
     // Émettre l'événement de création de projet pour déclencher les notifications
-    // this.eventEmitter.emit('project.created', {
-    //   projectId: savedProject.value.toPrimitive().id,
-    //   projectTitle: savedProject.value.toPrimitive().title,
-    //   ownerId: ownerId,
-    //   ownerName: 'Demo User',
-    // });
+    this.eventEmitter.emit('project.created', {
+      projectId: savedProject.value.toPrimitive().id,
+      projectTitle: savedProject.value.toPrimitive().title,
+      ownerId: ownerId,
+      ownerName: 'Demo User', // TODO: Récupérer le vrai nom de l'utilisateur
+    });
 
     //on retourne le projet avec les roles ajoutés
     return Result.ok(savedProject.value);
