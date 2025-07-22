@@ -111,6 +111,7 @@ export default function EditRoleForm({
                       placeholder="Ajouter des technologies"
                       searchPlaceholder="Rechercher une technologie..."
                       emptyText="Aucune technologie trouvée."
+                      maxSelections={6}
                     />
                   </FormControl>
                   <FormMessage />

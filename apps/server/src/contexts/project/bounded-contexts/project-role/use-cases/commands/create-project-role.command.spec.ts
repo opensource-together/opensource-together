@@ -65,11 +65,13 @@ describe('CreateProjectRoleCommandHandler', () => {
       id: '1',
       name: 'React',
       iconUrl: 'https://reactjs.org/favicon.ico',
+      type: 'TECH',
     });
     const typescript = TechStack.reconstitute({
       id: '2',
       name: 'TypeScript',
       iconUrl: 'https://typescriptlang.org/favicon.ico',
+      type: 'LANGUAGE',
     });
     if (!react.success || !typescript.success) {
       throw new Error('Failed to create tech stacks');

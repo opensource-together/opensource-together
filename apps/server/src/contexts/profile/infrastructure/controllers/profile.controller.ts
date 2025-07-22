@@ -1,30 +1,30 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { Session, PublicAccess } from 'supertokens-nestjs';
-import { Result } from '@/libs/result';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiCookieAuth,
-  ApiParam,
-} from '@nestjs/swagger';
+import { ProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/profile-response.dto';
+import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/mappers/profile.mapper';
 import {
   FindProfileByIdQuery,
   FullProfileData,
 } from '@/contexts/profile/use-cases/queries/find-profile-by-id.query';
-import { ProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/profile-response.dto';
-import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/mappers/profile.mapper';
-import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
-import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
+import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
+import { Result } from '@/libs/result';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import {
+  ApiCookieAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 
 @ApiTags('Profile')
 @Controller('profile')
@@ -91,11 +91,17 @@ export class ProfileController {
           shortDescription: 'E-commerce avec React et Node.js',
           ownerId: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
           techStacks: [
-            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+            {
+              id: '1',
+              name: 'React',
+              iconUrl: 'https://reactjs.org/logo.svg',
+              type: 'TECH',
+            },
             {
               id: '2',
               name: 'Node.js',
               iconUrl: 'https://nodejs.org/logo.svg',
+              type: 'TECH',
             },
           ],
           categories: [{ id: '2', name: 'Développement Web' }],
@@ -125,6 +131,7 @@ export class ProfileController {
                   id: '1',
                   name: 'React',
                   iconUrl: 'https://reactjs.org/logo.svg',
+                  type: 'TECH',
                 },
               ],
               createdAt: '2025-01-15T10:30:00.000Z',
@@ -171,9 +178,9 @@ export class ProfileController {
     return GetProjectsByUserIdResponseDto.toResponse(result.value);
   }
 
+  @PublicAccess()
   @Get(':id')
   @ApiOperation({ summary: 'Récupérer un profil par son ID' })
-  @ApiCookieAuth('sAccessToken')
   @ApiParam({
     name: 'id',
     description: "ID de l'utilisateur dont on veut récupérer le profil",
@@ -209,14 +216,6 @@ export class ProfileController {
       message: 'Profile not found',
       error: 'Not Found',
       statusCode: 404,
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Non authentifié',
-    example: {
-      message: 'unauthorised',
-      statusCode: 401,
     },
   })
   async getProfileById(@Param('id') id: string): Promise<ProfileResponseDto> {
