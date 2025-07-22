@@ -2,9 +2,24 @@ import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/proj
 import { ApplyToProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
 import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/dto/apply-to-role-request.dto';
 import { Result } from '@/libs/result';
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiBody, ApiCookieAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
