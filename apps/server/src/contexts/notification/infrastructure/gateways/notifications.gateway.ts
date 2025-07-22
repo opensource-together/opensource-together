@@ -57,37 +57,25 @@ export class NotificationsGateway
   async handleConnection(client: AuthenticatedSocket): Promise<void> {
     // Éviter les appels multiples pour le même client
     if (this.connectingClients.has(client.id)) {
-      console.log(
-        `🔄 handleConnection déjà en cours pour ${client.id} - IGNORÉ`,
-      );
       return;
     }
 
     this.connectingClients.add(client.id);
-    console.log(`🆕 handleConnection START pour ${client.id}`);
 
     try {
       const userId = await this.webSocketAuthService.authenticateSocket(client);
 
       if (!userId) {
-        console.log(`❌ Authentification échouée pour ${client.id}`);
         client.disconnect();
         return;
       }
-
-      console.log(
-        `✅ Authentification réussie: ${client.id} → userId: ${userId}`,
-      );
 
       // Enregistrer la connexion
       this.connectionManager.registerConnection(userId, client);
 
       // Envoyer les notifications non lues
       await this.sendUnreadNotifications(userId, client);
-
-      console.log(`🎉 handleConnection TERMINÉ pour ${client.id}`);
     } catch (error) {
-      console.log(`💥 Erreur handleConnection ${client.id}:`, error.message);
       client.disconnect();
     } finally {
       // Nettoyer le Set après traitement
@@ -99,15 +87,12 @@ export class NotificationsGateway
    * Gère la déconnexion d'un client WebSocket
    */
   handleDisconnect(client: AuthenticatedSocket): void {
-    console.log(`🚪 handleDisconnect pour ${client.id}`);
-
     // Nettoyer le Set des connexions en cours (au cas où)
     this.connectingClients.delete(client.id);
 
     const userId = this.connectionManager.findUserIdBySocketId(client.id);
     if (userId) {
       this.connectionManager.unregisterConnection(userId);
-      console.log(`👋 Utilisateur ${userId} déconnecté`);
     }
   }
 
@@ -132,13 +117,13 @@ export class NotificationsGateway
    */
   sendNotificationToUser(notification: NotificationData): void {
     const userSocket = this.connectionManager.getUserSocket(
-      notification.userId,
+      notification.receiverId,
     );
 
     if (userSocket) {
       userSocket.emit('new-notification', {
         id: notification.id,
-        userId: notification.userId,
+        receiverId: notification.receiverId,
         type: notification.type,
         payload: notification.payload,
         createdAt: notification.createdAt,
@@ -146,11 +131,11 @@ export class NotificationsGateway
       });
 
       this.logger.log(
-        `Notification envoyée à l'utilisateur ${notification.userId}: ${notification.type} (ID: ${notification.id})`,
+        `Notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
       );
     } else {
       this.logger.warn(
-        `Utilisateur ${notification.userId} non connecté, notification non envoyée en temps réel`,
+        `Utilisateur ${notification.receiverId} non connecté, notification non envoyée en temps réel`,
       );
     }
   }
@@ -160,13 +145,13 @@ export class NotificationsGateway
    */
   sendNotificationUpdate(notification: NotificationData): void {
     const userSocket = this.connectionManager.getUserSocket(
-      notification.userId,
+      notification.receiverId,
     );
 
     if (userSocket) {
       userSocket.emit('notification-update', {
         id: notification.id,
-        userId: notification.userId,
+        receiverId: notification.receiverId,
         type: notification.type,
         payload: notification.payload,
         createdAt: notification.createdAt,
@@ -174,7 +159,7 @@ export class NotificationsGateway
       });
 
       this.logger.log(
-        `Mise à jour de notification envoyée à l'utilisateur ${notification.userId}: ${notification.type} (ID: ${notification.id})`,
+        `Mise à jour de notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
       );
     }
   }

@@ -20,26 +20,20 @@ export class WebSocketAuthService {
       // Vérifier si le socket est déjà authentifié
       const existingUserId = (client as AuthenticatedSocket).userId;
       if (existingUserId) {
-        console.log(
-          `🔄 Socket ${client.id} déjà authentifié (userId: ${existingUserId})`,
-        );
         return existingUserId;
       }
 
       const token = this.extractTokenFromHandshake(client);
 
       if (!token) {
-        console.log(`❌ Token manquant pour socket ${client.id}`);
         return null;
       }
 
       const userId = await this.wsJwtService.verifyToken(token);
-      console.log(`🔐 Socket ${client.id} authentifié → userId: ${userId}`);
 
       (client as AuthenticatedSocket).userId = userId;
       return userId;
     } catch (error) {
-      console.log(`💥 Erreur auth socket ${client.id}:`, error.message);
       return null;
     }
   }
