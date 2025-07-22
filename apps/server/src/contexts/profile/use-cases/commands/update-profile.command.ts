@@ -59,10 +59,25 @@ export class UpdateProfileCommandHandler
       bio: props.bio ?? existingData.bio,
       location: props.location ?? existingData.location,
       company: props.company ?? existingData.company,
-      socialLinks: props.socialLinks ?? existingData.socialLinks,
-      experiences: props.experiences ?? existingData.experiences,
-      skills: props.skills ?? existingData.skills,
-      projects: props.projects ?? existingData.projects,
+      socialLinks: props.socialLinks ?? existingData.socialLinks.map(link => ({
+        type: link.type,
+        url: link.url,
+      })),
+      experiences: props.experiences ?? existingData.experiences.map(exp => ({
+        company: exp.company,
+        position: exp.position,
+        startDate: exp.startDate.toISOString(),
+        endDate: exp.endDate?.toISOString(),
+      })),
+      skills: props.skills ?? existingData.skills.map(skill => ({
+        name: skill.name,
+        level: skill.level,
+      })),
+      projects: props.projects ?? existingData.projects.map(proj => ({
+        name: proj.name,
+        description: proj.description,
+        url: proj.url,
+      })),
     };
 
     // Créer un nouveau profil avec les données mises à jour
