@@ -27,6 +27,7 @@ WORKDIR /app
 LABEL org.opencontainers.image.source=https://github.com/opensource-together/opensource-together
 
 RUN apk add --no-cache postgresql-client curl
+RUN npm install -g prisma
 
 ENV NODE_ENV=production
 
@@ -44,4 +45,4 @@ EXPOSE 3000
 ENV PORT=3000
 
 WORKDIR /app/dist
-CMD ["node", "main"]
+CMD prisma db push --skip-generate --schema=/app/schema/schema.prisma && node main
