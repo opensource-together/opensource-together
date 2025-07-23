@@ -146,6 +146,7 @@ export class ApplyToProjectRoleCommandHandler
     // 8. Créer la candidature
     const applicationResult = ProjectRoleApplication.create({
       projectId: projectData.id!,
+      projectTitle: projectData.title,
       projectRoleTitle: projectRole.toPrimitive().title,
       projectRoleId,
       selectedKeyFeatures: validKeyFeatures,

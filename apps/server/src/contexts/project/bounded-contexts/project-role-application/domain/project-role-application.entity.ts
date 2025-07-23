@@ -5,6 +5,7 @@ export type ApplicationStatus = 'PENDING' | 'APPROVAL' | 'REJECTED';
 export type ProjectRoleApplicationData = {
   id?: string;
   projectId: string;
+  projectTitle: string;
   projectRoleTitle: string;
   projectRoleId: string;
   status: ApplicationStatus;
@@ -34,6 +35,7 @@ export type ProjectRoleApplicationValidationErrors = {
 export class ProjectRoleApplication {
   public readonly id?: string;
   public readonly projectId: string;
+  public readonly projectTitle: string;
   public readonly projectRoleTitle: string;
   public readonly projectRoleId: string;
   public status: ApplicationStatus;
@@ -53,6 +55,7 @@ export class ProjectRoleApplication {
   private constructor(props: {
     id?: string;
     projectId: string;
+    projectTitle: string;
     projectRoleTitle: string;
     projectRoleId: string;
     status: ApplicationStatus;
@@ -71,6 +74,7 @@ export class ProjectRoleApplication {
   }) {
     this.id = props.id;
     this.projectId = props.projectId;
+    this.projectTitle = props.projectTitle;
     this.projectRoleTitle = props.projectRoleTitle;
     this.projectRoleId = props.projectRoleId;
     this.status = props.status;
@@ -209,6 +213,7 @@ export class ProjectRoleApplication {
     return {
       id: this.id,
       projectId: this.projectId,
+      projectTitle: this.projectTitle,
       projectRoleTitle: this.projectRoleTitle,
       projectRoleId: this.projectRoleId,
       status: this.status,
