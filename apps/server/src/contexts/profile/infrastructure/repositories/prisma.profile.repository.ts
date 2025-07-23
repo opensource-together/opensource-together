@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Result } from '@/libs/result';
 import { PrismaProfileMapper } from './prisma.profile.mapper';
-import { SocialLink } from '@/contexts/profile/domain/social-link.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 @Injectable()
@@ -19,7 +18,13 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
     bio: string;
     location: string;
     company: string;
-    socialLinks: SocialLink[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
     experiences: ProfileExperience[];
   }): Promise<Result<Profile, string>> {
     const { profileData, socialLinksData } =

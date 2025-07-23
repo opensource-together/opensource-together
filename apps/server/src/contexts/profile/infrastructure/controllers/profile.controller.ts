@@ -243,66 +243,66 @@ export class ProfileController {
     return ProfileMapper.toDto(findProfileByIdQueryResult.value);
   }
 
-  @Patch('me')
-  @ApiOperation({ summary: "Mettre à jour le profil de l'utilisateur courant" })
-  @ApiCookieAuth('sAccessToken')
-  @ApiBody({
-    description: 'Données de mise à jour du profil',
-    type: UpdateProfileRequestDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Profil mis à jour avec succès',
-    example: {
-      id: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
-      name: 'John Doe Updated',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
-      bio: 'Updated bio',
-      location: 'Lyon, France',
-      company: 'New Tech Corp',
-      socialLinks: [
-        { type: 'github', url: 'https://github.com/johndoe' },
-        { type: 'twitter', url: 'https://twitter.com/johndoe' },
-      ],
-      techStacks: [],
-      experiences: [],
-      joinedAt: '2025-04-16T15:47:31.633Z',
-      profileUpdatedAt: '2025-04-17T10:30:00.000Z',
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Erreur de validation',
-    example: {
-      message: 'Bio must be less than 1000 characters.',
-      statusCode: 400,
-    },
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Profil non trouvé',
-    example: {
-      message: 'Profile not found',
-      statusCode: 404,
-    },
-  })
-  async updateMyProfile(
-    @Session('userId') userId: string,
-    @Body() updateProfileDto: UpdateProfileRequestDto,
-  ): Promise<ProfileResponseDto> {
-    const result: Result<Profile, string> = await this.commandBus.execute(
-      new UpdateProfileCommand(userId, updateProfileDto),
-    );
+  // @Patch('me')
+  // @ApiOperation({ summary: "Mettre à jour le profil de l'utilisateur courant" })
+  // @ApiCookieAuth('sAccessToken')
+  // @ApiBody({
+  //   description: 'Données de mise à jour du profil',
+  //   type: UpdateProfileRequestDto,
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Profil mis à jour avec succès',
+  //   example: {
+  //     id: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
+  //     name: 'John Doe Updated',
+  //     avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+  //     bio: 'Updated bio',
+  //     location: 'Lyon, France',
+  //     company: 'New Tech Corp',
+  //     socialLinks: [
+  //       { type: 'github', url: 'https://github.com/johndoe' },
+  //       { type: 'twitter', url: 'https://twitter.com/johndoe' },
+  //     ],
+  //     techStacks: [],
+  //     experiences: [],
+  //     joinedAt: '2025-04-16T15:47:31.633Z',
+  //     profileUpdatedAt: '2025-04-17T10:30:00.000Z',
+  //   },
+  // })
+  // @ApiResponse({
+  //   status: 400,
+  //   description: 'Erreur de validation',
+  //   example: {
+  //     message: 'Bio must be less than 1000 characters.',
+  //     statusCode: 400,
+  //   },
+  // })
+  // @ApiResponse({
+  //   status: 404,
+  //   description: 'Profil non trouvé',
+  //   example: {
+  //     message: 'Profile not found',
+  //     statusCode: 404,
+  //   },
+  // })
+  // async updateMyProfile(
+  //   @Session('userId') userId: string,
+  //   @Body() updateProfileDto: UpdateProfileRequestDto,
+  // ): Promise<ProfileResponseDto> {
+  //   const result: Result<Profile, string> = await this.commandBus.execute(
+  //     new UpdateProfileCommand(userId, updateProfileDto),
+  //   );
 
-    if (!result.success) {
-      if (result.error === 'Profile not found') {
-        throw new NotFoundException(result.error);
-      }
-      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-    }
+  //   if (!result.success) {
+  //     if (result.error === 'Profile not found') {
+  //       throw new NotFoundException(result.error);
+  //     }
+  //     throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+  //   }
 
-    return UpdateProfileResponseDto.toResponse(result.value);
-  }
+  //   return UpdateProfileResponseDto.toResponse(result.value);
+  // }
 
   @Delete('me')
   @ApiOperation({ summary: "Supprimer le profil de l'utilisateur courant" })
@@ -341,14 +341,9 @@ export class ProfileController {
 
   @Patch()
   @ApiOperation({
-    summary: 'Mettre à jour un profil par son ID (admin uniquement)',
+    summary: 'Mettre à jour un profil par son ID (utilisateur courant)',
   })
   @ApiCookieAuth('sAccessToken')
-  @ApiParam({
-    name: 'id',
-    description: 'ID du profil à mettre à jour',
-    example: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
-  })
   @ApiBody({
     description: 'Données de mise à jour du profil',
     type: UpdateProfileRequestDto,
@@ -378,13 +373,6 @@ export class ProfileController {
     // @Param('id') profileId: string,
     @Body() updateProfileDto: UpdateProfileRequestDto,
   ): Promise<ProfileResponseDto> {
-    // Vérifier que l'utilisateur met à jour son propre profil
-    // if (currentUserId !== profileId) {
-    //   throw new ForbiddenException(
-    //     'You are not allowed to update this profile',
-    //   );
-    // }
-
     console.log({ updateProfileDto });
     const result: Result<Profile, string> = await this.commandBus.execute(
       new UpdateProfileCommand(currentUserId, updateProfileDto),

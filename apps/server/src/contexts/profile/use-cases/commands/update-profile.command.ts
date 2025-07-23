@@ -91,6 +91,17 @@ export class UpdateProfileCommandHandler
           endDate: exp.endDate?.toISOString(),
         })),
       techStacks: techStacksData,
+      socialLinks: {
+        github: existingData.socialLinks?.github ?? props.socialLinks?.github,
+        website:
+          existingData.socialLinks?.website ?? props.socialLinks?.website,
+        twitter:
+          existingData.socialLinks?.twitter ?? props.socialLinks?.twitter,
+        linkedin:
+          existingData.socialLinks?.linkedin ?? props.socialLinks?.linkedin,
+        discord:
+          existingData.socialLinks?.discord ?? props.socialLinks?.discord,
+      },
       projects:
         props.projects ??
         existingData.projects.map((proj) => ({

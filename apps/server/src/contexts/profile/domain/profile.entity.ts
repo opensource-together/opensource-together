@@ -1,9 +1,9 @@
 import { Result } from '@/libs/result';
-import { SocialLink } from './social-link.vo';
+// import { SocialLink } from './social-link.vo';
 import { ProfileExperience } from './profile-experience.vo';
 // import { ProfileSkill } from './profile-skill.vo';
 import { ProfileProject } from './profile-project.vo';
-import { SocialLinkType } from './social-link.vo';
+// import { SocialLinkType } from './social-link.vo';
 // import { SkillLevel } from './profile-skill.vo';
 
 export class Profile {
@@ -15,7 +15,13 @@ export class Profile {
   private location: string;
   private company: string;
 
-  private socialLinks: SocialLink[];
+  private socialLinks?: {
+    github?: string;
+    website?: string;
+    twitter?: string;
+    linkedin?: string;
+    discord?: string;
+  };
   private techStacks: {
     id: string;
     name: string;
@@ -34,7 +40,13 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks?: SocialLink[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
     techStacks?: {
       id: string;
       name: string;
@@ -52,7 +64,7 @@ export class Profile {
     this.bio = props.bio || '';
     this.location = props.location || '';
     this.company = props.company || '';
-    this.socialLinks = props.socialLinks || [];
+    this.socialLinks = props.socialLinks;
     this.techStacks = props.techStacks || [];
     this.experiences = props.experiences || [];
     this.projects = props.projects || [];
@@ -67,7 +79,13 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks?: { type: string; url: string }[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
     techStacks?: {
       id: string;
       name: string;
@@ -90,19 +108,19 @@ export class Profile {
       return Result.fail('Bio must be less than 1000 characters.');
     }
 
-    const socialLinkVOs: SocialLink[] = [];
-    for (const linkData of props.socialLinks || []) {
-      if (!linkData.url) continue;
+    // const sociallinkvos: sociallink[] = [];
+    // for (const linkData of props.socialLinks || []) {
+    //   if (!linkData.url) continue;
 
-      const socialLinkResult = SocialLink.create({
-        type: linkData.type as SocialLinkType,
-        url: linkData.url,
-      });
-      if (!socialLinkResult.success) {
-        return Result.fail(socialLinkResult.error);
-      }
-      socialLinkVOs.push(socialLinkResult.value);
-    }
+    //   const socialLinkResult = SocialLink.create({
+    //     type: linkData.type as SocialLinkType,
+    //     url: linkData.url,
+    //   });
+    //   if (!socialLinkResult.success) {
+    //     return Result.fail(socialLinkResult.error);
+    //   }
+    //   socialLinkVOs.push(socialLinkResult.value);
+    // }
 
     const experienceVOs: ProfileExperience[] = [];
     for (const expData of props.experiences || []) {
@@ -138,7 +156,7 @@ export class Profile {
         bio: props.bio,
         location: props.location,
         company: props.company,
-        socialLinks: socialLinkVOs,
+        socialLinks: props.socialLinks,
         techStacks: props.techStacks || [],
         experiences: experienceVOs,
         projects: projectVOs,
@@ -154,7 +172,13 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks?: SocialLink[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
     techStacks?: {
       id: string;
       name: string;
@@ -174,14 +198,14 @@ export class Profile {
     this.experiences.push(experience);
   }
 
-  public addSocialLink(link: SocialLink): Result<string, string> {
-    const existingLink = this.socialLinks.find((l) => l.type === link.type);
-    if (existingLink) {
-      return Result.fail(`A social link of type ${link.type} already exists.`);
-    }
-    this.socialLinks.push(link);
-    return Result.ok('');
-  }
+  // public addSocialLink(link: SocialLink): Result<string, string> {
+  //   const existingLink = this.socialLinks.find((l) => l.type === link.type);
+  //   if (existingLink) {
+  //     return Result.fail(`A social link of type ${link.type} already exists.`);
+  //   }
+  //   this.socialLinks.push(link);
+  //   return Result.ok('');
+  // }
 
   public addProject(project: ProfileProject): Result<string, string> {
     const existingProject = this.projects.find((p) => p.name === project.name);
