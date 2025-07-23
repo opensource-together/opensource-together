@@ -99,6 +99,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
@@ -125,6 +126,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;

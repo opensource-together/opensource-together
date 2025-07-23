@@ -93,6 +93,7 @@ export class PrismaProjectRoleApplicationRepository
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
@@ -130,6 +131,7 @@ export class PrismaProjectRoleApplicationRepository
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
@@ -156,6 +158,7 @@ export class PrismaProjectRoleApplicationRepository
           decidedAt: domainApplication.value.decidedAt || new Date(),
           decidedBy: domainApplication.value.decidedBy || '',
           rejectionReason: domainApplication.value.rejectionReason || '',
+          motivationLetter: domainApplication.value.motivationLetter || '',
           userProfile: {
             id: domainApplication.value.userProfile.id,
             name: domainApplication.value.userProfile.name,
@@ -185,6 +188,7 @@ export class PrismaProjectRoleApplicationRepository
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
+        motivationLetter: string;
         rejectionReason: string;
         userProfile: {
           id: string;
@@ -224,6 +228,7 @@ export class PrismaProjectRoleApplicationRepository
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
+        motivationLetter: string;
         rejectionReason: string;
         userProfile: {
           id: string;
@@ -250,6 +255,7 @@ export class PrismaProjectRoleApplicationRepository
           appliedAt: domainApplication.value.appliedAt,
           decidedAt: domainApplication.value.decidedAt || new Date(),
           decidedBy: domainApplication.value.decidedBy || '',
+          motivationLetter: domainApplication.value.motivationLetter || '',
           rejectionReason: domainApplication.value.rejectionReason || '',
           userProfile: {
             id: domainApplication.value.userProfile.id,
