@@ -190,7 +190,7 @@ export class NotificationsGateway
     );
 
     if (userSocket) {
-      userSocket.emit('notification-update', {
+      userSocket.emit('notification-read', {
         id: notification.id,
         receiverId: notification.receiverId,
         senderId: notification.senderId,

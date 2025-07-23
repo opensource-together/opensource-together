@@ -18,9 +18,7 @@ export class NotificationService implements NotificationServicePort {
   constructor(
     private readonly prisma: PrismaService,
     private readonly realtimeAdapter: RealtimeNotifierAdapter,
-  ) {
-    console.log('NotificationService constructor called'); // ← mets des logs ici
-  }
+  ) {}
 
   /**
    * Envoie une notification : persiste puis délègue aux canaux.
@@ -31,7 +29,7 @@ export class NotificationService implements NotificationServicePort {
     notification: SendNotificationPayload,
   ): Promise<Result<void, string>> {
     try {
-      // 1. Persister en base de données
+      // Persister en base de données
       const createdNotification = await this.prisma.notification.create({
         data: {
           receiverId: notification.receiverId,
@@ -41,7 +39,7 @@ export class NotificationService implements NotificationServicePort {
         },
       });
 
-      // 2. Construire les données brutes pour l'adapter
+      // Construire les données brutes pour l'adapter
       const notificationData: NotificationData = {
         id: createdNotification.id,
         receiverId: createdNotification.receiverId,
@@ -52,7 +50,7 @@ export class NotificationService implements NotificationServicePort {
         readAt: createdNotification.readAt,
       };
 
-      // 3. Envoyer aux canaux appropriés
+      // Envoyer aux canaux appropriés
       const channels = notification.channels || ['realtime'];
       let realtimeError: string | null = null;
 
@@ -73,7 +71,20 @@ export class NotificationService implements NotificationServicePort {
       return Result.ok(undefined);
     } catch (error) {
       console.error('Error sending notification:', error);
-      return Result.fail('Failed to send notification');
+
+      // Gestion spécifique des erreurs de contrainte de clé étrangère
+      if (error.code === 'P2003') {
+        if (error.meta?.constraint === 'Notification_senderId_fkey') {
+          return Result.fail(
+            `L'utilisateur expéditeur n'existe pas ou n'est pas connecté`,
+          );
+        }
+        if (error.meta?.constraint === 'Notification_receiverId_fkey') {
+          return Result.fail(`L'utilisateur destinataire n'existe pas`);
+        }
+      }
+
+      return Result.fail("Erreur lors de l'envoi de la notification");
     }
   }
 

@@ -14,10 +14,6 @@ export class CreateNotificationRequestDto {
 
   @IsString()
   @IsNotEmpty()
-  senderId: string;
-
-  @IsString()
-  @IsNotEmpty()
   type: string;
 
   @IsObject()

@@ -158,13 +158,21 @@ export class NotificationsController {
     },
   })
   async create(
+    @Session('userId') senderId: string,
     @Body() dto: CreateNotificationRequestDto,
   ): Promise<CreateNotificationResponseDto> {
     try {
+      // Validation : utilisateur connecté
+      if (!senderId) {
+        throw new BadRequestException(
+          'Vous devez être connecté pour envoyer une notification',
+        );
+      }
+
       const result = await this.commandBus.execute(
         new CreateNotificationCommand({
           receiverId: dto.receiverId,
-          senderId: dto.senderId,
+          senderId: senderId,
           type: dto.type,
           payload: dto.payload,
           channels: dto.channels || ['realtime'],
