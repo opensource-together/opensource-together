@@ -47,7 +47,7 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const renderIcon = () => {
     if (!confirmIcon) return null;
-    return <Icon name={confirmIcon} size="xs" variant={confirmIconVariant} />;
+    return <Icon name="check" size="xs" variant="white" />;
   };
 
   return (
