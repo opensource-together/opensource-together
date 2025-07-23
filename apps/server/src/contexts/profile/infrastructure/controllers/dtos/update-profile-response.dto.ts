@@ -12,19 +12,7 @@ export class UpdateProfileResponseDto {
       bio: profileState.bio,
       location: profileState.location,
       company: profileState.company,
-      socialLinks: profileState.socialLinks.reduce(
-        (acc, link) => {
-          acc[link.type as keyof typeof acc] = link.url;
-          return acc;
-        },
-        {} as {
-          github?: string;
-          discord?: string;
-          twitter?: string;
-          linkedin?: string;
-          website?: string;
-        },
-      ),
+      socialLinks: profileState.socialLinks || {},
       techStacks: profileState.techStacks.map((skill) => ({
         name: skill.name,
         id: skill.id,

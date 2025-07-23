@@ -61,7 +61,33 @@ export class CreateProfileCommandHandler
   async execute(
     command: CreateProfileCommand,
   ): Promise<Result<Profile, string>> {
-    const profileResult: Result<Profile, string> = Profile.create(command);
+    // Convertir les socialLinks du format tableau vers l'objet simple
+    const socialLinksObject: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    } = {};
+
+    command.socialLinks.forEach((link) => {
+      const linkType = link.type as keyof typeof socialLinksObject;
+      socialLinksObject[linkType] = link.url;
+    });
+
+    const profileData = {
+      userId: command.userId,
+      name: command.name,
+      login: command.login,
+      avatarUrl: command.avatarUrl,
+      bio: command.bio,
+      location: command.location,
+      company: command.company,
+      socialLinks: socialLinksObject,
+      experiences: command.experiences,
+    };
+
+    const profileResult: Result<Profile, string> = Profile.create(profileData);
 
     if (!profileResult.success) return Result.fail(profileResult.error);
 
