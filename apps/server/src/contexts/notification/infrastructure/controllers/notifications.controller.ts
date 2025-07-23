@@ -415,32 +415,30 @@ export class NotificationsController {
         new MarkNotificationReadCommand(notificationId, ownerId),
       );
 
-      console.log('result', result);
-      return MarkNotificationReadResponseDto.success();
-      // if (result.success) {
-      //   return MarkNotificationReadResponseDto.success();
-      // } else {
-      //   // Différencier les types d'erreurs
-      //   if (
-      //     result.error.includes('not found') ||
-      //     result.error.includes('non trouvée')
-      //   ) {
-      //     throw new NotFoundException('Notification non trouvée');
-      //   } else if (
-      //     result.error.includes('not the owner') ||
-      //     result.error.includes('ne vous appartient pas')
-      //   ) {
-      //     throw new HttpException(
-      //       'Cette notification ne vous appartient pas',
-      //       HttpStatus.FORBIDDEN,
-      //     );
-      //   } else {
-      //     throw new HttpException(
-      //       'Une erreur interne est survenue',
-      //       HttpStatus.INTERNAL_SERVER_ERROR,
-      //     );
-      //   }
-      // }
+      if (result.success) {
+        return MarkNotificationReadResponseDto.success();
+      } else {
+        // Différencier les types d'erreurs
+        if (
+          result.error.includes('not found') ||
+          result.error.includes('non trouvée')
+        ) {
+          throw new NotFoundException('Notification non trouvée');
+        } else if (
+          result.error.includes('not the owner') ||
+          result.error.includes('ne vous appartient pas')
+        ) {
+          throw new HttpException(
+            'Cette notification ne vous appartient pas',
+            HttpStatus.FORBIDDEN,
+          );
+        } else {
+          throw new HttpException(
+            'Une erreur interne est survenue',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
