@@ -11,6 +11,7 @@ export type ProfileTechStack = {
   id: string;
   name: string;
   iconUrl: string;
+  type: "LANGUAGE" | "TECH";
 };
 
 export type ProfileBadge = {
@@ -78,8 +79,14 @@ export type Profile = {
   joinedAt?: string;
   // updatedAt?: string;
   projects?: ProfileProject[];
-  socialLinks?: ProfileSocialLink[];
+  socialLinks?: {
+    github?: string;
+    discord?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
   contributionsCount?: number;
   experiences?: ProfileExperience[];
-  links?: ProfileLink[];
+  links?: ProfileLink[]; // Deprecated - pour compatibilité
 };

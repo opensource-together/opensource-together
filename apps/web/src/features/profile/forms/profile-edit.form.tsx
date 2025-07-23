@@ -20,6 +20,7 @@ import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
+import { useProfileUpdate } from "../hooks/use-profile-update.hook";
 import { Profile } from "../types/profile.type";
 import {
   ProfileSchema,
@@ -32,6 +33,7 @@ interface ProfileEditFormProps {
 
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const { updateProfile } = useProfileUpdate();
 
   const form = useForm({
     resolver: zodResolver(UpdateProfileSchema),
@@ -40,29 +42,17 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
       name: profile.name || "",
       title: profile.title || "",
       bio: profile.bio || "",
-      techStacks: profile.techStacks?.map((techStack) => techStack.name) || [],
-      externalLinks:
-        profile.links?.reduce(
-          (acc, link) => {
-            const linkType = link.type === "link" ? "website" : link.type;
-            acc[linkType as keyof typeof acc] = link.url;
-            return acc;
-          },
-          {} as {
-            github?: string;
-            discord?: string;
-            twitter?: string;
-            linkedin?: string;
-            website?: string;
-          }
-        ) || {},
+      techStacks: profile.techStacks?.map((techStack) => techStack.id) || [],
+      socialLinks: profile.socialLinks || {},
     },
   });
 
   const { control } = form;
 
   const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
-    console.log("Profile edit data:", data);
+    console.log(data);
+    const result = updateProfile(data);
+    console.log(result);
   });
 
   return (
@@ -177,7 +167,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             <FormLabel>Liens sociaux</FormLabel>
             <FormField
               control={control}
-              name="externalLinks.github"
+              name="socialLinks.github"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -193,7 +183,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.discord"
+              name="socialLinks.discord"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -209,7 +199,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.twitter"
+              name="socialLinks.twitter"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -225,7 +215,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.linkedin"
+              name="socialLinks.linkedin"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -241,7 +231,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.website"
+              name="socialLinks.website"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
