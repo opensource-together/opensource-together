@@ -27,6 +27,7 @@ export interface ComboboxOption {
   id: string;
   name: string;
   techStack?: TechStack[];
+  type?: "LANGUAGE" | "TECH";
 }
 
 interface ComboboxProps {
@@ -128,37 +129,107 @@ export function Combobox({
             <CommandInput placeholder={searchPlaceholder} className="h-9" />
             <CommandList>
               <CommandEmpty>{emptyText}</CommandEmpty>
-              <CommandGroup>
-                {options.map((option) => {
-                  const isSelected = value.includes(option.id);
-                  const isDisabled = !isSelected && isMaxReached;
+              {options.some((opt) => opt.type === "LANGUAGE") && (
+                <>
+                  <CommandGroup heading="Langages">
+                    {options
+                      .filter((opt) => opt.type === "LANGUAGE")
+                      .map((option) => {
+                        const isSelected = value.includes(option.id);
+                        const isDisabled = !isSelected && isMaxReached;
+                        return (
+                          <CommandItem
+                            key={option.id}
+                            value={option.name}
+                            onSelect={(selectedName) =>
+                              !isDisabled && handleSelect(selectedName)
+                            }
+                            className={cn(
+                              "cursor-pointer",
+                              isDisabled && "cursor-not-allowed opacity-50"
+                            )}
+                          >
+                            <Icon
+                              name="check"
+                              size="xs"
+                              variant="gray"
+                              className={cn(
+                                "mr-2",
+                                isSelected ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {option.name}
+                          </CommandItem>
+                        );
+                      })}
+                  </CommandGroup>
+                  <CommandGroup heading="Technologies">
+                    {options
+                      .filter((opt) => opt.type === "TECH")
+                      .map((option) => {
+                        const isSelected = value.includes(option.id);
+                        const isDisabled = !isSelected && isMaxReached;
+                        return (
+                          <CommandItem
+                            key={option.id}
+                            value={option.name}
+                            onSelect={(selectedName) =>
+                              !isDisabled && handleSelect(selectedName)
+                            }
+                            className={cn(
+                              "cursor-pointer",
+                              isDisabled && "cursor-not-allowed opacity-50"
+                            )}
+                          >
+                            <Icon
+                              name="check"
+                              size="xs"
+                              variant="gray"
+                              className={cn(
+                                "mr-2",
+                                isSelected ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {option.name}
+                          </CommandItem>
+                        );
+                      })}
+                  </CommandGroup>
+                </>
+              )}
+              {!options.some((opt) => opt.type === "LANGUAGE") && (
+                <CommandGroup>
+                  {options.map((option) => {
+                    const isSelected = value.includes(option.id);
+                    const isDisabled = !isSelected && isMaxReached;
 
-                  return (
-                    <CommandItem
-                      key={option.id}
-                      value={option.name}
-                      onSelect={(selectedName) =>
-                        !isDisabled && handleSelect(selectedName)
-                      }
-                      className={cn(
-                        "cursor-pointer",
-                        isDisabled && "cursor-not-allowed opacity-50"
-                      )}
-                    >
-                      <Icon
-                        name="check"
-                        size="xs"
-                        variant="gray"
+                    return (
+                      <CommandItem
+                        key={option.id}
+                        value={option.name}
+                        onSelect={(selectedName) =>
+                          !isDisabled && handleSelect(selectedName)
+                        }
                         className={cn(
-                          "mr-2",
-                          isSelected ? "opacity-100" : "opacity-0"
+                          "cursor-pointer",
+                          isDisabled && "cursor-not-allowed opacity-50"
                         )}
-                      />
-                      {option.name}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
+                      >
+                        <Icon
+                          name="check"
+                          size="xs"
+                          variant="gray"
+                          className={cn(
+                            "mr-2",
+                            isSelected ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {option.name}
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

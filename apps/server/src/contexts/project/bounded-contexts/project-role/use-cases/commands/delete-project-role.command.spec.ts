@@ -65,6 +65,7 @@ describe('DeleteProjectRoleCommandHandler', () => {
       id: '1',
       name: 'React',
       iconUrl: 'https://reactjs.org/favicon.ico',
+      type: 'TECH',
     });
     if (!react.success) {
       throw new Error('Failed to create tech stack');

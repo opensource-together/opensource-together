@@ -88,10 +88,16 @@ model ProjectExternalLink {
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
+enum TechStackType {
+  LANGUAGE
+  TECH
+}
+
 model TechStack {
   id           String        @id @default(uuid())
   name         String
   iconUrl      String
+  type         TechStackType
   projects     Project[]
   projectRoles ProjectRole[]
 }
@@ -124,6 +130,7 @@ model ProjectRole {
 model ProjectRoleApplication {
   id            String       @id @default(uuid())
   projectId     String
+  projectTitle  String
   projectRoleId String
   projectRoleTitle String
   status        String

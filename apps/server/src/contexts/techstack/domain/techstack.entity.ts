@@ -4,11 +4,13 @@ export type TechStackData = {
   id: string;
   name: string;
   iconUrl: string;
+  type: 'LANGUAGE' | 'TECH';
 };
 export type TechStackValidationErrors = {
   id?: string;
   name?: string;
   iconUrl?: string;
+  type?: string;
 };
 
 export type TechStackPrimitive = TechStackData;
@@ -41,11 +43,18 @@ export class TechStack {
   private readonly id: string;
   private name: string;
   private iconUrl: string;
+  private type: 'LANGUAGE' | 'TECH';
 
-  private constructor(props: { id: string; name: string; iconUrl: string }) {
+  private constructor(props: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }) {
     this.id = props.id;
     this.name = props.name;
     this.iconUrl = props.iconUrl;
+    this.type = props.type;
   }
 
   public static reconstitute(
@@ -61,7 +70,12 @@ export class TechStack {
   public static validate(
     props: TechStackData,
   ): Result<TechStack, TechStackValidationErrors | string> {
-    const error: { id?: string; name?: string; iconUrl?: string } = {};
+    const error: {
+      id?: string;
+      name?: string;
+      iconUrl?: string;
+      type?: string;
+    } = {};
     if (!props.id) {
       error.id = 'Id is required';
     }
@@ -70,6 +84,9 @@ export class TechStack {
     }
     if (!props.iconUrl) {
       error.iconUrl = 'Icon URL is required';
+    }
+    if (!props.type || (props.type !== 'LANGUAGE' && props.type !== 'TECH')) {
+      error.type = 'Type must be LANGUAGE or TECH';
     }
     if (Object.keys(error).length > 0) {
       return Result.fail(error);
@@ -92,6 +109,7 @@ export class TechStack {
       id: this.id,
       name: this.name,
       iconUrl: this.iconUrl,
+      type: this.type,
     };
   }
 

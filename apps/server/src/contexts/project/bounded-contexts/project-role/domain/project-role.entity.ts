@@ -1,8 +1,8 @@
-import { Result } from '@/libs/result';
 import {
   TechStack,
   TechStackValidationErrors,
 } from '@/contexts/techstack/domain/techstack.entity';
+import { Result } from '@/libs/result';
 
 // Type unifié pour la création et la reconstitution
 export type ProjectRoleData = {
@@ -11,7 +11,12 @@ export type ProjectRoleData = {
   title: string;
   description: string;
   isFilled: boolean;
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  techStacks: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -240,7 +245,10 @@ export class ProjectRole {
       title: this.title,
       description: this.description,
       isFilled: this.isFilled,
-      techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
+      techStacks: this.techStacks.map((ts) => {
+        const { id, name, iconUrl, type } = ts.toPrimitive();
+        return { id, name, iconUrl, type };
+      }),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

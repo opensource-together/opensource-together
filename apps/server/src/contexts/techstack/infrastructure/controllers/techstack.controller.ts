@@ -1,10 +1,10 @@
+import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
+import { GetAllTechStacksQuery } from '@/contexts/techstack/use-cases/queries/get-all-techstacks.query';
+import { Result } from '@/libs/result';
 import { Controller, Get } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetAllTechStacksQuery } from '@/contexts/techstack/use-cases/queries/get-all-techstacks.query';
-import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/libs/result';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PublicAccess } from 'supertokens-nestjs';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('Tech Stacks')
 @Controller('techstacks')
@@ -22,36 +22,43 @@ export class TechStackController {
         id: '1',
         name: 'React',
         iconUrl: 'https://react.dev/logo-og.png',
+        type: 'TECH',
       },
       {
         id: '2',
         name: 'Next.js',
         iconUrl: 'https://nextjs.org/static/favicon/favicon-32x32.png',
+        type: 'TECH',
       },
       {
         id: '3',
         name: 'TypeScript',
         iconUrl: 'https://www.typescriptlang.org/static/images/logo.svg',
+        type: 'LANGUAGE',
       },
       {
         id: '4',
         name: 'Tailwind CSS',
         iconUrl: 'https://tailwindcss.com/favicon.ico',
+        type: 'TECH',
       },
       {
         id: '5',
         name: 'Prisma',
         iconUrl: 'https://www.prisma.io/favicon.ico',
+        type: 'TECH',
       },
       {
         id: '6',
         name: 'PostgreSQL',
         iconUrl: 'https://www.postgresql.org/favicon.ico',
+        type: 'LANGUAGE',
       },
       {
         id: '7',
         name: 'Docker',
         iconUrl: 'https://www.docker.com/favicon.ico',
+        type: 'TECH',
       },
     ],
   })
@@ -63,7 +70,9 @@ export class TechStackController {
       statusCode: 500,
     },
   })
-  async getAllTechStacks(): Promise<TechStack[] | { error: string }> {
+  async getAllTechStacks(): Promise<
+    { languages: TechStack[]; technologies: TechStack[] } | { error: string }
+  > {
     const result: Result<TechStack[], string> = await this.queryBus.execute(
       new GetAllTechStacksQuery(),
     );
@@ -72,6 +81,13 @@ export class TechStackController {
       return { error: result.error };
     }
 
-    return result.value;
+    const languages = result.value.filter(
+      (ts) => ts.toPrimitive().type === 'LANGUAGE',
+    );
+    const technologies = result.value.filter(
+      (ts) => ts.toPrimitive().type === 'TECH',
+    );
+
+    return { languages, technologies };
   }
 }

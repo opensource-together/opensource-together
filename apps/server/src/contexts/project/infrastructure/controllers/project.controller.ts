@@ -17,12 +17,12 @@ import {
   Controller,
   Delete,
   Get,
-  Query,
   HttpException,
   HttpStatus,
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -36,13 +36,13 @@ import {
 } from '@nestjs/swagger';
 import { Octokit } from '@octokit/rest';
 import { PublicAccess, Session } from 'supertokens-nestjs';
+import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
-import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -69,8 +69,18 @@ export class ProjectController {
         shortDescription: 'E-commerce with React & Node.js',
         ownerId: 'github_user123',
         techStacks: [
-          { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-          { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+          {
+            id: '1',
+            name: 'React',
+            iconUrl: 'https://reactjs.org/logo.svg',
+            type: 'TECH',
+          },
+          {
+            id: '2',
+            name: 'Node.js',
+            iconUrl: 'https://nodejs.org/logo.svg',
+            type: 'TECH',
+          },
         ],
         categories: [{ id: '2', name: 'Développement Web' }],
         keyFeatures: [
@@ -99,6 +109,7 @@ export class ProjectController {
                 id: '1',
                 name: 'React',
                 iconUrl: 'https://reactjs.org/logo.svg',
+                type: 'TECH',
               },
             ],
             createdAt: '2025-01-15T10:30:00.000Z',
@@ -158,8 +169,18 @@ export class ProjectController {
         shortDescription: 'E-commerce with React & Node.js',
         ownerId: 'github_user123',
         techStacks: [
-          { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-          { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+          {
+            id: '1',
+            name: 'React',
+            iconUrl: 'https://reactjs.org/logo.svg',
+            type: 'TECH',
+          },
+          {
+            id: '2',
+            name: 'Node.js',
+            iconUrl: 'https://nodejs.org/logo.svg',
+            type: 'TECH',
+          },
         ],
         categories: [{ id: '2', name: 'Développement Web' }],
         keyFeatures: [
@@ -188,6 +209,7 @@ export class ProjectController {
                 id: '1',
                 name: 'React',
                 iconUrl: 'https://reactjs.org/logo.svg',
+                type: 'TECH',
               },
             ],
             createdAt: '2025-01-15T10:30:00.000Z',
@@ -279,8 +301,18 @@ export class ProjectController {
       description: 'Modern e-commerce app with React and Node.js',
       shortDescription: 'E-commerce with React & Node.js',
       techStacks: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-        { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/logo.svg',
+          type: 'TECH',
+        },
+        {
+          id: '2',
+          name: 'Node.js',
+          iconUrl: 'https://nodejs.org/logo.svg',
+          type: 'TECH',
+        },
       ],
       categories: [{ id: '2', name: 'Développement Web' }],
       keyFeatures: [
@@ -305,7 +337,12 @@ export class ProjectController {
           description: 'React developer needed',
           isFilled: false,
           techStacks: [
-            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+            {
+              id: '1',
+              name: 'React',
+              iconUrl: 'https://reactjs.org/logo.svg',
+              type: 'TECH',
+            },
           ],
           createdAt: '2025-01-15T10:30:00.000Z',
           updatedAt: '2025-01-15T10:30:00.000Z',
@@ -504,8 +541,18 @@ export class ProjectController {
         { type: 'github', url: 'https://github.com/user/mon-projet' },
       ],
       techStacks: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-        { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/logo.svg',
+          type: 'TECH',
+        },
+        {
+          id: '2',
+          name: 'Node.js',
+          iconUrl: 'https://nodejs.org/logo.svg',
+          type: 'TECH',
+        },
       ],
       categories: [{ id: '1', name: 'Développement Web' }],
       keyFeatures: [
@@ -530,7 +577,12 @@ export class ProjectController {
           description: 'Role description',
           isFilled: false,
           techStacks: [
-            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+            {
+              id: '1',
+              name: 'React',
+              iconUrl: 'https://reactjs.org/logo.svg',
+              type: 'TECH',
+            },
           ],
           createdAt: '2025-07-05T14:59:31.560Z',
           updatedAt: '2025-07-05T14:59:31.560Z',
@@ -650,7 +702,12 @@ export class ProjectController {
       shortDescription: 'Description courte mise à jour',
       ownerId: 'github_user123',
       techStacks: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/logo.svg',
+          type: 'TECH',
+        },
       ],
       categories: [{ id: '1', name: 'Développement Web' }],
       createdAt: '2025-01-15T10:30:00.000Z',
