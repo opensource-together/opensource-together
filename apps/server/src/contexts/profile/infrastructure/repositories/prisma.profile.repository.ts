@@ -48,7 +48,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
 
         return tx.profile.findUnique({
           where: { userId: profileData.userId },
-          include: { socialLinks: true },
+          include: { socialLinks: true, techStacks: true },
         });
       });
 
@@ -70,7 +70,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
     try {
       const rawProfile = await this.prisma.profile.findUnique({
         where: { userId: id },
-        include: { socialLinks: true },
+        include: { socialLinks: true, techStacks: true },
       });
 
       if (!rawProfile) {
@@ -85,9 +85,13 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
     }
   }
 
-  async update(userId: string, profile: Profile): Promise<Result<Profile, string>> {
+  async update(
+    userId: string,
+    profile: Profile,
+  ): Promise<Result<Profile, string>> {
     const profileData = profile.toPrimitive();
-    const { profileData: repoData, socialLinksData } = PrismaProfileMapper.toRepo(profileData);
+    const { profileData: repoData, socialLinksData } =
+      PrismaProfileMapper.toRepo(profileData);
 
     try {
       const updatedRawProfile = await this.prisma.$transaction(async (tx) => {
@@ -119,15 +123,33 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
           });
         }
 
+        // Mettre à jour les relations techStacks
+        // D'abord, supprimer toutes les relations existantes
+        await tx.techStack.updateMany({
+          where: { profileId: userId },
+          data: { profileId: null },
+        });
+
+        // Puis connecter les nouvelles techStacks
+        if (profileData.techStacks.length > 0) {
+          const techStackIds = profileData.techStacks.map((ts) => ts.id);
+          await tx.techStack.updateMany({
+            where: { id: { in: techStackIds } },
+            data: { profileId: userId },
+          });
+        }
+
         // Retourner le profil mis à jour
         return tx.profile.findUnique({
           where: { userId },
-          include: { socialLinks: true },
+          include: { socialLinks: true, techStacks: true },
         });
       });
 
       if (!updatedRawProfile) {
-        return Result.fail('Erreur technique : Le profil n\'a pas pu être retrouvé après sa mise à jour.');
+        return Result.fail(
+          "Erreur technique : Le profil n'a pas pu être retrouvé après sa mise à jour.",
+        );
       }
 
       const domainProfile = PrismaProfileMapper.toDomain(updatedRawProfile);

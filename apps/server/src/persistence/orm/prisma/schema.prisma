@@ -39,6 +39,7 @@ model Profile {
   location    String?
   company     String?
   bio         String?
+  techStacks  TechStack[]
   updatedAt   DateTime         @default(now()) @updatedAt
   user        User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
   socialLinks UserSocialLink[]
@@ -100,6 +101,8 @@ model TechStack {
   type         TechStackType
   projects     Project[]
   projectRoles ProjectRole[]
+  profile      Profile?     @relation(fields: [profileId], references: [userId], onDelete: Cascade)
+  profileId    String?
 }
 
 model teamMember {

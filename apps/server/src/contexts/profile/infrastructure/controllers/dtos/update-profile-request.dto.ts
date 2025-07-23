@@ -1,10 +1,14 @@
-import { IsString, IsArray, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsArray, IsOptional, IsObject } from 'class-validator';
+// import { Type } from 'class-transformer';
 
 export class UpdateProfileRequestDto {
   @IsString()
   @IsOptional()
   name?: string;
+
+  @IsString()
+  @IsOptional()
+  title?: string;
 
   @IsString()
   @IsOptional()
@@ -22,9 +26,15 @@ export class UpdateProfileRequestDto {
   @IsOptional()
   company?: string;
 
-  @IsArray()
+  @IsObject()
   @IsOptional()
-  socialLinks?: { type: string; url: string }[];
+  socialLinks?: {
+    github?: string;
+    discord?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
 
   @IsArray()
   @IsOptional()
@@ -42,4 +52,8 @@ export class UpdateProfileRequestDto {
   @IsArray()
   @IsOptional()
   projects?: { name: string; description: string; url: string }[];
+
+  @IsArray()
+  @IsOptional()
+  techStacks?: string[];
 }
