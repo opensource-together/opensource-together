@@ -12,13 +12,24 @@ export class UpdateProfileResponseDto {
       bio: profileState.bio,
       location: profileState.location,
       company: profileState.company,
-      socialLinks: profileState.socialLinks.map((link) => ({
-        type: link.type,
-        url: link.url,
-      })),
-      skills: profileState.skills.map((skill) => ({
+      socialLinks: profileState.socialLinks.reduce(
+        (acc, link) => {
+          acc[link.type as keyof typeof acc] = link.url;
+          return acc;
+        },
+        {} as {
+          github?: string;
+          discord?: string;
+          twitter?: string;
+          linkedin?: string;
+          website?: string;
+        },
+      ),
+      techStacks: profileState.techStacks.map((skill) => ({
         name: skill.name,
-        level: skill.level,
+        id: skill.id,
+        type: skill.type,
+        iconUrl: skill.iconUrl,
       })),
       experiences: profileState.experiences.map((experience) => ({
         company: experience.company,
@@ -31,8 +42,10 @@ export class UpdateProfileResponseDto {
         description: project.description,
         url: project.url,
       })),
-      joinedAt: profileState.updatedAt?.toISOString() ?? new Date().toISOString(),
-      profileUpdatedAt: profileState.updatedAt?.toISOString() ?? new Date().toISOString(),
+      joinedAt:
+        profileState.updatedAt?.toISOString() ?? new Date().toISOString(),
+      profileUpdatedAt:
+        profileState.updatedAt?.toISOString() ?? new Date().toISOString(),
     };
   }
 }

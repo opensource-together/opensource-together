@@ -63,7 +63,7 @@ export class ProfileController {
         { type: 'linkedin', url: 'https://www.linkedin.com/in/jhondoe/' },
         { type: 'website', url: 'https://jhondoe.com' },
       ],
-      skills: [],
+      techStacks: [],
       experiences: [],
       joinedAt: '2025-04-16T15:47:31.633Z',
       profileUpdatedAt: '2025-04-16T15:47:31.633Z',
@@ -215,7 +215,7 @@ export class ProfileController {
         { type: 'linkedin', url: 'https://www.linkedin.com/in/johndoe/' },
         { type: 'website', url: 'https://johndoe.com' },
       ],
-      skills: [],
+      techStacks: [],
       experiences: [],
       projects: [],
       joinedAt: '2025-04-16T15:47:31.633Z',
@@ -244,7 +244,7 @@ export class ProfileController {
   }
 
   @Patch('me')
-  @ApiOperation({ summary: 'Mettre à jour le profil de l\'utilisateur courant' })
+  @ApiOperation({ summary: "Mettre à jour le profil de l'utilisateur courant" })
   @ApiCookieAuth('sAccessToken')
   @ApiBody({
     description: 'Données de mise à jour du profil',
@@ -264,7 +264,7 @@ export class ProfileController {
         { type: 'github', url: 'https://github.com/johndoe' },
         { type: 'twitter', url: 'https://twitter.com/johndoe' },
       ],
-      skills: [],
+      techStacks: [],
       experiences: [],
       joinedAt: '2025-04-16T15:47:31.633Z',
       profileUpdatedAt: '2025-04-17T10:30:00.000Z',
@@ -305,7 +305,7 @@ export class ProfileController {
   }
 
   @Delete('me')
-  @ApiOperation({ summary: 'Supprimer le profil de l\'utilisateur courant' })
+  @ApiOperation({ summary: "Supprimer le profil de l'utilisateur courant" })
   @ApiCookieAuth('sAccessToken')
   @ApiResponse({
     status: 200,
@@ -339,8 +339,10 @@ export class ProfileController {
     return { message: 'Profile deleted successfully' };
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Mettre à jour un profil par son ID (admin uniquement)' })
+  @Patch()
+  @ApiOperation({
+    summary: 'Mettre à jour un profil par son ID (admin uniquement)',
+  })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({
     name: 'id',
@@ -373,17 +375,21 @@ export class ProfileController {
   })
   async updateProfile(
     @Session('userId') currentUserId: string,
-    @Param('id') profileId: string,
+    // @Param('id') profileId: string,
     @Body() updateProfileDto: UpdateProfileRequestDto,
   ): Promise<ProfileResponseDto> {
     // Vérifier que l'utilisateur met à jour son propre profil
-    if (currentUserId !== profileId) {
-      throw new ForbiddenException('You are not allowed to update this profile');
-    }
+    // if (currentUserId !== profileId) {
+    //   throw new ForbiddenException(
+    //     'You are not allowed to update this profile',
+    //   );
+    // }
 
+    console.log({ updateProfileDto });
     const result: Result<Profile, string> = await this.commandBus.execute(
-      new UpdateProfileCommand(profileId, updateProfileDto),
+      new UpdateProfileCommand(currentUserId, updateProfileDto),
     );
+    console.log({ result });
 
     if (!result.success) {
       if (result.error === 'Profile not found') {
@@ -396,7 +402,9 @@ export class ProfileController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Supprimer un profil par son ID (admin uniquement)' })
+  @ApiOperation({
+    summary: 'Supprimer un profil par son ID (admin uniquement)',
+  })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({
     name: 'id',
@@ -432,7 +440,9 @@ export class ProfileController {
   ): Promise<{ message: string }> {
     // Vérifier que l'utilisateur supprime son propre profil
     if (currentUserId !== profileId) {
-      throw new ForbiddenException('You are not allowed to delete this profile');
+      throw new ForbiddenException(
+        'You are not allowed to delete this profile',
+      );
     }
 
     const result: Result<boolean, string> = await this.commandBus.execute(

@@ -1,6 +1,7 @@
 import {
   Profile as PrismaProfile,
   UserSocialLink as PrismaSocialLink,
+  TechStack as PrismaTechStack,
 } from '@prisma/client';
 import { Profile } from '@/contexts/profile/domain/profile.entity';
 import {
@@ -12,6 +13,7 @@ import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.
 // Un type helper pour représenter un objet Prisma avec ses relations
 type RawPrismaProfile = PrismaProfile & {
   socialLinks: PrismaSocialLink[];
+  techStacks: PrismaTechStack[];
 };
 
 export class PrismaProfileMapper {
@@ -39,7 +41,12 @@ export class PrismaProfileMapper {
       location: raw.location || undefined,
       company: raw.company || undefined,
       socialLinks: socialLinks,
-      skills: [],
+      techStacks: raw.techStacks.map((techStack) => ({
+        id: techStack.id,
+        name: techStack.name,
+        iconUrl: techStack.iconUrl,
+        type: techStack.type,
+      })),
       experiences: [],
       projects: [],
       updatedAt: raw.updatedAt,
