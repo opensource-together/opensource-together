@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
+import { Icon, IconName } from "@/shared/components/ui/icon";
 
 import { Profile } from "../types/profile.type";
 
@@ -17,8 +17,16 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
     joinedAt = "N/A",
     bio = "",
     techStacks = [],
-    socialLinks = [],
+    socialLinks = {},
   } = profile;
+
+  // Convertir l'objet socialLinks en array pour l'affichage
+  const socialLinksArray = Object.entries(socialLinks)
+    .filter(([_, url]) => url && url.trim() !== "")
+    .map(([type, url]) => ({
+      type: type as IconName,
+      url: url as string,
+    }));
 
   const formatJoinDate = (dateString: string) => {
     const parsedDate = new Date(dateString);
@@ -45,10 +53,10 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             </p>
           </div>
         </div>
-        {socialLinks.length > 0 && (
+        {socialLinksArray.length > 0 && (
           <div className="flex items-center justify-end space-x-3">
             <div className="flex items-center space-x-3">
-              {socialLinks.map((link) => (
+              {socialLinksArray.map((link) => (
                 <button key={link.type}>
                   <a href={link.url} target="_blank" rel="noopener noreferrer">
                     <Icon
@@ -74,8 +82,8 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>
       <div className="flex-grow border-t border-black/5" />
 
-      {techStacks.map((techStack, index) => (
-        <div key={index}>
+      {techStacks && techStacks.length > 0 && (
+        <div>
           <div className="mt-10 mb-4 flex items-center justify-between">
             <h3 className="text-lg font-medium tracking-tighter">
               Compétences techniques
@@ -83,20 +91,22 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {/* <Badge
-              key={index}
-              style={{
-                color: techStack.color,
-                backgroundColor: techStack.bgColor,
-              }}
-              variant={getRoleBadgeVariant(techStack.name)}
-              className="text-xs"
-            >
-              {techStack.name}
-            </Badge> */}
+            {techStacks.map((techStack) => (
+              <div
+                key={techStack.id}
+                className="flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1"
+              >
+                <img
+                  src={techStack.iconUrl}
+                  alt={techStack.name}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium">{techStack.name}</span>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }

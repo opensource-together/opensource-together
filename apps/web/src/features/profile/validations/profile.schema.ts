@@ -17,7 +17,7 @@ export const profileSchema = z.object({
     .array(z.string())
     .max(10, "Maximum 10 technologies autorisées")
     .optional(),
-  externalLinks: z
+  socialLinks: z
     .object({
       github: urlWithDomainCheck(
         ["github.com"],
