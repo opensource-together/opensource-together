@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/opensource-together/opensource-together/compare/v0.1.3...v0.1.4) (2025-07-24)
+
+
+### Features
+
+* add production syncing workflow ([9a0db57](https://github.com/opensource-together/opensource-together/commit/9a0db57b36ce91d8fd1a6e84a13ac2bac80edbac))
+* add production syncing workflow ([e3e345d](https://github.com/opensource-together/opensource-together/commit/e3e345dcc163c03b3df79469dd14129afc262410))
+
 ## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-07-23)
 
 
