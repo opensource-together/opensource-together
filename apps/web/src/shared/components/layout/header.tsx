@@ -78,11 +78,11 @@ export default function Header() {
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
             <Image
-              src="/ost-beta-logo.svg"
+              src="/header-logo.png"
               alt="ost-logo"
-              width={207}
-              height={25}
-              className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
+              width={209}
+              height={12}
+              className="h-auto max-h-[16px] w-[150px] md:max-h-[20px] md:w-[170px] lg:max-h-[25px] lg:w-[209px]"
             />
           </Link>
 
@@ -193,17 +193,46 @@ export default function Header() {
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
           {/* Star Us - visible seulement si pas connecté */}
           {!isAuthenticated && (
-            <Link href="https://github.com/opensource-together" target="_blank">
-              <Button
-                variant="outline"
-                className="flex items-center font-medium shadow-none"
+            <div className="flex items-center gap-2">
+              <Link
+                href="https://x.com/OpenSTogether"
+                target="_blank"
+                className="mt-[1px] flex items-center"
               >
-                Star Us <Icon name="github" size="md" />
-              </Button>
-            </Link>
+                <Image
+                  src="/icons/x-gray-icon.svg"
+                  alt="X"
+                  width={12}
+                  height={12}
+                />
+              </Link>
+              <Link
+                href="https://www.linkedin.com/company/opensource-together"
+                target="_blank"
+                className="flex items-center"
+              >
+                <Image
+                  src="/icons/lk-gray-icon.svg"
+                  alt="LinkedIn"
+                  width={16}
+                  height={16}
+                />
+              </Link>
+              <Link
+                href="https://github.com/opensource-together"
+                target="_blank"
+              >
+                <Button
+                  variant="outline"
+                  className="ml-2 flex items-center font-medium shadow-none"
+                >
+                  Star Us <Icon name="github" size="md" />
+                </Button>
+              </Link>
+            </div>
           )}
 
-          {/* Créer un Projet */}
+          {/* Créer un Projet ou Se connecter avec Github */}
           {isAuthenticated ? (
             <Link href="/projects/create">
               <Button>
@@ -218,10 +247,20 @@ export default function Header() {
               </Button>
             </Link>
           ) : (
-            <Button onClick={handleCreate}>
-              <span className="hidden sm:inline">Créer un Projet</span>
-              <span className="inline sm:hidden">Nouveau projet</span>
-              <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
+            <Button
+              asChild
+              variant="default"
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
+            >
+              <a href="/auth/login">
+                <Image
+                  src="/icons/new-github-icon.svg"
+                  alt="github"
+                  width={13}
+                  height={16}
+                />
+                Se connecter avec Github
+              </a>
             </Button>
           )}
 
@@ -299,14 +338,15 @@ export default function Header() {
                 </Button>
               </Link>
             ) : (
-              <Button onClick={handleCreate} className="w-full max-w-[220px]">
-                New Project{" "}
-                <Icon
-                  name="plus"
-                  size="xs"
-                  variant="white"
-                  className="ml-0 align-middle"
-                />
+              <Button
+                asChild
+                variant="default"
+                className="flex w-full max-w-[220px] items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
+              >
+                <a href="/auth/github">
+                  <Icon name="github" size="md" variant="white" />
+                  Se connecter avec Github
+                </a>
               </Button>
             )}
           </div>
