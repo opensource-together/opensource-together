@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.5](https://github.com/opensource-together/opensource-together/compare/v0.1.4...v0.1.5) (2025-07-24)
+
+
+### Bug Fixes
+
+* update lockfile ([07bd05f](https://github.com/opensource-together/opensource-together/commit/07bd05ff6c89d28358e6e6000c610fd28e5eee0d))
+* update package vulnerabilities ([0a66c4d](https://github.com/opensource-together/opensource-together/commit/0a66c4d624cb3dfc47fe9f888ef216a6df0fa37c))
+* update package vulnerabilities ([7ab48e0](https://github.com/opensource-together/opensource-together/commit/7ab48e0d0632895ba4cc71337c6e08561ef193de))
+
 ## [0.1.4](https://github.com/opensource-together/opensource-together/compare/v0.1.3...v0.1.4) (2025-07-24)
 
 
