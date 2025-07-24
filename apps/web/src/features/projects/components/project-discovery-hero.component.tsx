@@ -22,6 +22,7 @@ export default function ProjectDiscoveryHero() {
         style={{ transform: "rotate(8deg)" }}
       />
 
+      {/* Images de fond, visibles uniquement à partir de md */}
       <Image
         src="/bible-left-2.png"
         alt="Bible gauche"
