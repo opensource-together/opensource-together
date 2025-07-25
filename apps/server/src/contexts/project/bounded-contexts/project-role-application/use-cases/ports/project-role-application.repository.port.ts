@@ -13,6 +13,25 @@ export interface ProjectRoleApplicationRepositoryPort {
     application: ProjectRoleApplication,
   ): Promise<Result<ProjectRoleApplication, string>>;
 
+  findAllByUserId(userId: string): Promise<
+    Result<
+      {
+        appplicationId: string;
+        projectTitle: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        status: string;
+        selectedKeyFeatures: string[];
+        selectedProjectGoals: string[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy: string;
+        rejectionReason: string;
+        motivationLetter: string;
+      }[],
+      string
+    >
+  >;
   /**
    * Met à jour une candidature existante
    */
@@ -80,6 +99,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
@@ -106,6 +126,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;

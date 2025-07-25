@@ -52,6 +52,7 @@ export class GetAllProjectApplicationsQueryHandler
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
