@@ -19,12 +19,21 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # New step to generate a token using the GitHub App
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.OST_PRODUCTION_PUSH_APP_ID }}
+          private-key: ${{ secrets.OST_PRODUCTION_PUSH_APP_PRIVATE_KEY }}
+
       - name: Merge main into production
         run: |
           git checkout production
           git merge main --no-edit
 
+      # Modified push step to use the generated token
       - name: Push to production
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.OST_PRODUCTION_PUSH_PAT }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ steps.generate_token.outputs.token }}@github.com/${{ github.repository }}
           git push origin production
