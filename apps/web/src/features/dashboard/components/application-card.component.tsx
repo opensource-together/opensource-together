@@ -11,7 +11,7 @@ import { ProjectRoleApplicationType } from "../../projects/types/project-applica
 import { KeyFeature, ProjectGoal } from "../../projects/types/project.type";
 
 interface ApplicationCardProps {
-  application: ProjectRoleApplicationType;
+  application?: ProjectRoleApplicationType;
   keyFeatures?: KeyFeature[];
   projectGoals?: ProjectGoal[];
   className?: string;
@@ -42,7 +42,7 @@ export default function ApplicationCard({
     motivationLetter,
     status,
     appliedAt,
-  } = application;
+  } = application || {};
 
   const userName = userProfile?.name;
   const userAvatarUrl = userProfile?.avatarUrl;
@@ -108,12 +108,12 @@ export default function ApplicationCard({
   };
 
   const handleAccept = () => {
-    onAccept?.(id);
+    onAccept?.(id || "");
     setIsAcceptConfirmOpen(false);
   };
 
   const handleReject = () => {
-    onReject?.(id);
+    onReject?.(id || "");
     setIsRejectConfirmOpen(false);
   };
 
@@ -180,7 +180,7 @@ export default function ApplicationCard({
         <div className="mb-4 md:mb-6">
           <p className="text-sm leading-relaxed tracking-tighter text-black/70">
             Candidature pour le rôle • {projectRoleTitle || "Rôle inconnu"} •{" "}
-            {formatRelativeTime(appliedAt)}
+            {formatRelativeTime(appliedAt || "")}
           </p>
           <span
             onClick={() => setIsMotivationModalOpen(true)}

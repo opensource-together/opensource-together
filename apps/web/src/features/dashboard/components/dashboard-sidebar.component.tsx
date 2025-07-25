@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
+import { Icon, IconName } from "@/shared/components/ui/icon";
 
 const sidebarItems = [
   {
@@ -14,18 +14,18 @@ const sidebarItems = [
     icon: "home",
   },
   {
-    label: "Projets",
-    href: "/dashboard/projects",
+    label: "Mes projets",
+    href: "/dashboard/my-projects",
     icon: "mix",
   },
   {
-    label: "Candidatures",
-    href: "/dashboard/applications",
+    label: "Mes candidatures",
+    href: "/dashboard/my-applications",
     icon: "file-text",
   },
   {
-    label: "Contributions",
-    href: "/dashboard/contributions",
+    label: "Mes contributions",
+    href: "/dashboard/my-contributions",
     icon: "commit",
   },
 ];
@@ -58,10 +58,10 @@ export default function DashboardSidebar() {
                 }`}
               >
                 <Icon
-                  name={item.icon as any}
+                  name={item.icon as IconName}
                   size="sm"
                   variant={isActive ? "default" : "gray"}
-                  className={`h-4 w-4`}
+                  className="size-4"
                 />
                 <span className="text-sm">{item.label}</span>
               </Link>
