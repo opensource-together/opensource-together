@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7](https://github.com/opensource-together/opensource-together/compare/v0.1.6...v0.1.7) (2025-07-25)
+
+
+### Bug Fixes
+
+* use github app instead of PAT ([a9948be](https://github.com/opensource-together/opensource-together/commit/a9948be470eab32e4a45048ebacdb39ad225b294))
+* use github app instead of PAT ([035f3d1](https://github.com/opensource-together/opensource-together/commit/035f3d1ca496a99d9e1574a8395a2217df001ed4))
+
 ## [0.1.6](https://github.com/opensource-together/opensource-together/compare/v0.1.5...v0.1.6) (2025-07-25)
 
 
