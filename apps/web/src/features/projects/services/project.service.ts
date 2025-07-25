@@ -127,6 +127,7 @@ export const createProject = async (
   method: ProjectCreateMethod = "scratch"
 ): Promise<Project> => {
   let imageUrl: string | null = null;
+  const coverImageUrls: string[] = [];
 
   try {
     // Upload image if provided
@@ -137,11 +138,22 @@ export const createProject = async (
       }
     }
 
+    // Upload cover images
+    if (storeData.coverImages && storeData.coverImages.length > 0) {
+      for (const coverImage of storeData.coverImages) {
+        const coverImageUrl = await safeUploadMedia(coverImage);
+        if (coverImageUrl) {
+          coverImageUrls.push(coverImageUrl);
+        }
+      }
+    }
+
     // Transform store data to API format
-    const apiData = transformProjectForApi({
-      ...storeData,
+    const apiData = {
+      ...transformProjectForApi(storeData),
       image: imageUrl || storeData.image,
-    });
+      coverImages: coverImageUrls,
+    };
 
     const validatedData = createProjectApiSchema.parse(apiData);
 
@@ -166,9 +178,12 @@ export const createProject = async (
 
     return response.json();
   } catch (error) {
-    // Cleanup uploaded image on failure
+    // Cleanup uploaded images on failure
     if (imageUrl) {
       await safeDeleteMedia(imageUrl);
+    }
+    for (const coverImageUrl of coverImageUrls) {
+      await safeDeleteMedia(coverImageUrl);
     }
     throw error;
   }

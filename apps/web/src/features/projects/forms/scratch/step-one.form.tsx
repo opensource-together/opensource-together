@@ -16,6 +16,7 @@ import {
 } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
+import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-upload";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
@@ -36,6 +37,9 @@ export function StepOneForm() {
   const [editingGoalIndex, setEditingGoalIndex] = useState<number | null>(null);
   const [editingFeatureText, setEditingFeatureText] = useState("");
   const [editingGoalText, setEditingGoalText] = useState("");
+  const [coverImages, setCoverImages] = useState<File[]>(
+    formData.coverImages || []
+  );
 
   const form = useForm<StepOneFormData>({
     resolver: zodResolver(stepOneSchema),
@@ -129,6 +133,7 @@ export function StepOneForm() {
       shortDescription: data.shortDescription,
       keyFeatures: data.keyFeatures,
       projectGoals: data.projectGoals,
+      coverImages,
     });
 
     router.push("/projects/create/scratch/step-two");
@@ -172,6 +177,20 @@ export function StepOneForm() {
             </FormItem>
           )}
         />
+
+        <FormItem>
+          <FormLabel tooltip="Ajoutez jusqu'à 4 images de couverture pour présenter votre projet. Ces images seront affichées sur la page du projet.">
+            Images de couverture
+          </FormLabel>
+          <FormControl>
+            <MultipleImageUpload
+              onFilesChange={setCoverImages}
+              maxFiles={4}
+              maxSize={5}
+              accept="image/*"
+            />
+          </FormControl>
+        </FormItem>
 
         <FormField
           control={control}
