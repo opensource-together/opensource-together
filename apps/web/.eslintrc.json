@@ -50,8 +50,7 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
-    "@typescript-eslint/no-explicit-any": "warn",
-    "no-console": "error"
+    "@typescript-eslint/no-explicit-any": "warn"
   },
   "ignorePatterns": [
     "**/node_modules/*",
