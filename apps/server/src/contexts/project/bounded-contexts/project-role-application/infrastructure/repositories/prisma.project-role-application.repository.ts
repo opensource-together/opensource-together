@@ -10,7 +10,9 @@ import { PrismaProjectRoleApplicationMapper } from './prisma.project-role-applic
 export class PrismaProjectRoleApplicationRepository
   implements ProjectRoleApplicationRepositoryPort
 {
-  private readonly Logger = new Logger(PrismaProjectRoleApplicationRepository.name);
+  private readonly Logger = new Logger(
+    PrismaProjectRoleApplicationRepository.name,
+  );
   constructor(private readonly prisma: PrismaService) {}
 
   async create(

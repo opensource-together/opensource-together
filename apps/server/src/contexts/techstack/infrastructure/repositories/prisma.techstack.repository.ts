@@ -26,7 +26,7 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
         successTechStacks.map((domainTechStack) => domainTechStack.value),
       );
     } catch (error) {
-      return Result.fail(`Error fetching all tech stacks`);
+      return Result.fail(`Error fetching all tech stacks : ${error}`);
     }
   }
 
@@ -41,7 +41,7 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
       }
       return Result.ok(techStackReconstituted.value);
     } catch (error) {
-      return Result.fail(error as string);
+      return Result.fail(`Could not create TechStack : ${error}`);
     }
   }
 
@@ -65,7 +65,7 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
         successTechStacks.map((domainTechStack) => domainTechStack.value),
       );
     } catch (error) {
-      return Result.fail(`TechStacks not found`);
+      return Result.fail(`TechStacks not found : ${error}`);
     }
   }
 

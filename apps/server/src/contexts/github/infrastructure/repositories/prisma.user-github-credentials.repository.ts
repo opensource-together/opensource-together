@@ -10,7 +10,9 @@ import { Result } from '@/libs/result';
 export class PrismaUserGitHubCredentialsRepository
   implements UserGitHubCredentialsRepositoryPort
 {
-  private readonly Logger = new Logger(PrismaUserGitHubCredentialsRepository.name);
+  private readonly Logger = new Logger(
+    PrismaUserGitHubCredentialsRepository.name,
+  );
   constructor(private readonly prisma: PrismaService) {}
 
   async findGhTokenByUserId(userId: string): Promise<Result<string, string>> {

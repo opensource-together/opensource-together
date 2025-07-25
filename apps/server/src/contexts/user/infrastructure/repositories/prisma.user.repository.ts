@@ -22,7 +22,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
       return Result.ok(user.value);
     } catch (error) {
       return Result.fail(
-        "Erreur technique lors de la recherche de l'utilisateur.",
+        `Erreur technique lors de la recherche de l'utilisateur : ${error}`,
       );
     }
   }
@@ -42,7 +42,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
       return Result.ok(userResult.value);
     } catch (error) {
       return Result.fail(
-        "Erreur technique lors de la création de l'utilisateur.",
+        `Erreur technique lors de la création de l'utilisateur : ${error}`,
       );
     }
   }

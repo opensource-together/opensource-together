@@ -11,7 +11,7 @@ import { PrismaProjectKeyFeatureMapper } from '@/contexts/project/bounded-contex
 export class PrismaProjectKeyFeatureRepository
   implements ProjectKeyFeatureRepositoryPort
 {
-private readonly Logger = new Logger(PrismaProjectKeyFeatureRepository.name);
+  private readonly Logger = new Logger(PrismaProjectKeyFeatureRepository.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async create(
