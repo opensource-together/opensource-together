@@ -67,7 +67,7 @@ export default function StepTwoForm() {
           onNext={handleNext}
           onPrevious={handlePrevious}
           previousLabel="Retour"
-          nextLabel="Confirmer"
+          nextLabel="Suivant"
           nextType="button"
         />
       </div>

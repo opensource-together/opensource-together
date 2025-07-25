@@ -24,7 +24,8 @@ export const stepOneSchema = z.object({
     .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
   shortDescription: z
     .string()
-    .min(10, "La description doit contenir au moins 10 caractères"),
+    .min(10, "La description doit contenir au moins 10 caractères")
+    .max(100, "La description ne peut pas dépasser 100 caractères"),
   keyFeatures: z
     .array(
       z.object({

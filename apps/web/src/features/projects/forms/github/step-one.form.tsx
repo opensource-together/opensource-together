@@ -26,7 +26,7 @@ import {
 export default function StepOneForm() {
   const router = useRouter();
   const { selectRepository, formData } = useProjectCreateStore();
-  const { data: githubRepos } = useGithubRepos();
+  const { data: githubRepos, isLoading } = useGithubRepos();
   const form = useForm<SelectedRepoFormData>({
     resolver: zodResolver(selectedRepoSchema),
     defaultValues: {
@@ -127,38 +127,42 @@ export default function StepOneForm() {
                     style={{ scrollbarWidth: "none" }}
                   >
                     <div className="flex flex-col divide-y divide-black/4">
-                      {githubRepos?.map((repo, idx) => (
-                        <div
-                          key={idx}
-                          className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
-                            selectedRepository?.title === repo.title
-                              ? "bg-black-50"
-                              : "hover:bg-gray-50"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-black">
-                              {repo.owner} / {repo.title}
-                            </span>
+                      {isLoading ? (
+                        <GithubRepoSkeleton />
+                      ) : (
+                        githubRepos?.map((repo, idx) => (
+                          <div
+                            key={idx}
+                            className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
+                              selectedRepository?.title === repo.title
+                                ? "bg-black-50"
+                                : "hover:bg-gray-50"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-black">
+                                {repo.owner} / {repo.title}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <Button
+                                type="button"
+                                variant={
+                                  selectedRepository?.title === repo.title
+                                    ? "default"
+                                    : "outline"
+                                }
+                                size="sm"
+                                onClick={() => handleRepositorySelect(repo)}
+                              >
+                                {selectedRepository?.title === repo.title
+                                  ? "Sélectionné"
+                                  : "Sélectionner"}
+                              </Button>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <Button
-                              type="button"
-                              variant={
-                                selectedRepository?.title === repo.title
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() => handleRepositorySelect(repo)}
-                            >
-                              {selectedRepository?.title === repo.title
-                                ? "Sélectionné"
-                                : "Sélectionner"}
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </div>
                   </div>
                   {/* Custom scrollbar */}
@@ -205,7 +209,7 @@ export default function StepOneForm() {
             onNext={onSubmit}
             onPrevious={handlePrevious}
             previousLabel="Retour"
-            nextLabel="Importer"
+            nextLabel="Suivant"
             isLoading={isSubmitting}
             nextType="submit"
             isNextDisabled={!selectedRepository}
@@ -214,4 +218,19 @@ export default function StepOneForm() {
       </form>
     </Form>
   );
+}
+
+export function GithubRepoSkeleton() {
+  return Array.from({ length: 10 }).map((_, idx) => (
+    <div
+      key={`skeleton-${idx}`}
+      className="flex h-[64px] animate-pulse items-center justify-between px-6"
+    >
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="h-4 w-48 rounded-md bg-gray-200"></div>
+        <div className="h-3 w-32 rounded-md bg-gray-200"></div>
+      </div>
+      <div className="h-8 w-24 rounded-md bg-gray-200"></div>
+    </div>
+  ));
 }
