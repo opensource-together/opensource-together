@@ -5,7 +5,9 @@ import {
 } from "supertokens-web-js/recipe/thirdparty";
 
 import { API_BASE_URL } from "@/config/config";
+
 import logger from "@/shared/logger";
+
 import { Profile } from "@/features/profile/types/profile.type";
 
 /**

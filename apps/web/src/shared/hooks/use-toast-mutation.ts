@@ -1,5 +1,6 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+
 import logger from "@/shared/logger";
 
 type ToastMutationOptions<TData, TError, TVariables> = {
