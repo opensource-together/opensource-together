@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.1.10](https://github.com/opensource-together/opensource-together/compare/v0.1.9...v0.1.10) (2025-07-25)
+
+
+### Features
+
+* add new SVG icons and dashboard pages for applications, contributions, and projects ([8749342](https://github.com/opensource-together/opensource-together/commit/87493429df7d7d044acd22495670310aa70a4247))
+* create migration ci check for destructive actions ([4850545](https://github.com/opensource-together/opensource-together/commit/48505456dac4df0026c9142852b30b6f0acffc4a))
+* enhance dashboard with project and application management features ([a810e4a](https://github.com/opensource-together/opensource-together/commit/a810e4a64265f1ad1c5efd39dd8df3939109ce95))
+* implement project role application management hooks and services ([ff3eb56](https://github.com/opensource-together/opensource-together/commit/ff3eb563ece36c0949b13b898e24852bbf92572c))
+
+
+### Bug Fixes
+
+* clean package.json ([8e25fdc](https://github.com/opensource-together/opensource-together/commit/8e25fdc356512ab470414fb9401c96f9b3d3d50b))
+* removed nextjs logger ([e24bd42](https://github.com/opensource-together/opensource-together/commit/e24bd42742408a1b1c47bf50186d0dd1b1b4bdcc))
+
+
+### Miscellaneous
+
+* add web build args to web publishing ([8b37492](https://github.com/opensource-together/opensource-together/commit/8b37492bce17198fb246bdab09b2e58e5d319a38))
+* add web build args to web publishing ([6e7c9f4](https://github.com/opensource-together/opensource-together/commit/6e7c9f449547faeab1e128ea9782e403c07cdfcc))
+* fix linting ([eead3b7](https://github.com/opensource-together/opensource-together/commit/eead3b7c89fd9018235479cc435608dda774b75d))
+* fix server linting ([878676b](https://github.com/opensource-together/opensource-together/commit/878676bee3790c55385485306df65d6989ff3ade))
+* refactor web logging ([9d33d71](https://github.com/opensource-together/opensource-together/commit/9d33d71af63f2359f5c6598ec318276722ae24e2))
+
 ## [0.1.9](https://github.com/opensource-together/opensource-together/compare/v0.1.8...v0.1.9) (2025-07-25)
 
 
