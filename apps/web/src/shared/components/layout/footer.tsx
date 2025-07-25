@@ -9,22 +9,22 @@ export default function Footer() {
   return (
     <footer className="flex w-full flex-col justify-center bg-white">
       {/* Section texte + image décorative */}
-      <div className="mx-auto flex w-full max-w-[1147px] items-center justify-between">
+      <div className="mx-auto flex w-full max-w-[1147px] flex-col items-center justify-between px-4 py-8 md:flex-row md:px-0 md:py-0">
         {/* Texte à gauche */}
-        <div className="max-w-[530px] min-w-0 flex-shrink-0">
+        <div className="max-w-[530px] min-w-0 flex-shrink-0 text-center md:text-left">
           <h1
-            className="mb-2 text-2xl leading-tight font-medium tracking-tighter md:text-3xl lg:text-5xl"
+            className="mb-2 text-2xl leading-tight font-medium tracking-tighter md:text-2xl lg:text-5xl"
             style={{ fontFamily: "Aspekta", fontWeight: 500 }}
           >
             Construisons ensemble <br /> l'avenir du développement
           </h1>
-          <p className="text-muted-foreground max-w-[500px] text-xs md:text-sm">
+          <p className="text-muted-foreground mx-auto max-w-[500px] text-xs md:mx-0 md:text-sm">
             Trouvez des projets, postulez à des rôles, collaborez, construisons,{" "}
             <br />
             partageons et grandissons ensemble grâce à l&apos;open source
           </p>
           {/* Boutons */}
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 flex flex-col gap-3 md:flex-row">
             <Button
               asChild
               variant="default"
@@ -53,22 +53,22 @@ export default function Footer() {
             </Button>
           </div>
         </div>
-        {/* Image décorative à droite */}
-        <div className="ml-4 flex-shrink-0">
+        {/* Image décorative - visible sur mobile en dessous, à droite sur desktop */}
+        <div className="mt-6 flex justify-center md:mt-0 md:ml-4 md:flex-shrink-0">
           <Image
             src="/background-footer-2.png"
             alt="ost-footer-bg"
             width={575}
             height={551}
-            className="object-contain"
+            className="w-[300px] object-contain md:w-[575px]"
             priority
           />
         </div>
       </div>
       {/* Footer classique en bas */}
-      <div className="mx-auto flex w-full max-w-[1147px] items-center justify-between border-t border-neutral-200 px-4 py-7">
+      <div className="mx-auto flex w-full max-w-[1147px] flex-col items-center justify-between border-t border-neutral-200 px-4 py-4 md:flex-row md:py-7">
         {/* Logo à gauche */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="mb-4 flex items-center md:mb-0">
           <Image
             src="/icons/new-ost-log-icon.svg"
             alt="ost-logo"
@@ -78,7 +78,7 @@ export default function Footer() {
           />
         </Link>
         {/* Navigation à droite */}
-        <nav className="flex items-center gap-6 text-sm">
+        <nav className="flex flex-wrap items-center justify-center gap-4 text-xs md:gap-6 md:text-sm">
           <Link
             href="/services"
             className="text-black/70 transition hover:text-black"
