@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
-
+import logger from "@/shared/logger";
 import {
   safeDeleteMedia,
   safeReplaceMedia,
@@ -45,7 +45,7 @@ export const getProjects = async (): Promise<Project[]> => {
     // Mock data - commented out for now
     // return Promise.resolve(mockProjects);
   } catch (error) {
-    console.error("Error while sending the request to the API:", error);
+    logger.error("Error while sending the request to the API:", error);
     throw error;
   }
 };
@@ -79,7 +79,7 @@ export const getProjectDetails = async (
     //   mockProjects.find((p) => p.id === projectId) || mockProjects[0]
     // );
   } catch (error) {
-    console.error("Error fetching project details:", error);
+    logger.error("Error fetching project details:", error);
     throw error;
   }
 };
@@ -241,7 +241,7 @@ export const updateProject = async (
 
     return response.json();
   } catch (error) {
-    console.error("Error updating project:", error);
+    logger.error("Error updating project:", error);
     throw error;
   }
 };
@@ -279,7 +279,7 @@ export const deleteProject = async (projectId: string): Promise<void> => {
 
     // No need to return anything for DELETE
   } catch (error) {
-    console.error("Error deleting project:", error);
+    logger.error("Error deleting project:", error);
     throw error;
   }
 };

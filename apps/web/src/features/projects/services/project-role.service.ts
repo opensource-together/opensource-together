@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
+import logger from "@/shared/logger";
 
 import {
   CreateProjectRoleSchema,
@@ -30,7 +31,7 @@ export const getProjectRoles = async (projectId: string) => {
 
     return response.json();
   } catch (error) {
-    console.error("Error fetching project roles:", error);
+    logger.error("Error fetching project roles:", error);
     throw error;
   }
 };
@@ -66,7 +67,7 @@ export const createProjectRole = async (
 
     return response.json();
   } catch (error) {
-    console.error("Error creating project role:", error);
+    logger.error("Error creating project role:", error);
     throw error;
   }
 };
@@ -104,7 +105,7 @@ export const updateProjectRole = async (
 
     return response.json();
   } catch (error) {
-    console.error("Error updating project role:", error);
+    logger.error("Error updating project role:", error);
     throw error;
   }
 };
@@ -136,7 +137,7 @@ export const deleteProjectRole = async (
       throw new Error(error.message || "Error deleting project role");
     }
   } catch (error) {
-    console.error("Error deleting project role:", error);
+    logger.error("Error deleting project role:", error);
     throw error;
   }
 };

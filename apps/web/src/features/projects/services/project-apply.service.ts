@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
+import logger from "@/shared/logger";
 
 import { ProjectRoleApplicationType } from "../types/project-application.type";
 import { RoleApplicationSchema } from "../validations/project-apply.schema";
@@ -28,7 +29,7 @@ export async function applyToProjectRole(
 
     return response.json();
   } catch (error) {
-    console.error("Error applying to project role:", error);
+    logger.error("Error applying to project role:", error);
     throw error;
   }
 }
