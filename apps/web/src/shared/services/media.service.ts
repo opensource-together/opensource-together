@@ -1,7 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
 
-import logger from "@/shared/logger";
-
 export interface MediaUploadResponse {
   url: string;
 }
@@ -30,7 +28,7 @@ export const uploadMedia = async (file: File): Promise<MediaUploadResponse> => {
 
     return response.json();
   } catch (error) {
-    logger.error("Error uploading media:", error);
+    console.error("Error uploading media:", error);
     throw error;
   }
 };
@@ -64,7 +62,7 @@ export const replaceMedia = async (
 
     return response.json();
   } catch (error) {
-    logger.error("Error changing media:", error);
+    console.error("Error changing media:", error);
     throw error;
   }
 };
@@ -88,7 +86,7 @@ export const deleteMedia = async (key: string): Promise<void> => {
       throw new Error("Failed to delete media");
     }
   } catch (error) {
-    logger.error("Error deleting media:", error);
+    console.error("Error deleting media:", error);
     throw error;
   }
 };
@@ -117,7 +115,7 @@ export const safeUploadMedia = async (file: File): Promise<string | null> => {
     const response = await uploadMedia(file);
     return response.url;
   } catch (error) {
-    logger.error("Error uploading media:", error);
+    console.error("Error uploading media:", error);
     return null;
   }
 };
@@ -133,7 +131,7 @@ export const safeReplaceMedia = async (
   newFile: File
 ): Promise<string | null> => {
   if (!currentImageUrl) {
-    logger.warn("No current image URL provided for replacement");
+    console.warn("No current image URL provided for replacement");
     return null;
   }
 
@@ -144,7 +142,7 @@ export const safeReplaceMedia = async (
     const response = await replaceMedia(currentImageKey, newFile);
     return response.url;
   } catch (error) {
-    logger.warn("Failed to change image, falling back to upload:", error);
+    console.warn("Failed to change image, falling back to upload:", error);
 
     try {
       // Fallback: upload new image and clean old one
@@ -154,7 +152,7 @@ export const safeReplaceMedia = async (
       });
       return response.url;
     } catch (uploadError) {
-      logger.error("Failed to upload replacement image:", uploadError);
+      console.error("Failed to upload replacement image:", uploadError);
       return null;
     }
   }
@@ -174,7 +172,7 @@ export const safeDeleteMedia = async (imageUrl: string): Promise<void> => {
   try {
     await deleteMedia(key);
   } catch (error) {
-    logger.warn(`Failed to delete image "${imageUrl}":`, error);
+    console.warn(`Failed to delete image "${imageUrl}":`, error);
     // Silent fail - deletion is safe by default
   }
 };

@@ -1,8 +1,6 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import logger from "@/shared/logger";
-
 type ToastMutationOptions<TData, TError, TVariables> = {
   mutationFn: (variables: TVariables) => Promise<TData>;
   loadingMessage: string;
@@ -71,7 +69,7 @@ export function useToastMutation<TData, TError = Error, TVariables = void>({
       }
 
       toast.error(displayMessage);
-      logger.error(errorMessage, error);
+      console.error(errorMessage, error);
       onError?.(error, variables, context);
     },
   });

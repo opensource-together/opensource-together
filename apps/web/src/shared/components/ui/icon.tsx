@@ -2,7 +2,6 @@ import Image from "next/image";
 import React from "react";
 
 import { cn } from "@/shared/lib/utils";
-import logger from "@/shared/logger";
 
 // Type for the icon size
 export type IconSize = "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
@@ -330,7 +329,7 @@ export const Icon: React.FC<IconProps> = ({
   const iconPath = iconFiles[name]?.[variant] || iconFiles[name]?.default;
 
   if (!iconPath) {
-    logger.warn(`Icon "${name}" with variant "${variant}" not found`);
+    console.warn(`Icon "${name}" with variant "${variant}" not found`);
     return null;
   }
 

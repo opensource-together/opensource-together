@@ -1,7 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
 
-import logger from "@/shared/logger";
-
 export async function getDashboardProjectApplications(projectId: string) {
   try {
     const response = await fetch(
@@ -25,7 +23,7 @@ export async function getDashboardProjectApplications(projectId: string) {
       id: app.appplicationId || app.id,
     }));
   } catch (error) {
-    logger.error("[getDashboardProjectApplications]", error);
+    console.error("[getDashboardProjectApplications]", error);
     throw error;
   }
 }
@@ -50,7 +48,7 @@ export async function acceptDashboardProjectApplication(
       );
     }
   } catch (error) {
-    logger.error("[acceptDashboardProjectApplication]", error);
+    console.error("[acceptDashboardProjectApplication]", error);
     throw error;
   }
 }
@@ -75,7 +73,7 @@ export async function rejectDashboardProjectApplication(
       );
     }
   } catch (error) {
-    logger.error("[rejectDashboardProjectApplication]", error);
+    console.error("[rejectDashboardProjectApplication]", error);
     throw error;
   }
 }
