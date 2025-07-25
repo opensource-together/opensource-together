@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/opensource-together/opensource-together/compare/v0.1.8...v0.1.9) (2025-07-25)
+
+
+### Bug Fixes
+
+* typo ([d22bae5](https://github.com/opensource-together/opensource-together/commit/d22bae58165803e8d2811e5ec3ebda0db9b9fead))
+
 ## [0.1.8](https://github.com/opensource-together/opensource-together/compare/v0.1.7...v0.1.8) (2025-07-25)
 
 
