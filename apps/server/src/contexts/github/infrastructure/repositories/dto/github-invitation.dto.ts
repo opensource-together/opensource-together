@@ -1,4 +1,10 @@
-import { IsEnum, IsNumber, IsString, IsUrl, ValidateNested } from 'class-validator';
+import {
+  IsEnum,
+  IsNumber,
+  IsString,
+  IsUrl,
+  ValidateNested,
+} from 'class-validator';
 import { GithubRepositoryPermissionsDto } from './github-permissions.dto';
 import { GithubRepositoryDto } from './github-repository.dto';
 import { GithubUserDto } from './github-user.dto';
