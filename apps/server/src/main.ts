@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
 import supertokens from 'supertokens-node';
@@ -7,7 +7,9 @@ import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(RootModule);
+  const app = await NestFactory.create(RootModule, {
+    logger: new Logger(),
+  });
 
   app.setGlobalPrefix('v1');
 
@@ -50,8 +52,8 @@ async function bootstrap() {
 }
 bootstrap()
   .then(() => {
-    console.log(`Server started at ${process.env.PORT ?? 4000}!`);
+    Logger.log(`Server started at ${process.env.PORT ?? 4000}!`);
   })
   .catch((e) => {
-    console.log(`Server crashed : ${e}`);
+    Logger.error(`Server crashed : ${e}`);
   });

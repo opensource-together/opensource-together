@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Injectable } from '@nestjs/common';
@@ -9,6 +10,7 @@ import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.
 
 @Injectable()
 export class PrismaProfileRepository implements ProfileRepositoryPort {
+  private readonly Logger = new Logger(PrismaProfileRepository.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async create(profile: {
@@ -61,7 +63,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
       const domainProfile = PrismaProfileMapper.toDomain(savedRawProfile);
       return Result.ok(domainProfile);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Erreur technique lors de la sauvegarde du profil.');
     }
   }
@@ -80,7 +82,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
       const domainProfile = PrismaProfileMapper.toDomain(rawProfile);
       return Result.ok(domainProfile);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Erreur technique lors de la recherche du profil.');
     }
   }
