@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/opensource-together/opensource-together/compare/v0.1.7...v0.1.8) (2025-07-25)
+
+
+### Miscellaneous
+
+* add permissions to production syncing workflow ([f74d937](https://github.com/opensource-together/opensource-together/commit/f74d93713057f2a71051a1e1a36a8b63575751e6))
+
 ## [0.1.7](https://github.com/opensource-together/opensource-together/compare/v0.1.6...v0.1.7) (2025-07-25)
 
 
