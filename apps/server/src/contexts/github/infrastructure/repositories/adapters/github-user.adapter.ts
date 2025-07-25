@@ -1,14 +1,14 @@
 import { Result } from '@/libs/result';
 import { GithubUserDto } from '../dto/github-user.dto';
-import { validate } from 'class-validator';
+import { validateSync } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-export async function toGithubUserDto(
+export function toGithubUserDto(
   data: unknown,
-): Promise<Result<GithubUserDto>> {
+): Result<GithubUserDto> {
   try {
     const user = plainToInstance(GithubUserDto, data);
-    const validationErrors = await validate(user);
+    const validationErrors = validateSync(user);
     if (validationErrors.length > 0) {
       return Result.fail(validationErrors.toString());
     }
