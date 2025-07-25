@@ -19,6 +19,7 @@ import { Input } from "@/shared/components/ui/input";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import logger from "@/shared/logger";
 
 import { Profile } from "../types/profile.type";
 import {
@@ -62,7 +63,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { control } = form;
 
   const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
-    console.log("Profile edit data:", data);
+    logger.info("Profile edit data:", data);
   });
 
   return (

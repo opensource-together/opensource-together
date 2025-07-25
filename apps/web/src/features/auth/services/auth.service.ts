@@ -5,7 +5,7 @@ import {
 } from "supertokens-web-js/recipe/thirdparty";
 
 import { API_BASE_URL } from "@/config/config";
-
+import logger from "@/shared/logger";
 import { Profile } from "@/features/profile/types/profile.type";
 
 /**
@@ -16,7 +16,7 @@ export const checkSession = async (): Promise<boolean> => {
     const sessionExists = await Session.doesSessionExist();
     return sessionExists;
   } catch (error) {
-    console.error("checkSession error:", error);
+    logger.error("checkSession error:", error);
     return false;
   }
 };
@@ -50,7 +50,7 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
 
     throw new Error("Failed to fetch user profile");
   } catch (error) {
-    console.error("Error fetching current user:", error);
+    logger.error("Error fetching current user:", error);
     return null;
   }
 };
@@ -63,7 +63,6 @@ export async function getGitHubAuthUrl(): Promise<string> {
     throw new Error("getGitHubAuthUrl can only be called in the browser");
   }
   const url = window.location.origin;
-  console.log(url);
   return getAuthorisationURLWithQueryParamsAndSetState({
     thirdPartyId: "github",
     frontendRedirectURI: `${url}/auth/callback/github`,
@@ -92,7 +91,7 @@ export async function handleGitHubCallback(): Promise<{ success: boolean }> {
 
     throw new Error("An error occurred during the login.");
   } catch (err) {
-    console.error("handleGitHubCallback error:", err);
+    logger.error("handleGitHubCallback error:", err);
     throw new Error("Error during the login via GitHub.");
   }
 }
@@ -104,7 +103,7 @@ export async function logout(): Promise<void> {
   try {
     await Session.signOut();
   } catch (err) {
-    console.error("logout error:", err);
+    logger.error("logout error:", err);
     throw new Error("Error during the logout.");
   }
 }
