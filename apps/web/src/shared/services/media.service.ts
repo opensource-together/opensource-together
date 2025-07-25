@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
+
 import logger from "@/shared/logger";
 
 export interface MediaUploadResponse {
