@@ -21,21 +21,25 @@ export default function StepSuccessView() {
     <div className="mx-auto mt-42 max-w-lg">
       <div className="mx-7 flex flex-col items-center justify-center gap-6 text-center tracking-tighter md:mx-auto">
         <h1 className="text-2xl font-medium md:text-3xl">
-          Félicitations ! Votre projet a été créé
+          Félicitations ! <br /> Votre projet a été créé
         </h1>
         <p className="text-black/70">
           Vous pouvez maintenant trouver vos projets dans votre tableau de bord
           « Mes projets » et les membres pourront postuler à tous les rôles
           ouverts.{" "}
         </p>
-        <Link
-          href={projectId ? `/projects/${projectId}` : "/"}
-          className="w-10/12"
-        >
-          <Button size="lg" className="w-full">
-            Voir le projet
-          </Button>
-        </Link>
+        <div className="flex w-10/12 flex-col gap-6">
+          <Link href={projectId ? `/projects/${projectId}` : "/"}>
+            <Button size="lg" className="w-full">
+              Voir le projet
+            </Button>
+          </Link>
+          <Link href="/">
+            <Button size="lg" variant="outline" className="w-full">
+              Découvrir d&apos;autres projets
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

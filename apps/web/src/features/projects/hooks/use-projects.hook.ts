@@ -7,12 +7,16 @@ import { getQueryClient } from "@/shared/lib/query-client";
 import {
   createProject,
   deleteProject,
+  getGithubRepos,
   getProjectDetails,
   getProjects,
   updateProject,
 } from "../services/project.service";
-import { ProjectFormData } from "../stores/project-create.store";
-import { Project } from "../types/project.type";
+import {
+  ProjectCreateMethod,
+  ProjectFormData,
+} from "../stores/project-create.store";
+import { GithubRepoType, Project } from "../types/project.type";
 import { UpdateProjectData } from "../validations/project.schema";
 
 /**
@@ -42,6 +46,18 @@ export function useProject(projectId: string) {
 }
 
 /**
+ * Fetches the list of GitHub repositories for the authenticated user.
+ *
+ * @returns A React Query result containing the list of GitHub repositories.
+ */
+export function useGithubRepos() {
+  return useQuery<GithubRepoType[]>({
+    queryKey: ["github-repos"],
+    queryFn: getGithubRepos,
+  });
+}
+
+/**
  * Handles the creation of a new project.
  *
  * @returns An object containing:
@@ -57,10 +73,12 @@ export function useCreateProject() {
     mutationFn: ({
       projectData,
       imageFile,
+      method,
     }: {
       projectData: ProjectFormData;
       imageFile?: File;
-    }) => createProject(projectData, imageFile),
+      method: ProjectCreateMethod;
+    }) => createProject(projectData, imageFile, method),
     loadingMessage: "Création du projet en cours...",
     successMessage: "Projet créé avec succès",
     errorMessage: "Erreur lors de la création du projet",

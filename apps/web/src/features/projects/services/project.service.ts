@@ -6,8 +6,11 @@ import {
   safeUploadMedia,
 } from "@/shared/services/media.service";
 
-import { ProjectFormData } from "../stores/project-create.store";
-import { Project } from "../types/project.type";
+import {
+  ProjectCreateMethod,
+  ProjectFormData,
+} from "../stores/project-create.store";
+import { GithubRepoType, Project } from "../types/project.type";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
@@ -82,15 +85,46 @@ export const getProjectDetails = async (
 };
 
 /**
+ * Fetch GitHub repositories for the authenticated user.
+ *
+ * @returns A promise that resolves to an array of GitHub repositories.
+ */
+export const getGithubRepos = async (): Promise<GithubRepoType[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/github/repos`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.message || "Failed to fetch GitHub repositories"
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching GitHub repositories:", error);
+    throw error;
+  }
+};
+
+/**
  * Creates a new project with optional image upload.
  *
  * @param storeData - The data for the new project.
  * @param imageFile - Optional image file to upload.
+ * @param method - Method of creation ('scratch' or 'github').
  * @returns A promise that resolves to the created project.
  */
 export const createProject = async (
   storeData: ProjectFormData,
-  imageFile?: File
+  imageFile?: File,
+  method: ProjectCreateMethod = "scratch"
 ): Promise<Project> => {
   let imageUrl: string | null = null;
 
@@ -111,7 +145,12 @@ export const createProject = async (
 
     const validatedData = createProjectApiSchema.parse(apiData);
 
-    const response = await fetch(`${API_BASE_URL}/projects`, {
+    const url =
+      method === "github"
+        ? `${API_BASE_URL}/projects?method=github`
+        : `${API_BASE_URL}/projects?method=scratch`;
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
