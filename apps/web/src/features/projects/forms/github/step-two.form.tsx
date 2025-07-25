@@ -8,13 +8,23 @@ import { Label } from "@/shared/components/ui/label";
 import FormNavigationButtons from "../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 
-export default function StepTwoView() {
+export default function StepTwoForm() {
   const router = useRouter();
-  const { formData } = useProjectCreateStore();
+  const { formData, updateProjectInfo } = useProjectCreateStore();
 
   const handlePrevious = () => router.push("/projects/create/github/step-one");
 
-  const handleNext = () => router.push("/projects/create/github/step-three");
+  const handleNext = () => {
+    if (formData.selectedRepository) {
+      updateProjectInfo({
+        title: formData.selectedRepository.title,
+        shortDescription:
+          formData.selectedRepository.description ||
+          "Description à compléter pour ce projet.",
+      });
+    }
+    router.push("/projects/create/github/step-three");
+  };
 
   return (
     <div className="w-full">
@@ -35,7 +45,8 @@ export default function StepTwoView() {
             </div>
           </div>
           <div className="mb-3 line-clamp-5 text-sm leading-6 text-black/50">
-            {formData.selectedRepository?.description}
+            {formData.selectedRepository?.description ||
+              "Aucune description disponible. Vous pourrez en ajouter une à l'étape suivante."}
           </div>
         </div>
         <div className="my-4 h-px border-t-2 border-black/5" />
@@ -57,6 +68,7 @@ export default function StepTwoView() {
           onPrevious={handlePrevious}
           previousLabel="Retour"
           nextLabel="Confirmer"
+          nextType="button"
         />
       </div>
     </div>

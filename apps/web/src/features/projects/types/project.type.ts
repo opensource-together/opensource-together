@@ -106,7 +106,7 @@ export interface ProjectEditForm {
 export interface GithubRepoType {
   owner?: string;
   title: string;
-  description?: string;
+  description?: string | null;
   url: string;
 }
 
