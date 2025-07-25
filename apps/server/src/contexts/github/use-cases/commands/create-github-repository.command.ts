@@ -5,7 +5,7 @@
  * Use case pour tester la création d'un repository GitHub
  */
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Result } from '@/libs/result';
 // import {
 //   GITHUB_API_SERVICE_PORT,
@@ -36,6 +36,7 @@ export class CreateGitHubRepositoryCommand implements ICommand {
 export class CreateGitHubRepositoryCommandHandler
   implements ICommandHandler<CreateGitHubRepositoryCommand>
 {
+  private readonly Logger = new Logger(CreateGitHubRepositoryCommand.name);
   constructor(
     @Inject(USER_GITHUB_CREDENTIALS_REPOSITORY_PORT)
     private readonly userGitHubCredentialsRepo: UserGitHubCredentialsRepositoryPort,
@@ -63,7 +64,7 @@ export class CreateGitHubRepositoryCommandHandler
         `Erreur lors du déchiffrement du token GitHub: ${decryptedGhToken.error}`,
       );
     }
-    console.log({ command });
+    this.Logger.log({ command });
     const createRepoResult = await this.githubRepository.createGithubRepository(
       {
         title: command.repoName,

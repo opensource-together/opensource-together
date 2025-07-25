@@ -26,7 +26,6 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
         successTechStacks.map((domainTechStack) => domainTechStack.value),
       );
     } catch (error) {
-      console.log('error', error);
       return Result.fail(`Error fetching all tech stacks`);
     }
   }
@@ -48,7 +47,6 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
 
   async findByIds(ids: string[]): Promise<Result<TechStack[], string>> {
     try {
-      console.log('ids', ids);
       const techStacks = await this.prisma.techStack.findMany({
         where: { id: { in: ids } },
       });
@@ -67,7 +65,6 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
         successTechStacks.map((domainTechStack) => domainTechStack.value),
       );
     } catch (error) {
-      console.log('error', error);
       return Result.fail(`TechStacks not found`);
     }
   }
