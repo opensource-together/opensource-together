@@ -14,7 +14,6 @@ export class PrismaUserMapper {
       };
       return Result.ok(toRepo as PrismaUser);
     } catch (error) {
-      console.error(error);
       return Result.fail(`Error mapping user to repository format`);
     }
   }

@@ -137,7 +137,6 @@ export class Project {
     if (props.createdAt > props.updatedAt) {
       return Result.fail('createdAt must be before updatedAt');
     }
-    console.log('props', props);
 
     return Project.validate(props);
   }
