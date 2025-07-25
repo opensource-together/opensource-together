@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsArray, IsOptional, ArrayMaxSize } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  IsOptional,
+  ArrayMaxSize,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { Title } from '@/contexts/project/domain/vo/title.vo';
 import { Description } from '@/contexts/project/domain/vo/description.vo';
