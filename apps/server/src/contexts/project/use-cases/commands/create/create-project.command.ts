@@ -45,6 +45,7 @@ export class CreateProjectCommand implements ICommand {
       octokit: Octokit;
       method: string;
       image?: string;
+      coverImages?: string[];
     },
   ) {}
 }
@@ -82,6 +83,7 @@ export class CreateProjectCommandHandler
       octokit,
       method,
       image,
+      coverImages,
     } = createProjectCommand.props;
     // verifier si un project n'existe pas déjà avec le même titre
     const projectWithSameTitle = await this.projectRepo.findByTitle(title);
@@ -149,6 +151,7 @@ export class CreateProjectCommandHandler
       keyFeatures: keyFeatures,
       projectGoals: projectGoals,
       image,
+      coverImages,
     });
     if (!projectResult.success) {
       return Result.fail(projectResult.error);

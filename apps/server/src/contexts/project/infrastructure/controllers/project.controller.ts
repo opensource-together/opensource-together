@@ -632,6 +632,7 @@ export class ProjectController {
         octokit: octokit,
         method: method,
         image: project.image,
+        coverImages: project.coverImages,
       }),
     );
     if (!projectRes.success) {
