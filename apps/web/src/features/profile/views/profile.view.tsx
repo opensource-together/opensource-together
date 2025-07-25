@@ -23,8 +23,6 @@ export default function ProfileView() {
       <div className="mt-12 mb-8 flex w-full">
         <PinnedProjects profile={currentUser} />
       </div>
-
-      {/* Section des candidatures reçues */}
     </div>
   );
 }
