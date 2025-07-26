@@ -59,6 +59,7 @@ export type ProjectData = {
   projectGoals: { id?: string; goal: string }[];
   image?: string;
   readme?: string;
+  coverImages?: string[]; // Array of cover image URLs (1 to 4)
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -81,6 +82,7 @@ export type ProjectProps = {
   projectGoals: ProjectGoals[];
   image?: string;
   readme?: string;
+  coverImages?: string[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -99,6 +101,7 @@ export class Project {
   private projectGoals: ProjectGoals[];
   private image?: string;
   private readme?: string;
+  private coverImages?: string[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -118,6 +121,7 @@ export class Project {
     this.projectGoals = props.projectGoals;
     this.image = props.image;
     this.readme = props.readme;
+    this.coverImages = props.coverImages;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -246,6 +250,7 @@ export class Project {
       projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
       image: this.image,
       readme: this.readme,
+      coverImages: this.coverImages,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
@@ -401,5 +406,9 @@ export class Project {
 
   public getReadme(): string | undefined {
     return this.readme;
+  }
+
+  public getCoverImages(): string[] | undefined {
+    return this.coverImages;
   }
 }

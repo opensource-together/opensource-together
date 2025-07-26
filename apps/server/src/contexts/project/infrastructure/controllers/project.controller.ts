@@ -634,6 +634,7 @@ export class ProjectController {
         method: method,
         image: project.image,
         readme: project.readme,
+        coverImages: project.coverImages,
       }),
     );
     if (!projectRes.success) {

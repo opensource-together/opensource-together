@@ -75,6 +75,7 @@ model Project {
   profileId        String?
   image            String?
   readme           String?               @db.Text
+  coverImages      String[]              // Array of cover image URLs (1 to 4)
   // Index composite pour recherche + tri par date
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre

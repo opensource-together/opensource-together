@@ -29,6 +29,7 @@ type PrismaProjectWithIncludes = PrismaProject & {
   externalLinks: ProjectExternalLink[];
   image?: string | null;
   readme?: string | null;
+  coverImages: string[];
 };
 
 export class PrismaProjectMapper {
@@ -40,6 +41,7 @@ export class PrismaProjectMapper {
       shortDescription: projectData.shortDescription,
       image: projectData.image,
       readme: projectData.readme,
+      coverImages: projectData.coverImages || [],
       externalLinks: {
         create:
           projectData.externalLinks
@@ -138,6 +140,7 @@ export class PrismaProjectMapper {
       })),
       image: prismaProject.image || undefined,
       readme: prismaProject.readme || undefined,
+      coverImages: prismaProject.coverImages || [],
     };
     const project = Project.reconstitute(projectData);
     if (!project.success)
