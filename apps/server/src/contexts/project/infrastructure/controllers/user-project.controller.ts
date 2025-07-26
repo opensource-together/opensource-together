@@ -39,7 +39,7 @@ import { Octokit } from '@octokit/rest';
 import { Session } from 'supertokens-nestjs';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
-import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
+import { GetProjectsByUserIdResponseDto } from './dto/get-projects-by-user-id-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
 
@@ -73,7 +73,7 @@ export class UserProjectController {
     }
     
     // TODO: Add GitHub stats enrichment similar to getProjects
-    return GetProjectsResponseDto.toResponse(projects.value);
+    return GetProjectsByUserIdResponseDto.toResponse(projects.value);
   }
 
   @Post()

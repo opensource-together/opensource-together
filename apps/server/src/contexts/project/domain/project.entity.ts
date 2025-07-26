@@ -58,6 +58,7 @@ export type ProjectData = {
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
   image?: string;
+  coverImages?: string[]; // Array of cover image URLs (1 to 4)
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -79,6 +80,7 @@ export type ProjectProps = {
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoals[];
   image?: string;
+  coverImages?: string[];
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -96,6 +98,7 @@ export class Project {
   private keyFeatures: KeyFeature[];
   private projectGoals: ProjectGoals[];
   private image?: string;
+  private coverImages?: string[];
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -114,6 +117,7 @@ export class Project {
     this.keyFeatures = props.keyFeatures;
     this.projectGoals = props.projectGoals;
     this.image = props.image;
+    this.coverImages = props.coverImages;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -241,6 +245,7 @@ export class Project {
       keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
       projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
       image: this.image,
+      coverImages: this.coverImages,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
