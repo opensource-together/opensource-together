@@ -2,7 +2,7 @@
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
-import DashboardHeading from "../components/dashboard-heading.component";
+import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectsList from "../components/my-projects-list.component";
 
 export default function MyProjectsView() {

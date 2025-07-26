@@ -1,5 +1,5 @@
-import DashboardHeading from "../components/dashboard-heading.component";
-import MyApplicationsList from "../components/my-applications-list.component";
+import DashboardHeading from "../components/layout/dashboard-heading.component";
+import MyApplicationsList from "../components/my-applications/my-applications-list.component";
 
 export default function MyApplicationsView() {
   return (
