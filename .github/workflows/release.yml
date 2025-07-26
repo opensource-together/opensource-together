@@ -28,8 +28,10 @@ jobs:
         if: steps.release.outputs.prs_created
         env:
           PR_NUMBER: ${{ steps.release.outputs.pr }}
+          ROOT_VERSION: ${{ steps.release.outputs.version }}
           VERSION: ${{ steps.release.outputs['apps/web--version'] }}
         run: |
+          echo "Root version: ${ROOT_VERSION}"
           if [ -n "$VERSION" ]; then
             TITLE="Release v${VERSION} !"
             echo "Updating PR #${PR_NUMBER} title to: ${TITLE}"
