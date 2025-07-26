@@ -27,7 +27,7 @@
     {
       "type": "node-workspace",
       "updateAllPackages": true,
-      "updatePeerDependencies": true,
+      "updatePeerDependencies": true
     }
   ],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
