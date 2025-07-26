@@ -37,6 +37,10 @@ export const projectSchema = z.object({
     .min(1, "Au moins une catégorie est requise")
     .max(6, "Maximum 6 catégories autorisées"),
   image: z.string().optional(),
+  coverImages: z
+    .array(z.string())
+    .max(4, "Maximum 4 images de couverture autorisées")
+    .optional(),
   externalLinks: z
     .object({
       github: urlWithDomainCheck(
@@ -100,6 +104,7 @@ export const updateProjectApiSchema = z.object({
   description: z.string().min(10, "Une description est requise"),
   shortDescription: z.string().min(10, "Une description est requise"),
   image: z.string().optional(),
+  coverImages: z.array(z.string()).max(4).optional(),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
   keyFeatures: z
