@@ -75,7 +75,11 @@ import { PrismaProjectKeyFeatureRepository } from '../bounded-contexts/project-k
     GithubInfrastructure,
     ...projectUseCases,
   ],
-  controllers: [ProjectController, UserProjectController, ProjectKeyFeatureController],
+  controllers: [
+    ProjectController,
+    UserProjectController,
+    ProjectKeyFeatureController,
+  ],
   exports: [
     ...projectUseCases,
     // OctokitProvider

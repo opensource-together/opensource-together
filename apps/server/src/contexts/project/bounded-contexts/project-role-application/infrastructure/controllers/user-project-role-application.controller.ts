@@ -29,14 +29,19 @@ import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-applica
 @Controller('projects/me/:projectId/roles')
 @ApiCookieAuth('sAccessToken')
 export class UserProjectRoleApplicationController {
-  private readonly Logger = new Logger(UserProjectRoleApplicationController.name);
+  private readonly Logger = new Logger(
+    UserProjectRoleApplicationController.name,
+  );
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
 
   @Get('applications')
-  @ApiOperation({ summary: 'Récupérer toutes les candidatures pour un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary:
+      "Récupérer toutes les candidatures pour un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -67,7 +72,7 @@ export class UserProjectRoleApplicationController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès refusé - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès refusé - Vous n'êtes pas le propriétaire du projet",
   })
   async getProjectApplications(
     @Session('userId') userId: string,
@@ -104,7 +109,10 @@ export class UserProjectRoleApplicationController {
   }
 
   @Get(':roleId/applications')
-  @ApiOperation({ summary: 'Récupérer les candidatures pour un rôle spécifique d\'un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary:
+      "Récupérer les candidatures pour un rôle spécifique d'un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -121,14 +129,18 @@ export class UserProjectRoleApplicationController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès refusé - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès refusé - Vous n'êtes pas le propriétaire du projet",
   })
   async getApplicationByRoleId(
     @Param('roleId') roleId: string,
     @Param('projectId') projectId: string,
     @Session('userId') userId: string,
   ) {
-    this.Logger.log('Getting applications for role', { roleId, projectId, userId });
+    this.Logger.log('Getting applications for role', {
+      roleId,
+      projectId,
+      userId,
+    });
     const applications: Result<
       {
         appplicationId: string;
@@ -160,7 +172,10 @@ export class UserProjectRoleApplicationController {
   }
 
   @Patch('applications/:applicationId/accept')
-  @ApiOperation({ summary: 'Accepter une candidature pour un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary:
+      "Accepter une candidature pour un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -177,7 +192,7 @@ export class UserProjectRoleApplicationController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès refusé - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès refusé - Vous n'êtes pas le propriétaire du projet",
   })
   async acceptApplication(
     @Param('applicationId') applicationId: string,
@@ -201,7 +216,9 @@ export class UserProjectRoleApplicationController {
   }
 
   @Patch('applications/:applicationId/reject')
-  @ApiOperation({ summary: 'Rejeter une candidature pour un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Rejeter une candidature pour un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -230,7 +247,7 @@ export class UserProjectRoleApplicationController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès refusé - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès refusé - Vous n'êtes pas le propriétaire du projet",
   })
   async rejectApplication(
     @Param('applicationId') applicationId: string,

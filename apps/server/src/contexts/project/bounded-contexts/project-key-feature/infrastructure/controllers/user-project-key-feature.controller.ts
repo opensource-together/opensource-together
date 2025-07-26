@@ -30,9 +30,11 @@ export class UserProjectKeyFeatureController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post('key-features')
-  @ApiOperation({ summary: 'Créer une key feature pour un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Créer une key feature pour un projet de l'utilisateur connecté",
+  })
   @ApiParam({ name: 'projectId', description: 'ID du projet' })
-  @ApiBody({ 
+  @ApiBody({
     schema: {
       type: 'object',
       required: ['features'],
@@ -52,7 +54,7 @@ export class UserProjectKeyFeatureController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès interdit - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès interdit - Vous n'êtes pas le propriétaire du projet",
   })
   async createKeyFeature(
     @Session('userId') userId: string,
@@ -66,7 +68,7 @@ export class UserProjectKeyFeatureController {
         features: createKeyFeatureDto.features,
       }),
     );
-    
+
     if (!result.success) {
       if (result.error === 'You are not allowed to update this project') {
         throw new HttpException(result.error, HttpStatus.FORBIDDEN);
@@ -76,12 +78,14 @@ export class UserProjectKeyFeatureController {
       }
       throw new BadRequestException(result.error);
     }
-    
+
     return result.value.toPrimitive();
   }
 
   @Delete('key-features/:keyFeatureId')
-  @ApiOperation({ summary: 'Supprimer une key feature d\'un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Supprimer une key feature d'un projet de l'utilisateur connecté",
+  })
   @ApiParam({ name: 'projectId', description: 'ID du projet' })
   @ApiParam({ name: 'keyFeatureId', description: 'ID de la key feature' })
   @ApiResponse({
@@ -91,7 +95,7 @@ export class UserProjectKeyFeatureController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès interdit - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès interdit - Vous n'êtes pas le propriétaire du projet",
   })
   @ApiResponse({
     status: 404,

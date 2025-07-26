@@ -35,7 +35,9 @@ export class UserProjectRolesController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post()
-  @ApiOperation({ summary: 'Ajouter un rôle à un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Ajouter un rôle à un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -76,7 +78,7 @@ export class UserProjectRolesController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès interdit - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès interdit - Vous n'êtes pas le propriétaire du projet",
   })
   @ApiResponse({
     status: 404,
@@ -100,7 +102,9 @@ export class UserProjectRolesController {
     const result: Result<ProjectRole, string> =
       await this.commandBus.execute(command);
     if (!result.success) {
-      if (result.error === 'You are not allowed to create roles in this project') {
+      if (
+        result.error === 'You are not allowed to create roles in this project'
+      ) {
         throw new HttpException(result.error, HttpStatus.FORBIDDEN);
       }
       if (result.error === 'Project not found') {
@@ -112,7 +116,9 @@ export class UserProjectRolesController {
   }
 
   @Patch(':roleId')
-  @ApiOperation({ summary: 'Mettre à jour un rôle d\'un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Mettre à jour un rôle d'un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -158,7 +164,7 @@ export class UserProjectRolesController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès interdit - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès interdit - Vous n'êtes pas le propriétaire du projet",
   })
   @ApiResponse({
     status: 404,
@@ -198,7 +204,9 @@ export class UserProjectRolesController {
   }
 
   @Delete(':roleId')
-  @ApiOperation({ summary: 'Supprimer un rôle d\'un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Supprimer un rôle d'un projet de l'utilisateur connecté",
+  })
   @ApiParam({
     name: 'projectId',
     description: 'ID du projet',
@@ -218,7 +226,7 @@ export class UserProjectRolesController {
   })
   @ApiResponse({
     status: 403,
-    description: 'Accès interdit - Vous n\'êtes pas le propriétaire du projet',
+    description: "Accès interdit - Vous n'êtes pas le propriétaire du projet",
   })
   @ApiResponse({
     status: 404,

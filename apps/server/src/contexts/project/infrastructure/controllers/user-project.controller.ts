@@ -1,12 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
-import {
-  Author,
-  Contributor,
-  LastCommit,
-  RepositoryInfo,
-} from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
@@ -52,33 +46,34 @@ export class UserProjectController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @ApiOperation({ summary: 'Récupérer tous les projets de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Récupérer tous les projets de l'utilisateur connecté",
+  })
   @ApiResponse({
     status: 200,
-    description: 'Liste des projets de l\'utilisateur',
+    description: "Liste des projets de l'utilisateur",
   })
   @ApiResponse({ status: 401, description: 'Non authentifié' })
   @UseGuards(GithubAuthGuard)
   @Get()
-  async getUserProjects(
-    @Session('userId') userId: string,
-    @GitHubOctokit() octokit?: Octokit,
-  ) {
+  async getUserProjects(@Session('userId') userId: string) {
     const projects: Result<Project[]> = await this.queryBus.execute(
-      new FindProjectsByUserIdQuery(userId)
+      new FindProjectsByUserIdQuery(userId),
     );
-    
+
     if (!projects.success) {
       throw new HttpException(projects.error, HttpStatus.BAD_REQUEST);
     }
-    
+
     // TODO: Add GitHub stats enrichment similar to getProjects
     return GetProjectsByUserIdResponseDto.toResponse(projects.value);
   }
 
   @Post()
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ summary: 'Créer un nouveau projet pour l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Créer un nouveau projet pour l'utilisateur connecté",
+  })
   @ApiBody({
     description: 'Données du projet',
     type: CreateProjectDtoRequest,
@@ -123,17 +118,19 @@ export class UserProjectController {
         image: project.image,
       }),
     );
-    
+
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }
-    
+
     return CreateProjectResponseDto.toResponse(projectRes.value);
   }
 
   @Patch(':id')
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ summary: 'Mettre à jour un projet de l\'utilisateur connecté' })
+  @ApiOperation({
+    summary: "Mettre à jour un projet de l'utilisateur connecté",
+  })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   @ApiBody({
     description: 'Données de mise à jour',
@@ -185,7 +182,7 @@ export class UserProjectController {
 
   @Delete(':id')
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ summary: 'Supprimer un projet de l\'utilisateur connecté' })
+  @ApiOperation({ summary: "Supprimer un projet de l'utilisateur connecté" })
   @ApiParam({ name: 'id', description: 'ID du projet' })
   @ApiResponse({
     status: 200,

@@ -473,9 +473,9 @@ export class ProjectController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Post()
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Créer un nouveau projet (DEPRECATED - use POST /projects/me instead)',
-    deprecated: true 
+    deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
   @ApiBody({
@@ -651,9 +651,9 @@ export class ProjectController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Patch(':id')
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Mettre à jour un projet (DEPRECATED - use PATCH /projects/me/:id instead)',
-    deprecated: true 
+    deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({ name: 'id', description: 'ID du projet' })
@@ -777,9 +777,9 @@ export class ProjectController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Delete(':id')
   @UseGuards(GithubAuthGuard)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Supprimer un projet (DEPRECATED - use DELETE /projects/me/:id instead)',
-    deprecated: true 
+    deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({ name: 'id', description: 'ID du projet' })

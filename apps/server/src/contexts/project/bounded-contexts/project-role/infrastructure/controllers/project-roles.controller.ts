@@ -124,9 +124,9 @@ export class ProjectRolesController {
   // Note: User-specific role creation has been moved to /projects/me/:projectId/roles
   // This endpoint is kept for backward compatibility but should be deprecated
   @Post()
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Ajouter un rôle à un projet existant (DEPRECATED - use POST /projects/me/:projectId/roles instead)',
-    deprecated: true 
+    deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({
@@ -234,9 +234,9 @@ export class ProjectRolesController {
   // Note: User-specific role update has been moved to /projects/me/:projectId/roles/:roleId
   // This endpoint is kept for backward compatibility but should be deprecated
   @Patch(':roleId')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Mettre à jour un rôle de projet existant (DEPRECATED - use PATCH /projects/me/:projectId/roles/:roleId instead)',
-    deprecated: true 
+    deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({
@@ -368,9 +368,9 @@ export class ProjectRolesController {
   // Note: User-specific role deletion has been moved to /projects/me/:projectId/roles/:roleId
   // This endpoint is kept for backward compatibility but should be deprecated
   @Delete(':roleId')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Supprimer un rôle de projet existant (DEPRECATED - use DELETE /projects/me/:projectId/roles/:roleId instead)',
-    deprecated: true 
+    deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({

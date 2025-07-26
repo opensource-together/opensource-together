@@ -39,7 +39,10 @@ import { UserProjectRoleApplicationController } from './controllers/user-project
       useClass: PrismaUserRepository,
     },
   ],
-  controllers: [ProjectRoleApplicationController, UserProjectRoleApplicationController],
+  controllers: [
+    ProjectRoleApplicationController,
+    UserProjectRoleApplicationController,
+  ],
   exports: [
     PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
     PROJECT_ROLE_REPOSITORY_PORT,
