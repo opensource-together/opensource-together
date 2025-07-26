@@ -23,11 +23,6 @@ const sidebarItems = [
     href: "/dashboard/my-applications",
     icon: "file-text",
   },
-  {
-    label: "Mes contributions",
-    href: "/dashboard/my-contributions",
-    icon: "commit",
-  },
 ];
 
 export default function DashboardSidebar() {
