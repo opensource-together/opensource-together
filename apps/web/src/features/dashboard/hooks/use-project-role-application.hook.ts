@@ -2,9 +2,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
+import { mockProjectRoleApplications } from "../mocks/project-role-applications.mock";
 import {
   acceptProjectRoleApplication,
-  getMyProjectRolesApplications,
   getProjectRolesApplications,
   rejectProjectRoleApplication,
 } from "../services/project-role-application.service";
@@ -31,7 +31,8 @@ export function useProjectRolesApplications(projectId: string) {
 export function useMyProjectRolesApplications() {
   return useQuery({
     queryKey: ["my-project-roles-applications"],
-    queryFn: () => getMyProjectRolesApplications(),
+    // queryFn: () => getMyProjectRolesApplications(),
+    queryFn: () => Promise.resolve(mockProjectRoleApplications),
   });
 }
 
