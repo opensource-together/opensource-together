@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { ProjectRoleApplicationType } from "../types/project-application.type";
+import { ProjectRoleApplicationType } from "../../dashboard/types/project-role-application.type";
 import { RoleApplicationSchema } from "../validations/project-apply.schema";
 
 export async function applyToProjectRole(

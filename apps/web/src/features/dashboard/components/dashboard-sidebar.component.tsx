@@ -1,145 +1,73 @@
 "use client";
 
-import { FolderIcon, GitBranchIcon, UserIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/shared/components/ui/avatar";
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import Icon from "@/shared/components/ui/icon";
+import { Icon, IconName } from "@/shared/components/ui/icon";
 
-import { ProjectRoleApplicationType } from "@/features/projects/types/project-application.type";
-import { Project } from "@/features/projects/types/project.type";
+const sidebarItems = [
+  {
+    label: "Accueil",
+    href: "/dashboard",
+    icon: "home",
+  },
+  {
+    label: "Mes projets",
+    href: "/dashboard/my-projects",
+    icon: "mix",
+  },
+  {
+    label: "Mes candidatures",
+    href: "/dashboard/my-applications",
+    icon: "file-text",
+  },
+  {
+    label: "Mes contributions",
+    href: "/dashboard/my-contributions",
+    icon: "commit",
+  },
+];
 
-import { useDashboardProject } from "../context/dashboard-project.context";
-
-interface DashboardSidebarProps {
-  projects?: Project[];
-  applications?: ProjectRoleApplicationType[];
-  contributions?: any[];
-}
-
-export default function DashboardSidebar({
-  applications = [],
-  contributions = [],
-}: Omit<DashboardSidebarProps, "projects">) {
-  const { userProjects, selectedProject, setSelectedProject } =
-    useDashboardProject();
-
-  const handleProjectClick = (project: Project) => {
-    setSelectedProject(project);
-  };
+export default function DashboardSidebar() {
+  const pathname = usePathname();
 
   return (
-    <aside className="mt-5 ml-7 flex h-[95%] w-72 flex-col rounded-2xl border border-[black]/5 bg-white">
-      <div className="flex flex-1 flex-col gap-6 overflow-y-auto p-4">
-        {/* Dashboard Section */}
-        <div className="space-y-3">
-          <h3 className="flex items-center gap-2 text-sm font-medium text-gray-600">
-            <FolderIcon className="h-4 w-4" />
-            Dashboard
-          </h3>
-          <div className="space-y-1">
-            {userProjects.length > 0 ? (
-              userProjects.map((project) => (
-                <button
-                  key={project.id}
-                  onClick={() => handleProjectClick(project)}
-                  className={`flex w-full items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50 ${selectedProject?.id === project.id ? "bg-gray-100" : ""}`}
-                >
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={project.image} alt={project.title} />
-                    <AvatarFallback className="text-xs">
-                      {project.title?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm">{project.title}</span>
-                </button>
-              ))
-            ) : (
-              <div className="px-3 py-2 text-sm text-gray-500">
-                Aucun projet dont vous êtes le créateur
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* My Role Applications Section */}
-        <div className="space-y-3">
-          <h3 className="flex items-center gap-2 text-sm font-medium text-gray-600">
-            <UserIcon className="h-4 w-4" />
-            My Role Applications
-          </h3>
-          <div className="space-y-1">
-            {applications.length > 0 ? (
-              applications.map((application: ProjectRoleApplicationType) => (
-                <Link
-                  key={application.id}
-                  href={`/applications/${application.id}`}
-                  className="flex items-center justify-between rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                >
-                  <span className="text-sm">
-                    {application.projectRoleTitle}
-                  </span>
-                  <Badge
-                    variant={
-                      application.status === "ACCEPTED"
-                        ? "success"
-                        : application.status === "REJECTED"
-                          ? "destructive"
-                          : "secondary"
-                    }
-                  >
-                    {application.status}
-                  </Badge>
-                </Link>
-              ))
-            ) : (
-              <div className="px-3 py-2 text-sm text-gray-500">
-                No applications yet
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* My Contributions Section */}
-        <div className="space-y-3">
-          <h3 className="flex items-center gap-2 text-sm font-medium text-gray-600">
-            <GitBranchIcon className="h-4 w-4" />
-            My Contributions
-          </h3>
-          <div className="space-y-1">
-            {contributions.length > 0 ? (
-              contributions.map((contribution: any) => (
-                <Link
-                  key={contribution.id}
-                  href={`/contributions/${contribution.id}`}
-                  className="flex items-center gap-3 rounded-md px-3 py-2 transition-colors hover:bg-gray-50"
-                >
-                  <span className="text-sm">{contribution.title}</span>
-                </Link>
-              ))
-            ) : (
-              <div className="px-3 py-2 text-sm text-gray-500">
-                No contributions yet
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="mx-4 my-5">
+    <aside className="flex w-80 flex-col border border-[black]/5 bg-stone-50/50 px-6 pt-5">
+      <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
         <Button asChild className="w-full">
           <Link href="/projects/create">
             Créer un Project
-            <Icon name="plus" size="xs" variant="white" />
+            <Plus className="ml-2 h-4 w-4" />
           </Link>
         </Button>
+        <div className="mt-4 space-y-1">
+          {sidebarItems.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`flex items-center gap-3 rounded-md px-3 py-2 transition-colors ${
+                  isActive
+                    ? "bg-stone-100 font-medium text-black"
+                    : "text-black/50 hover:bg-stone-100"
+                }`}
+              >
+                <Icon
+                  name={item.icon as IconName}
+                  size="sm"
+                  variant={isActive ? "default" : "gray"}
+                  className="size-4"
+                />
+                <span className="text-sm">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </aside>
   );

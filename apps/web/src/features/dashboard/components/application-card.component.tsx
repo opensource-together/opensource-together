@@ -7,11 +7,11 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 import { Modal } from "@/shared/components/ui/modal";
 
-import { ProjectRoleApplicationType } from "../../projects/types/project-application.type";
 import { KeyFeature, ProjectGoal } from "../../projects/types/project.type";
+import { ProjectRoleApplicationType } from "../types/project-role-application.type";
 
 interface ApplicationCardProps {
-  application: ProjectRoleApplicationType;
+  application?: ProjectRoleApplicationType;
   keyFeatures?: KeyFeature[];
   projectGoals?: ProjectGoal[];
   className?: string;
@@ -34,7 +34,7 @@ export default function ApplicationCard({
   const [isMotivationModalOpen, setIsMotivationModalOpen] = useState(false);
 
   const {
-    id,
+    appplicationId,
     userProfile,
     projectRoleTitle,
     selectedKeyFeatures = [],
@@ -42,7 +42,7 @@ export default function ApplicationCard({
     motivationLetter,
     status,
     appliedAt,
-  } = application;
+  } = application || {};
 
   const userName = userProfile?.name;
   const userAvatarUrl = userProfile?.avatarUrl;
@@ -108,12 +108,12 @@ export default function ApplicationCard({
   };
 
   const handleAccept = () => {
-    onAccept?.(id);
+    onAccept?.(appplicationId || "");
     setIsAcceptConfirmOpen(false);
   };
 
   const handleReject = () => {
-    onReject?.(id);
+    onReject?.(appplicationId || "");
     setIsRejectConfirmOpen(false);
   };
 
@@ -180,7 +180,7 @@ export default function ApplicationCard({
         <div className="mb-4 md:mb-6">
           <p className="text-sm leading-relaxed tracking-tighter text-black/70">
             Candidature pour le rôle • {projectRoleTitle || "Rôle inconnu"} •{" "}
-            {formatRelativeTime(appliedAt)}
+            {formatRelativeTime(appliedAt?.toISOString() || "")}
           </p>
           <span
             onClick={() => setIsMotivationModalOpen(true)}

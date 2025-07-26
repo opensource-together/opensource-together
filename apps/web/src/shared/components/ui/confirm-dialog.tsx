@@ -42,7 +42,6 @@ export function ConfirmDialog({
   onCancel,
   confirmText = "Confirmer",
   confirmIcon = "check",
-  confirmIconVariant = "default",
   confirmVariant = "default",
 }: ConfirmDialogProps) {
   const renderIcon = () => {

@@ -3,7 +3,7 @@ import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profil
 import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { Result } from '@/libs/result';
 import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 
 export class CreateProfileCommand implements ICommand {
   public readonly userId: string;
@@ -53,6 +53,7 @@ export class CreateProfileCommand implements ICommand {
 export class CreateProfileCommandHandler
   implements ICommandHandler<CreateProfileCommand>
 {
+  private readonly Logger = new Logger(CreateProfileCommand.name);
   constructor(
     @Inject(PROFILE_REPOSITORY_PORT)
     private readonly profileRepository: ProfileRepositoryPort,
@@ -96,7 +97,7 @@ export class CreateProfileCommandHandler
     const savedProfileResult = await this.profileRepository.create(
       profile.toPrimitive(),
     );
-    console.log({ savedProfileResult });
+    this.Logger.log({ savedProfileResult });
 
     if (!savedProfileResult.success)
       return Result.fail('Erreur technique lors de la création du profil.');

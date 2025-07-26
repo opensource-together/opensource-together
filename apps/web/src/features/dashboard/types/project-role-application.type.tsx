@@ -1,14 +1,16 @@
 export interface ProjectRoleApplicationType {
-  id: string;
-  userId: string;
-  projectId: string;
+  appplicationId: string;
   projectRoleId: string;
   projectRoleTitle: string;
+  projectTitle: string;
+  status: "PENDING" | "APPROVAL" | "ACCEPTED" | "REJECTED";
   selectedKeyFeatures: string[];
   selectedProjectGoals: string[];
+  appliedAt: Date;
+  decidedAt: Date;
+  decidedBy?: string;
+  rejectionReason?: string;
   motivationLetter: string;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
-  appliedAt: string;
   userProfile: {
     id: string;
     name: string;

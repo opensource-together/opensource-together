@@ -63,7 +63,6 @@ export async function getGitHubAuthUrl(): Promise<string> {
     throw new Error("getGitHubAuthUrl can only be called in the browser");
   }
   const url = window.location.origin;
-  console.log(url);
   return getAuthorisationURLWithQueryParamsAndSetState({
     thirdPartyId: "github",
     frontendRedirectURI: `${url}/auth/callback/github`,

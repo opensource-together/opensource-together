@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { ProjectRoleApplicationRepositoryPort } from '../../use-cases/ports/project-role-application.repository.port';
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
@@ -9,6 +10,9 @@ import { PrismaProjectRoleApplicationMapper } from './prisma.project-role-applic
 export class PrismaProjectRoleApplicationRepository
   implements ProjectRoleApplicationRepositoryPort
 {
+  private readonly Logger = new Logger(
+    PrismaProjectRoleApplicationRepository.name,
+  );
   constructor(private readonly prisma: PrismaService) {}
 
   async create(
@@ -49,7 +53,7 @@ export class PrismaProjectRoleApplicationRepository
 
       return Result.ok(domainApplication.value);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Une erreur est survenue');
     }
   }
@@ -75,7 +79,7 @@ export class PrismaProjectRoleApplicationRepository
       }
       return Result.ok(projectRoleApplication.status);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Une erreur est survenue');
     }
   }
@@ -169,7 +173,7 @@ export class PrismaProjectRoleApplicationRepository
 
       return Result.ok(projectRoleApplications);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(
         'Une erreur est survenue lors de la récupération des candidatures',
       );
@@ -200,7 +204,7 @@ export class PrismaProjectRoleApplicationRepository
     >
   > {
     try {
-      console.log('roleId findByRoleId', roleId);
+      this.Logger.log('roleId findByRoleId', roleId);
       const applications = await this.prisma.projectRoleApplication.findMany({
         where: { projectRoleId: String(roleId) },
         include: {
@@ -213,7 +217,7 @@ export class PrismaProjectRoleApplicationRepository
           project: true,
         },
       });
-      console.log('applications findByRoleId', applications);
+      this.Logger.log('applications findByRoleId', applications);
       if (!applications) {
         return Result.ok([]);
       }
@@ -264,13 +268,13 @@ export class PrismaProjectRoleApplicationRepository
           },
         });
       }
-      console.log(
+      this.Logger.log(
         'projectRoleApplications findByRoleId',
         projectRoleApplications,
       );
       return Result.ok(projectRoleApplications);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(
         'Une erreur est survenue lors de la récupération des candidatures',
       );
@@ -317,7 +321,7 @@ export class PrismaProjectRoleApplicationRepository
 
       return Result.ok(domainApplication.value);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(
         'Une erreur est survenue lors de la récupération de la candidature',
       );
@@ -356,7 +360,7 @@ export class PrismaProjectRoleApplicationRepository
           user: application.profile.user,
         },
       });
-      console.log('domainApplication acceptApplication', domainApplication);
+      this.Logger.log('domainApplication acceptApplication', domainApplication);
       if (!domainApplication.success) {
         return Result.fail(
           'Une erreur est survenue lors de la récupération de la candidature',
@@ -365,7 +369,7 @@ export class PrismaProjectRoleApplicationRepository
 
       return Result.ok(domainApplication.value);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(
         'Une erreur est survenue lors de la récupération de la candidature',
       );
@@ -453,7 +457,7 @@ export class PrismaProjectRoleApplicationRepository
 
       return Result.ok(projectRoleApplications);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(
         'Une erreur est survenue lors de la récupération des candidatures',
       );

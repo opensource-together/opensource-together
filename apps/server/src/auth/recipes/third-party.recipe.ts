@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import ThirdParty from 'supertokens-node/recipe/thirdparty';
 import { CommandBus } from '@nestjs/cqrs';
@@ -140,7 +141,7 @@ export const thirdPartyRecipe = ({
                   const newUserResult: Result<User> =
                     await commandBus.execute(createUserCommand);
                   if (!newUserResult.success) {
-                    console.log({ newUserResult });
+                    Logger.log({ newUserResult });
                     await commandBus.execute(new DeleteUserCommand(id));
 
                     await deleteUser(id);
@@ -172,7 +173,7 @@ export const thirdPartyRecipe = ({
                   );
                   await commandBus.execute(createUserGhTokenCommand);
                 } catch (error) {
-                  console.error('Error during sign up process:', error);
+                  Logger.error('Error during sign up process:', error);
                   await deleteUser(id);
                 }
               } else {

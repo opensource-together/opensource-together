@@ -26,8 +26,7 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
         successTechStacks.map((domainTechStack) => domainTechStack.value),
       );
     } catch (error) {
-      console.log('error', error);
-      return Result.fail(`Error fetching all tech stacks`);
+      return Result.fail(`Error fetching all tech stacks : ${error}`);
     }
   }
 
@@ -42,13 +41,12 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
       }
       return Result.ok(techStackReconstituted.value);
     } catch (error) {
-      return Result.fail(error as string);
+      return Result.fail(`Could not create TechStack : ${error}`);
     }
   }
 
   async findByIds(ids: string[]): Promise<Result<TechStack[], string>> {
     try {
-      console.log('ids', ids);
       const techStacks = await this.prisma.techStack.findMany({
         where: { id: { in: ids } },
       });
@@ -67,8 +65,7 @@ export class PrismaTechStackRepository implements TechStackRepositoryPort {
         successTechStacks.map((domainTechStack) => domainTechStack.value),
       );
     } catch (error) {
-      console.log('error', error);
-      return Result.fail(`TechStacks not found`);
+      return Result.fail(`TechStacks not found : ${error}`);
     }
   }
 

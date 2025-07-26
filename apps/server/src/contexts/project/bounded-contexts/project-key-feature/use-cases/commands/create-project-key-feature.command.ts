@@ -5,7 +5,7 @@ import {
 } from '@/contexts/project/bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
 import { KeyFeature } from '../../domain/key-feature.entity';
 import { Result } from '@/libs/result';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
@@ -27,6 +27,7 @@ export class CreateProjectKeyFeatureCommandHandler
   implements
     ICommandHandler<CreateProjectKeyFeatureCommand, Result<Project, string>>
 {
+  private readonly Logger = new Logger(CreateProjectKeyFeatureCommand.name);
   constructor(
     @Inject(PROJECT_KEY_FEATURE_REPOSITORY_PORT)
     private readonly projectKeyFeatureRepository: ProjectKeyFeatureRepositoryPort,
@@ -38,7 +39,7 @@ export class CreateProjectKeyFeatureCommandHandler
     command: CreateProjectKeyFeatureCommand,
   ): Promise<Result<Project, string>> {
     const { userId, projectId, features } = command.props;
-    console.log(features);
+    this.Logger.log(features);
     const keyFeatureResults = features.map((f) =>
       KeyFeature.create({
         projectId,

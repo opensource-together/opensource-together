@@ -1,5 +1,83 @@
 # Changelog
 
+## [0.1.10](https://github.com/opensource-together/opensource-together/compare/v0.1.9...v0.1.10) (2025-07-25)
+
+
+### Features
+
+* add new SVG icons and dashboard pages for applications, contributions, and projects ([8749342](https://github.com/opensource-together/opensource-together/commit/87493429df7d7d044acd22495670310aa70a4247))
+* create migration ci check for destructive actions ([4850545](https://github.com/opensource-together/opensource-together/commit/48505456dac4df0026c9142852b30b6f0acffc4a))
+* enhance dashboard with project and application management features ([a810e4a](https://github.com/opensource-together/opensource-together/commit/a810e4a64265f1ad1c5efd39dd8df3939109ce95))
+* implement project role application management hooks and services ([ff3eb56](https://github.com/opensource-together/opensource-together/commit/ff3eb563ece36c0949b13b898e24852bbf92572c))
+
+
+### Bug Fixes
+
+* clean package.json ([8e25fdc](https://github.com/opensource-together/opensource-together/commit/8e25fdc356512ab470414fb9401c96f9b3d3d50b))
+* removed nextjs logger ([e24bd42](https://github.com/opensource-together/opensource-together/commit/e24bd42742408a1b1c47bf50186d0dd1b1b4bdcc))
+
+
+### Miscellaneous
+
+* add web build args to web publishing ([8b37492](https://github.com/opensource-together/opensource-together/commit/8b37492bce17198fb246bdab09b2e58e5d319a38))
+* add web build args to web publishing ([6e7c9f4](https://github.com/opensource-together/opensource-together/commit/6e7c9f449547faeab1e128ea9782e403c07cdfcc))
+* fix linting ([eead3b7](https://github.com/opensource-together/opensource-together/commit/eead3b7c89fd9018235479cc435608dda774b75d))
+* fix server linting ([878676b](https://github.com/opensource-together/opensource-together/commit/878676bee3790c55385485306df65d6989ff3ade))
+* refactor web logging ([9d33d71](https://github.com/opensource-together/opensource-together/commit/9d33d71af63f2359f5c6598ec318276722ae24e2))
+
+## [0.1.9](https://github.com/opensource-together/opensource-together/compare/v0.1.8...v0.1.9) (2025-07-25)
+
+
+### Bug Fixes
+
+* typo ([d22bae5](https://github.com/opensource-together/opensource-together/commit/d22bae58165803e8d2811e5ec3ebda0db9b9fead))
+
+## [0.1.8](https://github.com/opensource-together/opensource-together/compare/v0.1.7...v0.1.8) (2025-07-25)
+
+
+### Miscellaneous
+
+* add permissions to production syncing workflow ([f74d937](https://github.com/opensource-together/opensource-together/commit/f74d93713057f2a71051a1e1a36a8b63575751e6))
+
+## [0.1.7](https://github.com/opensource-together/opensource-together/compare/v0.1.6...v0.1.7) (2025-07-25)
+
+
+### Bug Fixes
+
+* use github app instead of PAT ([a9948be](https://github.com/opensource-together/opensource-together/commit/a9948be470eab32e4a45048ebacdb39ad225b294))
+* use github app instead of PAT ([035f3d1](https://github.com/opensource-together/opensource-together/commit/035f3d1ca496a99d9e1574a8395a2217df001ed4))
+
+## [0.1.6](https://github.com/opensource-together/opensource-together/compare/v0.1.5...v0.1.6) (2025-07-25)
+
+
+### Bug Fixes
+
+* github adapters data validation ([ecd4d11](https://github.com/opensource-together/opensource-together/commit/ecd4d11710f8b0b9eb66c5aeed935475e338d8a2))
+* github adapters data validation ([a500dbd](https://github.com/opensource-together/opensource-together/commit/a500dbd27e257afcdec34a679008122051f5565e))
+* made validation synchronous ([e2c794b](https://github.com/opensource-together/opensource-together/commit/e2c794bd146a5df66bdfd9ef13fc2dd7f99ca1fe))
+
+
+### Miscellaneous
+
+* fix linting ([0df81cb](https://github.com/opensource-together/opensource-together/commit/0df81cb23facdce40d1fd1c831ec9d83ec46013c))
+
+## [0.1.5](https://github.com/opensource-together/opensource-together/compare/v0.1.4...v0.1.5) (2025-07-24)
+
+
+### Bug Fixes
+
+* update lockfile ([07bd05f](https://github.com/opensource-together/opensource-together/commit/07bd05ff6c89d28358e6e6000c610fd28e5eee0d))
+* update package vulnerabilities ([0a66c4d](https://github.com/opensource-together/opensource-together/commit/0a66c4d624cb3dfc47fe9f888ef216a6df0fa37c))
+* update package vulnerabilities ([7ab48e0](https://github.com/opensource-together/opensource-together/commit/7ab48e0d0632895ba4cc71337c6e08561ef193de))
+
+## [0.1.4](https://github.com/opensource-together/opensource-together/compare/v0.1.3...v0.1.4) (2025-07-24)
+
+
+### Features
+
+* add production syncing workflow ([9a0db57](https://github.com/opensource-together/opensource-together/commit/9a0db57b36ce91d8fd1a6e84a13ac2bac80edbac))
+* add production syncing workflow ([e3e345d](https://github.com/opensource-together/opensource-together/commit/e3e345dcc163c03b3df79469dd14129afc262410))
+
 ## [0.1.3](https://github.com/opensource-together/opensource-together/compare/v0.1.2...v0.1.3) (2025-07-23)
 
 

@@ -1,5 +1,5 @@
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
   ProjectRoleApplicationRepositoryPort,
@@ -31,6 +31,7 @@ export class AcceptUserApplicationCommand implements ICommand {
 export class AcceptUserApplicationCommandHandler
   implements ICommandHandler<AcceptUserApplicationCommand>
 {
+  private readonly Logger = new Logger(AcceptUserApplicationCommand.name);
   constructor(
     @Inject(PROJECT_REPOSITORY_PORT)
     private readonly projectRepo: ProjectRepositoryPort,
@@ -44,7 +45,7 @@ export class AcceptUserApplicationCommandHandler
     const { projectRoleApplicationId, projectId, userId } = command.props;
     const project: Result<Project, string> =
       await this.projectRepo.findById(projectId);
-    console.log('project', project);
+    this.Logger.log('project', project);
     if (!project.success) {
       return Result.fail('Project not found');
     }

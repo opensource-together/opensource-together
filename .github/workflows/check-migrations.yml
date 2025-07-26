@@ -1,0 +1,74 @@
+name: Check for destructive migrations
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: ost
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U user -d ost" --health-interval=5s
+          --health-timeout=5s --health-retries=5
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: production
+          path: prod
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          path: curr
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies for main
+        working-directory: prod/apps/server
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: Install dependencies for PR
+        working-directory: curr/apps/server
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client for main
+        working-directory: prod/apps/server
+        run: |
+          pnpm exec prisma generate --schema=./src/persistence/orm/prisma/schema.prisma
+
+      - name: Generate Prisma client for PR
+        working-directory: curr/apps/server
+        run: |
+          pnpm exec prisma generate --schema=./src/persistence/orm/prisma/schema.prisma
+
+      - name: Check for destructive migrations
+        env:
+          DATABASE_URL: "postgresql://user:password@localhost:5432/ost"
+        run: |
+          npx --yes \
+          prisma migrate diff \
+          --from-migrations=prod/apps/server/src/persistence/orm/prisma/migrations \
+          --to-migrations=curr/apps/server/src/persistence/orm/prisma/migrations \
+          --shadow-database-url "$DATABASE_URL" \
+          --script

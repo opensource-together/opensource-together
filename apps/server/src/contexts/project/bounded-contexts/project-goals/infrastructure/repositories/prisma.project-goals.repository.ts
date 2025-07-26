@@ -1,16 +1,19 @@
+import { Logger } from '@nestjs/common';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Result } from '@/libs/result';
 import { ProjectGoalsRepositoryPort } from '../../use-cases/ports/project-goals.repository.port';
 import { ProjectGoals } from '../../domain/project-goals.entity';
+
 export class PrismaProjectGoalsRepository
   implements ProjectGoalsRepositoryPort
 {
+  private readonly Logger = new Logger(PrismaProjectGoalsRepository.name);
   constructor(private readonly prisma: PrismaService) {}
   async updateMany(
     goals: ProjectGoals[],
   ): Promise<Result<ProjectGoals[], string>> {
     try {
-      console.log('updateMany', goals);
+      this.Logger.log('updateMany', goals);
       await this.prisma.$transaction(async (tx) => {
         const repoGoals = goals.map((goal) => goal.toPrimitive());
 
@@ -66,7 +69,7 @@ export class PrismaProjectGoalsRepository
       });
       return Result.ok(goals);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(error);
     }
   }

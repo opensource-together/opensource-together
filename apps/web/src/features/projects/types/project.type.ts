@@ -76,6 +76,7 @@ export interface Project {
   slug?: string;
   title: string;
   image?: string;
+  coverImages?: string[];
   author: Author;
   shortDescription: string;
   longDescription?: string;

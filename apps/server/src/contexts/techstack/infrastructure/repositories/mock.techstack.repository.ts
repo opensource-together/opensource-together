@@ -89,7 +89,6 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
       return Promise.resolve(Result.fail('Tech stack not found'));
     }
     this.techStacks = this.techStacks.filter((ts) => ts.id !== id);
-    console.log('techStacks', this.techStacks);
     return Promise.resolve(Result.ok(true));
   }
 

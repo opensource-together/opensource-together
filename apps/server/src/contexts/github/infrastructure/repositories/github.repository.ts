@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { GithubRepositoryDto } from './dto/github-repository.dto';
 import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import {
@@ -8,7 +9,7 @@ import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
-import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/inputs/invite-user-to-repo.inputs.dto';
+import { InviteUserToRepoInput } from './inputs/invite-user-to-repo.inputs.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
 import { toGithubInvitationDto } from './adapters/github-invitation.adapter';
 import { GithubRepoListInput } from './inputs/github-repo-list.input';
@@ -16,6 +17,7 @@ import { toGithubRepoListInput } from './adapters/github-repo-list.adapter';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
+  private readonly Logger = new Logger(GithubRepository.name);
   constructor() {}
 
   async createGithubRepository(
@@ -36,7 +38,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubRepositoryDto(response);
     } catch (e) {
-      console.error('error creating github repository', e);
+      this.Logger.error('error creating github repository', e);
       return Result.fail('Failed to create github repository');
     }
   }
@@ -57,7 +59,7 @@ export class GithubRepository implements GithubRepositoryPort {
       });
       return toGithubInvitationDto(response);
     } catch (e) {
-      console.log('error inviting user to repository', e);
+      this.Logger.log('error inviting user to repository', e);
       return Result.fail('Failed to invite user to repository');
     }
   }
@@ -81,10 +83,10 @@ export class GithubRepository implements GithubRepositoryPort {
         watchers: response.data.watchers_count,
         openIssues: response.data.open_issues_count,
       };
-      console.log('repositoryInfo', repositoryInfo);
+      this.Logger.log('repositoryInfo', repositoryInfo);
       return Result.ok<RepositoryInfo>(repositoryInfo);
     } catch (e) {
-      console.error('error fetching repository', e);
+      this.Logger.error('error fetching repository', e);
       return Result.fail('Failed to fetch repository');
     }
   }
@@ -139,7 +141,7 @@ export class GithubRepository implements GithubRepositoryPort {
         commitsNumber,
       });
     } catch (e: any) {
-      console.error('error fetching commits', e);
+      this.Logger.error('error fetching commits', e);
       // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
       // }
       return Result.ok({
@@ -184,7 +186,7 @@ export class GithubRepository implements GithubRepositoryPort {
         },
       });
       if (!Array.isArray(response.data)) {
-        console.error(
+        this.Logger.error(
           'Unexpected response format for contributors',
           response.data,
         );
@@ -199,7 +201,7 @@ export class GithubRepository implements GithubRepositoryPort {
       }));
       return Result.ok(contributors);
     } catch (e: any) {
-      console.log('error fetching contributors', e);
+      this.Logger.error('error fetching contributors', e);
       // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
       // }
       return Result.ok([]);
@@ -235,7 +237,7 @@ export class GithubRepository implements GithubRepositoryPort {
         .filter((v) => v !== undefined);
       return Result.ok(repositories);
     } catch (e) {
-      console.error('error fetching user repositories', e);
+      this.Logger.error('error fetching user repositories', e);
       return Result.fail('Failed to fetch user repositories');
     }
   }

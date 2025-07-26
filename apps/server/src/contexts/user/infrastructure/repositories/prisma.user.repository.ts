@@ -21,10 +21,8 @@ export class PrismaUserRepository implements UserRepositoryPort {
       if (!user.success) return Result.fail(user.error);
       return Result.ok(user.value);
     } catch (error) {
-      //TODO: log l'erreur avec sentry
-      console.log('error', error);
       return Result.fail(
-        "Erreur technique lors de la recherche de l'utilisateur.",
+        `Erreur technique lors de la recherche de l'utilisateur : ${error}`,
       );
     }
   }
@@ -43,10 +41,8 @@ export class PrismaUserRepository implements UserRepositoryPort {
       if (!userResult.success) return Result.fail(userResult.error);
       return Result.ok(userResult.value);
     } catch (error) {
-      //TODO: log l'erreur avec sentry
-      console.log('error', error);
       return Result.fail(
-        "Erreur technique lors de la création de l'utilisateur.",
+        `Erreur technique lors de la création de l'utilisateur : ${error}`,
       );
     }
   }

@@ -43,7 +43,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
       }
       return Result.ok(domainProject.value);
     } catch (error) {
-      console.log('error', error);
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           return Result.fail('Project already exists');

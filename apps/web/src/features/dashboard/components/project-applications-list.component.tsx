@@ -1,16 +1,22 @@
+"use client";
+
 import {
-  useAcceptDashboardProjectApplication,
-  useDashboardProjectApplications,
-  useRejectDashboardProjectApplication,
-} from "../hooks/use-dashboard-applications.hook";
+  useAcceptProjectRoleApplication,
+  useProjectRolesApplications,
+  useRejectProjectRoleApplication,
+} from "../hooks/use-project-role-application.hook";
+import { ProjectRoleApplicationType } from "../types/project-role-application.type";
 import ApplicationCard from "./application-card.component";
 
-export default function ProjectApplicationsList({ project }: { project: any }) {
-  const { data: applications, isLoading } = useDashboardProjectApplications(
-    project.id
-  );
-  const acceptMutation = useAcceptDashboardProjectApplication(project.id);
-  const rejectMutation = useRejectDashboardProjectApplication(project.id);
+export default function ProjectApplicationsList({
+  projectId,
+}: {
+  projectId: string;
+}) {
+  const { data: applications, isLoading } =
+    useProjectRolesApplications(projectId);
+  const acceptMutation = useAcceptProjectRoleApplication(projectId);
+  const rejectMutation = useRejectProjectRoleApplication(projectId);
 
   if (isLoading) return <div>Chargement des candidatures...</div>;
   if (!applications || applications.length === 0)
@@ -18,14 +24,13 @@ export default function ProjectApplicationsList({ project }: { project: any }) {
 
   return (
     <div className="space-y-4">
-      {applications.map((application: any) => (
+      {applications.map((application: ProjectRoleApplicationType) => (
         <ApplicationCard
-          key={application.id}
-          application={application}
-          keyFeatures={project.keyFeatures}
-          projectGoals={project.projectGoals}
-          onAccept={() => acceptMutation.mutate(application.id)}
-          onReject={() => rejectMutation.mutate(application.id)}
+          key={application.appplicationId}
+          keyFeatures={[]}
+          projectGoals={[]}
+          onAccept={() => acceptMutation.mutate(application.appplicationId)}
+          onReject={() => rejectMutation.mutate(application.appplicationId)}
           isProcessing={acceptMutation.isPending || rejectMutation.isPending}
         />
       ))}

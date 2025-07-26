@@ -83,7 +83,6 @@ export class FindProjectByIdHandler
     if (!ownerProjectInfo.success) {
       return Result.fail(ownerProjectInfo.error);
     }
-    console.log('ownerProjectInfo', ownerProjectInfo);
     const ownerLogin = ownerProjectInfo.value.toPrimitive().login;
     const ownerName = ownerProjectInfo.value.toPrimitive().name;
     const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;

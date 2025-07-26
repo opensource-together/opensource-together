@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
 import { MockCategoryRepository } from '@/contexts/category/infrastructure/repositories/mock.category.repository';
@@ -279,7 +280,7 @@ describe('CreateProjectCommandHandler', () => {
       if (!projectResultExpected.success) {
         throw new Error(JSON.stringify(projectResultExpected.error));
       }
-      console.log(
+      Logger.log(
         'projectResultExpected',
         projectResultExpected.value.toPrimitive(),
       );
@@ -361,7 +362,7 @@ describe('CreateProjectCommandHandler', () => {
         // await deleteTechStacksInMemory(techStackRepo, props.categories);
         // throw new Error(JSON.stringify(result.error));
       } else {
-        console.log('result', result.value.toPrimitive());
+        Logger.log('result', result.value.toPrimitive());
         throw new Error('Test should have failed but succeeded');
       }
     });

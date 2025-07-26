@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EncryptionServicePort } from '@/contexts/encryption/ports/encryption.service.port';
 import { Result } from '@/libs/result';
@@ -6,6 +6,7 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class EncryptionService implements EncryptionServicePort {
+  private readonly Logger = new Logger(EncryptionService.name);
   private readonly encryptionKey: Buffer;
   private readonly algorithm = 'aes-256-gcm';
   private readonly ivLength = 16;
@@ -45,7 +46,7 @@ export class EncryptionService implements EncryptionServicePort {
       const result = `${iv.toString('hex')}:${tag.toString('hex')}:${encrypted}`;
       return Result.ok(result);
     } catch (error) {
-      console.error('Erreur de chiffrement:', error);
+      this.Logger.error('Erreur de chiffrement:', error);
       return Result.fail('Erreur lors du chiffrement des données');
     }
   }
@@ -78,7 +79,7 @@ export class EncryptionService implements EncryptionServicePort {
 
       return Result.ok(decrypted);
     } catch (error) {
-      console.error('Erreur de déchiffrement:', error);
+      this.Logger.error('Erreur de déchiffrement:', error);
       return Result.fail('Erreur lors du déchiffrement des données');
     }
   }
