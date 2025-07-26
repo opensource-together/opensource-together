@@ -38,6 +38,7 @@ export class PrismaProjectMapper {
       description: projectData.description,
       shortDescription: projectData.shortDescription,
       image: projectData.image,
+      coverImages: projectData.coverImages || [],
       externalLinks: {
         create:
           projectData.externalLinks
@@ -99,6 +100,7 @@ export class PrismaProjectMapper {
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
+      coverImages: prismaProject.coverImages || [],
       techStacks: prismaProject.techStacks.map((techStack) => ({
         id: techStack.id,
         name: techStack.name,
