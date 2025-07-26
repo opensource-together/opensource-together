@@ -49,4 +49,8 @@ export class CreateProjectDtoRequest {
     description: string;
     techStacks: string[];
   }[];
+
+  @IsString()
+  @IsOptional()
+  readme?: string;
 }

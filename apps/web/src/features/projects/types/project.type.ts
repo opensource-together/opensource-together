@@ -86,6 +86,7 @@ export interface Project {
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
   categories: Category[];
+  readme?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

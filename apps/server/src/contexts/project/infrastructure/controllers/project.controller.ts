@@ -633,6 +633,7 @@ export class ProjectController {
         octokit: octokit,
         method: method,
         image: project.image,
+        readme: project.readme,
       }),
     );
     if (!projectRes.success) {

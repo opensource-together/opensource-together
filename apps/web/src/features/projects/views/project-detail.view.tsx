@@ -13,6 +13,7 @@ import SkeletonProjectDetail from "../components/skeletons/skeleton-project-deta
 import CreateRoleForm from "../forms/create-role.form";
 import { useGetProjectRoles } from "../hooks/use-project-role.hook";
 import { useProject } from "../hooks/use-projects.hook";
+import ProjectReadme from "../components/project-readme.component";
 
 interface ProjectDetailViewProps {
   projectId: string;
@@ -43,6 +44,7 @@ export default function ProjectDetailView({
           </div>
           <div className="flex w-full flex-col gap-8 lg:max-w-[668px]">
             <ProjectHero project={project} />
+            <ProjectReadme readme={project.readme} />
             <div>
               <div className="mb-3 flex items-center justify-between lg:max-w-[668px]">
                 <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">

@@ -87,6 +87,15 @@ export const stepFourSchema = z.object({
     .optional(),
 });
 
+// Step 5: README
+export const stepFiveSchema = z.object({
+  readme: z
+    .string()
+    .min(50, "Le README doit contenir au moins 50 caractères")
+    .max(10000, "Le README ne peut pas dépasser 10000 caractères")
+    .optional(),
+});
+
 // ========================================
 // COMBINED SCHEMAS
 // ========================================
@@ -97,6 +106,7 @@ export const createProjectSchema = z.object({
   ...stepOneSchema.shape,
   ...stepTwoSchema.shape,
   ...stepThreeSchema.shape,
+  ...stepFiveSchema.shape,
   selectedRepository: z
     .object({
       name: z.string(),
@@ -114,4 +124,5 @@ export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
 export type RoleFormData = z.infer<typeof roleSchema>;
 export type StepThreeFormData = z.infer<typeof stepThreeSchema>;
 export type StepFourFormData = z.infer<typeof stepFourSchema>;
+export type StepFiveFormData = z.infer<typeof stepFiveSchema>;
 export type CreateProjectFormData = z.infer<typeof createProjectSchema>;

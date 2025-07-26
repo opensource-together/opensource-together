@@ -31,6 +31,7 @@ export const transformProjectForApi = (
       description: role.description,
       techStacks: role.techStacks?.map((tech: TechStack) => tech.id),
     })),
+    readme: storeData.readme,
   };
 };
 
@@ -41,7 +42,7 @@ export const transformProjectForApi = (
  * @returns The transformed data for the API.
  */
 export const transformProjectForApiUpdate = (
-  formData: ProjectSchema
+  formData: ProjectSchema & { readme?: string }
 ): UpdateProjectApiData => {
   return {
     title: formData.title,
@@ -60,5 +61,6 @@ export const transformProjectForApiUpdate = (
     categories: formData.categories || [],
     keyFeatures: formData.keyFeatures?.map((feature) => feature.feature) || [],
     projectGoals: formData.projectGoals?.map((goal) => goal.goal) || [],
+    readme: formData.readme,
   };
 };

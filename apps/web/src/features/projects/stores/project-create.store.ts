@@ -24,6 +24,7 @@ export interface ProjectFormData {
   projectGoals: ProjectGoal[];
   techStack: TechStack[];
   categories: Category[];
+  readme?: string;
   // Data for github method
   selectedRepository: {
     name: string;
@@ -55,6 +56,7 @@ interface ProjectCreateStore {
         | "categories"
         | "roles"
         | "externalLinks"
+        | "readme"
       >
     >
   ) => void;
@@ -79,6 +81,7 @@ const initialFormData: ProjectFormData = {
   techStack: [],
   categories: [],
   roles: [],
+  readme: "",
 };
 
 export const useProjectCreateStore = create<ProjectCreateStore>()(
