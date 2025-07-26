@@ -1,4 +1,5 @@
 {
+  "target-branch": "olyxz16/fix-release-please-versionning",
   "group-pull-request-title-pattern": "Release v${version}",
   "pull-request-title-pattern": "Release ${component} v${version}",
   "pull-request-header": "## 🎉 New Release\n\nThis release contains :",
