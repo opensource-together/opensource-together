@@ -1,6 +1,6 @@
 {
-  "name": "my-app",
-  "version": "0.1.0",
+  "name": "ost-web",
+  "version": "0.1.10",
   "private": true,
   "engines": {
     "node": ">= 20.0.0"
