@@ -1,4 +1,4 @@
-import DashboardHeading from "../components/dashboard-heading.component";
+import DashboardHeading from "../components/layout/dashboard-heading.component";
 
 export default function MyContributionsView() {
   return (
