@@ -20,6 +20,7 @@ jobs:
         id: release
         with:
           token: ${{ secrets.OST_RELEASE_PAT }}
+          target-branch: olyxz16/fix-release-please-versionning
           config-file: .github/release-please-config.json
           manifest-file: .github/release-please-manifest.json
 
