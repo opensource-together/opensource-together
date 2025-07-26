@@ -20,10 +20,10 @@
   ],
   "packages": {
     "apps/web": {
-      "release-type": "node",
+      "release-type": "node"
     },
     "apps/server": {
-      "release-type": "node",
+      "release-type": "node"
     }
   },
   "plugins": [
