@@ -31,10 +31,10 @@ jobs:
           ROOT_VERSION: ${{ steps.release.outputs.version }}
           VERSION: ${{ steps.release.outputs['apps/web--version'] }}
         run: |
-          echo "Root version: ${ROOT_VERSION}"
+          echo "Root version: $ROOT_VERSION"
           if [ -n "$VERSION" ]; then
-            TITLE="Release v${VERSION} !"
-            echo "Updating PR #${PR_NUMBER} title to: ${TITLE}"
+            TITLE="Release v$VERSION !"
+            echo "Updating PR #$PR_NUMBER title to: $TITLE"
             gh pr edit $PR_NUMBER --title "$TITLE"
           else
             echo "No version found in outputs"
