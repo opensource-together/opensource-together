@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -16,6 +17,7 @@ import { ProfileSchema } from "../validations/profile.schema";
  */
 export function useProfileUpdate() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const mutation = useToastMutation({
     mutationFn: (data: ProfileSchema) => updateProfile(data),
@@ -25,8 +27,9 @@ export function useProfileUpdate() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["profile"],
+          queryKey: ["user/me"],
         });
+        router.push("/profile");
       },
     },
   });

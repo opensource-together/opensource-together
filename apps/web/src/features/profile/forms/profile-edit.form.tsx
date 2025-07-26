@@ -115,13 +115,13 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             )}
           />
 
-          {/* Description */}
+          {/* Bio */}
           <FormField
             control={form.control}
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Bio</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}

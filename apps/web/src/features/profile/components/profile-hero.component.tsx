@@ -1,8 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Icon, IconName } from "@/shared/components/ui/icon";
+import { Icon } from "@/shared/components/ui/icon";
+import { TechStackList } from "@/shared/components/ui/tech-stack-list.component";
 
 import { Profile } from "../types/profile.type";
 
@@ -14,7 +16,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
   const {
     avatarUrl = "",
     name = "User",
-    joinedAt = "N/A",
+    jobTitle = "",
     bio = "",
     techStacks = [],
     socialLinks = {},
@@ -24,7 +26,13 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
   const socialLinksArray = Object.entries(socialLinks)
     .filter(([_, url]) => url && url.trim() !== "")
     .map(([type, url]) => ({
-      type: type as IconName,
+      type: type as
+        | "github"
+        | "twitter"
+        | "linkedin"
+        | "discord"
+        | "other"
+        | "website",
       url: url as string,
     }));
 
@@ -48,26 +56,58 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
           <div>
             <h2 className="text-2xl font-medium tracking-tighter">{name}</h2>
-            <p className="text-sm tracking-tighter text-black/50">
-              Rejoint le {formatJoinDate(joinedAt)}
-            </p>
+            <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
           </div>
         </div>
         {socialLinksArray.length > 0 && (
           <div className="flex items-center justify-end space-x-3">
-            <div className="flex items-center space-x-3">
-              {socialLinksArray.map((link) => (
-                <button key={link.type}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <Icon
-                      name={link.type}
-                      size="md"
-                      variant="black"
-                      interactive
+            <div className="flex items-center space-x-2">
+              {socialLinksArray.map((link, index) => {
+                let iconSrc = "";
+                let iconAlt = "";
+
+                switch (link.type) {
+                  case "github":
+                    iconSrc = "/icons/github-gray-icon.svg";
+                    iconAlt = "GitHub";
+                    break;
+                  case "twitter":
+                    iconSrc = "/icons/x-gray-icon.svg";
+                    iconAlt = "Twitter/X";
+                    break;
+                  case "linkedin":
+                    iconSrc = "/icons/linkedin-gray-icon.svg";
+                    iconAlt = "LinkedIn";
+                    break;
+                  case "discord":
+                    iconSrc = "/icons/discord-gray.svg";
+                    iconAlt = "Discord";
+                    break;
+                  case "other":
+                  case "website":
+                  default:
+                    iconSrc = "/icons/link-gray-icon.svg";
+                    iconAlt = "Website";
+                    break;
+                }
+
+                return (
+                  <Link
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image
+                      src={iconSrc}
+                      alt={iconAlt}
+                      width={24}
+                      height={24}
+                      className="size-6"
                     />
-                  </a>
-                </button>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
             <Link href="/profile/edit">
               <Button className="font-normal">
@@ -92,16 +132,8 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
 
           <div className="flex flex-wrap gap-2">
             {techStacks.map((techStack) => (
-              <div
-                key={techStack.id}
-                className="flex items-center gap-2 rounded-md bg-gray-100 px-3 py-1"
-              >
-                <img
-                  src={techStack.iconUrl}
-                  alt={techStack.name}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm font-medium">{techStack.name}</span>
+              <div key={techStack.id}>
+                <TechStackList techStackIds={[techStack.id]} />
               </div>
             ))}
           </div>
