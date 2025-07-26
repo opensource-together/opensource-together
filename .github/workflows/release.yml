@@ -43,10 +43,9 @@ jobs:
       - name: Debug All Outputs
         if: steps.release.outputs.pr
         run: |
-          echo "=== All Release Please Outputs ===" || exit 0
-          echo "PR Number: ${{ steps.release.outputs.pr }}" || exit 0
-          echo "Web Version: ${{ steps.release.outputs['apps/web--version'] }}" || exit 0
-          echo "Server Version: ${{ steps.release.outputs['apps/server--version'] }}" || exit 0
+          echo "PR Number: ${{ steps.release.outputs.pr }}"
+          echo "Web Version: ${{ steps.release.outputs['apps/web--version'] }}"
+          echo "Server Version: ${{ steps.release.outputs['apps/server--version'] }}"
           echo "Releases Created: ${{ steps.release.outputs.releases_created }}"
           echo "PRs Created: ${{ steps.release.outputs.prs_created }}"
           echo ""
