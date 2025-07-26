@@ -8,6 +8,7 @@
   "packages": {
     ".": {
       "release-type": "node",
+      "path": "apps",
       "draft-pull-request": true,
       "changelog-sections": [
         { "type": "feat", "section": "Features" },

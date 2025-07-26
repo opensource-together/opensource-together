@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - olyxz16/fix-release-please-versionning
 
 jobs:
   release-please:
