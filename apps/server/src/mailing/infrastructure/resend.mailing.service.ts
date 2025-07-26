@@ -10,26 +10,28 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class ResendMailingService implements MailingServicePort {
   private readonly resend: Resend;
-
+  private readonly logger = new Logger(ResendMailingService.name);
   constructor(private readonly configService: ConfigService) {
     this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
   }
 
-  private readonly logger = new Logger(ResendMailingService.name);
   async sendEmail(payload: SendEmailPayload): Promise<Result<void, string>> {
     try {
-      const resendResponse = await this.resend.emails.send({
+      await this.resend.emails.send({
         from: payload.from ?? process.env.RESEND_FROM!, // ex: "noreply@opensourcetogether.dev"
         to: payload.to,
         subject: payload.subject,
         html: payload.html,
         text: payload.text,
       });
-      console.log(resendResponse);
+      this.logger.log(
+        `Sent mail to ${payload.to} with subject "${payload.subject}"`,
+      );
       return Result.ok(undefined);
-    } catch (err: any) {
-      console.error(err);
-      this.logger.error('Failed to send email', err);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send mail to ${payload.to} with subject "${payload.subject}" with error: ${error}`,
+      );
       return Result.fail('MAIL_SEND_FAILED');
     }
   }

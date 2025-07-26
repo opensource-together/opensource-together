@@ -1,12 +1,14 @@
-import { ArgumentsHost, Catch } from '@nestjs/common';
+import { ArgumentsHost, Catch, Logger } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
+  private readonly Logger = new Logger(AllExceptionsFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
     if (exception instanceof Error) {
       if (exception.message.includes('Getting userInfo failed with 401')) {
-        console.warn(
+        this.Logger.warn(
           `[Supertokens] Suppressed internal error: ${exception.message}`,
         );
         return;

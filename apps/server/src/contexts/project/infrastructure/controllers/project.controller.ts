@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import {
@@ -424,7 +425,7 @@ export class ProjectController {
       contributors,
       commits,
     } = projectRes.value;
-    console.log('projectRes', projectRes.value);
+    Logger.log('projectRes', projectRes.value);
     return GetProjectByIdResponseDto.toResponse({
       author,
       project,
@@ -608,7 +609,7 @@ export class ProjectController {
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
-    console.log({ image: project.image });
+    Logger.log({ image: project.image });
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,

@@ -122,7 +122,6 @@ export class CreateProjectCommandHandler
     const allCategoriesValidated = categoriesValidation.value;
 
     //ont créer un project pour valider des regles métier
-    console.log('image create project commands', image);
     const projectResult = Project.create({
       ownerId,
       title,

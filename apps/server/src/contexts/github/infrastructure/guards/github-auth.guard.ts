@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
   Inject,
+  Logger,
 } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { SessionRequest } from 'supertokens-node/framework/express';
@@ -23,6 +24,7 @@ export interface GithubAuthRequest extends SessionRequest {
 
 @Injectable()
 export class GithubAuthGuard implements CanActivate {
+  private readonly Logger = new Logger(GithubAuthGuard.name);
   constructor(
     @Inject(USER_GITHUB_CREDENTIALS_REPOSITORY_PORT)
     private readonly userGitHubCredentialsRepo: UserGitHubCredentialsRepositoryPort,
@@ -39,7 +41,7 @@ export class GithubAuthGuard implements CanActivate {
       const octokit = new Octokit({
         auth: process.env.GH_TOKEN_OST_PUBLIC,
       });
-      console.log('mode public');
+      this.Logger.log('mode public');
       request.octokit = octokit;
       return true;
     }
@@ -53,7 +55,7 @@ export class GithubAuthGuard implements CanActivate {
       throw new UnauthorizedException('GitHub credentials not found');
     }
 
-    console.log({ userGhTokenResult });
+    this.Logger.log({ userGhTokenResult });
     const decryptedTokenResult = this.encryptionService.decrypt(
       userGhTokenResult.value,
     );

@@ -11,6 +11,7 @@ import {
   Param,
   Patch,
   Post,
+  Logger,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -28,6 +29,7 @@ import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-applica
 
 @Controller('projects/:projectId/roles')
 export class ProjectRoleApplicationController {
+  private readonly Logger = new Logger(ProjectRoleApplicationController.name);
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
@@ -267,9 +269,9 @@ export class ProjectRoleApplicationController {
     @Param('projectId') projectId: string,
     @Session('userId') userId: string,
   ) {
-    console.log('roleId', roleId);
-    console.log('projectId', projectId);
-    console.log('userId', userId);
+    this.Logger.log('roleId', roleId);
+    this.Logger.log('projectId', projectId);
+    this.Logger.log('userId', userId);
     const applications: Result<
       {
         appplicationId: string;
@@ -291,7 +293,7 @@ export class ProjectRoleApplicationController {
     > = await this.queryBus.execute(
       new GetApplicationByRoleIdQuery({ roleId, userId, projectId }),
     );
-    console.log('applications', applications);
+    this.Logger.log('applications', applications);
     if (!applications.success) {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
     }

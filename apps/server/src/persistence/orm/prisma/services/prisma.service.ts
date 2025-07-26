@@ -1,4 +1,9 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+  Logger,
+} from '@nestjs/common';
 import { PrismaClient, TechStackType } from '@prisma/client';
 
 @Injectable()
@@ -6,10 +11,11 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  private readonly Logger = new Logger(PrismaService.name);
   async onModuleInit(): Promise<void> {
     await this.$connect();
 
-    console.log('Initializing database...');
+    this.Logger.log('Initializing database...');
     await this.seedInitialData();
   }
 
@@ -531,7 +537,7 @@ export class PrismaService
       for (const techStack of techStacks) {
         await this.techStack.create({ data: techStack });
       }
-      console.log('Base de données initialisée avec les technologies');
+      this.Logger.log('Base de données initialisée avec les technologies');
     }
 
     // Seed Categories
@@ -615,7 +621,7 @@ export class PrismaService
       for (const category of categories) {
         await this.category.create({ data: category });
       }
-      console.log('Base de données initialisée avec les catégories');
+      this.Logger.log('Base de données initialisée avec les catégories');
     }
   }
 
