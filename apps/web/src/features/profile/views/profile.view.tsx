@@ -1,7 +1,6 @@
 "use client";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
-import { useProjects } from "@/features/projects/hooks/use-projects.hook";
 
 import ProfileError from "../components/error-ui/profile-error.component";
 import PinnedProjects from "../components/pinned-projects.component";
@@ -10,7 +9,6 @@ import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.c
 
 export default function ProfileView() {
   const { currentUser, isLoading, isError } = useAuth();
-  const { data: projects = [] } = useProjects();
 
   if (isLoading) return <SkeletonProfileView />;
   if (isError || !currentUser) return <ProfileError />;
