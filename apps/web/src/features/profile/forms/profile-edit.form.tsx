@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
@@ -20,6 +21,7 @@ import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
+import { useProfileUpdate } from "../hooks/use-profile-update.hook";
 import { Profile } from "../types/profile.type";
 import {
   ProfileSchema,
@@ -32,37 +34,30 @@ interface ProfileEditFormProps {
 
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const { updateProfile } = useProfileUpdate();
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const form = useForm({
     resolver: zodResolver(UpdateProfileSchema),
     defaultValues: {
       avatarUrl: profile.avatarUrl || "",
       name: profile.name || "",
-      title: profile.title || "",
+      title: profile.jobTitle || "",
       bio: profile.bio || "",
-      techStacks: profile.techStacks?.map((techStack) => techStack.name) || [],
-      externalLinks:
-        profile.links?.reduce(
-          (acc, link) => {
-            const linkType = link.type === "link" ? "website" : link.type;
-            acc[linkType as keyof typeof acc] = link.url;
-            return acc;
-          },
-          {} as {
-            github?: string;
-            discord?: string;
-            twitter?: string;
-            linkedin?: string;
-            website?: string;
-          }
-        ) || {},
+      techStacks: profile.techStacks?.map((techStack) => techStack.id) || [],
+      socialLinks: profile.socialLinks || {},
     },
   });
 
   const { control } = form;
 
   const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
-    console.info("Profile edit data:", data);
+    console.log(data);
+    const result = updateProfile({
+      data,
+      avatarFile: avatarFile || undefined,
+      currentAvatarUrl: profile.avatarUrl,
+    });
   });
 
   return (
@@ -79,7 +74,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
                   <FormLabel>Choisir un avatar</FormLabel>
                   <FormControl>
                     <AvatarUpload
-                      onFileSelect={() => {}}
+                      onFileSelect={(file) => setAvatarFile(file)}
                       accept="image/*"
                       maxSize={1}
                       size="xl"
@@ -177,7 +172,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             <FormLabel>Liens sociaux</FormLabel>
             <FormField
               control={control}
-              name="externalLinks.github"
+              name="socialLinks.github"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -193,7 +188,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.discord"
+              name="socialLinks.discord"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -209,7 +204,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.twitter"
+              name="socialLinks.twitter"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -225,7 +220,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.linkedin"
+              name="socialLinks.linkedin"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -241,7 +236,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             />
             <FormField
               control={control}
-              name="externalLinks.website"
+              name="socialLinks.website"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

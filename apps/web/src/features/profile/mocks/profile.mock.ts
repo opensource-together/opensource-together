@@ -169,6 +169,16 @@ export const mockProfile: Profile = {
   bio: "Développeur fullstack créant du code propre et efficace pour des expériences web modernes.",
   location: "Paris, France",
   blog: "https://byronlove111.dev",
+  company: "Freelance",
+  joinedAt: "2025-04-25T00:00:00Z",
+  contributionsCount: 1268,
+  socialLinks: {
+    github: "https://github.com/byronlove111",
+    twitter: "https://x.com/byronlove111",
+    linkedin: "https://www.linkedin.com/in/byronlove111/",
+    discord: "https://discord.com/byronlove111",
+    website: "https://byronlove111.dev",
+  },
   links: [
     {
       type: "github",
@@ -191,27 +201,27 @@ export const mockProfile: Profile = {
       url: "https://discord.com/byronlove111",
     },
   ],
-  company: "Freelance",
-  joinedAt: "2025-04-25T00:00:00Z",
-  contributionsCount: 1268,
   techStacks: [
     {
       id: "1",
       name: "React",
       iconUrl:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+      type: "TECH",
     },
     {
       id: "2",
       name: "Figma",
       iconUrl:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+      type: "TECH",
     },
     {
       id: "3",
       name: "MongoDB",
       iconUrl:
         "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
+      type: "TECH",
     },
   ],
   projects: [
@@ -239,6 +249,7 @@ export const mockProfile: Profile = {
           name: "TypeScript",
           iconUrl:
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+          type: "LANGUAGE",
         },
       ],
       author: {
@@ -289,12 +300,14 @@ export const mockProfile: Profile = {
           name: "TypeScript",
           iconUrl:
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+          type: "LANGUAGE",
         },
         {
           id: "1",
           name: "Go",
           iconUrl:
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
+          type: "LANGUAGE",
         },
       ],
       author: {
@@ -321,11 +334,6 @@ export const mockProfile: Profile = {
         },
       },
     },
-  ],
-  socialLinks: [
-    { type: "github", url: "https://github.com/byronlove111" },
-    { type: "twitter", url: "https://twitter.com/byronlove111" },
-    { type: "link", url: "https://byronlove111.dev" },
   ],
   experiences: [
     {
