@@ -25,13 +25,13 @@ export function MyApplicationsCard({
 }: MyApplicationsCardProps) {
   return (
     <div
-      className={`w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] ${
+      className={`w-full rounded-[20px] border border-[black]/6 px-4 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] sm:px-6.5 ${
         isSelected ? "shadow-[0_0_8px_rgba(0,0,0,0.1)]" : ""
       }`}
       onClick={onClick}
     >
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start sm:gap-0">
         <div className="flex items-start gap-4">
           <Avatar
             src={application.project.image}
@@ -40,7 +40,7 @@ export function MyApplicationsCard({
             size="lg"
           />
           <div>
-            <h3 className="text-lg font-medium tracking-tighter text-black">
+            <h3 className="text-base font-medium tracking-tighter text-black sm:text-lg">
               {application.projectRole.title} - {application.project.title}
             </h3>
             <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
@@ -49,7 +49,7 @@ export function MyApplicationsCard({
           </div>
         </div>
         <Badge
-          className={`px-2 py-1 ${
+          className={`self-start px-2 py-1 sm:self-auto ${
             STATUS_STYLES[application.status as keyof typeof STATUS_STYLES]?.bg
           } ${
             STATUS_STYLES[application.status as keyof typeof STATUS_STYLES]
@@ -69,7 +69,7 @@ export function MyApplicationsCard({
       <div className="my-4 border-t border-black/3" />
 
       {/* Footer */}
-      <div className="flex w-full items-center justify-between overflow-hidden text-xs">
+      <div className="flex w-full flex-col items-start justify-between gap-4 overflow-hidden text-xs sm:flex-row sm:items-center sm:gap-0">
         <div className="flex gap-5">
           {application.projectRole.techStacks.slice(0, 3).map((tech) => (
             <StackLogo
