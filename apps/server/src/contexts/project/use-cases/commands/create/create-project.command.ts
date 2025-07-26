@@ -45,6 +45,7 @@ export class CreateProjectCommand implements ICommand {
       octokit: Octokit;
       method: string;
       image?: string;
+      readme?: string;
       coverImages?: string[];
     },
   ) {}
@@ -150,6 +151,7 @@ export class CreateProjectCommandHandler
       keyFeatures: keyFeatures,
       projectGoals: projectGoals,
       image,
+      readme: createProjectCommand.props.readme,
       coverImages,
     });
     if (!projectResult.success) {

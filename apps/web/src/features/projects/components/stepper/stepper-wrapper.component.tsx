@@ -17,7 +17,7 @@ export function StepperWrapper({ currentStep, children }: StepperWrapperProps) {
       <div className="my-24 flex flex-col items-center justify-center">
         <StepperIndicatorComponent
           currentStep={currentStep}
-          totalSteps={4}
+          totalSteps={5}
           className="mb-20"
         />
         {children}

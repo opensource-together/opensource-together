@@ -96,6 +96,7 @@ export const createProjectApiSchema = z.object({
       })
     )
     .optional(),
+  readme: z.string().optional(),
 });
 
 // API schema for updates - what the backend expects
@@ -119,6 +120,7 @@ export const updateProjectApiSchema = z.object({
       })
     )
     .optional(),
+  readme: z.string().optional(),
 });
 
 // ========================================

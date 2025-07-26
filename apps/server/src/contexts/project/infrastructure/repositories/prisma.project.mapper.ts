@@ -28,6 +28,8 @@ type PrismaProjectWithIncludes = PrismaProject & {
   projectGoals: ProjectGoal[];
   externalLinks: ProjectExternalLink[];
   image?: string | null;
+  readme?: string | null;
+  coverImages: string[];
 };
 
 export class PrismaProjectMapper {
@@ -38,6 +40,7 @@ export class PrismaProjectMapper {
       description: projectData.description,
       shortDescription: projectData.shortDescription,
       image: projectData.image,
+      readme: projectData.readme,
       coverImages: projectData.coverImages || [],
       externalLinks: {
         create:
@@ -100,7 +103,6 @@ export class PrismaProjectMapper {
       ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
-      coverImages: prismaProject.coverImages || [],
       techStacks: prismaProject.techStacks.map((techStack) => ({
         id: techStack.id,
         name: techStack.name,
@@ -137,6 +139,8 @@ export class PrismaProjectMapper {
         updatedAt: role.updatedAt,
       })),
       image: prismaProject.image || undefined,
+      readme: prismaProject.readme || undefined,
+      coverImages: prismaProject.coverImages || [],
     };
     const project = Project.reconstitute(projectData);
     if (!project.success)
