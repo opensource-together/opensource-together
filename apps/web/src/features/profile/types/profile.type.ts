@@ -67,7 +67,7 @@ export type Profile = {
   id: string;
   name: string;
   avatarUrl: string;
-  title?: string;
+  jobTitle?: string;
   bio?: string;
   login: string;
   techStacks?: ProfileTechStack[];

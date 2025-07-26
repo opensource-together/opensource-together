@@ -14,6 +14,7 @@ export class Profile {
   private bio: string;
   private location: string;
   private company: string;
+  private jobTitle: string;
 
   private socialLinks?: {
     github?: string;
@@ -40,6 +41,7 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -64,6 +66,7 @@ export class Profile {
     this.bio = props.bio || '';
     this.location = props.location || '';
     this.company = props.company || '';
+    this.jobTitle = props.jobTitle || '';
     this.socialLinks = props.socialLinks;
     this.techStacks = props.techStacks || [];
     this.experiences = props.experiences || [];
@@ -79,6 +82,7 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -156,6 +160,7 @@ export class Profile {
         bio: props.bio,
         location: props.location,
         company: props.company,
+        jobTitle: props.jobTitle,
         socialLinks: props.socialLinks,
         techStacks: props.techStacks || [],
         experiences: experienceVOs,
@@ -172,6 +177,7 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -227,6 +233,7 @@ export class Profile {
       bio: this.bio,
       location: this.location,
       company: this.company,
+      jobTitle: this.jobTitle,
       updatedAt: this.updatedAt,
       socialLinks: this.socialLinks,
       techStacks: this.techStacks,

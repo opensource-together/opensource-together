@@ -12,6 +12,7 @@ export class ProfileResponseDto {
   bio: string;
   location: string;
   company: string;
+  jobTitle: string;
   socialLinks: {
     github?: string;
     discord?: string;

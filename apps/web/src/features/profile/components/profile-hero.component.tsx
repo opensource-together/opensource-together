@@ -14,6 +14,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
   const {
     avatarUrl = "",
     name = "User",
+    jobTitle = "",
     joinedAt = "N/A",
     bio = "",
     techStacks = [],
@@ -48,6 +49,11 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
           <div>
             <h2 className="text-2xl font-medium tracking-tighter">{name}</h2>
+            {jobTitle && (
+              <p className="text-base tracking-tighter text-black/70 mb-1">
+                {jobTitle}
+              </p>
+            )}
             <p className="text-sm tracking-tighter text-black/50">
               Rejoint le {formatJoinDate(joinedAt)}
             </p>

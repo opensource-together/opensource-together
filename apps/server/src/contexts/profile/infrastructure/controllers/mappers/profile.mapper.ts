@@ -13,6 +13,7 @@ export class ProfileMapper {
       bio: profileState.bio,
       location: profileState.location,
       company: profileState.company,
+      jobTitle: profileState.jobTitle,
 
       socialLinks: profileState.socialLinks || {},
 

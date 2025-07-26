@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
@@ -34,13 +35,14 @@ interface ProfileEditFormProps {
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
   const { updateProfile } = useProfileUpdate();
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const form = useForm({
     resolver: zodResolver(UpdateProfileSchema),
     defaultValues: {
       avatarUrl: profile.avatarUrl || "",
       name: profile.name || "",
-      title: profile.title || "",
+      title: profile.jobTitle || "",
       bio: profile.bio || "",
       techStacks: profile.techStacks?.map((techStack) => techStack.id) || [],
       socialLinks: profile.socialLinks || {},
@@ -51,7 +53,11 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
 
   const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
     console.log(data);
-    const result = updateProfile(data);
+    const result = updateProfile({
+      data,
+      avatarFile: avatarFile || undefined,
+      currentAvatarUrl: profile.avatarUrl,
+    });
   });
 
   return (
@@ -68,7 +74,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
                   <FormLabel>Choisir un avatar</FormLabel>
                   <FormControl>
                     <AvatarUpload
-                      onFileSelect={() => {}}
+                      onFileSelect={(file) => setAvatarFile(file)}
                       accept="image/*"
                       maxSize={1}
                       size="xl"

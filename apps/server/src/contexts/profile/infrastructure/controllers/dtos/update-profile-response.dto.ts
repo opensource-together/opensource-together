@@ -12,6 +12,7 @@ export class UpdateProfileResponseDto {
       bio: profileState.bio,
       location: profileState.location,
       company: profileState.company,
+      jobTitle: profileState.jobTitle,
       socialLinks: profileState.socialLinks || {},
       techStacks: profileState.techStacks.map((skill) => ({
         name: skill.name,

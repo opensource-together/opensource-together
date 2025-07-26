@@ -20,6 +20,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
     bio: string;
     location: string;
     company: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;

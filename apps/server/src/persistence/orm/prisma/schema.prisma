@@ -39,6 +39,7 @@ model Profile {
   location    String?
   company     String?
   bio         String?
+  jobTitle    String?
   techStacks  TechStack[]
   updatedAt   DateTime         @default(now()) @updatedAt
   user        User?            @relation(fields: [userId], references: [id], onDelete: Cascade)

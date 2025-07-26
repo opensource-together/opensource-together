@@ -82,6 +82,7 @@ export class UpdateProfileCommandHandler
       bio: props.bio ?? existingData.bio,
       location: props.location ?? existingData.location,
       company: props.company ?? existingData.company,
+      jobTitle: props.title ?? existingData.jobTitle,
       experiences:
         props.experiences ??
         existingData.experiences.map((exp) => ({

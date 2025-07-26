@@ -40,6 +40,7 @@ export class PrismaProfileMapper {
       bio: raw.bio || undefined,
       location: raw.location || undefined,
       company: raw.company || undefined,
+      jobTitle: raw.jobTitle || undefined,
       socialLinks: socialLinksObject,
       techStacks: raw.techStacks.map((techStack) => ({
         id: techStack.id,
@@ -66,6 +67,7 @@ export class PrismaProfileMapper {
     bio?: string;
     location?: string;
     company?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -97,6 +99,7 @@ export class PrismaProfileMapper {
         bio: profileState.bio,
         location: profileState.location,
         company: profileState.company,
+        jobTitle: profileState.jobTitle,
       },
       // Données pour la table liée `UserSocialLink`
       socialLinksData,
