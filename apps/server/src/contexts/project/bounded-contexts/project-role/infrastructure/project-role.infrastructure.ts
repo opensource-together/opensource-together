@@ -4,6 +4,7 @@ import { PersistenceInfrastructure } from '@/persistence/persistence.infrastruct
 import { PrismaProjectRoleRepository } from '@/contexts/project/bounded-contexts/project-role/infrastructure/repositories/prisma.project-role.repository';
 import { projectRoleUseCases } from '@/contexts/project/bounded-contexts/project-role/use-cases/project-role.use-cases';
 import { ProjectRolesController } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/project-roles.controller';
+import { UserProjectRolesController } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/user-project-roles.controller';
 import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
 import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repositories/prisma.project.repository';
@@ -52,7 +53,7 @@ import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositorie
       useClass: PrismaUserRepository,
     },
   ],
-  controllers: [ProjectRolesController],
+  controllers: [ProjectRolesController, UserProjectRolesController],
   exports: [PROJECT_ROLE_REPOSITORY_PORT],
 })
 export class ProjectRoleInfrastructure {}
