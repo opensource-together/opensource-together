@@ -43,14 +43,14 @@ jobs:
       - name: Debug All Outputs
         if: steps.release.outputs.pr
         run: |
-          echo "PR Number: ${{ steps.release.outputs.pr }}"
-          echo "Web Version: ${{ steps.release.outputs['apps/web--version'] }}"
-          echo "Server Version: ${{ steps.release.outputs['apps/server--version'] }}"
-          echo "Releases Created: ${{ steps.release.outputs.releases_created }}"
-          echo "PRs Created: ${{ steps.release.outputs.prs_created }}"
-          echo ""
-          echo "Full JSON output:"
-          echo '${{ toJSON(steps.release.outputs) }}'
+          echo 'PR Number: "${{ steps.release.outputs.pr }}"'
+          echo 'Web Version: "${{ steps.release.outputs['apps/web--version'] }}"'
+          echo 'Server Version: "${{ steps.release.outputs['apps/server--version'] }}"'
+          echo 'Releases Created: "${{ steps.release.outputs.releases_created }}"'
+          echo 'PRs Created: "${{ steps.release.outputs.prs_created }}"'
+          echo ''
+          echo 'Full JSON output:'
+          echo '"${{ toJSON(steps.release.outputs) }}"'
 
       - uses: actions/checkout@v4
       - name: tag major and minor versions
