@@ -36,17 +36,6 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       url: url as string,
     }));
 
-  const formatJoinDate = (dateString: string) => {
-    const parsedDate = new Date(dateString);
-    return isNaN(parsedDate.getTime())
-      ? "Date inconnue"
-      : parsedDate.toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        });
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between">
