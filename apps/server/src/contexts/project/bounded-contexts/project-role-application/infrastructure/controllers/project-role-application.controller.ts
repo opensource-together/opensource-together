@@ -132,8 +132,13 @@ export class ProjectRoleApplicationController {
     return result.value;
   }
 
+  // Note: User-specific application management has been moved to /projects/me/:projectId/roles/applications
+  // This endpoint is kept for backward compatibility but should be deprecated
   @Get('applications')
-  @ApiOperation({ summary: "Récupérer les candidatures d'un projet" })
+  @ApiOperation({ 
+    summary: "Récupérer les candidatures d'un projet (DEPRECATED - use GET /projects/me/:projectId/roles/applications instead)",
+    deprecated: true 
+  })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({ name: 'projectId', description: 'ID du projet' })
   @ApiResponse({
@@ -263,7 +268,13 @@ export class ProjectRoleApplicationController {
       statusCode: 400,
     },
   })
+  // Note: User-specific application management has been moved to /projects/me/:projectId/roles/:roleId/applications
+  // This endpoint is kept for backward compatibility but should be deprecated
   @Get(':roleId/applications')
+  @ApiOperation({ 
+    summary: "Récupérer les candidatures d'un rôle spécifique (DEPRECATED - use GET /projects/me/:projectId/roles/:roleId/applications instead)",
+    deprecated: true 
+  })
   async getApplicationByRoleId(
     @Param('roleId') roleId: string,
     @Param('projectId') projectId: string,
@@ -300,7 +311,13 @@ export class ProjectRoleApplicationController {
     return applications.value;
   }
 
+  // Note: User-specific application management has been moved to /projects/me/:projectId/roles/applications/:applicationId/accept
+  // This endpoint is kept for backward compatibility but should be deprecated
   @Patch('applications/:applicationId/accept')
+  @ApiOperation({ 
+    summary: "Accepter une candidature (DEPRECATED - use PATCH /projects/me/:projectId/roles/applications/:applicationId/accept instead)",
+    deprecated: true 
+  })
   async acceptApplication(
     @Param('applicationId') applicationId: string,
     @Param('projectId') projectId: string,
@@ -319,7 +336,13 @@ export class ProjectRoleApplicationController {
     return result.value;
   }
 
+  // Note: User-specific application management has been moved to /projects/me/:projectId/roles/applications/:applicationId/reject
+  // This endpoint is kept for backward compatibility but should be deprecated
   @Patch('applications/:applicationId/reject')
+  @ApiOperation({ 
+    summary: "Rejeter une candidature (DEPRECATED - use PATCH /projects/me/:projectId/roles/applications/:applicationId/reject instead)",
+    deprecated: true 
+  })
   async rejectApplication(
     @Param('applicationId') applicationId: string,
     @Param('projectId') projectId: string,

@@ -12,6 +12,7 @@ import { ResendMailingService } from '@/mailing/infrastructure/resend.mailing.se
 import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 import { ProjectRoleApplicationController } from './controllers/project-role-application.controller';
+import { UserProjectRoleApplicationController } from './controllers/user-project-role-application.controller';
 
 @Module({
   imports: [PersistenceInfrastructure],
@@ -38,7 +39,7 @@ import { ProjectRoleApplicationController } from './controllers/project-role-app
       useClass: PrismaUserRepository,
     },
   ],
-  controllers: [ProjectRoleApplicationController],
+  controllers: [ProjectRoleApplicationController, UserProjectRoleApplicationController],
   exports: [
     PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
     PROJECT_ROLE_REPOSITORY_PORT,

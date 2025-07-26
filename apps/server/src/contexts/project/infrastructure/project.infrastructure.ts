@@ -8,6 +8,7 @@ import { PrismaProjectRoleRepository } from '@/contexts/project/bounded-contexts
 import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
 import { ProjectController } from '@/contexts/project/infrastructure/controllers/project.controller';
+import { UserProjectController } from '@/contexts/project/infrastructure/controllers/user-project.controller';
 import { ProjectKeyFeatureController } from '@/contexts/project/bounded-contexts/project-key-feature/infrastructure/controllers/project-key-feature.controller';
 import { GithubRepository } from '@/contexts/github/infrastructure/repositories/github.repository';
 import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
@@ -74,7 +75,7 @@ import { PrismaProjectKeyFeatureRepository } from '../bounded-contexts/project-k
     GithubInfrastructure,
     ...projectUseCases,
   ],
-  controllers: [ProjectController, ProjectKeyFeatureController],
+  controllers: [ProjectController, UserProjectController, ProjectKeyFeatureController],
   exports: [
     ...projectUseCases,
     // OctokitProvider

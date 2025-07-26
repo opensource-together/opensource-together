@@ -26,8 +26,13 @@ import { Project } from '@/contexts/project/domain/project.entity';
 export class ProjectKeyFeatureController {
   constructor(private readonly commandBus: CommandBus) {}
 
+  // Note: User-specific key feature deletion has been moved to /projects/me/:projectId/key-features/:keyFeatureId
+  // This endpoint is kept for backward compatibility but should be deprecated
   @Delete('key-features/:keyFeatureId')
-  @ApiOperation({ summary: 'Supprimer une key feature' })
+  @ApiOperation({ 
+    summary: 'Supprimer une key feature (DEPRECATED - use DELETE /projects/me/:projectId/key-features/:keyFeatureId instead)',
+    deprecated: true 
+  })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({ name: 'projectId', description: 'ID du projet' })
   @ApiParam({ name: 'keyFeatureId', description: 'ID de la key feature' })
@@ -76,8 +81,13 @@ export class ProjectKeyFeatureController {
     return { success: true };
   }
 
+  // Note: User-specific key feature creation has been moved to /projects/me/:projectId/key-features
+  // This endpoint is kept for backward compatibility but should be deprecated
   @Post('key-features')
-  @ApiOperation({ summary: 'Créer une key feature' })
+  @ApiOperation({ 
+    summary: 'Créer une key feature (DEPRECATED - use POST /projects/me/:projectId/key-features instead)',
+    deprecated: true 
+  })
   @ApiCookieAuth('sAccessToken')
   @ApiParam({ name: 'projectId', description: 'ID du projet' })
   @ApiBody({ type: CreateProjectKeyFeatureCommand })
