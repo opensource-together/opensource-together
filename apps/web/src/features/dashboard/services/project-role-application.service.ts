@@ -1,5 +1,7 @@
 import { API_BASE_URL } from "@/config/config";
 
+import { ProjectRoleApplicationType } from "../types/project-role-application.type";
+
 /**
  * Fetches the list of project role applications for a specific project.
  *
@@ -36,7 +38,9 @@ export async function getProjectRolesApplications(projectId: string) {
  *
  * @returns A promise that resolves to an array of project role applications.
  */
-export async function getMyProjectRolesApplications() {
+export async function getMyProjectRolesApplications(): Promise<
+  ProjectRoleApplicationType[]
+> {
   try {
     const response = await fetch(`${API_BASE_URL}/user/applications`, {
       method: "GET",
