@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
+import { Sheet, SheetContent } from "@/shared/components/ui/sheet";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useMyProjectRolesApplications } from "../../hooks/use-project-role-application.hook";
@@ -37,16 +38,20 @@ export function MyApplicationsList() {
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [selectedApplication, setSelectedApplication] =
     useState<ProjectRoleApplicationType | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-  const filteredApplications =
-    selectedStatus === "ALL"
-      ? applications || []
-      : (applications || []).filter(
+  const filteredApplications = useMemo(() => {
+    if (!applications) return [];
+
+    return selectedStatus === "ALL"
+      ? applications
+      : applications.filter(
           (application: ProjectRoleApplicationType) =>
             application.status === selectedStatus
         );
+  }, [applications, selectedStatus]);
 
-  // Mettre à jour la sélection quand le filtre change
+  // Update the selected application when the filter changes
   useEffect(() => {
     if (filteredApplications.length > 0) {
       setSelectedApplication(filteredApplications[0]);
@@ -54,6 +59,13 @@ export function MyApplicationsList() {
       setSelectedApplication(null);
     }
   }, [selectedStatus, filteredApplications]);
+
+  const handleApplicationClick = (application: ProjectRoleApplicationType) => {
+    setSelectedApplication(application);
+    if (window.innerWidth < 640) {
+      setIsDetailsOpen(true);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -89,33 +101,47 @@ export function MyApplicationsList() {
         ))}
       </div>
 
-      <div className="flex gap-6">
-        <div className="w-1/2 space-y-4">
+      <div className="flex flex-col gap-6 sm:flex-row">
+        <div className="w-full space-y-4 sm:w-1/2">
           {filteredApplications.length === 0 ? (
             <EmptyState
               title="Aucune candidature pour ce statut"
               description="Vous n'avez pas de candidatures correspondant à ce filtre."
             />
           ) : (
-            filteredApplications.map((application) => (
-              <MyApplicationsCard
-                key={application.appplicationId}
-                application={application}
-                onClick={() => setSelectedApplication(application)}
-                isSelected={
-                  selectedApplication?.appplicationId ===
-                  application.appplicationId
-                }
-              />
-            ))
+            filteredApplications.map(
+              (application: ProjectRoleApplicationType) => (
+                <MyApplicationsCard
+                  key={application.appplicationId}
+                  application={application}
+                  onClick={() => handleApplicationClick(application)}
+                  isSelected={
+                    selectedApplication?.appplicationId ===
+                    application.appplicationId
+                  }
+                />
+              )
+            )
           )}
         </div>
 
+        {/* Desktop view */}
         {selectedApplication && (
-          <div className="w-1/2">
+          <div className="hidden w-1/2 sm:block">
             <MyApplicationDetails application={selectedApplication} />
           </div>
         )}
+
+        {/* Mobile view */}
+        <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <SheetContent side="bottom" className="h-[85vh] p-0">
+            <div className="h-full overflow-y-auto px-6 pt-12 pb-6">
+              {selectedApplication && (
+                <MyApplicationDetails application={selectedApplication} />
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
   );
