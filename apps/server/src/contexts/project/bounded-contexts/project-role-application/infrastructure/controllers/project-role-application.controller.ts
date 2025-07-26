@@ -136,7 +136,8 @@ export class ProjectRoleApplicationController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Get('applications')
   @ApiOperation({
-    summary: "Récupérer les candidatures d'un projet (DEPRECATED - use GET /projects/me/:projectId/roles/applications instead)",
+    summary:
+      "Récupérer les candidatures d'un projet (DEPRECATED - use GET /projects/me/:projectId/roles/applications instead)",
     deprecated: true,
   })
   @ApiCookieAuth('sAccessToken')
@@ -272,7 +273,8 @@ export class ProjectRoleApplicationController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Get(':roleId/applications')
   @ApiOperation({
-    summary: "Récupérer les candidatures d'un rôle spécifique (DEPRECATED - use GET /projects/me/:projectId/roles/:roleId/applications instead)",
+    summary:
+      "Récupérer les candidatures d'un rôle spécifique (DEPRECATED - use GET /projects/me/:projectId/roles/:roleId/applications instead)",
     deprecated: true,
   })
   async getApplicationByRoleId(
@@ -315,7 +317,8 @@ export class ProjectRoleApplicationController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Patch('applications/:applicationId/accept')
   @ApiOperation({
-    summary: 'Accepter une candidature (DEPRECATED - use PATCH /projects/me/:projectId/roles/applications/:applicationId/accept instead)',
+    summary:
+      'Accepter une candidature (DEPRECATED - use PATCH /projects/me/:projectId/roles/applications/:applicationId/accept instead)',
     deprecated: true,
   })
   async acceptApplication(
@@ -340,7 +343,8 @@ export class ProjectRoleApplicationController {
   // This endpoint is kept for backward compatibility but should be deprecated
   @Patch('applications/:applicationId/reject')
   @ApiOperation({
-    summary: 'Rejeter une candidature (DEPRECATED - use PATCH /projects/me/:projectId/roles/applications/:applicationId/reject instead)',
+    summary:
+      'Rejeter une candidature (DEPRECATED - use PATCH /projects/me/:projectId/roles/applications/:applicationId/reject instead)',
     deprecated: true,
   })
   async rejectApplication(

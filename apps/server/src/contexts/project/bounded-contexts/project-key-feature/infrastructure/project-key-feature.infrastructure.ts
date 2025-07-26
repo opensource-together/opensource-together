@@ -21,10 +21,7 @@ import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repos
     },
     ...projectKeyFeaturesUseCases,
   ],
-  controllers: [
-    ProjectKeyFeatureController,
-    UserProjectKeyFeatureController,
-  ],
+  controllers: [ProjectKeyFeatureController, UserProjectKeyFeatureController],
   exports: [PROJECT_KEY_FEATURE_REPOSITORY_PORT],
 })
 export class ProjectKeyFeatureInfrastructure {}
