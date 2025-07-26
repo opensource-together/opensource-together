@@ -1,17 +1,21 @@
 {
   "packages": {
-    ".": {
+    "apps/server": {
       "release-type": "node",
       "changelog-path": "CHANGELOG.md",
       "draft-pull-request": true,
-      "plugins": [
-        {
-          "type": "node-workspace",
-          "updateAllPackages": true,
-          "updatePeerDependencies": true,
-          "considerAllArtifacts": true
-        }
-      ],
+      "changelog-sections": [
+        {"type": "feat", "section": "Features", "hidden": false},
+        {"type": "fix", "section": "Bug Fixes", "hidden": false},
+        {"type": "chore", "section": "Miscellaneous", "hidden": false},
+        {"type": "docs", "section": "Documentation", "hidden": false},
+        {"type": "perf", "section": "Performance Improvements", "hidden": false}
+      ]
+    },
+    "apps/web": {
+      "release-type": "node",
+      "changelog-path": "CHANGELOG.md",
+      "draft-pull-request": true,
       "changelog-sections": [
         {"type": "feat", "section": "Features", "hidden": false},
         {"type": "fix", "section": "Bug Fixes", "hidden": false},
@@ -21,5 +25,13 @@
       ]
     }
   },
+  "plugins": [
+    {
+      "type": "node-workspace",
+      "updateAllPackages": true,
+      "updatePeerDependencies": true,
+      "considerAllArtifacts": true
+    }
+  ],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
