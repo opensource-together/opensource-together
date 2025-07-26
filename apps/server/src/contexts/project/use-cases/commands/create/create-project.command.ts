@@ -151,7 +151,7 @@ export class CreateProjectCommandHandler
       keyFeatures: keyFeatures,
       projectGoals: projectGoals,
       image,
-      readme: this.props.readme,
+      readme: createProjectCommand.props.readme,
       coverImages,
     });
     if (!projectResult.success) {
