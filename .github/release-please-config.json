@@ -20,9 +20,11 @@
   ],
   "packages": {
     "apps/web": {
+      "package-name": "web",
       "release-type": "node"
     },
     "apps/server": {
+      "package-name": "server",
       "release-type": "node"
     }
   },
@@ -31,6 +33,13 @@
       "type": "node-workspace",
       "updateAllPackages": true,
       "updatePeerDependencies": true
+    },
+    {
+      "type": "linked-versions",
+      "packages": [
+        "apps/web",
+        "apps/server"
+      ]
     }
   ],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
