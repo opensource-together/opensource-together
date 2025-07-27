@@ -6,7 +6,7 @@ interface GithubCalendarProps {
 }
 
 export default function GithubCalendar({
-  contributionsCount = 0,
+  contributionsCount: _contributionsCount = 0,
 }: GithubCalendarProps) {
   // Générer les données du calendrier par semaine
   const generateCalendarData = (): ContributionLevel[][] => {

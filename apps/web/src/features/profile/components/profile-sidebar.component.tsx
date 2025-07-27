@@ -57,15 +57,15 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
   const getDisplayText = (url: string, type: string) => {
     if (type === "github") {
-      const match = url.match(/github\.com\/([^\/]+)/);
+      const match = url.match(/github\.com\/([^/]+)/);
       return match ? `@${match[1]}` : url;
     }
     if (type === "twitter") {
-      const match = url.match(/x\.com\/([^\/]+)/);
+      const match = url.match(/x\.com\/([^/]+)/);
       return match ? `@${match[1]}` : url;
     }
     if (type === "linkedin") {
-      const match = url.match(/linkedin\.com\/in\/([^\/]+)/);
+      const match = url.match(/linkedin\.com\/in\/([^/]+)/);
       return match ? `@${match[1]}` : url;
     }
     return url;
