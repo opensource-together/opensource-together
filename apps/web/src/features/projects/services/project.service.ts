@@ -138,14 +138,16 @@ export const createProject = async (
       }
     }
 
-    // Upload cover images
+    // Upload cover images in parallel
     if (storeData.coverImages && storeData.coverImages.length > 0) {
-      for (const coverImage of storeData.coverImages) {
-        const coverImageUrl = await safeUploadMedia(coverImage);
-        if (coverImageUrl) {
-          coverImageUrls.push(coverImageUrl);
-        }
-      }
+      const uploadPromises = storeData.coverImages.map((file) =>
+        safeUploadMedia(file)
+      );
+      const results = await Promise.all(uploadPromises);
+
+      results.forEach((url) => {
+        if (url) coverImageUrls.push(url);
+      });
     }
 
     // Transform store data to API format
