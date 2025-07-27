@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
+import Icon from "@/shared/components/ui/icon";
 
 import { Profile } from "../types/profile.type";
 
@@ -41,36 +42,6 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   const techStacks = profile.techStacks || [];
   const links = profile.links || defaultLinks;
 
-  const getIconSrc = (type: string) => {
-    switch (type) {
-      case "github":
-        return "/icons/github-gray-icon.svg";
-      case "twitter":
-        return "/icons/x-gray-icon.svg";
-      case "linkedin":
-        return "/icons/linkedin-gray-icon.svg";
-      case "link":
-      default:
-        return "/icons/link-gray-icon.svg";
-    }
-  };
-
-  const getDisplayText = (url: string, type: string) => {
-    if (type === "github") {
-      const match = url.match(/github\.com\/([^/]+)/);
-      return match ? `@${match[1]}` : url;
-    }
-    if (type === "twitter") {
-      const match = url.match(/x\.com\/([^/]+)/);
-      return match ? `@${match[1]}` : url;
-    }
-    if (type === "linkedin") {
-      const match = url.match(/linkedin\.com\/in\/([^/]+)/);
-      return match ? `@${match[1]}` : url;
-    }
-    return url;
-  };
-
   return (
     <div className="flex w-[252px] flex-col gap-5">
       {/* Breadcrumb */}
@@ -85,13 +56,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         {/* Stars Earned */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
-            <Image
-              src="/icons/black-star-icon.svg"
-              alt="star"
-              width={12}
-              height={10}
-              className=""
-            />
+            <Icon name="star" size="sm" variant="black" />
             <span className="text-sm font-normal text-black">
               Étoiles gagnées
             </span>
@@ -107,13 +72,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         {/* Joined Projects */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
-            <Image
-              src="/icons/joined-project-icon.svg"
-              alt="projects"
-              width={11}
-              height={10}
-              className=""
-            />
+            <Icon name="fork" size="sm" variant="black" />
             <span className="text-sm font-normal text-black">
               Projets rejoints
             </span>
@@ -129,13 +88,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         {/* Contributions */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
-            <Image
-              src="/icons/contributor-icon.svg"
-              alt="contributions"
-              width={12}
-              height={8}
-              className="mt-[2px]"
-            />
+            <Icon name="people" size="sm" variant="black" />
             <span className="text-sm font-normal text-black">
               Contributions
             </span>
@@ -172,30 +125,58 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
       {/* External Links Section */}
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
+        <h2 className="text-md mb-4 font-medium tracking-tight text-black">
           Liens externes
         </h2>
-        <div className="flex flex-col gap-2">
-          {links.map((link, index) => (
-            <Link
-              key={index}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-50"
-            >
-              <Image
-                src={getIconSrc(link.type)}
-                alt={link.type}
-                width={20}
-                height={20}
-                className="opacity-50"
-              />
-              <span className="text-sm font-normal text-black/70">
-                {getDisplayText(link.url, link.type)}
-              </span>
-            </Link>
-          ))}
+        <div className="flex flex-col gap-6">
+          {links.map((link, index) => {
+            let iconSrc = "";
+            let iconAlt = "";
+
+            switch (link.type) {
+              case "github":
+                iconSrc = "/icons/github-gray-icon.svg";
+                iconAlt = "GitHub";
+                break;
+              case "twitter":
+                iconSrc = "/icons/x-gray-icon.svg";
+                iconAlt = "Twitter/X";
+                break;
+              case "linkedin":
+                iconSrc = "/icons/linkedin-gray-icon.svg";
+                iconAlt = "LinkedIn";
+                break;
+              case "discord":
+                iconSrc = "/icons/discord-gray.svg";
+                iconAlt = "Discord";
+                break;
+              default:
+                iconSrc = "/icons/link-gray-icon.svg";
+                iconAlt = "Website";
+                break;
+            }
+
+            return (
+              <Link
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <Image
+                  src={iconSrc}
+                  alt={iconAlt}
+                  width={24}
+                  height={24}
+                  className="size-6"
+                />
+                <span className="text-muted-foreground font-normal">
+                  {link.type}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

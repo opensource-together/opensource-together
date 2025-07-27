@@ -19,11 +19,11 @@ export default function GithubCallbackView() {
       {/* Logo en position absolue, à gauche de l'écran */}
       <div className="absolute top-15 left-20 z-10">
         <Image
-          src="/header-logo.png"
-          alt="OpenSource Together Logo"
-          width={210}
-          height={35}
-          className="h-auto w-[150px] md:w-[210px]"
+          src="/ostogether-logo.svg"
+          alt="ost-logo"
+          width={209}
+          height={12}
+          className="max-h-[16px] lg:max-h-[25px]"
         />
       </div>
 
@@ -49,11 +49,9 @@ export default function GithubCallbackView() {
             <Loader2 className="h-12 w-12 animate-spin" />
             <h1 className="text-2xl font-medium">Connexion en cours...</h1>
             <p className="text-muted-foreground w-[500px] text-sm leading-relaxed">
-              Nous vérifions actuellement vos informations GitHub et configurons
-              votre profil. Cette opération peut prendre quelques instants. Vous
-              serez automatiquement redirigé vers
-              <span className="font-medium"> OpenSource Together</span> dès que
-              tout sera prêt.
+              Nous vérifions vos informations Github. Vous serez redirigé vers{" "}
+              <span className="font-medium">OpenSource Together</span> dans
+              quelques instants.
             </p>
           </div>
         </div>
