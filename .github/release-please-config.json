@@ -12,8 +12,8 @@
         "release-type": "node",
         "component": "ost",
         "extra-files": [
-          "apps/web/package.json",
-          "apps/server/package.json"
+          "web/package.json",
+          "server/package.json"
         ]
       }
   },
