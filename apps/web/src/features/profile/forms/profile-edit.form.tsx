@@ -146,7 +146,7 @@ export default function ProfileEditForm({
                 <Textarea
                   {...field}
                   placeholder="Parlez-nous de vous, vos passions, votre expérience..."
-                  className="min-h-[120px] w-full resize-none sm:w-[500px] md:w-[638px]"
+                  className="min-h-[120px] w-full resize-none sm:w-[500px] md:w-[650px]"
                 />
               </FormControl>
               <FormMessage />
