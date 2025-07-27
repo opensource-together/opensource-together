@@ -19,7 +19,7 @@ interface ProfileEditFormProps {
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { updateProfile, isUpdating } = useProfileUpdate();
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-  const [_shouldDeleteImage, setShouldDeleteImage] = useState(false);
+  const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
 
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
@@ -35,25 +35,25 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
       socialLinks: profile.socialLinks || {},
     },
   });
-  const { setValue } = form;
 
   const handleImageSelect = (file: File | null) => {
     if (file) {
       setSelectedImageFile(file);
       setShouldDeleteImage(false);
-      setValue("avatarUrl", "new-image-selected"); // Indicator that new image is selected
     } else {
       setSelectedImageFile(null);
       setShouldDeleteImage(true);
-      setValue("avatarUrl", ""); // Clear image
     }
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
     updateProfile({
-      updateData: data,
+      updateData: {
+        ...data,
+        avatarUrl: profile.avatarUrl || "",
+      },
       avatarFile: selectedImageFile || undefined,
-      shouldDeleteAvatar: selectedImageFile === null,
+      shouldDeleteAvatar: shouldDeleteImage,
     });
   });
 
