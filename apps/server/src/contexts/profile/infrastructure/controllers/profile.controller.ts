@@ -1,5 +1,10 @@
+import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { ProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/profile-response.dto';
+import { UpdateProfileRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-profile-request.dto';
+import { UpdateProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-profile-response.dto';
 import { ProfileMapper } from '@/contexts/profile/infrastructure/controllers/mappers/profile.mapper';
+import { DeleteProfileCommand } from '@/contexts/profile/use-cases/commands/delete-profile.command';
+import { UpdateProfileCommand } from '@/contexts/profile/use-cases/commands/update-profile.command';
 import {
   FindProfileByIdQuery,
   FullProfileData,
@@ -7,32 +12,27 @@ import {
 import { Project } from '@/contexts/project/domain/project.entity';
 import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
-import { UpdateProfileCommand } from '@/contexts/profile/use-cases/commands/update-profile.command';
-import { DeleteProfileCommand } from '@/contexts/profile/use-cases/commands/delete-profile.command';
-import { UpdateProfileRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-profile-request.dto';
-import { UpdateProfileResponseDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-profile-response.dto';
-import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { Result } from '@/libs/result';
 import {
+  Body,
   Controller,
+  Delete,
+  ForbiddenException,
   Get,
   HttpException,
   HttpStatus,
   NotFoundException,
   Param,
   Patch,
-  Delete,
-  Body,
-  ForbiddenException,
 } from '@nestjs/common';
-import { QueryBus, CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
+  ApiBody,
   ApiCookieAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
   ApiTags,
-  ApiBody,
 } from '@nestjs/swagger';
 import { PublicAccess, Session } from 'supertokens-nestjs';
 
@@ -373,11 +373,9 @@ export class ProfileController {
     // @Param('id') profileId: string,
     @Body() updateProfileDto: UpdateProfileRequestDto,
   ): Promise<ProfileResponseDto> {
-    console.log({ updateProfileDto });
     const result: Result<Profile, string> = await this.commandBus.execute(
       new UpdateProfileCommand(currentUserId, updateProfileDto),
     );
-    console.log({ result });
 
     if (!result.success) {
       if (result.error === 'Profile not found') {
