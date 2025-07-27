@@ -78,7 +78,7 @@ export default function Header() {
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
             <Image
-              src="/header-logo.png"
+              src="/ostogether-logo.svg"
               alt="ost-logo"
               width={209}
               height={12}
@@ -195,37 +195,10 @@ export default function Header() {
           {!isAuthenticated && (
             <div className="flex items-center gap-2">
               <Link
-                href="https://x.com/OpenSTogether"
-                target="_blank"
-                className="mt-[1px] flex items-center"
-              >
-                <Image
-                  src="/icons/x-gray-icon.svg"
-                  alt="X"
-                  width={12}
-                  height={12}
-                />
-              </Link>
-              <Link
-                href="https://www.linkedin.com/company/opensource-together"
-                target="_blank"
-                className="flex items-center"
-              >
-                <Image
-                  src="/icons/lk-gray-icon.svg"
-                  alt="LinkedIn"
-                  width={16}
-                  height={16}
-                />
-              </Link>
-              <Link
                 href="https://github.com/opensource-together"
                 target="_blank"
               >
-                <Button
-                  variant="outline"
-                  className="ml-2 flex items-center font-medium shadow-none"
-                >
+                <Button variant="outline">
                   Star Us <Icon name="github" size="md" />
                 </Button>
               </Link>
@@ -259,7 +232,7 @@ export default function Header() {
                   width={13}
                   height={16}
                 />
-                Se connecter avec Github
+                Connexion avec Github
               </a>
             </Button>
           )}
@@ -345,7 +318,7 @@ export default function Header() {
               >
                 <a href="/auth/github">
                   <Icon name="github" size="md" variant="white" />
-                  Se connecter avec Github
+                  Connexion avec Github
                 </a>
               </Button>
             )}
