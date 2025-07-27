@@ -3,30 +3,30 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Form, useForm, UseFormReturn } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
-import { Combobox } from "@/shared/components/ui/combobox";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
+import { Icon } from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
-import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useProfileUpdate } from "../hooks/use-profile-update.hook";
 import { Profile } from "../types/profile.type";
 import { ProfileSchema, profileSchema } from "../validations/profile.schema";
+import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 interface ProfileEditFormProps {
   profile: Profile;
+  form: UseFormReturn<ProfileSchema>;
 }
 
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
@@ -45,7 +45,15 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
     },
   });
 
-  const { control } = form;
+  const addExperience = () => {
+    if (newExperience.trim()) {
+      setValue("experiences", [
+        ...experiences,
+        { experience: newExperience.trim() },
+      ]);
+      setNewExperience("");
+    }
+  };
 
   const handleAvatarSelect = (file: File | null) => {
     setSelectedImageFile(file);
@@ -103,10 +111,10 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
           {/* Title */}
           <FormField
             control={control}
-            name="title"
-            render={({ field }) => (
+            name="avatarUrl"
+            render={() => (
               <FormItem>
-                <FormLabel>Titre</FormLabel>
+                <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Ex: Développeur Full Stack" />
                 </FormControl>
@@ -133,34 +141,22 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
               </FormItem>
             )}
           />
+        </div>
 
-          {/* Tech Stack */}
-          <FormField
-            control={control}
-            name="techStacks"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Technologies (max 10)</FormLabel>
-                <FormControl>
-                  <Combobox
-                    options={techStackOptions}
-                    value={field.value || []}
-                    onChange={field.onChange}
-                    placeholder={
-                      techStacksLoading
-                        ? "Chargement des technologies..."
-                        : "Ajouter des technologies..."
-                    }
-                    searchPlaceholder="Rechercher une technologie..."
-                    emptyText="Aucune technologie trouvée."
-                    disabled={techStacksLoading}
-                    maxSelections={10}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        {/* Name */}
+        <FormField
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Nom</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Votre nom" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
           {/* External Links */}
           <div className="flex flex-col gap-4">
