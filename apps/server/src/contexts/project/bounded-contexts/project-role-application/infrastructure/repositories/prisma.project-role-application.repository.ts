@@ -90,6 +90,7 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -128,6 +129,7 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -154,7 +156,8 @@ export class PrismaProjectRoleApplicationRepository
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: domainApplication.value.projectRoleTitle,
+          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
+          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
           status: domainApplication.value.status,
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
           selectedProjectGoals: domainApplication.value.selectedProjectGoals,
@@ -186,6 +189,7 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -226,6 +230,7 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -252,7 +257,8 @@ export class PrismaProjectRoleApplicationRepository
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: domainApplication.value.projectRoleTitle,
+          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
+          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
           status: domainApplication.value.status,
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
           selectedProjectGoals: domainApplication.value.selectedProjectGoals,
@@ -380,8 +386,10 @@ export class PrismaProjectRoleApplicationRepository
       {
         appplicationId: string;
         projectTitle: string;
+        projectDescription: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -415,7 +423,9 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         projectTitle: string;
+        projectDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -442,8 +452,10 @@ export class PrismaProjectRoleApplicationRepository
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: domainApplication.value.projectRoleTitle,
-          projectTitle: domainApplication.value.projectTitle,
+          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
+          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
+          projectTitle: application.project.title, // Utilise le titre actuel du projet
+          projectDescription: application.project.description, // Utilise la description actuelle du projet
           status: domainApplication.value.status,
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
           selectedProjectGoals: domainApplication.value.selectedProjectGoals,

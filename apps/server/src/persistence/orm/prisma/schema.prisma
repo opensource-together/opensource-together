@@ -134,9 +134,10 @@ model ProjectRole {
 model ProjectRoleApplication {
   id            String       @id @default(uuid())
   projectId     String
-  projectTitle  String
+  projectTitle  String       // On garde pour l'historique
   projectRoleId String
-  projectRoleTitle String
+  projectRoleTitle String     // On garde pour l'historique
+  projectDescription String?  // Nouveau champ pour la description du projet
   status        String
   motivationLetter String?
   selectedKeyFeatures String[]
