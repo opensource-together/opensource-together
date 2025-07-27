@@ -210,6 +210,7 @@ export class ProjectRoleApplicationController {
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
@@ -277,6 +278,7 @@ export class ProjectRoleApplicationController {
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];

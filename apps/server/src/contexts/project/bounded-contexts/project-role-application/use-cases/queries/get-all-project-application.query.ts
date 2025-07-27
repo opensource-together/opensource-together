@@ -45,6 +45,7 @@ export class GetAllProjectApplicationsQueryHandler
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];

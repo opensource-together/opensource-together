@@ -29,8 +29,10 @@ export class FindUserApplicationsQueryHandler
       {
         appplicationId: string;
         projectTitle: string;
+        projectDescription: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
         selectedKeyFeatures: string[];
         selectedProjectGoals: string[];
