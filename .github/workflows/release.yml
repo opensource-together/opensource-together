@@ -24,7 +24,7 @@ jobs:
 
       - name: Update PR title
         run: |
-          VERSION=$(jq -r 'to_entries[0].value' .release-please-manifest.json)
+          VERSION=$(jq -r 'to_entries[0].value' .github/release-please-manifest.json)
           PR=$(gh pr list --head release-please--branches--main --json number -q '.[0].number')
           gh pr edit "$PR" --title "release: v$VERSION"
 
