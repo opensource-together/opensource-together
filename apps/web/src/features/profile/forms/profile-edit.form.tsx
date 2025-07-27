@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
@@ -22,25 +23,22 @@ import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useProfileUpdate } from "../hooks/use-profile-update.hook";
 import { Profile } from "../types/profile.type";
-import {
-  ProfileSchema,
-  UpdateProfileSchema,
-} from "../validations/profile.schema";
+import { ProfileSchema, profileSchema } from "../validations/profile.schema";
 
 interface ProfileEditFormProps {
   profile: Profile;
 }
 
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
+  const { updateProfile, isUpdating } = useProfileUpdate();
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
-  const { updateProfile } = useProfileUpdate();
-
-  const form = useForm({
-    resolver: zodResolver(UpdateProfileSchema),
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const form = useForm<ProfileSchema>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
-      avatarUrl: profile.avatarUrl || "",
+      avatarUrl: profile.avatarUrl || undefined,
       name: profile.name || "",
-      title: profile.title || "",
+      title: profile.jobTitle || "",
       bio: profile.bio || "",
       techStacks: profile.techStacks?.map((techStack) => techStack.id) || [],
       socialLinks: profile.socialLinks || {},
@@ -49,10 +47,16 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
 
   const { control } = form;
 
+  const handleAvatarSelect = (file: File | null) => {
+    setSelectedImageFile(file);
+  };
+
   const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
-    console.log(data);
-    const result = updateProfile(data);
-    console.log(result);
+    updateProfile({
+      updateData: data,
+      avatarFile: selectedImageFile || undefined,
+      shouldDeleteAvatar: selectedImageFile === null,
+    });
   });
 
   return (
@@ -69,7 +73,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
                   <FormLabel>Choisir un avatar</FormLabel>
                   <FormControl>
                     <AvatarUpload
-                      onFileSelect={() => {}}
+                      onFileSelect={handleAvatarSelect}
                       accept="image/*"
                       maxSize={1}
                       size="xl"
@@ -252,7 +256,9 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
             <Link href="/profile">
               <Button variant="outline">Annuler</Button>
             </Link>
-            <Button type="submit">Confirmer</Button>
+            <Button type="submit" disabled={isUpdating}>
+              Confirmer
+            </Button>
           </div>
         </form>
       </Form>
