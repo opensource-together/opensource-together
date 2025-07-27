@@ -8,7 +8,10 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Le nom est requis")
     .max(50, "Le nom ne peut pas dépasser 50 caractères"),
-  title: z.string().max(200, "Le titre ne peut pas dépasser 200 caractères"),
+  title: z
+    .string()
+    .max(200, "Le titre ne peut pas dépasser 200 caractères")
+    .optional(),
   bio: z
     .string()
     .max(500, "La bio ne peut pas dépasser 500 caractères")
