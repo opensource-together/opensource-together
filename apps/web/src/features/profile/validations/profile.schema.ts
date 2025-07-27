@@ -8,7 +8,10 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Le nom est requis")
     .max(50, "Le nom ne peut pas dépasser 50 caractères"),
-  title: z.string().max(200, "Le titre ne peut pas dépasser 200 caractères"),
+  title: z
+    .string()
+    .max(200, "Le titre ne peut pas dépasser 200 caractères")
+    .optional(),
   bio: z
     .string()
     .max(500, "La bio ne peut pas dépasser 500 caractères")
@@ -24,25 +27,25 @@ export const profileSchema = z.object({
       })
     )
     .optional(),
-  externalLinks: z
+  socialLinks: z
     .object({
       github: urlWithDomainCheck(
         ["github.com"],
         "URL GitHub invalide (doit contenir github.com)"
-      ).optional(),
+      ),
       discord: urlWithDomainCheck(
         ["discord.gg", "discord.com"],
         "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-      ).optional(),
+      ),
       twitter: urlWithDomainCheck(
         ["twitter.com", "x.com"],
         "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-      ).optional(),
+      ),
       linkedin: urlWithDomainCheck(
         ["linkedin.com"],
         "URL LinkedIn invalide (doit contenir linkedin.com)"
-      ).optional(),
-      website: urlWithDomainCheck([], "URL du site web invalide").optional(),
+      ),
+      website: urlWithDomainCheck([], "URL du site web invalide"),
     })
     .optional(),
 });

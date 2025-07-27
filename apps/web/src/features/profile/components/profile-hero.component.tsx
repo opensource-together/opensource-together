@@ -11,18 +11,7 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatarUrl = "", name = "User", joinedAt = "N/A", bio = "" } = profile;
-
-  const formatJoinDate = (dateString: string) => {
-    const parsedDate = new Date(dateString);
-    return isNaN(parsedDate.getTime())
-      ? "Date inconnue"
-      : parsedDate.toLocaleDateString("fr-FR", {
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        });
-  };
+  const { avatarUrl = "", name = "User", jobTitle = "", bio = "" } = profile;
 
   return (
     <div>
@@ -33,9 +22,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
           <div>
             <h2 className="text-2xl font-medium tracking-tighter">{name}</h2>
-            <p className="text-sm tracking-tighter text-black/50">
-              Rejoint le {formatJoinDate(joinedAt)}
-            </p>
+            <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
           </div>
         </div>
 
