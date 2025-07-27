@@ -20,17 +20,8 @@ jobs:
         with:
           token: ${{ secrets.OST_RELEASE_PAT }}
           config-file: .github/release-please-config.json
-          manifest-file: .github/release-please-manifest.json
 
       - uses: actions/checkout@v4
-
-      - name: Update PR title
-        run: |
-          VERSION=$(jq -r 'to_entries[0].value' .github/release-please-manifest.json)
-          PR=$(gh pr list --head release-please--branches--main --json number -q '.[0].number')
-          gh pr edit "$PR" --title "release: v$VERSION"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
