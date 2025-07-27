@@ -50,12 +50,12 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
     }
   };
 
-  const handleAvatarSelect = (file: File | null) => {
-    setSelectedImageFile(file);
-  };
-
-  const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
-    console.info("Profile edit data:", data);
+  const onSubmit = form.handleSubmit(async (data) => {
+    updateProfile({
+      updateData: data,
+      avatarFile: selectedImageFile || undefined,
+      shouldDeleteAvatar: selectedImageFile === null,
+    });
   });
 
   return (
