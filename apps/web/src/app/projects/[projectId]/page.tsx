@@ -1,6 +1,7 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
 
+import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
 
 import { getProjectDetails } from "@/features/projects/services/project.service";
@@ -53,6 +54,7 @@ export default async function ProjectPage({
   return (
     <HydrationBoundary state={dehydratedState}>
       <ProjectDetailView projectId={projectId} />
+      <CTAFooter imageIllustration="/illustrations/man-walking.png" />
     </HydrationBoundary>
   );
 }

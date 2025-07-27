@@ -19,8 +19,15 @@ import { Avatar } from "../ui/avatar";
 import Icon from "../ui/icon";
 
 const HeaderBackdrop = () => {
+  const pathname = usePathname();
+  const headerDashboard = pathname.startsWith("/dashboard");
+
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[81px]" />
+    <div
+      className={`pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[81px] ${
+        headerDashboard ? "hidden" : ""
+      }`}
+    />
   );
 };
 
@@ -28,11 +35,17 @@ interface NavLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
+  startWith?: boolean;
 }
 
-function NavLink({ href, children, className = "" }: NavLinkProps) {
+function NavLink({
+  href,
+  children,
+  className = "",
+  startWith = false,
+}: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = startWith ? pathname.startsWith(href) : pathname === href;
 
   return (
     <Link
@@ -52,14 +65,12 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const headerDashboard = pathname.startsWith("/dashboard");
   const { isAuthenticated, currentUser, logout, requireAuth } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
-
-  const handleCreate = () =>
-    requireAuth(() => router.push("/projects/create"), "/projects/create");
 
   const handleProfile = () =>
     requireAuth(() => router.push("/profile"), "/profile");
@@ -74,15 +85,19 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal md:py-6 lg:px-20">
+      <header
+        className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal md:py-6 lg:px-20 ${
+          headerDashboard ? "border-b border-black/5" : ""
+        }`}
+      >
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
             <Image
-              src="/ost-beta-logo.svg"
+              src="/ostogether-logo.svg"
               alt="ost-logo"
-              width={207}
-              height={25}
-              className="h-auto max-h-[25px] w-auto md:max-h-[30px] lg:max-h-[35px]"
+              width={209}
+              height={12}
+              className="max-h-[16px] lg:max-h-[25px]"
             />
           </Link>
 
@@ -92,7 +107,9 @@ export default function Header() {
 
             {/* Dashboard */}
             {isAuthenticated ? (
-              <NavLink href="/dashboard">Gestion de projet</NavLink>
+              <NavLink startWith href="/dashboard">
+                Gestion de projet
+              </NavLink>
             ) : (
               <Button
                 variant="ghost"
@@ -193,35 +210,33 @@ export default function Header() {
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
           {/* Star Us - visible seulement si pas connecté */}
           {!isAuthenticated && (
-            <Link href="https://github.com/opensource-together" target="_blank">
-              <Button
-                variant="outline"
-                className="flex items-center font-medium shadow-none"
+            <div className="flex items-center gap-2">
+              <Link
+                href="https://github.com/opensource-together"
+                target="_blank"
               >
-                Star Us <Icon name="github" size="md" />
-              </Button>
-            </Link>
+                <Button variant="outline">
+                  Star Us <Icon name="github" size="md" />
+                </Button>
+              </Link>
+            </div>
           )}
 
-          {/* Créer un Projet */}
-          {isAuthenticated ? (
-            <Link href="/projects/create">
-              <Button>
-                <span className="hidden sm:inline">Créer un Projet</span>
-                <span className="inline sm:hidden">Nouveau projet</span>
-                <Icon
-                  name="plus"
-                  size="xs"
-                  variant="white"
-                  className="ml-1.5"
+          {!isAuthenticated && (
+            <Button
+              asChild
+              variant="default"
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
+            >
+              <a href="/auth/login">
+                <Image
+                  src="/icons/new-github-icon.svg"
+                  alt="github"
+                  width={13}
+                  height={16}
                 />
-              </Button>
-            </Link>
-          ) : (
-            <Button onClick={handleCreate}>
-              <span className="hidden sm:inline">Créer un Projet</span>
-              <span className="inline sm:hidden">Nouveau projet</span>
-              <Icon name="plus" size="xs" variant="white" className="ml-1.5" />
+                Connexion avec Github
+              </a>
             </Button>
           )}
 
@@ -286,27 +301,16 @@ export default function Header() {
         {/* Actions mobile affichées dans le menu */}
         {mobileMenuOpen && (
           <div className="mt-3 flex w-full justify-center md:hidden">
-            {isAuthenticated ? (
-              <Link href="/projects/create" className="w-full max-w-[220px]">
-                <Button className="w-full">
-                  New Project{" "}
-                  <Icon
-                    name="plus"
-                    size="xs"
-                    variant="white"
-                    className="ml-0 align-middle"
-                  />
-                </Button>
-              </Link>
-            ) : (
-              <Button onClick={handleCreate} className="w-full max-w-[220px]">
-                New Project{" "}
-                <Icon
-                  name="plus"
-                  size="xs"
-                  variant="white"
-                  className="ml-0 align-middle"
-                />
+            {!isAuthenticated && (
+              <Button
+                asChild
+                variant="default"
+                className="flex w-full max-w-[220px] items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
+              >
+                <a href="/auth/github">
+                  <Icon name="github" size="md" variant="white" />
+                  Connexion avec Github
+                </a>
               </Button>
             )}
           </div>
