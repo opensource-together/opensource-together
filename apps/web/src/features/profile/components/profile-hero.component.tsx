@@ -13,14 +13,7 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const {
-    avatarUrl = "",
-    name = "User",
-    jobTitle = "",
-    bio = "",
-    techStacks = [],
-    socialLinks = {},
-  } = profile;
+  const { avatarUrl = "", name = "User", joinedAt = "N/A", bio = "" } = profile;
 
   // Convertir l'objet socialLinks en array pour l'affichage
   const socialLinksArray = Object.entries(socialLinks)
