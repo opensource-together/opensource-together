@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -13,6 +15,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     title = "",
     shortDescription = "",
     longDescription,
+    coverImages = [],
     keyFeatures = [],
     projectGoals = [],
     image,
@@ -48,7 +51,39 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         {/* separator */}
         <div className="my-5 h-[2px] w-full bg-black/3" />
 
-        <div className="w-full max-w-[629px]">
+        {coverImages.length > 0 && (
+          <div className="mt-2 flex flex-row gap-1">
+            {/* Main large image */}
+            <div className="flex-1">
+              <Image
+                src={coverImages[0]}
+                alt={title}
+                width={700}
+                height={400}
+                className="h-[272px] w-full rounded-md object-cover"
+                priority
+              />
+            </div>
+            {/* Thumbnails on the right */}
+            {coverImages.length > 1 && (
+              <div className="flex min-w-[180px] flex-col gap-1">
+                {coverImages.slice(1, 4).map((img, idx) => (
+                  <div key={img} className="h-[88px] w-[140px]">
+                    <Image
+                      src={img}
+                      alt={`${title} cover ${idx + 2}`}
+                      width={140}
+                      height={88}
+                      className="h-full w-full rounded-md object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="mt-10 w-full max-w-[629px]">
           {keyFeatures.length > 0 && (
             <>
               <h3 className="mb-3 font-medium text-black">
