@@ -27,25 +27,25 @@ export const profileSchema = z.object({
       })
     )
     .optional(),
-  externalLinks: z
+  socialLinks: z
     .object({
       github: urlWithDomainCheck(
         ["github.com"],
         "URL GitHub invalide (doit contenir github.com)"
-      ).optional(),
+      ),
       discord: urlWithDomainCheck(
         ["discord.gg", "discord.com"],
         "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-      ).optional(),
+      ),
       twitter: urlWithDomainCheck(
         ["twitter.com", "x.com"],
         "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-      ).optional(),
+      ),
       linkedin: urlWithDomainCheck(
         ["linkedin.com"],
         "URL LinkedIn invalide (doit contenir linkedin.com)"
-      ).optional(),
-      website: urlWithDomainCheck([], "URL du site web invalide").optional(),
+      ),
+      website: urlWithDomainCheck([], "URL du site web invalide"),
     })
     .optional(),
 });

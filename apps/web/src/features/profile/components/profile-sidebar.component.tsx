@@ -12,6 +12,7 @@ interface ProfileSidebarProps {
 }
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
+  const { techStacks = [], socialLinks = {} } = profile;
   const breadcrumbItems = [
     {
       label: "Discover",
@@ -30,17 +31,26 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     contributions: 5,
   };
 
-  const defaultLinks = [
-    { type: "twitter" as const, url: "https://x.com/zinedinechm" },
-    { type: "linkedin" as const, url: "https://linkedin.com/in/zine-chm" },
-    { type: "github" as const, url: "https://github.com/zinedinechm" },
-    { type: "link" as const, url: "https://zinedine.ch" },
-  ];
-
   // Utiliser les données du profil ou les valeurs par défaut
   const stats = defaultStats; // À adapter selon les données réelles du profil
-  const techStacks = profile.techStacks || [];
-  const links = profile.links || defaultLinks;
+
+  const formatUrl = (url: string) => {
+    if (!url) return "";
+    try {
+      const urlObj = new URL(url);
+      return urlObj.hostname + urlObj.pathname;
+    } catch {
+      return url;
+    }
+  };
+
+  const socialLinksConfig = [
+    { key: "github", icon: "/icons/github-gray-icon.svg", alt: "GitHub" },
+    { key: "twitter", icon: "/icons/x-gray-icon.svg", alt: "Twitter/X" },
+    { key: "linkedin", icon: "/icons/linkedin-gray-icon.svg", alt: "LinkedIn" },
+    { key: "discord", icon: "/icons/discord-gray.svg", alt: "Discord" },
+    { key: "website", icon: "/icons/link-gray-icon.svg", alt: "Website" },
+  ];
 
   return (
     <div className="flex w-[252px] flex-col gap-5">
@@ -58,7 +68,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
           <div className="flex items-center gap-2">
             <Icon name="star" size="sm" variant="black" />
             <span className="text-sm font-normal text-black">
-              Étoiles gagnées
+              Stars gagnées
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
@@ -107,7 +117,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         <h2 className="text-md mb-2 font-medium tracking-tight text-black">
           Technologies
         </h2>
-        {techStacks && techStacks.length > 0 ? (
+        {techStacks.length > 0 ? (
           <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
             {techStacks.map((tech, index) => (
               <StackLogo
@@ -129,51 +139,26 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
           Liens externes
         </h2>
         <div className="flex flex-col gap-6">
-          {links.map((link, index) => {
-            let iconSrc = "";
-            let iconAlt = "";
-
-            switch (link.type) {
-              case "github":
-                iconSrc = "/icons/github-gray-icon.svg";
-                iconAlt = "GitHub";
-                break;
-              case "twitter":
-                iconSrc = "/icons/x-gray-icon.svg";
-                iconAlt = "Twitter/X";
-                break;
-              case "linkedin":
-                iconSrc = "/icons/linkedin-gray-icon.svg";
-                iconAlt = "LinkedIn";
-                break;
-              case "discord":
-                iconSrc = "/icons/discord-gray.svg";
-                iconAlt = "Discord";
-                break;
-              default:
-                iconSrc = "/icons/link-gray-icon.svg";
-                iconAlt = "Website";
-                break;
-            }
+          {socialLinksConfig.map((config) => {
+            const url = socialLinks[config.key as keyof typeof socialLinks];
+            if (!url) return null;
 
             return (
               <Link
-                key={index}
-                href={link.url}
+                key={config.key}
+                href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2"
+                className="group text-muted-foreground flex items-center gap-2 text-sm transition-colors hover:text-black"
               >
                 <Image
-                  src={iconSrc}
-                  alt={iconAlt}
+                  src={config.icon}
+                  alt={config.alt}
                   width={24}
                   height={24}
-                  className="size-6"
+                  className="size-5 opacity-50 transition-opacity group-hover:opacity-100"
                 />
-                <span className="text-muted-foreground font-normal">
-                  {link.type}
-                </span>
+                <span className="truncate">{formatUrl(url)}</span>
               </Link>
             );
           })}

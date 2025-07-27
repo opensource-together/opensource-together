@@ -1,32 +1,25 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useState } from "react";
-import { Form, useForm, UseFormReturn } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 
-import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
-import { Button } from "@/shared/components/ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/shared/components/ui/form";
-import { Icon } from "@/shared/components/ui/icon";
-import { Input } from "@/shared/components/ui/input";
-import { Textarea } from "@/shared/components/ui/textarea";
+import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 
-import { useProfileUpdate } from "../hooks/use-profile-update.hook";
+import { useProfileUpdate } from "../hooks/use-profile.hook";
 import { Profile } from "../types/profile.type";
 import { ProfileSchema, profileSchema } from "../validations/profile.schema";
 import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
+import { Button } from "@/shared/components/ui/button";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/shared/components/ui/form";
+import { Input } from "@/shared/components/ui/input";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { Link } from "lucide-react";
 
 interface ProfileEditFormProps {
   profile: Profile;
-  form: UseFormReturn<ProfileSchema>;
 }
 
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
@@ -45,13 +38,15 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
     },
   });
 
-  const addExperience = () => {
-    if (newExperience.trim()) {
-      setValue("experiences", [
-        ...experiences,
-        { experience: newExperience.trim() },
-      ]);
-      setNewExperience("");
+  const handleImageSelect = (file: File | null) => {
+    if (file) {
+      setSelectedImageFile(file);
+      setShouldDeleteImage(false);
+      setValue("avatarUrl", "new-image-selected"); // Indicator that new image is selected
+    } else {
+      setSelectedImageFile(null);
+      setShouldDeleteImage(true);
+      setValue("avatarUrl", ""); // Clear image
     }
   };
 

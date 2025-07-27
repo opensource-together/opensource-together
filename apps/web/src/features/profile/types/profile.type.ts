@@ -1,8 +1,11 @@
-import { IconName } from "@/shared/components/ui/icon";
+import { Project } from "@/features/projects/types/project.type";
 
-export type ProfileSocialLink = {
-  type: IconName;
-  url: string;
+export type ProfileSocialLinks = {
+  github?: string;
+  website?: string;
+  twitter?: string;
+  discord?: string;
+  linkedin?: string;
 };
 
 export type ProfileTechStack = {
@@ -10,18 +13,6 @@ export type ProfileTechStack = {
   name: string;
   iconUrl: string;
   type: "LANGUAGE" | "TECH";
-};
-
-export type ProfileBadge = {
-  label: string;
-  color: string;
-  bgColor: string;
-};
-
-export type ProfileSkill = {
-  name: string;
-  level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT";
-  badges: ProfileBadge[];
 };
 
 export type ProfileExperience = {
@@ -32,35 +23,17 @@ export type ProfileExperience = {
   endDate: string;
 };
 
-export interface ProfileLink {
-  type: IconName;
-  url: string;
-}
-
-// Correspond to GitHub User format
 export type Profile = {
   id: string;
   name: string;
   avatarUrl: string;
-  jobTitle?: string;
   bio?: string;
-  login: string;
-  techStacks?: ProfileTechStack[];
-  websiteUrl?: string;
-  type: string;
   location?: string;
-  blog?: string;
   company?: string;
-  joinedAt?: string;
-  // updatedAt?: string;
-  socialLinks?: {
-    github?: string;
-    discord?: string;
-    twitter?: string;
-    linkedin?: string;
-    website?: string;
-  };
-  contributionsCount?: number;
+  socialLinks?: ProfileSocialLinks;
+  techStacks?: ProfileTechStack[];
   experiences?: ProfileExperience[];
-  links?: ProfileLink[]; // Deprecated - pour compatibilité
+  projects?: Project[];
+  joinedAt?: string;
+  profileUpdatedAt?: string;
 };
