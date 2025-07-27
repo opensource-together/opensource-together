@@ -58,7 +58,7 @@ export default function Header() {
     return null;
   }
 
-  const handleCreate = () =>
+  const _handleCreate /*unused vairable*/ = () =>
     requireAuth(() => router.push("/projects/create"), "/projects/create");
 
   const handleProfile = () =>
