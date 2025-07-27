@@ -11,14 +11,7 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const {
-    avatarUrl = "",
-    name = "User",
-    joinedAt = "N/A",
-    bio = "",
-    techStacks = [],
-    socialLinks = [],
-  } = profile;
+  const { avatarUrl = "", name = "User", joinedAt = "N/A", bio = "" } = profile;
 
   const formatJoinDate = (dateString: string) => {
     const parsedDate = new Date(dateString);
