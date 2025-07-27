@@ -27,6 +27,7 @@ export type Profile = {
   id: string;
   name: string;
   avatarUrl: string;
+  jobTitle?: string;
   bio?: string;
   location?: string;
   company?: string;

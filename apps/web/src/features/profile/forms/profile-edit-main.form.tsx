@@ -272,7 +272,7 @@ export default function ProfileEditMainForm({
                 Annuler
               </Button>
             </Link>
-            <Button onClick={onSubmit} disabled={isUpdating}>
+            <Button type="submit" disabled={isUpdating}>
               {isUpdating ? "Enregistrement..." : "Confirmer"}
             </Button>
           </div>

@@ -32,13 +32,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
         profile.experiences?.map((experience) => ({
           experience: experience.position,
         })) || [],
-      socialLinks: {
-        github: profile.socialLinks?.github || "",
-        discord: profile.socialLinks?.discord || "",
-        twitter: profile.socialLinks?.twitter || "",
-        linkedin: profile.socialLinks?.linkedin || "",
-        website: profile.socialLinks?.website || "",
-      },
+      socialLinks: profile.socialLinks || {},
     },
   });
   const { setValue } = form;
@@ -57,12 +51,9 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
 
   const onSubmit = form.handleSubmit(async (data) => {
     updateProfile({
-      updateData: {
-        ...data,
-        avatarUrl: shouldDeleteImage ? undefined : data.avatarUrl, // Let service handle the actual URL
-      },
+      updateData: data,
       avatarFile: selectedImageFile || undefined,
-      shouldDeleteAvatar: shouldDeleteImage,
+      shouldDeleteAvatar: selectedImageFile === null,
     });
   });
 

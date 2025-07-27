@@ -1,11 +1,15 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profile.repository.port';
 import { Profile } from '@/contexts/profile/domain/profile.entity';
+import {
+  PROFILE_REPOSITORY_PORT,
+  ProfileRepositoryPort,
+} from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import {
+  TECHSTACK_REPOSITORY_PORT,
+  TechStackRepositoryPort,
+} from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { Result } from '@/libs/result';
-import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
-import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
 export class UpdateProfileCommand implements ICommand {
   constructor(
@@ -92,15 +96,15 @@ export class UpdateProfileCommandHandler
         })),
       techStacks: techStacksData,
       socialLinks: {
-        github: existingData.socialLinks?.github ?? props.socialLinks?.github,
+        github: props.socialLinks?.github ?? existingData.socialLinks?.github,
         website:
-          existingData.socialLinks?.website ?? props.socialLinks?.website,
+          props.socialLinks?.website ?? existingData.socialLinks?.website,
         twitter:
-          existingData.socialLinks?.twitter ?? props.socialLinks?.twitter,
+          props.socialLinks?.twitter ?? existingData.socialLinks?.twitter,
         linkedin:
-          existingData.socialLinks?.linkedin ?? props.socialLinks?.linkedin,
+          props.socialLinks?.linkedin ?? existingData.socialLinks?.linkedin,
         discord:
-          existingData.socialLinks?.discord ?? props.socialLinks?.discord,
+          props.socialLinks?.discord ?? existingData.socialLinks?.discord,
       },
       projects:
         props.projects ??
