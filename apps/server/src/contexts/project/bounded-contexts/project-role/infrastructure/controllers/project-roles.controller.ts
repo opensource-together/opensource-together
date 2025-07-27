@@ -15,6 +15,7 @@ import {
   Param,
   Patch,
   Post,
+  Logger,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -32,6 +33,7 @@ import { UpdateProjectRoleDtoRequest } from './dto/update-project-role-request.d
 @ApiTags('Project Roles')
 @Controller('projects/:projectId/roles')
 export class ProjectRolesController {
+  private readonly Logger = new Logger(ProjectRolesController.name);
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
@@ -205,8 +207,8 @@ export class ProjectRolesController {
     @Param('projectId') projectId: string,
     @Body() body: CreateProjectRoleDtoRequest,
   ) {
-    console.log('body', body);
-    console.log('projectId', projectId);
+    this.Logger.log('body', body);
+    this.Logger.log('projectId', projectId);
     const { title, description, techStacks } = body;
     const command = new CreateProjectRoleCommand({
       projectId,

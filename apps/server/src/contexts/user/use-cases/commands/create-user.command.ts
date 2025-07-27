@@ -42,7 +42,6 @@ export class CreateUserCommandHandler
       this.userRepo.findByUsername(command.username),
       this.userRepo.findByEmail(command.email),
     ]);
-    console.log({ userExistsByUsername, userExistsByEmail });
     if (userExistsByUsername.success || userExistsByEmail.success)
       return Result.fail('Identifiants incorrects.');
 
