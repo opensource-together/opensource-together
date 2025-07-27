@@ -31,6 +31,7 @@ export type Profile = {
   bio?: string;
   location?: string;
   company?: string;
+  contributionsCount?: number;
   socialLinks?: ProfileSocialLinks;
   techStacks?: ProfileTechStack[];
   experiences?: ProfileExperience[];
