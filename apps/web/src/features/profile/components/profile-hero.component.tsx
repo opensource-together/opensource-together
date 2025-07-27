@@ -1,10 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
-import { TechStackList } from "@/shared/components/ui/tech-stack-list.component";
 
 import { Profile } from "../types/profile.type";
 
@@ -13,21 +11,7 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatarUrl = "", name = "User", joinedAt = "N/A", bio = "" } = profile;
-
-  // Convertir l'objet socialLinks en array pour l'affichage
-  const socialLinksArray = Object.entries(socialLinks)
-    .filter(([_, url]) => url && url.trim() !== "")
-    .map(([type, url]) => ({
-      type: type as
-        | "github"
-        | "twitter"
-        | "linkedin"
-        | "discord"
-        | "other"
-        | "website",
-      url: url as string,
-    }));
+  const { avatarUrl = "", name = "User", jobTitle = "", bio = "" } = profile;
 
   return (
     <div>
