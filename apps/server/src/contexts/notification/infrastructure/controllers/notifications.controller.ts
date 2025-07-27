@@ -171,6 +171,7 @@ export class NotificationsController {
 
       const result = await this.commandBus.execute(
         new CreateNotificationCommand({
+          object: dto.object,
           receiverId: dto.receiverId,
           senderId: senderId,
           type: dto.type,

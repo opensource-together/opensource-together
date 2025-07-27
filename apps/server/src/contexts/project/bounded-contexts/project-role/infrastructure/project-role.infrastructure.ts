@@ -16,6 +16,10 @@ import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project/bou
 import { PrismaProjectRoleApplicationRepository } from '@/contexts/project/bounded-contexts/project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
 import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
+import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import { PrismaProfileRepository } from '@/contexts/profile/infrastructure/repositories/prisma.profile.repository';
+import { MAILING_SERVICE_PORT } from '@/mailing/ports/mailing.service.port';
+import { ResendMailingService } from '@/mailing/infrastructure/resend.mailing.service';
 
 @Module({
   imports: [PersistenceInfrastructure],
@@ -50,6 +54,14 @@ import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositorie
     {
       provide: USER_REPOSITORY_PORT,
       useClass: PrismaUserRepository,
+    },
+    {
+      provide: PROFILE_REPOSITORY_PORT,
+      useClass: PrismaProfileRepository,
+    },
+    {
+      provide: MAILING_SERVICE_PORT,
+      useClass: ResendMailingService,
     },
   ],
   controllers: [ProjectRolesController],

@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import {
   NotificationServicePort,
@@ -32,6 +32,7 @@ export class NotificationService implements NotificationServicePort {
       // Persister en base de données
       const createdNotification = await this.prisma.notification.create({
         data: {
+          object: notification.object,
           receiverId: notification.receiverId,
           senderId: notification.senderId,
           type: notification.type,
@@ -42,6 +43,7 @@ export class NotificationService implements NotificationServicePort {
       // Construire les données brutes pour l'adapter
       const notificationData: NotificationData = {
         id: createdNotification.id,
+        object: createdNotification.object,
         receiverId: createdNotification.receiverId,
         senderId: createdNotification.senderId,
         type: createdNotification.type,
@@ -109,6 +111,7 @@ export class NotificationService implements NotificationServicePort {
 
       const notificationData: NotificationData[] = notifications.map((n) => ({
         id: n.id,
+        object: n.object,
         receiverId: n.receiverId,
         senderId: n.senderId,
         type: n.type,
@@ -142,6 +145,7 @@ export class NotificationService implements NotificationServicePort {
       // Construire les données pour l'adapter
       const notificationData: NotificationData = {
         id: updatedNotification.id,
+        object: updatedNotification.object,
         receiverId: updatedNotification.receiverId,
         senderId: updatedNotification.senderId,
         type: updatedNotification.type,
@@ -203,6 +207,7 @@ export class NotificationService implements NotificationServicePort {
       for (const notification of unreadNotifications) {
         const notificationData: NotificationData = {
           id: notification.id,
+          object: notification.object,
           receiverId: notification.receiverId,
           senderId: notification.senderId,
           type: notification.type,
@@ -244,6 +249,7 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok({
         id: notification.id,
+        object: notification.object,
         receiverId: notification.receiverId,
         senderId: notification.senderId,
         type: notification.type,

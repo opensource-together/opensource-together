@@ -10,6 +10,10 @@ import {
 export class CreateNotificationRequestDto {
   @IsString()
   @IsNotEmpty()
+  object: string;
+
+  @IsString()
+  @IsNotEmpty()
   receiverId: string;
 
   @IsString()

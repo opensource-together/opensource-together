@@ -11,6 +11,7 @@ import {
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class RejectUserApplicationCommand implements ICommand {
   constructor(
@@ -32,6 +33,8 @@ export class RejectUserApplicationCommandHandler
     private readonly projectRepo: ProjectRepositoryPort,
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
     private readonly projectRoleApplicationRepository: ProjectRoleApplicationRepositoryPort,
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(command: RejectUserApplicationCommand) {
@@ -55,6 +58,18 @@ export class RejectUserApplicationCommandHandler
     if (!application.success) {
       return Result.fail(application.error);
     }
+
+    this.eventEmitter.emit('project.role.application.rejected', {
+      object: 'Le statut de la candidature a été mis à jour',
+      payload: {
+        applicantId: application.value.toPrimitive().userProfile.id,
+        applicantName: application.value.toPrimitive().userProfile.name,
+        projectId,
+        projectTitle: project.value.toPrimitive().title,
+        roleName: project.value.toPrimitive().title,
+        message: `Votre candidature pour le rôle ${project.value.toPrimitive().title} a été rejetée.`,
+      },
+    });
 
     return Result.ok(application.value);
   }

@@ -142,6 +142,7 @@ export class NotificationsGateway
 
     if (userSocket) {
       userSocket.emit('new-notification', {
+        object: notification.object,
         id: notification.id,
         receiverId: notification.receiverId,
         senderId: notification.senderId,
@@ -191,6 +192,7 @@ export class NotificationsGateway
 
     if (userSocket) {
       userSocket.emit('notification-read', {
+        object: notification.object,
         id: notification.id,
         receiverId: notification.receiverId,
         senderId: notification.senderId,

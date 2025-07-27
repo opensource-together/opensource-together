@@ -9,9 +9,6 @@ import { NotificationService } from './services/notification.service';
 
 // Gateway WebSocket
 
-// Listeners EventEmitter2
-import { ProjectListener } from './listeners/project.listener';
-
 // Use cases
 import { notificationUseCases } from '../use-cases/notification.use-cases';
 
@@ -56,9 +53,6 @@ import { NOTIFICATION_GATEWAY_PORT } from '../use-cases/ports/notification.gatew
     // WebSocket services (sans le gateway qui est déjà déclaré ci-dessus)
     WebSocketConnectionManager,
     RealtimeNotifierAdapter,
-
-    // Listeners EventEmitter2
-    ProjectListener,
 
     // Use cases (commands et queries)
     ...notificationUseCases,

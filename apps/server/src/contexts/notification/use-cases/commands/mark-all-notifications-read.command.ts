@@ -50,6 +50,7 @@ export class MarkAllNotificationsReadCommandHandler
     const notificationEntities = result.value.map((data) =>
       Notification.reconstitute({
         id: data.id,
+        object: data.object,
         receiverId: data.receiverId,
         senderId: data.senderId,
         type: data.type,

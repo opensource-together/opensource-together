@@ -24,6 +24,7 @@ export class ProjectNotificationsListener {
     ownerName: string;
   }) {
     const command = new CreateNotificationCommand({
+      object: 'project.created',
       receiverId: event.ownerId,
       senderId: event.ownerId,
       type: 'project.created',
@@ -50,6 +51,7 @@ export class ProjectNotificationsListener {
     updatedFields: string[];
   }) {
     const command = new CreateNotificationCommand({
+      object: 'project.updated',
       receiverId: event.ownerId,
       senderId: event.updatedBy,
       type: 'project.updated',
@@ -76,6 +78,7 @@ export class ProjectNotificationsListener {
     ownerId: string;
   }) {
     const command = new CreateNotificationCommand({
+      object: 'project.deleted',
       receiverId: event.ownerId,
       senderId: event.ownerId,
       type: 'project.deleted',

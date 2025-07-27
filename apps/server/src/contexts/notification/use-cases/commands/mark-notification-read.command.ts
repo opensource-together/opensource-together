@@ -48,6 +48,7 @@ export class MarkNotificationReadCommandHandler
     // 2. Reconstituer l'entité
     const notificationEntity = Notification.reconstitute({
       id: result.value.id,
+      object: result.value.object,
       receiverId: result.value.receiverId,
       senderId: result.value.senderId,
       type: result.value.type,

@@ -2,93 +2,83 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateNotificationCommand } from '../../../../../notification/use-cases/commands/create-notification.command';
+import {
+  ApplyProjectRequestAcceptedNotification,
+  ApplyProjectRequestCreatedNotification,
+  ApplyProjectRequestRejectedNotification,
+  ProjectRoleApplicationCreatedEvent,
+} from '../../../../../notification/notification.interface';
 
 /**
- * Listener pour les notifications liées aux rôles de projet.
- * Transforme les événements métier du contexte project-role en notifications.
+ * Listener pour les événements liés aux projets.
+ * Transforme les DomainEvents en notifications.
+ *
+ * Principe : Quand un événement métier se produit (ex: "project.role.assigned"),
+ * ce listener le "capture" et crée une notification appropriée.
  */
 @Injectable()
-export class ProjectRoleNotificationsListener {
+export class ProjectRoleApplicationListener {
   constructor(private readonly commandBus: CommandBus) {}
 
   /**
-   * Notification lors de l'assignation d'un rôle
-   */
-  @OnEvent('project.role.assigned')
-  async handleRoleAssigned(event: {
-    userId: string;
-    projectId: string;
-    projectTitle: string;
-    roleName: string;
-    assignedBy: string;
-  }) {
-    const command = new CreateNotificationCommand({
-      receiverId: event.userId,
-      senderId: event.assignedBy,
-      type: 'project.role.assigned',
-      payload: {
-        projectId: event.projectId,
-        projectTitle: event.projectTitle,
-        roleName: event.roleName,
-        assignedBy: event.assignedBy,
-        message: `Vous avez été assigné au rôle "${event.roleName}" sur le projet "${event.projectTitle}".`,
-      },
-      channels: ['realtime'],
-    });
-
-    await this.commandBus.execute(command);
-  }
-
-  /**
-   * Notification lors de la création d'une candidature
+   * Écoute l'événement : Un utilisateur a postulé pour un rôle.
+   * Notifie le propriétaire du projet.
    */
   @OnEvent('project.role.application.created')
-  async handleApplicationCreated(event: {
-    projectOwnerId: string;
-    applicantId: string;
-    applicantName: string;
-    projectId: string;
-    projectTitle: string;
-    roleName: string;
-  }) {
-    const command = new CreateNotificationCommand({
+  async handleProjectRoleApplication(
+    event: ProjectRoleApplicationCreatedEvent,
+  ) {
+    // Créer la notification de type ApplyProjectRequestCreatedNotification
+    const notificationData: ApplyProjectRequestCreatedNotification = {
+      object: 'Un utilisateur a postulé pour un rôle',
+      message: event.message,
+      type: 'project.role.application.created',
+      appplicationId: event.applicationId,
+      projectRoleId: event.projectRole.id,
+      projectRoleTitle: event.projectRole.title,
+      project: {
+        id: event.projectId,
+        title: event.projectTitle,
+        shortDescription: event.projectShortDescription,
+        image: event.projectImage,
+        author: event.projectAuthor,
+      },
+      projectRole: event.projectRole,
+      status: 'PENDING',
+      selectedKeyFeatures: event.selectedKeyFeatures,
+      selectedProjectGoals: event.selectedProjectGoals,
+      appliedAt: new Date(),
+      motivationLetter: event.motivationLetter,
+      userProfile: {
+        id: event.applicantId,
+        name: event.applicantName,
+        avatarUrl: undefined, // Sera récupéré côté frontend si nécessaire
+      },
+    };
+
+    // Notifier le propriétaire du projet
+    const ownerNotificationCommand = new CreateNotificationCommand({
+      object: 'Un utilisateur a postulé pour un rôle',
       receiverId: event.projectOwnerId,
       senderId: event.applicantId,
       type: 'project.role.application.created',
-      payload: {
-        applicantId: event.applicantId,
-        applicantName: event.applicantName,
-        projectId: event.projectId,
-        projectTitle: event.projectTitle,
-        roleName: event.roleName,
-        message: `${event.applicantName} a postulé pour le rôle "${event.roleName}" sur votre projet "${event.projectTitle}".`,
-      },
+      payload: JSON.parse(JSON.stringify(notificationData)),
       channels: ['realtime'],
     });
 
-    await this.commandBus.execute(command);
+    await this.commandBus.execute(ownerNotificationCommand);
   }
 
-  /**
-   * Notification lors de l'acceptation d'une candidature
-   */
   @OnEvent('project.role.application.accepted')
-  async handleApplicationAccepted(event: {
-    applicantId: string;
-    projectId: string;
-    projectTitle: string;
-    roleName: string;
-  }) {
+  async handlePorjectRoleApplicationAccepted(
+    event: ApplyProjectRequestAcceptedNotification,
+  ) {
     const command = new CreateNotificationCommand({
-      receiverId: event.applicantId,
-      senderId: event.applicantId,
-      type: 'project.role.application.accepted',
-      payload: {
-        projectId: event.projectId,
-        projectTitle: event.projectTitle,
-        roleName: event.roleName,
-        message: `Votre candidature pour le rôle "${event.roleName}" sur le projet "${event.projectTitle}" a été acceptée !`,
-      },
+      object: 'Votre candidature a été acceptée',
+      receiverId: event.userProfile.id,
+      senderId: event.project.author.userId,
+      type: event.type,
+      payload: JSON.parse(JSON.stringify(event)),
       channels: ['realtime'],
     });
 
@@ -96,25 +86,19 @@ export class ProjectRoleNotificationsListener {
   }
 
   /**
-   * Notification lors du refus d'une candidature
+   * Écoute l'événement : Un utilisateur a rejeté une candidature.
+   * Notifie l'utilisateur qui a postulé.
    */
   @OnEvent('project.role.application.rejected')
-  async handleApplicationRejected(event: {
-    applicantId: string;
-    projectId: string;
-    projectTitle: string;
-    roleName: string;
-  }) {
+  async handleProjectRoleApplicationRejected(
+    event: ApplyProjectRequestRejectedNotification,
+  ) {
     const command = new CreateNotificationCommand({
-      receiverId: event.applicantId,
-      senderId: event.applicantId,
-      type: 'project.role.application.rejected',
-      payload: {
-        projectId: event.projectId,
-        projectTitle: event.projectTitle,
-        roleName: event.roleName,
-        message: `Votre candidature pour le rôle "${event.roleName}" sur le projet "${event.projectTitle}" n'a pas été retenue.`,
-      },
+      object: 'Votre candidature a été rejetée',
+      receiverId: event.userProfile.id,
+      senderId: event.project.author.userId,
+      type: event.type,
+      payload: JSON.parse(JSON.stringify(event)),
       channels: ['realtime'],
     });
 

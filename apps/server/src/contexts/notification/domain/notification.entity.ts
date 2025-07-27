@@ -2,6 +2,7 @@ import { Result } from '@/libs/result';
 
 export type NotificationData = {
   id?: string;
+  object: string;
   receiverId: string;
   senderId: string;
   type: string;
@@ -14,6 +15,7 @@ export type NotificationPrimitive = NotificationData;
 
 export class Notification {
   private readonly id?: string;
+  private readonly object: string;
   private readonly receiverId: string;
   private readonly senderId: string;
   private readonly type: string;
@@ -23,6 +25,7 @@ export class Notification {
 
   private constructor(props: {
     id?: string;
+    object: string;
     receiverId: string;
     senderId: string;
     type: string;
@@ -31,6 +34,7 @@ export class Notification {
     readAt?: Date | null;
   }) {
     this.id = props.id;
+    this.object = props.object;
     this.receiverId = props.receiverId;
     this.senderId = props.senderId;
     this.type = props.type;
@@ -40,6 +44,7 @@ export class Notification {
   }
 
   public static create(props: {
+    object: string;
     receiverId: string;
     senderId: string;
     type: string;
@@ -61,6 +66,7 @@ export class Notification {
 
   public static reconstitute(props: {
     id: string;
+    object: string;
     receiverId: string;
     senderId: string;
     type: string;
@@ -77,11 +83,15 @@ export class Notification {
   }
 
   private static validate(props: {
+    object: string;
     receiverId: string;
     senderId: string;
     type: string;
     payload: Record<string, unknown>;
   }): Result<void, string> {
+    if (!props.object || props.object.trim() === '') {
+      return Result.fail('object is required');
+    }
     if (!props.receiverId || props.receiverId.trim() === '') {
       return Result.fail('receiverId is required');
     }
@@ -120,6 +130,7 @@ export class Notification {
   public toPrimitive(): NotificationPrimitive {
     return {
       id: this.id,
+      object: this.object,
       receiverId: this.receiverId,
       senderId: this.senderId,
       type: this.type,
