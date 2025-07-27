@@ -1,11 +1,10 @@
-import { Logger } from '@nestjs/common';
+import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 import { Profile } from '@/contexts/profile/domain/profile.entity';
 import { ProfileRepositoryPort } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Result } from '@/libs/result';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaProfileMapper } from './prisma.profile.mapper';
-import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 @Injectable()
 export class PrismaProfileRepository implements ProfileRepositoryPort {
@@ -162,7 +161,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
       const domainProfile = PrismaProfileMapper.toDomain(updatedRawProfile);
       return Result.ok(domainProfile);
     } catch (error) {
-      console.error(error);
+      this.Logger.error('Error updating profile:', error);
       return Result.fail('Erreur technique lors de la mise à jour du profil.');
     }
   }
@@ -183,7 +182,7 @@ export class PrismaProfileRepository implements ProfileRepositoryPort {
 
       return Result.ok(true);
     } catch (error) {
-      console.error(error);
+      this.Logger.error('Error deleting profile:', error);
       return Result.fail('Erreur technique lors de la suppression du profil.');
     }
   }
