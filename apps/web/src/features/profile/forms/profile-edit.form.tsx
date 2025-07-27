@@ -62,7 +62,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { control } = form;
 
   const onSubmit = form.handleSubmit(async (data: ProfileSchema) => {
-    console.log("Profile edit data:", data);
+    console.info("Profile edit data:", data);
   });
 
   return (

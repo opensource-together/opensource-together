@@ -18,6 +18,7 @@ export interface ProjectFormData {
   title: string;
   shortDescription: string;
   image: string;
+  coverImages: File[]; // Array of cover image files (1 to 4)
   // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   externalLinks: ExternalLink[];
   keyFeatures: KeyFeature[];
@@ -48,6 +49,7 @@ interface ProjectCreateStore {
         | "title"
         | "shortDescription"
         | "image"
+        | "coverImages"
         // | "status"
         | "keyFeatures"
         | "projectGoals"
@@ -71,6 +73,7 @@ const initialFormData: ProjectFormData = {
   title: "",
   shortDescription: "",
   image: "",
+  coverImages: [],
   // status: "DRAFT",
   externalLinks: [],
   keyFeatures: [],
