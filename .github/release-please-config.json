@@ -8,14 +8,14 @@
   "changelog-path": "CHANGELOG.md",
   "draft-pull-request": true,
   "packages": {
-    "apps/web": {
-      "package-name": "frontend",
-      "release-type": "node"
-    },
-    "apps/server": {
-      "package-name": "backend",
-      "release-type": "node"
-    }
+     ".": {
+        "release-type": "node",
+        "component": "ost",
+        "extra-files": [
+          "apps/web/package.json",
+          "apps/server/package.json"
+        ]
+      }
   },
   "changelog-sections": [
     { "type": "feat", "section": "Features" },
