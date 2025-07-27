@@ -19,8 +19,15 @@ import { Avatar } from "../ui/avatar";
 import Icon from "../ui/icon";
 
 const HeaderBackdrop = () => {
+  const pathname = usePathname();
+  const headerDashboard = pathname.startsWith("/dashboard");
+
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[81px]" />
+    <div
+      className={`pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[81px] ${
+        headerDashboard ? "hidden" : ""
+      }`}
+    />
   );
 };
 
@@ -28,11 +35,17 @@ interface NavLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
+  startWith?: boolean;
 }
 
-function NavLink({ href, children, className = "" }: NavLinkProps) {
+function NavLink({
+  href,
+  children,
+  className = "",
+  startWith = false,
+}: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = startWith ? pathname.startsWith(href) : pathname === href;
 
   return (
     <Link
@@ -52,14 +65,12 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const headerDashboard = pathname.startsWith("/dashboard");
   const { isAuthenticated, currentUser, logout, requireAuth } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
-
-  const _handleCreate /*unused vairable*/ = () =>
-    requireAuth(() => router.push("/projects/create"), "/projects/create");
 
   const handleProfile = () =>
     requireAuth(() => router.push("/profile"), "/profile");
@@ -74,7 +85,11 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal md:py-6 lg:px-20">
+      <header
+        className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal md:py-6 lg:px-20 ${
+          headerDashboard ? "border-b border-black/5" : ""
+        }`}
+      >
         <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
           <Link href="/">
             <Image
@@ -82,7 +97,7 @@ export default function Header() {
               alt="ost-logo"
               width={209}
               height={12}
-              className="h-auto max-h-[16px] w-[150px] md:max-h-[20px] md:w-[170px] lg:max-h-[25px] lg:w-[209px]"
+              className="max-h-[16px] lg:max-h-[25px]"
             />
           </Link>
 
@@ -92,7 +107,9 @@ export default function Header() {
 
             {/* Dashboard */}
             {isAuthenticated ? (
-              <NavLink href="/dashboard">Gestion de projet</NavLink>
+              <NavLink startWith href="/dashboard">
+                Gestion de projet
+              </NavLink>
             ) : (
               <Button
                 variant="ghost"
@@ -205,21 +222,7 @@ export default function Header() {
             </div>
           )}
 
-          {/* Créer un Projet ou Se connecter avec Github */}
-          {isAuthenticated ? (
-            <Link href="/projects/create">
-              <Button>
-                <span className="hidden sm:inline">Créer un Projet</span>
-                <span className="inline sm:hidden">Nouveau projet</span>
-                <Icon
-                  name="plus"
-                  size="xs"
-                  variant="white"
-                  className="ml-1.5"
-                />
-              </Button>
-            </Link>
-          ) : (
+          {!isAuthenticated && (
             <Button
               asChild
               variant="default"
@@ -298,19 +301,7 @@ export default function Header() {
         {/* Actions mobile affichées dans le menu */}
         {mobileMenuOpen && (
           <div className="mt-3 flex w-full justify-center md:hidden">
-            {isAuthenticated ? (
-              <Link href="/projects/create" className="w-full max-w-[220px]">
-                <Button className="w-full">
-                  New Project{" "}
-                  <Icon
-                    name="plus"
-                    size="xs"
-                    variant="white"
-                    className="ml-0 align-middle"
-                  />
-                </Button>
-              </Link>
-            ) : (
+            {!isAuthenticated && (
               <Button
                 asChild
                 variant="default"

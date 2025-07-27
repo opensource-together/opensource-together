@@ -25,22 +25,22 @@ export default function ProfileView() {
 
       {/* Main Content à droite */}
       <div className="flex w-full flex-col items-center justify-center gap-5 lg:w-[639px]">
-        <div className="w-[639px] w-full">
+        <div className="w-full">
           <ProfileHero profile={currentUser} />
         </div>
 
         {/* Section du calendrier GitHub */}
-        <div className="mb-8 w-[639px] w-full">
+        <div className="mb-8 w-full">
           <GithubCalendar contributionsCount={currentUser.contributionsCount} />
         </div>
 
         {/* Section des expériences */}
-        <div className="w-[639px] w-full">
+        <div className="w-full">
           <ProfileExperience />
         </div>
 
         {/* Section des projets pinnés */}
-        <div className="mt-12 mb-8 flex w-[639px] w-full">
+        <div className="mt-12 mb-8 flex w-full">
           <PinnedProjects profile={currentUser} />
         </div>
       </div>

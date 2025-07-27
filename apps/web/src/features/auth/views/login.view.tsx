@@ -12,11 +12,11 @@ export default function LoginView() {
       {/* Logo en position absolue, à gauche de l'écran */}
       <Link href="/" className="absolute top-15 left-20 z-10">
         <Image
-          src="/header-logo.png"
-          alt="OpenSource Together Logo"
-          width={210}
-          height={35}
-          className="h-auto w-[150px] md:w-[210px]"
+          src="/ostogether-logo.svg"
+          alt="ost-logo"
+          width={209}
+          height={12}
+          className="max-h-[16px] lg:max-h-[25px]"
         />
       </Link>
 

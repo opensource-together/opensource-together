@@ -45,58 +45,15 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             </p>
           </div>
         </div>
-        {socialLinks.length > 0 && (
-          <div className="flex items-center justify-end space-x-3">
-            <div className="flex items-center space-x-3">
-              {socialLinks.map((link) => (
-                <button key={link.type}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <Icon
-                      name={link.type}
-                      size="md"
-                      variant="black"
-                      interactive
-                    />
-                  </a>
-                </button>
-              ))}
-            </div>
-            <Link href="/profile/edit">
-              <Button className="font-normal">
-                Modifier le profil{" "}
-                <Icon name="pencil" size="xs" variant="white" />
-              </Button>
-            </Link>
-          </div>
-        )}
+
+        <Link href="/profile/edit">
+          <Button className="font-normal">
+            Modifier le profil <Icon name="pencil" size="xs" variant="white" />
+          </Button>
+        </Link>
       </div>
 
       <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>
-      <div className="flex-grow border-t border-black/5" />
-
-      {techStacks.map((techStack, index) => (
-        <div key={index}>
-          <div className="mt-10 mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-medium tracking-tighter">
-              Compétences techniques
-            </h3>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {/* <Badge
-              key={index}
-              style={{
-                color: techStack.color,
-                backgroundColor: techStack.bgColor,
-              }}
-              variant={getRoleBadgeVariant(techStack.name)}
-              className="text-xs"
-            >
-              {techStack.name}
-            </Badge> */}
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
