@@ -24,34 +24,6 @@ jobs:
           config-file: .github/release-please-config.json
           manifest-file: .github/release-please-manifest.json
 
-      - name: Format pull request title
-        if: steps.release.outputs.prs_created
-        env:
-          PR_NUMBER: ${{ steps.release.outputs.pr }}
-          ROOT_VERSION: ${{ steps.release.outputs.version }}
-          VERSION: ${{ steps.release.outputs['apps/web--version'] }}
-        run: |
-          echo "Root version: $ROOT_VERSION"
-          if [ -n "$VERSION" ]; then
-            TITLE="Release v$VERSION !"
-            echo "Updating PR #$PR_NUMBER title to: $TITLE"
-            gh pr edit $PR_NUMBER --title "$TITLE"
-          else
-            echo "No version found in outputs"
-          fi
-
-      - name: Debug All Outputs
-        if: steps.release.outputs.pr
-        run: |
-          echo 'PR Number: "${{ steps.release.outputs.pr }}"'
-          echo 'Web Version: "${{ steps.release.outputs['apps/web--version'] }}"'
-          echo 'Server Version: "${{ steps.release.outputs['apps/server--version'] }}"'
-          echo 'Releases Created: "${{ steps.release.outputs.releases_created }}"'
-          echo 'PRs Created: "${{ steps.release.outputs.prs_created }}"'
-          echo ''
-          echo 'Full JSON output:'
-          echo '"${{ toJSON(steps.release.outputs) }}"'
-
       - uses: actions/checkout@v4
       - name: tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
