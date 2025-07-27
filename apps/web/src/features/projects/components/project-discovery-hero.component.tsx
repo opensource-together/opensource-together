@@ -7,14 +7,14 @@ export default function ProjectDiscoveryHero() {
     <div className="relative mx-auto min-h-[266px] w-full max-w-[3000px] overflow-hidden">
       {/* Images de fond, hors du hero */}
       <Image
-        src="/bible-left-2.png"
+        src="/illustrations/bible-left-2.png"
         alt="Bible gauche"
         width={758}
         height={533}
         className="pointer-events-none absolute top-[-150px] left-[-165px] z-0 hidden md:block"
       />
       <Image
-        src="/bible-right-2.png"
+        src="/illustrations/bible-right-2.png"
         alt="Bible droite"
         width={705}
         height={840}
@@ -24,14 +24,14 @@ export default function ProjectDiscoveryHero() {
 
       {/* Images de fond, visibles uniquement à partir de md */}
       <Image
-        src="/bible-left-2.png"
+        src="/illustrations/bible-left-2.png"
         alt="Bible gauche"
         width={400}
         height={200}
         className="pointer-events-none absolute top-[-50px] left-[-100px] z-0 md:hidden"
       />
       <Image
-        src="/bible-right-2.png"
+        src="/illustrations/bible-right-2.png"
         alt="Bible droite"
         width={400}
         height={200}

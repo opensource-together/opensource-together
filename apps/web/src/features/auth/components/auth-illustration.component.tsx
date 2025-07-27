@@ -4,7 +4,7 @@ export default function AuthIllustration() {
   return (
     <div className="relative hidden w-full lg:block">
       <Image
-        src="/berserk-background.png"
+        src="/illustrations/knight-background.png"
         alt="Background"
         fill
         priority
