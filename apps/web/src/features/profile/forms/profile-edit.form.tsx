@@ -42,19 +42,20 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
     if (file) {
       setSelectedImageFile(file);
       setShouldDeleteImage(false);
-      setValue("avatarUrl", "new-image-selected"); // Indicator that new image is selected
     } else {
       setSelectedImageFile(null);
       setShouldDeleteImage(true);
-      setValue("avatarUrl", ""); // Clear image
     }
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
     updateProfile({
-      updateData: data,
+      updateData: {
+        ...data,
+        avatarUrl: profile.avatarUrl || "",
+      },
       avatarFile: selectedImageFile || undefined,
-      shouldDeleteAvatar: selectedImageFile === null,
+      shouldDeleteAvatar: shouldDeleteImage,
     });
   });
 
