@@ -19,7 +19,7 @@ interface ProfileEditFormProps {
 export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const { updateProfile, isUpdating } = useProfileUpdate();
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-  const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
+  const [_shouldDeleteImage, setShouldDeleteImage] = useState(false);
 
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
