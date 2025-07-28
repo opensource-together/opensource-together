@@ -101,8 +101,8 @@ export function MyApplicationsList() {
         ))}
       </div>
 
-      <div className="flex flex-col gap-6 sm:flex-row">
-        <div className="w-full space-y-4 sm:w-1/2">
+      <div className="flex flex-col gap-8 md:flex-row">
+        <div className="w-full space-y-4 md:w-[40%]">
           {filteredApplications.length === 0 ? (
             <EmptyState
               title="Aucune candidature pour ce statut"
@@ -127,7 +127,7 @@ export function MyApplicationsList() {
 
         {/* Desktop view */}
         {selectedApplication && (
-          <div className="hidden w-1/2 sm:block">
+          <div className="hidden w-[60%] md:block">
             <MyApplicationDetails application={selectedApplication} />
           </div>
         )}

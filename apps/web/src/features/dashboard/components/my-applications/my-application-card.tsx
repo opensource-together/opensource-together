@@ -2,15 +2,8 @@
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
-import { Badge } from "@/shared/components/ui/badge";
 
 import { ProjectRoleApplicationType } from "../../types/project-role-application.type";
-
-const STATUS_STYLES = {
-  PENDING: { bg: "bg-yellow-100", text: "text-yellow-800" },
-  ACCEPTED: { bg: "bg-green-100", text: "text-green-800" },
-  REJECTED: { bg: "bg-red-100", text: "text-red-800" },
-} as const;
 
 interface MyApplicationsCardProps {
   application: ProjectRoleApplicationType;
@@ -41,23 +34,16 @@ export function MyApplicationsCard({
           />
           <div>
             <h3 className="text-base font-medium tracking-tighter text-black sm:text-lg">
-              {application.projectRole.title} - {application.project.title}
+              {application.projectRole.title}{" "}
+              <span className="font-normal text-black/50">
+                — {application.project.title}
+              </span>
             </h3>
             <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
               by {application.project.author.name}
             </p>
           </div>
         </div>
-        <Badge
-          className={`self-start px-2 py-1 sm:self-auto ${
-            STATUS_STYLES[application.status as keyof typeof STATUS_STYLES]?.bg
-          } ${
-            STATUS_STYLES[application.status as keyof typeof STATUS_STYLES]
-              ?.text
-          }`}
-        >
-          {application.status}
-        </Badge>
       </div>
 
       {/* Description */}
@@ -85,9 +71,6 @@ export function MyApplicationsCard({
             </span>
           )}
         </div>
-        <p className="text-muted-foreground">
-          Envoyée le {new Date(application.appliedAt).toLocaleDateString()}
-        </p>
       </div>
     </div>
   );

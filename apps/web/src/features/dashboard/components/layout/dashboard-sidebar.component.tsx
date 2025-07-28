@@ -29,16 +29,16 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-16 flex-col border border-[black]/5 bg-stone-50/50 px-2 pt-5 sm:w-80 sm:px-6">
+    <aside className="flex w-16 flex-col border border-[black]/5 bg-stone-50/50 px-2 pt-5 lg:w-80 lg:px-6">
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
-        <Button asChild className="hidden w-full sm:flex">
+        <Button asChild className="hidden w-full lg:flex">
           <Link href="/projects/create">
             Créer un Project
             <Plus className="ml-2 h-4 w-4" />
           </Link>
         </Button>
         {/* Mobile view */}
-        <div className="flex justify-center sm:hidden">
+        <div className="flex justify-center lg:hidden">
           <Button asChild size="icon" className="size-9">
             <Link href="/projects/create">
               <Plus className="size-4" />
@@ -60,7 +60,7 @@ export default function DashboardSidebar() {
                   variant={isActive ? "default" : "gray"}
                   className="size-4"
                 />
-                <span className="hidden text-sm sm:inline">{item.label}</span>
+                <span className="hidden text-sm lg:inline">{item.label}</span>
               </>
             );
 
@@ -69,7 +69,7 @@ export default function DashboardSidebar() {
                 {/* Desktop view */}
                 <Link
                   href={item.href}
-                  className={`hidden items-center gap-3 rounded-md px-3 py-2 transition-colors sm:flex ${
+                  className={`hidden items-center gap-3 rounded-md px-3 py-2 transition-colors lg:flex ${
                     isActive
                       ? "bg-stone-100 font-medium text-black"
                       : "text-black/50 hover:bg-stone-100"
@@ -80,7 +80,7 @@ export default function DashboardSidebar() {
                 {/* Mobile view */}
                 <Link
                   href={item.href}
-                  className={`flex items-center justify-center rounded-md p-2 transition-colors sm:hidden ${
+                  className={`flex items-center justify-center rounded-md p-2 transition-colors lg:hidden ${
                     isActive
                       ? "bg-stone-100 font-medium text-black"
                       : "text-black/50 hover:bg-stone-100"
