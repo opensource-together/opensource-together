@@ -38,8 +38,8 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
           <ProjectCardComponent
             key={project.id}
             projectId={project.id}
-            title={project.name}
-            shortDescription={project.description || ""}
+            title={project.title}
+            shortDescription={project.shortDescription || ""}
             image={project.image || ""}
             showViewProject={true}
             techStacks={

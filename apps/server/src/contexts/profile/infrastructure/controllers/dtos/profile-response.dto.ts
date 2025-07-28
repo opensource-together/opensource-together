@@ -1,4 +1,4 @@
-import { SocialLink } from '@/contexts/profile/domain/social-link.vo';
+// import { SocialLink } from '@/contexts/profile/domain/social-link.vo';
 
 export type ProfileProjectDto = {
   name: string;
@@ -12,9 +12,20 @@ export class ProfileResponseDto {
   bio: string;
   location: string;
   company: string;
-  socialLinks: SocialLink[];
+  socialLinks: {
+    github?: string;
+    discord?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
+  };
   // Remplacer "any" par les vrais types quand ils seront définis
-  skills: any[];
+  techStacks: {
+    name: string;
+    id: string;
+    type: 'LANGUAGE' | 'TECH';
+    iconUrl: string;
+  }[];
   experiences: {
     company: string;
     position: string;

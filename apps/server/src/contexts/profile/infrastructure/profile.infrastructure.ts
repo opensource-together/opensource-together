@@ -6,9 +6,10 @@ import { PROFILE_REPOSITORY_PORT } from '../use-cases/ports/profile.repository.p
 import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
+import { TechStackInfrastructure } from '@/contexts/techstack/infrastructure/techstack.infrastructure';
 
 @Module({
-  imports: [PersistenceInfrastructure],
+  imports: [PersistenceInfrastructure, TechStackInfrastructure],
   providers: [
     ...profileUseCases,
     {

@@ -23,6 +23,7 @@ jobs:
           manifest-file: .github/release-please-manifest.json
 
       - uses: actions/checkout@v4
+
       - name: tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
         run: |

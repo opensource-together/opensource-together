@@ -92,7 +92,8 @@ export function StepFourForm() {
 
     const finalFormData = {
       ...formData,
-      // Don't put image URL here - it will be handled by the service
+      // Include coverImages from store data
+      coverImages: formData.coverImages || [],
       externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
