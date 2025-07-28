@@ -2,6 +2,7 @@
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Label } from "@/shared/components/ui/label";
+import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
 import { ProjectRoleApplicationType } from "../../types/project-role-application.type";
 
@@ -11,15 +12,27 @@ export function MyApplicationDetails({
   application: ProjectRoleApplicationType;
 }) {
   return (
-    <div className="sticky top-6 space-y-6 rounded-[20px] border border-[black]/6 p-6">
+    <div className="sticky top-6 space-y-8 rounded-[20px] border border-[black]/6 p-6">
       {/* Description */}
-      <div>
-        <Label className="text-xl">
-          {application.projectRole.title} - {application.project.title}
-        </Label>
-        <p className="mt-4 tracking-tighter text-black/70">
-          {application.projectRole.description}
-        </p>
+      <div className="flex justify-between">
+        <div>
+          <Label className="text-xl">
+            {application.projectRole.title}{" "}
+            <span className="font-normal text-black/50">
+              — {application.project.title}
+            </span>
+          </Label>
+          <p className="mt-4 tracking-tighter text-black/70">
+            {application.projectRole.description}
+          </p>
+        </div>
+        <div>
+          <span
+            className={`text-sm font-medium tracking-tighter text-nowrap ${getStatusStyle(application.status)}`}
+          >
+            {getStatusText(application.status)}
+          </span>
+        </div>
       </div>
 
       {/* Tech Stack */}
