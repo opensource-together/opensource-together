@@ -1,0 +1,684 @@
+---
+description: Ceci est un guide permettant de savoir comment implementer un systeme qui fonctionnera a l'aide de websocket.
+alwaysApply: false
+---
+
+# 🚀 Règle WebSocket : Architecture et Conventions
+
+## 📖 Vue d'ensemble
+
+Règle pour créer des systèmes WebSocket temps réel (notifications, messagerie, chat) dans l'architecture clean du projet avec EventEmitter et authentification JWT.
+
+## 🏗️ Architecture
+
+### Flux Event-Driven
+
+```
+Action → Command Handler → EventEmitter.emit() → @OnEvent Listener → Notification Command → Service → WebSocket Gateway → Client
+```
+
+### Couches
+
+- **Domain** : Entités métier avec validation
+- **Use Cases** : Commands/Queries CQRS + Ports (interfaces)
+- **Infrastructure** : Controllers REST, Gateway WebSocket, Services, Listeners
+
+## 📁 Structure des Fichiers
+
+```
+src/contexts/[votre-contexte]/
+├── domain/
+│   └── [entity].entity.ts                 # Entités avec validation métier
+├── use-cases/
+│   ├── commands/create-[entity].command.ts # Commands CQRS
+│   ├── queries/get-[entities].query.ts     # Queries CQRS
+│   └── ports/
+│       ├── [entity].service.port.ts        # Interface service
+│       └── [entity].gateway.port.ts        # Interface gateway
+└── infrastructure/
+    ├── controllers/[entity].controller.ts  # REST API
+    ├── gateways/
+    │   ├── [entity].gateway.ts             # WebSocket Gateway
+    │   └── websocket-connection.manager.ts # Gestion connexions
+    ├── listeners/[entity].listener.ts      # Event Listeners (@OnEvent)
+    ├── services/
+    │   ├── [entity].service.ts             # Service métier
+    │   └── realtime-notifier.adapter.ts    # Adapter WebSocket
+    └── [entity].infrastructure.ts          # Module NestJS
+```
+
+## 🎯 Étapes d'Implémentation
+
+### 1. Entité Domain
+
+```typescript
+export class Notification {
+  private constructor(props: NotificationData) {
+    /* ... */
+  }
+
+  public static create(props: CreateProps): Result<Notification, string> {
+    const validation = this.validate(props);
+    if (!validation.success) return Result.fail(validation.error);
+    return Result.ok(new Notification(props));
+  }
+
+  public static reconstitute(
+    props: NotificationData
+  ): Result<Notification, string> {
+    return Result.ok(new Notification(props));
+  }
+}
+```
+
+### 2. Ports (Interfaces)
+
+```typescript
+export interface NotificationServicePort {
+  sendNotification(
+    notification: SendNotificationPayload
+  ): Promise<Result<void, string>>;
+  getUnreadNotifications(
+    userId: string
+  ): Promise<Result<NotificationData[], string>>;
+}
+
+export interface NotificationGatewayPort {
+  sendNotificationToUser(
+    notification: NotificationData
+  ): Promise<string | null>;
+}
+
+export const NOTIFICATION_SERVICE_PORT = Symbol("NOTIFICATION_SERVICE_PORT");
+```
+
+### 3. Commands/Queries CQRS
+
+```typescript
+@CommandHandler(CreateNotificationCommand)
+export class CreateNotificationCommandHandler {
+  constructor(
+    @Inject(NOTIFICATION_SERVICE_PORT)
+    private readonly notificationService: NotificationServicePort
+  ) {}
+
+  async execute(
+    command: CreateNotificationCommand
+  ): Promise<Result<void, string>> {
+    // 1. Validation avec entité domain
+    const notificationResult = Notification.create(command.payload);
+    if (!notificationResult.success)
+      return Result.fail(notificationResult.error);
+
+    // 2. Déléguer au service
+    return await this.notificationService.sendNotification(command.payload);
+  }
+}
+```
+
+### 4. Service Infrastructure
+
+```typescript
+@Injectable()
+export class NotificationService implements NotificationServicePort {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly realtimeAdapter: RealtimeNotifierAdapter
+  ) {}
+
+  async sendNotification(notification: SendNotificationPayload): Promise<Result<void, string>> {
+    // 1. Persister en DB
+    const saved = await this.prisma.notification.create({...});
+
+    // 2. Envoyer via WebSocket si canal realtime
+    if (notification.channels?.includes("realtime")) {
+      await this.realtimeAdapter.send(notificationData);
+    }
+
+    return Result.ok();
+  }
+}
+```
+
+### 5. Gateway WebSocket
+
+```typescript
+@WebSocketGateway({
+  cors: { credentials: true, origin: "*" },
+  namespace: "notifications",
+})
+export class NotificationsGateway implements NotificationGatewayPort {
+  constructor(
+    private readonly webSocketAuthService: WebSocketAuthService,
+    private readonly connectionManager: WebSocketConnectionManager
+  ) {}
+
+  async handleConnection(client: AuthenticatedSocket): Promise<void> {
+    const userId = await this.webSocketAuthService.authenticateSocket(client);
+    if (!userId) {
+      client.disconnect();
+      return;
+    }
+
+    this.connectionManager.registerConnection(userId, client);
+    await this.sendUnreadNotifications(userId, client);
+  }
+
+  async sendNotificationToUser(
+    notification: NotificationData
+  ): Promise<string | null> {
+    const userSocket = this.connectionManager.getUserSocket(
+      notification.receiverId
+    );
+    if (!userSocket) return `User ${notification.receiverId} not connected`;
+
+    userSocket.emit("new-notification", notification);
+    return null;
+  }
+}
+```
+
+### 6. Event Listeners
+
+```typescript
+@Injectable()
+export class ProjectNotificationsListener {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @OnEvent("project.created")
+  async handleProjectCreated(event: ProjectCreatedEvent) {
+    const command = new CreateNotificationCommand({
+      object: "project.created",
+      receiverId: event.ownerId,
+      senderId: event.ownerId,
+      type: "project.created",
+      payload: {
+        projectTitle: event.projectTitle,
+        message: `Votre projet "${event.projectTitle}" a été créé avec succès !`,
+      },
+      channels: ["realtime"],
+    });
+
+    await this.commandBus.execute(command);
+  }
+}
+```
+
+### 7. Émission d'Événements
+
+```typescript
+@CommandHandler(CreateProjectCommand)
+export class CreateProjectCommandHandler {
+  constructor(
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2
+  ) {}
+
+  async execute(
+    command: CreateProjectCommand
+  ): Promise<Result<Project, string>> {
+    // 1. Logique métier + sauvegarde
+    const savedProject = await this.projectRepo.create(projectResult.value);
+
+    // 2. Émettre événement pour déclencher notifications
+    this.eventEmitter.emit("project.created", {
+      projectId: savedProject.value.toPrimitive().id,
+      projectTitle: savedProject.value.toPrimitive().title,
+      ownerId: command.props.ownerId,
+    });
+
+    return Result.ok(savedProject.value);
+  }
+}
+```
+
+### 8. Module Configuration
+
+```typescript
+@Module({
+  imports: [CqrsModule, PersistenceInfrastructure],
+  providers: [
+    ...notificationUseCases, // Commands & Queries handlers
+    { provide: NOTIFICATION_SERVICE_PORT, useClass: NotificationService },
+    { provide: NOTIFICATION_GATEWAY_PORT, useClass: NotificationsGateway },
+    RealtimeNotifierAdapter,
+    WebSocketConnectionManager,
+    ProjectNotificationsListener,
+  ],
+  controllers: [NotificationsController],
+  exports: [NOTIFICATION_SERVICE_PORT, NOTIFICATION_GATEWAY_PORT],
+})
+export class NotificationInfrastructure {}
+```
+
+## 🔄 Patterns et Conventions
+
+### Événements Recommandés
+
+```typescript
+// Format: "contexte.action" ou "contexte.resource.action"
+"project.created";
+"project.role.application.created";
+"project.role.application.accepted";
+"message.received";
+"user.welcome";
+```
+
+### Authentification WebSocket
+
+- Token JWT via query param `x-ws-token`
+- Service `WebSocketAuthService.authenticateSocket()`
+- Interface `AuthenticatedSocket` avec `userId`
+
+### Gestion Connexions
+
+- Une connexion par utilisateur (remplacement automatique)
+- Synchronisation hors ligne : envoi notifications non lues à la connexion
+- Events: `unread-notifications`, `new-notification`, `notification-read`
+
+### Structure Notification
+
+```typescript
+{
+  id: string,
+  object: string,         // Type d'objet notifié
+  receiverId: string,     // Destinataire
+  senderId: string,       // Expéditeur
+  type: string,          // Type d'événement
+  payload: object,       // Données spécifiques
+  channels: string[],    // ["realtime", "email"]
+  createdAt: Date,
+  readAt: Date | null
+}
+```
+
+## ✅ Bonnes Pratiques
+
+### À Faire
+
+- Validation stricte avec entités domain
+- Authentification JWT pour WebSocket
+- Persistance AVANT envoi WebSocket
+- Logs détaillés pour debugging
+- Gestion d'erreurs avec Result<T, E>
+- Découplage via événements
+- Tests des listeners individuellement
+
+### À Éviter
+
+- Logique métier dans Gateway
+- Connexions non authentifiées
+- Listeners synchrones lourds
+- Couplage fort entre contextes
+- Payload trop volumineux
+- CORS trop permissif en production
+
+## 🧪 Test Frontend
+
+```javascript
+// 1. Token auth
+const { wsToken } = await fetch("/notifications/ws-token").then((r) =>
+  r.json()
+);
+
+// 2. Connexion
+const socket = io("ws://localhost:4000/notifications", {
+  query: { "x-ws-token": wsToken },
+});
+
+// 3. Events
+socket.on("connect", () => console.log("✅ Connecté"));
+socket.on("unread-notifications", (notifs) =>
+  console.log("📬 Non lues:", notifs)
+);
+socket.on("new-notification", (notif) => console.log("📩 Nouvelle:", notif));
+socket.on("notification-read", (notif) => console.log("🔄 Lue:", notif));
+```
+
+## 🚀 Extensions
+
+- Email adapter : `EmailNotifierAdapter`
+- Push mobile : `PushNotifierAdapter`
+- Préférences utilisateur : `NotificationPreferencesService`
+- Retry automatique : `ReliableNotificationService`
+- Groupage : `NotificationGroupingService`
+
+# 🚀 Règle WebSocket : Architecture et Conventions
+
+## 📖 Vue d'ensemble
+
+Règle pour créer des systèmes WebSocket temps réel (notifications, messagerie, chat) dans l'architecture clean du projet avec EventEmitter et authentification JWT.
+
+## 🏗️ Architecture
+
+### Flux Event-Driven
+
+```
+Action → Command Handler → EventEmitter.emit() → @OnEvent Listener → Notification Command → Service → WebSocket Gateway → Client
+```
+
+### Couches
+
+- **Domain** : Entités métier avec validation
+- **Use Cases** : Commands/Queries CQRS + Ports (interfaces)
+- **Infrastructure** : Controllers REST, Gateway WebSocket, Services, Listeners
+
+## 📁 Structure des Fichiers
+
+```
+src/contexts/[votre-contexte]/
+├── domain/
+│   └── [entity].entity.ts                 # Entités avec validation métier
+├── use-cases/
+│   ├── commands/create-[entity].command.ts # Commands CQRS
+│   ├── queries/get-[entities].query.ts     # Queries CQRS
+│   └── ports/
+│       ├── [entity].service.port.ts        # Interface service
+│       └── [entity].gateway.port.ts        # Interface gateway
+└── infrastructure/
+    ├── controllers/[entity].controller.ts  # REST API
+    ├── gateways/
+    │   ├── [entity].gateway.ts             # WebSocket Gateway
+    │   └── websocket-connection.manager.ts # Gestion connexions
+    ├── listeners/[entity].listener.ts      # Event Listeners (@OnEvent)
+    ├── services/
+    │   ├── [entity].service.ts             # Service métier
+    │   └── realtime-notifier.adapter.ts    # Adapter WebSocket
+    └── [entity].infrastructure.ts          # Module NestJS
+```
+
+## 🎯 Étapes d'Implémentation
+
+### 1. Entité Domain
+
+```typescript
+export class Notification {
+  private constructor(props: NotificationData) {
+    /* ... */
+  }
+
+  public static create(props: CreateProps): Result<Notification, string> {
+    const validation = this.validate(props);
+    if (!validation.success) return Result.fail(validation.error);
+    return Result.ok(new Notification(props));
+  }
+
+  public static reconstitute(
+    props: NotificationData
+  ): Result<Notification, string> {
+    return Result.ok(new Notification(props));
+  }
+}
+```
+
+### 2. Ports (Interfaces)
+
+```typescript
+export interface NotificationServicePort {
+  sendNotification(
+    notification: SendNotificationPayload
+  ): Promise<Result<void, string>>;
+  getUnreadNotifications(
+    userId: string
+  ): Promise<Result<NotificationData[], string>>;
+}
+
+export interface NotificationGatewayPort {
+  sendNotificationToUser(
+    notification: NotificationData
+  ): Promise<string | null>;
+}
+
+export const NOTIFICATION_SERVICE_PORT = Symbol("NOTIFICATION_SERVICE_PORT");
+```
+
+### 3. Commands/Queries CQRS
+
+```typescript
+@CommandHandler(CreateNotificationCommand)
+export class CreateNotificationCommandHandler {
+  constructor(
+    @Inject(NOTIFICATION_SERVICE_PORT)
+    private readonly notificationService: NotificationServicePort
+  ) {}
+
+  async execute(
+    command: CreateNotificationCommand
+  ): Promise<Result<void, string>> {
+    // 1. Validation avec entité domain
+    const notificationResult = Notification.create(command.payload);
+    if (!notificationResult.success)
+      return Result.fail(notificationResult.error);
+
+    // 2. Déléguer au service
+    return await this.notificationService.sendNotification(command.payload);
+  }
+}
+```
+
+### 4. Service Infrastructure
+
+```typescript
+@Injectable()
+export class NotificationService implements NotificationServicePort {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly realtimeAdapter: RealtimeNotifierAdapter
+  ) {}
+
+  async sendNotification(notification: SendNotificationPayload): Promise<Result<void, string>> {
+    // 1. Persister en DB
+    const saved = await this.prisma.notification.create({...});
+
+    // 2. Envoyer via WebSocket si canal realtime
+    if (notification.channels?.includes("realtime")) {
+      await this.realtimeAdapter.send(notificationData);
+    }
+
+    return Result.ok();
+  }
+}
+```
+
+### 5. Gateway WebSocket
+
+```typescript
+@WebSocketGateway({
+  cors: { credentials: true, origin: "*" },
+  namespace: "notifications",
+})
+export class NotificationsGateway implements NotificationGatewayPort {
+  constructor(
+    private readonly webSocketAuthService: WebSocketAuthService,
+    private readonly connectionManager: WebSocketConnectionManager
+  ) {}
+
+  async handleConnection(client: AuthenticatedSocket): Promise<void> {
+    const userId = await this.webSocketAuthService.authenticateSocket(client);
+    if (!userId) {
+      client.disconnect();
+      return;
+    }
+
+    this.connectionManager.registerConnection(userId, client);
+    await this.sendUnreadNotifications(userId, client);
+  }
+
+  async sendNotificationToUser(
+    notification: NotificationData
+  ): Promise<string | null> {
+    const userSocket = this.connectionManager.getUserSocket(
+      notification.receiverId
+    );
+    if (!userSocket) return `User ${notification.receiverId} not connected`;
+
+    userSocket.emit("new-notification", notification);
+    return null;
+  }
+}
+```
+
+### 6. Event Listeners
+
+```typescript
+@Injectable()
+export class ProjectNotificationsListener {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @OnEvent("project.created")
+  async handleProjectCreated(event: ProjectCreatedEvent) {
+    const command = new CreateNotificationCommand({
+      object: "project.created",
+      receiverId: event.ownerId,
+      senderId: event.ownerId,
+      type: "project.created",
+      payload: {
+        projectTitle: event.projectTitle,
+        message: `Votre projet "${event.projectTitle}" a été créé avec succès !`,
+      },
+      channels: ["realtime"],
+    });
+
+    await this.commandBus.execute(command);
+  }
+}
+```
+
+### 7. Émission d'Événements
+
+```typescript
+@CommandHandler(CreateProjectCommand)
+export class CreateProjectCommandHandler {
+  constructor(
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2
+  ) {}
+
+  async execute(
+    command: CreateProjectCommand
+  ): Promise<Result<Project, string>> {
+    // 1. Logique métier + sauvegarde
+    const savedProject = await this.projectRepo.create(projectResult.value);
+
+    // 2. Émettre événement pour déclencher notifications
+    this.eventEmitter.emit("project.created", {
+      projectId: savedProject.value.toPrimitive().id,
+      projectTitle: savedProject.value.toPrimitive().title,
+      ownerId: command.props.ownerId,
+    });
+
+    return Result.ok(savedProject.value);
+  }
+}
+```
+
+### 8. Module Configuration
+
+```typescript
+@Module({
+  imports: [CqrsModule, PersistenceInfrastructure],
+  providers: [
+    ...notificationUseCases, // Commands & Queries handlers
+    { provide: NOTIFICATION_SERVICE_PORT, useClass: NotificationService },
+    { provide: NOTIFICATION_GATEWAY_PORT, useClass: NotificationsGateway },
+    RealtimeNotifierAdapter,
+    WebSocketConnectionManager,
+    ProjectNotificationsListener,
+  ],
+  controllers: [NotificationsController],
+  exports: [NOTIFICATION_SERVICE_PORT, NOTIFICATION_GATEWAY_PORT],
+})
+export class NotificationInfrastructure {}
+```
+
+## 🔄 Patterns et Conventions
+
+### Événements Recommandés
+
+```typescript
+// Format: "contexte.action" ou "contexte.resource.action"
+"project.created";
+"project.role.application.created";
+"project.role.application.accepted";
+"message.received";
+"user.welcome";
+```
+
+### Authentification WebSocket
+
+- Token JWT via query param `x-ws-token`
+- Service `WebSocketAuthService.authenticateSocket()`
+- Interface `AuthenticatedSocket` avec `userId`
+
+### Gestion Connexions
+
+- Une connexion par utilisateur (remplacement automatique)
+- Synchronisation hors ligne : envoi notifications non lues à la connexion
+- Events: `unread-notifications`, `new-notification`, `notification-read`
+
+### Structure Notification
+
+```typescript
+{
+  id: string,
+  object: string,         // Type d'objet notifié
+  receiverId: string,     // Destinataire
+  senderId: string,       // Expéditeur
+  type: string,          // Type d'événement
+  payload: object,       // Données spécifiques
+  channels: string[],    // ["realtime", "email"]
+  createdAt: Date,
+  readAt: Date | null
+}
+```
+
+## ✅ Bonnes Pratiques
+
+### À Faire
+
+- Validation stricte avec entités domain
+- Authentification JWT pour WebSocket
+- Persistance AVANT envoi WebSocket
+- Logs détaillés pour debugging
+- Gestion d'erreurs avec Result<T, E>
+- Découplage via événements
+- Tests des listeners individuellement
+
+### À Éviter
+
+- Logique métier dans Gateway
+- Connexions non authentifiées
+- Listeners synchrones lourds
+- Couplage fort entre contextes
+- Payload trop volumineux
+- CORS trop permissif en production
+
+## 🧪 Test Frontend
+
+```javascript
+// 1. Token auth
+const { wsToken } = await fetch("/notifications/ws-token").then((r) =>
+  r.json()
+);
+
+// 2. Connexion
+const socket = io("ws://localhost:4000/notifications", {
+  query: { "x-ws-token": wsToken },
+});
+
+// 3. Events
+socket.on("connect", () => console.log("✅ Connecté"));
+socket.on("unread-notifications", (notifs) =>
+  console.log("📬 Non lues:", notifs)
+);
+socket.on("new-notification", (notif) => console.log("📩 Nouvelle:", notif));
+socket.on("notification-read", (notif) => console.log("🔄 Lue:", notif));
+```
+
+## 🚀 Extensions
+
+- Email adapter : `EmailNotifierAdapter`
+- Push mobile : `PushNotifierAdapter`
+- Préférences utilisateur : `NotificationPreferencesService`
+- Retry automatique : `ReliableNotificationService`
+- Groupage : `NotificationGroupingService`
