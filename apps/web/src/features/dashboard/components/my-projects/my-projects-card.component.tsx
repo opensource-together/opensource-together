@@ -33,7 +33,7 @@ export default function MyProjectsCardComponent({
       <ProjectCard className={className}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
-            <Avatar src={project.imageUrl} name={project.title} size="lg" />
+            <Avatar src={project.image} name={project.title} size="lg" />
             <ProjectCardInfo>
               <ProjectCardTitle>{project.title}</ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
