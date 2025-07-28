@@ -173,3 +173,79 @@ model ProjectGoal {
   goal      String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
+
+// 💬 Messagerie Models
+
+enum RoomType {
+  DIRECT
+  GROUP
+  SYSTEM
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+model Room {
+  id            String            @id // ID généré par l'application (ex: direct_user1_user2)
+  roomType      RoomType          @default(DIRECT)
+  name          String?
+  description   String?
+  isActive      Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  lastMessageAt DateTime?
+  
+  // Relations
+  participants  RoomParticipant[]
+  messages      Message[]
+}
+
+model RoomParticipant {
+  id       String   @id @default(uuid())
+  roomId   String
+  userId   String
+  joinedAt DateTime @default(now())
+  
+  // Relations
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  
+  // Contraintes
+  @@unique([roomId, userId])
+}
+
+model Message {
+  id          String      @id @default(uuid())
+  roomId      String
+  senderId    String
+  content     String
+  messageType MessageType @default(TEXT)
+  replyToId   String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  room      Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  replyTo   Message?      @relation("MessageReply", fields: [replyToId], references: [id])
+  replies   Message[]     @relation("MessageReply")
+  readBy    MessageRead[]
+  
+  // Index pour améliorer les performances
+  @@index([roomId, createdAt])
+}
+
+model MessageRead {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  readAt    DateTime @default(now())
+  
+  // Relations
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  
+  // Contraintes
+  @@unique([messageId, userId])
+}

@@ -9,6 +9,7 @@ import { CategoryInfrastructure } from './category/infrastructure/category.infra
 import { ProjectRoleApplicationInfrastructure } from './project/bounded-contexts/project-role-application/infrastructure/project-role-application.infrastructure';
 import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastructure';
 import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/project-key-feature/infrastructure/project-key-feature.infrastructure';
+import { MessagerieInfrastructure } from './messagerie/infrastructure/messagerie.infrastructure';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/proj
     ProjectRoleApplicationInfrastructure,
     MailingInfrastructure,
     ProjectKeyFeatureInfrastructure,
+    MessagerieInfrastructure,
   ],
   exports: [
     UserInfrastructure,
@@ -33,6 +35,7 @@ import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/proj
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
     ProjectKeyFeatureInfrastructure,
+    MessagerieInfrastructure,
   ],
 })
 export class ContextsModule {}
