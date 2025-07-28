@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import DashboardHeading from "../components/layout/dashboard-heading.component";
@@ -9,8 +11,15 @@ import { useApplicationsReceived } from "../hooks/use-applications-received.hook
 
 export default function MyProjectsView() {
   const { data: allApplications = [] } = useApplicationsReceived();
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
+    null
+  );
 
   const handleApplicationDecision = () => {};
+
+  const selectedProjectApplications = selectedProjectId
+    ? allApplications.filter((app) => app.projectId === selectedProjectId)
+    : [];
 
   return (
     <div>
@@ -18,23 +27,39 @@ export default function MyProjectsView() {
         title="Mes projets"
         description="Gérez vos projets Open Source et les candidatures reçues."
       />
-      <div className="mt-8 flex gap-8">
+
+      {/* Layout responsive */}
+      <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
         {/* Section Mes Projets */}
-        <div className="w-[35%]min-w-0">
-          <MyProjectsList />
+        <div className="order-1 w-full min-w-0 lg:w-[35%]">
+          <div className="mb-4 lg:mb-0">
+            <h2 className="text-lg font-semibold tracking-tight lg:hidden">
+              Mes Projets
+            </h2>
+          </div>
+          <MyProjectsList
+            onProjectSelect={setSelectedProjectId}
+            selectedProjectId={selectedProjectId}
+          />
         </div>
 
-        {/* Section Candidatures récentes */}
-        <div className="w-[70%] min-w-0">
-          {allApplications.length > 0 ? (
+        {/* Section Candidatures & Équipe - Affichage conditionnel */}
+        <div className="order-2 w-full min-w-0 lg:w-[65%]">
+          <div className="mb-4 lg:mb-0">
+            <h2 className="text-lg font-semibold tracking-tight lg:hidden">
+              Candidatures & Équipe
+            </h2>
+          </div>
+
+          {selectedProjectId ? (
             <MyProjectTabs
-              applications={allApplications}
+              applications={selectedProjectApplications}
               onApplicationDecision={handleApplicationDecision}
             />
           ) : (
             <EmptyState
-              title="Aucune candidature"
-              description="Aucune candidature reçue pour le moment."
+              title="Sélectionnez un projet"
+              description="Cliquez sur un projet pour voir ses candidatures et membres d'équipe."
             />
           )}
         </div>
