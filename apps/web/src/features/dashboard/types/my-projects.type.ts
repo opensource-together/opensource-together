@@ -23,3 +23,15 @@ export interface ApplicationReceived {
   }[];
   rejectionReason?: string;
 }
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  avatarUrl?: string;
+  role: string;
+  joinedAt: string;
+  techStacks?: Array<{
+    id: string;
+    name: string;
+  }>;
+}

@@ -3,7 +3,7 @@
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import DashboardHeading from "../components/layout/dashboard-heading.component";
-import MyApplicationsReceived from "../components/my-projects/my-applications-received.component";
+import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
 import { useApplicationsReceived } from "../hooks/use-applications-received.hook";
 
@@ -25,9 +25,9 @@ export default function MyProjectsView() {
         </div>
 
         {/* Section Candidatures récentes */}
-        <div className="w-[65%] min-w-0">
+        <div className="w-[70%] min-w-0">
           {allApplications.length > 0 ? (
-            <MyApplicationsReceived
+            <MyProjectTabs
               applications={allApplications}
               onApplicationDecision={handleApplicationDecision}
             />
