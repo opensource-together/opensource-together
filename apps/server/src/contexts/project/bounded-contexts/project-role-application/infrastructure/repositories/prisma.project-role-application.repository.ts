@@ -37,7 +37,12 @@ export class PrismaProjectRoleApplicationRepository
             },
           },
           projectRole: true,
-          project: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
         },
       });
 
@@ -90,9 +95,10 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -117,7 +123,12 @@ export class PrismaProjectRoleApplicationRepository
             },
           },
           projectRole: true,
-          project: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
         },
       });
       if (!applications) {
@@ -128,9 +139,10 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -154,10 +166,20 @@ export class PrismaProjectRoleApplicationRepository
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: domainApplication.value.projectRoleTitle,
+          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
+          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
           status: domainApplication.value.status,
-          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
-          selectedProjectGoals: domainApplication.value.selectedProjectGoals,
+          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures.map(
+            (kf) => ({
+              id: kf.toPrimitive().id!,
+              feature: kf.toPrimitive().feature,
+            }),
+          ),
+          selectedProjectGoals:
+            domainApplication.value.selectedProjectGoals.map((pg) => ({
+              id: pg.toPrimitive().id!,
+              goal: pg.toPrimitive().goal,
+            })),
           appliedAt: domainApplication.value.appliedAt,
           decidedAt: domainApplication.value.decidedAt || new Date(),
           decidedBy: domainApplication.value.decidedBy || '',
@@ -186,9 +208,10 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -214,7 +237,12 @@ export class PrismaProjectRoleApplicationRepository
             },
           },
           projectRole: true,
-          project: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
         },
       });
       this.Logger.log('applications findByRoleId', applications);
@@ -226,9 +254,10 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -252,10 +281,20 @@ export class PrismaProjectRoleApplicationRepository
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: domainApplication.value.projectRoleTitle,
+          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
+          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
           status: domainApplication.value.status,
-          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
-          selectedProjectGoals: domainApplication.value.selectedProjectGoals,
+          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures.map(
+            (kf) => ({
+              id: kf.toPrimitive().id!,
+              feature: kf.toPrimitive().feature,
+            }),
+          ),
+          selectedProjectGoals:
+            domainApplication.value.selectedProjectGoals.map((pg) => ({
+              id: pg.toPrimitive().id!,
+              goal: pg.toPrimitive().goal,
+            })),
           appliedAt: domainApplication.value.appliedAt,
           decidedAt: domainApplication.value.decidedAt || new Date(),
           decidedBy: domainApplication.value.decidedBy || '',
@@ -294,7 +333,12 @@ export class PrismaProjectRoleApplicationRepository
         },
         include: {
           projectRole: true,
-          project: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
           profile: {
             include: {
               user: true,
@@ -341,7 +385,12 @@ export class PrismaProjectRoleApplicationRepository
         },
         include: {
           projectRole: true,
-          project: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
           profile: {
             include: {
               user: true,
@@ -380,11 +429,13 @@ export class PrismaProjectRoleApplicationRepository
       {
         appplicationId: string;
         projectTitle: string;
+        projectDescription: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -399,7 +450,12 @@ export class PrismaProjectRoleApplicationRepository
         where: { profileId: { equals: userId } },
         include: {
           projectRole: true,
-          project: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
           profile: {
             include: {
               user: true,
@@ -415,10 +471,12 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         projectTitle: string;
+        projectDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -429,6 +487,11 @@ export class PrismaProjectRoleApplicationRepository
       for (const application of applications) {
         const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
           ...application,
+          project: {
+            ...application.project,
+            keyFeatures: application.project.keyFeatures,
+            projectGoals: application.project.projectGoals,
+          },
           profile: {
             ...application.profile,
             user: application.profile.user,
@@ -442,11 +505,22 @@ export class PrismaProjectRoleApplicationRepository
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: domainApplication.value.projectRoleTitle,
-          projectTitle: domainApplication.value.projectTitle,
+          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
+          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
+          projectTitle: application.project.title, // Utilise le titre actuel du projet
+          projectDescription: application.project.description, // Utilise la description actuelle du projet
           status: domainApplication.value.status,
-          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures,
-          selectedProjectGoals: domainApplication.value.selectedProjectGoals,
+          selectedKeyFeatures: domainApplication.value.selectedKeyFeatures.map(
+            (kf) => ({
+              id: kf.toPrimitive().id!,
+              feature: kf.toPrimitive().feature,
+            }),
+          ),
+          selectedProjectGoals:
+            domainApplication.value.selectedProjectGoals.map((pg) => ({
+              id: pg.toPrimitive().id!,
+              goal: pg.toPrimitive().goal,
+            })),
           appliedAt: domainApplication.value.appliedAt,
           decidedAt: domainApplication.value.decidedAt || new Date(),
           decidedBy: domainApplication.value.decidedBy || '',

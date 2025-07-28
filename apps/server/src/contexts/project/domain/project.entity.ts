@@ -398,4 +398,34 @@ export class Project {
     this.keyFeatures = [...remainingKeyFeatures, ...updatedKeyFeatures];
     return Result.ok(this.keyFeatures);
   }
+
+  public hasKeyFeature(keyFeatureId: string): boolean {
+    return this.keyFeatures.some((kf) => kf.toPrimitive().id === keyFeatureId);
+  }
+
+  public hasProjectGoal(projectGoalId: string): boolean {
+    return this.projectGoals.some(
+      (pg) => pg.toPrimitive().id === projectGoalId,
+    );
+  }
+
+  public getKeyFeature(keyFeatureId: string): Result<KeyFeature, string> {
+    const keyFeature = this.keyFeatures.find(
+      (kf) => kf.toPrimitive().id === keyFeatureId,
+    );
+    if (!keyFeature) {
+      return Result.fail('Key feature not found');
+    }
+    return Result.ok(keyFeature);
+  }
+
+  public getProjectGoal(projectGoalId: string): Result<ProjectGoals, string> {
+    const projectGoal = this.projectGoals.find(
+      (pg) => pg.toPrimitive().id === projectGoalId,
+    );
+    if (!projectGoal) {
+      return Result.fail('Project goal not found');
+    }
+    return Result.ok(projectGoal);
+  }
 }
