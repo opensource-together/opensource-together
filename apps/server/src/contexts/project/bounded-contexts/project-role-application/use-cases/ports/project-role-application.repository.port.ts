@@ -23,8 +23,8 @@ export interface ProjectRoleApplicationRepositoryPort {
         projectRoleTitle: string;
         projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -96,8 +96,8 @@ export interface ProjectRoleApplicationRepositoryPort {
         projectRoleTitle: string;
         projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
@@ -124,8 +124,8 @@ export interface ProjectRoleApplicationRepositoryPort {
         projectRoleTitle: string;
         projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
