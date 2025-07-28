@@ -3,29 +3,40 @@
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import DashboardHeading from "../components/layout/dashboard-heading.component";
-import MyProjectsList from "../components/my-projects-list.component";
+import MyApplicationsReceived from "../components/my-projects/my-applications-received.component";
+import MyProjectsList from "../components/my-projects/my-projects-list.component";
+import { useApplicationsReceived } from "../hooks/use-applications-received.hook";
 
 export default function MyProjectsView() {
+  const { data: allApplications = [] } = useApplicationsReceived();
+
+  const handleApplicationDecision = () => {};
+
   return (
     <div>
       <DashboardHeading
         title="Mes projets"
-        description="Vous pouvez visualiser vos projets Open Source ici et consulter les candidatures."
+        description="Gérez vos projets Open Source et les candidatures reçues."
       />
-      <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="mt-8 flex gap-8">
         {/* Section Mes Projets */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold">Mes projets</h2>
+        <div className="w-[35%]min-w-0">
           <MyProjectsList />
         </div>
 
-        {/* Section Candidatures */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold">Candidatures reçues</h2>
-          <EmptyState
-            title="Aucune candidature reçue"
-            description="Vous n'avez pas de candidatures reçues pour le moment."
-          />
+        {/* Section Candidatures récentes */}
+        <div className="w-[65%] min-w-0">
+          {allApplications.length > 0 ? (
+            <MyApplicationsReceived
+              applications={allApplications}
+              onApplicationDecision={handleApplicationDecision}
+            />
+          ) : (
+            <EmptyState
+              title="Aucune candidature"
+              description="Aucune candidature reçue pour le moment."
+            />
+          )}
         </div>
       </div>
     </div>
