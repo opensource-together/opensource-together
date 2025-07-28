@@ -9,7 +9,15 @@ import { Icon } from "@/shared/components/ui/icon";
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
 import MyProjectsCard from "./my-projects-card.component";
 
-export default function MyProjectsList() {
+interface MyProjectsListProps {
+  onProjectSelect?: (projectId: string) => void;
+  selectedProjectId?: string | null;
+}
+
+export default function MyProjectsList({
+  onProjectSelect,
+  selectedProjectId,
+}: MyProjectsListProps) {
   const { data: projects = [], isLoading: isLoadingProjects } = useMyProjects();
 
   if (isLoadingProjects) {
@@ -41,11 +49,23 @@ export default function MyProjectsList() {
     );
   }
 
+  const handleProjectClick = (projectId: string) => {
+    onProjectSelect?.(projectId);
+  };
+
   return (
     <div className="space-y-3">
-      {projects.map((project) => (
-        <MyProjectsCard key={project.id} project={project} />
-      ))}
+      {projects.map(
+        (project) =>
+          project.id && (
+            <MyProjectsCard
+              key={project.id}
+              project={project}
+              isSelected={selectedProjectId === project.id}
+              onClick={() => handleProjectClick(project.id!)}
+            />
+          )
+      )}
     </div>
   );
 }

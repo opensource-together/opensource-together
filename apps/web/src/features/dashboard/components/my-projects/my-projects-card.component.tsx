@@ -18,19 +18,23 @@ interface MyProjectsCardProps {
   project: Project;
   techStacks?: TechStack[];
   className?: string;
+  isSelected?: boolean;
+  onClick?: () => void;
 }
 
 export default function MyProjectsCardComponent({
   project,
   techStacks = [],
   className = "",
+  isSelected = false,
+  onClick,
 }: MyProjectsCardProps) {
   const displayTechStacks =
     techStacks.length > 0 ? techStacks : project.techStacks || [];
 
   return (
-    <div className="block">
-      <ProjectCard className={className}>
+    <div onClick={onClick} className="block">
+      <ProjectCard className={`${className} ${isSelected ? "shadow-md" : ""}`}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
             <Avatar src={project.image} name={project.title} size="lg" />
