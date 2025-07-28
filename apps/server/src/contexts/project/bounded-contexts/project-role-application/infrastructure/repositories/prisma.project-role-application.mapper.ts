@@ -31,8 +31,16 @@ export class PrismaProjectRoleApplicationMapper {
       projectRoleTitle: domainEntity.projectRoleTitle,
       status: domainEntity.status,
       motivationLetter: domainEntity.motivationLetter,
-      selectedKeyFeatures: domainEntity.selectedKeyFeatures,
-      selectedProjectGoals: domainEntity.selectedProjectGoals,
+      selectedKeyFeatures: {
+        connect: domainEntity.selectedKeyFeatures.map((kf) => ({
+          id: kf.toPrimitive().id,
+        })),
+      },
+      selectedProjectGoals: {
+        connect: domainEntity.selectedProjectGoals.map((pg) => ({
+          id: pg.toPrimitive().id,
+        })),
+      },
       rejectionReason: domainEntity.rejectionReason,
     };
     return Result.ok(toRepo);
@@ -47,7 +55,12 @@ export class PrismaProjectRoleApplicationMapper {
           };
         };
         projectRole: true;
-        project: true;
+        project: {
+          include: {
+            keyFeatures: true;
+            projectGoals: true;
+          };
+        };
       };
     }>,
   ): Result<
@@ -61,8 +74,8 @@ export class PrismaProjectRoleApplicationMapper {
       projectDescription: prismaEntity.projectDescription ?? undefined,
       projectRoleId: prismaEntity.projectRole.id,
       projectRoleTitle: prismaEntity.projectRole.title,
-      selectedKeyFeatures: prismaEntity.selectedKeyFeatures,
-      selectedProjectGoals: prismaEntity.selectedProjectGoals,
+      selectedKeyFeatures: prismaEntity.project.keyFeatures,
+      selectedProjectGoals: prismaEntity.project.projectGoals,
       rejectionReason: prismaEntity.rejectionReason ?? undefined,
       status: prismaEntity.status as ApplicationStatus,
       appliedAt: prismaEntity.appliedAt,

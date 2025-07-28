@@ -1,4 +1,6 @@
 import { Result } from '@/libs/result';
+import { KeyFeature } from '../../project-key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '../../project-goals/domain/project-goals.entity';
 
 export type ApplicationStatus = 'PENDING' | 'APPROVAL' | 'REJECTED';
 
@@ -11,8 +13,8 @@ export type ProjectRoleApplicationData = {
   projectRoleId: string;
   status: ApplicationStatus;
   motivationLetter?: string;
-  selectedKeyFeatures: string[];
-  selectedProjectGoals: string[];
+  selectedKeyFeatures: { id: string; feature: string }[];
+  selectedProjectGoals: { id: string; goal: string }[];
   rejectionReason?: string;
   appliedAt?: Date;
   decidedAt?: Date;
@@ -42,8 +44,8 @@ export class ProjectRoleApplication {
   public readonly projectRoleId: string;
   public status: ApplicationStatus;
   public readonly motivationLetter?: string;
-  public readonly selectedKeyFeatures: string[];
-  public readonly selectedProjectGoals: string[];
+  public readonly selectedKeyFeatures: KeyFeature[];
+  public readonly selectedProjectGoals: ProjectGoals[];
   public rejectionReason?: string;
   public readonly appliedAt: Date;
   public decidedAt?: Date;
@@ -63,8 +65,8 @@ export class ProjectRoleApplication {
     projectRoleId: string;
     status: ApplicationStatus;
     motivationLetter?: string;
-    selectedKeyFeatures: string[];
-    selectedProjectGoals: string[];
+    selectedKeyFeatures: KeyFeature[];
+    selectedProjectGoals: ProjectGoals[];
     rejectionReason?: string;
     appliedAt?: Date;
     decidedAt?: Date;
@@ -90,6 +92,96 @@ export class ProjectRoleApplication {
     this.decidedAt = props.decidedAt;
     this.decidedBy = props.decidedBy;
     this.userProfile = props.userProfile!;
+  }
+
+  public static create(
+    props: Omit<ProjectRoleApplicationData, 'status'>,
+  ): Result<
+    ProjectRoleApplication,
+    ProjectRoleApplicationValidationErrors | string
+  > {
+    const propsWithStatus: ProjectRoleApplicationData = {
+      ...props,
+      status: 'PENDING',
+    };
+
+    const selectedKeyFeaturesResult = props.selectedKeyFeatures.map((kf) =>
+      KeyFeature.reconstitute({
+        id: kf.id,
+        projectId: props.projectId,
+        feature: kf.feature,
+      }),
+    );
+    const selectedProjectGoalsResult = props.selectedProjectGoals.map((pg) =>
+      ProjectGoals.reconstitute({
+        id: pg.id,
+        projectId: props.projectId,
+        goal: pg.goal,
+      }),
+    );
+
+    if (!selectedKeyFeaturesResult.every((kf) => kf.success)) {
+      return Result.fail('Invalid key features');
+    }
+
+    if (!selectedProjectGoalsResult.every((pg) => pg.success)) {
+      return Result.fail('Invalid project goals');
+    }
+    const validationResult = this.validate(propsWithStatus);
+    if (!validationResult.success) {
+      return Result.fail(validationResult.error);
+    }
+
+    return Result.ok(
+      new ProjectRoleApplication({
+        ...propsWithStatus,
+        selectedKeyFeatures: selectedKeyFeaturesResult.map((kf) => kf.value),
+        selectedProjectGoals: selectedProjectGoalsResult.map((pg) => pg.value),
+      }),
+    );
+  }
+
+  public static reconstitute(
+    props: ProjectRoleApplicationData,
+  ): Result<
+    ProjectRoleApplication,
+    ProjectRoleApplicationValidationErrors | string
+  > {
+    const validationResult = this.validate(props);
+    const selectedKeyFeaturesResult = props.selectedKeyFeatures.map((kf) =>
+      KeyFeature.reconstitute({
+        id: kf.id,
+        projectId: props.projectId,
+        feature: kf.feature,
+      }),
+    );
+    const selectedProjectGoalsResult = props.selectedProjectGoals.map((pg) =>
+      ProjectGoals.reconstitute({
+        id: pg.id,
+        projectId: props.projectId,
+        goal: pg.goal,
+      }),
+    );
+
+    if (!selectedKeyFeaturesResult.every((kf) => kf.success)) {
+      return Result.fail('Invalid key features');
+    }
+
+    if (!selectedProjectGoalsResult.every((pg) => pg.success)) {
+      return Result.fail('Invalid project goals');
+    }
+
+    if (!validationResult.success) {
+      return Result.fail(validationResult.error);
+    }
+
+    return Result.ok(
+      new ProjectRoleApplication({
+        ...props,
+        selectedKeyFeatures: selectedKeyFeaturesResult.map((kf) => kf.value),
+        selectedProjectGoals: selectedProjectGoalsResult.map((pg) => pg.value),
+      }),
+    );
   }
 
   private static validate(
@@ -138,40 +230,6 @@ export class ProjectRoleApplication {
 
     return Result.ok(undefined);
   }
-
-  public static create(
-    props: Omit<ProjectRoleApplicationData, 'status'>,
-  ): Result<
-    ProjectRoleApplication,
-    ProjectRoleApplicationValidationErrors | string
-  > {
-    const propsWithStatus: ProjectRoleApplicationData = {
-      ...props,
-      status: 'PENDING',
-    };
-
-    const validationResult = this.validate(propsWithStatus);
-    if (!validationResult.success) {
-      return Result.fail(validationResult.error);
-    }
-
-    return Result.ok(new ProjectRoleApplication(propsWithStatus));
-  }
-
-  public static reconstitute(
-    props: ProjectRoleApplicationData,
-  ): Result<
-    ProjectRoleApplication,
-    ProjectRoleApplicationValidationErrors | string
-  > {
-    const validationResult = this.validate(props);
-    if (!validationResult.success) {
-      return Result.fail(validationResult.error);
-    }
-
-    return Result.ok(new ProjectRoleApplication(props));
-  }
-
   public approve(
     decidedBy: string,
   ): Result<void, ProjectRoleApplicationValidationErrors | string> {
@@ -223,8 +281,14 @@ export class ProjectRoleApplication {
       projectRoleId: this.projectRoleId,
       status: this.status,
       motivationLetter: this.motivationLetter,
-      selectedKeyFeatures: [...this.selectedKeyFeatures],
-      selectedProjectGoals: [...this.selectedProjectGoals],
+      selectedKeyFeatures: this.selectedKeyFeatures.map((kf) => ({
+        id: kf.toPrimitive().id!,
+        feature: kf.toPrimitive().feature,
+      })),
+      selectedProjectGoals: this.selectedProjectGoals.map((pg) => ({
+        id: pg.toPrimitive().id!,
+        goal: pg.toPrimitive().goal,
+      })),
       rejectionReason: this.rejectionReason,
       appliedAt: this.appliedAt,
       decidedAt: this.decidedAt,

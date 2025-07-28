@@ -137,8 +137,8 @@ model ProjectRoleApplication {
   projectDescription String?  // Nouveau champ pour la description du projet
   status        String
   motivationLetter String?
-  selectedKeyFeatures String[]
-  selectedProjectGoals String[]
+  selectedKeyFeatures KeyFeature[] @relation("ProjectRoleApplicationKeyFeature")
+  selectedProjectGoals ProjectGoal[] @relation("ProjectRoleApplicationProjectGoal")
   rejectionReason String?
   appliedAt DateTime @default(now())
   createdAt     DateTime     @default(now())
@@ -174,6 +174,7 @@ model KeyFeature {
   projectId String
   feature   String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationKeyFeature")
 }
 
 model ProjectGoal {
@@ -181,4 +182,5 @@ model ProjectGoal {
   projectId String
   goal      String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationProjectGoal")
 }
