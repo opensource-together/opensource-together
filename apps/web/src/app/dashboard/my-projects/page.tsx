@@ -1,5 +1,5 @@
-import MyProjectView from "@/features/dashboard/views/my-projects.view";
+import MyProjectsView from "@/features/dashboard/views/my-projects.view";
 
 export default function MyProjectsPage() {
-  return <MyProjectView />;
+  return <MyProjectsView />;
 }
