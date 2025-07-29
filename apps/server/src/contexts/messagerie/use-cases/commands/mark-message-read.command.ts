@@ -75,7 +75,9 @@ export class MarkMessageAsReadCommandHandler
 
       return Result.ok(undefined);
     } catch (error) {
-      return Result.fail(`Failed to mark message as read: ${error.message}`);
+      return Result.fail(
+        `Failed to mark message as read: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

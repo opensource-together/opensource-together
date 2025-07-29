@@ -16,7 +16,7 @@ export class MessageTypeConverter {
       case DomainMessageType.SYSTEM:
         return PrismaMessageType.SYSTEM;
       default:
-        throw new Error(`Unknown domain message type: ${domainType}`);
+        throw new Error(`Unknown domain message type: ${String(domainType)}`);
     }
   }
 
@@ -34,7 +34,7 @@ export class MessageTypeConverter {
       case PrismaMessageType.SYSTEM:
         return DomainMessageType.SYSTEM;
       default:
-        throw new Error(`Unknown prisma message type: ${prismaType}`);
+        throw new Error(`Unknown prisma message type: ${String(prismaType)}`);
     }
   }
 }

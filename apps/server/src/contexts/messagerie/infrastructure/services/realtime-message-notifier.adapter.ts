@@ -16,11 +16,11 @@ export class RealtimeMessageNotifierAdapter {
   /**
    * Envoie un message à tous les participants d'une room
    */
-  async sendMessageToRoom(
+  async sendMessageToChat(
     roomId: string,
     message: MessageData,
   ): Promise<string | null> {
-    return await this.messageGateway.sendMessageToRoom(roomId, message);
+    return this.messageGateway.sendMessageToChat(roomId, message);
   }
 
   /**
@@ -31,25 +31,21 @@ export class RealtimeMessageNotifierAdapter {
     messageId: string,
     userId: string,
   ): Promise<string | null> {
-    return await this.messageGateway.notifyMessageRead(
-      roomId,
-      messageId,
-      userId,
-    );
+    return this.messageGateway.notifyMessageRead(roomId, messageId, userId);
   }
 
   /**
    * Fait rejoindre un utilisateur à une room
    */
-  async joinRoom(userId: string, roomId: string): Promise<string | null> {
-    return await this.messageGateway.joinRoom(userId, roomId);
+  joinChat(userId: string, roomId: string): string | null {
+    return this.messageGateway.joinChat(userId, roomId);
   }
 
   /**
    * Fait quitter un utilisateur d'une room
    */
-  async leaveRoom(userId: string, roomId: string): Promise<string | null> {
-    return await this.messageGateway.leaveRoom(userId, roomId);
+  leaveChat(userId: string, roomId: string): string | null {
+    return this.messageGateway.leaveChat(userId, roomId);
   }
 
   /**
@@ -60,7 +56,7 @@ export class RealtimeMessageNotifierAdapter {
     userId: string,
     isTyping: boolean,
   ): Promise<string | null> {
-    return await this.messageGateway.notifyUserTyping(roomId, userId, isTyping);
+    return this.messageGateway.notifyUserTyping(roomId, userId, isTyping);
   }
 
   /**
@@ -70,34 +66,27 @@ export class RealtimeMessageNotifierAdapter {
     userId: string,
     isOnline: boolean,
   ): Promise<string | null> {
-    return await this.messageGateway.notifyUserOnlineStatus(userId, isOnline);
+    return this.messageGateway.notifyUserOnlineStatus(userId, isOnline);
   }
 
   /**
    * Notifie qu'une nouvelle room a été créée
    */
-  async notifyRoomCreated(roomData: RoomData): Promise<string | null> {
-    return await this.messageGateway.notifyRoomCreated(roomData);
-  }
-
-  /**
-   * Notifie qu'une room a été mise à jour
-   */
-  async notifyRoomUpdated(roomData: RoomData): Promise<string | null> {
-    return await this.messageGateway.notifyRoomUpdated(roomData);
+  notifyChatCreated(roomData: RoomData): string | null {
+    return this.messageGateway.notifyChatCreated(roomData);
   }
 
   /**
    * Récupère la liste des utilisateurs connectés dans une room
    */
-  async getConnectedUsersInRoom(roomId: string): Promise<string[]> {
-    return await this.messageGateway.getConnectedUsersInRoom(roomId);
+  getConnectedUsersInChat(): string[] {
+    return [];
   }
 
   /**
    * Vérifie si un utilisateur est connecté
    */
-  async getUserConnectionStatus(userId: string): Promise<boolean> {
-    return await this.messageGateway.getUserConnectionStatus(userId);
+  getUserConnectionStatus(userId: string): boolean {
+    return this.messageGateway.getUserConnectionStatus(userId);
   }
 }

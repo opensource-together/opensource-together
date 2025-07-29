@@ -42,7 +42,7 @@ export class MessageEventsListener {
 
       if (messageResult.success && messageResult.value) {
         // Diffuser le message à tous les participants de la room
-        await this.realtimeAdapter.sendMessageToRoom(
+        await this.realtimeAdapter.sendMessageToChat(
           event.roomId,
           messageResult.value,
         );
@@ -94,7 +94,7 @@ export class MessageEventsListener {
 
       if (roomResult.success && roomResult.value) {
         // Notifier tous les participants de la création de la room
-        await this.realtimeAdapter.notifyRoomCreated(roomResult.value);
+        this.realtimeAdapter.notifyChatCreated(roomResult.value);
       }
     } catch (error) {
       console.error('Error handling room.created event:', error);
@@ -105,14 +105,14 @@ export class MessageEventsListener {
    * 👥 Participants ont rejoint la room
    */
   @OnEvent('room.participants.joined')
-  async handleRoomParticipantsJoined(event: {
+  handleRoomParticipantsJoined(event: {
     roomId: string;
     participants: string[];
   }) {
     try {
       // Faire rejoindre chaque participant à la room WebSocket
       for (const userId of event.participants) {
-        await this.realtimeAdapter.joinRoom(userId, event.roomId);
+        this.realtimeAdapter.joinChat(userId, event.roomId);
       }
     } catch (error) {
       console.error('Error handling room.participants.joined event:', error);
@@ -137,7 +137,7 @@ export class MessageEventsListener {
 
       if (roomResult.success && roomResult.value) {
         // Notifier la mise à jour de la room (pour trier les rooms par activité)
-        await this.realtimeAdapter.notifyRoomUpdated(roomResult.value);
+        // await this.realtimeAdapter.notifyChatUpdated(roomResult.value);
       }
     } catch (error) {
       console.error('Error handling room.message.added event:', error);
@@ -149,7 +149,7 @@ export class MessageEventsListener {
    * Peut être utilisé pour envoyer des notifications push, email, etc.
    */
   @OnEvent('messaging.notification')
-  async handleMessagingNotification(event: {
+  handleMessagingNotification(event: {
     type: 'new_message' | 'message_read' | 'room_created' | 'user_joined';
     userId: string;
     roomId: string;
@@ -174,7 +174,7 @@ export class MessageEventsListener {
    * 🚨 Gestion des erreurs de messagerie
    */
   @OnEvent('messaging.error')
-  async handleMessagingError(event: {
+  handleMessagingError(event: {
     error: string;
     context: Record<string, unknown>;
     userId?: string;

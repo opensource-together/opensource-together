@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
@@ -17,28 +17,13 @@ import { RealtimeMessageNotifierAdapter } from './services/realtime-message-noti
 import { MessageEventsListener } from './listeners/message-events.listener';
 
 // Commands
-import {
-  SendMessageCommand,
-  SendMessageCommandHandler,
-} from '../use-cases/commands/send-message.command';
-import {
-  CreateRoomCommand,
-  CreateRoomCommandHandler,
-} from '../use-cases/commands/create-room.command';
-import {
-  MarkMessageAsReadCommand,
-  MarkMessageAsReadCommandHandler,
-} from '../use-cases/commands/mark-message-read.command';
+import { SendMessageCommandHandler } from '../use-cases/commands/send-message.command';
+import { CreateRoomCommandHandler } from '../use-cases/commands/create-room.command';
+import { MarkMessageAsReadCommandHandler } from '../use-cases/commands/mark-message-read.command';
 
 // Queries
-import {
-  GetMessagesQuery,
-  GetMessagesQueryHandler,
-} from '../use-cases/queries/get-messages.query';
-import {
-  GetUserRoomsQuery,
-  GetUserRoomsQueryHandler,
-} from '../use-cases/queries/get-user-rooms.query';
+import { GetMessagesQueryHandler } from '../use-cases/queries/get-messages.query';
+import { GetUserRoomsQueryHandler } from '../use-cases/queries/get-user-rooms.query';
 
 // Ports
 import { MESSAGE_SERVICE_PORT } from '../use-cases/ports/message.service.port';

@@ -6,7 +6,7 @@ import {
   MessageServicePort,
   GetMessagesPayload,
 } from '../ports/message.service.port';
-import { Message, MessageData } from '../../domain/message.entity';
+import { Message } from '../../domain/message.entity';
 
 export class GetMessagesQuery implements IQuery {
   constructor(public readonly payload: GetMessagesPayload) {}
@@ -57,7 +57,9 @@ export class GetMessagesQueryHandler
 
       return Result.ok(validMessages);
     } catch (error) {
-      return Result.fail(`Failed to get messages: ${error.message}`);
+      return Result.fail(
+        `Failed to get messages: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

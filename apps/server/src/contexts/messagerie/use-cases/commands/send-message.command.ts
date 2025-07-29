@@ -7,7 +7,7 @@ import {
   MessageServicePort,
   SendMessagePayload,
 } from '../ports/message.service.port';
-import { MessageData, MessageType } from '../../domain/message.entity';
+import { MessageData } from '../../domain/message.entity';
 
 export class SendMessageCommand implements ICommand {
   constructor(public readonly payload: SendMessagePayload) {}
@@ -72,7 +72,9 @@ export class SendMessageCommandHandler
 
       return Result.ok(message);
     } catch (error) {
-      return Result.fail(`Failed to send message: ${error.message}`);
+      return Result.fail(
+        `Failed to send message: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

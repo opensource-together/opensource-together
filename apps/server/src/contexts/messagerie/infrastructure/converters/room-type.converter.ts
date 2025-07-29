@@ -14,7 +14,7 @@ export class RoomTypeConverter {
       case DomainRoomType.SYSTEM:
         return PrismaRoomType.SYSTEM;
       default:
-        throw new Error(`Unknown domain room type: ${domainType}`);
+        throw new Error(`Unknown domain room type: ${String(domainType)}`);
     }
   }
 
@@ -30,7 +30,7 @@ export class RoomTypeConverter {
       case PrismaRoomType.SYSTEM:
         return DomainRoomType.SYSTEM;
       default:
-        throw new Error(`Unknown prisma room type: ${prismaType}`);
+        throw new Error(`Unknown prisma room type: ${String(prismaType)}`);
     }
   }
 }

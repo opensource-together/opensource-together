@@ -18,8 +18,9 @@ interface AuthenticatedSocket extends Socket {
 
 import { MessageGatewayPort } from '../../use-cases/ports/message.gateway.port';
 import { MessageData } from '../../domain/message.entity';
-import { RoomData } from '../../domain/room.entity';
+import { Room, RoomData } from '../../domain/room.entity';
 import { GetUserRoomsQuery } from '../../use-cases/queries/get-user-rooms.query';
+import { Result } from '@/libs/result';
 
 /**
  * Gateway WebSocket pour la messagerie - VERSION SIMPLIFIÉE
@@ -69,7 +70,7 @@ export class MessagerieGateway
       this.logger.log(`User ${userId} connected to messaging`);
 
       // Auto-rejoindre tous ses chats existants
-      await this.autoJoinUserChats(userId); // 🚫 DÉSACTIVÉ POUR TEST
+      await this.autoJoinUserChats(userId);
     } catch (error) {
       this.logger.error(`Connection error for socket ${client.id}:`, error);
       client.disconnect();
@@ -93,14 +94,14 @@ export class MessagerieGateway
    * 💬 Rejoindre un chat spécifique pour écouter ses messages
    */
   @SubscribeMessage('join-chat')
-  async handleJoinChat(
+  handleJoinChat(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() data: { chatId: string },
-  ): Promise<void> {
+  ): void {
     const userId = client.userId;
     if (!userId) return;
 
-    await this.joinChat(userId, data.chatId);
+    this.joinChat(userId, data.chatId);
   }
 
   /**
@@ -108,9 +109,7 @@ export class MessagerieGateway
    * Utile pour l'interface principale avec la liste des discussions
    */
   @SubscribeMessage('listen-all-chats')
-  async handleListenAllChats(
-    @ConnectedSocket() client: AuthenticatedSocket,
-  ): Promise<void> {
+  handleListenAllChats(@ConnectedSocket() client: AuthenticatedSocket): void {
     const userId = client.userId;
     if (!userId) return;
 
@@ -120,22 +119,20 @@ export class MessagerieGateway
   }
 
   @SubscribeMessage('leave-chat')
-  async handleLeaveChat(
+  handleLeaveChat(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() data: { chatId: string },
-  ): Promise<void> {
+  ): void {
     const userId = client.userId;
     if (!userId) return;
-    await this.leaveChat(userId, data.chatId);
+    this.leaveChat(userId, data.chatId);
   }
 
   @SubscribeMessage('leave-all-chats')
-  async handleLeaveAllChats(
-    @ConnectedSocket() client: AuthenticatedSocket,
-  ): Promise<void> {
+  handleLeaveAllChats(@ConnectedSocket() client: AuthenticatedSocket): void {
     const userId = client.userId;
     if (!userId) return;
-    await this.leaveAllChats(userId);
+    this.leaveAllChats(userId);
   }
 
   // === Implémentation MessageGatewayPort ===
@@ -143,7 +140,7 @@ export class MessagerieGateway
   /**
    * Envoie un nouveau message à tous les participants d'un chat
    */
-  async sendMessageToRoom(
+  async sendMessageToChat(
     roomId: string,
     message: MessageData,
   ): Promise<string | null> {
@@ -157,64 +154,52 @@ export class MessagerieGateway
 
       // Envoyer aux utilisateurs écoutant leurs chats globaux
       // (pour mettre à jour la liste des discussions)
-      this.notifyGlobalChatUpdate(roomId, message);
+      await this.notifyGlobalChatUpdate(roomId, message);
 
       this.logger.log(`Message sent to chat ${roomId}: ${message.id}`);
       return null;
     } catch (error) {
       this.logger.error(`Failed to send message to chat ${roomId}:`, error);
-      return `Failed to send: ${error.message}`;
+      return `Failed to send: ${error}`;
     }
   }
 
-  async joinRoom(userId: string, roomId: string): Promise<string | null> {
-    return await this.joinChat(userId, roomId);
+  async autoJoinUserChats(userId: string): Promise<void> {
+    return await this.autoJoinUserChatsInternal(userId);
   }
 
-  async leaveRoom(userId: string, roomId: string): Promise<string | null> {
-    // Implémentation simplifiée - pas nécessaire pour le MVP
-    return null;
+  joinChat(userId: string, chatId: string): string | null {
+    return this.joinChatInternal(userId, chatId);
+  }
+  leaveChat(userId: string, chatId: string): string | null {
+    return this.leaveChatInternal(userId, chatId);
+  }
+  leaveAllChats(userId: string): string | null {
+    return this.leaveAllChatsInternal(userId);
   }
 
   // Méthodes non utilisées dans la version simplifiée
   async notifyMessageRead(): Promise<string | null> {
-    return null;
+    return await Promise.resolve(null);
   }
   async notifyUserTyping(): Promise<string | null> {
-    return null;
+    return await Promise.resolve(null);
   }
   async notifyUserOnlineStatus(): Promise<string | null> {
+    return await Promise.resolve(null);
+  }
+  notifyChatCreated(roomData: RoomData): string | null {
+    this.notifyChatCreatedInternal(roomData);
     return null;
   }
-  async notifyRoomCreated(roomData: RoomData): Promise<string | null> {
-    // Notifier la création du chat aux participants
-    roomData.participants.forEach((userId) => {
-      const socket = this.userSockets.get(userId);
-      if (socket) {
-        socket.emit('chat-created', {
-          chat: roomData,
-          timestamp: new Date(),
-        });
-      }
-    });
-    return null;
-  }
-  async notifyRoomUpdated(): Promise<string | null> {
-    return null;
-  }
-  async getConnectedUsersInRoom(): Promise<string[]> {
-    return [];
-  }
-  async getUserConnectionStatus(userId: string): Promise<boolean> {
+
+  getUserConnectionStatus(userId: string): boolean {
     return this.userSockets.has(userId);
   }
 
   // === Méthodes privées ===
 
-  private async joinChat(
-    userId: string,
-    chatId: string,
-  ): Promise<string | null> {
+  private joinChatInternal(userId: string, chatId: string): string | null {
     try {
       const socket = this.userSockets.get(userId);
       if (!socket) {
@@ -234,14 +219,11 @@ export class MessagerieGateway
       return null;
     } catch (error) {
       this.logger.error(`Failed to join chat:`, error);
-      return `Failed to join: ${error.message}`;
+      return `Failed to join: ${error}`;
     }
   }
 
-  private async leaveChat(
-    userId: string,
-    chatId: string,
-  ): Promise<string | null> {
+  private leaveChatInternal(userId: string, chatId: string): string | null {
     try {
       const socket = this.userSockets.get(userId);
       if (!socket) {
@@ -255,11 +237,11 @@ export class MessagerieGateway
       return null;
     } catch (error) {
       this.logger.error(`Failed to leave chat:`, error);
-      return `Failed to leave: ${error.message}`;
+      return `Failed to leave: ${error}`;
     }
   }
 
-  private async leaveAllChats(userId: string): Promise<string | null> {
+  private leaveAllChatsInternal(userId: string): string | null {
     try {
       const socket = this.userSockets.get(userId);
       if (!socket) {
@@ -274,14 +256,14 @@ export class MessagerieGateway
       return null;
     } catch (error) {
       this.logger.error(`Failed to leave chat:`, error);
-      return `Failed to leave: ${error.message}`;
+      return `Failed to leave: ${error}`;
     }
   }
 
-  private async autoJoinUserChats(userId: string): Promise<void> {
+  private async autoJoinUserChatsInternal(userId: string): Promise<void> {
     try {
       // Récupérer tous les chats de l'utilisateur
-      const chatsResult = await this.queryBus.execute(
+      const chatsResult: Result<Room[], string> = await this.queryBus.execute(
         new GetUserRoomsQuery({ userId }),
       );
 
@@ -293,15 +275,30 @@ export class MessagerieGateway
       }
 
       // Auto-rejoindre tous ses chats
-      const chats = chatsResult.value;
+      const chats: Room[] = chatsResult.value;
       this.logger.log(`Auto-joining ${chats.length} chats for user ${userId}`);
 
       for (const chat of chats) {
-        await this.joinChat(userId, chat.id);
+        const chatId = chat.getId();
+        if (chatId) {
+          this.joinChat(userId, chatId);
+        }
       }
     } catch (error) {
       this.logger.error(`Failed to auto-join chats for user ${userId}:`, error);
     }
+  }
+
+  private notifyChatCreatedInternal(chat: RoomData): void {
+    chat.participants.forEach((userId) => {
+      const socket = this.userSockets.get(userId);
+      if (socket) {
+        socket.emit('chat-created', {
+          chat,
+          timestamp: new Date(),
+        });
+      }
+    });
   }
 
   private async notifyGlobalChatUpdate(
@@ -310,15 +307,15 @@ export class MessagerieGateway
   ): Promise<void> {
     try {
       // Récupérer tous les participants du chat
-      const chatsResult = await this.queryBus.execute(
+      const chatsResult: Result<Room[], string> = await this.queryBus.execute(
         new GetUserRoomsQuery({ userId: lastMessage.senderId }),
       );
 
       if (chatsResult.success) {
-        const chat = chatsResult.value.find((c) => c.id === chatId);
+        const chat = chatsResult.value.find((c) => c.getId() === chatId);
         if (chat) {
           // Notifier tous les participants sur leur canal global
-          chat.participants.forEach((userId) => {
+          chat.getParticipants().forEach((userId) => {
             this.server.to(`user-global:${userId}`).emit('chat-updated', {
               chatId,
               lastMessage,

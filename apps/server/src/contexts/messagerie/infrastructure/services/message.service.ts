@@ -69,7 +69,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(messageData);
     } catch (error) {
-      return Result.fail(`Failed to send message: ${error.message}`);
+      return Result.fail(
+        `Failed to send message: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -104,7 +106,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(messageData);
     } catch (error) {
-      return Result.fail(`Failed to get messages: ${error.message}`);
+      return Result.fail(
+        `Failed to get messages: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -138,7 +142,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(messageData);
     } catch (error) {
-      return Result.fail(`Failed to get message: ${error.message}`);
+      return Result.fail(
+        `Failed to get message: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -197,7 +203,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(roomData);
     } catch (error) {
-      return Result.fail(`Failed to create room: ${error.message}`);
+      return Result.fail(
+        `Failed to create room: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -232,7 +240,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(roomData);
     } catch (error) {
-      return Result.fail(`Failed to get direct room: ${error.message}`);
+      return Result.fail(
+        `Failed to get direct room: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -267,7 +277,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(roomData);
     } catch (error) {
-      return Result.fail(`Failed to get user rooms: ${error.message}`);
+      return Result.fail(
+        `Failed to get user rooms: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -304,7 +316,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(roomData);
     } catch (error) {
-      return Result.fail(`Failed to get room: ${error.message}`);
+      return Result.fail(
+        `Failed to get room: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -332,7 +346,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(undefined);
     } catch (error) {
-      return Result.fail(`Failed to mark message as read: ${error.message}`);
+      return Result.fail(
+        `Failed to mark message as read: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -371,7 +387,7 @@ export class MessageService implements MessageServicePort {
       return Result.ok(undefined);
     } catch (error) {
       return Result.fail(
-        `Failed to mark all messages as read: ${error.message}`,
+        `Failed to mark all messages as read: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -393,7 +409,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(!!room);
     } catch (error) {
-      return Result.fail(`Failed to check room access: ${error.message}`);
+      return Result.fail(
+        `Failed to check room access: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -415,7 +433,9 @@ export class MessageService implements MessageServicePort {
 
       return Result.ok(count);
     } catch (error) {
-      return Result.fail(`Failed to get unread count: ${error.message}`);
+      return Result.fail(
+        `Failed to get unread count: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

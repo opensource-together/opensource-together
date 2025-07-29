@@ -6,7 +6,7 @@ import {
   MessageServicePort,
   GetUserRoomsPayload,
 } from '../ports/message.service.port';
-import { Room, RoomData } from '../../domain/room.entity';
+import { Room } from '../../domain/room.entity';
 
 export class GetUserRoomsQuery implements IQuery {
   constructor(public readonly payload: GetUserRoomsPayload) {}
@@ -41,7 +41,9 @@ export class GetUserRoomsQueryHandler
 
       return Result.ok(validRooms);
     } catch (error) {
-      return Result.fail(`Failed to get user rooms: ${error.message}`);
+      return Result.fail(
+        `Failed to get user rooms: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

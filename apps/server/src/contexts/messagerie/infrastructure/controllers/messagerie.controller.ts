@@ -20,14 +20,14 @@ import {
   ApiResponse,
   ApiCookieAuth,
 } from '@nestjs/swagger';
-import {
-  SendMessageRequestDto,
-  CreateRoomRequestDto,
-} from './dto/send-message-request.dto';
+import { CreateRoomRequestDto } from './dto/send-message-request.dto';
 import { SendMessageCommand } from '../../use-cases/commands/send-message.command';
 import { CreateRoomCommand } from '../../use-cases/commands/create-room.command';
 import { GetMessagesQuery } from '../../use-cases/queries/get-messages.query';
 import { GetUserRoomsQuery } from '../../use-cases/queries/get-user-rooms.query';
+import { Result } from '@/libs/result';
+import { Room } from '@/contexts/messagerie/domain/room.entity';
+import { Message } from '@/contexts/messagerie/domain/message.entity';
 
 /**
  * 🎮 Controller REST pour la messagerie - VERSION SIMPLIFIÉE
@@ -134,7 +134,7 @@ export class MessagerieController {
       description: dto.description,
     });
 
-    const result = await this.commandBus.execute(command);
+    const result: Result<Room> = await this.commandBus.execute(command);
 
     if (!result.success) {
       return {
@@ -219,7 +219,7 @@ export class MessagerieController {
     @Param('chatId') chatId: string,
     @Body() dto: { content: string },
   ) {
-    const command = await this.commandBus.execute(
+    const command: Result<Message> = await this.commandBus.execute(
       new SendMessageCommand({
         roomId: chatId,
         senderId,
@@ -319,7 +319,7 @@ export class MessagerieController {
       offset: offset ? parseInt(offset, 10) : 0,
     });
 
-    const result = await this.queryBus.execute(query);
+    const result: Result<Message[]> = await this.queryBus.execute(query);
 
     if (!result.success) {
       return {
@@ -406,7 +406,7 @@ export class MessagerieController {
       offset: 0,
     });
 
-    const result = await this.queryBus.execute(query);
+    const result: Result<Room[]> = await this.queryBus.execute(query);
 
     if (!result.success) {
       return {

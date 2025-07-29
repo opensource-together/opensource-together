@@ -47,7 +47,9 @@ export class CreateRoomCommandHandler
 
       return Result.ok(room);
     } catch (error) {
-      return Result.fail(`Failed to create room: ${error.message}`);
+      return Result.fail(
+        `Failed to create room: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

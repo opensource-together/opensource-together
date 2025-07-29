@@ -3,7 +3,7 @@ import { RoomData } from '../../domain/room.entity';
 
 export interface MessageGatewayPort {
   // 📨 Envoi de messages en temps réel
-  sendMessageToRoom(
+  sendMessageToChat(
     roomId: string,
     message: MessageData,
   ): Promise<string | null>;
@@ -16,8 +16,10 @@ export interface MessageGatewayPort {
   ): Promise<string | null>;
 
   // 🏠 Gestion des rooms
-  joinRoom(userId: string, roomId: string): Promise<string | null>;
-  leaveRoom(userId: string, roomId: string): Promise<string | null>;
+  joinChat(userId: string, roomId: string): string | null;
+  leaveChat(userId: string, roomId: string): string | null;
+  autoJoinUserChats(userId: string): Promise<void>;
+  leaveAllChats(userId: string): string | null;
 
   // 👥 Notifications de présence (typing, online/offline)
   notifyUserTyping(
@@ -31,12 +33,11 @@ export interface MessageGatewayPort {
   ): Promise<string | null>;
 
   // 🔔 Notifications système
-  notifyRoomCreated(roomData: RoomData): Promise<string | null>;
-  notifyRoomUpdated(roomData: RoomData): Promise<string | null>;
+  notifyChatCreated(roomData: RoomData): string | null;
 
   // 📊 Métriques
-  getConnectedUsersInRoom(roomId: string): Promise<string[]>;
-  getUserConnectionStatus(userId: string): Promise<boolean>;
+  // getConnectedUsersInChat(roomId: string): Promise<string[]>;
+  getUserConnectionStatus(userId: string): boolean;
 }
 
 export const MESSAGE_GATEWAY_PORT = Symbol('MESSAGE_GATEWAY_PORT');
