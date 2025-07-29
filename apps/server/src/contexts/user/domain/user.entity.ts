@@ -6,6 +6,8 @@ import { Result } from '@/libs/result';
 import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
+export type UserPublic = Omit<User, 'email' | 'login'>;
+
 export class User {
   private readonly id: string;
   private username: Username;
@@ -289,8 +291,20 @@ export class User {
     return Result.ok('Email updated successfully');
   }
 
+  public hideEmail(hide: boolean) {
+    if (hide) {
+      this.email = this.email.hideEmail();
+    }
+  }
+
+  public hideLogin(hide: boolean) {
+    if (hide) {
+      this.login = '';
+    }
+  }
+
   public updateProfile(props: {
-    // name?: string;
+    username?: string;
     login?: string;
     avatarUrl?: string;
     location?: string;
@@ -308,7 +322,11 @@ export class User {
       return Result.fail('Bio must be less than 1000 characters.');
     }
 
-    // if (props.name) this.name = props.name;
+    if (props.username) {
+      const usernameVo = Username.create(props.username);
+      if (!usernameVo.success) return Result.fail(usernameVo.error);
+      this.username = usernameVo.value;
+    }
     if (props.login) this.login = props.login;
     if (props.avatarUrl !== undefined) this.avatarUrl = props.avatarUrl;
     if (props.location !== undefined) this.location = props.location;

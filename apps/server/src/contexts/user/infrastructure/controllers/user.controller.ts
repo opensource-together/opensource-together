@@ -14,7 +14,7 @@ import {
   HttpException,
   HttpStatus,
   NotFoundException,
-  ForbiddenException,
+  // ForbiddenException,
 } from '@nestjs/common';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import {
@@ -26,30 +26,30 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Session, PublicAccess } from 'supertokens-nestjs';
-
+import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
 // DTO simple pour la mise à jour d'utilisateur
-export class UpdateUserRequestDto {
-  name?: string;
-  avatarUrl?: string;
-  bio?: string;
-  location?: string;
-  company?: string;
-  socialLinks?: {
-    github?: string;
-    website?: string;
-    twitter?: string;
-    linkedin?: string;
-    discord?: string;
-  };
-  techStacks?: string[];
-  experiences?: {
-    company: string;
-    position: string;
-    startDate: string;
-    endDate?: string;
-  }[];
-  projects?: { name: string; description: string; url: string }[];
-}
+// export class UpdateUserRequestDto {
+//   username?: string;
+//   avatarUrl?: string;
+//   bio?: string;
+//   location?: string;
+//   company?: string;
+//   socialLinks?: {
+//     github?: string;
+//     website?: string;
+//     twitter?: string;
+//     linkedin?: string;
+//     discord?: string;
+//   };
+//   techStacks?: string[];
+//   experiences?: {
+//     company: string;
+//     position: string;
+//     startDate: string;
+//     endDate?: string;
+//   }[];
+//   projects?: { name: string; description: string; url: string }[];
+// }
 
 @ApiTags('User')
 @Controller('user')
@@ -59,50 +59,41 @@ export class UserController {
     private readonly commandBus: CommandBus,
   ) {}
 
+  //PRIVATE ENDPOINTS
+
   @Get('me')
   @ApiOperation({ summary: "Récupérer le profil de l'utilisateur courant" })
   @ApiCookieAuth('sAccessToken')
   @ApiResponse({
     status: 200,
     description: 'Profil utilisateur retourné avec succès',
+    example: {
+      id: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
+      username: 'Lhourquin',
+      email: 'lhourquin@gmail.com',
+      login: 'Lhourquin',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+      location: '',
+      company: '',
+      bio: 'Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together ',
+      socialLinks: {},
+      techStacks: [],
+      experiences: [],
+      projects: [],
+      createdAt: '2025-07-29T08:07:32.845Z',
+      updatedAt: '2025-07-29T08:07:32.845Z',
+    },
   })
   @ApiResponse({
     status: 404,
     description: 'Utilisateur non trouvé',
   })
   async getMyProfile(@Session('userId') userId: string) {
-    console.log('userId', userId);
     const result: Result<User, string> = await this.queryBus.execute(
-      new FindUserByIdQuery(userId),
-    );
-    console.log('result', result);
-
-    if (!result.success) {
-      throw new NotFoundException(result.error);
-    }
-
-    return result.value.toPrimitive();
-  }
-
-  @PublicAccess()
-  @Get(':id')
-  @ApiOperation({ summary: 'Récupérer un utilisateur par son ID' })
-  @ApiParam({
-    name: 'id',
-    description: "ID de l'utilisateur",
-    example: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Utilisateur retourné avec succès',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Utilisateur non trouvé',
-  })
-  async getUserById(@Param('id') id: string) {
-    const result: Result<User, string> = await this.queryBus.execute(
-      new FindUserByIdQuery(id),
+      new FindUserByIdQuery({
+        userId,
+        authenticatedUserId: userId,
+      }),
     );
 
     if (!result.success) {
@@ -180,8 +171,8 @@ export class UserController {
     return { message: 'User deleted successfully' };
   }
 
-  @Get('applications')
-  @ApiCookieAuth()
+  @Get('me/applications')
+  @ApiCookieAuth('sAccessToken')
   @ApiOperation({ summary: 'Get all applications for a user' })
   @ApiResponse({
     status: 200,
@@ -227,5 +218,40 @@ export class UserController {
     }
 
     return applications.value;
+  }
+
+  //PUBLIC ENDPOINTS
+  @PublicAccess()
+  @Get(':id')
+  @ApiOperation({ summary: 'Récupérer un utilisateur par son ID' })
+  @ApiParam({
+    name: 'id',
+    description: "ID de l'utilisateur",
+    example: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Utilisateur retourné avec succès',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Utilisateur non trouvé',
+  })
+  async getUserById(@Param('id') id: string) {
+    const result: Result<
+      Omit<User, 'email' | 'login'>,
+      string
+    > = await this.queryBus.execute(
+      new FindUserByIdQuery({
+        userId: id,
+        authenticatedUserId: '',
+      }),
+    );
+
+    if (!result.success) {
+      throw new NotFoundException(result.error);
+    }
+
+    return result.value.toPrimitive();
   }
 }

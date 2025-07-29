@@ -15,7 +15,7 @@ export class UpdateUserCommand implements ICommand {
   constructor(
     public readonly userId: string,
     public readonly props: {
-      name?: string;
+      username?: string;
       avatarUrl?: string;
       bio?: string;
       location?: string;
@@ -82,7 +82,7 @@ export class UpdateUserCommandHandler
 
     // Mettre à jour les autres propriétés du profil
     const updateResult = existingUser.updateProfile({
-      // name: props.name,
+      username: props.username,
       avatarUrl: props.avatarUrl,
       bio: props.bio,
       location: props.location,
