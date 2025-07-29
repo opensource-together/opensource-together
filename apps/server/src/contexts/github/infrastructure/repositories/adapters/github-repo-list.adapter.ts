@@ -8,7 +8,16 @@ export function toGithubRepoListInput<T extends GithubRepositoryDto>(
   data: T,
 ): Result<GithubRepoListInput> {
   try {
-    const input = plainToInstance(GithubRepoListInput, data);
+    // Transformer les propriétés pour correspondre à GithubRepoListInput
+    const transformedData = {
+      owner: data.owner.login,
+      title: data.name,
+      description: data.description || '',
+      url: data.html_url,
+      readme: '',
+    };
+
+    const input = plainToInstance(GithubRepoListInput, transformedData);
     const validationErrors = validateSync(input);
     if (validationErrors.length > 0) {
       return Result.fail(validationErrors.toString());
