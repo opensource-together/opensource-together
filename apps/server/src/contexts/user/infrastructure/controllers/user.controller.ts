@@ -27,6 +27,8 @@ import {
 } from '@nestjs/swagger';
 import { Session, PublicAccess } from 'supertokens-nestjs';
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
+import { Project } from '@/contexts/project/domain/project.entity';
+import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
 // DTO simple pour la mise à jour d'utilisateur
 // export class UpdateUserRequestDto {
 //   username?: string;
@@ -253,5 +255,33 @@ export class UserController {
     }
 
     return result.value.toPrimitive();
+  }
+
+  @PublicAccess()
+  @Get(':userId/projects')
+  @ApiOperation({ summary: "Récupérer les projets d'un utilisateur" })
+  @ApiParam({
+    name: 'userId',
+    description: "ID de l'utilisateur",
+    example: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Projets retournés avec succès',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Utilisateur non trouvé',
+  })
+  async getUserProjects(@Param('userId') userId: string) {
+    const result: Result<Project[], string> = await this.queryBus.execute(
+      new FindProjectsByUserIdQuery(userId),
+    );
+
+    if (!result.success) {
+      throw new NotFoundException(result.error);
+    }
+
+    return result.value.map((_) => _.toPrimitive());
   }
 }

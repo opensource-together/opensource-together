@@ -8,8 +8,9 @@ import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project/bou
 import { PrismaProjectRoleApplicationRepository } from '@/contexts/project/bounded-contexts/project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
 import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
+import { ProjectInfrastructure } from '@/contexts/project/infrastructure/project.infrastructure';
 @Module({
-  imports: [PersistenceInfrastructure],
+  imports: [PersistenceInfrastructure, ProjectInfrastructure],
   providers: [
     {
       provide: USER_REPOSITORY_PORT,
