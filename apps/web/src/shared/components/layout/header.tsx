@@ -64,8 +64,8 @@ export default function Header() {
   const handleProfile = () =>
     requireAuth(() => router.push("/profile"), "/profile");
 
-  const handleCollaboration = () =>
-    requireAuth(() => router.push("/collaboration"), "/collaboration");
+  const handleDashboard = () =>
+    requireAuth(() => router.push("/dashboard"), "/dashboard");
 
   const handleLogout = () => {
     logout();
@@ -92,11 +92,11 @@ export default function Header() {
 
             {/* Dashboard */}
             {isAuthenticated ? (
-              <NavLink href="/collaboration">Gestion de projet</NavLink>
+              <NavLink href="/dashboard">Gestion de projet</NavLink>
             ) : (
               <Button
                 variant="ghost"
-                onClick={handleCollaboration}
+                onClick={handleDashboard}
                 className="flex h-auto items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
               >
                 Gestion de projet
@@ -141,13 +141,13 @@ export default function Header() {
 
           {/* Dashboard mobile */}
           {isAuthenticated ? (
-            <NavLink href="/collaboration" className="w-full py-1.5">
+            <NavLink href="/dashboard" className="w-full py-1.5">
               Dashboard
             </NavLink>
           ) : (
             <Button
               variant="ghost"
-              onClick={handleCollaboration}
+              onClick={handleDashboard}
               className="flex h-auto w-full items-center justify-center px-3.5 py-1.5 text-[black]/70 transition-all duration-200 hover:rounded-full hover:bg-[black]/5"
             >
               Dashboard
@@ -244,20 +244,39 @@ export default function Header() {
                   <Icon name="chevron-down" size="md" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem
-                  onClick={handleProfile}
-                  className="cursor-pointer"
-                >
-                  <Icon name="user" size="sm" />
-                  Mon Profil
+              <DropdownMenuContent align="end" className="w-64 p-2">
+                <DropdownMenuItem onClick={handleProfile}>
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">Mon Profil</span>
+                      <p className="text-xs text-gray-500">
+                        Modifiez votre profil
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon name="user" size="sm" variant="gray" />
+                    </div>
+                  </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="cursor-pointer"
-                >
-                  <Icon name="logout" size="sm" />
-                  Déconnexion
+                <DropdownMenuItem onClick={handleDashboard}>
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">Dashboard</span>
+                      <p className="text-xs text-gray-500">Gestion de projet</p>
+                    </div>
+                    <Icon name="bagpack" size="sm" />
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <div className="flex w-full items-center justify-between">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">Déconnexion</span>
+                      <p className="text-xs text-gray-500">
+                        Déconnexion de votre compte
+                      </p>
+                    </div>
+                    <Icon name="logout" size="sm" variant="gray" />
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

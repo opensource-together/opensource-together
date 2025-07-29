@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { SuperTokensAuthGuard } from 'supertokens-nestjs';
 import { AuthModule } from '@/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ContextsModule } from './contexts/contexts.module';
@@ -19,11 +17,6 @@ import { MediaInfrastructure } from './media/infrastructure/media.infrastructure
     MediaInfrastructure,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: SuperTokensAuthGuard,
-    },
-  ],
+  providers: [],
 })
 export class RootModule {}

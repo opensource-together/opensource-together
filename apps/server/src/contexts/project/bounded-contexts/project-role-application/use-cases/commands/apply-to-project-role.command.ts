@@ -21,10 +21,15 @@ import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/do
 import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
 import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
 import {
+  PROFILE_REPOSITORY_PORT,
+  ProfileRepositoryPort,
+} from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import {
   MAILING_SERVICE_PORT,
   MailingServicePort,
   SendEmailPayload,
 } from '@/mailing/ports/mailing.service.port';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class ApplyToProjectRoleCommand implements ICommand {
   constructor(
@@ -45,6 +50,8 @@ export class ApplyToProjectRoleCommandHandler
   constructor(
     @Inject(USER_REPOSITORY_PORT)
     private readonly userRepo: UserRepositoryPort,
+    @Inject(PROFILE_REPOSITORY_PORT)
+    private readonly profileRepo: ProfileRepositoryPort,
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
     private readonly applicationRepo: ProjectRoleApplicationRepositoryPort,
     @Inject(PROJECT_ROLE_REPOSITORY_PORT)
@@ -53,6 +60,8 @@ export class ApplyToProjectRoleCommandHandler
     private readonly projectRepo: ProjectRepositoryPort,
     @Inject(MAILING_SERVICE_PORT)
     private readonly mailingService: MailingServicePort,
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(
@@ -124,17 +133,18 @@ export class ApplyToProjectRoleCommandHandler
 
     // 6. Vérifier qu'il n'y a pas déjà une candidature PENDING pour ce couple utilisateur/rôle
     const existingApplicationCheck =
-      await this.applicationRepo.existsPendingApplication(
-        userId,
-        projectRoleId,
-      );
-    if (
-      existingApplicationCheck.success &&
-      existingApplicationCheck.value == true
-    ) {
-      return Result.fail(
-        'You already have a pending application for this role',
-      );
+      await this.applicationRepo.existsStatusApplication(userId, projectRoleId);
+    if (existingApplicationCheck.success) {
+      if (existingApplicationCheck.value === 'PENDING') {
+        return Result.fail(
+          'You already have a pending application for this role',
+        );
+      }
+      if (existingApplicationCheck.value === 'REJECTED') {
+        return Result.fail(
+          'You already have a rejected application for this role',
+        );
+      }
     }
 
     // 7. Vérifier que l'utilisateur ne candidate pas à son propre projet
@@ -168,27 +178,39 @@ export class ApplyToProjectRoleCommandHandler
     if (!savedApplication.success) {
       return Result.fail('Unable to create application');
     }
-    // 10. Envoyer un email au propriétaire du projet
+    // 10. Récupérer le profil de l'auteur du projet pour l'événement
     const projectOwner = await this.userRepo.findById(projectData.ownerId);
     if (!projectOwner.success) {
       return Result.fail('Unable to find project owner');
     }
-    const projectOwnerData = projectOwner.value.toPrimitive();
-    const projectOwnerEmail = projectOwnerData.email;
-    const projectOwnerUsername = projectOwnerData.username;
 
-    const emailPayload: SendEmailPayload = {
-      to: projectOwnerEmail,
-      subject: `Nouvelle candidature pour le rôle ${projectRole.toPrimitive().title} dans le projet ${projectData.title}`,
-      html: `
-        <p>Salut ${projectOwnerUsername},</p>
-        <p>Une nouvelle candidature a été soumise pour le rôle ${projectRole.toPrimitive().title} dans votre projet ${projectData.title}.</p>
-        <p>Vous pouvez la consulter <a href="${process.env.FRONTEND_URL}/projects/${projectData.id}/applications">ici</a>.</p>
-        <p>Cordialement,</p>
-        <p>L'équipe Open Source Together</p>
-      `,
-    };
-    await this.mailingService.sendEmail(emailPayload);
+    const projectAuthorProfileResult = await this.profileRepo.findById(
+      projectData.ownerId,
+    );
+    if (!projectAuthorProfileResult.success) {
+      return Result.fail('Project owner profile not found');
+    }
+    const projectAuthorProfile = projectAuthorProfileResult.value.toPrimitive();
+
+    // Émettre l'événement de candidature pour déclencher les notifications
+    const savedApplicationData = savedApplication.value.toPrimitive();
+    this.eventEmitter.emit('project.role.application.created', {
+      projectOwnerId: projectData.ownerId,
+      applicantId: userId,
+      applicantName: savedApplicationData.userProfile.name,
+      projectId: projectData.id!,
+      projectTitle: projectData.title,
+      projectShortDescription: projectData.shortDescription,
+      projectImage: projectData.image,
+      projectAuthor: projectAuthorProfile,
+      roleName: projectRole.toPrimitive().title,
+      projectRole: projectRole.toPrimitive(),
+      applicationId: savedApplicationData.id,
+      selectedKeyFeatures: validKeyFeatures.map((feature) => ({ feature })),
+      selectedProjectGoals: validProjectGoals.map((goal) => ({ goal })),
+      motivationLetter: motivationLetter,
+      message: `Une nouvelle candidature a été soumise pour le rôle ${projectRole.toPrimitive().title} dans votre projet ${projectData.title}.`,
+    });
 
     return Result.ok(savedApplication.value);
   }
