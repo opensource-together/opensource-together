@@ -6,7 +6,7 @@ import { PublicProfileView } from "@/features/profile/views/public-profile.view"
 export default function TestProfilePage() {
   return (
     <>
-      <PublicProfileView profile={mockPublicProfile} />
+      <PublicProfileView userId={mockPublicProfile.id} />
       <CTAFooter imageIllustration="/illustrations/hooded-man.png" />
     </>
   );

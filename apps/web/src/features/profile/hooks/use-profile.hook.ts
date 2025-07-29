@@ -1,10 +1,18 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
-import { updateProfile } from "../services/profile.service";
+import { getProfileById, updateProfile } from "../services/profile.service";
 import { ProfileSchema } from "../validations/profile.schema";
+
+export const useProfile = (id: string) => {
+  return useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getProfileById(id),
+    enabled: !!id,
+  });
+};
 
 /**
  * Hook to update the profile of the current user.

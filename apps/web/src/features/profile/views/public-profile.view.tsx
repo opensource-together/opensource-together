@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import CTAFooter from "@/shared/components/layout/cta-footer";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
@@ -11,15 +10,18 @@ import PinnedProjects from "../components/pinned-projects.component";
 import ProfileExperience from "../components/profile-experience.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import PublicProfileHero from "../components/public-profile-hero.component";
-import { Profile } from "../types/profile.type";
+import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
+import { useProfile } from "../hooks/use-profile.hook";
 
 interface PublicProfileViewProps {
-  profile: Profile | null;
+  userId: string;
 }
 
-export function PublicProfileView({ profile }: PublicProfileViewProps) {
-  // Si pas de profil, afficher l'empty state
-  if (!profile) {
+export function PublicProfileView({ userId }: PublicProfileViewProps) {
+  const { data: profile, isLoading, isError } = useProfile(userId);
+
+  if (isLoading) return <SkeletonProfileView />;
+  if (isError || !profile) {
     return (
       <>
         <EmptyState
@@ -30,16 +32,9 @@ export function PublicProfileView({ profile }: PublicProfileViewProps) {
               <Link href="/">
                 <Button>Retour à l'accueil</Button>
               </Link>
-
-              <Link href="/dashboard">
-                <Button variant="secondary">Aller au Dashboard</Button>
-              </Link>
             </>
           }
         />
-        <div className="mt-16">
-          <CTAFooter imageIllustration="/illustrations/hooded-man.png" />
-        </div>
       </>
     );
   }
