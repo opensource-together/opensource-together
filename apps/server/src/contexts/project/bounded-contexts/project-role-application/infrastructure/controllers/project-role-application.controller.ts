@@ -302,43 +302,40 @@ export class ProjectRoleApplicationController {
     return applications.value;
   }
 
-  @Patch('applications/:applicationId/accept')
-  async acceptApplication(
-    @Param('applicationId') applicationId: string,
-    @Param('projectId') projectId: string,
-    @Session('userId') userId: string,
-  ) {
-    const command = new AcceptUserApplicationCommand({
-      projectRoleApplicationId: applicationId,
-      projectId,
-      userId,
-    });
-    const result: Result<ProjectRoleApplication, string> =
-      await this.commandBus.execute(command);
-    if (!result.success) {
-      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-    }
-    return result.value;
-  }
+  // @Patch('applications/:applicationId/accept')
+  // async acceptApplication(
+  //   @Param('applicationId') applicationId: string,
+  //   @Session('userId') userId: string,
+  // ) {
+  //   const command = new AcceptUserApplicationCommand({
+  //     projectRoleApplicationId: applicationId,
+  //     userId,
+  //   });
+  //   const result: Result<ProjectRoleApplication, string> =
+  //     await this.commandBus.execute(command);
+  //   if (!result.success) {
+  //     throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+  //   }
+  //   return result.value;
+  // }
 
-  @Patch('applications/:applicationId/reject')
-  async rejectApplication(
-    @Param('applicationId') applicationId: string,
-    @Param('projectId') projectId: string,
-    @Session('userId') userId: string,
-    @Body() body?: { rejectionReason?: string },
-  ) {
-    const command = new RejectUserApplicationCommand({
-      projectRoleApplicationId: applicationId,
-      projectId,
-      userId,
-      rejectionReason: body?.rejectionReason,
-    });
-    const result: Result<ProjectRoleApplication, string> =
-      await this.commandBus.execute(command);
-    if (!result.success) {
-      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-    }
-    return result.value;
-  }
+  // @Patch('applications/:applicationId/reject')
+  // async rejectApplication(
+  //   @Param('applicationId') applicationId: string,
+  //   @Param('projectId') projectId: string,
+  //   @Session('userId') userId: string,
+  //   @Body() body?: { rejectionReason?: string },
+  // ) {
+  //   const command = new RejectUserApplicationCommand({
+  //     projectRoleApplicationId: applicationId,
+  //     userId,
+  //     rejectionReason: body?.rejectionReason,
+  //   });
+  //   const result: Result<ProjectRoleApplication, string> =
+  //     await this.commandBus.execute(command);
+  //   if (!result.success) {
+  //     throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+  //   }
+  //   return result.value;
+  // }
 }
