@@ -1,12 +1,15 @@
 "use client";
 
+import Link from "next/link";
+
 import CTAFooter from "@/shared/components/layout/cta-footer";
+import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import GithubCalendar from "../components/github-calendar.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileExperience from "../components/profile-experience.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
-import PublicProfileEmpty from "../components/public-profile-empty.component";
 import PublicProfileHero from "../components/public-profile-hero.component";
 import { Profile } from "../types/profile.type";
 
@@ -19,7 +22,21 @@ export function PublicProfileView({ profile }: PublicProfileViewProps) {
   if (!profile) {
     return (
       <>
-        <PublicProfileEmpty />
+        <EmptyState
+          title="Profil non trouvé"
+          description="L'utilisateur que vous recherchez n'existe pas ou n'est pas accessible. Il se peut que le profil ait été supprimé ou que l'URL soit incorrecte."
+          action={
+            <>
+              <Link href="/">
+                <Button>Retour à l'accueil</Button>
+              </Link>
+
+              <Link href="/dashboard">
+                <Button variant="secondary">Aller au Dashboard</Button>
+              </Link>
+            </>
+          }
+        />
         <div className="mt-16">
           <CTAFooter imageIllustration="/illustrations/hooded-man.png" />
         </div>
