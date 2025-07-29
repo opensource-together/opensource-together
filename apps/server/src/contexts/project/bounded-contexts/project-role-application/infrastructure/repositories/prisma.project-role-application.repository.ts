@@ -507,4 +507,44 @@ export class PrismaProjectRoleApplicationRepository
       );
     }
   }
+
+  async findById(id: string): Promise<Result<ProjectRoleApplication, string>> {
+    try {
+      const application = await this.prisma.projectRoleApplication.findUnique({
+        where: { id },
+        include: {
+          projectRole: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
+          user: true,
+        },
+      });
+      if (!application) {
+        return Result.fail('Application not found');
+      }
+      const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+        ...application,
+        projectRole: application.projectRole,
+        project: application.project,
+        user: application.user,
+      });
+      if (!domainApplication.success) {
+        return Result.fail(
+          typeof domainApplication.error === 'string'
+            ? domainApplication.error
+            : 'Une erreur est survenue lors de la récupération de la candidature',
+        );
+      }
+      return Result.ok(domainApplication.value);
+    } catch (error) {
+      this.Logger.error(error);
+      return Result.fail(
+        'Une erreur est survenue lors de la récupération de la candidature',
+      );
+    }
+  }
 }

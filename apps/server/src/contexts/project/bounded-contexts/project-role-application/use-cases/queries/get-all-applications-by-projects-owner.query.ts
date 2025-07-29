@@ -10,7 +10,6 @@ import {
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 
 export class GetAllApplicationsByProjectsOwnerQuery implements IQuery {
   constructor(public readonly ownerId: string) {}

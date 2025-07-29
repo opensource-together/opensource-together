@@ -44,7 +44,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   /**
    * Trouve une candidature par son ID
    */
-  // findById(id: string): Promise<Result<ProjectRoleApplication, string>>;
+  findById(id: string): Promise<Result<ProjectRoleApplication, string>>;
 
   /**
    * Trouve toutes les candidatures d'un utilisateur
