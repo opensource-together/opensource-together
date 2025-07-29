@@ -6,6 +6,11 @@ import {
   MessageServicePort,
 } from '../../use-cases/ports/message.service.port';
 import { Inject } from '@nestjs/common';
+import {
+  NOTIFICATION_SERVICE_PORT,
+  NotificationServicePort,
+  SendNotificationPayload,
+} from '@/contexts/notification/use-cases/ports/notification.service.port';
 
 /**
  * 🎧 Listener pour les événements de messagerie.
@@ -19,10 +24,12 @@ export class MessageEventsListener {
     private readonly realtimeAdapter: RealtimeMessageNotifierAdapter,
     @Inject(MESSAGE_SERVICE_PORT)
     private readonly messageService: MessageServicePort,
+    @Inject(NOTIFICATION_SERVICE_PORT)
+    private readonly notificationService: NotificationServicePort,
   ) {}
 
   /**
-   * 📨 Message envoyé - diffuser en temps réel
+   * 📨 Message envoyé - diffuser en temps réel et notifier les participants
    */
   @OnEvent('message.sent')
   async handleMessageSent(event: {
@@ -46,6 +53,56 @@ export class MessageEventsListener {
           event.roomId,
           messageResult.value,
         );
+
+        // 📧 Créer des notifications pour les participants
+        const roomResult = await this.messageService.getRoomById(
+          event.roomId,
+          event.senderId,
+        );
+
+        if (roomResult.success && roomResult.value) {
+          const roomData = roomResult.value;
+
+          // Obtenir les participants directement depuis RoomData
+          const participants = roomData.participants;
+
+          // Créer une notification pour chaque participant (sauf l'expéditeur)
+          for (const participantId of participants) {
+            if (participantId !== event.senderId) {
+              const notificationPayload: SendNotificationPayload = {
+                object: 'Nouveau message reçu !',
+                receiverId: participantId,
+                senderId: event.senderId,
+                type: 'message.received',
+                payload: {
+                  messageId: event.messageId,
+                  roomId: event.roomId,
+                  content: event.content,
+                  messageType: event.messageType,
+                  roomName: roomData.name || 'Message privé',
+                },
+                channels: ['realtime'],
+              };
+
+              // Envoyer la notification
+              const notificationResult =
+                await this.notificationService.sendNotification(
+                  notificationPayload,
+                );
+
+              if (!notificationResult.success) {
+                console.error(
+                  `❌ Erreur envoi notification à ${participantId}:`,
+                  notificationResult.error,
+                );
+              } else {
+                console.log(
+                  `✅ Notification envoyée à ${participantId} pour message ${event.messageId}`,
+                );
+              }
+            }
+          }
+        }
       }
     } catch (error) {
       console.error('Error handling message.sent event:', error);

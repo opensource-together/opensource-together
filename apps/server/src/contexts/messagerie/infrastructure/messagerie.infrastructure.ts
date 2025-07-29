@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
+import { NotificationInfrastructure } from '@/contexts/notification/infrastructure/notification.infrastructure';
 
 // Controllers
 import { MessagerieController } from './controllers/messagerie.controller';
@@ -42,8 +43,8 @@ const messageUseCases = [
     CqrsModule,
     EventEmitterModule.forRoot(),
     PersistenceInfrastructure,
-    // ⚠️ Si vous avez des dépendances circulaires avec d'autres modules
-    // forwardRef(() => NotificationInfrastructure),
+    // Import du module de notifications pour accéder au service
+    forwardRef(() => NotificationInfrastructure),
   ],
   providers: [
     // 🔌 Use Cases (CQRS)
