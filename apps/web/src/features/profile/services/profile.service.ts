@@ -13,6 +13,33 @@ import {
 } from "../validations/profile.schema";
 
 /**
+ * Gets a public profile by ID.
+ *
+ * @param id - The profile ID to fetch.
+ * @returns A promise that resolves to the profile data.
+ */
+export const getProfileById = async (id: string): Promise<Profile> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/profile/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch profile");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    throw error;
+  }
+};
+
+/**
  * Updates the profile of the current user.
  *
  * @param params - The data for the updated profile.

@@ -1,14 +1,14 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsOptional,
-  ArrayMaxSize,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-import { Title } from '@/contexts/project/domain/vo/title.vo';
 import { Description } from '@/contexts/project/domain/vo/description.vo';
 import { ShortDescription } from '@/contexts/project/domain/vo/short-description.vo.';
+import { Title } from '@/contexts/project/domain/vo/title.vo';
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateProjectDtoRequest {
   @IsString()
