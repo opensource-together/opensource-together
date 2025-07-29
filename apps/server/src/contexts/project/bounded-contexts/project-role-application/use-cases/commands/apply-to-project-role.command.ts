@@ -25,6 +25,9 @@ import {
   MailingServicePort,
   SendEmailPayload,
 } from '@/mailing/ports/mailing.service.port';
+import { KeyFeature } from '../../../project-key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '../../../project-goals/domain/project-goals.entity';
+import { Project } from '@/contexts/project/domain/project.entity';
 
 export class ApplyToProjectRoleCommand implements ICommand {
   constructor(
@@ -85,9 +88,8 @@ export class ApplyToProjectRoleCommandHandler
     }
 
     // 3. Récupérer le projet pour valider les keyFeatures et projectGoals
-    const projectResult = await this.projectRepo.findById(
-      projectRole.toPrimitive().projectId!,
-    );
+    const projectResult: Result<Project, string> =
+      await this.projectRepo.findById(projectRole.toPrimitive().projectId!);
     if (!projectResult.success) {
       return Result.fail('Project not found');
     }
@@ -95,31 +97,33 @@ export class ApplyToProjectRoleCommandHandler
     const projectData = project.toPrimitive();
 
     // 4. Valider et récupérer les keyFeatures sélectionnées
-    const validKeyFeatures: string[] = [];
+    const validKeyFeatures: KeyFeature[] = [];
     for (const selectedId of selectedKeyFeatures) {
-      const keyFeature = projectData.keyFeatures.find(
-        (kf) => kf.id === selectedId,
-      );
-      if (!keyFeature) {
+      if (!project.hasKeyFeature(selectedId)) {
         return Result.fail(
           'Some selected key features do not belong to this project',
         );
       }
-      validKeyFeatures.push(keyFeature.feature);
+      const keyFeatureResult = project.getKeyFeature(selectedId);
+      if (!keyFeatureResult.success) {
+        return Result.fail(keyFeatureResult.error);
+      }
+      validKeyFeatures.push(keyFeatureResult.value);
     }
 
     // 5. Valider et récupérer les projectGoals sélectionnés
-    const validProjectGoals: string[] = [];
+    const validProjectGoals: ProjectGoals[] = [];
     for (const selectedId of selectedProjectGoals) {
-      const projectGoal = projectData.projectGoals.find(
-        (pg) => pg.id === selectedId,
-      );
-      if (!projectGoal) {
+      if (!project.hasProjectGoal(selectedId)) {
         return Result.fail(
           'Some selected project goals do not belong to this project',
         );
       }
-      validProjectGoals.push(projectGoal.goal);
+      const projectGoalResult = project.getProjectGoal(selectedId);
+      if (!projectGoalResult.success) {
+        return Result.fail(projectGoalResult.error);
+      }
+      validProjectGoals.push(projectGoalResult.value);
     }
 
     // 6. Vérifier qu'il n'y a pas déjà une candidature PENDING pour ce couple utilisateur/rôle
@@ -147,10 +151,17 @@ export class ApplyToProjectRoleCommandHandler
     const applicationResult = ProjectRoleApplication.create({
       projectId: projectData.id!,
       projectTitle: projectData.title,
+      projectDescription: projectData.description,
       projectRoleTitle: projectRole.toPrimitive().title,
       projectRoleId,
-      selectedKeyFeatures: validKeyFeatures,
-      selectedProjectGoals: validProjectGoals,
+      selectedKeyFeatures: validKeyFeatures.map((kf) => ({
+        id: kf.toPrimitive().id!,
+        feature: kf.toPrimitive().feature,
+      })),
+      selectedProjectGoals: validProjectGoals.map((pg) => ({
+        id: pg.toPrimitive().id!,
+        goal: pg.toPrimitive().goal,
+      })),
       motivationLetter,
       userProfile: {
         id: userId,
