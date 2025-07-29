@@ -25,25 +25,18 @@ model User {
   id                String                 @id @default(uuid())
   username          String                 @unique
   email             String                 @unique
+  // name              String
+  login             String
+  avatarUrl         String?
+  location          String?
+  company           String?
+  bio               String?
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
   githubCredentials UserGitHubCredentials?
-  profile           Profile?
-}
-
-model Profile {
-  userId      String           @id @unique
-  name        String
-  login       String
-  avatarUrl   String?
-  location    String?
-  company     String?
-  bio         String?
-  techStacks  TechStack[]
-  updatedAt   DateTime         @default(now()) @updatedAt
-  user        User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  socialLinks UserSocialLink[]
-  projects    Project[]
+  techStacks        TechStack[]
+  socialLinks       UserSocialLink[]
+  projects          Project[]
   projectRoleApplication ProjectRoleApplication[]
 }
 
@@ -72,8 +65,8 @@ model Project {
   keyFeatures      KeyFeature[]
   projectGoals     ProjectGoal[]
   projectRoleApplication ProjectRoleApplication[]
-  profile          Profile?              @relation(fields: [profileId], references: [userId], onDelete: Cascade)
-  profileId        String?
+  author           User?                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId         String?
   image            String?
   coverImages      String[]              // Array of cover image URLs (1 to 4)
   // Index composite pour recherche + tri par date
@@ -102,8 +95,7 @@ model TechStack {
   type         TechStackType
   projects     Project[]
   projectRoles ProjectRole[]
-  profile      Profile?     @relation(fields: [profileId], references: [userId], onDelete: Cascade)
-  profileId    String?
+  users        User[]
 }
 
 model teamMember {
@@ -147,8 +139,8 @@ model ProjectRoleApplication {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   projectRole   ProjectRole  @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
-  profile          Profile         @relation(fields: [profileId], references: [userId], onDelete: Cascade)
-  profileId String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
@@ -160,7 +152,7 @@ model UserSocialLink {
   createdAt DateTime @default(now())
 
   // Relation
-  profile Profile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Un utilisateur ne peut avoir qu'un seul lien d'un type donné.
   @@unique([userId, type])

@@ -105,7 +105,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],
@@ -133,7 +133,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],

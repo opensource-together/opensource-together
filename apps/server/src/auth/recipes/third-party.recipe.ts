@@ -6,7 +6,6 @@ import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-use
 import { deleteUser } from 'supertokens-node';
 import { Result } from '@/libs/result';
 import { User } from '@/contexts/user/domain/user.entity';
-import { CreateProfileCommand } from '@/contexts/profile/use-cases/commands/create-profile.command';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { CreateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
 import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
@@ -100,11 +99,15 @@ export const thirdPartyRecipe = ({
               const { id, emails } = response.user;
               if (response.createdNewRecipeUser) {
                 try {
-                  const createUserCommand = new CreateUserCommand(
+                  const createUserCommand = new CreateUserCommand({
                     id,
-                    githubUser.login,
-                    emails[0],
-                  );
+                    username: githubUser.login,
+                    email: emails[0],
+                    name: githubUser.name || githubUser.login,
+                    login: githubUser.login,
+                    avatarUrl: githubUser.avatar_url,
+                    bio: githubUser.bio ?? '',
+                  });
 
                   const socialLinksData: { type: string; url: string }[] = [];
                   if (githubUser.html_url) {
@@ -126,18 +129,6 @@ export const thirdPartyRecipe = ({
                     });
                   }
 
-                  const createProfileCommand = new CreateProfileCommand({
-                    userId: id,
-                    name: githubUser.name || githubUser.login,
-                    login: githubUser.login,
-                    avatarUrl: githubUser.avatar_url,
-                    bio: githubUser.bio ?? '',
-                    location: githubUser.location ?? '',
-                    company: githubUser.company ?? '',
-                    socialLinks: socialLinksData,
-                    experiences: [],
-                  });
-
                   const newUserResult: Result<User> =
                     await commandBus.execute(createUserCommand);
                   if (!newUserResult.success) {
@@ -146,16 +137,6 @@ export const thirdPartyRecipe = ({
 
                     await deleteUser(id);
                     throw new Error(newUserResult.error);
-                  }
-
-                  const newProfileResult: Result<any> =
-                    await commandBus.execute(createProfileCommand);
-                  if (!newProfileResult.success) {
-                    await commandBus.execute(new DeleteUserCommand(id));
-                    await deleteUser(id);
-                    throw new Error(
-                      `Failed to create profile: ${newProfileResult.error}`,
-                    );
                   }
 
                   const accessToken = response?.oAuthTokens

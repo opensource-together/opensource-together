@@ -1,13 +1,13 @@
 import {
-  Profile as PrismaProfile,
+  User as PrismaUser,
   UserSocialLink as PrismaSocialLink,
   TechStack as PrismaTechStack,
 } from '@prisma/client';
-import { Profile } from '@/contexts/profile/domain/profile.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 // Un type helper pour représenter un objet Prisma avec ses relations
-type RawPrismaProfile = PrismaProfile & {
+type RawPrismaUser = PrismaUser & {
   socialLinks: PrismaSocialLink[];
   techStacks: PrismaTechStack[];
 };
@@ -16,31 +16,33 @@ export class PrismaProfileMapper {
   /**
    * Traduit un objet brut de Prisma vers une entité du domaine.
    */
-  public static toDomain(raw: RawPrismaProfile): Profile {
+  public static toDomain(raw: RawPrismaUser): User {
     // 1. Convertir les UserSocialLink[] vers l'objet socialLinks simple
-    const socialLinksObject: {
-      github?: string;
-      website?: string;
-      twitter?: string;
-      linkedin?: string;
-      discord?: string;
-    } = {};
-
-    raw.socialLinks.forEach((link) => {
-      const linkType = link.type as keyof typeof socialLinksObject;
-      socialLinksObject[linkType] = link.url;
-    });
+    const socialLinksObject = raw.socialLinks.map((link) => ({
+      type: link.type,
+      url: link.url,
+    }));
 
     // 2. Reconstituer l'entité Profile
-    const profileEntity = Profile.reconstitute({
-      userId: raw.userId,
-      name: raw.name,
+    const profileEntity = User.reconstitute({
+      id: raw.id,
+      username: raw.username,
+      email: raw.email,
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+      // name: raw.name,
       login: raw.login,
       avatarUrl: raw.avatarUrl || undefined,
       bio: raw.bio || undefined,
       location: raw.location || undefined,
       company: raw.company || undefined,
-      socialLinks: socialLinksObject,
+      socialLinks: socialLinksObject as {
+        github?: string;
+        website?: string;
+        twitter?: string;
+        linkedin?: string;
+        discord?: string;
+      },
       techStacks: raw.techStacks.map((techStack) => ({
         id: techStack.id,
         name: techStack.name,
@@ -49,10 +51,17 @@ export class PrismaProfileMapper {
       })),
       experiences: [],
       projects: [],
-      updatedAt: raw.updatedAt,
     });
 
-    return profileEntity;
+    if (!profileEntity.success) {
+      throw new Error(
+        typeof profileEntity.error === 'string'
+          ? profileEntity.error
+          : 'Erreur de validation',
+      );
+    }
+
+    return profileEntity.value;
   }
 
   /**

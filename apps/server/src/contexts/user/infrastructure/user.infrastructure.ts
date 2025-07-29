@@ -6,6 +6,8 @@ import { USER_REPOSITORY_PORT } from '../use-cases/ports/user.repository.port';
 import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
 import { PrismaProjectRoleApplicationRepository } from '@/contexts/project/bounded-contexts/project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
+import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
 @Module({
   imports: [PersistenceInfrastructure],
   providers: [
@@ -16,6 +18,10 @@ import { PrismaProjectRoleApplicationRepository } from '@/contexts/project/bound
     {
       provide: PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
       useClass: PrismaProjectRoleApplicationRepository,
+    },
+    {
+      provide: TECHSTACK_REPOSITORY_PORT,
+      useClass: PrismaTechStackRepository,
     },
     ...userUseCases,
   ],

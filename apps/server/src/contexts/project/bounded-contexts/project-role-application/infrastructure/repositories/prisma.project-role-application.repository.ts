@@ -31,11 +31,7 @@ export class PrismaProjectRoleApplicationRepository
       const created = await this.prisma.projectRoleApplication.create({
         data: toRepo.value,
         include: {
-          profile: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
           projectRole: true,
           project: {
             include: {
@@ -71,7 +67,7 @@ export class PrismaProjectRoleApplicationRepository
       const projectRoleApplication =
         await this.prisma.projectRoleApplication.findFirst({
           where: {
-            profileId: userId,
+            userId: userId,
             projectRoleId,
             status: {
               in: ['PENDING', 'REJECTED'],
@@ -106,7 +102,7 @@ export class PrismaProjectRoleApplicationRepository
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],
@@ -117,11 +113,7 @@ export class PrismaProjectRoleApplicationRepository
       const applications = await this.prisma.projectRoleApplication.findMany({
         where: { projectId: { equals: projectId } },
         include: {
-          profile: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
           projectRole: true,
           project: {
             include: {
@@ -150,7 +142,7 @@ export class PrismaProjectRoleApplicationRepository
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[] = [];
@@ -187,7 +179,7 @@ export class PrismaProjectRoleApplicationRepository
           motivationLetter: domainApplication.value.motivationLetter || '',
           userProfile: {
             id: domainApplication.value.userProfile.id,
-            name: domainApplication.value.userProfile.name,
+            username: domainApplication.value.userProfile.username,
             avatarUrl: domainApplication.value.userProfile.avatarUrl || '',
           },
         });
@@ -219,7 +211,7 @@ export class PrismaProjectRoleApplicationRepository
         rejectionReason: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],
@@ -231,11 +223,7 @@ export class PrismaProjectRoleApplicationRepository
       const applications = await this.prisma.projectRoleApplication.findMany({
         where: { projectRoleId: String(roleId) },
         include: {
-          profile: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
           projectRole: true,
           project: {
             include: {
@@ -265,7 +253,7 @@ export class PrismaProjectRoleApplicationRepository
         rejectionReason: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[] = [];
@@ -302,7 +290,7 @@ export class PrismaProjectRoleApplicationRepository
           rejectionReason: domainApplication.value.rejectionReason || '',
           userProfile: {
             id: domainApplication.value.userProfile.id,
-            name: domainApplication.value.userProfile.name,
+            username: domainApplication.value.userProfile.username,
             avatarUrl: domainApplication.value.userProfile.avatarUrl || '',
           },
         });
@@ -339,11 +327,7 @@ export class PrismaProjectRoleApplicationRepository
               projectGoals: true,
             },
           },
-          profile: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
       });
       if (!application) return Result.fail('Application not found');
@@ -352,10 +336,7 @@ export class PrismaProjectRoleApplicationRepository
         ...application,
         projectRole: application.projectRole,
         project: application.project,
-        profile: {
-          ...application.profile,
-          user: application.profile.user,
-        },
+        user: application.user,
       });
       if (!domainApplication.success) {
         return Result.fail(
@@ -391,11 +372,7 @@ export class PrismaProjectRoleApplicationRepository
               projectGoals: true,
             },
           },
-          profile: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
       });
       if (!application) return Result.fail('Application not found');
@@ -404,10 +381,7 @@ export class PrismaProjectRoleApplicationRepository
         ...application,
         projectRole: application.projectRole,
         project: application.project,
-        profile: {
-          ...application.profile,
-          user: application.profile.user,
-        },
+        user: application.user,
       });
       this.Logger.log('domainApplication acceptApplication', domainApplication);
       if (!domainApplication.success) {
@@ -447,7 +421,7 @@ export class PrismaProjectRoleApplicationRepository
   > {
     try {
       const applications = await this.prisma.projectRoleApplication.findMany({
-        where: { profileId: { equals: userId } },
+        where: { userId: { equals: userId } },
         include: {
           projectRole: true,
           project: {
@@ -456,11 +430,7 @@ export class PrismaProjectRoleApplicationRepository
               projectGoals: true,
             },
           },
-          profile: {
-            include: {
-              user: true,
-            },
-          },
+          user: true,
         },
       });
       if (!applications) {
@@ -492,9 +462,9 @@ export class PrismaProjectRoleApplicationRepository
             keyFeatures: application.project.keyFeatures,
             projectGoals: application.project.projectGoals,
           },
-          profile: {
-            ...application.profile,
-            user: application.profile.user,
+          user: {
+            ...application.user,
+            username: application.user.username,
           },
         });
         if (!domainApplication.success) {

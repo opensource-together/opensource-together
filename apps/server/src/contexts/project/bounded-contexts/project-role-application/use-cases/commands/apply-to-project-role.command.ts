@@ -165,7 +165,7 @@ export class ApplyToProjectRoleCommandHandler
       motivationLetter,
       userProfile: {
         id: userId,
-        name: '', // Sera rempli par le mapper depuis le profile
+        username: '', // Sera rempli par le mapper depuis le profile
         avatarUrl: undefined,
       },
     });

@@ -56,7 +56,7 @@ export class GetAllProjectApplicationsQueryHandler
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[]

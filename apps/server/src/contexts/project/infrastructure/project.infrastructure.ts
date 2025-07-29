@@ -19,7 +19,7 @@ import { EncryptionService } from '@/contexts/encryption/infrastructure/encrypti
 import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
 import { PrismaCategoryRepository } from '@/contexts/category/infrastructure/repositories/prisma.category.repository';
 import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { PrismaProfileRepository } from '@/contexts/profile/infrastructure/repositories/prisma.profile.repository';
+import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 import { MEDIA_SERVICE_PORT } from '@/media/port/media.service.port';
 import { R2MediaService } from '@/media/infrastructure/services/r2.media.service';
 import { PROJECT_KEY_FEATURE_REPOSITORY_PORT } from '../bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
@@ -61,7 +61,7 @@ import { PrismaProjectKeyFeatureRepository } from '../bounded-contexts/project-k
     },
     {
       provide: PROFILE_REPOSITORY_PORT,
-      useClass: PrismaProfileRepository,
+      useClass: PrismaUserRepository,
     },
     {
       provide: MEDIA_SERVICE_PORT,
