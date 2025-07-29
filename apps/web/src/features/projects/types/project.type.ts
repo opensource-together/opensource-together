@@ -77,6 +77,7 @@ export interface Project {
   title: string;
   image?: string;
   coverImages?: string[];
+  readme?: string;
   author: Author;
   shortDescription: string;
   longDescription?: string;
@@ -107,6 +108,7 @@ export interface ProjectEditForm {
 export interface GithubRepoType {
   owner?: string;
   title: string;
+  readme?: string;
   description?: string | null;
   url: string;
 }

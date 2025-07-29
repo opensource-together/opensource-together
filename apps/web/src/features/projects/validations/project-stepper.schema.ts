@@ -10,7 +10,7 @@ export const selectedRepoSchema = z.object({
   selectedRepository: z
     .object({
       owner: z.string().optional(),
-      description: z.string().optional().nullable(),
+      readme: z.string().optional(),
       title: z.string(),
       url: z.string(),
     })

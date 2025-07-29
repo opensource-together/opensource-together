@@ -21,6 +21,7 @@ export interface ProjectFormData {
   image: string;
   coverImages: File[]; // Array of cover image files (1 to 4)
   // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  readme?: string;
   externalLinks: ExternalLink[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
@@ -47,6 +48,7 @@ interface ProjectCreateStore {
         | "image"
         | "coverImages"
         // | "status"
+        | "readme"
         | "keyFeatures"
         | "projectGoals"
         | "techStack"
@@ -71,6 +73,7 @@ const initialFormData: ProjectFormData = {
   image: "",
   coverImages: [],
   // status: "DRAFT",
+  readme: "",
   externalLinks: [],
   keyFeatures: [],
   projectGoals: [],
@@ -99,7 +102,11 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
 
         selectRepository: (repo) =>
           set((state) => ({
-            formData: { ...state.formData, selectedRepository: repo },
+            formData: {
+              ...state.formData,
+              selectedRepository: repo,
+              readme: repo.readme || "",
+            },
           })),
 
         updateRoles: (roles) =>

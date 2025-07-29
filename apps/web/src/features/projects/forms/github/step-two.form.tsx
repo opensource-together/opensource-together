@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
@@ -19,8 +20,8 @@ export default function StepTwoForm() {
       updateProjectInfo({
         title: formData.selectedRepository.title,
         shortDescription:
-          formData.selectedRepository.description ||
-          "Description à compléter pour ce projet.",
+          formData.selectedRepository.readme ||
+          "README à compléter pour ce projet.",
       });
     }
     router.push("/projects/create/github/step-three");
@@ -45,8 +46,10 @@ export default function StepTwoForm() {
             </div>
           </div>
           <div className="mb-3 line-clamp-5 text-sm leading-6 text-black/50">
-            {formData.selectedRepository?.description ||
-              "Aucune description disponible. Vous pourrez en ajouter une à l'étape suivante."}
+            <ReactMarkdown>
+              {formData.selectedRepository?.readme ||
+                "Aucune description disponible. Vous pourrez en ajouter une à l'étape suivante."}
+            </ReactMarkdown>
           </div>
         </div>
         <div className="my-4 h-px border-t-2 border-black/5" />
