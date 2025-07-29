@@ -2,30 +2,43 @@ import {
   Controller,
   Post,
   Get,
-  Patch,
-  Query,
   Param,
   Body,
   HttpStatus,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Session } from 'supertokens-nestjs';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiBody,
+  ApiResponse,
+  ApiCookieAuth,
+} from '@nestjs/swagger';
 import {
   SendMessageRequestDto,
   CreateRoomRequestDto,
 } from './dto/send-message-request.dto';
 import { SendMessageCommand } from '../../use-cases/commands/send-message.command';
 import { CreateRoomCommand } from '../../use-cases/commands/create-room.command';
-import { MarkMessageAsReadCommand } from '../../use-cases/commands/mark-message-read.command';
 import { GetMessagesQuery } from '../../use-cases/queries/get-messages.query';
 import { GetUserRoomsQuery } from '../../use-cases/queries/get-user-rooms.query';
 
 /**
- * 🎮 Controller REST pour la messagerie
- * Expose les APIs publiques pour l'interaction avec le système de messagerie
+ * 🎮 Controller REST pour la messagerie - VERSION SIMPLIFIÉE
+ * Seulement 4 fonctionnalités essentielles :
+ * 1. Créer un chat
+ * 2. Envoyer un message
+ * 3. Récupérer les messages d'un chat
+ * 4. Récupérer les chats de l'utilisateur (pour l'interface)
  */
+@ApiTags('💬 Messagerie')
+@ApiCookieAuth('sAccessToken')
 @Controller('messaging')
 export class MessagerieController {
   constructor(
@@ -35,55 +48,82 @@ export class MessagerieController {
   ) {}
 
   /**
-   * 📤 Envoyer un message dans une room
-   * POST /messaging/send
+   * 🏠 Créer un nouveau chat
+   * POST /messaging/chats
    */
-  @Post('send')
+  @Post('chats')
   @HttpCode(HttpStatus.CREATED)
-  async sendMessage(
-    @Session('userId') senderId: string,
-    @Body() dto: SendMessageRequestDto,
-  ) {
-    const command = await this.commandBus.execute(
-      new SendMessageCommand({
-        roomId: dto.roomId,
-        senderId,
-        content: dto.content,
-      }),
-    );
-
-    this.eventEmitter.emit('message.sent', command);
-
-    const result = {
-      success: true,
-      value: command,
-    };
-
-    if (!result.success) {
-      return {
-        success: false,
-        message: 'Message non envoyé',
-      };
-    }
-
-    return {
-      success: true,
-      message: 'Message envoyé avec succès',
-      data: result.value,
-    };
-  }
-
-  /**
-   * 🏠 Créer une nouvelle room de messagerie
-   * POST /messaging/rooms
-   */
-  @Post('rooms')
-  @HttpCode(HttpStatus.CREATED)
-  async createRoom(
+  @ApiOperation({
+    summary: '🏠 Créer un nouveau chat',
+    description:
+      "Crée un nouveau chat avec un ou plusieurs participants. L'utilisateur actuel est automatiquement ajouté aux participants.",
+  })
+  @ApiBody({
+    description: 'Données pour créer le chat',
+    schema: {
+      type: 'object',
+      properties: {
+        participants: {
+          type: 'array',
+          items: { type: 'string' },
+          description:
+            "Liste des IDs des participants (l'utilisateur actuel sera ajouté automatiquement)",
+          example: ['alice', 'bob'],
+        },
+        name: {
+          type: 'string',
+          description: 'Nom du chat (optionnel)',
+          example: 'Chat Alice & Bob',
+        },
+        description: {
+          type: 'string',
+          description: 'Description du chat (optionnel)',
+          example: 'Discussion privée entre Alice et Bob',
+        },
+      },
+      required: ['participants'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Chat créé avec succès',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'Chat créé avec succès' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', example: 'chat_abc123' },
+            name: { type: 'string', example: 'Chat Alice & Bob' },
+            participants: {
+              type: 'array',
+              items: { type: 'string' },
+              example: ['user123', 'alice', 'bob'],
+            },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erreur lors de la création du chat',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Erreur lors de la création' },
+      },
+    },
+  })
+  async createChat(
     @Session('userId') userId: string,
     @Body() dto: CreateRoomRequestDto,
   ) {
-    // Ajouter l'utilisateur actuel aux participants s'il n'y est pas
+    // Ajouter l'utilisateur actuel aux participants
     if (!dto.participants.includes(userId)) {
       dto.participants.push(userId);
     }
@@ -105,29 +145,178 @@ export class MessagerieController {
 
     return {
       success: true,
-      message: 'Room créée avec succès',
+      message: 'Chat créé avec succès',
       data: result.value,
     };
   }
 
   /**
-   * 📬 Récupérer les messages d'une room
-   * GET /messaging/rooms/:roomId/messages
+   * 📤 Envoyer un message dans un chat
+   * POST /messaging/chats/:chatId/messages
    */
-  @Get('rooms/:roomId/messages')
-  async getRoomMessages(
+  @Post('chats/:chatId/messages')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: '📤 Envoyer un message',
+    description:
+      'Envoie un message dans un chat spécifique. Le message sera diffusé en temps réel aux autres participants connectés.',
+  })
+  @ApiParam({
+    name: 'chatId',
+    description: 'ID du chat où envoyer le message',
+    example: 'chat_abc123',
+  })
+  @ApiBody({
+    description: 'Contenu du message à envoyer',
+    schema: {
+      type: 'object',
+      properties: {
+        content: {
+          type: 'string',
+          description: 'Contenu textuel du message',
+          example: 'Salut Bob ! Comment ça va ?',
+          minLength: 1,
+          maxLength: 1000,
+        },
+      },
+      required: ['content'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Message envoyé avec succès',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'Message envoyé' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', example: 'msg_xyz789' },
+            content: { type: 'string', example: 'Salut Bob !' },
+            senderId: { type: 'string', example: 'user123' },
+            roomId: { type: 'string', example: 'chat_abc123' },
+            createdAt: { type: 'string', format: 'date-time' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Chat non trouvé ou accès non autorisé',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Chat non trouvé' },
+      },
+    },
+  })
+  async sendMessage(
+    @Session('userId') senderId: string,
+    @Param('chatId') chatId: string,
+    @Body() dto: { content: string },
+  ) {
+    const command = await this.commandBus.execute(
+      new SendMessageCommand({
+        roomId: chatId,
+        senderId,
+        content: dto.content,
+      }),
+    );
+
+    // Émettre l'événement pour le temps réel
+    this.eventEmitter.emit('message.sent', {
+      ...command,
+      roomId: chatId,
+    });
+
+    return {
+      success: true,
+      message: 'Message envoyé',
+      data: command,
+    };
+  }
+
+  /**
+   * 📬 Récupérer tous les messages d'un chat
+   * GET /messaging/chats/:chatId/messages
+   */
+  @Get('chats/:chatId/messages')
+  @ApiOperation({
+    summary: "📬 Récupérer l'historique des messages",
+    description:
+      "Récupère tous les messages d'un chat avec pagination. Utile pour charger l'historique d'une conversation.",
+  })
+  @ApiParam({
+    name: 'chatId',
+    description: 'ID du chat dont récupérer les messages',
+    example: 'chat_abc123',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: 'number',
+    description: 'Nombre maximum de messages à récupérer (défaut: 50)',
+    example: 20,
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    type: 'number',
+    description: 'Nombre de messages à ignorer pour la pagination (défaut: 0)',
+    example: 0,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Messages récupérés avec succès',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', example: 'msg_xyz789' },
+              content: { type: 'string', example: 'Salut Alice !' },
+              senderId: { type: 'string', example: 'bob' },
+              roomId: { type: 'string', example: 'chat_abc123' },
+              createdAt: { type: 'string', format: 'date-time' },
+              updatedAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+        count: { type: 'number', example: 15 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Accès non autorisé au chat',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Accès non autorisé' },
+        data: { type: 'array', example: [] },
+      },
+    },
+  })
+  async getChatMessages(
     @Session('userId') userId: string,
-    @Param('roomId') roomId: string,
+    @Param('chatId') chatId: string,
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
-    @Query('beforeMessageId') beforeMessageId?: string,
   ) {
     const query = new GetMessagesQuery({
-      roomId,
+      roomId: chatId,
       userId,
-      limit: limit ? parseInt(limit, 10) : undefined,
-      offset: offset ? parseInt(offset, 10) : undefined,
-      beforeMessageId,
+      limit: limit ? parseInt(limit, 10) : 50,
+      offset: offset ? parseInt(offset, 10) : 0,
     });
 
     const result = await this.queryBus.execute(query);
@@ -150,19 +339,71 @@ export class MessagerieController {
   }
 
   /**
-   * 🏠 Récupérer les rooms d'un utilisateur
-   * GET /messaging/rooms
+   * 🏠 Récupérer tous les chats de l'utilisateur
+   * GET /messaging/chats
    */
-  @Get('rooms')
-  async getUserRooms(
+  @Get('chats')
+  @ApiOperation({
+    summary: "🏠 Liste des chats de l'utilisateur",
+    description:
+      "Récupère tous les chats auxquels l'utilisateur participe. Utile pour afficher la liste des conversations dans l'interface.",
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: 'number',
+    description: 'Nombre maximum de chats à récupérer (défaut: 20)',
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste des chats récupérée avec succès',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', example: 'chat_abc123' },
+              name: { type: 'string', example: 'Chat Alice & Bob' },
+              description: { type: 'string', example: 'Discussion privée' },
+              participants: {
+                type: 'array',
+                items: { type: 'string' },
+                example: ['user123', 'alice', 'bob'],
+              },
+              createdAt: { type: 'string', format: 'date-time' },
+              updatedAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+        count: { type: 'number', example: 5 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erreur serveur lors de la récupération des chats',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Erreur serveur' },
+        data: { type: 'array', example: [] },
+      },
+    },
+  })
+  async getUserChats(
     @Session('userId') userId: string,
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
   ) {
     const query = new GetUserRoomsQuery({
       userId,
-      limit: limit ? parseInt(limit, 10) : undefined,
-      offset: offset ? parseInt(offset, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : 20,
+      offset: 0,
     });
 
     const result = await this.queryBus.execute(query);
@@ -175,128 +416,12 @@ export class MessagerieController {
       };
     }
 
-    const rooms = result.value.map((room) => room.toPrimitive());
+    const chats = result.value.map((room) => room.toPrimitive());
 
     return {
       success: true,
-      data: rooms,
-      count: rooms.length,
+      data: chats,
+      count: chats.length,
     };
-  }
-
-  /**
-   * 🔍 Récupérer une room spécifique par son ID
-   * GET /messaging/rooms/:roomId
-   */
-  @Get('rooms/:roomId')
-  async getRoomById(
-    @Session('userId') userId: string,
-    @Param('roomId') roomId: string,
-  ) {
-    try {
-      // TODO: Créer GetRoomByIdQuery pour respecter l'architecture CQRS
-      // Pour l'instant, utiliser un appel direct temporaire
-      return {
-        success: false,
-        message: 'Endpoint not yet implemented - need GetRoomByIdQuery',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: 'Failed to get room',
-      };
-    }
-  }
-
-  /**
-   * ✅ Marquer un message comme lu
-   * PATCH /messaging/messages/:messageId/read
-   */
-  @Patch('messages/:messageId/read')
-  async markMessageAsRead(
-    @Session('userId') userId: string,
-    @Param('messageId') messageId: string,
-  ) {
-    const command = new MarkMessageAsReadCommand({
-      messageId,
-      userId,
-    });
-
-    const result = await this.commandBus.execute(command);
-
-    if (!result.success) {
-      return {
-        success: false,
-        message: result.error,
-      };
-    }
-
-    return {
-      success: true,
-      message: 'Message marqué comme lu',
-    };
-  }
-
-  /**
-   * 📊 Obtenir des statistiques d'une room
-   * GET /messaging/rooms/:roomId/stats
-   */
-  @Get('rooms/:roomId/stats')
-  async getRoomStats(
-    @Session('userId') userId: string,
-    @Param('roomId') roomId: string,
-  ) {
-    try {
-      // TODO: Implémenter via un service dédié
-      return {
-        success: true,
-        data: {
-          roomId,
-          totalMessages: 0,
-          unreadCount: 0,
-          connectedUsers: [],
-        },
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: 'Impossible de récupérer les statistiques',
-      };
-    }
-  }
-
-  /**
-   * 🔍 Rechercher des messages dans une room
-   * GET /messaging/rooms/:roomId/search
-   */
-  @Get('rooms/:roomId/search')
-  async searchMessages(
-    @Session('userId') userId: string,
-    @Param('roomId') roomId: string,
-    @Query('query') searchQuery?: string,
-    @Query('limit') limit?: string,
-  ) {
-    try {
-      if (!searchQuery || searchQuery.trim() === '') {
-        return {
-          success: false,
-          message: 'Query de recherche requise',
-          data: [],
-        };
-      }
-
-      // TODO: Implémenter la recherche via le service
-      return {
-        success: true,
-        data: [],
-        query: searchQuery,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: 'Erreur lors de la recherche',
-        data: [],
-      };
-    }
   }
 }
