@@ -1,5 +1,3 @@
-"use client";
-
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
 import {
@@ -14,68 +12,63 @@ import {
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
 
-import { ProjectRoleApplicationType } from "../../types/project-role-application.type";
+import { Project, TechStack } from "@/features/projects/types/project.type";
 
-interface MyApplicationsCardProps {
-  application: ProjectRoleApplicationType;
-  onClick?: () => void;
+interface MyProjectsCardProps {
+  project: Project;
+  techStacks?: TechStack[];
+  className?: string;
   isSelected?: boolean;
+  onClick?: () => void;
 }
 
-export function MyApplicationsCard({
-  application,
+export default function MyProjectsCardComponent({
+  project,
+  techStacks = [],
+  className = "",
+  isSelected = false,
   onClick,
-  isSelected,
-}: MyApplicationsCardProps) {
+}: MyProjectsCardProps) {
+  const displayTechStacks =
+    techStacks.length > 0 ? techStacks : project.techStacks || [];
+
   return (
-    <div onClick={onClick}>
-      <ProjectCard
-        className={`rounded-[20px] ${isSelected ? "shadow-[0_0_8px_rgba(0,0,0,0.1)]" : ""}`}
-      >
+    <div onClick={onClick} className="block">
+      <ProjectCard className={`${className} ${isSelected ? "shadow-md" : ""}`}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
-            <Avatar
-              src={application.project.image}
-              name={application.project.title}
-              alt={application.project.title}
-              size="lg"
-            />
+            <Avatar src={project.image} name={project.title} size="lg" />
             <ProjectCardInfo>
-              <ProjectCardTitle>
-                {application.projectRole.title}{" "}
-                <span className="font-normal text-black/50">
-                  — {application.project.title}
-                </span>
-              </ProjectCardTitle>
+              <ProjectCardTitle>{project.title}</ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {application.project.author.name}
+                by {project.author.name}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
         </ProjectCardHeader>
         <ProjectCardContent>
           <ProjectCardDescription>
-            {application.project.shortDescription}
+            {project.shortDescription}
           </ProjectCardDescription>
           <ProjectCardDivider />
-          {application.projectRole.techStacks.length > 0 && (
+          {displayTechStacks.length > 0 && (
             <ProjectCardFooter>
               <>
                 <div className="flex gap-5">
-                  {application.projectRole.techStacks
+                  {displayTechStacks
                     .slice(0, 3)
-                    .map((tech) => (
+                    .map((tech: TechStack, index: number) => (
                       <StackLogo
-                        key={tech.id}
-                        name={tech.name}
+                        key={tech.id || index}
                         icon={tech.iconUrl || ""}
                         alt={tech.name}
+                        name={tech.name}
                       />
                     ))}
                 </div>
-                {application.projectRole.techStacks.length > 3 && (
+                {displayTechStacks.length > 3 && (
                   <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                    +{application.projectRole.techStacks.length - 3}
+                    +{displayTechStacks.length - 3}
                   </span>
                 )}
               </>
