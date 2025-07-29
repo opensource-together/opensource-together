@@ -24,7 +24,7 @@ import {
 import { Session } from 'supertokens-nestjs';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
-import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
+import { GetAllProjectApplicationsQueryByProjectId } from '../../use-cases/queries/get-all-project-application.query';
 import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 
 @Controller('projects/:projectId/roles')
@@ -225,7 +225,7 @@ export class ProjectRoleApplicationController {
         };
       }[]
     > = await this.queryBus.execute(
-      new GetAllProjectApplicationsQuery({ projectId, userId }),
+      new GetAllProjectApplicationsQueryByProjectId({ projectId, userId }),
     );
     if (!applications.success) {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
