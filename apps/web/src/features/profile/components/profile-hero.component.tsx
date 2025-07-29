@@ -11,17 +11,17 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const { avatarUrl = "", name = "User", jobTitle = "", bio = "" } = profile;
+  const { avatarUrl = "", username = "", jobTitle = "", bio = "" } = profile;
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="mr-4">
-            <Avatar src={avatarUrl} name={name} alt={name} size="2xl" />
+            <Avatar src={avatarUrl} name={username} alt={username} size="2xl" />
           </div>
           <div>
-            <h2 className="text-2xl font-medium tracking-tighter">{name}</h2>
+            <h2 className="text-2xl font-medium tracking-tighter">{username}</h2>
             <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
           </div>
         </div>

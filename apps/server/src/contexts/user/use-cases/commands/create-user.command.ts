@@ -6,7 +6,6 @@ import {
   USER_REPOSITORY_PORT,
 } from '../ports/user.repository.port';
 import { Result } from '@/libs/result';
-// import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 export class CreateUserCommand implements ICommand {
   constructor(
@@ -83,9 +82,6 @@ export class CreateUserCommandHandler
       this.userRepo.findByEmail(email),
     ]);
 
-    console.log('userExistsByUsername', userExistsByUsername);
-    console.log('userExistsByEmail', userExistsByEmail);
-
     if (userExistsByUsername.success || userExistsByEmail.success) {
       return Result.fail('Identifiants incorrects.');
     }
@@ -104,7 +100,6 @@ export class CreateUserCommandHandler
       experiences,
       projects,
     });
-    // console.log('validUser', validUser);
 
     if (!validUser.success) {
       return Result.fail(
@@ -114,13 +109,10 @@ export class CreateUserCommandHandler
       );
     }
 
-    console.log('validUser', validUser.value);
-
     const savedUser: Result<User, string> = await this.userRepo.create(
       validUser.value,
     );
 
-    console.log('savedUser', savedUser);
     if (!savedUser.success) {
       return Result.fail(
         "Erreur technique lors de la création de l'utilisateur.",

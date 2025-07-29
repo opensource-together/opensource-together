@@ -49,7 +49,7 @@ export const updateProfile = async (
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/profile`, {
+    const response = await fetch(`${API_BASE_URL}/user/me`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
