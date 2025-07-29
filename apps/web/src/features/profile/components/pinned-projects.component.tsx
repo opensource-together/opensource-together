@@ -5,6 +5,8 @@ import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Icon } from "@/shared/components/ui/icon";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 import { Profile } from "../types/profile.type";
 
 interface PinnedProjectsProps {
@@ -13,6 +15,7 @@ interface PinnedProjectsProps {
 
 export default function PinnedProjects({ profile }: PinnedProjectsProps) {
   const { projects = [] } = profile;
+  const { currentUser } = useAuth();
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -23,14 +26,20 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
       {projects.length === 0 ? (
         <EmptyState
           title="Aucun projet rejoint"
-          description="Découvrez des projets open source de la communauté et rejoignez-les."
+          description={
+            profile.id === currentUser?.id
+              ? "Découvrez des projets open source de la communauté et rejoignez-les."
+              : "Cet utilisateur n'a pas encore rejoint de projet."
+          }
           action={
-            <Link href="/">
-              <Button className="font-medium">
-                Explorer les projets
-                <Icon name="arrow-up-right" size="xs" variant="white" />
-              </Button>
-            </Link>
+            profile.id === currentUser?.id && (
+              <Link href="/">
+                <Button className="font-medium">
+                  Explorer les projets
+                  <Icon name="arrow-up-right" size="xs" variant="white" />
+                </Button>
+              </Link>
+            )
           }
         />
       ) : (

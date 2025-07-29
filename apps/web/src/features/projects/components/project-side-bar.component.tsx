@@ -71,6 +71,13 @@ export default function ProjectSideBar({
     router.push(`/projects/${project.id}/edit`);
   };
 
+  const handleContributorClick = (contributor: any) => {
+    // Pour l'instant, utiliser le login GitHub comme ID
+    // TODO: Remplacer par le vrai ID utilisateur quand disponible
+    const userId = contributor.login;
+    router.push(`/profile/${userId}`);
+  };
+
   const breadcrumbItems = [
     {
       label: "Accueil",
@@ -246,7 +253,8 @@ export default function ProjectSideBar({
                   name={contributor.login}
                   alt={contributor.login}
                   size="sm"
-                  className="-ml-4 border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  className="-ml-4 cursor-pointer border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  onClick={() => handleContributorClick(contributor)}
                 />
               </div>
             ))}
