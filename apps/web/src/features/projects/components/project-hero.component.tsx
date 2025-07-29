@@ -5,6 +5,7 @@ import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
+import ProjectReadme from "./project-readme.component";
 
 interface ProjectHeroProps {
   project: Project;
@@ -81,6 +82,10 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
               </div>
             )}
           </div>
+        )}
+
+        {project.readme && (
+          <ProjectReadme readme={project.readme} projectTitle={title} />
         )}
 
         <div className="mt-10 w-full max-w-[629px]">
