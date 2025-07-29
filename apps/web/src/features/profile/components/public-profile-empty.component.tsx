@@ -30,8 +30,8 @@ export default function PublicProfileEmpty() {
             <Button>Retour à l'accueil</Button>
           </Link>
 
-          <Link href="/projects">
-            <Button variant="secondary">Découvrir des projets</Button>
+          <Link href="/dashboard">
+            <Button variant="secondary">Retour au Dashboard</Button>
           </Link>
         </div>
       </div>
