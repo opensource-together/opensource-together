@@ -220,7 +220,25 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      const repositories = response.data
+
+      // Récupérer les informations de l'utilisateur authentifié
+      const userResponse = await octokit.rest.users.getAuthenticated({
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      const authenticatedUser = userResponse.data.login;
+
+      // Filtrer pour ne garder que les repositories dont l'utilisateur est le propriétaire
+      const ownedRepositories = response.data.filter(
+        (repo) => repo.owner.login === authenticatedUser,
+      );
+
+      this.Logger.log(
+        `Found ${ownedRepositories.length} owned repositories out of ${response.data.length} total repositories`,
+      );
+
+      const repositories = ownedRepositories
         .map((repo) => {
           const rep = toGithubRepositoryDto(repo);
           if (rep.success) {

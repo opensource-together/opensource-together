@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/github-octokit.decorator';
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import {
@@ -20,6 +19,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Patch,
   Post,
@@ -634,6 +634,7 @@ export class ProjectController {
         method: method,
         image: project.image,
         coverImages: project.coverImages,
+        readme: project.readme,
       }),
     );
     if (!projectRes.success) {

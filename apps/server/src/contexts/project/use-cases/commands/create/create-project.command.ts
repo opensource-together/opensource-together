@@ -46,6 +46,7 @@ export class CreateProjectCommand implements ICommand {
       method: string;
       image?: string;
       coverImages?: string[];
+      readme?: string;
     },
   ) {}
 }
@@ -84,6 +85,7 @@ export class CreateProjectCommandHandler
       method,
       image,
       coverImages,
+      readme,
     } = createProjectCommand.props;
     // verifier si un project n'existe pas déjà avec le même titre
     const projectWithSameTitle = await this.projectRepo.findByTitle(title);
@@ -151,6 +153,7 @@ export class CreateProjectCommandHandler
       projectGoals: projectGoals,
       image,
       coverImages,
+      readme,
     });
     if (!projectResult.success) {
       return Result.fail(projectResult.error);
