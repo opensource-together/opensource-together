@@ -9,7 +9,6 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Logger,
 } from '@nestjs/common';
@@ -22,8 +21,6 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
-import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
-import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
 import { GetAllProjectApplicationsQueryByProjectId } from '../../use-cases/queries/get-all-project-application.query';
 import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 

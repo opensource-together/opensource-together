@@ -340,6 +340,7 @@ describe('Domain Project Entity', () => {
         id: '123',
         username: 'test',
         email: 'test@test.com',
+        login: 'test',
       });
       if (!user.success) {
         throw new Error('User creation should have succeeded');
@@ -359,6 +360,7 @@ describe('Domain Project Entity', () => {
         id: '456',
         username: 'test',
         email: 'test@test.com',
+        login: 'test',
       });
       if (!user.success) {
         throw new Error('User creation should have succeeded');

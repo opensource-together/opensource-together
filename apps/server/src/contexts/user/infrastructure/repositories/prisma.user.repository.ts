@@ -8,7 +8,7 @@ import { PrismaUserMapper } from './prisma.user.mapper';
 @Injectable()
 export class PrismaUserRepository implements UserRepositoryPort {
   private readonly Logger = new Logger(PrismaUserRepository.name);
-  
+
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Result<User, string>> {
@@ -20,12 +20,12 @@ export class PrismaUserRepository implements UserRepositoryPort {
           techStacks: true,
         },
       });
-      
+
       if (!userResult) return Result.fail('User not found');
-      
+
       const user = PrismaUserMapper.toDomain(userResult);
       if (!user.success) return Result.fail(user.error);
-      
+
       return Result.ok(user.value);
     } catch (error) {
       this.Logger.error('Error finding user by id:', error);
@@ -38,9 +38,9 @@ export class PrismaUserRepository implements UserRepositoryPort {
   async create(user: User): Promise<Result<User, string>> {
     const mappedData = PrismaUserMapper.toRepo(user);
     if (!mappedData.success) return Result.fail(mappedData.error);
-    
+
     const { userData, socialLinksData } = mappedData.value;
-    
+
     try {
       const savedUser = await this.prisma.$transaction(async (tx) => {
         // Créer l'utilisateur
@@ -71,10 +71,10 @@ export class PrismaUserRepository implements UserRepositoryPort {
       if (!savedUser) {
         return Result.fail("Erreur lors de la création de l'utilisateur.");
       }
-      
+
       const userResult = PrismaUserMapper.toDomain(savedUser);
       if (!userResult.success) return Result.fail(userResult.error);
-      
+
       return Result.ok(userResult.value);
     } catch (error) {
       this.Logger.error('Error creating user:', error);
@@ -93,12 +93,12 @@ export class PrismaUserRepository implements UserRepositoryPort {
           techStacks: true,
         },
       });
-      
+
       if (!userResult) return Result.fail('User not found');
-      
+
       const user = PrismaUserMapper.toDomain(userResult);
       if (!user.success) return Result.fail(user.error);
-      
+
       return Result.ok(user.value);
     } catch (error) {
       this.Logger.error('Error finding user by email:', error);
@@ -117,12 +117,12 @@ export class PrismaUserRepository implements UserRepositoryPort {
           techStacks: true,
         },
       });
-      
+
       if (!userResult) return Result.fail('User not found');
-      
+
       const user = PrismaUserMapper.toDomain(userResult);
       if (!user.success) return Result.fail(user.error);
-      
+
       return Result.ok(user.value);
     } catch (error) {
       this.Logger.error('Error finding user by username:', error);
@@ -135,9 +135,9 @@ export class PrismaUserRepository implements UserRepositoryPort {
   async update(user: User): Promise<Result<User, string>> {
     const mappedData = PrismaUserMapper.toRepo(user);
     if (!mappedData.success) return Result.fail(mappedData.error);
-    
+
     const { userData, socialLinksData } = mappedData.value;
-    
+
     try {
       const updatedUser = await this.prisma.$transaction(async (tx) => {
         // Mettre à jour l'utilisateur
@@ -175,10 +175,10 @@ export class PrismaUserRepository implements UserRepositoryPort {
       });
 
       if (!updatedUser) return Result.fail('User not updated');
-      
+
       const userResult = PrismaUserMapper.toDomain(updatedUser);
       if (!userResult.success) return Result.fail(userResult.error);
-      
+
       return Result.ok(userResult.value);
     } catch (error) {
       this.Logger.error('Error updating user:', error);
@@ -190,7 +190,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
 
   async delete(user: User): Promise<Result<void, string>> {
     const { id } = user.toPrimitive();
-    
+
     try {
       await this.prisma.$transaction(async (tx) => {
         // Supprimer les liens sociaux d'abord (contrainte de clé étrangère)
@@ -203,7 +203,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
           where: { id },
         });
       });
-      
+
       return Result.ok(undefined);
     } catch (error) {
       this.Logger.error('Error deleting user:', error);
@@ -214,7 +214,10 @@ export class PrismaUserRepository implements UserRepositoryPort {
   }
 
   // Nouvelle méthode pour mettre à jour les tech stacks d'un utilisateur
-  async updateTechStacks(userId: string, techStackIds: string[]): Promise<Result<User, string>> {
+  async updateTechStacks(
+    userId: string,
+    techStackIds: string[],
+  ): Promise<Result<User, string>> {
     try {
       const updatedUser = await this.prisma.$transaction(async (tx) => {
         // Déconnecter toutes les tech stacks existantes
