@@ -55,6 +55,7 @@ export async function handleGithubSignUp(
       username: githubUser.login,
       email: email,
       name: githubUser.name || githubUser.login,
+      provider: 'github',
       login: githubUser.login,
       avatarUrl: githubUser.avatar_url,
       bio: githubUser.bio ?? '',

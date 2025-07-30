@@ -4,6 +4,8 @@ import { User } from '@/contexts/user/domain/user.entity';
 import { Result } from '@/libs/result';
 import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
 import { deleteUser } from 'supertokens-node';
+import { Logger } from '@nestjs/common';
+import { LOADIPHLPAPI } from 'dns';
 
 export async function handleGoogleSignUp(
   userInfo: {
@@ -27,6 +29,7 @@ export async function handleGoogleSignUp(
         username: username,
         email: email,
         name: username,
+        provider: 'google',
         login: username,
         avatarUrl: picture,
         location: undefined,
@@ -42,13 +45,14 @@ export async function handleGoogleSignUp(
       }),
     );
 
+    Logger.log('createUserResult', createUserResult);
     if (!createUserResult.success) {
-      console.error('Erreur création utilisateur:', createUserResult.error);
+      Logger.error('Erreur création utilisateur:', createUserResult.error);
       await deleteUser(id);
       throw new Error('Échec création utilisateur');
     }
   } catch (error) {
-    console.error('Erreur lors de la création:', error);
+    Logger.error('Erreur lors de la création:', error);
     await deleteUser(id);
     throw error;
   }

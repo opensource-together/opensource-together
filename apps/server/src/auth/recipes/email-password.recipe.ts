@@ -99,6 +99,7 @@ export const emailPasswordRecipe = (
                 id: responseSignUpPOSTSupertokens.user.id,
                 email: emailForCreateUser,
                 username: usernameForCreateUser,
+                provider: 'email',
                 name: '',
                 login: '',
                 avatarUrl: '',

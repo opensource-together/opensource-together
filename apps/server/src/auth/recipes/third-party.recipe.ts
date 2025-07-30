@@ -14,6 +14,7 @@ import { handleGithubSignUp } from './github/github-signInUp';
 import { googleProviderConfig } from './google/google-provider.config';
 import { githubProviderConfig } from './github/github-provider.config';
 import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
+import { Logger } from '@nestjs/common';
 
 interface GithubUserInfo {
   user: {
@@ -117,18 +118,23 @@ export const thirdPartyRecipe = ({
 
               // Traiter seulement les nouveaux utilisateurs
               if (input.thirdPartyId === 'google') {
-                const { picture, email } = response.rawUserInfoFromProvider
-                  .fromUserInfoAPI as {
-                  picture: string;
-                  email: string;
-                };
-                const userInfo = {
-                  id: response.user.id,
-                  email,
-                  // provider: 'google',
-                  picture,
-                };
-                await handleGoogleSignUp(userInfo, commandBus);
+                Logger.log('response', response);
+                if (response.createdNewRecipeUser) {
+                  const { picture, email } = response.rawUserInfoFromProvider
+                    .fromUserInfoAPI as {
+                    picture: string;
+                    email: string;
+                  };
+                  const userInfo = {
+                    id: response.user.id,
+                    email,
+                    // provider: 'google',
+                    picture,
+                  };
+                  await handleGoogleSignUp(userInfo, commandBus);
+                } else {
+                  return response;
+                }
               }
             }
             // if (response.status === 'OK') {

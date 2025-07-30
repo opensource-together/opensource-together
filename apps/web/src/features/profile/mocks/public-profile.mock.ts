@@ -9,6 +9,7 @@ export const mockPublicProfile: Profile = {
   company: "Tech Corp",
   jobTitle: "Senior Fullstack Developer",
   contributionsCount: 1250,
+  provider: "github",
   socialLinks: {
     github: "https://github.com/johndoe",
     twitter: "https://twitter.com/johndoe",

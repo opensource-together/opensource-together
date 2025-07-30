@@ -30,7 +30,7 @@ export class PrismaProfileMapper {
       email: raw.email,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
-      // name: raw.name,
+      provider: raw.provider,
       login: raw.login,
       avatarUrl: raw.avatarUrl || undefined,
       bio: raw.bio || undefined,
@@ -70,6 +70,7 @@ export class PrismaProfileMapper {
   public static toRepo(profile: {
     userId: string;
     name: string;
+    provider: string;
     login: string;
     avatarUrl: string;
     bio?: string;
@@ -101,6 +102,7 @@ export class PrismaProfileMapper {
       profileData: {
         userId: profileState.userId,
         name: profileState.name,
+        provider: profileState.provider,
         login: profileState.login,
         avatarUrl: profileState.avatarUrl,
         bio: profileState.bio,
