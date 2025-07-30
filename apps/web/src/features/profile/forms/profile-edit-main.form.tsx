@@ -97,8 +97,8 @@ export default function ProfileEditMainForm({
                     accept="image/*"
                     maxSize={1}
                     size="xl"
-                    name={profile.name}
-                    fallback={profile.name}
+                    name={profile.username}
+                    fallback={profile.username}
                     currentImageUrl={profile.avatarUrl}
                     className="mt-4"
                   />

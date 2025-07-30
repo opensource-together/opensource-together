@@ -20,7 +20,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       isActive: false,
     },
     {
-      label: profile.name || "Profile",
+      label: profile.username || "Profile",
       isActive: true,
     },
   ];
