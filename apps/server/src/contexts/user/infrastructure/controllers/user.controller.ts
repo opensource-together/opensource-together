@@ -80,6 +80,7 @@ export class UserController {
       bio: 'Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together ',
       socialLinks: {},
       techStacks: [],
+      provider: 'google',
       experiences: [],
       projects: [],
       createdAt: '2025-07-29T08:07:32.845Z',
