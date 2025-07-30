@@ -9,7 +9,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 
-import { Project } from "../types/project.type";
+import { GithubContributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
@@ -71,7 +71,7 @@ export default function ProjectSideBar({
     router.push(`/projects/${project.id}/edit`);
   };
 
-  const handleContributorClick = (contributor: any) => {
+  const handleContributorClick = (contributor: GithubContributor) => {
     // Pour l'instant, utiliser le login GitHub comme ID
     // TODO: Remplacer par le vrai ID utilisateur quand disponible
     const userId = contributor.login;

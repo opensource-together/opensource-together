@@ -23,10 +23,10 @@ import {
   stepFourSchema,
 } from "@/features/projects/validations/project-stepper.schema";
 
-import { ProjectCreationConfirmDialog } from "../../components/stepper/creation-confirmation-dialog.component";
+import { ProjectImportationConfirmDialog } from "../../components/stepper/import-confirmation-dialog.component";
 import { FormNavigationButtons } from "../../components/stepper/stepper-navigation-buttons.component";
 
-export function StepFourForm() {
+export function StepSixForm() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const { createProject, isCreating } = useCreateProject();
@@ -56,7 +56,7 @@ export function StepFourForm() {
   } = form;
 
   const handlePrevious = () => {
-    router.push("/projects/create/scratch/step-three");
+    router.push("/projects/create/github/step-five");
   };
 
   const handleLogoSelect = (file: File | null) => {
@@ -67,17 +67,39 @@ export function StepFourForm() {
   const convertToExternalLinksArray = (
     formLinks: StepFourFormData["externalLinks"]
   ) => {
-    if (!formLinks) return [];
-
-    return Object.entries(formLinks)
-      .filter(([_, url]) => typeof url === "string" && url.trim())
-      .map(([type, url]) => ({
-        type: type === "website" ? "other" : type,
-        url: url as string,
-      })) as Array<{
+    const links: Array<{
       type: "github" | "discord" | "twitter" | "linkedin" | "other";
       url: string;
-    }>;
+    }> = [];
+
+    // Always add the GitHub repository URL first (since this is a GitHub import)
+    if (formData.selectedRepository?.url) {
+      links.push({
+        type: "github",
+        url: formData.selectedRepository.url,
+      });
+    }
+
+    // Add other external links from the form (excluding GitHub to avoid duplicates)
+    if (formLinks) {
+      Object.entries(formLinks)
+        .filter(([type, url]) => {
+          return (
+            typeof url === "string" && url.trim() && type !== "github" // Skip GitHub field since we already added the repo URL
+          );
+        })
+        .forEach(([type, url]) => {
+          links.push({
+            type:
+              type === "website"
+                ? "other"
+                : (type as "discord" | "twitter" | "linkedin"),
+            url: url as string,
+          });
+        });
+    }
+
+    return links;
   };
 
   const handleFormSubmit = handleSubmit(async (data) => {
@@ -92,8 +114,7 @@ export function StepFourForm() {
 
     const finalFormData = {
       ...formData,
-      // Include coverImages from store data
-      coverImages: formData.coverImages || [],
+      // Don't put image URL here - it will be handled by the service
       externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
@@ -105,8 +126,8 @@ export function StepFourForm() {
     // Create project with consolidated data and pass the file separately
     createProject({
       projectData: finalFormData,
+      method: "github",
       imageFile: pendingFormData.logo, // Pass the File object directly
-      method: "scratch",
     });
   };
 
@@ -159,10 +180,21 @@ export function StepFourForm() {
                   <FormControl>
                     <InputWithIcon
                       icon="github"
-                      placeholder="https://github.com/..."
-                      {...field}
+                      placeholder={
+                        formData.selectedRepository?.url ||
+                        "https://github.com/..."
+                      }
+                      value={formData.selectedRepository?.url || field.value}
+                      disabled={!!formData.selectedRepository?.url}
+                      onChange={field.onChange}
                     />
                   </FormControl>
+                  {formData.selectedRepository?.url && (
+                    <p className="text-muted-foreground text-xs">
+                      L'URL du repository Github sélectionné sera
+                      automatiquement utilisée
+                    </p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -244,7 +276,7 @@ export function StepFourForm() {
         </form>
       </Form>
 
-      <ProjectCreationConfirmDialog
+      <ProjectImportationConfirmDialog
         open={showConfirmation}
         onOpenChange={setShowConfirmation}
         projectTitle={formData.title}

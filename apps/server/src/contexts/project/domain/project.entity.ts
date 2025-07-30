@@ -59,6 +59,7 @@ export type ProjectData = {
   projectGoals: { id?: string; goal: string }[];
   image?: string;
   coverImages?: string[]; // Array of cover image URLs (1 to 4)
+  readme?: string; // Ajout du champ README
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -81,6 +82,7 @@ export type ProjectProps = {
   projectGoals: ProjectGoals[];
   image?: string;
   coverImages?: string[];
+  readme?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -99,6 +101,7 @@ export class Project {
   private projectGoals: ProjectGoals[];
   private image?: string;
   private coverImages?: string[];
+  private readme?: string;
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -118,6 +121,7 @@ export class Project {
     this.projectGoals = props.projectGoals;
     this.image = props.image;
     this.coverImages = props.coverImages;
+    this.readme = props.readme;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -246,6 +250,7 @@ export class Project {
       projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
       image: this.image,
       coverImages: this.coverImages,
+      readme: this.readme,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

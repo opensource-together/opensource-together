@@ -49,6 +49,10 @@ export class CreateProjectDtoRequest {
   @IsString({ each: true })
   coverImages: string[];
 
+  @IsString()
+  @IsOptional()
+  readme: string;
+
   @IsArray()
   keyFeatures: string[];
 

@@ -75,6 +75,7 @@ export const createProjectApiSchema = z.object({
   shortDescription: z.string().min(10, "Une description est requise"),
   image: z.string().optional(),
   coverImages: z.array(z.string()).max(4).optional(),
+  readme: z.string().optional(),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
   keyFeatures: z

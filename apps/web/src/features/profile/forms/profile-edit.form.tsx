@@ -24,7 +24,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      avatarUrl: profile.avatarUrl || "",
+      avatarUrl: profile.avatarUrl || undefined,
       name: profile.name || "",
       bio: profile.bio || "",
       techStacks: profile.techStacks?.map((tech) => tech.id) || [],

@@ -1,5 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsString, IsUrl, ValidateNested } from 'class-validator';
+import {
+  IsNumber,
+  IsString,
+  IsUrl,
+  ValidateNested,
+  IsOptional,
+} from 'class-validator';
 import { GithubUserDto } from './github-user.dto';
 
 export class GithubRepositoryDto {
@@ -22,6 +28,7 @@ export class GithubRepositoryDto {
   @IsUrl()
   html_url: string;
 
+  @IsOptional()
   @IsString()
   description: string;
 
@@ -29,7 +36,7 @@ export class GithubRepositoryDto {
   forks_count: number;
 
   @IsNumber()
-  subscribers_count: number;
+  watchers_count: number;
 
   @IsNumber()
   stargazers_count: number;
