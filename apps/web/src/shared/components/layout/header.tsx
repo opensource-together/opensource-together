@@ -249,12 +249,12 @@ export default function Header() {
                 >
                   <Avatar
                     src={currentUser?.avatarUrl}
-                    name={currentUser?.name}
-                    alt={currentUser?.name}
+                    name={currentUser?.username}
+                    alt={currentUser?.username}
                     size="xs"
                   />
                   <span className="font-medium tracking-tighter">
-                    {currentUser?.name}
+                    {currentUser?.username}
                   </span>
                   <Icon name="chevron-down" size="md" />
                 </Button>
