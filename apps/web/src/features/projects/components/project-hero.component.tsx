@@ -67,7 +67,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                   console.warn(`Failed to load image: ${coverImages[0]}`);
                   // Hide the image container and show a placeholder
                   const target = e.target as HTMLImageElement;
-                  const container = target.closest('div');
+                  const container = target.closest("div");
                   if (container) {
                     container.innerHTML = `
                       <div class="h-[272px] w-full rounded-md bg-gray-100 flex items-center justify-center">
@@ -93,7 +93,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                         console.warn(`Failed to load image: ${img}`);
                         // Hide the image and show a placeholder
                         const target = e.target as HTMLImageElement;
-                        const container = target.closest('div');
+                        const container = target.closest("div");
                         if (container) {
                           container.innerHTML = `
                             <div class="h-[88px] w-[140px] rounded-md bg-gray-100 flex items-center justify-center">
