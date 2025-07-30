@@ -105,8 +105,8 @@ export function StepFourForm() {
     // Create project with consolidated data and pass the file separately
     createProject({
       projectData: finalFormData,
-      method: "scratch",
       imageFile: pendingFormData.logo, // Pass the File object directly
+      method: "scratch",
     });
   };
 

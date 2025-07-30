@@ -63,6 +63,19 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                 height={400}
                 className="h-[272px] w-full rounded-md object-cover"
                 priority
+                onError={(e) => {
+                  console.warn(`Failed to load image: ${coverImages[0]}`);
+                  // Hide the image container and show a placeholder
+                  const target = e.target as HTMLImageElement;
+                  const container = target.closest('div');
+                  if (container) {
+                    container.innerHTML = `
+                      <div class="h-[272px] w-full rounded-md bg-gray-100 flex items-center justify-center">
+                        <span class="text-gray-400 text-sm">Image non disponible</span>
+                      </div>
+                    `;
+                  }
+                }}
               />
             </div>
             {/* Thumbnails on the right */}
@@ -76,6 +89,19 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                       width={140}
                       height={88}
                       className="h-full w-full rounded-md object-cover"
+                      onError={(e) => {
+                        console.warn(`Failed to load image: ${img}`);
+                        // Hide the image and show a placeholder
+                        const target = e.target as HTMLImageElement;
+                        const container = target.closest('div');
+                        if (container) {
+                          container.innerHTML = `
+                            <div class="h-[88px] w-[140px] rounded-md bg-gray-100 flex items-center justify-center">
+                              <span class="text-gray-400 text-xs">Image non disponible</span>
+                            </div>
+                          `;
+                        }
+                      }}
                     />
                   </div>
                 ))}

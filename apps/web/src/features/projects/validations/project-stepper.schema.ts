@@ -26,6 +26,7 @@ export const stepOneSchema = z.object({
     .string()
     .min(10, "La description doit contenir au moins 10 caractères")
     .max(100, "La description ne peut pas dépasser 100 caractères"),
+  coverImages: z.array(z.instanceof(File)).optional(),
   keyFeatures: z
     .array(
       z.object({
