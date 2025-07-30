@@ -9,7 +9,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 
-import { Project, GithubContributor } from "../types/project.type";
+import { GithubContributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
