@@ -111,7 +111,7 @@ export default function ProfileEditMainForm({
           {/* Name */}
           <FormField
             control={control}
-            name="name"
+            name="username"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nom</FormLabel>
