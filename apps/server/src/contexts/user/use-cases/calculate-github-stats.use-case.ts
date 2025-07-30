@@ -89,56 +89,27 @@ export class CalculateGitHubStatsUseCase {
     octokit: Octokit,
   ): Promise<Result<GitHubStatsCalculationResult, string>> {
     try {
-      // Récupérer les repositories de l'utilisateur
-      const reposResult =
-        await this.githubRepo.findRepositoriesOfAuthenticatedUser(octokit);
-      if (!reposResult.success) {
-        return Result.fail('Failed to fetch user repositories');
-      }
+      // Utiliser les nouvelles méthodes optimisées
+      const [totalStarsResult, contributedReposResult, commitsLastYearResult] =
+        await Promise.all([
+          this.githubRepo.getUserTotalStars(octokit),
+          this.githubRepo.getUserContributedRepos(octokit),
+          this.githubRepo.getUserCommitsLastYear(octokit),
+        ]);
 
-      const repositories = reposResult.value;
-      let totalStars = 0;
-      let contributedRepos = 0;
-      let commitsThisYear = 0;
-
-      // Calculer le total des stars
-      for (const repo of repositories) {
-        const repoInfoResult =
-          await this.githubRepo.findRepositoryByOwnerAndName(
-            repo.owner,
-            repo.title,
-            octokit,
-          );
-
-        if (repoInfoResult.success) {
-          totalStars += repoInfoResult.value.stars;
-        }
-      }
-
-      // Compter les repositories contribués (tous les repositories de l'utilisateur)
-      contributedRepos = repositories.length;
-
-      // Calculer les commits de cette année
-      const currentYear = new Date().getFullYear();
-      for (const repo of repositories) {
-        const commitsResult = await this.githubRepo.findCommitsByRepository(
-          repo.owner,
-          repo.title,
-          octokit,
-        );
-
-        if (commitsResult.success) {
-          // Filtrer les commits de cette année
-          const commitsThisYearInRepo = commitsResult.value.commitsNumber;
-          // Note: Cette approche est simplifiée. Pour un calcul précis,
-          // il faudrait analyser chaque commit individuellement
-          commitsThisYear += Math.min(commitsThisYearInRepo, 100); // Limite pour éviter la surcharge
-        }
-      }
+      // Gérer les erreurs individuelles
+      const totalStars = totalStarsResult.success ? totalStarsResult.value : 0;
+      const contributedRepos = contributedReposResult.success
+        ? contributedReposResult.value
+        : 0;
+      const commitsThisYear = commitsLastYearResult.success
+        ? commitsLastYearResult.value
+        : 0;
 
       console.log('totalStars', totalStars);
       console.log('contributedRepos', contributedRepos);
       console.log('commitsThisYear', commitsThisYear);
+
       return Result.ok({
         totalStars,
         contributedRepos,

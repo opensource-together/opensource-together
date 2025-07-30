@@ -327,4 +327,311 @@ export class GithubRepository implements GithubRepositoryPort {
       return Result.fail('Failed to fetch repository README');
     }
   }
+
+  async getUserTotalStars(octokit: Octokit): Promise<Result<number, string>> {
+    try {
+      this.Logger.log('Fetching user total stars using GraphQL');
+
+      // Récupérer l'utilisateur authentifié
+      const userResponse = await octokit.rest.users.getAuthenticated();
+      const username = userResponse.data.login;
+
+      // Utiliser GraphQL pour récupérer les stars de tous les types de repositories
+      const graphqlQuery = `
+        query($username: String!) {
+          user(login: $username) {
+            # Repositories owned par l'utilisateur
+            repositories(first: 100, privacy: PUBLIC, isFork: false, ownerAffiliations: OWNER) {
+              nodes {
+                stargazerCount
+                nameWithOwner
+              }
+            }
+            # Repositories où l'utilisateur a contribué (pas owner)
+            repositoriesContributedTo(first: 100, privacy: PUBLIC) {
+              nodes {
+                stargazerCount
+                nameWithOwner
+              }
+            }
+            # Organisations dont l'utilisateur est membre
+            organizations(first: 100) {
+              nodes {
+                repositories(first: 100, privacy: PUBLIC) {
+                  nodes {
+                    stargazerCount
+                    nameWithOwner
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const response = (await octokit.graphql(graphqlQuery, {
+        username,
+      })) as any;
+
+      let totalStars = 0;
+      const countedRepos = new Set<string>(); // Pour éviter les doublons
+
+      // Stars des repositories owned
+      if (response.user?.repositories?.nodes) {
+        for (const repo of response.user.repositories.nodes) {
+          if (!countedRepos.has(repo.nameWithOwner)) {
+            totalStars += repo.stargazerCount || 0;
+            countedRepos.add(repo.nameWithOwner);
+            this.Logger.debug(
+              `Owned repo: ${repo.nameWithOwner} - ${repo.stargazerCount} stars`,
+            );
+          }
+        }
+      }
+
+      // Stars des repositories contribués (pas owner)
+      if (response.user?.repositoriesContributedTo?.nodes) {
+        for (const repo of response.user.repositoriesContributedTo.nodes) {
+          if (!countedRepos.has(repo.nameWithOwner)) {
+            totalStars += repo.stargazerCount || 0;
+            countedRepos.add(repo.nameWithOwner);
+            this.Logger.debug(
+              `Contributed repo: ${repo.nameWithOwner} - ${repo.stargazerCount} stars`,
+            );
+          }
+        }
+      }
+
+      // Stars des repositories d'organisations
+      if (response.user?.organizations?.nodes) {
+        for (const org of response.user.organizations.nodes) {
+          if (org.repositories?.nodes) {
+            for (const repo of org.repositories.nodes) {
+              if (!countedRepos.has(repo.nameWithOwner)) {
+                totalStars += repo.stargazerCount || 0;
+                countedRepos.add(repo.nameWithOwner);
+                this.Logger.debug(
+                  `Org repo: ${repo.nameWithOwner} - ${repo.stargazerCount} stars`,
+                );
+              }
+            }
+          }
+        }
+      }
+
+      this.Logger.log(
+        `Total stars calculated (GraphQL): ${totalStars} for ${username} (${countedRepos.size} unique repos)`,
+      );
+      return Result.ok(totalStars);
+    } catch (error) {
+      this.Logger.error('Error fetching user total stars with GraphQL', error);
+      return Result.fail('Failed to fetch user total stars with GraphQL');
+    }
+  }
+
+  async getUserContributedRepos(
+    octokit: Octokit,
+  ): Promise<Result<number, string>> {
+    try {
+      this.Logger.log(
+        'Fetching user contributed repositories count using GraphQL',
+      );
+
+      // Récupérer l'utilisateur authentifié
+      const userResponse = await octokit.rest.users.getAuthenticated();
+      const username = userResponse.data.login;
+
+      // Utiliser GraphQL pour récupérer tous les types de repositories en une seule requête
+      const graphqlQuery = `
+        query($username: String!) {
+          user(login: $username) {
+            repositories(first: 100, privacy: PUBLIC, ownerAffiliations: OWNER) {
+              totalCount
+            }
+            repositoriesContributedTo(first: 100, privacy: PUBLIC) {
+              totalCount
+            }
+            organizations(first: 100) {
+              totalCount
+              nodes {
+                repositories(first: 100, privacy: PUBLIC) {
+                  totalCount
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const response = (await octokit.graphql(graphqlQuery, {
+        username,
+      })) as any;
+
+      let totalRepos = 0;
+
+      console.log(response);
+      // Repositories owned
+      const ownedRepos = response.user?.repositories?.totalCount || 0;
+      totalRepos += ownedRepos;
+      this.Logger.log(`Owned repositories: ${ownedRepos}`);
+
+      // Repositories contribués (individuels)
+      const contributedRepos =
+        response.user?.repositoriesContributedTo?.totalCount || 0;
+      totalRepos += contributedRepos;
+      this.Logger.log(
+        `Contributed repositories (individual): ${contributedRepos}`,
+      );
+
+      // Repositories d'organisations
+      let orgRepos = 0;
+      if (response.user?.organizations?.nodes) {
+        for (const org of response.user.organizations.nodes) {
+          orgRepos += org.repositories?.totalCount || 0;
+        }
+      }
+      totalRepos += orgRepos;
+      this.Logger.log(`Organization repositories: ${orgRepos}`);
+
+      this.Logger.log(
+        `Total repositories where user figures (GraphQL): ${totalRepos}`,
+      );
+      return Result.ok(totalRepos);
+    } catch (error) {
+      this.Logger.error(
+        'Error fetching user contributed repos count with GraphQL',
+        error,
+      );
+      return Result.fail(
+        'Failed to fetch user contributed repos count with GraphQL',
+      );
+    }
+  }
+
+  async getUserCommitsLastYear(
+    octokit: Octokit,
+  ): Promise<Result<number, string>> {
+    try {
+      this.Logger.log('Fetching user total commits using GraphQL');
+
+      // Récupérer l'utilisateur authentifié
+      const userResponse = await octokit.rest.users.getAuthenticated();
+      const username = userResponse.data.login;
+
+      // Utiliser l'API GraphQL pour récupérer toutes les contributions de l'année
+      const currentYear = new Date().getFullYear();
+      const startDate = `${currentYear}-01-01T00:00:00Z`;
+      const endDate = `${currentYear}-12-31T23:59:59Z`;
+
+      const graphqlQuery = `
+        query($username: String!, $startDate: DateTime!, $endDate: DateTime!) {
+          user(login: $username) {
+            contributionsCollection(from: $startDate, to: $endDate) {
+              # Total des contributions par type
+              totalCommitContributions
+              totalIssueContributions
+              totalPullRequestContributions
+              totalPullRequestReviewContributions
+              
+              # Détail des contributions par repository
+              commitContributionsByRepository(maxRepositories: 100) {
+                repository {
+                  nameWithOwner
+                }
+                contributions {
+                  totalCount
+                }
+              }
+              
+              # Contributions issues
+              issueContributionsByRepository(maxRepositories: 100) {
+                repository {
+                  nameWithOwner
+                }
+                contributions {
+                  totalCount
+                }
+              }
+              
+              # Contributions pull requests
+              pullRequestContributionsByRepository(maxRepositories: 100) {
+                repository {
+                  nameWithOwner
+                }
+                contributions {
+                  totalCount
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      const response = (await octokit.graphql(graphqlQuery, {
+        username,
+        startDate,
+        endDate,
+      })) as any;
+
+      let totalContributions = 0;
+      const contributionsCollection = response.user?.contributionsCollection;
+
+      if (contributionsCollection) {
+        // Commits
+        const totalCommits =
+          contributionsCollection.totalCommitContributions || 0;
+        totalContributions += totalCommits;
+        this.Logger.log(`Total commits: ${totalCommits}`);
+
+        // Issues
+        const totalIssues =
+          contributionsCollection.totalIssueContributions || 0;
+        totalContributions += totalIssues;
+        this.Logger.log(`Total issues: ${totalIssues}`);
+
+        // Pull Requests
+        const totalPRs =
+          contributionsCollection.totalPullRequestContributions || 0;
+        totalContributions += totalPRs;
+        this.Logger.log(`Total pull requests: ${totalPRs}`);
+
+        // Reviews
+        const totalReviews =
+          contributionsCollection.totalPullRequestReviewContributions || 0;
+        totalContributions += totalReviews;
+        this.Logger.log(`Total reviews: ${totalReviews}`);
+
+        // Si le total des commits est faible, calculer à partir des contributions par repository
+        if (totalCommits < 50) {
+          let detailedCommits = 0;
+          const commitContributions =
+            contributionsCollection.commitContributionsByRepository || [];
+
+          for (const contribution of commitContributions) {
+            const count = contribution.contributions?.totalCount || 0;
+            detailedCommits += count;
+            this.Logger.debug(
+              `Repo ${contribution.repository.nameWithOwner}: ${count} commits`,
+            );
+          }
+
+          if (detailedCommits > totalCommits) {
+            totalContributions =
+              totalContributions - totalCommits + detailedCommits;
+            this.Logger.log(
+              `Using detailed commits count: ${detailedCommits} (instead of ${totalCommits})`,
+            );
+          }
+        }
+      }
+
+      this.Logger.log(
+        `Total contributions in ${currentYear} (GraphQL): ${totalContributions}`,
+      );
+      return Result.ok(totalContributions);
+    } catch (error) {
+      this.Logger.error('Error fetching user commits with GraphQL', error);
+      return Result.fail('Failed to fetch user commits with GraphQL');
+    }
+  }
 }
