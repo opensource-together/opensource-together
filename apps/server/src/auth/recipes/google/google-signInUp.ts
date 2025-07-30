@@ -5,7 +5,6 @@ import { Result } from '@/libs/result';
 import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
 import { deleteUser } from 'supertokens-node';
 import { Logger } from '@nestjs/common';
-import { LOADIPHLPAPI } from 'dns';
 
 export async function handleGoogleSignUp(
   userInfo: {
