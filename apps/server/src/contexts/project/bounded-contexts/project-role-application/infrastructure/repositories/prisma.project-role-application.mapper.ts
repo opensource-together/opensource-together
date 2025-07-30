@@ -11,9 +11,9 @@ export class PrismaProjectRoleApplicationMapper {
     domainEntity: ProjectRoleApplication,
   ): Result<Prisma.ProjectRoleApplicationCreateInput, string> {
     const toRepo: Prisma.ProjectRoleApplicationCreateInput = {
-      profile: {
+      user: {
         connect: {
-          userId: domainEntity.userProfile.id,
+          id: domainEntity.userProfile.id,
         },
       },
       projectRole: {
@@ -49,11 +49,7 @@ export class PrismaProjectRoleApplicationMapper {
   static toDomain(
     prismaEntity: Prisma.ProjectRoleApplicationGetPayload<{
       include: {
-        profile: {
-          include: {
-            user: true;
-          };
-        };
+        user: true;
         projectRole: true;
         project: {
           include: {
@@ -81,9 +77,9 @@ export class PrismaProjectRoleApplicationMapper {
       appliedAt: prismaEntity.appliedAt,
       motivationLetter: prismaEntity.motivationLetter ?? undefined,
       userProfile: {
-        id: prismaEntity.profile.userId,
-        name: prismaEntity.profile.name ?? '',
-        avatarUrl: prismaEntity.profile.avatarUrl ?? undefined,
+        id: prismaEntity.user.id,
+        username: prismaEntity.user.username ?? '',
+        avatarUrl: prismaEntity.user.avatarUrl ?? undefined,
       },
     });
     if (!domainEntity.success) {

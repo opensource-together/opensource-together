@@ -95,11 +95,20 @@ export const emailPasswordRecipe = (
             )?.value as string;
 
             const createUserResult: Result<User> = await commandBus.execute(
-              new CreateUserCommand(
-                responseSignUpPOSTSupertokens.user.id,
-                usernameForCreateUser,
-                emailForCreateUser,
-              ),
+              new CreateUserCommand({
+                id: responseSignUpPOSTSupertokens.user.id,
+                email: emailForCreateUser,
+                username: usernameForCreateUser,
+                name: '',
+                login: '',
+                avatarUrl: '',
+                location: '',
+                company: '',
+                bio: '',
+                socialLinks: {},
+                experiences: [],
+                projects: [],
+              }),
             );
             Logger.log(
               'je suis dans le createUserResult de signUpPOST',

@@ -21,7 +21,7 @@ export class DeleteUserCommandHandler
 
   async execute(command: DeleteUserCommand): Promise<Result<string, string>> {
     const user = await this.userRepo.findById(command.userId);
-    if (!user.success) return Result.fail(user.error as string);
+    if (!user.success) return Result.fail(user.error);
     const deletedUser = await this.userRepo.delete(user.value);
     if (!deletedUser.success) return Result.fail(deletedUser.error);
     return Result.ok('User deleted successfully');

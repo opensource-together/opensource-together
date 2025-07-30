@@ -21,7 +21,6 @@ export class AcceptUserApplicationCommand implements ICommand {
   constructor(
     public readonly props: {
       projectRoleApplicationId: string;
-      projectId: string;
       userId: string;
     },
   ) {}
@@ -42,31 +41,41 @@ export class AcceptUserApplicationCommandHandler
   ) {}
 
   async execute(command: AcceptUserApplicationCommand) {
-    const { projectRoleApplicationId, projectId, userId } = command.props;
-    const project: Result<Project, string> =
-      await this.projectRepo.findById(projectId);
-    this.Logger.log('project', project);
-    if (!project.success) {
+    const { projectRoleApplicationId, userId } = command.props;
+    const applicationResult: Result<ProjectRoleApplication, string> =
+      await this.projectRoleApplicationRepository.findById(
+        projectRoleApplicationId,
+      );
+    if (!applicationResult.success) {
+      return Result.fail(applicationResult.error);
+    }
+    const application = applicationResult.value;
+
+    const projectResult: Result<Project, string> =
+      await this.projectRepo.findById(application.toPrimitive().projectId);
+    this.Logger.log('project', projectResult);
+    if (!projectResult.success) {
       return Result.fail('Project not found');
     }
 
-    if (!project.value.hasOwnerId(userId)) {
+    const project = projectResult.value;
+    if (!project.hasOwnerId(userId)) {
       return Result.fail('User is not the owner of the project');
     }
 
-    const application: Result<ProjectRoleApplication, string> =
+    const acceptedApplication: Result<ProjectRoleApplication, string> =
       await this.projectRoleApplicationRepository.acceptApplication({
         applicationId: projectRoleApplicationId,
-        projectId,
+        projectId: application.toPrimitive().projectId,
         userId,
       });
-    if (!application.success) {
-      return Result.fail(application.error);
+    if (!acceptedApplication.success) {
+      return Result.fail(acceptedApplication.error);
     }
 
     const projectRole: Result<ProjectRole, string> =
       await this.projectRoleRepository.findById(
-        application.value.projectRoleId,
+        acceptedApplication.value.projectRoleId,
       );
 
     if (!projectRole.success) {
@@ -80,6 +89,6 @@ export class AcceptUserApplicationCommandHandler
       return Result.fail(updatedProjectRole.error);
     }
 
-    return Result.ok(application.value);
+    return Result.ok(acceptedApplication.value);
   }
 }

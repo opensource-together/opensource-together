@@ -44,7 +44,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   /**
    * Trouve une candidature par son ID
    */
-  // findById(id: string): Promise<Result<ProjectRoleApplication, string>>;
+  findById(id: string): Promise<Result<ProjectRoleApplication, string>>;
 
   /**
    * Trouve toutes les candidatures d'un utilisateur
@@ -105,7 +105,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],
@@ -133,7 +133,7 @@ export interface ProjectRoleApplicationRepositoryPort {
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],

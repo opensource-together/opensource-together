@@ -9,7 +9,6 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Logger,
 } from '@nestjs/common';
@@ -22,9 +21,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
-import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
-import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
-import { GetAllProjectApplicationsQuery } from '../../use-cases/queries/get-all-project-application.query';
+import { GetAllProjectApplicationsQueryByProjectId } from '../../use-cases/queries/get-all-project-application.query';
 import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 
 @Controller('projects/:projectId/roles')
@@ -225,7 +222,7 @@ export class ProjectRoleApplicationController {
         };
       }[]
     > = await this.queryBus.execute(
-      new GetAllProjectApplicationsQuery({ projectId, userId }),
+      new GetAllProjectApplicationsQueryByProjectId({ projectId, userId }),
     );
     if (!applications.success) {
       throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
@@ -302,43 +299,40 @@ export class ProjectRoleApplicationController {
     return applications.value;
   }
 
-  @Patch('applications/:applicationId/accept')
-  async acceptApplication(
-    @Param('applicationId') applicationId: string,
-    @Param('projectId') projectId: string,
-    @Session('userId') userId: string,
-  ) {
-    const command = new AcceptUserApplicationCommand({
-      projectRoleApplicationId: applicationId,
-      projectId,
-      userId,
-    });
-    const result: Result<ProjectRoleApplication, string> =
-      await this.commandBus.execute(command);
-    if (!result.success) {
-      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-    }
-    return result.value;
-  }
+  // @Patch('applications/:applicationId/accept')
+  // async acceptApplication(
+  //   @Param('applicationId') applicationId: string,
+  //   @Session('userId') userId: string,
+  // ) {
+  //   const command = new AcceptUserApplicationCommand({
+  //     projectRoleApplicationId: applicationId,
+  //     userId,
+  //   });
+  //   const result: Result<ProjectRoleApplication, string> =
+  //     await this.commandBus.execute(command);
+  //   if (!result.success) {
+  //     throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+  //   }
+  //   return result.value;
+  // }
 
-  @Patch('applications/:applicationId/reject')
-  async rejectApplication(
-    @Param('applicationId') applicationId: string,
-    @Param('projectId') projectId: string,
-    @Session('userId') userId: string,
-    @Body() body?: { rejectionReason?: string },
-  ) {
-    const command = new RejectUserApplicationCommand({
-      projectRoleApplicationId: applicationId,
-      projectId,
-      userId,
-      rejectionReason: body?.rejectionReason,
-    });
-    const result: Result<ProjectRoleApplication, string> =
-      await this.commandBus.execute(command);
-    if (!result.success) {
-      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
-    }
-    return result.value;
-  }
+  // @Patch('applications/:applicationId/reject')
+  // async rejectApplication(
+  //   @Param('applicationId') applicationId: string,
+  //   @Param('projectId') projectId: string,
+  //   @Session('userId') userId: string,
+  //   @Body() body?: { rejectionReason?: string },
+  // ) {
+  //   const command = new RejectUserApplicationCommand({
+  //     projectRoleApplicationId: applicationId,
+  //     userId,
+  //     rejectionReason: body?.rejectionReason,
+  //   });
+  //   const result: Result<ProjectRoleApplication, string> =
+  //     await this.commandBus.execute(command);
+  //   if (!result.success) {
+  //     throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+  //   }
+  //   return result.value;
+  // }
 }

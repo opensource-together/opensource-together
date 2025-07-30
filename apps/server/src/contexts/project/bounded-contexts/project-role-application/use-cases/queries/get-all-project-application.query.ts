@@ -10,7 +10,7 @@ import {
   PROJECT_REPOSITORY_PORT,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 
-export class GetAllProjectApplicationsQuery implements IQuery {
+export class GetAllProjectApplicationsQueryByProjectId implements IQuery {
   constructor(
     public readonly props: {
       projectId: string;
@@ -19,9 +19,9 @@ export class GetAllProjectApplicationsQuery implements IQuery {
   ) {}
 }
 
-@QueryHandler(GetAllProjectApplicationsQuery)
-export class GetAllProjectApplicationsQueryHandler
-  implements IQueryHandler<GetAllProjectApplicationsQuery>
+@QueryHandler(GetAllProjectApplicationsQueryByProjectId)
+export class GetAllProjectApplicationsQueryByProjectIdHandler
+  implements IQueryHandler<GetAllProjectApplicationsQueryByProjectId>
 {
   constructor(
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
@@ -30,7 +30,7 @@ export class GetAllProjectApplicationsQueryHandler
     private readonly projectRepository: ProjectRepositoryPort,
   ) {}
 
-  async execute(query: GetAllProjectApplicationsQuery) {
+  async execute(query: GetAllProjectApplicationsQueryByProjectId) {
     const { projectId, userId } = query.props;
     const project = await this.projectRepository.findById(projectId);
     if (!project.success) {
@@ -56,7 +56,7 @@ export class GetAllProjectApplicationsQueryHandler
         motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[]

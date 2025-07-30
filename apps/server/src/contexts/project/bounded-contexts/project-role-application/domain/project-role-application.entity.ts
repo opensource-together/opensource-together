@@ -21,7 +21,7 @@ export type ProjectRoleApplicationData = {
   decidedBy?: string;
   userProfile: {
     id: string;
-    name: string;
+    username: string;
     avatarUrl?: string;
   };
 };
@@ -52,7 +52,7 @@ export class ProjectRoleApplication {
   public decidedBy?: string;
   public readonly userProfile: {
     id: string;
-    name: string;
+    username: string;
     avatarUrl?: string;
   };
 
@@ -73,7 +73,7 @@ export class ProjectRoleApplication {
     decidedBy?: string;
     userProfile: {
       id: string;
-      name: string;
+      username: string;
       avatarUrl?: string;
     };
   }) {

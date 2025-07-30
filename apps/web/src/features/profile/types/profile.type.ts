@@ -25,7 +25,7 @@ export type ProfileExperience = {
 
 export type Profile = {
   id: string;
-  name: string;
+  username: string;
   avatarUrl: string;
   jobTitle?: string;
   bio?: string;

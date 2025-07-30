@@ -32,7 +32,7 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
       return null;
     }
 
-    const response = await fetch(`${API_BASE_URL}/profile/me`, {
+    const response = await fetch(`${API_BASE_URL}/user/me`, {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",

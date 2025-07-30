@@ -24,8 +24,9 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      avatarUrl: profile.avatarUrl || undefined,
-      name: profile.name || "",
+      avatarUrl: profile.avatarUrl || "",
+      username: profile.username || "",
+
       bio: profile.bio || "",
       techStacks: profile.techStacks?.map((tech) => tech.id) || [],
       experiences:
@@ -64,7 +65,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
       isActive: false,
     },
     {
-      label: profile.name || "Profile",
+      label: profile.username || "Profile",
       isActive: true,
     },
   ];

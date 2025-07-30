@@ -16,7 +16,6 @@ export class RejectUserApplicationCommand implements ICommand {
   constructor(
     public readonly props: {
       projectRoleApplicationId: string;
-      projectId: string;
       userId: string;
       rejectionReason?: string;
     },
@@ -36,27 +35,34 @@ export class RejectUserApplicationCommandHandler
   ) {}
 
   async execute(command: RejectUserApplicationCommand) {
-    const { projectRoleApplicationId, projectId, userId } = command.props;
-    const project: Result<Project, string> =
-      await this.projectRepo.findById(projectId);
-    this.Logger.log('project', project);
-    if (!project.success) {
+    const { projectRoleApplicationId, userId } = command.props;
+    const applicationResult: Result<ProjectRoleApplication, string> =
+      await this.projectRoleApplicationRepository.findById(
+        projectRoleApplicationId,
+      );
+    if (!applicationResult.success) {
+      return Result.fail(applicationResult.error);
+    }
+    const application = applicationResult.value;
+    const projectResult: Result<Project, string> =
+      await this.projectRepo.findById(application.toPrimitive().projectId);
+    if (!projectResult.success) {
       return Result.fail('Project not found');
     }
 
-    if (!project.value.hasOwnerId(userId)) {
+    const project = projectResult.value;
+    if (!project.hasOwnerId(userId)) {
       return Result.fail('User is not the owner of the project');
     }
-
-    const application: Result<ProjectRoleApplication, string> =
+    const applicationRejected: Result<ProjectRoleApplication, string> =
       await this.projectRoleApplicationRepository.rejectApplication({
         applicationId: projectRoleApplicationId,
         rejectionReason: command.props.rejectionReason || '',
       });
-    if (!application.success) {
-      return Result.fail(application.error);
+    if (!applicationRejected.success) {
+      return Result.fail(applicationRejected.error);
     }
 
-    return Result.ok(application.value);
+    return Result.ok(applicationRejected.value);
   }
 }

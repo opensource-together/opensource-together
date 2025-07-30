@@ -2,7 +2,7 @@ import { Profile } from "../types/profile.type";
 
 export const mockPublicProfile: Profile = {
   id: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
-  name: "John Doe",
+  username: "John Doe",
   avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
   bio: "Fullstack Developer | Express & React | Building @awesome-project | Passionné par l'open source et les nouvelles technologies. J'aime créer des applications qui ont un impact positif sur la vie des gens.",
   location: "Paris, France",
