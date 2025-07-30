@@ -78,6 +78,7 @@ export class UserController {
       location: '',
       company: '',
       bio: 'Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together ',
+      jobTitle: 'Senior Fullstack Developer',
       socialLinks: {},
       techStacks: [],
       experiences: [],

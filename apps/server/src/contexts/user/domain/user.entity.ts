@@ -18,6 +18,7 @@ export class User {
   private location: string;
   private company: string;
   private bio: string;
+  private jobTitle: string;
   private socialLinks?: {
     github?: string;
     website?: string;
@@ -49,6 +50,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -76,6 +78,7 @@ export class User {
     this.location = props.location || '';
     this.company = props.company || '';
     this.bio = props.bio || '';
+    this.jobTitle = props.jobTitle || '';
     this.socialLinks = props.socialLinks;
     this.techStacks = props.techStacks || [];
     this.experiences = props.experiences || [];
@@ -94,6 +97,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -166,6 +170,7 @@ export class User {
         location: props.location,
         company: props.company,
         bio: props.bio,
+        jobTitle: props.jobTitle,
         socialLinks: props.socialLinks,
         techStacks: props.techStacks || [],
         experiences: experienceVOs,
@@ -184,6 +189,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -224,6 +230,7 @@ export class User {
         location: props.location,
         company: props.company,
         bio: props.bio,
+        jobTitle: props.jobTitle,
         socialLinks: props.socialLinks,
         techStacks: props.techStacks,
         experiences: props.experiences,
@@ -310,6 +317,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -332,6 +340,7 @@ export class User {
     if (props.location !== undefined) this.location = props.location;
     if (props.company !== undefined) this.company = props.company;
     if (props.bio !== undefined) this.bio = props.bio;
+    if (props.jobTitle !== undefined) this.jobTitle = props.jobTitle;
     if (props.socialLinks !== undefined) this.socialLinks = props.socialLinks;
 
     return Result.ok('Profile updated successfully');
@@ -396,6 +405,7 @@ export class User {
       location: this.location,
       company: this.company,
       bio: this.bio,
+      jobTitle: this.jobTitle,
       socialLinks: this.socialLinks,
       techStacks: this.techStacks,
       experiences: this.experiences,

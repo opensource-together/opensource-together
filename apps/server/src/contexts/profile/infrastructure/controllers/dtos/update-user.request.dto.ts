@@ -8,7 +8,7 @@ export class UpdateUserRequestDto {
 
   @IsString()
   @IsOptional()
-  title?: string;
+  jobTitle?: string;
 
   @IsString()
   @IsOptional()

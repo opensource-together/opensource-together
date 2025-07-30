@@ -20,6 +20,7 @@ export class UpdateUserCommand implements ICommand {
       bio?: string;
       location?: string;
       company?: string;
+      jobTitle?: string;
       socialLinks?: {
         github?: string;
         website?: string;
@@ -87,6 +88,7 @@ export class UpdateUserCommandHandler
       bio: props.bio,
       location: props.location,
       company: props.company,
+      jobTitle: props.jobTitle,
       socialLinks: props.socialLinks,
     });
 

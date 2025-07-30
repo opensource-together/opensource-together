@@ -32,6 +32,7 @@ export class PrismaUserMapper {
         location: primitive.location,
         company: primitive.company,
         bio: primitive.bio,
+        jobTitle: primitive.jobTitle,
       };
 
       const socialLinksData: Omit<UserSocialLink, 'id' | 'userId'>[] = [];
@@ -115,6 +116,7 @@ export class PrismaUserMapper {
         location: prismaUser.location ?? undefined,
         company: prismaUser.company ?? undefined,
         bio: prismaUser.bio ?? undefined,
+        jobTitle: prismaUser.jobTitle ?? undefined,
         socialLinks,
         techStacks,
         experiences,
