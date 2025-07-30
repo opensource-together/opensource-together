@@ -26,7 +26,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
     defaultValues: {
       avatarUrl: profile.avatarUrl || "",
       username: profile.username || "",
-
+      jobTitle: profile.jobTitle || "",
       bio: profile.bio || "",
       techStacks: profile.techStacks?.map((tech) => tech.id) || [],
       experiences:
