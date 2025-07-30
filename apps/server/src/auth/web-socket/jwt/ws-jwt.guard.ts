@@ -38,7 +38,7 @@ export class WsAuthGuard implements CanActivate {
       client.handshake.query &&
       typeof client.handshake.query['x-ws-token'] === 'string'
     ) {
-      return client.handshake.query['x-ws-token'] as string;
+      return client.handshake.query['x-ws-token'];
     }
     if (
       client.handshake &&

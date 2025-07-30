@@ -27,7 +27,6 @@ import {
 import {
   MAILING_SERVICE_PORT,
   MailingServicePort,
-  SendEmailPayload,
 } from '@/mailing/ports/mailing.service.port';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 

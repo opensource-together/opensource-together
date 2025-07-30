@@ -62,7 +62,10 @@ export class ProjectRoleApplicationListener {
       receiverId: event.projectOwnerId,
       senderId: event.applicantId,
       type: 'project.role.application.created',
-      payload: JSON.parse(JSON.stringify(notificationData)),
+      payload: JSON.parse(JSON.stringify(notificationData)) as Record<
+        string,
+        unknown
+      >,
       channels: ['realtime'],
     });
 
@@ -78,7 +81,7 @@ export class ProjectRoleApplicationListener {
       receiverId: event.userProfile.id,
       senderId: event.project.author.userId,
       type: event.type,
-      payload: JSON.parse(JSON.stringify(event)),
+      payload: JSON.parse(JSON.stringify(event)) as Record<string, unknown>,
       channels: ['realtime'],
     });
 
@@ -98,7 +101,7 @@ export class ProjectRoleApplicationListener {
       receiverId: event.userProfile.id,
       senderId: event.project.author.userId,
       type: event.type,
-      payload: JSON.parse(JSON.stringify(event)),
+      payload: JSON.parse(JSON.stringify(event)) as Record<string, unknown>,
       channels: ['realtime'],
     });
 

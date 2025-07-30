@@ -20,6 +20,8 @@ import {
 import { WebSocketConnectionManager } from './websocket-connection.manager';
 import { QueryBus } from '@nestjs/cqrs';
 import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
+import { Result } from '@/libs/result';
+import { User } from '@/contexts/user/domain/user.entity';
 
 /**
  * Gateway WebSocket pour les notifications en temps réel.
@@ -78,7 +80,7 @@ export class NotificationsGateway
 
       // Envoyer les notifications non lues
       await this.sendUnreadNotifications(userId, client);
-    } catch (error) {
+    } catch {
       client.disconnect();
     } finally {
       // Nettoyer le Set après traitement
@@ -123,7 +125,7 @@ export class NotificationsGateway
     notification: NotificationData,
   ): Promise<string | null> {
     // 1. Vérifier que l'utilisateur existe dans le système
-    const userExistsResult = await this.queryBus.execute(
+    const userExistsResult: Result<User, string> = await this.queryBus.execute(
       new FindUserByIdQuery(notification.receiverId),
     );
 
@@ -173,7 +175,7 @@ export class NotificationsGateway
     notification: NotificationData,
   ): Promise<string | null> {
     // 1. Vérifier que l'utilisateur existe dans le système
-    const userExistsResult = await this.queryBus.execute(
+    const userExistsResult: Result<User, string> = await this.queryBus.execute(
       new FindUserByIdQuery(notification.receiverId),
     );
 
@@ -248,7 +250,10 @@ export class NotificationsGateway
         );
       }
     } catch (error) {
-      console.log(`💥 Erreur envoi notifications non lues:`, error.message);
+      console.log(
+        `💥 Erreur envoi notifications non lues:`,
+        error instanceof Error ? error.message : String(error),
+      );
     }
   }
 }

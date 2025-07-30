@@ -169,7 +169,7 @@ export class NotificationsController {
         );
       }
 
-      const result = await this.commandBus.execute(
+      const result: Result<void, string> = await this.commandBus.execute(
         new CreateNotificationCommand({
           object: dto.object,
           receiverId: dto.receiverId,
@@ -597,7 +597,7 @@ export class NotificationsController {
     try {
       const wsToken = await this.wsJwtService.generateToken(userId);
       return WsTokenResponseDto.create(wsToken);
-    } catch (error) {
+    } catch {
       throw new HttpException(
         'Une erreur interne est survenue lors de la génération du token',
         HttpStatus.INTERNAL_SERVER_ERROR,

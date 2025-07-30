@@ -33,7 +33,7 @@ export class WebSocketAuthService {
 
       (client as AuthenticatedSocket).userId = userId;
       return userId;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
