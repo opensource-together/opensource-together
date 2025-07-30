@@ -69,6 +69,16 @@ export async function getGitHubAuthUrl(): Promise<string> {
   });
 }
 
+export async function getGoogleAuthUrl(): Promise<string> {
+  if (typeof window === "undefined") {
+    throw new Error("getGoogleAuthUrl can only be called in the browser");
+  }
+  const url = window.location.origin;
+  return getAuthorisationURLWithQueryParamsAndSetState({
+    thirdPartyId: "google",
+    frontendRedirectURI: `${url}/auth/callback/google`,
+  });
+}
 /**
  * Handle the GitHub callback after the authorization
  */
@@ -96,6 +106,29 @@ export async function handleGitHubCallback(): Promise<{ success: boolean }> {
   }
 }
 
+export async function handleGoogleCallback(): Promise<{ success: boolean }> {
+  try {
+    const response = await signInAndUp();
+    const sessionExists = await checkSession();
+
+    if (response.status === "OK" && sessionExists) {
+      return { success: true };
+    }
+
+    if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
+      throw new Error("Google didn't provide an email");
+    }
+
+    if (!sessionExists) {
+      throw new Error("The session couldn't be created after login.");
+    }
+
+    throw new Error("An error occurred during the login.");
+  } catch (err) {
+    console.error("handleGoogleCallback error:", err);
+    throw new Error("Error during the login via Google.");
+  }
+}
 /**
  * Logout the user
  */

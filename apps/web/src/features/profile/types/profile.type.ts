@@ -30,6 +30,7 @@ export type Profile = {
   jobTitle?: string;
   bio?: string;
   location?: string;
+  provider: string;
   company?: string;
   contributionsCount?: number;
   socialLinks?: ProfileSocialLinks;

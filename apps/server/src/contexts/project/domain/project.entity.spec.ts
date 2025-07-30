@@ -339,6 +339,7 @@ describe('Domain Project Entity', () => {
       const user = User.create({
         id: '123',
         username: 'test',
+        provider: 'email',
         email: 'test@test.com',
         login: 'test',
       });
@@ -359,6 +360,7 @@ describe('Domain Project Entity', () => {
       const user = User.create({
         id: '456',
         username: 'test',
+        provider: 'email',
         email: 'test@test.com',
         login: 'test',
       });
