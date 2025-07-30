@@ -2,6 +2,7 @@ import { FindUserApplicationsQuery } from '@/contexts/user/use-cases/queries/fin
 import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
+import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
 import { User } from '@/contexts/user/domain/user.entity';
 import { Result } from '@/libs/result';
 import {
@@ -59,6 +60,7 @@ export class UserController {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
+    private readonly calculateGitHubStatsUseCase: CalculateGitHubStatsUseCase,
   ) {}
 
   //PRIVATE ENDPOINTS
@@ -103,7 +105,33 @@ export class UserController {
       throw new NotFoundException(result.error);
     }
 
-    return result.value.toPrimitive();
+    const user = result.value;
+    const userPrimitive = user.toPrimitive();
+
+    // Calculer les statistiques GitHub
+    try {
+      const githubStatsResult =
+        await this.calculateGitHubStatsUseCase.execute(userId);
+      if (githubStatsResult.success) {
+        userPrimitive.githubStats = githubStatsResult.value;
+      } else {
+        // Si pas de credentials GitHub ou erreur, utiliser des stats à 0
+        userPrimitive.githubStats = {
+          totalStars: 0,
+          contributedRepos: 0,
+          commitsThisYear: 0,
+        };
+      }
+    } catch (error) {
+      // En cas d'erreur, utiliser des stats à 0
+      userPrimitive.githubStats = {
+        totalStars: 0,
+        contributedRepos: 0,
+        commitsThisYear: 0,
+      };
+    }
+
+    return userPrimitive;
   }
 
   @Patch('me')

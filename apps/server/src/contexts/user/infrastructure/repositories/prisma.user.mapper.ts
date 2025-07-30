@@ -3,12 +3,16 @@ import { Email } from '@/contexts/user/domain/email.vo';
 import { Username } from '@/contexts/user/domain/username.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
+import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
 import { Result } from '@/libs/result';
 import { User as PrismaUser, UserSocialLink, TechStack } from '@prisma/client';
 
 type UserWithRelations = PrismaUser & {
   socialLinks: UserSocialLink[];
   techStacks: TechStack[];
+  totalStars: number;
+  contributedRepos: number;
+  commitsThisYear: number;
 };
 
 export class PrismaUserMapper {
@@ -33,6 +37,9 @@ export class PrismaUserMapper {
         company: primitive.company,
         bio: primitive.bio,
         jobTitle: primitive.jobTitle,
+        totalStars: primitive.githubStats?.totalStars || 0,
+        contributedRepos: primitive.githubStats?.contributedRepos || 0,
+        commitsThisYear: primitive.githubStats?.commitsThisYear || 0,
       };
 
       const socialLinksData: Omit<UserSocialLink, 'id' | 'userId'>[] = [];
@@ -106,6 +113,23 @@ export class PrismaUserMapper {
       const experiences: ProfileExperience[] = [];
       const projects: ProfileProject[] = [];
 
+      // Créer les statistiques GitHub si elles existent
+      let githubStats: GitHubStats | undefined;
+      if (
+        prismaUser.totalStars > 0 ||
+        prismaUser.contributedRepos > 0 ||
+        prismaUser.commitsThisYear > 0
+      ) {
+        const statsResult = GitHubStats.create({
+          totalStars: prismaUser.totalStars,
+          contributedRepos: prismaUser.contributedRepos,
+          commitsThisYear: prismaUser.commitsThisYear,
+        });
+        if (statsResult.success) {
+          githubStats = statsResult.value;
+        }
+      }
+
       const userResult = User.reconstitute({
         id: prismaUser.id,
         username: prismaUser.username,
@@ -121,6 +145,7 @@ export class PrismaUserMapper {
         techStacks,
         experiences,
         projects,
+        githubStats,
         createdAt: prismaUser.createdAt,
         updatedAt: prismaUser.updatedAt,
       });

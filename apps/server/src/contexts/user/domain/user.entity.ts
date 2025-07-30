@@ -5,6 +5,7 @@ import { Email } from '@/contexts/user/domain/email.vo';
 import { Result } from '@/libs/result';
 import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
+import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
 
 export type UserPublic = Omit<User, 'email' | 'login'>;
 
@@ -34,6 +35,7 @@ export class User {
   }[];
   private experiences: ProfileExperience[];
   private projects: ProfileProject[];
+  private githubStats?: GitHubStats;
 
   private readonly createdAt?: Date;
   private readonly updatedAt?: Date;
@@ -66,6 +68,7 @@ export class User {
     }[];
     experiences?: ProfileExperience[];
     projects?: ProfileProject[];
+    githubStats?: GitHubStats;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -83,6 +86,7 @@ export class User {
     this.techStacks = props.techStacks || [];
     this.experiences = props.experiences || [];
     this.projects = props.projects || [];
+    this.githubStats = props.githubStats;
     this.createdAt = props.createdAt ?? new Date();
     this.updatedAt = props.updatedAt ?? new Date();
   }
@@ -205,6 +209,7 @@ export class User {
     }[];
     experiences?: ProfileExperience[];
     projects?: ProfileProject[];
+    githubStats?: GitHubStats;
     createdAt: Date;
     updatedAt: Date;
   }): Result<
@@ -235,6 +240,7 @@ export class User {
         techStacks: props.techStacks,
         experiences: props.experiences,
         projects: props.projects,
+        githubStats: props.githubStats,
         createdAt: props.createdAt,
         updatedAt: props.updatedAt,
       }),
@@ -370,6 +376,14 @@ export class User {
     this.techStacks = techStacks;
   }
 
+  public updateGitHubStats(stats: GitHubStats): void {
+    this.githubStats = stats;
+  }
+
+  public getGitHubStats(): GitHubStats | undefined {
+    return this.githubStats;
+  }
+
   // Getters pour l'accès en lecture seule
 
   // Getters pour l'accès en lecture seule
@@ -410,6 +424,7 @@ export class User {
       techStacks: this.techStacks,
       experiences: this.experiences,
       projects: this.projects,
+      githubStats: this.githubStats?.toPrimitive(),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

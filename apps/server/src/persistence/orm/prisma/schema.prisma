@@ -39,6 +39,10 @@ model User {
   socialLinks       UserSocialLink[]
   projects          Project[]
   projectRoleApplication ProjectRoleApplication[]
+  // GitHub Statistics
+  totalStars        Int                   @default(0)
+  contributedRepos  Int                   @default(0)
+  commitsThisYear   Int                   @default(0)
 }
 
 model UserGitHubCredentials {
