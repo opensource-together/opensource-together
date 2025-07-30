@@ -106,6 +106,7 @@ export function StepFourForm() {
     createProject({
       projectData: finalFormData,
       imageFile: pendingFormData.logo, // Pass the File object directly
+      method: "scratch",
     });
   };
 

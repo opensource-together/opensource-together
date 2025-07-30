@@ -220,11 +220,35 @@ export class GithubRepository implements GithubRepositoryPort {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-      const repositories = response.data
+
+      // Récupérer les informations de l'utilisateur authentifié
+      const userResponse = await octokit.rest.users.getAuthenticated({
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      const authenticatedUser = userResponse.data.login;
+
+      // Filtrer pour ne garder que les repositories dont l'utilisateur est le propriétaire
+      const ownedRepositories = response.data.filter(
+        (repo) => repo.owner.login === authenticatedUser,
+      );
+
+      this.Logger.log(
+        `Found ${ownedRepositories.length} owned repositories out of ${response.data.length} total repositories`,
+      );
+
+      const repositories = ownedRepositories
         .map((repo) => {
           const rep = toGithubRepositoryDto(repo);
           if (rep.success) {
             return rep.value;
+          } else {
+            this.Logger.error(
+              'Failed to transform repository to DTO:',
+              rep.error,
+            );
+            return undefined;
           }
         })
         .filter((v) => v !== undefined)
@@ -232,13 +256,75 @@ export class GithubRepository implements GithubRepositoryPort {
           const rep = toGithubRepoListInput(repo);
           if (rep.success) {
             return rep.value;
+          } else {
+            this.Logger.error(
+              'Failed to transform repository to list input:',
+              rep.error,
+            );
+            return undefined;
           }
         })
         .filter((v) => v !== undefined);
-      return Result.ok(repositories);
+
+      // Récupérer les README pour chaque repository
+      const repositoriesWithReadme = await Promise.all(
+        repositories.map(async (repo) => {
+          try {
+            const readmeResult = await this.getRepositoryReadme(
+              repo.owner,
+              repo.title,
+              octokit,
+            );
+            if (readmeResult.success) {
+              return { ...repo, readme: readmeResult.value };
+            } else {
+              this.Logger.warn(
+                `Failed to fetch README for ${repo.owner}/${repo.title}: ${readmeResult.error}`,
+              );
+              return repo;
+            }
+          } catch (error) {
+            this.Logger.error(
+              `Error fetching README for ${repo.owner}/${repo.title}:`,
+              error,
+            );
+            return repo;
+          }
+        }),
+      );
+
+      return Result.ok(repositoriesWithReadme);
     } catch (e) {
       this.Logger.error('error fetching user repositories', e);
       return Result.fail('Failed to fetch user repositories');
+    }
+  }
+
+  async getRepositoryReadme(
+    owner: string,
+    repo: string,
+    octokit: Octokit,
+  ): Promise<Result<string, string>> {
+    try {
+      const response = await octokit.rest.repos.getReadme({
+        owner,
+        repo,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+
+      // Le contenu est encodé en base64
+      const content = Buffer.from(response.data.content, 'base64').toString(
+        'utf-8',
+      );
+      return Result.ok(content);
+    } catch (e: any) {
+      if (e) {
+        return Result.fail('README not found');
+      }
+      this.Logger.error('error fetching repository README', e);
+      return Result.fail('Failed to fetch repository README');
     }
   }
 }

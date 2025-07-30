@@ -9,7 +9,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 
-import { Project } from "../types/project.type";
+import { GithubContributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
@@ -69,6 +69,13 @@ export default function ProjectSideBar({
 
   const handleEditClick = () => {
     router.push(`/projects/${project.id}/edit`);
+  };
+
+  const handleContributorClick = (contributor: GithubContributor) => {
+    // Pour l'instant, utiliser le login GitHub comme ID
+    // TODO: Remplacer par le vrai ID utilisateur quand disponible
+    const userId = contributor.login;
+    router.push(`/profile/${userId}`);
   };
 
   const breadcrumbItems = [
@@ -246,7 +253,8 @@ export default function ProjectSideBar({
                   name={contributor.login}
                   alt={contributor.login}
                   size="sm"
-                  className="-ml-4 border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  className="-ml-4 cursor-pointer border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  onClick={() => handleContributorClick(contributor)}
                 />
               </div>
             ))}

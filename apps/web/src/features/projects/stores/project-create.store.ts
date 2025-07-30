@@ -5,32 +5,29 @@ import { ProjectRole } from "../types/project-role.type";
 import {
   Category,
   ExternalLink,
+  GithubRepoType,
   KeyFeature,
   ProjectGoal,
   TechStack,
 } from "../types/project.type";
 
-export type ProjectCreateMethod = "github" | "scratch";
+export type ProjectCreateMethod = "scratch" | "github";
 
 export interface ProjectFormData {
-  method: ProjectCreateMethod | null;
+  method: ProjectCreateMethod;
   // Data for scratch method
   title: string;
   shortDescription: string;
   image: string;
   coverImages: File[]; // Array of cover image files (1 to 4)
   // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  readme?: string;
   externalLinks: ExternalLink[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
   techStack: TechStack[];
   categories: Category[];
-  // Data for github method
-  selectedRepository: {
-    name: string;
-    date: string;
-  } | null;
-  // Common data for roles configuration
+  selectedRepository: GithubRepoType | null;
   roles: ProjectRole[];
 }
 
@@ -51,6 +48,7 @@ interface ProjectCreateStore {
         | "image"
         | "coverImages"
         // | "status"
+        | "readme"
         | "keyFeatures"
         | "projectGoals"
         | "techStack"
@@ -60,7 +58,7 @@ interface ProjectCreateStore {
       >
     >
   ) => void;
-  selectRepository: (repo: { name: string; date: string }) => void;
+  selectRepository: (repo: GithubRepoType) => void;
   updateRoles: (roles: ProjectFormData["roles"]) => void;
   nextStep: () => void;
   previousStep: () => void;
@@ -69,12 +67,13 @@ interface ProjectCreateStore {
 }
 
 const initialFormData: ProjectFormData = {
-  method: null,
+  method: "scratch",
   title: "",
   shortDescription: "",
   image: "",
   coverImages: [],
   // status: "DRAFT",
+  readme: "",
   externalLinks: [],
   keyFeatures: [],
   projectGoals: [],
@@ -103,7 +102,11 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
 
         selectRepository: (repo) =>
           set((state) => ({
-            formData: { ...state.formData, selectedRepository: repo },
+            formData: {
+              ...state.formData,
+              selectedRepository: repo,
+              readme: repo.readme || "",
+            },
           })),
 
         updateRoles: (roles) =>

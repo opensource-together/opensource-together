@@ -69,6 +69,7 @@ model Project {
   authorId         String?
   image            String?
   coverImages      String[]              // Array of cover image URLs (1 to 4)
+  readme           String?
   // Index composite pour recherche + tri par date
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
