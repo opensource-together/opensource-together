@@ -82,10 +82,7 @@ export type ProjectProps = {
   projectGoals: ProjectGoals[];
   image?: string;
   coverImages?: string[];
-<<<<<<< HEAD
   readme?: string;
-=======
->>>>>>> origin/main
   createdAt?: Date;
   updatedAt?: Date;
 };
