@@ -382,9 +382,6 @@ export class GithubRepository implements GithubRepositoryPort {
           if (!countedRepos.has(repo.nameWithOwner)) {
             totalStars += repo.stargazerCount || 0;
             countedRepos.add(repo.nameWithOwner);
-            this.Logger.debug(
-              `Owned repo: ${repo.nameWithOwner} - ${repo.stargazerCount} stars`,
-            );
           }
         }
       }
@@ -395,9 +392,6 @@ export class GithubRepository implements GithubRepositoryPort {
           if (!countedRepos.has(repo.nameWithOwner)) {
             totalStars += repo.stargazerCount || 0;
             countedRepos.add(repo.nameWithOwner);
-            this.Logger.debug(
-              `Contributed repo: ${repo.nameWithOwner} - ${repo.stargazerCount} stars`,
-            );
           }
         }
       }
@@ -410,9 +404,6 @@ export class GithubRepository implements GithubRepositoryPort {
               if (!countedRepos.has(repo.nameWithOwner)) {
                 totalStars += repo.stargazerCount || 0;
                 countedRepos.add(repo.nameWithOwner);
-                this.Logger.debug(
-                  `Org repo: ${repo.nameWithOwner} - ${repo.stargazerCount} stars`,
-                );
               }
             }
           }
@@ -469,7 +460,6 @@ export class GithubRepository implements GithubRepositoryPort {
 
       let totalRepos = 0;
 
-      console.log(response);
       // Repositories owned
       const ownedRepos = response.user?.repositories?.totalCount || 0;
       totalRepos += ownedRepos;
@@ -610,9 +600,6 @@ export class GithubRepository implements GithubRepositoryPort {
           for (const contribution of commitContributions) {
             const count = contribution.contributions?.totalCount || 0;
             detailedCommits += count;
-            this.Logger.debug(
-              `Repo ${contribution.repository.nameWithOwner}: ${count} commits`,
-            );
           }
 
           if (detailedCommits > totalCommits) {

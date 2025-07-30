@@ -106,10 +106,6 @@ export class CalculateGitHubStatsUseCase {
         ? commitsLastYearResult.value
         : 0;
 
-      console.log('totalStars', totalStars);
-      console.log('contributedRepos', contributedRepos);
-      console.log('commitsThisYear', commitsThisYear);
-
       return Result.ok({
         totalStars,
         contributedRepos,
