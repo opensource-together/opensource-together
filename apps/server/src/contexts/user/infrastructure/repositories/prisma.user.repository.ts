@@ -274,6 +274,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
       totalStars: number;
       contributedRepos: number;
       commitsThisYear: number;
+      contributionGraph?: any;
     },
   ): Promise<Result<User, string>> {
     try {
@@ -287,13 +288,18 @@ export class PrismaUserRepository implements UserRepositoryPort {
 
       if (!userResult) return Result.fail('User not found');
 
-      // Mettre à jour les statistiques GitHub
+      // Temporairement utiliser l'ancienne structure en attendant prisma generate
       await this.prisma.user.update({
         where: { id: userId },
         data: {
-          totalStars: githubStats.totalStars,
-          contributedRepos: githubStats.contributedRepos,
-          commitsThisYear: githubStats.commitsThisYear,
+          githubStats: {
+            create: {
+              totalStars: githubStats.totalStars,
+              contributedRepos: githubStats.contributedRepos,
+              commitsThisYear: githubStats.commitsThisYear,
+              contributionGraph: githubStats.contributionGraph,
+            },
+          },
         },
       });
 

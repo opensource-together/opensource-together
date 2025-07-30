@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Result } from '@/libs/result';
 import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
+import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 import {
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
@@ -23,6 +24,7 @@ export interface GitHubStatsCalculationResult {
   totalStars: number;
   contributedRepos: number;
   commitsThisYear: number;
+  contributionGraph: ContributionGraph;
 }
 
 @Injectable()
@@ -57,6 +59,11 @@ export class CalculateGitHubStatsUseCase {
           totalStars: 0,
           contributedRepos: 0,
           commitsThisYear: 0,
+          contributionGraph: {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
         });
       }
 
@@ -90,12 +97,17 @@ export class CalculateGitHubStatsUseCase {
   ): Promise<Result<GitHubStatsCalculationResult, string>> {
     try {
       // Utiliser les nouvelles méthodes optimisées
-      const [totalStarsResult, contributedReposResult, commitsLastYearResult] =
-        await Promise.all([
-          this.githubRepo.getUserTotalStars(octokit),
-          this.githubRepo.getUserContributedRepos(octokit),
-          this.githubRepo.getUserCommitsLastYear(octokit),
-        ]);
+      const [
+        totalStarsResult,
+        contributedReposResult,
+        commitsLastYearResult,
+        contributionGraphResult,
+      ] = await Promise.all([
+        this.githubRepo.getUserTotalStars(octokit),
+        this.githubRepo.getUserContributedRepos(octokit),
+        this.githubRepo.getUserCommitsLastYear(octokit),
+        this.githubRepo.getUserContributionGraph(octokit),
+      ]);
 
       // Gérer les erreurs individuelles
       const totalStars = totalStarsResult.success ? totalStarsResult.value : 0;
@@ -105,11 +117,15 @@ export class CalculateGitHubStatsUseCase {
       const commitsThisYear = commitsLastYearResult.success
         ? commitsLastYearResult.value
         : 0;
+      const contributionGraph = contributionGraphResult.success
+        ? contributionGraphResult.value
+        : { weeks: [], totalContributions: 0, maxContributions: 0 };
 
       return Result.ok({
         totalStars,
         contributedRepos,
         commitsThisYear,
+        contributionGraph,
       });
     } catch (error) {
       return Result.fail(`Failed to calculate stats: ${error}`);

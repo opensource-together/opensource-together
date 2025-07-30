@@ -5,6 +5,7 @@ import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/reposito
 import { Result } from '@/libs/result';
 import { Octokit } from '@octokit/rest';
 import { GithubRepoListInput } from '../../infrastructure/repositories/inputs/github-repo-list.input';
+import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 
 export type LastCommit = {
   sha: string;
@@ -78,4 +79,7 @@ export interface GithubRepositoryPort {
   getUserTotalStars(octokit: Octokit): Promise<Result<number, string>>;
   getUserContributedRepos(octokit: Octokit): Promise<Result<number, string>>;
   getUserCommitsLastYear(octokit: Octokit): Promise<Result<number, string>>;
+  getUserContributionGraph(
+    octokit: Octokit,
+  ): Promise<Result<ContributionGraph, string>>;
 }

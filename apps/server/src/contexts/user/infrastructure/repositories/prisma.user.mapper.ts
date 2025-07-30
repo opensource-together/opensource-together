@@ -3,23 +3,46 @@ import { Email } from '@/contexts/user/domain/email.vo';
 import { Username } from '@/contexts/user/domain/username.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
-import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
+import {
+  ContributionGraph,
+  GitHubStats,
+} from '@/contexts/user/domain/github-stats.vo';
 import { Result } from '@/libs/result';
 import { User as PrismaUser, UserSocialLink, TechStack } from '@prisma/client';
 
+// Type temporaire pour l'ancienne structure
 type UserWithRelations = PrismaUser & {
   socialLinks: UserSocialLink[];
   techStacks: TechStack[];
-  totalStars: number;
-  contributedRepos: number;
-  commitsThisYear: number;
+  // Anciens champs (seront supprimés après migration)
+  totalStars?: number;
+  contributedRepos?: number;
+  commitsThisYear?: number;
+  // Nouvelle relation (sera disponible après prisma generate)
+  githubStats?: any | null;
 };
 
 export class PrismaUserMapper {
   static toRepo(user: DomainUser): Result<
     {
-      userData: Omit<PrismaUser, 'createdAt' | 'updatedAt'>;
+      userData: {
+        id: string;
+        username: string;
+        email: string;
+        login: string;
+        avatarUrl: string | null;
+        location: string | null;
+        company: string | null;
+        bio: string | null;
+        jobTitle: string | null;
+      };
       socialLinksData: Omit<UserSocialLink, 'id' | 'userId'>[];
+      githubStatsData?: {
+        totalStars: number;
+        contributedRepos: number;
+        commitsThisYear: number;
+        contributionGraph?: any;
+      };
     },
     string
   > {
@@ -37,9 +60,6 @@ export class PrismaUserMapper {
         company: primitive.company,
         bio: primitive.bio,
         jobTitle: primitive.jobTitle,
-        totalStars: primitive.githubStats?.totalStars || 0,
-        contributedRepos: primitive.githubStats?.contributedRepos || 0,
-        commitsThisYear: primitive.githubStats?.commitsThisYear || 0,
       };
 
       const socialLinksData: Omit<UserSocialLink, 'id' | 'userId'>[] = [];
@@ -56,7 +76,18 @@ export class PrismaUserMapper {
         }
       }
 
-      return Result.ok({ userData, socialLinksData });
+      // Préparer les données GitHubStats si elles existent
+      let githubStatsData: any = undefined;
+      if (primitive.githubStats) {
+        githubStatsData = {
+          totalStars: primitive.githubStats.totalStars,
+          contributedRepos: primitive.githubStats.contributedRepos,
+          commitsThisYear: primitive.githubStats.commitsThisYear,
+          contributionGraph: primitive.githubStats.contributionGraph,
+        };
+      }
+
+      return Result.ok({ userData, socialLinksData, githubStatsData });
     } catch (error) {
       return Result.fail(`Error mapping user to repository format : ${error}`);
     }
@@ -115,15 +146,39 @@ export class PrismaUserMapper {
 
       // Créer les statistiques GitHub si elles existent
       let githubStats: GitHubStats | undefined;
-      if (
-        prismaUser.totalStars > 0 ||
-        prismaUser.contributedRepos > 0 ||
-        prismaUser.commitsThisYear > 0
+
+      // Essayer d'abord la nouvelle structure (githubStats relation)
+      if (prismaUser.githubStats) {
+        const statsResult = GitHubStats.create({
+          totalStars: prismaUser.githubStats.totalStars,
+          contributedRepos: prismaUser.githubStats.contributedRepos,
+          commitsThisYear: prismaUser.githubStats.commitsThisYear,
+          contributionGraph: (prismaUser.githubStats
+            .contributionGraph as ContributionGraph) || {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
+        });
+        if (statsResult.success) {
+          githubStats = statsResult.value;
+        }
+      }
+      // Fallback sur l'ancienne structure (champs directs)
+      else if (
+        prismaUser.totalStars !== undefined ||
+        prismaUser.contributedRepos !== undefined ||
+        prismaUser.commitsThisYear !== undefined
       ) {
         const statsResult = GitHubStats.create({
-          totalStars: prismaUser.totalStars,
-          contributedRepos: prismaUser.contributedRepos,
-          commitsThisYear: prismaUser.commitsThisYear,
+          totalStars: prismaUser.totalStars || 0,
+          contributedRepos: prismaUser.contributedRepos || 0,
+          commitsThisYear: prismaUser.commitsThisYear || 0,
+          contributionGraph: {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
         });
         if (statsResult.success) {
           githubStats = statsResult.value;

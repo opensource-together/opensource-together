@@ -87,6 +87,29 @@ export class UserController {
       projects: [],
       createdAt: '2025-07-29T08:07:32.845Z',
       updatedAt: '2025-07-29T08:07:32.845Z',
+      githubStats: {
+        totalStars: 150,
+        contributedRepos: 25,
+        commitsThisYear: 380,
+        contributionGraph: {
+          weeks: [
+            {
+              days: [
+                { date: '2025-01-01', count: 0, level: 0 },
+                { date: '2025-01-02', count: 3, level: 2 },
+                { date: '2025-01-03', count: 5, level: 3 },
+                { date: '2025-01-04', count: 2, level: 1 },
+                { date: '2025-01-05', count: 8, level: 4 },
+                { date: '2025-01-06', count: 1, level: 1 },
+                { date: '2025-01-07', count: 0, level: 0 },
+              ],
+            },
+            // ... autres semaines
+          ],
+          totalContributions: 380,
+          maxContributions: 12,
+        },
+      },
     },
   })
   @ApiResponse({
@@ -120,6 +143,11 @@ export class UserController {
           totalStars: 0,
           contributedRepos: 0,
           commitsThisYear: 0,
+          contributionGraph: {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
         };
       }
     } catch (error) {
@@ -128,6 +156,11 @@ export class UserController {
         totalStars: 0,
         contributedRepos: 0,
         commitsThisYear: 0,
+        contributionGraph: {
+          weeks: [],
+          totalContributions: 0,
+          maxContributions: 0,
+        },
       };
     }
 

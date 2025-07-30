@@ -14,6 +14,7 @@ import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
 import { toGithubInvitationDto } from './adapters/github-invitation.adapter';
 import { GithubRepoListInput } from './inputs/github-repo-list.input';
 import { toGithubRepoListInput } from './adapters/github-repo-list.adapter';
+import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
@@ -619,6 +620,83 @@ export class GithubRepository implements GithubRepositoryPort {
     } catch (error) {
       this.Logger.error('Error fetching user commits with GraphQL', error);
       return Result.fail('Failed to fetch user commits with GraphQL');
+    }
+  }
+
+  async getUserContributionGraph(
+    octokit: Octokit,
+  ): Promise<Result<ContributionGraph, string>> {
+    try {
+      this.Logger.log('Fetching user contribution graph using GraphQL');
+      const userResponse = await octokit.rest.users.getAuthenticated();
+      const username = userResponse.data.login;
+      const currentYear = new Date().getFullYear();
+      const startDate = `${currentYear}-01-01T00:00:00Z`;
+      const endDate = `${currentYear}-12-31T23:59:59Z`;
+      const graphqlQuery = `
+        query($username: String!, $startDate: DateTime!, $endDate: DateTime!) {
+          user(login: $username) {
+            contributionsCollection(from: $startDate, to: $endDate) {
+              contributionCalendar {
+                totalContributions
+                weeks {
+                  contributionDays {
+                    date
+                    contributionCount
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+      const response = (await octokit.graphql(graphqlQuery, {
+        username,
+        startDate,
+        endDate,
+      })) as any;
+      const calendar =
+        response.user?.contributionsCollection?.contributionCalendar;
+      if (!calendar) {
+        return Result.fail('No contribution calendar found');
+      }
+      // Trouver le max pour le niveau de couleur
+      let max = 0;
+      for (const week of calendar.weeks) {
+        for (const day of week.contributionDays) {
+          if (day.contributionCount > max) max = day.contributionCount;
+        }
+      }
+      // Helper pour le niveau de couleur (0-4)
+      function getLevel(count: number, max: number): number {
+        if (count === 0) return 0;
+        if (max === 0) return 0;
+        if (count >= max) return 4;
+        if (count >= max * 0.75) return 3;
+        if (count >= max * 0.5) return 2;
+        if (count >= max * 0.25) return 1;
+        return 1;
+      }
+      const graph: ContributionGraph = {
+        weeks: calendar.weeks.map((week: any) => ({
+          days: week.contributionDays.map((day: any) => ({
+            date: day.date,
+            count: day.contributionCount,
+            level: getLevel(day.contributionCount, max),
+          })),
+        })),
+        totalContributions: calendar.totalContributions,
+        maxContributions: max,
+      };
+      return Result.ok(graph);
+    } catch (error) {
+      this.Logger.error(
+        'Error fetching user contribution graph with GraphQL',
+        error,
+      );
+      return Result.fail(
+        'Failed to fetch user contribution graph with GraphQL',
+      );
     }
   }
 }

@@ -1,16 +1,32 @@
 import { Result } from '@/libs/result';
 
+export interface ContributionDay {
+  date: string; // Format: "YYYY-MM-DD"
+  count: number;
+  level: number; // 0-4 (pour la couleur)
+}
+export interface ContributionWeek {
+  days: ContributionDay[];
+}
+export interface ContributionGraph {
+  weeks: ContributionWeek[];
+  totalContributions: number;
+  maxContributions: number;
+}
+
 export class GitHubStats {
   private constructor(
     private readonly totalStars: number,
     private readonly contributedRepos: number,
     private readonly commitsThisYear: number,
+    private readonly contributionGraph: ContributionGraph,
   ) {}
 
   public static create(props: {
     totalStars: number;
     contributedRepos: number;
     commitsThisYear: number;
+    contributionGraph: ContributionGraph;
   }): Result<GitHubStats, string> {
     const validationResult = this.validate(props);
     if (!validationResult.success) {
@@ -22,6 +38,7 @@ export class GitHubStats {
         validationResult.value.totalStars,
         validationResult.value.contributedRepos,
         validationResult.value.commitsThisYear,
+        validationResult.value.contributionGraph,
       ),
     );
   }
@@ -30,6 +47,7 @@ export class GitHubStats {
     totalStars: number;
     contributedRepos: number;
     commitsThisYear: number;
+    contributionGraph: ContributionGraph;
   }): Result<GitHubStats, string> {
     return this.create(props);
   }
@@ -38,11 +56,13 @@ export class GitHubStats {
     totalStars: number;
     contributedRepos: number;
     commitsThisYear: number;
+    contributionGraph: ContributionGraph;
   }): Result<
     {
       totalStars: number;
       contributedRepos: number;
       commitsThisYear: number;
+      contributionGraph: ContributionGraph;
     },
     string
   > {
@@ -55,11 +75,15 @@ export class GitHubStats {
     if (props.commitsThisYear < 0) {
       return Result.fail('Commits this year cannot be negative');
     }
+    if (!props.contributionGraph) {
+      return Result.fail('Contribution graph is required');
+    }
 
     return Result.ok({
       totalStars: props.totalStars,
       contributedRepos: props.contributedRepos,
       commitsThisYear: props.commitsThisYear,
+      contributionGraph: props.contributionGraph,
     });
   }
 
@@ -75,11 +99,16 @@ export class GitHubStats {
     return this.commitsThisYear;
   }
 
+  public getContributionGraph(): ContributionGraph {
+    return this.contributionGraph;
+  }
+
   public toPrimitive() {
     return {
       totalStars: this.totalStars,
       contributedRepos: this.contributedRepos,
       commitsThisYear: this.commitsThisYear,
+      contributionGraph: this.contributionGraph,
     };
   }
 
@@ -87,11 +116,13 @@ export class GitHubStats {
     totalStars?: number;
     contributedRepos?: number;
     commitsThisYear?: number;
+    contributionGraph?: ContributionGraph;
   }): Result<GitHubStats, string> {
     return GitHubStats.create({
       totalStars: props.totalStars ?? this.totalStars,
       contributedRepos: props.contributedRepos ?? this.contributedRepos,
       commitsThisYear: props.commitsThisYear ?? this.commitsThisYear,
+      contributionGraph: props.contributionGraph ?? this.contributionGraph,
     });
   }
 }
