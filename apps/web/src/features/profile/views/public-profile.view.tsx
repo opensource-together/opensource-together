@@ -39,6 +39,9 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     );
   }
 
+  // Masquer le calendrier GitHub si l'utilisateur s'est connecté avec Google
+  const shouldShowGithubCalendar = profile.provider !== "google";
+
   return (
     <>
       <div className="mx-4 mt-4 flex w-full max-w-7xl flex-col gap-2 md:mx-auto md:mt-8 lg:flex-row lg:justify-center">
@@ -53,13 +56,15 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
             <PublicProfileHero profile={profile} />
           </div>
 
-          {/* Section du calendrier GitHub */}
-          <div className="mb-8 w-full">
-            <GithubCalendar
-              contributionGraph={profile.githubStats?.contributionGraph}
-              contributionsCount={profile.githubStats?.commitsThisYear || 0}
-            />
-          </div>
+          {/* Section du calendrier GitHub - seulement si pas connecté avec Google */}
+          {shouldShowGithubCalendar && (
+            <div className="mb-8 w-full">
+              <GithubCalendar
+                contributionGraph={profile.githubStats?.contributionGraph}
+                contributionsCount={profile.githubStats?.commitsThisYear || 0}
+              />
+            </div>
+          )}
 
           {/* Section des expériences */}
           <div className="w-full">

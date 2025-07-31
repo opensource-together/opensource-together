@@ -73,11 +73,11 @@ export default function GithubCalendar({
       <div className="w-full max-w-full overflow-hidden">
         <div>
           <h3 className="mb-4 text-lg font-medium tracking-tight text-black">
-            Activité de contribution
+            Activité de contribution GitHub
           </h3>
           <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
-              Aucune donnée de contribution disponible
+              Aucune donnée de contribution GitHub disponible
             </p>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function GithubCalendar({
     <div className="w-full max-w-full overflow-hidden">
       <div>
         <h3 className="mb-4 text-lg font-medium tracking-tight text-black">
-          Activité de contribution
+          Activité de contribution GitHub
         </h3>
 
         <div className="relative">
@@ -175,8 +175,8 @@ export default function GithubCalendar({
           <div className="font-medium">{formatDate(tooltip.date)}</div>
           <div className="text-gray-300">
             {tooltip.count === 0
-              ? "Aucune contribution"
-              : `${tooltip.count} contribution${tooltip.count > 1 ? "s" : ""}`}
+              ? "Aucune contribution GitHub"
+              : `${tooltip.count} contribution${tooltip.count > 1 ? "s" : ""} GitHub`}
           </div>
         </div>
       )}

@@ -25,14 +25,15 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     },
   ];
 
-  const defaultStats = {
-    starsEarned: 54,
-    joinedProjects: 34,
-    contributions: 5,
+  // Utiliser les vraies données GitHub ou des valeurs par défaut
+  const stats = {
+    starsEarned: profile.githubStats?.totalStars || 0,
+    joinedProjects: profile.githubStats?.contributedRepos || 0,
+    contributions: profile.githubStats?.commitsThisYear || 0,
   };
 
-  // Utiliser les données du profil ou les valeurs par défaut
-  const stats = defaultStats; // À adapter selon les données réelles du profil
+  // Masquer les statistiques si l'utilisateur s'est connecté avec Google
+  const shouldShowStats = profile.provider !== "google";
 
   const formatUrl = (url: string) => {
     if (!url) return "";
@@ -57,60 +58,62 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       {/* Breadcrumb */}
       <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
 
-      {/* Stats Section */}
-      <div className="mb-2 flex flex-col md:max-w-[263px]">
-        <h2 className="text-md mb-1 font-medium tracking-tight text-black">
-          Statistiques
-        </h2>
+      {/* Stats Section - seulement si pas connecté avec Google */}
+      {shouldShowStats && (
+        <div className="mb-2 flex flex-col md:max-w-[263px]">
+          <h2 className="text-md mb-1 font-medium tracking-tight text-black">
+            Statistiques GitHub
+          </h2>
 
-        {/* Stars Earned */}
-        <div className="flex items-center justify-between py-1">
-          <div className="flex items-center gap-2">
-            <Icon name="star" size="sm" variant="black" />
-            <span className="text-sm font-normal text-black">
-              Stars gagnées
+          {/* Stars Earned */}
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Icon name="star" size="sm" variant="black" />
+              <span className="text-sm font-normal text-black">
+                Stars gagnées
+              </span>
+            </div>
+            <div className="mx-4 flex flex-1 items-center">
+              <div className="h-[1px] w-full bg-black/5" />
+            </div>
+            <span className="text-sm font-medium text-black">
+              {stats.starsEarned}
             </span>
           </div>
-          <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
-          </div>
-          <span className="text-sm font-medium text-black">
-            {stats.starsEarned}
-          </span>
-        </div>
 
-        {/* Joined Projects */}
-        <div className="flex items-center justify-between py-1">
-          <div className="flex items-center gap-2">
-            <Icon name="fork" size="sm" variant="black" />
-            <span className="text-sm font-normal text-black">
-              Projets rejoints
+          {/* Joined Projects */}
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Icon name="fork" size="sm" variant="black" />
+              <span className="text-sm font-normal text-black">
+                Repos contribués
+              </span>
+            </div>
+            <div className="mx-4 flex flex-1 items-center">
+              <div className="h-[1px] w-full bg-black/5" />
+            </div>
+            <span className="text-sm font-medium text-black">
+              {stats.joinedProjects}
             </span>
           </div>
-          <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
-          </div>
-          <span className="text-sm font-medium text-black">
-            {stats.joinedProjects}
-          </span>
-        </div>
 
-        {/* Contributions */}
-        <div className="flex items-center justify-between py-1">
-          <div className="flex items-center gap-2">
-            <Icon name="people" size="sm" variant="black" />
-            <span className="text-sm font-normal text-black">
-              Contributions
+          {/* Contributions */}
+          <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-2">
+              <Icon name="people" size="sm" variant="black" />
+              <span className="text-sm font-normal text-black">
+                Commits cette année
+              </span>
+            </div>
+            <div className="mx-4 flex flex-1 items-center">
+              <div className="h-[1px] w-full bg-black/5" />
+            </div>
+            <span className="text-sm font-medium text-black">
+              {stats.contributions}
             </span>
           </div>
-          <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
-          </div>
-          <span className="text-sm font-medium text-black">
-            {stats.contributions}
-          </span>
         </div>
-      </div>
+      )}
 
       {/* Skills Section */}
       <div className="mb-2 flex flex-col">

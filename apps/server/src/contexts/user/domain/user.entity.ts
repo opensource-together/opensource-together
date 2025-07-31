@@ -1,11 +1,11 @@
 // apps/server/src/contexts/user/domain/user.entity.ts
 
-import { Username } from '@/contexts/user/domain/username.vo';
-import { Email } from '@/contexts/user/domain/email.vo';
-import { Result } from '@/libs/result';
-import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
+import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
+import { Email } from '@/contexts/user/domain/email.vo';
 import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
+import { Username } from '@/contexts/user/domain/username.vo';
+import { Result } from '@/libs/result';
 
 export type UserPublic = Omit<User, 'email' | 'login'>;
 
