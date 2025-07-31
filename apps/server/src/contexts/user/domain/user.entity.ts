@@ -424,7 +424,7 @@ export class User {
       techStacks: this.techStacks,
       experiences: this.experiences,
       projects: this.projects,
-      githubStats: this.githubStats?.toPrimitive(),
+      githubStats: this.githubStats?.toPrimitive() || null,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

@@ -1,17 +1,19 @@
 import { Result } from '@/libs/result';
 
 export interface ContributionDay {
-  date: string; // Format: "YYYY-MM-DD"
-  count: number;
-  level: number; // 0-4 (pour la couleur)
+  date: string; // Format: "YYYY-MM-DD" - Un jour spécifique
+  count: number; // Nombre de contributions ce jour
+  level: number; // 0-4 (niveau de couleur pour l'affichage)
 }
+
 export interface ContributionWeek {
-  days: ContributionDay[];
+  days: ContributionDay[]; // 7 jours (dimanche à samedi)
 }
+
 export interface ContributionGraph {
-  weeks: ContributionWeek[];
-  totalContributions: number;
-  maxContributions: number;
+  weeks: ContributionWeek[]; // ~52 semaines (1 an de données)
+  totalContributions: number; // Total des contributions de l'année
+  maxContributions: number; // Maximum de contributions par jour (pour calculer les niveaux)
 }
 
 export class GitHubStats {

@@ -131,14 +131,29 @@ export class UserController {
     const user = result.value;
     const userPrimitive = user.toPrimitive();
 
-    // Calculer les statistiques GitHub
-    try {
-      const githubStatsResult =
-        await this.calculateGitHubStatsUseCase.execute(userId);
-      if (githubStatsResult.success) {
-        userPrimitive.githubStats = githubStatsResult.value;
-      } else {
-        // Si pas de credentials GitHub ou erreur, utiliser des stats à 0
+    // Vérifier si l'utilisateur s'est connecté via GitHub
+    if (userPrimitive.provider === 'github') {
+      // Calculer les statistiques GitHub seulement si le provider est GitHub
+      try {
+        const githubStatsResult =
+          await this.calculateGitHubStatsUseCase.execute(userId);
+        if (githubStatsResult.success) {
+          userPrimitive.githubStats = githubStatsResult.value;
+        } else {
+          // Si pas de credentials GitHub ou erreur, utiliser des stats à 0
+          userPrimitive.githubStats = {
+            totalStars: 0,
+            contributedRepos: 0,
+            commitsThisYear: 0,
+            contributionGraph: {
+              weeks: [],
+              totalContributions: 0,
+              maxContributions: 0,
+            },
+          };
+        }
+      } catch (error) {
+        // En cas d'erreur, utiliser des stats à 0
         userPrimitive.githubStats = {
           totalStars: 0,
           contributedRepos: 0,
@@ -150,18 +165,9 @@ export class UserController {
           },
         };
       }
-    } catch (error) {
-      // En cas d'erreur, utiliser des stats à 0
-      userPrimitive.githubStats = {
-        totalStars: 0,
-        contributedRepos: 0,
-        commitsThisYear: 0,
-        contributionGraph: {
-          weeks: [],
-          totalContributions: 0,
-          maxContributions: 0,
-        },
-      };
+    } else {
+      // Si le provider n'est pas GitHub, attribuer undefined aux githubStats
+      userPrimitive.githubStats = null;
     }
 
     return userPrimitive;
@@ -316,7 +322,48 @@ export class UserController {
       throw new NotFoundException(result.error);
     }
 
-    return result.value.toPrimitive();
+    const userPrimitive = result.value.toPrimitive();
+
+    // Vérifier si l'utilisateur s'est connecté via GitHub
+    if (userPrimitive.provider === 'github') {
+      // Calculer les statistiques GitHub seulement si le provider est GitHub
+      try {
+        const githubStatsResult =
+          await this.calculateGitHubStatsUseCase.execute(id);
+        if (githubStatsResult.success) {
+          userPrimitive.githubStats = githubStatsResult.value;
+        } else {
+          // Si pas de credentials GitHub ou erreur, utiliser des stats à 0
+          userPrimitive.githubStats = {
+            totalStars: 0,
+            contributedRepos: 0,
+            commitsThisYear: 0,
+            contributionGraph: {
+              weeks: [],
+              totalContributions: 0,
+              maxContributions: 0,
+            },
+          };
+        }
+      } catch (error) {
+        // En cas d'erreur, utiliser des stats à 0
+        userPrimitive.githubStats = {
+          totalStars: 0,
+          contributedRepos: 0,
+          commitsThisYear: 0,
+          contributionGraph: {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
+        };
+      }
+    } else {
+      // Si le provider n'est pas GitHub, attribuer undefined aux githubStats
+      userPrimitive.githubStats = null;
+    }
+
+    return userPrimitive;
   }
 
   @PublicAccess()
