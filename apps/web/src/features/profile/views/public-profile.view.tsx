@@ -55,7 +55,10 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
 
           {/* Section du calendrier GitHub */}
           <div className="mb-8 w-full">
-            <GithubCalendar contributionsCount={profile.contributionsCount} />
+            <GithubCalendar
+              contributionGraph={profile.githubStats?.contributionGraph}
+              contributionsCount={profile.githubStats?.commitsThisYear || 0}
+            />
           </div>
 
           {/* Section des expériences */}

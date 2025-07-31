@@ -31,7 +31,10 @@ export default function ProfileView() {
 
         {/* Section du calendrier GitHub */}
         <div className="mb-8 w-full">
-          <GithubCalendar contributionsCount={currentUser.contributionsCount} />
+          <GithubCalendar
+            contributionGraph={currentUser.githubStats?.contributionGraph}
+            contributionsCount={currentUser.githubStats?.commitsThisYear || 0}
+          />
         </div>
 
         {/* Section des expériences */}

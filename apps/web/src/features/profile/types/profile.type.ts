@@ -23,6 +23,29 @@ export type ProfileExperience = {
   endDate: string;
 };
 
+export type ContributionDay = {
+  date: string;
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4;
+};
+
+export type ContributionWeek = {
+  days: ContributionDay[];
+};
+
+export type ContributionGraph = {
+  weeks: ContributionWeek[];
+  totalContributions: number;
+  maxContributions: number;
+};
+
+export type GithubStats = {
+  totalStars: number;
+  contributedRepos: number;
+  commitsThisYear: number;
+  contributionGraph: ContributionGraph;
+};
+
 export type Profile = {
   id: string;
   username: string;
@@ -39,4 +62,5 @@ export type Profile = {
   projects?: Project[];
   joinedAt?: string;
   profileUpdatedAt?: string;
+  githubStats?: GithubStats;
 };
