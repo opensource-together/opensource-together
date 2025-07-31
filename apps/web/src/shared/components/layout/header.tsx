@@ -228,15 +228,7 @@ export default function Header() {
               variant="default"
               className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
             >
-              <a href="/auth/login">
-                <Image
-                  src="/icons/new-github-icon.svg"
-                  alt="github"
-                  width={13}
-                  height={16}
-                />
-                Connexion avec Github
-              </a>
+              <a href="/auth/login">Se connecter</a>
             </Button>
           )}
 
@@ -307,10 +299,7 @@ export default function Header() {
                 variant="default"
                 className="flex w-full max-w-[220px] items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
               >
-                <a href="/auth/github">
-                  <Icon name="github" size="md" variant="white" />
-                  Connexion avec Github
-                </a>
+                <a href="/auth/github">Se connecter</a>
               </Button>
             )}
           </div>
