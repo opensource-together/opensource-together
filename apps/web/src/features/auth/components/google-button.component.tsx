@@ -43,7 +43,7 @@ export default function GoogleButton({
           src={
             isOutlineVariant
               ? "/icons/new-google-icon-black.svg"
-              : "/icons/new-google-icon.svg"
+              : "/icons/new-google-icon-black.svg"
           }
           alt="Google"
           width={16}
