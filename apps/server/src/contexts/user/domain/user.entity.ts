@@ -13,7 +13,7 @@ export class User {
   private readonly id: string;
   private username: Username;
   private email: Email;
-  // private name: string;
+  private provider: string;
   private login: string;
   private avatarUrl: string;
   private location: string;
@@ -46,7 +46,7 @@ export class User {
     id: string;
     username: Username;
     email: Email;
-    // name: string;
+    provider: string;
     login: string;
     avatarUrl?: string;
     location?: string;
@@ -75,7 +75,7 @@ export class User {
     this.id = props.id;
     this.username = props.username;
     this.email = props.email;
-    // this.name = props.name;
+    this.provider = props.provider;
     this.login = props.login;
     this.avatarUrl = props.avatarUrl || '';
     this.location = props.location || '';
@@ -95,7 +95,7 @@ export class User {
     id: string;
     username: string;
     email: string;
-    // name: string;
+    provider: string;
     login: string;
     avatarUrl?: string;
     location?: string;
@@ -168,7 +168,7 @@ export class User {
         id: props.id,
         username: validateResult.value.username,
         email: validateResult.value.email,
-        // name: props.name,
+        provider: props.provider,
         login: props.login,
         avatarUrl: props.avatarUrl,
         location: props.location,
@@ -187,7 +187,7 @@ export class User {
     id: string;
     username: string;
     email: string;
-    // name: string;
+    provider: string;
     login: string;
     avatarUrl?: string;
     location?: string;
@@ -229,7 +229,7 @@ export class User {
         id: validUser.value.id,
         username: validUser.value.username,
         email: validUser.value.email,
-        // name: props.name,
+        provider: props.provider,
         login: props.login,
         avatarUrl: props.avatarUrl,
         location: props.location,
@@ -251,7 +251,7 @@ export class User {
     id: string;
     username: string;
     email: string;
-    // name: string;
+    provider: string;
   }): Result<
     { id: string; username: Username; email: Email },
     { id?: string; username?: string; email?: string } | string
@@ -413,7 +413,7 @@ export class User {
       id: this.id,
       username: this.username.getUsername(),
       email: this.email.getEmail(),
-      // name: this.name,
+      provider: this.provider,
       login: this.login,
       avatarUrl: this.avatarUrl,
       location: this.location,

@@ -27,6 +27,7 @@ model User {
   email             String                 @unique
 	jobTitle					String?
   // name              String
+  provider          String                 @default("email")
   login             String
   avatarUrl         String?
   location          String?

@@ -83,6 +83,7 @@ export class UserController {
       jobTitle: 'Senior Fullstack Developer',
       socialLinks: {},
       techStacks: [],
+      provider: 'google',
       experiences: [],
       projects: [],
       createdAt: '2025-07-29T08:07:32.845Z',

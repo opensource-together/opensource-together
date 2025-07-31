@@ -1,5 +1,5 @@
 import { ICommand, ICommandHandler, CommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { User } from '@/contexts/user/domain/user.entity';
 import {
   UserRepositoryPort,
@@ -14,6 +14,7 @@ export class CreateUserCommand implements ICommand {
       readonly username: string;
       readonly email: string;
       readonly name: string;
+      readonly provider: string;
       readonly login: string;
       readonly avatarUrl?: string;
       readonly location?: string;
@@ -66,7 +67,7 @@ export class CreateUserCommandHandler
       id,
       username,
       email,
-      // name,
+      provider,
       company,
       bio,
       socialLinks,
@@ -82,6 +83,9 @@ export class CreateUserCommandHandler
       this.userRepo.findByEmail(email),
     ]);
 
+    Logger.log('userExistsByUsername', userExistsByUsername);
+    Logger.log('userExistsByEmail', userExistsByEmail);
+
     if (userExistsByUsername.success || userExistsByEmail.success) {
       return Result.fail('Identifiants incorrects.');
     }
@@ -91,6 +95,7 @@ export class CreateUserCommandHandler
       username,
       email,
       // name,
+      provider,
       login,
       avatarUrl,
       location,
