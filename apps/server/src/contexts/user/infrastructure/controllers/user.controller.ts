@@ -1,35 +1,34 @@
-import { FindUserApplicationsQuery } from '@/contexts/user/use-cases/queries/find-user-applications.query';
-import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
-import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
-import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
-import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
-import { User } from '@/contexts/user/domain/user.entity';
-import { Result } from '@/libs/result';
-import {
-  Controller,
-  Get,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-  // ForbiddenException,
-} from '@nestjs/common';
-import { QueryBus, CommandBus } from '@nestjs/cqrs';
-import {
-  ApiCookieAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Session, PublicAccess } from 'supertokens-nestjs';
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
+import { User } from '@/contexts/user/domain/user.entity';
+import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
+import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
+import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
+import { FindUserApplicationsQuery } from '@/contexts/user/use-cases/queries/find-user-applications.query';
+import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
+import { Result } from '@/libs/result';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Patch,
+} from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 // DTO simple pour la mise à jour d'utilisateur
 // export class UpdateUserRequestDto {
 //   username?: string;

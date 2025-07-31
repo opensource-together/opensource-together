@@ -13,14 +13,14 @@ import {
 } from "../validations/profile.schema";
 
 /**
- * Gets a public profile by ID.
+ * Gets a public user by ID.
  *
- * @param id - The profile ID to fetch.
- * @returns A promise that resolves to the profile data.
+ * @param id - The user ID to fetch.
+ * @returns A promise that resolves to the user data.
  */
-export const getProfileById = async (id: string): Promise<Profile> => {
+export const getUserById = async (id: string): Promise<Profile> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/profile/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/user/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -29,12 +29,12 @@ export const getProfileById = async (id: string): Promise<Profile> => {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || "Failed to fetch profile");
+      throw new Error(error.message || "Failed to fetch user");
     }
 
     return response.json();
   } catch (error) {
-    console.error("Error fetching profile:", error);
+    console.error("Error fetching user:", error);
     throw error;
   }
 };
