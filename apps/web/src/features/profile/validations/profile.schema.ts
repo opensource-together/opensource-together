@@ -8,7 +8,7 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Le nom d'utilisateur est requis")
     .max(50, "Le nom d'utilisateur ne peut pas dépasser 50 caractères"),
-  title: z
+  jobTitle: z
     .string()
     .max(200, "Le titre ne peut pas dépasser 200 caractères")
     .optional(),

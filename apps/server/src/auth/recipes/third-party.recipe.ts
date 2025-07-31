@@ -1,7 +1,7 @@
 // import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import ThirdParty from 'supertokens-node/recipe/thirdparty';
 import { CommandBus } from '@nestjs/cqrs';
+import ThirdParty from 'supertokens-node/recipe/thirdparty';
 // import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
 import { deleteUser } from 'supertokens-node';
 // import { Result } from '@/libs/result';
@@ -9,12 +9,12 @@ import { deleteUser } from 'supertokens-node';
 // import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 // import { CreateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
 // import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
-import { handleGoogleSignUp } from './google/google-signInUp';
-import { handleGithubSignUp } from './github/github-signInUp';
-import { googleProviderConfig } from './google/google-provider.config';
-import { githubProviderConfig } from './github/github-provider.config';
 import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
 import { Logger } from '@nestjs/common';
+import { githubProviderConfig } from './github/github-provider.config';
+import { handleGithubSignUp } from './github/github-signInUp';
+import { googleProviderConfig } from './google/google-provider.config';
+import { handleGoogleSignUp } from './google/google-signInUp';
 
 interface GithubUserInfo {
   user: {

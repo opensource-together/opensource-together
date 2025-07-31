@@ -9,8 +9,16 @@ import { PrismaProjectRoleApplicationRepository } from '@/contexts/project/bound
 import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
 import { ProjectInfrastructure } from '@/contexts/project/infrastructure/project.infrastructure';
+import { GithubInfrastructure } from '@/contexts/github/infrastructure/github.infrastructure';
+import { EncryptionModule } from '@/contexts/encryption/infrastructure/encryption.module';
+import { CalculateGitHubStatsUseCase } from '../use-cases/calculate-github-stats.use-case';
 @Module({
-  imports: [PersistenceInfrastructure, ProjectInfrastructure],
+  imports: [
+    PersistenceInfrastructure,
+    ProjectInfrastructure,
+    GithubInfrastructure,
+    EncryptionModule,
+  ],
   providers: [
     {
       provide: USER_REPOSITORY_PORT,
@@ -24,6 +32,7 @@ import { ProjectInfrastructure } from '@/contexts/project/infrastructure/project
       provide: TECHSTACK_REPOSITORY_PORT,
       useClass: PrismaTechStackRepository,
     },
+    CalculateGitHubStatsUseCase,
     ...userUseCases,
   ],
   controllers: [UserController],

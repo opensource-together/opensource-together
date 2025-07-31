@@ -3,7 +3,7 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
 
-import { getProfileById } from "@/features/profile/services/profile.service";
+import { getUserById } from "@/features/profile/services/profile.service";
 import { PublicProfileView } from "@/features/profile/views/public-profile.view";
 
 interface PublicProfilePageProps {
@@ -20,7 +20,7 @@ export default async function PublicProfilePage({
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["user", userId],
-    queryFn: () => getProfileById(userId),
+    queryFn: () => getUserById(userId),
   });
 
   const dehydratedState = dehydrate(queryClient);

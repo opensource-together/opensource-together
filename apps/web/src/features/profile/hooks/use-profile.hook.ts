@@ -3,13 +3,13 @@ import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
-import { getProfileById, updateProfile } from "../services/profile.service";
+import { getUserById, updateProfile } from "../services/profile.service";
 import { ProfileSchema } from "../validations/profile.schema";
 
 export const useProfile = (id: string) => {
   return useQuery({
     queryKey: ["user", id],
-    queryFn: () => getProfileById(id),
+    queryFn: () => getUserById(id),
     enabled: !!id,
   });
 };

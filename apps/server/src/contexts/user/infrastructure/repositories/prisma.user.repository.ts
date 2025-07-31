@@ -267,4 +267,69 @@ export class PrismaUserRepository implements UserRepositoryPort {
       );
     }
   }
+
+  async updateGitHubStats(
+    userId: string,
+    githubStats: {
+      totalStars: number;
+      contributedRepos: number;
+      commitsThisYear: number;
+      contributionGraph?: {
+        weeks: {
+          contributionCount: number;
+          date: string;
+        }[];
+        totalContributions: number;
+        maxContributions: number;
+      };
+    },
+  ): Promise<Result<User, string>> {
+    try {
+      const userResult = await this.prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          socialLinks: true,
+          techStacks: true,
+        },
+      });
+
+      if (!userResult) return Result.fail('User not found');
+
+      // Temporairement utiliser l'ancienne structure en attendant prisma generate
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          githubStats: {
+            create: {
+              totalStars: githubStats.totalStars,
+              contributedRepos: githubStats.contributedRepos,
+              commitsThisYear: githubStats.commitsThisYear,
+              contributionGraph: githubStats.contributionGraph,
+            },
+          },
+        },
+      });
+
+      // Récupérer l'utilisateur mis à jour
+      const updatedUserResult = await this.prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+          socialLinks: true,
+          techStacks: true,
+        },
+      });
+
+      if (!updatedUserResult) return Result.fail('User not found after update');
+
+      const updatedUser = PrismaUserMapper.toDomain(updatedUserResult);
+      if (!updatedUser.success) return Result.fail(updatedUser.error);
+
+      return Result.ok(updatedUser.value);
+    } catch (error) {
+      this.Logger.error('Error updating GitHub stats:', error);
+      return Result.fail(
+        `Erreur technique lors de la mise à jour des statistiques GitHub : ${error}`,
+      );
+    }
+  }
 }

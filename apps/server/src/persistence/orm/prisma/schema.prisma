@@ -25,6 +25,8 @@ model User {
   id                String                 @id @default(uuid())
   username          String                 @unique
   email             String                 @unique
+	jobTitle					String?
+  // name              String
   provider          String                 @default("email")
   login             String
   avatarUrl         String?
@@ -34,6 +36,7 @@ model User {
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
   githubCredentials UserGitHubCredentials?
+  githubStats       GitHubStats?
   techStacks        TechStack[]
   socialLinks       UserSocialLink[]
   projects          Project[]
@@ -179,4 +182,18 @@ model ProjectGoal {
   goal      String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationProjectGoal")
+}
+
+model GitHubStats {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  totalStars        Int      @default(0)
+  contributedRepos  Int      @default(0)
+  commitsThisYear   Int      @default(0)
+  contributionGraph Json?    // Stockage du ContributionGraph en JSON
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relation vers User
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

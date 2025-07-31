@@ -1,10 +1,11 @@
 // apps/server/src/contexts/user/domain/user.entity.ts
 
-import { Username } from '@/contexts/user/domain/username.vo';
-import { Email } from '@/contexts/user/domain/email.vo';
-import { Result } from '@/libs/result';
-import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
+import { ProfileProject } from '@/contexts/profile/domain/profile-project.vo';
+import { Email } from '@/contexts/user/domain/email.vo';
+import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
+import { Username } from '@/contexts/user/domain/username.vo';
+import { Result } from '@/libs/result';
 
 export type UserPublic = Omit<User, 'email' | 'login'>;
 
@@ -18,6 +19,7 @@ export class User {
   private location: string;
   private company: string;
   private bio: string;
+  private jobTitle: string;
   private socialLinks?: {
     github?: string;
     website?: string;
@@ -33,6 +35,7 @@ export class User {
   }[];
   private experiences: ProfileExperience[];
   private projects: ProfileProject[];
+  private githubStats?: GitHubStats;
 
   private readonly createdAt?: Date;
   private readonly updatedAt?: Date;
@@ -49,6 +52,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -64,6 +68,7 @@ export class User {
     }[];
     experiences?: ProfileExperience[];
     projects?: ProfileProject[];
+    githubStats?: GitHubStats;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -76,10 +81,12 @@ export class User {
     this.location = props.location || '';
     this.company = props.company || '';
     this.bio = props.bio || '';
+    this.jobTitle = props.jobTitle || '';
     this.socialLinks = props.socialLinks;
     this.techStacks = props.techStacks || [];
     this.experiences = props.experiences || [];
     this.projects = props.projects || [];
+    this.githubStats = props.githubStats;
     this.createdAt = props.createdAt ?? new Date();
     this.updatedAt = props.updatedAt ?? new Date();
   }
@@ -94,6 +101,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -166,6 +174,7 @@ export class User {
         location: props.location,
         company: props.company,
         bio: props.bio,
+        jobTitle: props.jobTitle,
         socialLinks: props.socialLinks,
         techStacks: props.techStacks || [],
         experiences: experienceVOs,
@@ -184,6 +193,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -199,6 +209,7 @@ export class User {
     }[];
     experiences?: ProfileExperience[];
     projects?: ProfileProject[];
+    githubStats?: GitHubStats;
     createdAt: Date;
     updatedAt: Date;
   }): Result<
@@ -224,10 +235,12 @@ export class User {
         location: props.location,
         company: props.company,
         bio: props.bio,
+        jobTitle: props.jobTitle,
         socialLinks: props.socialLinks,
         techStacks: props.techStacks,
         experiences: props.experiences,
         projects: props.projects,
+        githubStats: props.githubStats,
         createdAt: props.createdAt,
         updatedAt: props.updatedAt,
       }),
@@ -310,6 +323,7 @@ export class User {
     location?: string;
     company?: string;
     bio?: string;
+    jobTitle?: string;
     socialLinks?: {
       github?: string;
       website?: string;
@@ -332,6 +346,7 @@ export class User {
     if (props.location !== undefined) this.location = props.location;
     if (props.company !== undefined) this.company = props.company;
     if (props.bio !== undefined) this.bio = props.bio;
+    if (props.jobTitle !== undefined) this.jobTitle = props.jobTitle;
     if (props.socialLinks !== undefined) this.socialLinks = props.socialLinks;
 
     return Result.ok('Profile updated successfully');
@@ -359,6 +374,14 @@ export class User {
     }[],
   ): void {
     this.techStacks = techStacks;
+  }
+
+  public updateGitHubStats(stats: GitHubStats): void {
+    this.githubStats = stats;
+  }
+
+  public getGitHubStats(): GitHubStats | undefined {
+    return this.githubStats;
   }
 
   // Getters pour l'accès en lecture seule
@@ -396,10 +419,12 @@ export class User {
       location: this.location,
       company: this.company,
       bio: this.bio,
+      jobTitle: this.jobTitle,
       socialLinks: this.socialLinks,
       techStacks: this.techStacks,
       experiences: this.experiences,
       projects: this.projects,
+      githubStats: this.githubStats?.toPrimitive() || null,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

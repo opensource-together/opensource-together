@@ -14,4 +14,12 @@ export interface UserRepositoryPort {
     userId: string,
     techStackIds: string[],
   ): Promise<Result<User, string>>;
+  updateGitHubStats(
+    userId: string,
+    githubStats: {
+      totalStars: number;
+      contributedRepos: number;
+      commitsThisYear: number;
+    },
+  ): Promise<Result<User, string>>;
 }

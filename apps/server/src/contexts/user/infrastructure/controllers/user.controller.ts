@@ -1,34 +1,34 @@
-import { FindUserApplicationsQuery } from '@/contexts/user/use-cases/queries/find-user-applications.query';
-import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
-import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
-import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
-import { User } from '@/contexts/user/domain/user.entity';
-import { Result } from '@/libs/result';
-import {
-  Controller,
-  Get,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-  // ForbiddenException,
-} from '@nestjs/common';
-import { QueryBus, CommandBus } from '@nestjs/cqrs';
-import {
-  ApiCookieAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Session, PublicAccess } from 'supertokens-nestjs';
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
+import { User } from '@/contexts/user/domain/user.entity';
+import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
+import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
+import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
+import { FindUserApplicationsQuery } from '@/contexts/user/use-cases/queries/find-user-applications.query';
+import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
+import { Result } from '@/libs/result';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Patch,
+} from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { PublicAccess, Session } from 'supertokens-nestjs';
 // DTO simple pour la mise à jour d'utilisateur
 // export class UpdateUserRequestDto {
 //   username?: string;
@@ -59,6 +59,7 @@ export class UserController {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
+    private readonly calculateGitHubStatsUseCase: CalculateGitHubStatsUseCase,
   ) {}
 
   //PRIVATE ENDPOINTS
@@ -78,6 +79,7 @@ export class UserController {
       location: '',
       company: '',
       bio: 'Fullstack Developer | \r\nNestJS & Angular lover | \r\nBuilding @opensource-together ',
+      jobTitle: 'Senior Fullstack Developer',
       socialLinks: {},
       techStacks: [],
       provider: 'google',
@@ -85,6 +87,29 @@ export class UserController {
       projects: [],
       createdAt: '2025-07-29T08:07:32.845Z',
       updatedAt: '2025-07-29T08:07:32.845Z',
+      githubStats: {
+        totalStars: 150,
+        contributedRepos: 25,
+        commitsThisYear: 380,
+        contributionGraph: {
+          weeks: [
+            {
+              days: [
+                { date: '2025-01-01', count: 0, level: 0 },
+                { date: '2025-01-02', count: 3, level: 2 },
+                { date: '2025-01-03', count: 5, level: 3 },
+                { date: '2025-01-04', count: 2, level: 1 },
+                { date: '2025-01-05', count: 8, level: 4 },
+                { date: '2025-01-06', count: 1, level: 1 },
+                { date: '2025-01-07', count: 0, level: 0 },
+              ],
+            },
+            // ... autres semaines
+          ],
+          totalContributions: 380,
+          maxContributions: 12,
+        },
+      },
     },
   })
   @ApiResponse({
@@ -103,7 +128,49 @@ export class UserController {
       throw new NotFoundException(result.error);
     }
 
-    return result.value.toPrimitive();
+    const user = result.value;
+    const userPrimitive = user.toPrimitive();
+
+    // Vérifier si l'utilisateur s'est connecté via GitHub
+    if (userPrimitive.provider === 'github') {
+      // Calculer les statistiques GitHub seulement si le provider est GitHub
+      try {
+        const githubStatsResult =
+          await this.calculateGitHubStatsUseCase.execute(userId);
+        if (githubStatsResult.success) {
+          userPrimitive.githubStats = githubStatsResult.value;
+        } else {
+          // Si pas de credentials GitHub ou erreur, utiliser des stats à 0
+          userPrimitive.githubStats = {
+            totalStars: 0,
+            contributedRepos: 0,
+            commitsThisYear: 0,
+            contributionGraph: {
+              weeks: [],
+              totalContributions: 0,
+              maxContributions: 0,
+            },
+          };
+        }
+      } catch {
+        // En cas d'erreur, utiliser des stats à 0
+        userPrimitive.githubStats = {
+          totalStars: 0,
+          contributedRepos: 0,
+          commitsThisYear: 0,
+          contributionGraph: {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
+        };
+      }
+    } else {
+      // Si le provider n'est pas GitHub, attribuer undefined aux githubStats
+      userPrimitive.githubStats = null;
+    }
+
+    return userPrimitive;
   }
 
   @Patch('me')
@@ -255,7 +322,48 @@ export class UserController {
       throw new NotFoundException(result.error);
     }
 
-    return result.value.toPrimitive();
+    const userPrimitive = result.value.toPrimitive();
+
+    // Vérifier si l'utilisateur s'est connecté via GitHub
+    if (userPrimitive.provider === 'github') {
+      // Calculer les statistiques GitHub seulement si le provider est GitHub
+      try {
+        const githubStatsResult =
+          await this.calculateGitHubStatsUseCase.execute(id);
+        if (githubStatsResult.success) {
+          userPrimitive.githubStats = githubStatsResult.value;
+        } else {
+          // Si pas de credentials GitHub ou erreur, utiliser des stats à 0
+          userPrimitive.githubStats = {
+            totalStars: 0,
+            contributedRepos: 0,
+            commitsThisYear: 0,
+            contributionGraph: {
+              weeks: [],
+              totalContributions: 0,
+              maxContributions: 0,
+            },
+          };
+        }
+      } catch {
+        // En cas d'erreur, utiliser des stats à 0
+        userPrimitive.githubStats = {
+          totalStars: 0,
+          contributedRepos: 0,
+          commitsThisYear: 0,
+          contributionGraph: {
+            weeks: [],
+            totalContributions: 0,
+            maxContributions: 0,
+          },
+        };
+      }
+    } else {
+      // Si le provider n'est pas GitHub, attribuer undefined aux githubStats
+      userPrimitive.githubStats = null;
+    }
+
+    return userPrimitive;
   }
 
   @PublicAccess()

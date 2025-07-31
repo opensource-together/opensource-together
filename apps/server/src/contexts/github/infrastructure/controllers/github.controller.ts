@@ -16,14 +16,17 @@ import { GitHubOctokit } from '../decorators/github-octokit.decorator';
 import { Octokit } from '@octokit/rest';
 import { GithubAuthGuard } from '../guards/github-auth.guard';
 import { GithubRepoListInput } from '../repositories/inputs/github-repo-list.input';
-import { GithubRepository } from '../repositories/github.repository';
+import {
+  GITHUB_REPOSITORY_PORT,
+  GithubRepositoryPort,
+} from '../../use-cases/ports/github-repository.port';
 
 @ApiTags('Github')
 @Controller('github')
 export class GithubController {
   constructor(
-    @Inject(GithubRepository)
-    private readonly githubRepository: GithubRepository,
+    @Inject(GITHUB_REPOSITORY_PORT)
+    private readonly githubRepository: GithubRepositoryPort,
   ) {}
 
   @Get('repos')
