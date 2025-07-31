@@ -369,9 +369,34 @@ export class GithubRepository implements GithubRepositoryPort {
         }
       `;
 
-      const response = (await octokit.graphql(graphqlQuery, {
+      const response: {
+        user?: {
+          repositories?: {
+            nodes?: Array<{
+              stargazerCount: number;
+              nameWithOwner: string;
+            }>;
+          };
+          repositoriesContributedTo?: {
+            nodes?: Array<{
+              stargazerCount: number;
+              nameWithOwner: string;
+            }>;
+          };
+          organizations?: {
+            nodes?: Array<{
+              repositories?: {
+                nodes?: Array<{
+                  stargazerCount: number;
+                  nameWithOwner: string;
+                }>;
+              };
+            }>;
+          };
+        };
+      } = await octokit.graphql(graphqlQuery, {
         username,
-      })) as any;
+      });
 
       let totalStars = 0;
       const countedRepos = new Set<string>(); // Pour éviter les doublons
@@ -454,9 +479,25 @@ export class GithubRepository implements GithubRepositoryPort {
         }
       `;
 
-      const response = (await octokit.graphql(graphqlQuery, {
+      const response: {
+        user?: {
+          repositories?: {
+            totalCount: number;
+          };
+          repositoriesContributedTo?: {
+            totalCount: number;
+          };
+          organizations?: {
+            nodes?: Array<{
+              repositories?: {
+                totalCount: number;
+              };
+            }>;
+          };
+        };
+      } = await octokit.graphql(graphqlQuery, {
         username,
-      })) as any;
+      });
 
       let totalRepos = 0;
 
@@ -557,11 +598,25 @@ export class GithubRepository implements GithubRepositoryPort {
         }
       `;
 
-      const response = (await octokit.graphql(graphqlQuery, {
+      const response: {
+        user?: {
+          contributionsCollection?: {
+            totalCommitContributions: number;
+            totalIssueContributions: number;
+            totalPullRequestContributions: number;
+            totalPullRequestReviewContributions: number;
+            commitContributionsByRepository?: Array<{
+              contributions?: {
+                totalCount: number;
+              };
+            }>;
+          };
+        };
+      } = await octokit.graphql(graphqlQuery, {
         username,
         startDate,
         endDate,
-      })) as any;
+      });
 
       let totalContributions = 0;
       const contributionsCollection = response.user?.contributionsCollection;
@@ -649,11 +704,26 @@ export class GithubRepository implements GithubRepositoryPort {
           }
         }
       `;
-      const response = (await octokit.graphql(graphqlQuery, {
+      const response: {
+        user?: {
+          contributionsCollection?: {
+            contributionCalendar?: {
+              totalContributions: number;
+              weeks: Array<{
+                contributionDays: Array<{
+                  date: string;
+                  contributionCount: number;
+                }>;
+              }>;
+            };
+          };
+        };
+      } = await octokit.graphql(graphqlQuery, {
         username,
         startDate,
         endDate,
-      })) as any;
+      });
+
       const calendar =
         response.user?.contributionsCollection?.contributionCalendar;
       if (!calendar) {
@@ -677,8 +747,8 @@ export class GithubRepository implements GithubRepositoryPort {
         return 1;
       }
       const graph: ContributionGraph = {
-        weeks: calendar.weeks.map((week: any) => ({
-          days: week.contributionDays.map((day: any) => ({
+        weeks: calendar.weeks.map((week) => ({
+          days: week.contributionDays.map((day) => ({
             date: day.date,
             count: day.contributionCount,
             level: getLevel(day.contributionCount, max),

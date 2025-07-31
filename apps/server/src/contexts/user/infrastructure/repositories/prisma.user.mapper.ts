@@ -19,7 +19,12 @@ type UserWithRelations = PrismaUser & {
   contributedRepos?: number;
   commitsThisYear?: number;
   // Nouvelle relation (sera disponible après prisma generate)
-  githubStats?: any | null;
+  githubStats?: {
+    totalStars: number;
+    contributedRepos: number;
+    commitsThisYear: number;
+    contributionGraph: ContributionGraph;
+  } | null;
 };
 
 export class PrismaUserMapper {
@@ -77,7 +82,14 @@ export class PrismaUserMapper {
       }
 
       // Préparer les données GitHubStats si elles existent
-      let githubStatsData: any = undefined;
+      let githubStatsData:
+        | {
+            totalStars: number;
+            contributedRepos: number;
+            commitsThisYear: number;
+            contributionGraph: ContributionGraph;
+          }
+        | undefined = undefined;
       if (primitive.githubStats) {
         githubStatsData = {
           totalStars: primitive.githubStats.totalStars,
@@ -153,8 +165,7 @@ export class PrismaUserMapper {
           totalStars: prismaUser.githubStats.totalStars,
           contributedRepos: prismaUser.githubStats.contributedRepos,
           commitsThisYear: prismaUser.githubStats.commitsThisYear,
-          contributionGraph: (prismaUser.githubStats
-            .contributionGraph as ContributionGraph) || {
+          contributionGraph: prismaUser.githubStats.contributionGraph || {
             weeks: [],
             totalContributions: 0,
             maxContributions: 0,

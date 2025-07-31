@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Result } from '@/libs/result';
-import { GitHubStats } from '@/contexts/user/domain/github-stats.vo';
 import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 import {
   USER_REPOSITORY_PORT,

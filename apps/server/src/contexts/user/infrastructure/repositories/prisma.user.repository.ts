@@ -274,7 +274,14 @@ export class PrismaUserRepository implements UserRepositoryPort {
       totalStars: number;
       contributedRepos: number;
       commitsThisYear: number;
-      contributionGraph?: any;
+      contributionGraph?: {
+        weeks: {
+          contributionCount: number;
+          date: string;
+        }[];
+        totalContributions: number;
+        maxContributions: number;
+      };
     },
   ): Promise<Result<User, string>> {
     try {

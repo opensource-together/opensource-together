@@ -152,7 +152,7 @@ export class UserController {
             },
           };
         }
-      } catch (error) {
+      } catch {
         // En cas d'erreur, utiliser des stats à 0
         userPrimitive.githubStats = {
           totalStars: 0,
@@ -345,7 +345,7 @@ export class UserController {
             },
           };
         }
-      } catch (error) {
+      } catch {
         // En cas d'erreur, utiliser des stats à 0
         userPrimitive.githubStats = {
           totalStars: 0,
