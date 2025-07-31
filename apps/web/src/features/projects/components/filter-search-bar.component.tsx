@@ -31,7 +31,7 @@ export default function FilterSearchBar() {
               <div className="absolute top-1/2 right-0 h-12 -translate-y-1/2 pl-4" />
             </div>
             <div className="relative">
-              <FilterItem label="Filtrer par" value="Role" />
+              <FilterItem label="Filtrer par" value="Rôle" />
               <div className="absolute top-1/2 right-0 h-8 -translate-y-1/2" />
             </div>
             <div className="relative">
