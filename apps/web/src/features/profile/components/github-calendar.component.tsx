@@ -1,3 +1,5 @@
+import { useRef, useState } from "react";
+
 import { ContributionGraph } from "../types/profile.type";
 
 interface GithubCalendarProps {
@@ -5,10 +7,20 @@ interface GithubCalendarProps {
   contributionsCount?: number;
 }
 
+interface TooltipData {
+  date: string;
+  count: number;
+  level: number;
+}
+
 export default function GithubCalendar({
   contributionGraph,
   contributionsCount = 0,
 }: GithubCalendarProps) {
+  const [tooltip, setTooltip] = useState<TooltipData | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
   const getSquareColor = (level: number): string => {
     switch (level) {
       case 0:
@@ -24,6 +36,31 @@ export default function GithubCalendar({
       default:
         return "bg-[#E8EAEE]";
     }
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (tooltip) {
+      setTooltipPosition({ x: e.clientX + 10, y: e.clientY - 10 });
+    }
+  };
+
+  const handleMouseEnter = (day: TooltipData, e: React.MouseEvent) => {
+    setTooltip(day);
+    setTooltipPosition({ x: e.clientX + 10, y: e.clientY - 10 });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltip(null);
   };
 
   // Si pas de données de contribution, afficher un message
@@ -98,7 +135,10 @@ export default function GithubCalendar({
             </div>
 
             {/* Calendrier principal */}
-            <div className="h-[60px] w-full max-w-[598.07px] rounded-lg border border-black/5 p-1 md:h-[97px] md:p-2">
+            <div
+              className="h-[60px] w-full max-w-[598.07px] rounded-lg border border-black/5 p-1 md:h-[97px] md:p-2"
+              onMouseMove={handleMouseMove}
+            >
               <div className="flex h-full gap-[1px] md:gap-0.5">
                 {contributionGraph.weeks.map((week, weekIndex) => (
                   <div
@@ -108,8 +148,9 @@ export default function GithubCalendar({
                     {week.days.map((day, dayIndex) => (
                       <div
                         key={dayIndex}
-                        className={`size-[6px] rounded-full md:size-[9px] ${getSquareColor(day.level)}`}
-                        title={`${day.date}: ${day.count} contributions`}
+                        className={`size-[6px] rounded-full md:size-[9px] ${getSquareColor(day.level)} cursor-pointer transition-colors hover:opacity-80`}
+                        onMouseEnter={(e) => handleMouseEnter(day, e)}
+                        onMouseLeave={handleMouseLeave}
                       />
                     ))}
                   </div>
@@ -119,6 +160,26 @@ export default function GithubCalendar({
           </div>
         </div>
       </div>
+
+      {/* Tooltip */}
+      {tooltip && (
+        <div
+          ref={tooltipRef}
+          className="fixed z-50 rounded-lg border border-black/5 bg-white px-3 py-2 text-sm text-black shadow-lg"
+          style={{
+            left: tooltipPosition.x,
+            top: tooltipPosition.y,
+            transform: "translateY(-100%)",
+          }}
+        >
+          <div className="font-medium">{formatDate(tooltip.date)}</div>
+          <div className="text-gray-300">
+            {tooltip.count === 0
+              ? "Aucune contribution"
+              : `${tooltip.count} contribution${tooltip.count > 1 ? "s" : ""}`}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
