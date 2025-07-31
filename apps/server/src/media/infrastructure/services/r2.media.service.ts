@@ -1,14 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Result } from '@/libs/result';
 import {
-  S3Client,
-  PutObjectCommand,
   DeleteObjectCommand,
   HeadObjectCommand,
   NotFound,
+  PutObjectCommand,
+  S3Client,
 } from '@aws-sdk/client-s3';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MediaServicePort } from '../../port/media.service.port';
-import { Result } from '@/libs/result';
 
 @Injectable()
 export class R2MediaService implements MediaServicePort {

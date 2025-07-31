@@ -17,11 +17,7 @@ export default function LoginForm() {
           </div>
           <div className="space-y-4">
             <GitHubButton text="Se connecter avec GitHub" />
-            <GitHubButton text="S'inscrire avec GitHub" variant="outline" />
-          </div>
-          <div className="space-y-4">
-            <GoogleButton text="Se connecter avec Google" />
-            <GoogleButton text="S'inscrire avec Google" variant="outline" />
+            <GoogleButton variant="outline" text="Se connecter avec Google" />
           </div>
         </div>
       </div>
