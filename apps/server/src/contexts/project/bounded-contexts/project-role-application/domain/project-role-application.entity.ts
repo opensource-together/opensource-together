@@ -2,29 +2,11 @@ import { Result } from '@/libs/result';
 import { KeyFeature } from '../../project-key-feature/domain/key-feature.entity';
 import { ProjectGoals } from '../../project-goals/domain/project-goals.entity';
 
-export type ApplicationStatus = 'PENDING' | 'APPROVAL' | 'REJECTED';
-
-export type ProjectRoleApplicationData = {
-  id?: string;
-  projectId: string;
-  projectTitle: string;
-  projectDescription?: string;
-  projectRoleTitle: string;
-  projectRoleId: string;
-  status: ApplicationStatus;
-  motivationLetter?: string;
-  selectedKeyFeatures: { id: string; feature: string }[];
-  selectedProjectGoals: { id: string; goal: string }[];
-  rejectionReason?: string;
-  appliedAt?: Date;
-  decidedAt?: Date;
-  decidedBy?: string;
-  userProfile: {
-    id: string;
-    username: string;
-    avatarUrl?: string;
-  };
-};
+export type ApplicationStatus =
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CANCELLED';
 
 export type ProjectRoleApplicationValidationErrors = {
   projectRoleId?: string;
@@ -33,6 +15,23 @@ export type ProjectRoleApplicationValidationErrors = {
   motivationLetter?: string;
   rejectionReason?: string;
   status?: string;
+};
+
+export type ProjectRoleApplicationCreateData = {
+  id?: string;
+  projectId: string;
+  projectTitle: string;
+  projectDescription?: string;
+  projectRoleTitle: string;
+  projectRoleId: string;
+  motivationLetter?: string;
+  selectedKeyFeatures: { id: string; feature: string }[];
+  selectedProjectGoals: { id: string; goal: string }[];
+  userProfile: {
+    id: string;
+    username: string;
+    avatarUrl?: string;
+  };
 };
 
 export class ProjectRoleApplication {
@@ -95,14 +94,14 @@ export class ProjectRoleApplication {
   }
 
   public static create(
-    props: Omit<ProjectRoleApplicationData, 'status'>,
+    props: ProjectRoleApplicationCreateData,
   ): Result<
     ProjectRoleApplication,
     ProjectRoleApplicationValidationErrors | string
   > {
-    const propsWithStatus: ProjectRoleApplicationData = {
+    const propsWithStatus = {
       ...props,
-      status: 'PENDING',
+      status: 'PENDING' as ApplicationStatus,
     };
 
     const selectedKeyFeaturesResult = props.selectedKeyFeatures.map((kf) =>
@@ -141,9 +140,27 @@ export class ProjectRoleApplication {
     );
   }
 
-  public static reconstitute(
-    props: ProjectRoleApplicationData,
-  ): Result<
+  public static reconstitute(props: {
+    id?: string;
+    projectId: string;
+    projectTitle: string;
+    projectDescription?: string;
+    projectRoleTitle: string;
+    projectRoleId: string;
+    status: ApplicationStatus;
+    motivationLetter?: string;
+    selectedKeyFeatures: { id: string; feature: string }[];
+    selectedProjectGoals: { id: string; goal: string }[];
+    rejectionReason?: string;
+    appliedAt?: Date;
+    decidedAt?: Date;
+    decidedBy?: string;
+    userProfile: {
+      id: string;
+      username: string;
+      avatarUrl?: string;
+    };
+  }): Result<
     ProjectRoleApplication,
     ProjectRoleApplicationValidationErrors | string
   > {
@@ -184,9 +201,14 @@ export class ProjectRoleApplication {
     );
   }
 
-  private static validate(
-    props: ProjectRoleApplicationData,
-  ): Result<void, ProjectRoleApplicationValidationErrors | string> {
+  private static validate(props: {
+    projectRoleId: string;
+    selectedKeyFeatures: { id: string; feature: string }[];
+    selectedProjectGoals: { id: string; goal: string }[];
+    motivationLetter?: string;
+    rejectionReason?: string;
+    status?: ApplicationStatus;
+  }): Result<void, ProjectRoleApplicationValidationErrors | string> {
     const errors: ProjectRoleApplicationValidationErrors = {};
 
     if (!props.projectRoleId || props.projectRoleId.trim() === '') {
@@ -217,9 +239,10 @@ export class ProjectRoleApplication {
 
     if (
       props.status &&
-      !['PENDING', 'APPROVAL', 'REJECTED'].includes(props.status)
+      !['PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED'].includes(props.status)
     ) {
-      errors.status = 'Status must be PENDING, APPROVAL, or REJECTED';
+      errors.status =
+        'Status must be PENDING, ACCEPTED, REJECTED, or CANCELLED';
     }
 
     // userProfile est optionnel, pas de validation nécessaire
@@ -239,7 +262,7 @@ export class ProjectRoleApplication {
       });
     }
 
-    this.status = 'APPROVAL';
+    this.status = 'ACCEPTED';
     this.decidedAt = new Date();
     this.decidedBy = decidedBy;
     this.rejectionReason = undefined;
@@ -271,7 +294,7 @@ export class ProjectRoleApplication {
     return Result.ok(undefined);
   }
 
-  public toPrimitive(): ProjectRoleApplicationData {
+  public toPrimitive() {
     return {
       id: this.id,
       projectId: this.projectId,
@@ -306,7 +329,7 @@ export class ProjectRoleApplication {
   }
 
   public isApproved(): boolean {
-    return this.status === 'APPROVAL';
+    return this.status === 'ACCEPTED';
   }
 
   public isRejected(): boolean {
