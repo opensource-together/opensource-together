@@ -139,7 +139,7 @@ model ProjectRoleApplication {
   selectedKeyFeatures KeyFeature[] @relation("ProjectRoleApplicationKeyFeature")
   selectedProjectGoals ProjectGoal[] @relation("ProjectRoleApplicationProjectGoal")
   rejectionReason String?
-  decidedAt     DateTime?    @default// Date de décision (acceptation/rejet)
+  decidedAt     DateTime?    @updatedAt// Date de décision (acceptation/rejet)
   decidedBy     String?      // ID de l'utilisateur qui a pris la décision
   appliedAt DateTime @default(now())
   createdAt     DateTime     @default(now())
