@@ -3,6 +3,44 @@ import { API_BASE_URL } from "@/config/config";
 import { ProjectRoleApplicationType } from "../types/project-role-application.type";
 
 /**
+ * Récupère les candidatures de l'utilisateur courant
+ *
+ * @returns Promise<ProjectRoleApplicationType[]> - Liste des candidatures
+ */
+export const getMyApplications = async (): Promise<
+  ProjectRoleApplicationType[]
+> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/me/applications`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch applications");
+    }
+
+    const data = await response.json();
+
+    // Convertir les dates string en objets Date
+    return data.map((application: any) => ({
+      ...application,
+      appliedAt: new Date(application.appliedAt),
+      decidedAt: application.decidedAt
+        ? new Date(application.decidedAt)
+        : undefined,
+    }));
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    throw error;
+  }
+};
+
+/**
  * Fetches the list of project role applications for a specific project.
  *
  * @param projectId - The ID of the project to fetch applications for.
@@ -29,35 +67,6 @@ export async function getProjectRolesApplications(projectId: string) {
     return data;
   } catch (error) {
     console.error("[getProjectRolesApplications]", error);
-    throw error;
-  }
-}
-
-/**
- * Fetches the list of project role applications for the current user.
- *
- * @returns A promise that resolves to an array of project role applications.
- */
-export async function getMyProjectRolesApplications(): Promise<
-  ProjectRoleApplicationType[]
-> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/user/applications`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message ||
-          `Erreur lors de la récupération des candidatures: ${response.status}`
-      );
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("[getMyProjectRolesApplications]", error);
     throw error;
   }
 }

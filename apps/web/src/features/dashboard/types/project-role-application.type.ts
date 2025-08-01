@@ -5,8 +5,7 @@ import { Author } from "@/features/projects/types/project.type";
  * Type représentant une candidature à un rôle de projet
  *
  * Cette interface correspond à la structure retournée par l'API backend
- * après les modifications apportées pour inclure les informations complètes
- * du projet et du rôle de projet.
+ * pour l'endpoint GET /v1/user/me/applications
  *
  * @see {@link ProjectRole} - Type du rôle de projet
  * @see {@link Author} - Type de l'auteur du projet
@@ -30,10 +29,15 @@ import { Author } from "@/features/projects/types/project.type";
  *   },
  *   projectRole: {
  *     id: "uuid",
+ *     projectId: "uuid",
  *     title: "Développeur Frontend",
  *     description: "Description du rôle",
  *     techStacks: [
  *       { id: "uuid", name: "React", iconUrl: "https://example.com/react.svg" }
+ *     ],
+ *     roleCount: 1,
+ *     projectGoal: [
+ *       { id: "uuid", projectId: "uuid", goal: "Améliorer l'UX" }
  *     ]
  *   },
  *   status: "PENDING",
@@ -81,7 +85,36 @@ export interface ProjectRoleApplicationType {
   };
 
   /** Informations complètes du rôle de projet */
-  projectRole: ProjectRole;
+  projectRole: {
+    /** ID unique du rôle de projet */
+    id: string;
+
+    /** ID du projet associé */
+    projectId: string;
+
+    /** Titre du rôle */
+    title: string;
+
+    /** Description du rôle */
+    description: string;
+
+    /** Technologies requises pour ce rôle */
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+    }[];
+
+    /** Nombre de rôles disponibles */
+    roleCount: number;
+
+    /** Objectifs du projet associés à ce rôle */
+    projectGoal: {
+      id: string;
+      projectId: string;
+      goal: string;
+    }[];
+  };
 
   /** Statut de la candidature */
   status: "PENDING" | "ACCEPTED" | "REJECTED" | "CANCELLED";
@@ -99,8 +132,8 @@ export interface ProjectRoleApplicationType {
   /** Date de soumission de la candidature */
   appliedAt: Date;
 
-  /** Date de décision (acceptation/rejet) */
-  decidedAt: Date;
+  /** Date de décision (acceptation/rejet) - optionnel */
+  decidedAt?: Date;
 
   /** ID de l'utilisateur qui a pris la décision (optionnel) */
   decidedBy?: string;
