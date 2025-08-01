@@ -1,9 +1,10 @@
 {
   "packages": {
-    ".": {
+    "apps": {
       "release-type": "node",
       "version-file": "apps/package.json",
-      "changelog-path": "CHANGELOG.md"
+      "changelog-path": "CHANGELOG.md",
+      "package-name": ""
     }
   },
   "draft-pull-request": true,
