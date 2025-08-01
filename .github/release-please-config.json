@@ -2,7 +2,6 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "package-name": "opensource-together",
       "version-file": "apps/package.json",
       "changelog-path": "CHANGELOG.md"
     }
