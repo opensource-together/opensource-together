@@ -2,7 +2,6 @@
   "packages": {
     ".": {
       "release-type": "node",
-      "path": "apps",
       "version-file": "apps/package.json",
       "changelog-path": "CHANGELOG.md"
     }
