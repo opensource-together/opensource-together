@@ -1,4 +1,3 @@
-import { ProjectRole } from "@/features/projects/types/project-role.type";
 import { Author } from "@/features/projects/types/project.type";
 
 /**
@@ -7,8 +6,6 @@ import { Author } from "@/features/projects/types/project.type";
  * Cette interface correspond à la structure retournée par l'API backend
  * pour l'endpoint GET /v1/user/me/applications
  *
- * @see {@link ProjectRole} - Type du rôle de projet
- * @see {@link Author} - Type de l'auteur du projet
  *
  * @example
  * ```typescript

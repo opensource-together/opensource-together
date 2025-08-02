@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { ProjectRoleApplicationType } from "../types/project-role-application.type";
+import { ProjectRoleApplicationType } from "./../types/project-role-application.type";
 
 /**
  * Récupère les candidatures de l'utilisateur courant
@@ -24,16 +24,7 @@ export const getMyApplications = async (): Promise<
       throw new Error(error.message || "Failed to fetch applications");
     }
 
-    const data = await response.json();
-
-    // Convertir les dates string en objets Date
-    return data.map((application: any) => ({
-      ...application,
-      appliedAt: new Date(application.appliedAt),
-      decidedAt: application.decidedAt
-        ? new Date(application.decidedAt)
-        : undefined,
-    }));
+    return await response.json();
   } catch (error) {
     console.error("Error fetching applications:", error);
     throw error;
