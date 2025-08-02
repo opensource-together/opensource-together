@@ -154,6 +154,16 @@ describe('CreateProjectCommandHandler', () => {
           },
         ],
         ownerId: '1',
+        owner: {
+          id: '1',
+          username: 'testuser',
+          login: 'testuser',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+          email: 'test@example.com',
+          provider: 'github',
+          createdAt: mockClock.now(),
+          updatedAt: mockClock.now(),
+        },
         categories: [
           {
             id: '1',
@@ -256,6 +266,16 @@ describe('CreateProjectCommandHandler', () => {
           },
         ],
         ownerId: '1',
+        owner: {
+          id: '1',
+          username: 'testuser',
+          login: 'testuser',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+          email: 'test@example.com',
+          provider: 'github',
+          createdAt: mockClock.now(),
+          updatedAt: mockClock.now(),
+        },
         categories: [
           {
             id: '1',
