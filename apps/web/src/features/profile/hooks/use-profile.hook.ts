@@ -42,7 +42,7 @@ export const useProfileUpdate = () => {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        router.push("/profile");
+        router.push("/profile/me");
       },
     },
   });

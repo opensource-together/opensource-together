@@ -74,7 +74,7 @@ export default function Header() {
   }
 
   const handleProfile = () =>
-    requireAuth(() => router.push("/profile"), "/profile");
+    requireAuth(() => router.push("/profile/me"), "/profile/me");
 
   const handleDashboard = () =>
     requireAuth(() => router.push("/dashboard"), "/dashboard");
@@ -176,7 +176,7 @@ export default function Header() {
 
           {/* Profile mobile */}
           {isAuthenticated && (
-            <NavLink href="/profile" className="w-full py-1.5">
+            <NavLink href="/profile/me" className="w-full py-1.5">
               Mon Profil
             </NavLink>
           )}
