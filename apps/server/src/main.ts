@@ -12,23 +12,8 @@ async function bootstrap() {
     bodyParser: false, // Required for Better Auth
   });
 
-  // app.setGlobalPrefix('v1'); // Disabled for Better Auth compatibility
+  app.setGlobalPrefix('v1'); // Disabled for Better Auth compatibility
 
-  // CORS handled by Better Auth module
-  // app.enableCors({
-  //   origin: 'http://localhost:3000',
-  //   allowedHeaders: [
-  //     'content-type',
-  //     'authorization',
-  //     'cookie',
-  //     'x-requested-with',
-  //   ],
-  //   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  //   credentials: true,
-  // });
-
-  // Middleware Better Auth - REMOVED: handled by AuthModule.forRoot(auth)
-  // app.use('api/auth', auth.handler as RequestHandler);
 
   // Activation de la validation automatique des DTOs
   app.useGlobalPipes(

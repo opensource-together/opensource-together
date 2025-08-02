@@ -16,6 +16,7 @@ export class BetterAuthGithubHook {
 
       try {
         // Créer les credentials GitHub
+        console.log('oAuthTokens', oAuthTokens);
         if (oAuthTokens?.access_token) {
           const createUserGhTokenCommand = new CreateUserGhTokenCommand({
             userId: userData.id,

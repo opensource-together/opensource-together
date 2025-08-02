@@ -15,7 +15,6 @@ export class AuthController {
 
   @All('*')
   handleAuthRequest(@Req() req: Request, @Res() res: Response) {
-    console.log(req.url);
     return this.authService.api.handler(req, res);
   }
 
