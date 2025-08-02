@@ -1,7 +1,5 @@
 import { Project } from "@/features/projects/types/project.type";
 
-import { ApplicationReceived } from "../types/my-projects.type";
-
 export const mockMyProjects: Project[] = [
   {
     id: "1",
@@ -146,7 +144,7 @@ export const mockMyProjects: Project[] = [
   },
 ];
 
-export const mockApplicationsReceived: ApplicationReceived[] = [
+export const mockApplicationsReceived = [
   {
     id: "app-1",
     projectId: "1",

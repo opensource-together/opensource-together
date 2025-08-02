@@ -1,17 +1,25 @@
 import { ProjectRole } from "@/features/projects/types/project-role.type";
 
-export interface ApplicationReceived {
+export interface ProjectType {
   id: string;
-  projectId: string;
-  projectTitle: string;
-  projectRole: ProjectRole;
+  title: string;
+  shortDescription: string;
+  image?: string;
+  status: string;
+  applications: ApplicationType[];
+  teamMembers: TeamMemberType[];
+}
+
+export interface ApplicationType {
+  id: string;
+  status: "PENDING" | "ACCEPTED" | "REJECTED";
   applicant: {
     id: string;
     name: string;
     avatarUrl?: string;
     email?: string;
   };
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  projectRole: ProjectRole;
   appliedAt: Date;
   decidedAt?: Date;
   motivationLetter: string;
@@ -24,12 +32,12 @@ export interface ApplicationReceived {
   rejectionReason?: string;
 }
 
-export interface TeamMember {
+export interface TeamMemberType {
   id: string;
   name: string;
   avatarUrl?: string;
   role: string;
-  joinedAt: string;
+  joinedAt: Date;
   techStacks?: Array<{
     id: string;
     name: string;
