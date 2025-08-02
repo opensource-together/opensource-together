@@ -66,6 +66,18 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
             },
+            {
+              id: "3",
+              name: "Electron",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/electron/electron-original.svg",
+            },
+            {
+              id: "4",
+              name: "Node.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+            },
           ],
           roleCount: 2,
         },
@@ -483,15 +495,9 @@ export const mockDashboardData: MyProjectType[] = [
       },
       {
         id: "17",
-        name: "WebAssembly",
-        iconUrl:
-          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webassembly/webassembly-original.svg",
-      },
-      {
-        id: "18",
         name: "Rust",
         iconUrl:
-          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-plain.svg",
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg",
       },
     ],
     author: {
