@@ -83,12 +83,13 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
         let contributors = Result.fail<OstContributor[]>('No authentication');
 
         // Récupérer les contributeurs OST approuvés
-        const ostContributorsPromise: Promise<Result<OstContributor[], string>> =
-          this.queryBus.execute(
-            new FindApprovedContributorsByProjectIdQuery({
-              projectId: projectPrimitive.id!,
-            }),
-          );
+        const ostContributorsPromise: Promise<
+          Result<OstContributor[], string>
+        > = this.queryBus.execute(
+          new FindApprovedContributorsByProjectIdQuery({
+            projectId: projectPrimitive.id!,
+          }),
+        );
 
         if (octokit) {
           [commits, repoInfo, contributors] = await Promise.all([
