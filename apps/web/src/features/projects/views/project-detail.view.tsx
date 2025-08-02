@@ -4,6 +4,8 @@ import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import Icon from "@/shared/components/ui/icon";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
 import ProjectHero from "../components/project-hero.component";
@@ -24,9 +26,10 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError } = useProject(projectId);
   const { data: projectRoles, isLoading: isProjectRolesLoading } =
     useGetProjectRoles(projectId);
+  const { currentUser } = useAuth();
 
-  // TODO: Remplacer par la vraie logique de vérification du maintainer
-  const isMaintainer = false; // Variable temporaire pour le développement
+  // Determine if the current user is the maintainer of the project
+  const isMaintainer = currentUser?.id === project?.author?.ownerId;
 
   if (isLoading || isProjectRolesLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
