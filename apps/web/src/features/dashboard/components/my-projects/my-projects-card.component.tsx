@@ -12,10 +12,12 @@ import {
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
 
-import { Project, TechStack } from "@/features/projects/types/project.type";
+import { TechStack } from "@/features/projects/types/project.type";
+
+import { MyProjectType } from "../../types/my-projects.type";
 
 interface MyProjectsCardProps {
-  project: Project;
+  project: MyProjectType;
   techStacks?: TechStack[];
   className?: string;
   isSelected?: boolean;
@@ -41,7 +43,7 @@ export default function MyProjectsCardComponent({
             <ProjectCardInfo>
               <ProjectCardTitle>{project.title}</ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {project.author.name}
+                by {project.author?.name}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>

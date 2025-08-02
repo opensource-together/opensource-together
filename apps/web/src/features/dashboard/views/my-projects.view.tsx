@@ -7,12 +7,10 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
-import { useApplicationsReceived } from "../hooks/use-applications-received.hook";
 import { useMyProjects } from "../hooks/use-my-projects.hook";
 import { ApplicationType } from "../types/my-projects.type";
 
 export default function MyProjectsView() {
-  const { data: allApplications = [] } = useApplicationsReceived();
   const { data: projects = [] } = useMyProjects();
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
@@ -37,9 +35,9 @@ export default function MyProjectsView() {
     console.log("Application decision:", { applicationId, decision, reason });
   };
 
-  const selectedProjectApplications = selectedProjectId
-    ? allApplications.filter((app) => app.projectId === selectedProjectId)
-    : [];
+  // Récupérer les applications du projet sélectionné
+  const selectedProject = projects.find((p) => p.id === selectedProjectId);
+  const selectedProjectApplications = selectedProject?.applications || [];
 
   return (
     <div>

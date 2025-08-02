@@ -1,9 +1,16 @@
 import { ProjectRole } from "@/features/projects/types/project-role.type";
+import { TechStack } from "@/features/projects/types/project.type";
 
-export interface ProjectType {
+export interface MyProjectType {
   id: string;
   title: string;
   shortDescription: string;
+  techStacks: TechStack[];
+  author: {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+  };
   image?: string;
   status: string;
   applications: ApplicationType[];
