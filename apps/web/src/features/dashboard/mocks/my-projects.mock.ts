@@ -14,9 +14,9 @@ export const mockMyProjects: Project[] = [
     longDescription:
       "Une application desktop qui vous permet de gérer toutes vos notifications GitHub en un seul endroit. Gitify est conçu pour améliorer votre productivité en centralisant vos notifications et en vous permettant de les traiter rapidement.",
     status: "PUBLISHED",
-    author: {
+    owner: {
       ownerId: "user-1",
-      name: "69Kilian",
+      username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
     techStacks: [
@@ -88,9 +88,9 @@ export const mockMyProjects: Project[] = [
     longDescription:
       "OpenDocs est une solution open source pour créer, maintenir et partager de la documentation technique de manière collaborative. Elle offre des fonctionnalités avancées de versioning, de révision et d'intégration continue.",
     status: "DRAFT",
-    author: {
+    owner: {
       ownerId: "user-1",
-      name: "69Kilian",
+      username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
     techStacks: [

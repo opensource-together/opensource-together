@@ -17,9 +17,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       title: "studydi",
       shortDescription: "Application de révision interactive",
       image: "https://example.com/project-image.jpg",
-      author: {
+      owner: {
         ownerId: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
-        name: "Lucalhost",
+        username: "Lucalhost",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
     },
@@ -85,9 +85,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         "LeetGrind is a tool for managing code source for developers.",
       image:
         "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
-      author: leetgrindProject?.author || {
+      owner: {
         ownerId: "1",
-        name: "y2_dev",
+        username: "y2_dev",
         avatarUrl:
           "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
       },
@@ -172,9 +172,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         opensourcifyProject?.shortDescription ||
         "OpenSourcify is a tool for managing code source for developers.",
       image: opensourcifyProject?.image || "/icons/opensourcify.png",
-      author: opensourcifyProject?.author || {
+      owner: {
         ownerId: "2",
-        name: "Jane Doe",
+        username: "Jane Doe",
         avatarUrl: "/icons/janedoe.png",
       },
     },
@@ -252,9 +252,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         codequestProject?.shortDescription ||
         "CodeQuest is a tool for managing code source for developers.",
       image: codequestProject?.image || "/icons/codequest.png",
-      author: codequestProject?.author || {
+      owner: {
         ownerId: "3",
-        name: "Maxime Dupont",
+        username: "Maxime Dupont",
         avatarUrl: "/icons/maximedupont.png",
       },
     },
@@ -338,9 +338,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         gitifyProject?.shortDescription ||
         "Gitify is a tool for managing code source for developers.",
       image: gitifyProject?.image,
-      author: gitifyProject?.author || {
+      owner: {
         ownerId: "1",
-        name: "69Killian",
+        username: "69Killian",
         avatarUrl: "/icons/killiancodes-icon.jpg",
       },
     },

@@ -48,7 +48,8 @@ export function MyApplicationsCard({
                 </span>
               </ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {application.project.author.name}
+                {/* TODO: change to author no null or undefined*/}
+                by {application.project.owner?.username}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>

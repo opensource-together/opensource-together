@@ -35,9 +35,9 @@ export const mockProjects: Project[] = [
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
 
-    author: {
+    owner: {
       ownerId: "1",
-      name: "y2_dev",
+      username: "y2_dev",
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
     },
@@ -147,9 +147,9 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Open Source" },
       { id: "3", name: "Challenges" },
     ],
-    author: {
+    owner: {
       ownerId: "1",
-      name: "69Killian",
+      username: "69Killian",
       avatarUrl: "/icons/killiancodes-icon.jpg",
     },
     shortDescription:
@@ -241,9 +241,9 @@ export const mockProjects: Project[] = [
     },
     image:
       "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fdocs.devcord.app%2Fintroduction",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "p2aco",
+      username: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
     shortDescription:
@@ -315,9 +315,9 @@ export const mockProjects: Project[] = [
       { id: "2", name: "Open Source" },
       { id: "3", name: "Snippets" },
     ],
-    author: {
+    owner: {
       ownerId: "1",
-      name: "Spectre",
+      username: "Spectre",
       avatarUrl:
         "https://pbs.twimg.com/profile_images/1922394540058517504/LeIKSyDr_400x400.jpg",
     },
@@ -399,9 +399,9 @@ export const mockProjects: Project[] = [
     title: "NextSandbox",
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "Byron Love",
+      username: "Byron Love",
       avatarUrl: "exemplebyronIcon.svg",
     },
     shortDescription:
@@ -497,9 +497,9 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kubernetes/kubernetes-original.svg",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "p2aco",
+      username: "p2aco",
       avatarUrl: "/icons/p2aco-icon.png",
     },
     shortDescription:
@@ -580,9 +580,9 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original-wordmark.svg",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "Olyxz16",
+      username: "Olyxz16",
       avatarUrl:
         "https://media.discordapp.net/attachments/1337829619629424711/1374073158629593211/Sans_titre.png?ex=682cb8da&is=682b675a&hm=3208e6ba63ac6ea8b76686536217505cdddac1972dd760c6523dbea8d85da3d3&=&format=webp&quality=lossless&width=1080&height=1080",
     },
@@ -669,9 +669,9 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://pbs.twimg.com/profile_images/1865742929723064320/p6I7UUXh_400x400.jpg",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "Shyybi",
+      username: "Shyybi",
       avatarUrl: "/icons/shyybi-icon.png",
     },
     shortDescription:
@@ -752,9 +752,9 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-plain.svg",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "Sarah Miller",
+      username: "Sarah Miller",
       avatarUrl: "exemplebyronIcon.svg",
     },
     shortDescription:
@@ -831,9 +831,9 @@ export const mockProjects: Project[] = [
     ],
     image:
       "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
-    author: {
+    owner: {
       ownerId: "1",
-      name: "Emma Wilson",
+      username: "Emma Wilson",
       avatarUrl: "exemplebyronIcon.svg",
     },
     shortDescription:

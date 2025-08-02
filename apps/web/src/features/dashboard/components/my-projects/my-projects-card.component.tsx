@@ -41,7 +41,7 @@ export default function MyProjectsCardComponent({
             <ProjectCardInfo>
               <ProjectCardTitle>{project.title}</ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {project.author.name}
+                by {project.owner.username}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>

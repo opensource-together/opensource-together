@@ -48,9 +48,9 @@ export default function ProjectSideBar({
   // Create a list that includes the owner first, then the contributors
   const allContributors = (() => {
     const ownerContributor = {
-      login: project.author?.name || "Owner",
-      avatar_url: project.author?.avatarUrl || "",
-      html_url: `https://github.com/${project.author?.name}`,
+      login: project.owner?.username || "Owner",
+      avatar_url: project.owner?.avatarUrl || "",
+      html_url: `https://github.com/${project.owner?.username}`,
       contributions: 999, // To ensure it's first
     };
 
@@ -60,7 +60,7 @@ export default function ProjectSideBar({
     );
 
     // If the owner is not already in the list, add it first
-    if (!isOwnerInContributors && project.author) {
+    if (!isOwnerInContributors && project.owner) {
       return [ownerContributor, ...contributors];
     }
 

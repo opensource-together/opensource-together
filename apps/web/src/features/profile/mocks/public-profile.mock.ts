@@ -94,9 +94,9 @@ export const mockPublicProfile: Profile = {
         "Un outil complet pour la gestion de projets avec des fonctionnalités avancées",
       image:
         "https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=Awesome+Project",
-      author: {
+      owner: {
         ownerId: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
-        name: "John Doe",
+        username: "John Doe",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
       techStacks: [
@@ -142,9 +142,9 @@ export const mockPublicProfile: Profile = {
         "Une bibliothèque légère et performante pour créer des animations fluides",
       image:
         "https://via.placeholder.com/300x200/10B981/FFFFFF?text=Open+Source+Lib",
-      author: {
+      owner: {
         ownerId: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
-        name: "John Doe",
+        username: "John Doe",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
       techStacks: [

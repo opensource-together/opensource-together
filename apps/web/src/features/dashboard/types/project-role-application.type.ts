@@ -1,4 +1,4 @@
-import { Author } from "@/features/projects/types/project.type";
+import { Owner } from "@/features/projects/types/project.type";
 
 /**
  * Type représentant une candidature à un rôle de projet
@@ -18,9 +18,9 @@ import { Author } from "@/features/projects/types/project.type";
  *     title: "Mon Projet",
  *     shortDescription: "Description courte",
  *     image: "https://example.com/image.jpg",
- *     author: {
+ *     owner: {
  *       ownerId: "uuid",
- *       name: "John Doe",
+ *       username: "John Doe",
  *       avatarUrl: "https://example.com/avatar.jpg"
  *     }
  *   },
@@ -78,7 +78,7 @@ export interface ProjectRoleApplicationType {
     image?: string;
 
     /** Informations de l'auteur du projet */
-    author: Author;
+    owner: Owner;
   };
 
   /** Informations complètes du rôle de projet */
