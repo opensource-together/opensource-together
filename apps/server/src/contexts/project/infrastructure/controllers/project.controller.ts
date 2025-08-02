@@ -2,7 +2,6 @@ import { GitHubOctokit } from '@/contexts/github/infrastructure/decorators/githu
 import { GithubAuthGuard } from '@/contexts/github/infrastructure/guards/github-auth.guard';
 import {
   Author,
-  Contributor,
   LastCommit,
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';

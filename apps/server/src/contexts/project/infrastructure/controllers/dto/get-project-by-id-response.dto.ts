@@ -1,7 +1,6 @@
 import { Project, ProjectData } from '@/contexts/project/domain/project.entity';
 import {
   Author,
-  Contributor,
   LastCommit,
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';

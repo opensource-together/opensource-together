@@ -35,13 +35,15 @@ export const mockMyProjects: Project[] = [
         {
           login: "69Kilian",
           avatar_url: "/icons/user-placeholder.svg",
-          html_url: "https://github.com/69Kilian",
+          html_url: "http://localhost:4000/v1/user/user-001",
+          user_id: "user-001",
           contributions: 120,
         },
         {
           login: "contributor2",
           avatar_url: "/icons/user-placeholder.svg",
-          html_url: "https://github.com/contributor2",
+          html_url: "http://localhost:4000/v1/user/user-002",
+          user_id: "user-002",
           contributions: 45,
         },
       ],
@@ -108,7 +110,8 @@ export const mockMyProjects: Project[] = [
         {
           login: "69Kilian",
           avatar_url: "/icons/user-placeholder.svg",
-          html_url: "https://github.com/69Kilian",
+          html_url: "http://localhost:4000/v1/user/user-003",
+          user_id: "user-003",
           contributions: 67,
         },
       ],

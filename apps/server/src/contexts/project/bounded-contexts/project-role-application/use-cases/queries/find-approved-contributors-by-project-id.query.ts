@@ -1,9 +1,9 @@
 import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
 import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { 
+import {
   PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-  ProjectRoleApplicationRepositoryPort 
+  ProjectRoleApplicationRepositoryPort,
 } from '../ports/project-role-application.repository.port';
 
 export type OstContributor = {
@@ -37,23 +37,24 @@ export class FindApprovedContributorsByProjectIdHandler
     const { projectId } = query.props;
 
     // Récupérer toutes les candidatures pour ce projet
-    const applicationsResult = await this.projectRoleApplicationRepository.findAllByProjectId(projectId);
-    
+    const applicationsResult =
+      await this.projectRoleApplicationRepository.findAllByProjectId(projectId);
+
     if (!applicationsResult.success) {
       return Result.fail(applicationsResult.error);
     }
 
     // Filtrer uniquement les candidatures approuvées et regrouper par utilisateur
     const approvedApplications = applicationsResult.value.filter(
-      app => app.status === 'APPROVAL'
+      (app) => app.status === 'APPROVAL',
     );
 
     // Regrouper par utilisateur pour éviter les doublons
     const contributorsMap = new Map<string, OstContributor>();
-    
-    approvedApplications.forEach(app => {
+
+    approvedApplications.forEach((app) => {
       const userId = app.userProfile.id;
-      
+
       if (contributorsMap.has(userId)) {
         // Incrémenter le nombre de contributions pour cet utilisateur
         const existingContributor = contributorsMap.get(userId)!;
@@ -71,8 +72,9 @@ export class FindApprovedContributorsByProjectIdHandler
     });
 
     // Convertir la Map en tableau et trier par nombre de contributions
-    const contributors = Array.from(contributorsMap.values())
-      .sort((a, b) => b.contributions - a.contributions);
+    const contributors = Array.from(contributorsMap.values()).sort(
+      (a, b) => b.contributions - a.contributions,
+    );
 
     return Result.ok(contributors);
   }

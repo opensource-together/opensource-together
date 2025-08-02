@@ -1,5 +1,4 @@
 import {
-  Contributor,
   GITHUB_REPOSITORY_PORT,
   GithubRepositoryPort,
   LastCommit,
@@ -96,9 +95,10 @@ export class FindProjectByIdHandler
     let contributors: Result<OstContributor[], string>;
 
     // Récupérer les contributeurs OST approuvés
-    const ostContributorsPromise = this.queryBus.execute(
-      new FindApprovedContributorsByProjectIdQuery({ projectId: id })
-    );
+    const ostContributorsPromise: Promise<Result<OstContributor[], string>> =
+      this.queryBus.execute(
+        new FindApprovedContributorsByProjectIdQuery({ projectId: id }),
+      );
 
     if (octokit) {
       [commits, repoInfo, contributors] = await Promise.all([

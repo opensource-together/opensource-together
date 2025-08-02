@@ -7,7 +7,6 @@ import { Result } from '@/libs/result';
 import { IQuery } from '@nestjs/cqrs';
 import {
   GITHUB_REPOSITORY_PORT,
-  Contributor,
   GithubRepositoryPort,
   LastCommit,
   RepositoryInfo,
@@ -84,11 +83,12 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
         let contributors = Result.fail<OstContributor[]>('No authentication');
 
         // Récupérer les contributeurs OST approuvés
-        const ostContributorsPromise = this.queryBus.execute(
-          new FindApprovedContributorsByProjectIdQuery({ 
-            projectId: projectPrimitive.id! 
-          })
-        );
+        const ostContributorsPromise: Promise<Result<OstContributor[], string>> =
+          this.queryBus.execute(
+            new FindApprovedContributorsByProjectIdQuery({
+              projectId: projectPrimitive.id!,
+            }),
+          );
 
         if (octokit) {
           [commits, repoInfo, contributors] = await Promise.all([
