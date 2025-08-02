@@ -6,6 +6,7 @@ import {
   LastCommit,
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
+import { OstContributor } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/find-approved-contributors-by-project-id.query';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
@@ -275,7 +276,7 @@ export class ProjectController {
         repositoryInfo: RepositoryInfo;
         lastCommit: LastCommit;
         commits: number;
-        contributors: Contributor[];
+        contributors: OstContributor[];
         project: Project;
       })[]
     > = await this.queryBus.execute(new GetProjectsQuery({ octokit: octokit }));
@@ -407,7 +408,7 @@ export class ProjectController {
         project: Project;
         repositoryInfo: RepositoryInfo;
         lastCommit: LastCommit;
-        contributors: Contributor[];
+        contributors: OstContributor[];
         commits: number;
       },
       string

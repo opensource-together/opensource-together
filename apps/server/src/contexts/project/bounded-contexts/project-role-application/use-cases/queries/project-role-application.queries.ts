@@ -10,6 +10,10 @@ import { GetAllApplicationsByProjectsOwnerQuery } from './get-all-applications-b
 import { GetAllApplicationsByProjectsOwnerQueryHandler } from './get-all-applications-by-projects-owner.query';
 import { GetApplicationByIdQuery } from './get-application-by-id.query';
 import { GetApplicationByIdQueryHandler } from './get-application-by-id.query';
+import {
+  FindApprovedContributorsByProjectIdQuery,
+  FindApprovedContributorsByProjectIdHandler,
+} from './find-approved-contributors-by-project-id.query';
 
 export const ProjectRoleApplicationQueries = [
   GetAllProjectApplicationsQueryByProjectId,
@@ -20,4 +24,6 @@ export const ProjectRoleApplicationQueries = [
   GetAllApplicationsByProjectsOwnerQueryHandler,
   GetApplicationByIdQuery,
   GetApplicationByIdQueryHandler,
+  FindApprovedContributorsByProjectIdQuery,
+  FindApprovedContributorsByProjectIdHandler,
 ];

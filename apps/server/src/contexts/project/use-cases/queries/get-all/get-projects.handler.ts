@@ -1,4 +1,4 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler, QueryBus } from '@nestjs/cqrs';
 import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { Inject } from '@nestjs/common';
@@ -16,6 +16,10 @@ import {
   PROFILE_REPOSITORY_PORT,
   ProfileRepositoryPort,
 } from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import {
+  FindApprovedContributorsByProjectIdQuery,
+  OstContributor,
+} from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/find-approved-contributors-by-project-id.query';
 
 import { Octokit } from '@octokit/rest';
 export class GetProjectsQuery implements IQuery {
@@ -35,6 +39,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
     private readonly githubRepo: GithubRepositoryPort,
     @Inject(PROFILE_REPOSITORY_PORT)
     private readonly profileRepo: ProfileRepositoryPort,
+    private readonly queryBus: QueryBus,
   ) {}
 
   async execute(query: GetProjectsQuery): Promise<
@@ -48,7 +53,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
         repositoryInfo: RepositoryInfo;
         lastCommit: LastCommit | null;
         commits: number;
-        contributors: Contributor[];
+        contributors: OstContributor[];
         project: Project;
       }[],
       string
@@ -76,7 +81,14 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
           lastCommit: LastCommit | null;
           commitsNumber: number;
         }>('No authentication');
-        let contributors = Result.fail<Contributor[]>('No authentication');
+        let contributors = Result.fail<OstContributor[]>('No authentication');
+
+        // Récupérer les contributeurs OST approuvés
+        const ostContributorsPromise = this.queryBus.execute(
+          new FindApprovedContributorsByProjectIdQuery({ 
+            projectId: projectPrimitive.id! 
+          })
+        );
 
         if (octokit) {
           [commits, repoInfo, contributors] = await Promise.all([
@@ -90,12 +102,10 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
               repoName,
               octokit,
             ),
-            this.githubRepo.findContributorsByRepository(
-              owner.login,
-              repoName,
-              octokit,
-            ),
+            ostContributorsPromise,
           ]);
+        } else {
+          contributors = await ostContributorsPromise;
         }
 
         const defaultStats: RepositoryInfo = {

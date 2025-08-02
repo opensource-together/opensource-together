@@ -22,6 +22,14 @@ export interface GithubContributor {
   contributions: number;
 }
 
+export interface OstContributor {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  user_id: string;
+  contributions: number;
+}
+
 export interface LastCommit {
   sha: string;
   message: string;
@@ -35,7 +43,7 @@ export interface LastCommit {
 }
 
 export interface ProjectStats {
-  contributors?: GithubContributor[];
+  contributors?: OstContributor[];
   stars?: number;
   forks?: number;
   watchers?: number;

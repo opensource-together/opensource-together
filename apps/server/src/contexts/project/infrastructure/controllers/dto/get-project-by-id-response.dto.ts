@@ -5,6 +5,7 @@ import {
   LastCommit,
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
+import { OstContributor } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/find-approved-contributors-by-project-id.query';
 
 export class GetProjectByIdResponseDto {
   public static toResponse(props: {
@@ -13,13 +14,13 @@ export class GetProjectByIdResponseDto {
     repositoryInfo: RepositoryInfo;
     commits: number;
     lastCommit: LastCommit;
-    contributors: Contributor[];
+    contributors: OstContributor[];
   }): Omit<ProjectData, 'ownerId'> & {
     author: Author;
     projectStats: RepositoryInfo & {
       commits: number;
       lastCommit: LastCommit;
-      contributors: Contributor[];
+      contributors: OstContributor[];
     };
   } {
     const {

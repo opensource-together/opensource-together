@@ -14,9 +14,13 @@ import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
+import {
+  FindApprovedContributorsByProjectIdQuery,
+  OstContributor,
+} from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/find-approved-contributors-by-project-id.query';
 import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
-import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { IQuery, IQueryHandler, QueryHandler, QueryBus } from '@nestjs/cqrs';
 import { Octokit } from '@octokit/rest';
 export class FindProjectByIdQuery implements IQuery {
   constructor(
@@ -38,6 +42,7 @@ export class FindProjectByIdHandler
     private readonly githubRepo: GithubRepositoryPort,
     @Inject(PROFILE_REPOSITORY_PORT)
     private readonly profileRepo: ProfileRepositoryPort,
+    private readonly queryBus: QueryBus,
   ) {}
 
   async execute(query: FindProjectByIdQuery): Promise<
@@ -51,7 +56,7 @@ export class FindProjectByIdHandler
         project: Project;
         repositoryInfo: RepositoryInfo;
         lastCommit: LastCommit | null;
-        contributors: Contributor[];
+        contributors: OstContributor[];
         commits: number;
       },
       string
@@ -64,12 +69,7 @@ export class FindProjectByIdHandler
       openIssues: number;
       commits: number;
       lastCommit: LastCommit | null;
-      contributors: {
-        login: string;
-        avatar_url: string;
-        html_url: string;
-        contributions: number;
-      }[];
+      contributors: OstContributor[];
     };
 
     const { id, octokit } = query.props;
@@ -93,7 +93,12 @@ export class FindProjectByIdHandler
       string
     >;
     let repoInfo: Result<RepositoryInfo, string>;
-    let contributors: Result<Contributor[], string>;
+    let contributors: Result<OstContributor[], string>;
+
+    // Récupérer les contributeurs OST approuvés
+    const ostContributorsPromise = this.queryBus.execute(
+      new FindApprovedContributorsByProjectIdQuery({ projectId: id })
+    );
 
     if (octokit) {
       [commits, repoInfo, contributors] = await Promise.all([
@@ -107,17 +112,13 @@ export class FindProjectByIdHandler
           repoName.replace(/\s+/g, '-'),
           octokit,
         ),
-        this.githubRepo.findContributorsByRepository(
-          ownerLogin,
-          repoName.replace(/\s+/g, '-'),
-          octokit,
-        ),
+        ostContributorsPromise,
       ]);
     } else {
       // Valeurs par défaut si pas d'octokit
       commits = Result.fail('No authentication');
       repoInfo = Result.fail('No authentication');
-      contributors = Result.fail('No authentication');
+      contributors = await ostContributorsPromise;
     }
 
     const defaultProjectStats: ProjectStats = {
