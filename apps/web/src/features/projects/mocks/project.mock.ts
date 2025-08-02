@@ -228,7 +228,8 @@ export const mockProjects: Project[] = [
         {
           login: "Lhourquin",
           avatar_url: "https://avatars.githubusercontent.com/u/45101981?v=4",
-          html_url: "https://github.com/Lhourquin",
+          html_url: "http://localhost:4000/v1/user/user-lhourquin",
+          user_id: "user-lhourquin",
           contributions: 3,
         },
         {
@@ -375,7 +376,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 5 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 5,
+        },
       ],
       stars: 42,
       forks: 8,
@@ -464,7 +471,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 3 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 3,
+        },
       ],
       stars: 28,
       forks: 5,
@@ -548,7 +561,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 3 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 3,
+        },
       ],
       stars: 15,
       forks: 2,
@@ -634,7 +653,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 2 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 2,
+        },
       ],
       stars: 6,
       forks: 0,
@@ -723,7 +748,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 4 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 4,
+        },
       ],
       stars: 37,
       forks: 5,
@@ -799,7 +830,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 8 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 8,
+        },
       ],
       stars: 156,
       forks: 23,
@@ -879,7 +916,13 @@ export const mockProjects: Project[] = [
     ],
     projectStats: {
       contributors: [
-        { login: "y2_dev", avatar_url: "", html_url: "", contributions: 5 },
+        {
+          login: "y2_dev",
+          avatar_url: "/icons/y2-dev-avatar.svg",
+          html_url: "http://localhost:4000/v1/user/user-y2dev",
+          user_id: "user-y2dev",
+          contributions: 5,
+        },
       ],
       stars: 112,
       forks: 18,
