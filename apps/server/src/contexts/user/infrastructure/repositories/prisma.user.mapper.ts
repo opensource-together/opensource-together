@@ -32,8 +32,10 @@ export class PrismaUserMapper {
     {
       userData: {
         id: string;
-        username: string;
+        name: string;
         email: string;
+        emailVerified: boolean;
+        username: string;
         login: string;
         avatarUrl: string | null;
         location: string | null;
@@ -56,8 +58,10 @@ export class PrismaUserMapper {
 
       const userData = {
         id: primitive.id,
-        username: primitive.username,
+        name: primitive.username, // Use username as name for Prisma
         email: primitive.email,
+        emailVerified: true, // Default to verified for OAuth users
+        username: primitive.username,
         provider: primitive.provider,
         login: primitive.login,
         avatarUrl: primitive.avatarUrl,

@@ -1,0 +1,41 @@
+### Test de l'API Better Auth
+
+# Test de la route de base
+GET http://localhost:4000/v1/auth
+
+###
+
+# Test de la route /me (doit retourner 401 si non connecté)
+GET http://localhost:4000/v1/auth/me
+
+###
+
+# Test d'inscription (POST)
+POST http://localhost:4000/v1/auth/signup
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+# Test de connexion (POST)
+POST http://localhost:4000/v1/auth/signin
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+# Test de déconnexion
+POST http://localhost:4000/v1/auth/signout
+
+###
+
+# Test de l'authentification GitHub
+GET http://localhost:4000/v1/auth/authorize/github 

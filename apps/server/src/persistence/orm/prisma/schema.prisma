@@ -22,25 +22,32 @@ enum Difficulty {
 }
 
 model User {
-  id                String                 @id @default(uuid())
-  username          String                 @unique
-  email             String                 @unique
-	jobTitle					String?
+  id                     String                   @id @default(uuid())
+  username               String                   @unique
+  email                  String                   @unique
+  jobTitle               String?
   // name              String
-  provider          String                 @default("email")
-  login             String
-  avatarUrl         String?
-  location          String?
-  company           String?
-  bio               String?
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
-  githubCredentials UserGitHubCredentials?
-  githubStats       GitHubStats?
-  techStacks        TechStack[]
-  socialLinks       UserSocialLink[]
-  projects          Project[]
+  provider               String                   @default("email")
+  login                  String
+  avatarUrl              String?
+  location               String?
+  company                String?
+  bio                    String?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  githubCredentials      UserGitHubCredentials?
+  githubStats            GitHubStats?
+  techStacks             TechStack[]
+  socialLinks            UserSocialLink[]
+  projects               Project[]
   projectRoleApplication ProjectRoleApplication[]
+  name                   String
+  emailVerified          Boolean
+  image                  String?
+  sessions               Session[]
+  accounts               Account[]
+
+  @@map("user")
 }
 
 model UserGitHubCredentials {
@@ -53,29 +60,29 @@ model UserGitHubCredentials {
 }
 
 model Project {
-  id               String                @id @default(uuid())
-  ownerId          String
-  title            String
-  description      String
-  shortDescription String // ADDED
-  externalLinks    ProjectExternalLink[]
-  createdAt        DateTime              @default(now()) // RENAMED
-  updatedAt        DateTime              @updatedAt
-  techStacks       TechStack[]
-  projectMembers   teamMember[]
-  projectRoles     ProjectRole[]
-  categories       Category[]
-  keyFeatures      KeyFeature[]
-  projectGoals     ProjectGoal[]
+  id                     String                   @id @default(uuid())
+  ownerId                String
+  title                  String
+  description            String
+  shortDescription       String // ADDED
+  externalLinks          ProjectExternalLink[]
+  createdAt              DateTime                 @default(now()) // RENAMED
+  updatedAt              DateTime                 @updatedAt
+  techStacks             TechStack[]
+  projectMembers         teamMember[]
+  projectRoles           ProjectRole[]
+  categories             Category[]
+  keyFeatures            KeyFeature[]
+  projectGoals           ProjectGoal[]
   projectRoleApplication ProjectRoleApplication[]
-  author           User?                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId         String?
-  image            String?
-  coverImages      String[]              // Array of cover image URLs (1 to 4)
-  readme           String?
+  author                 User?                    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId               String?
+  image                  String?
+  coverImages            String[] // Array of cover image URLs (1 to 4)
+  readme                 String?
   // Index composite pour recherche + tri par date
-  @@index([createdAt(sort: Desc)], name: "idx_project_date")
   // Index pour recherche textuelle sur le titre
+  @@index([createdAt(sort: Desc)], name: "idx_project_date")
   @@index([title], name: "idx_title_search")
 }
 
@@ -112,40 +119,41 @@ model teamMember {
 }
 
 model ProjectRole {
-  id          String       @id @default(uuid())
-  projectId   String
-  title       String // RENAMED
-  techStacks  TechStack[] // RENAMED
-  description String
-  isFilled    Boolean
-  teamMember  teamMember[]
-  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id                     String                   @id @default(uuid())
+  projectId              String
+  title                  String // RENAMED
+  techStacks             TechStack[] // RENAMED
+  description            String
+  isFilled               Boolean
+  teamMember             teamMember[]
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
   projectRoleApplication ProjectRoleApplication[]
   // Index pour recherche par projet et rôle
-  @@index([projectId, title], name: "idx_project_roles") // UPDATED
+  // UPDATED
+  @@index([projectId, title], name: "idx_project_roles")
 }
 
 model ProjectRoleApplication {
-  id            String       @id @default(uuid())
-  projectId     String
-  projectTitle  String       // On garde pour l'historique
-  projectRoleId String
-  projectRoleTitle String     // On garde pour l'historique
-  projectDescription String?  // Nouveau champ pour la description du projet
-  status        String
-  motivationLetter String?
-  selectedKeyFeatures KeyFeature[] @relation("ProjectRoleApplicationKeyFeature")
+  id                   String        @id @default(uuid())
+  projectId            String
+  projectTitle         String // On garde pour l'historique
+  projectRoleId        String
+  projectRoleTitle     String // On garde pour l'historique
+  projectDescription   String? // Nouveau champ pour la description du projet
+  status               String
+  motivationLetter     String?
+  selectedKeyFeatures  KeyFeature[]  @relation("ProjectRoleApplicationKeyFeature")
   selectedProjectGoals ProjectGoal[] @relation("ProjectRoleApplicationProjectGoal")
-  rejectionReason String?
-  appliedAt DateTime @default(now())
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  projectRole   ProjectRole  @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
-  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           String
-  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  rejectionReason      String?
+  appliedAt            DateTime      @default(now())
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  projectRole          ProjectRole   @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
+  user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String
+  project              Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model UserSocialLink {
@@ -169,18 +177,18 @@ model Category {
 }
 
 model KeyFeature {
-  id        String  @id @default(uuid())
-  projectId String
-  feature   String
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id                     String                   @id @default(uuid())
+  projectId              String
+  feature                String
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationKeyFeature")
 }
 
 model ProjectGoal {
-  id        String  @id @default(uuid())
-  projectId String
-  goal      String
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  id                     String                   @id @default(uuid())
+  projectId              String
+  goal                   String
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationProjectGoal")
 }
 
@@ -190,10 +198,54 @@ model GitHubStats {
   totalStars        Int      @default(0)
   contributedRepos  Int      @default(0)
   commitsThisYear   Int      @default(0)
-  contributionGraph Json?    // Stockage du ContributionGraph en JSON
+  contributionGraph Json? // Stockage du ContributionGraph en JSON
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  
   // Relation vers User
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }

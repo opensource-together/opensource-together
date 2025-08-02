@@ -1,20 +1,17 @@
-import Session from "supertokens-web-js/recipe/session";
-import {
-  getAuthorisationURLWithQueryParamsAndSetState,
-  signInAndUp,
-} from "supertokens-web-js/recipe/thirdparty";
+import { authClient } from "@/lib/auth-client";
 
 import { API_BASE_URL } from "@/config/config";
 
 import { Profile } from "@/features/profile/types/profile.type";
+import { createAuthClient } from "better-auth/react";
 
 /**
  * Check if session exists
  */
 export const checkSession = async (): Promise<boolean> => {
   try {
-    const sessionExists = await Session.doesSessionExist();
-    return sessionExists;
+    const { data: session } = await authClient.getSession();
+    return !!session;
   } catch (error) {
     console.error("checkSession error:", error);
     return false;
@@ -56,87 +53,107 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
 };
 
 /**
- * Get the GitHub authentication URL
+ * Sign in with email and password
  */
-export async function getGitHubAuthUrl(): Promise<string> {
-  if (typeof window === "undefined") {
-    throw new Error("getGitHubAuthUrl can only be called in the browser");
-  }
-  const url = window.location.origin;
-  return getAuthorisationURLWithQueryParamsAndSetState({
-    thirdPartyId: "github",
-    frontendRedirectURI: `${url}/auth/callback/github`,
-  });
-}
+export const signInWithEmail = async (email: string, password: string) => {
+  try {
+    const { data, error } = await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: "/dashboard",
+    });
 
-export async function getGoogleAuthUrl(): Promise<string> {
-  if (typeof window === "undefined") {
-    throw new Error("getGoogleAuthUrl can only be called in the browser");
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("signInWithEmail error:", error);
+    throw error;
   }
-  const url = window.location.origin;
-  return getAuthorisationURLWithQueryParamsAndSetState({
-    thirdPartyId: "google",
-    frontendRedirectURI: `${url}/auth/callback/google`,
-  });
-}
+};
+
 /**
- * Handle the GitHub callback after the authorization
+ * Sign up with email and password
  */
-export async function handleGitHubCallback(): Promise<{ success: boolean }> {
+export const signUpWithEmail = async (
+  email: string,
+  password: string,
+  name: string
+) => {
   try {
-    const response = await signInAndUp();
-    const sessionExists = await checkSession();
+    const { data, error } = await authClient.signUp.email({
+      email,
+      password,
+      name,
+      callbackURL: "/dashboard",
+    });
 
-    if (response.status === "OK" && sessionExists) {
-      return { success: true };
+    if (error) {
+      throw new Error(error.message);
     }
 
-    if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
-      throw new Error("GitHub didn't provide an email");
-    }
-
-    if (!sessionExists) {
-      throw new Error("The session couldn't be created after login.");
-    }
-
-    throw new Error("An error occurred during the login.");
-  } catch (err) {
-    console.error("handleGitHubCallback error:", err);
-    throw new Error("Error during the login via GitHub.");
+    return { success: true, data };
+  } catch (error) {
+    console.error("signUpWithEmail error:", error);
+    throw error;
   }
-}
+};
 
-export async function handleGoogleCallback(): Promise<{ success: boolean }> {
+/**
+ * Sign in with GitHub
+ */
+export const signInWithGitHub = async () => {
   try {
-    const response = await signInAndUp();
-    const sessionExists = await checkSession();
-
-    if (response.status === "OK" && sessionExists) {
-      return { success: true };
-    }
-
-    if (response.status === "NO_EMAIL_GIVEN_BY_PROVIDER") {
-      throw new Error("Google didn't provide an email");
-    }
-
-    if (!sessionExists) {
-      throw new Error("The session couldn't be created after login.");
-    }
-
-    throw new Error("An error occurred during the login.");
-  } catch (err) {
-    console.error("handleGoogleCallback error:", err);
-    throw new Error("Error during the login via Google.");
+    const newAuthClient = createAuthClient({
+      baseURL: "http://localhost:4000",
+    });
+    await newAuthClient.signIn.social({
+      provider: "github",
+      callbackURL: "/auth/callback/github",
+      // callbackURL: "/dashboard",
+      // errorCallbackURL: "/auth/error",
+      // newUserCallbackURL: "/welcome",
+    });
+  } catch (error) {
+    console.error("signInWithGitHub error:", error);
+    throw error;
   }
-}
+};
+
+/**
+ * Sign in with Google
+ */
+export const signInWithGoogle = async () => {
+  try {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+      errorCallbackURL: "/auth/error",
+      newUserCallbackURL: "/welcome",
+    });
+  } catch (error) {
+    console.error("signInWithGoogle error:", error);
+    throw error;
+  }
+};
+
 /**
  * Logout the user
  */
-export async function logout(): Promise<void> {
+export const logout = async (): Promise<void> => {
   try {
-    await Session.signOut();
-  } catch (err) {
-    console.error("logout error:", err);
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          // Redirection vers la page de login après déconnexion
+          window.location.href = "/auth/login";
+        },
+      },
+    });
+  } catch (error) {
+    console.error("logout error:", error);
     throw new Error("Error during the logout.");
   }
-}
+};

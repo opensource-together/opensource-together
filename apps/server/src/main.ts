@@ -1,24 +1,34 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { SuperTokensExceptionFilter } from 'supertokens-nestjs';
-import supertokens from 'supertokens-node';
 import { RootModule } from './root.module';
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+// import { auth } from './libs/auth';
+// import { RequestHandler } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(RootModule, {
     logger: new Logger(),
+    bodyParser: false, // Required for Better Auth
   });
 
-  app.setGlobalPrefix('v1');
+  // app.setGlobalPrefix('v1'); // Disabled for Better Auth compatibility
 
-  // Configuration CORS
-  app.enableCors({
-    origin: ['http://localhost:3000'],
-    allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
-    credentials: true,
-  });
+  // CORS handled by Better Auth module
+  // app.enableCors({
+  //   origin: 'http://localhost:3000',
+  //   allowedHeaders: [
+  //     'content-type',
+  //     'authorization',
+  //     'cookie',
+  //     'x-requested-with',
+  //   ],
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  //   credentials: true,
+  // });
+
+  // Middleware Better Auth - REMOVED: handled by AuthModule.forRoot(auth)
+  // app.use('api/auth', auth.handler as RequestHandler);
 
   // Activation de la validation automatique des DTOs
   app.useGlobalPipes(
@@ -29,12 +39,8 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new SuperTokensExceptionFilter());
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(
-    new AllExceptionsFilter(httpAdapter),
-    new SuperTokensExceptionFilter(),
-  );
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   const config = new DocumentBuilder()
     .setTitle('OpenSource Together API')
@@ -42,11 +48,11 @@ async function bootstrap() {
       "Documentation de l'API pour la plateforme OpenSource Together",
     )
     .setVersion('1.0')
-    .addCookieAuth('sAccessToken') // pour la session SuperTokens
+    .addBearerAuth() // Pour Better Auth
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/v1/api-docs', app, document);
+  SwaggerModule.setup('/api-docs', app, document);
 
   await app.listen(process.env.PORT ?? 4000);
 }
