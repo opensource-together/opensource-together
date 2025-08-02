@@ -14,7 +14,7 @@ export const ostContributorsExample: OstContributor[] = [
     contributions: 3, // Nombre de rôles approuvés dans ce projet
   },
   {
-    login: "Killian C", 
+    login: "Killian C",
     avatar_url: "/icons/killiancodes-icon.jpg",
     html_url: "http://localhost:4000/v1/user/user-456",
     user_id: "user-456",
@@ -22,7 +22,7 @@ export const ostContributorsExample: OstContributor[] = [
   },
   {
     login: "P2aco Dev",
-    avatar_url: "/icons/p2aco-icon.png", 
+    avatar_url: "/icons/p2aco-icon.png",
     html_url: "http://localhost:4000/v1/user/user-789",
     user_id: "user-789",
     contributions: 1,
@@ -31,13 +31,13 @@ export const ostContributorsExample: OstContributor[] = [
 
 /**
  * Comparaison : Anciens contributeurs GitHub vs Nouveaux contributeurs OST
- * 
+ *
  * AVANT (GitHub contributors):
  * - Proviennent de l'API GitHub
  * - Incluent github-actions[bot], lowlighter, etc.
  * - Lien vers profiles GitHub
  * - contributions = commits GitHub
- * 
+ *
  * APRÈS (OST contributors):
  * - Proviennent des candidatures approuvées dans la base OST
  * - Uniquement les vrais contributeurs OST (utilisateurs acceptés)
@@ -52,20 +52,20 @@ export const comparisonExample = {
     contributors: [
       {
         login: "github-actions[bot]",
-        avatar_url: "https://avatars.githubusercontent.com/u/41898282?v=4", 
+        avatar_url: "https://avatars.githubusercontent.com/u/41898282?v=4",
         html_url: "https://github.com/apps/github-actions",
         contributions: 25,
       },
       {
         login: "lowlighter",
         avatar_url: "https://avatars.githubusercontent.com/u/22963968?v=4",
-        html_url: "https://github.com/lowlighter", 
+        html_url: "https://github.com/lowlighter",
         contributions: 15,
-      }
-    ]
+      },
+    ],
   },
   after: {
     // Ce qu'on a maintenant avec les contributeurs OST
-    contributors: ostContributorsExample
-  }
+    contributors: ostContributorsExample,
+  },
 };

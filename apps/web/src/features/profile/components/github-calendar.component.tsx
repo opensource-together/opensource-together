@@ -15,7 +15,7 @@ interface TooltipData {
 
 export default function GithubCalendar({
   contributionGraph,
-  contributionsCount = 0,
+  contributionsCount: _contributionsCount = 0,
 }: GithubCalendarProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
