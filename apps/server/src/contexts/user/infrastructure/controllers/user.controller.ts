@@ -494,6 +494,18 @@ export class UserController {
     return applications.value;
   }
 
+  @Patch('me/applications/:id')
+  @ApiOperation({ summary: 'Cancel an application' })
+  @ApiParam({ name: 'id', description: 'Application ID' })
+  async cancelApplication(
+    @Param('id') id: string,
+    @Session('userId') userId: string,
+  ) {
+    return await this.commandBus.execute(
+      new CancelApplicationCommand(id, userId),
+    );
+  }
+
   //PUBLIC ENDPOINTS
   @PublicAccess()
   @Get(':id')
