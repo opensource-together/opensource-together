@@ -57,9 +57,9 @@ export default function useAuth() {
       window.location.assign(authUrl);
       return authUrl;
     },
-    loadingMessage: "Redirection vers GitHub...",
+    loadingMessage: "Redirection vers Github...",
     successMessage: "Redirection en cours...",
-    errorMessage: "Erreur lors de la redirection vers GitHub",
+    errorMessage: "Erreur lors de la redirection vers Github",
   });
 
   const googleSignInMutation = useToastMutation({
@@ -75,7 +75,7 @@ export default function useAuth() {
 
   const githubCallbackMutation = useToastMutation({
     mutationFn: handleGitHubCallback,
-    loadingMessage: "Vérification de vos informations GitHub...",
+    loadingMessage: "Vérification de vos informations Github...",
     successMessage: "Connexion réussie !",
     errorMessage: "Une erreur est survenue lors de la connexion",
     options: {

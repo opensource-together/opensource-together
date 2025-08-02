@@ -1,5 +1,5 @@
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { Result } from '@/libs/result';
-import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 
 export const PROJECT_ROLE_APPLICATION_REPOSITORY_PORT = Symbol(
   'ProjectRoleApplicationRepository',
@@ -17,19 +17,53 @@ export interface ProjectRoleApplicationRepositoryPort {
     Result<
       {
         appplicationId: string;
-        projectTitle: string;
-        projectDescription: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        projectRoleDescription: string;
-        status: string;
-        selectedKeyFeatures: { id: string; feature: string }[];
-        selectedProjectGoals: { id: string; goal: string }[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          author: {
+            ownerId: string;
+            name: string;
+            avatarUrl?: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
         motivationLetter: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl?: string;
+        };
       }[],
       string
     >
@@ -94,19 +128,50 @@ export interface ProjectRoleApplicationRepositoryPort {
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        projectRoleDescription: string;
-        status: string;
-        selectedKeyFeatures: { id: string; feature: string }[];
-        selectedProjectGoals: { id: string; goal: string }[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          author: {
+            ownerId: string;
+            name: string;
+            avatarUrl?: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
         motivationLetter: string;
         userProfile: {
           id: string;
-          username: string;
-          avatarUrl: string;
+          name: string;
+          avatarUrl?: string;
         };
       }[],
       string

@@ -75,6 +75,8 @@ export class PrismaProjectRoleApplicationMapper {
       rejectionReason: prismaEntity.rejectionReason ?? undefined,
       status: prismaEntity.status as ApplicationStatus,
       appliedAt: prismaEntity.appliedAt,
+      decidedAt: prismaEntity.decidedAt ?? undefined,
+      decidedBy: prismaEntity.decidedBy ?? undefined,
       motivationLetter: prismaEntity.motivationLetter ?? undefined,
       userProfile: {
         id: prismaEntity.user.id,

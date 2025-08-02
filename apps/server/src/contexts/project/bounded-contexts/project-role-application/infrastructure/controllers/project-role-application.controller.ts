@@ -1,6 +1,7 @@
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { ApplyToProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
 import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/dto/apply-to-role-request.dto';
+import { GetAllProjectApplicationsQueryByProjectId } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-project-application.query';
 import { Result } from '@/libs/result';
 import {
   Body,
@@ -21,7 +22,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
-import { GetAllProjectApplicationsQueryByProjectId } from '../../use-cases/queries/get-all-project-application.query';
+// import { GetAllProjectApplicationsQueryByProjectId } from '../../use-cases/queries/get-all-project-application.query';
 import { GetApplicationByRoleIdQuery } from '../../use-cases/queries/get-application-by-role-id.query';
 
 @Controller('projects/:projectId/roles')
@@ -75,16 +76,31 @@ export class ProjectRoleApplicationController {
     example: {
       id: 'd32ffdab-127c-43cd-b05c-f523003e25f1',
       projectId: 'f9157e9d-82cb-4227-8f69-bcb637ae05b7',
+      projectTitle: 'Mon Projet',
+      projectDescription: 'Description du projet',
       projectRoleTitle: 'Dév web',
       projectRoleId: '178210fe-8166-4fa0-824e-d9858072076d',
       status: 'PENDING',
       motivationLetter: 'je peux faire ca et tout etc',
-      selectedKeyFeatures: ['test key features'],
-      selectedProjectGoals: ['test project goals'],
+      selectedKeyFeatures: [
+        {
+          id: 'feature-1',
+          feature: 'test key features',
+        },
+      ],
+      selectedProjectGoals: [
+        {
+          id: 'goal-1',
+          goal: 'test project goals',
+        },
+      ],
       appliedAt: '2025-07-18T04:48:56.776Z',
+      decidedAt: null,
+      decidedBy: null,
+      rejectionReason: null,
       userProfile: {
         id: 'accfaebd-b8bb-479b-aa3e-e02509d86e1d',
-        name: 'LhourquinPro',
+        username: 'LhourquinPro',
         avatarUrl: 'https://avatars.githubusercontent.com/u/78709164?v=4',
       },
     },
@@ -126,7 +142,7 @@ export class ProjectRoleApplicationController {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
     }
 
-    return result.value;
+    return result.value.toPrimitive();
   }
 
   @Get('applications')

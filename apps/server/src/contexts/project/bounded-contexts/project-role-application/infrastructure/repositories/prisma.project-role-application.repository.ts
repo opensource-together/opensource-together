@@ -91,19 +91,50 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        projectRoleDescription: string;
-        status: string;
-        selectedKeyFeatures: { id: string; feature: string }[];
-        selectedProjectGoals: { id: string; goal: string }[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          author: {
+            ownerId: string;
+            name: string;
+            avatarUrl?: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
         motivationLetter: string;
         userProfile: {
           id: string;
-          username: string;
-          avatarUrl: string;
+          name: string;
+          avatarUrl?: string;
         };
       }[],
       string
@@ -114,11 +145,16 @@ export class PrismaProjectRoleApplicationRepository
         where: { projectId: { equals: projectId } },
         include: {
           user: true,
-          projectRole: true,
+          projectRole: {
+            include: {
+              techStacks: true,
+            },
+          },
           project: {
             include: {
               keyFeatures: true,
               projectGoals: true,
+              author: true,
             },
           },
         },
@@ -131,56 +167,131 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        projectRoleDescription: string;
-        status: string;
-        selectedKeyFeatures: { id: string; feature: string }[];
-        selectedProjectGoals: { id: string; goal: string }[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          author: {
+            ownerId: string;
+            name: string;
+            avatarUrl?: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
         motivationLetter: string;
         userProfile: {
           id: string;
-          username: string;
-          avatarUrl: string;
+          name: string;
+          avatarUrl?: string;
         };
       }[] = [];
 
       for (const application of applications) {
-        const domainApplication =
-          PrismaProjectRoleApplicationMapper.toDomain(application);
+        const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+          ...application,
+          project: {
+            ...application.project,
+            keyFeatures: application.project.keyFeatures,
+            projectGoals: application.project.projectGoals,
+          },
+          user: {
+            ...application.user,
+            username: application.user.username,
+          },
+        });
         if (!domainApplication.success) {
           return Result.fail(
             'Une erreur est survenue lors de la récupération des candidatures',
           );
         }
+
+        // Mapper les techStacks du projectRole
+        const techStacks = application.projectRole.techStacks.map((ts) => ({
+          id: ts.id,
+          name: ts.name,
+          iconUrl: ts.iconUrl,
+        }));
+
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
-          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
-          status: domainApplication.value.status,
+          projectRoleTitle: application.projectRole.title,
+          project: {
+            id: application.project.id,
+            title: application.project.title,
+            shortDescription: application.project.shortDescription,
+            image: application.project.image || undefined,
+            author: {
+              ownerId:
+                application.project.authorId || application.project.ownerId,
+              name:
+                application.project.author?.username ||
+                application.project.author?.login ||
+                'Unknown',
+              avatarUrl: application.project.author?.avatarUrl || undefined,
+            },
+          },
+          projectRole: {
+            id: application.projectRole.id,
+            projectId: application.projectRole.projectId,
+            title: application.projectRole.title,
+            description: application.projectRole.description,
+            techStacks,
+            roleCount: undefined, // À implémenter si nécessaire
+            projectGoal: undefined, // À implémenter si nécessaire
+          },
+          status: domainApplication.value.status as
+            | 'PENDING'
+            | 'ACCEPTED'
+            | 'REJECTED'
+            | 'CANCELLED',
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures.map(
             (kf) => ({
-              id: kf.toPrimitive().id!,
               feature: kf.toPrimitive().feature,
             }),
           ),
           selectedProjectGoals:
             domainApplication.value.selectedProjectGoals.map((pg) => ({
-              id: pg.toPrimitive().id!,
               goal: pg.toPrimitive().goal,
             })),
           appliedAt: domainApplication.value.appliedAt,
           decidedAt: domainApplication.value.decidedAt || new Date(),
-          decidedBy: domainApplication.value.decidedBy || '',
-          rejectionReason: domainApplication.value.rejectionReason || '',
+          decidedBy: domainApplication.value.decidedBy || undefined,
+          rejectionReason: domainApplication.value.rejectionReason || undefined,
           motivationLetter: domainApplication.value.motivationLetter || '',
           userProfile: {
             id: domainApplication.value.userProfile.id,
-            username: domainApplication.value.userProfile.username,
-            avatarUrl: domainApplication.value.userProfile.avatarUrl || '',
+            name: domainApplication.value.userProfile.username,
+            avatarUrl:
+              domainApplication.value.userProfile.avatarUrl || undefined,
           },
         });
       }
@@ -362,7 +473,7 @@ export class PrismaProjectRoleApplicationRepository
       const application = await this.prisma.projectRoleApplication.update({
         where: { id: props.applicationId },
         data: {
-          status: 'APPROVAL',
+          status: 'ACCEPTED',
         },
         include: {
           projectRole: true,
@@ -402,19 +513,53 @@ export class PrismaProjectRoleApplicationRepository
     Result<
       {
         appplicationId: string;
-        projectTitle: string;
-        projectDescription: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        projectRoleDescription: string;
-        status: string;
-        selectedKeyFeatures: { id: string; feature: string }[];
-        selectedProjectGoals: { id: string; goal: string }[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          author: {
+            ownerId: string;
+            name: string;
+            avatarUrl?: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
         motivationLetter: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl?: string;
+        };
       }[],
       string
     >
@@ -423,11 +568,16 @@ export class PrismaProjectRoleApplicationRepository
       const applications = await this.prisma.projectRoleApplication.findMany({
         where: { userId: { equals: userId } },
         include: {
-          projectRole: true,
+          projectRole: {
+            include: {
+              techStacks: true,
+            },
+          },
           project: {
             include: {
               keyFeatures: true,
               projectGoals: true,
+              author: true,
             },
           },
           user: true,
@@ -441,17 +591,51 @@ export class PrismaProjectRoleApplicationRepository
         appplicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        projectRoleDescription: string;
-        projectTitle: string;
-        projectDescription: string;
-        status: string;
-        selectedKeyFeatures: { id: string; feature: string }[];
-        selectedProjectGoals: { id: string; goal: string }[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          author: {
+            ownerId: string;
+            name: string;
+            avatarUrl?: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
         motivationLetter: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl?: string;
+        };
       }[] = [];
 
       for (const application of applications) {
@@ -472,30 +656,67 @@ export class PrismaProjectRoleApplicationRepository
             'Une erreur est survenue lors de la récupération des candidatures',
           );
         }
+
+        // Mapper les techStacks du projectRole
+        const techStacks = application.projectRole.techStacks.map((ts) => ({
+          id: ts.id,
+          name: ts.name,
+          iconUrl: ts.iconUrl,
+        }));
+
         projectRoleApplications.push({
           appplicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
-          projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
-          projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
-          projectTitle: application.project.title, // Utilise le titre actuel du projet
-          projectDescription: application.project.description, // Utilise la description actuelle du projet
-          status: domainApplication.value.status,
+          projectRoleTitle: application.projectRole.title,
+          project: {
+            id: application.project.id,
+            title: application.project.title,
+            shortDescription: application.project.shortDescription,
+            image: application.project.image || undefined,
+            author: {
+              ownerId:
+                application.project.authorId || application.project.ownerId,
+              name:
+                application.project.author?.username ||
+                application.project.author?.login ||
+                'Unknown',
+              avatarUrl: application.project.author?.avatarUrl || undefined,
+            },
+          },
+          projectRole: {
+            id: application.projectRole.id,
+            projectId: application.projectRole.projectId,
+            title: application.projectRole.title,
+            description: application.projectRole.description,
+            techStacks,
+            roleCount: undefined, // À implémenter si nécessaire
+            projectGoal: undefined, // À implémenter si nécessaire
+          },
+          status: domainApplication.value.status as
+            | 'PENDING'
+            | 'ACCEPTED'
+            | 'REJECTED'
+            | 'CANCELLED',
           selectedKeyFeatures: domainApplication.value.selectedKeyFeatures.map(
             (kf) => ({
-              id: kf.toPrimitive().id!,
               feature: kf.toPrimitive().feature,
             }),
           ),
           selectedProjectGoals:
             domainApplication.value.selectedProjectGoals.map((pg) => ({
-              id: pg.toPrimitive().id!,
               goal: pg.toPrimitive().goal,
             })),
           appliedAt: domainApplication.value.appliedAt,
           decidedAt: domainApplication.value.decidedAt || new Date(),
-          decidedBy: domainApplication.value.decidedBy || '',
-          rejectionReason: domainApplication.value.rejectionReason || '',
+          decidedBy: domainApplication.value.decidedBy || undefined,
+          rejectionReason: domainApplication.value.rejectionReason || undefined,
           motivationLetter: domainApplication.value.motivationLetter || '',
+          userProfile: {
+            id: domainApplication.value.userProfile.id,
+            name: domainApplication.value.userProfile.username,
+            avatarUrl:
+              domainApplication.value.userProfile.avatarUrl || undefined,
+          },
         });
       }
 
