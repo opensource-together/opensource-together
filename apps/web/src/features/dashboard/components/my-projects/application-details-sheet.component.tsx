@@ -54,10 +54,14 @@ export default function ApplicationDetailsSheet({
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent
-        side="right"
-        className="w-full overflow-y-auto sm:w-[600px] lg:w-[700px]"
+        responsive
+        responsiveWidth={{
+          mobile: "w-full",
+          desktop: "w-[450px]",
+        }}
+        className="overflow-y-auto bg-white"
       >
-        <SheetHeader className="bg-background sticky top-0 z-10 border-b pb-4">
+        <SheetHeader className="border-b pb-4">
           <SheetTitle className="flex items-center gap-3">
             <Avatar
               src={application.applicant.avatarUrl}

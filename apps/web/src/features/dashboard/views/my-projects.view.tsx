@@ -15,6 +15,9 @@ export default function MyProjectsView() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
+  const [activeTab, setActiveTab] = useState<"projects" | "details">(
+    "projects"
+  );
 
   // Sélectionner automatiquement le premier projet par défaut
   useEffect(() => {
@@ -25,6 +28,14 @@ export default function MyProjectsView() {
       }
     }
   }, [projects, selectedProjectId]);
+
+  const handleProjectSelect = (projectId: string) => {
+    setSelectedProjectId(projectId);
+    // Sur mobile, basculer vers l'onglet détails
+    if (window.innerWidth < 1024) {
+      setActiveTab("details");
+    }
+  };
 
   const handleApplicationDecision = (
     applicationId: string,
@@ -48,33 +59,74 @@ export default function MyProjectsView() {
 
       {/* Layout responsive */}
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
-        {/* Section Mes Projets */}
-        <div className="order-1 w-full min-w-0 lg:w-[35%]">
-          <div className="mb-4 lg:mb-0">
-            <h2 className="text-lg font-semibold tracking-tight lg:hidden">
-              Mes Projets
-            </h2>
-          </div>
+        {/* Section Mes Projets - Desktop */}
+        <div className="order-1 hidden w-full min-w-0 lg:block lg:w-[35%]">
           <MyProjectsList
             onProjectSelect={setSelectedProjectId}
             selectedProjectId={selectedProjectId}
           />
         </div>
 
-        {/* Section Candidatures & Équipe - Affichage conditionnel */}
-        <div className="order-2 w-full min-w-0 lg:w-[65%]">
-          <div className="mb-4 lg:mb-0">
-            <h2 className="text-lg font-semibold tracking-tight lg:hidden">
-              Candidatures & Équipe
-            </h2>
-          </div>
-
+        {/* Section Candidatures & Équipe - Desktop */}
+        <div className="order-2 hidden w-full min-w-0 lg:block lg:w-[65%]">
           {selectedProjectId ? (
             <MyProjectTabs
               applications={selectedProjectApplications as ApplicationType[]}
               onApplicationDecision={handleApplicationDecision}
             />
           ) : (
+            <EmptyState
+              title="Sélectionnez un projet"
+              description="Cliquez sur un projet pour voir ses candidatures et membres d'équipe."
+            />
+          )}
+        </div>
+
+        {/* Mobile: Navigation par onglets */}
+        <div className="order-1 block w-full lg:hidden">
+          {/* Onglets de navigation mobile */}
+          <div className="mb-6 flex border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab("projects")}
+              className={`flex-1 py-3 text-center text-sm font-medium transition-colors ${
+                activeTab === "projects"
+                  ? "border-primary text-primary border-b-2"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Mes Projets ({projects.length})
+            </button>
+            <button
+              onClick={() => setActiveTab("details")}
+              disabled={!selectedProjectId}
+              className={`flex-1 py-3 text-center text-sm font-medium transition-colors ${
+                activeTab === "details"
+                  ? "border-primary text-primary border-b-2"
+                  : selectedProjectId
+                    ? "text-gray-500 hover:text-gray-700"
+                    : "cursor-not-allowed text-gray-300"
+              }`}
+            >
+              Détails
+            </button>
+          </div>
+
+          {/* Contenu des onglets */}
+          {activeTab === "projects" && (
+            <MyProjectsList
+              onProjectSelect={handleProjectSelect}
+              selectedProjectId={selectedProjectId}
+            />
+          )}
+
+          {activeTab === "details" && selectedProjectId && (
+            <MyProjectTabs
+              applications={selectedProjectApplications as ApplicationType[]}
+              onApplicationDecision={handleApplicationDecision}
+            />
+          )}
+
+          {activeTab === "details" && !selectedProjectId && (
             <EmptyState
               title="Sélectionnez un projet"
               description="Cliquez sur un projet pour voir ses candidatures et membres d'équipe."
