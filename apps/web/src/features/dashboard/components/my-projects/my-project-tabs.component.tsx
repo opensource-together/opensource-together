@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 
-import { ApplicationReceived, TeamMember } from "../../types/my-projects.type";
+import { ApplicationType, TeamMemberType } from "../../types/my-projects.type";
 import MyApplicationsReceived from "./my-applications-received.component";
 import MyTeamMembers from "./my-team-members.component";
 
 // Mock data for the team members (to be replaced by your real data)
-const mockTeamMembers: TeamMember[] = [
+const mockTeamMembers: TeamMemberType[] = [
   {
     id: "1",
     name: "Byron Love",
     avatarUrl: "/icons/exemplebyronIcon.svg",
     role: "Frontend Developer",
-    joinedAt: "2024-01-15",
+    joinedAt: new Date("2024-01-15"),
     techStacks: [
       { id: "1", name: "React" },
       { id: "2", name: "TypeScript" },
@@ -25,7 +25,7 @@ const mockTeamMembers: TeamMember[] = [
     name: "Jane Smith",
     avatarUrl: "/icons/exemplebyronIcon.svg",
     role: "Backend Developer",
-    joinedAt: "2024-01-20",
+    joinedAt: new Date("2024-01-20"),
     techStacks: [
       { id: "4", name: "Node.js" },
       { id: "5", name: "PostgreSQL" },
@@ -34,8 +34,8 @@ const mockTeamMembers: TeamMember[] = [
 ];
 
 interface MyProjectTabsProps {
-  applications: ApplicationReceived[];
-  teamMembers?: TeamMember[];
+  applications: ApplicationType[];
+  teamMembers?: TeamMemberType[];
   onApplicationDecision?: (
     applicationId: string,
     decision: "ACCEPTED" | "REJECTED",
@@ -66,7 +66,7 @@ export default function MyProjectTabs({
   ];
 
   return (
-    <div>
+    <div className="sticky top-0 z-10">
       {/* Tabs */}
       <div className="flex border-b border-black/10 tracking-tighter">
         {tabs.map((tab) => (
