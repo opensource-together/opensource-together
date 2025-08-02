@@ -60,7 +60,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
 
   const breadcrumbItems = [
     {
-      label: "Discover",
+      label: "Découvrir",
       href: "/",
       isActive: false,
     },
