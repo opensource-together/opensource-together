@@ -2,6 +2,8 @@
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
+import { Button } from "@/shared/components/ui/button";
+import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
 import {
   Sheet,
@@ -61,7 +63,7 @@ export default function ApplicationDetailsSheet({
         }}
         className="overflow-y-auto bg-white"
       >
-        <SheetHeader className="border-b pb-4">
+        <SheetHeader className="pb-4">
           <SheetTitle className="flex items-center gap-3">
             <Avatar
               src={application.applicant.avatarUrl}
@@ -69,14 +71,19 @@ export default function ApplicationDetailsSheet({
               alt={application.applicant.name}
               size="lg"
             />
-            <div>
+            <div className="flex-1 text-start">
               <h2 className="text-xl font-medium">
                 {application.applicant.name}
               </h2>
               <p className="text-muted-foreground text-sm font-normal">
-                {application.projectRole.title}
+                Candidat
               </p>
             </div>
+
+            <Button variant="outline" size="sm" className="font-medium">
+              Voir profil
+              <Icon name="user" size="xs" />
+            </Button>
           </SheetTitle>
         </SheetHeader>
 
@@ -85,36 +92,68 @@ export default function ApplicationDetailsSheet({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">Statut</span>
+              <div className="mx-4 flex flex-1 items-center">
+                <div className="h-[1px] w-full bg-black/5" />
+              </div>
               <span
                 className={`text-sm font-medium ${getStatusStyle(application.status)}`}
               >
                 {getStatusText(application.status)}
               </span>
             </div>
-
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">Postulé le</span>
+              <div className="mx-4 flex flex-1 items-center">
+                <div className="h-[1px] w-full bg-black/5" />
+              </div>
               <span className="text-sm font-medium">
                 {new Date(application.appliedAt).toLocaleDateString("fr-FR")}
               </span>
             </div>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">
+                Postulé pour le rôle
+              </span>
+              <div className="mx-4 flex flex-1 items-center">
+                <div className="h-[1px] w-full bg-black/5" />
+              </div>
+              <span className="text-sm font-medium">
+                {application.projectRole.title}
+              </span>
+            </div>
           </div>
 
-          {application.projectRole.techStacks.length > 0 && (
+          {/* Role description */}
+          {application.projectRole.description && (
             <div>
-              <Label className="text-sm font-medium">Stack technique</Label>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {application.projectRole.techStacks.map((tech) => (
-                  <StackLogo
-                    key={tech.id}
-                    name={tech.name}
-                    icon={tech.iconUrl || ""}
-                    alt={tech.name}
-                  />
-                ))}
-              </div>
+              <Label className="text-sm font-medium">Description du rôle</Label>
+              <p className="mt-2 text-sm whitespace-pre-wrap">
+                {application.projectRole.description}
+              </p>
             </div>
           )}
+
+          {/* Candidat skills */}
+          {application.projectRole.techStacks &&
+            application.projectRole.techStacks.length > 0 && (
+              <div>
+                <Label className="text-sm font-medium">
+                  Technologies demandées
+                </Label>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {application.projectRole.techStacks.map((skill) => (
+                    <StackLogo
+                      key={skill.id}
+                      name={skill.name}
+                      icon={skill.iconUrl || ""}
+                      alt={skill.name}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+          <div className="h-[1px] w-full bg-black/5" />
 
           {/* Motivation letter */}
           {application.motivationLetter && (
@@ -129,6 +168,26 @@ export default function ApplicationDetailsSheet({
               </div>
             </div>
           )}
+
+          {/* Candidat skills */}
+          {application.applicant.skills &&
+            application.applicant.skills.length > 0 && (
+              <div>
+                <Label className="text-sm font-medium">
+                  Compétences du candidat
+                </Label>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {application.applicant.skills.map((skill) => (
+                    <StackLogo
+                      key={skill.id}
+                      name={skill.name}
+                      icon={skill.iconUrl || ""}
+                      alt={skill.name}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
           {/* Selected features */}
           {application.selectedKeyFeatures &&
@@ -171,6 +230,20 @@ export default function ApplicationDetailsSheet({
                 </ul>
               </div>
             )}
+
+          {/* Rejection reason */}
+          {application.status === "REJECTED" && application.rejectionReason && (
+            <div>
+              <Label className="text-sm font-medium text-red-600">
+                Raison du refus
+              </Label>
+              <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-4">
+                <p className="text-sm whitespace-pre-wrap text-red-700">
+                  {application.rejectionReason}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Actions for pending applications */}
           {application.status === "PENDING" && children && (

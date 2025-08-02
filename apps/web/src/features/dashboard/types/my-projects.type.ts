@@ -17,25 +17,31 @@ export interface MyProjectType {
   teamMembers: TeamMemberType[];
 }
 
+export type ApplicationStatus = "PENDING" | "ACCEPTED" | "REJECTED";
+
+// Candidature optimisée avec compétences du candidat
 export interface ApplicationType {
   id: string;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  status: ApplicationStatus;
   applicant: {
     id: string;
     name: string;
     avatarUrl?: string;
-    email?: string;
+    skills?: TechStack[];
   };
   projectRole: ProjectRole;
   appliedAt: Date;
   decidedAt?: Date;
+  decidedBy?: string;
   motivationLetter: string;
-  selectedKeyFeatures: {
+  selectedKeyFeatures: Array<{
+    id: string;
     feature: string;
-  }[];
-  selectedProjectGoals: {
+  }>;
+  selectedProjectGoals: Array<{
+    id: string;
     goal: string;
-  }[];
+  }>;
   rejectionReason?: string;
 }
 
@@ -48,5 +54,6 @@ export interface TeamMemberType {
   techStacks?: Array<{
     id: string;
     name: string;
+    iconUrl?: string;
   }>;
 }

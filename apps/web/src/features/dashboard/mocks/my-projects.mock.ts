@@ -33,6 +33,24 @@ export const mockDashboardData: MyProjectType[] = [
         iconUrl:
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
       },
+      {
+        id: "5",
+        name: "Express",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
+      },
+      {
+        id: "6",
+        name: "PostgreSQL",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+      },
+      {
+        id: "7",
+        name: "Docker",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+      },
     ],
     author: {
       id: "user-1",
@@ -47,12 +65,50 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-2",
           name: "Byron Love",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "byron.love@email.com",
+          skills: [
+            {
+              id: "1",
+              name: "React",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+            },
+            {
+              id: "2",
+              name: "TypeScript",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+            },
+            {
+              id: "3",
+              name: "Electron",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/electron/electron-original.svg",
+            },
+            {
+              id: "4",
+              name: "Node.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+            },
+            {
+              id: "5",
+              name: "Express",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
+            },
+            {
+              id: "6",
+              name: "PostgreSQL",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-1",
           title: "Front-End Developer",
-          description: "Développer l'interface utilisateur de l'application",
+          description:
+            "Nous recherchons un développeur front-end pour concevoir et améliorer l'interface utilisateur de l'application desktop.",
           techStacks: [
             {
               id: "1",
@@ -78,18 +134,25 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
             },
+            {
+              id: "5",
+              name: "Express",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
+            },
           ],
-          roleCount: 2,
         },
         appliedAt: new Date("2024-01-14T09:30:00Z"),
         motivationLetter:
           "Je suis passionné par les applications desktop et j'ai une solide expérience en React et TypeScript. J'aimerais contribuer à améliorer l'interface utilisateur de Gitify et apporter de nouvelles fonctionnalités innovantes.",
         selectedKeyFeatures: [
-          { feature: "Interface desktop native" },
-          { feature: "Support multi-comptes" },
+          { id: "1", feature: "Interface desktop native" },
+          { id: "2", feature: "Support multi-comptes" },
+          { id: "3", feature: "Notifications personnalisées" },
         ],
         selectedProjectGoals: [
-          { goal: "Améliorer la productivité des développeurs" },
+          { id: "1", goal: "Améliorer la productivité des développeurs" },
+          { id: "2", goal: "Réduire le temps de réponse aux notifications" },
         ],
       },
       {
@@ -99,12 +162,38 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-3",
           name: "Sarah Johnson",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "sarah.johnson@email.com",
+          skills: [
+            {
+              id: "4",
+              name: "Node.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+            },
+            {
+              id: "5",
+              name: "Express",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
+            },
+            {
+              id: "6",
+              name: "PostgreSQL",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+            },
+            {
+              id: "7",
+              name: "Docker",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-2",
           title: "Backend Developer",
-          description: "Développer les APIs et l'intégration GitHub",
+          description:
+            "Nous recherchons un développeur backend pour créer les APIs et gérer l'intégration avec GitHub.",
           techStacks: [
             {
               id: "4",
@@ -118,19 +207,32 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
             },
+            {
+              id: "6",
+              name: "PostgreSQL",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+            },
+            {
+              id: "7",
+              name: "Docker",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+            },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-13T15:45:00Z"),
         motivationLetter:
           "Avec 5 ans d'expérience en développement backend et une expertise approfondie de l'API GitHub, je suis confiant dans ma capacité à améliorer l'architecture serveur de Gitify et à optimiser les performances.",
         selectedKeyFeatures: [
-          { feature: "Notifications GitHub centralisées" },
-          { feature: "Support multi-comptes" },
+          { id: "1", feature: "Notifications GitHub centralisées" },
+          { id: "2", feature: "Support multi-comptes" },
+          { id: "3", feature: "API REST performante" },
         ],
         selectedProjectGoals: [
-          { goal: "Améliorer la productivité des développeurs" },
-          { goal: "Centraliser la gestion des notifications" },
+          { id: "1", goal: "Améliorer la productivité des développeurs" },
+          { id: "2", goal: "Centraliser la gestion des notifications" },
+          { id: "3", goal: "Optimiser la scalabilité du backend" },
         ],
       },
       {
@@ -140,13 +242,7 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-8",
           name: "Lucas Rodriguez",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "lucas.rodriguez@email.com",
-        },
-        projectRole: {
-          id: "role-6",
-          title: "Full-Stack Developer",
-          description: "Développer les fonctionnalités complètes",
-          techStacks: [
+          skills: [
             {
               id: "1",
               name: "React",
@@ -166,19 +262,52 @@ export const mockDashboardData: MyProjectType[] = [
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/graphql/graphql-plain.svg",
             },
           ],
-          roleCount: 1,
+        },
+        projectRole: {
+          id: "role-6",
+          title: "Full-Stack Developer",
+          description:
+            "Nous recherchons un développeur full-stack pour prendre en charge le développement de toutes les fonctionnalités de l'application.",
+          techStacks: [
+            {
+              id: "1",
+              name: "React",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+            },
+            {
+              id: "4",
+              name: "Node.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+            },
+            {
+              id: "6",
+              name: "GraphQL",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/graphql/graphql-plain.svg",
+            },
+            {
+              id: "7",
+              name: "Docker",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
+            },
+          ],
         },
         appliedAt: new Date("2024-01-10T10:00:00Z"),
         decidedAt: new Date("2024-01-11T14:30:00Z"),
         motivationLetter:
           "Développeur full-stack avec une forte expérience en React et Node.js. Je peux contribuer à toutes les couches de l'application et apporter des améliorations significatives.",
         selectedKeyFeatures: [
-          { feature: "Notifications GitHub centralisées" },
-          { feature: "Interface desktop native" },
+          { id: "1", feature: "Notifications GitHub centralisées" },
+          { id: "2", feature: "Interface desktop native" },
+          { id: "3", feature: "Intégration GraphQL" },
         ],
         selectedProjectGoals: [
-          { goal: "Améliorer la productivité des développeurs" },
-          { goal: "Centraliser la gestion des notifications" },
+          { id: "1", goal: "Améliorer la productivité des développeurs" },
+          { id: "2", goal: "Centraliser la gestion des notifications" },
+          { id: "3", goal: "Automatiser les tests end-to-end" },
         ],
       },
       {
@@ -188,12 +317,26 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-5",
           name: "Marie Dubois",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "marie.dubois@email.com",
+          skills: [
+            {
+              id: "1",
+              name: "React",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+            },
+            {
+              id: "2",
+              name: "TypeScript",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-1",
           title: "Front-End Developer",
-          description: "Développer l'interface utilisateur de l'application",
+          description:
+            "Nous recherchons un développeur front-end pour faire le design et l'amélioration de l'interface utilisateur de l'application desktop.",
           techStacks: [
             {
               id: "1",
@@ -208,7 +351,6 @@ export const mockDashboardData: MyProjectType[] = [
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
             },
           ],
-          roleCount: 2,
         },
         appliedAt: new Date("2024-01-11T14:30:00Z"),
         decidedAt: new Date("2024-01-12T16:45:00Z"),
@@ -216,9 +358,13 @@ export const mockDashboardData: MyProjectType[] = [
           "Profil intéressant mais nous recherchons une expérience plus approfondie en Electron pour ce rôle spécifique.",
         motivationLetter:
           "Je découvre le développement d'applications desktop et j'aimerais apprendre en contribuant à Gitify. J'ai de bonnes bases en React mais je suis encore débutante avec Electron.",
-        selectedKeyFeatures: [{ feature: "Interface desktop native" }],
+        selectedKeyFeatures: [
+          { id: "1", feature: "Interface desktop native" },
+          { id: "2", feature: "Mode sombre" },
+        ],
         selectedProjectGoals: [
-          { goal: "Améliorer la productivité des développeurs" },
+          { id: "1", goal: "Améliorer la productivité des développeurs" },
+          { id: "2", goal: "Rendre l'UI plus accessible" },
         ],
       },
     ],
@@ -233,6 +379,7 @@ export const mockDashboardData: MyProjectType[] = [
           { id: "1", name: "React" },
           { id: "2", name: "TypeScript" },
           { id: "4", name: "Node.js" },
+          { id: "5", name: "Express" },
         ],
       },
       {
@@ -245,6 +392,19 @@ export const mockDashboardData: MyProjectType[] = [
           { id: "1", name: "React" },
           { id: "4", name: "Node.js" },
           { id: "6", name: "GraphQL" },
+          { id: "7", name: "Docker" },
+        ],
+      },
+      {
+        id: "member-4",
+        name: "Sarah Johnson",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Backend Developer",
+        joinedAt: new Date("2024-01-13T15:45:00Z"),
+        techStacks: [
+          { id: "4", name: "Node.js" },
+          { id: "5", name: "Express" },
+          { id: "6", name: "PostgreSQL" },
         ],
       },
     ],
@@ -275,6 +435,12 @@ export const mockDashboardData: MyProjectType[] = [
         iconUrl:
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
       },
+      {
+        id: "10",
+        name: "Figma",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+      },
     ],
     author: {
       id: "user-1",
@@ -289,12 +455,26 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-4",
           name: "Alex Chen",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "alex.chen@email.com",
+          skills: [
+            {
+              id: "10",
+              name: "Figma",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
+            },
+            {
+              id: "11",
+              name: "Adobe XD",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/xd/xd-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-3",
           title: "UX/UI Designer",
-          description: "Concevoir l'expérience utilisateur et l'interface",
+          description:
+            "Nous recherchons un designer UX/UI pour concevoir l'expérience utilisateur et l'interface de la plateforme.",
           techStacks: [
             {
               id: "10",
@@ -306,21 +486,22 @@ export const mockDashboardData: MyProjectType[] = [
               id: "11",
               name: "Adobe XD",
               iconUrl:
-                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/adobexd/adobexd-original.svg",
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/xd/xd-original.svg",
             },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-12T11:20:00Z"),
         decidedAt: new Date("2024-01-13T10:00:00Z"),
         motivationLetter:
           "Je suis spécialisé dans la conception d'interfaces pour les outils de documentation et j'ai une forte expérience en recherche utilisateur. Je serais ravi de contribuer à créer une expérience utilisateur exceptionnelle pour OpenDocs.",
         selectedKeyFeatures: [
-          { feature: "Éditeur markdown avancé" },
-          { feature: "Collaboration en temps réel" },
+          { id: "1", feature: "Éditeur markdown avancé" },
+          { id: "2", feature: "Collaboration en temps réel" },
+          { id: "3", feature: "Mode lecture seule" },
         ],
         selectedProjectGoals: [
-          { goal: "Simplifier la création de documentation" },
+          { id: "1", goal: "Simplifier la création de documentation" },
+          { id: "2", goal: "Améliorer l'expérience utilisateur" },
         ],
       },
       {
@@ -330,12 +511,32 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-9",
           name: "Thomas Müller",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "thomas.muller@email.com",
+          skills: [
+            {
+              id: "7",
+              name: "Vue.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg",
+            },
+            {
+              id: "8",
+              name: "Nuxt.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nuxtjs/nuxtjs-original.svg",
+            },
+            {
+              id: "9",
+              name: "PostgreSQL",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-7",
           title: "Vue.js Developer",
-          description: "Développer l'interface avec Vue.js et Nuxt.js",
+          description:
+            "Nous recherchons un développeur Vue.js pour développer l'interface de la plateforme avec Vue.js et Nuxt.js.",
           techStacks: [
             {
               id: "7",
@@ -349,19 +550,26 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nuxtjs/nuxtjs-original.svg",
             },
+            {
+              id: "9",
+              name: "PostgreSQL",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+            },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-15T16:20:00Z"),
         motivationLetter:
           "Développeur Vue.js expérimenté avec une passion pour les outils de documentation. J'ai contribué à plusieurs projets open source et je peux apporter une expertise technique solide.",
         selectedKeyFeatures: [
-          { feature: "Éditeur markdown avancé" },
-          { feature: "Versioning automatique" },
+          { id: "1", feature: "Éditeur markdown avancé" },
+          { id: "2", feature: "Versioning automatique" },
+          { id: "3", feature: "Recherche plein texte" },
         ],
         selectedProjectGoals: [
-          { goal: "Simplifier la création de documentation" },
-          { goal: "Améliorer la collaboration technique" },
+          { id: "1", goal: "Simplifier la création de documentation" },
+          { id: "2", goal: "Améliorer la collaboration technique" },
+          { id: "3", goal: "Augmenter la couverture des tests" },
         ],
       },
     ],
@@ -387,6 +595,17 @@ export const mockDashboardData: MyProjectType[] = [
         techStacks: [
           { id: "10", name: "Figma" },
           { id: "11", name: "Adobe XD" },
+        ],
+      },
+      {
+        id: "member-3",
+        name: "Thomas Müller",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Vue.js Developer",
+        joinedAt: new Date("2024-01-15T16:20:00Z"),
+        techStacks: [
+          { id: "7", name: "Vue.js" },
+          { id: "8", name: "Nuxt.js" },
         ],
       },
     ],
@@ -416,6 +635,12 @@ export const mockDashboardData: MyProjectType[] = [
         iconUrl:
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
       },
+      {
+        id: "15",
+        name: "RxJS",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rxjs/rxjs-original.svg",
+      },
     ],
     author: {
       id: "user-1",
@@ -430,7 +655,26 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-10",
           name: "Elena Petrova",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "elena.petrova@email.com",
+          skills: [
+            {
+              id: "12",
+              name: "Angular",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angularjs/angularjs-original.svg",
+            },
+            {
+              id: "15",
+              name: "RxJS",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rxjs/rxjs-original.svg",
+            },
+            {
+              id: "13",
+              name: "Firebase",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-8",
@@ -449,19 +693,26 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rxjs/rxjs-original.svg",
             },
+            {
+              id: "13",
+              name: "Firebase",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg",
+            },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-16T12:00:00Z"),
         motivationLetter:
           "Développeuse Angular avec 4 ans d'expérience, je suis passionnée par les plateformes de networking tech. J'ai une forte expertise en RxJS et je peux contribuer à créer une expérience utilisateur fluide.",
         selectedKeyFeatures: [
-          { feature: "Profils développeurs détaillés" },
-          { feature: "Chat en temps réel" },
+          { id: "1", feature: "Profils développeurs détaillés" },
+          { id: "2", feature: "Chat en temps réel" },
+          { id: "3", feature: "Notifications push" },
         ],
         selectedProjectGoals: [
-          { goal: "Faciliter le networking tech" },
-          { goal: "Améliorer le recrutement tech" },
+          { id: "1", goal: "Faciliter le networking tech" },
+          { id: "2", goal: "Améliorer le recrutement tech" },
+          { id: "3", goal: "Augmenter l'engagement utilisateur" },
         ],
       },
     ],
@@ -476,6 +727,17 @@ export const mockDashboardData: MyProjectType[] = [
           { id: "12", name: "Angular" },
           { id: "13", name: "Firebase" },
           { id: "14", name: "MongoDB" },
+        ],
+      },
+      {
+        id: "member-2",
+        name: "Elena Petrova",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Angular Developer",
+        joinedAt: new Date("2024-01-16T12:00:00Z"),
+        techStacks: [
+          { id: "12", name: "Angular" },
+          { id: "15", name: "RxJS" },
         ],
       },
     ],
@@ -499,6 +761,18 @@ export const mockDashboardData: MyProjectType[] = [
         iconUrl:
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg",
       },
+      {
+        id: "18",
+        name: "WASM",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webassembly/webassembly-original.svg",
+      },
+      {
+        id: "19",
+        name: "SvelteKit",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sveltekit/sveltekit-original.svg",
+      },
     ],
     author: {
       id: "user-1",
@@ -513,7 +787,20 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-11",
           name: "Marcus Johnson",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "marcus.johnson@email.com",
+          skills: [
+            {
+              id: "17",
+              name: "Rust",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg",
+            },
+            {
+              id: "18",
+              name: "WASM",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webassembly/webassembly-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-9",
@@ -521,31 +808,32 @@ export const mockDashboardData: MyProjectType[] = [
           description: "Développer les composants backend en Rust",
           techStacks: [
             {
-              id: "18",
+              id: "17",
               name: "Rust",
               iconUrl:
-                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-plain.svg",
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg",
             },
             {
-              id: "19",
+              id: "18",
               name: "WASM",
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webassembly/webassembly-original.svg",
             },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-09T14:30:00Z"),
         decidedAt: new Date("2024-01-10T09:15:00Z"),
         motivationLetter:
           "Développeur Rust avec une expertise en WebAssembly. Je suis passionné par l'éducation tech et je peux contribuer à optimiser les performances de l'IDE en ligne.",
         selectedKeyFeatures: [
-          { feature: "Éditeur de code en temps réel" },
-          { feature: "Support multi-langages" },
+          { id: "1", feature: "Éditeur de code en temps réel" },
+          { id: "2", feature: "Support multi-langages" },
+          { id: "3", feature: "Compilation instantanée" },
         ],
         selectedProjectGoals: [
-          { goal: "Faciliter l'apprentissage du code" },
-          { goal: "Améliorer l'expérience développeur" },
+          { id: "1", goal: "Faciliter l'apprentissage du code" },
+          { id: "2", goal: "Améliorer l'expérience développeur" },
+          { id: "3", goal: "Rendre l'IDE accessible à tous" },
         ],
       },
       {
@@ -555,7 +843,20 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-12",
           name: "Sophie Martin",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "sophie.martin@email.com",
+          skills: [
+            {
+              id: "16",
+              name: "Svelte",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg",
+            },
+            {
+              id: "19",
+              name: "SvelteKit",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sveltekit/sveltekit-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-10",
@@ -569,13 +870,12 @@ export const mockDashboardData: MyProjectType[] = [
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg",
             },
             {
-              id: "20",
+              id: "19",
               name: "SvelteKit",
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sveltekit/sveltekit-original.svg",
             },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-08T11:45:00Z"),
         decidedAt: new Date("2024-01-09T16:20:00Z"),
@@ -583,8 +883,14 @@ export const mockDashboardData: MyProjectType[] = [
           "Profil intéressant mais nous recherchons une expérience plus approfondie en WebAssembly et en développement d'outils de développement.",
         motivationLetter:
           "Développeuse Svelte débutante, j'aimerais apprendre en contribuant à un projet éducatif. J'ai de bonnes bases en JavaScript mais je découvre Svelte.",
-        selectedKeyFeatures: [{ feature: "Interface utilisateur moderne" }],
-        selectedProjectGoals: [{ goal: "Faciliter l'apprentissage du code" }],
+        selectedKeyFeatures: [
+          { id: "1", feature: "Interface utilisateur moderne" },
+          { id: "2", feature: "Mode collaboratif" },
+        ],
+        selectedProjectGoals: [
+          { id: "1", goal: "Faciliter l'apprentissage du code" },
+          { id: "2", goal: "Favoriser la collaboration entre étudiants" },
+        ],
       },
     ],
     teamMembers: [
@@ -595,8 +901,19 @@ export const mockDashboardData: MyProjectType[] = [
         role: "Rust Developer",
         joinedAt: new Date("2024-01-10T09:15:00Z"),
         techStacks: [
-          { id: "18", name: "Rust" },
-          { id: "19", name: "WASM" },
+          { id: "17", name: "Rust" },
+          { id: "18", name: "WASM" },
+        ],
+      },
+      {
+        id: "member-6",
+        name: "Sophie Martin",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Svelte Developer",
+        joinedAt: new Date("2024-01-09T16:20:00Z"),
+        techStacks: [
+          { id: "16", name: "Svelte" },
+          { id: "19", name: "SvelteKit" },
         ],
       },
     ],
@@ -626,6 +943,18 @@ export const mockDashboardData: MyProjectType[] = [
         iconUrl:
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jupyter/jupyter-original.svg",
       },
+      {
+        id: "24",
+        name: "Pandas",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pandas/pandas-original.svg",
+      },
+      {
+        id: "25",
+        name: "NumPy",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original.svg",
+      },
     ],
     author: {
       id: "user-1",
@@ -640,7 +969,32 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-13",
           name: "Yuki Tanaka",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "yuki.tanaka@email.com",
+          skills: [
+            {
+              id: "22",
+              name: "Python",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
+            },
+            {
+              id: "24",
+              name: "Pandas",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pandas/pandas-original.svg",
+            },
+            {
+              id: "25",
+              name: "NumPy",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original.svg",
+            },
+            {
+              id: "21",
+              name: "D3.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/d3js/d3js-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-11",
@@ -665,23 +1019,43 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original.svg",
             },
+            {
+              id: "21",
+              name: "D3.js",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/d3js/d3js-original.svg",
+            },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-17T08:00:00Z"),
         motivationLetter:
           "Data Scientist avec une expertise en visualisation de données. J'ai travaillé sur plusieurs projets de data viz et je peux contribuer à créer des algorithmes performants.",
         selectedKeyFeatures: [
-          { feature: "Graphiques interactifs" },
-          { feature: "Support multi-formats" },
+          { id: "1", feature: "Graphiques interactifs" },
+          { id: "2", feature: "Support multi-formats" },
+          { id: "3", feature: "Export PDF/PNG" },
         ],
         selectedProjectGoals: [
-          { goal: "Simplifier la visualisation de données" },
-          { goal: "Améliorer l'expérience utilisateur" },
+          { id: "1", goal: "Simplifier la visualisation de données" },
+          { id: "2", goal: "Améliorer l'expérience utilisateur" },
+          { id: "3", goal: "Rendre la bibliothèque open source" },
         ],
       },
     ],
-    teamMembers: [],
+    teamMembers: [
+      {
+        id: "member-7",
+        name: "Yuki Tanaka",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Data Scientist",
+        joinedAt: new Date("2024-01-17T08:00:00Z"),
+        techStacks: [
+          { id: "22", name: "Python" },
+          { id: "24", name: "Pandas" },
+          { id: "25", name: "NumPy" },
+        ],
+      },
+    ],
   },
   {
     id: "6",
@@ -708,6 +1082,18 @@ export const mockDashboardData: MyProjectType[] = [
         iconUrl:
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webcrypto/webcrypto-original.svg",
       },
+      {
+        id: "29",
+        name: "Signal Protocol",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/signal/signal-original.svg",
+      },
+      {
+        id: "30",
+        name: "Gin",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gin/gin-original.svg",
+      },
     ],
     author: {
       id: "user-1",
@@ -722,7 +1108,26 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-14",
           name: "Ahmed Hassan",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "ahmed.hassan@email.com",
+          skills: [
+            {
+              id: "28",
+              name: "WebCrypto",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webcrypto/webcrypto-original.svg",
+            },
+            {
+              id: "29",
+              name: "Signal Protocol",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/signal/signal-original.svg",
+            },
+            {
+              id: "26",
+              name: "Go",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-12",
@@ -742,19 +1147,20 @@ export const mockDashboardData: MyProjectType[] = [
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/signal/signal-original.svg",
             },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-06T13:20:00Z"),
         decidedAt: new Date("2024-01-07T10:45:00Z"),
         motivationLetter:
           "Expert en sécurité informatique avec une forte expérience en cryptographie. J'ai contribué à plusieurs projets de messagerie sécurisée et je peux implémenter des protocoles robustes.",
         selectedKeyFeatures: [
-          { feature: "Chiffrement de bout en bout" },
-          { feature: "Messagerie sécurisée" },
+          { id: "1", feature: "Chiffrement de bout en bout" },
+          { id: "2", feature: "Messagerie sécurisée" },
+          { id: "3", feature: "Authentification 2FA" },
         ],
         selectedProjectGoals: [
-          { goal: "Protéger la vie privée des utilisateurs" },
-          { goal: "Créer une messagerie fiable" },
+          { id: "1", goal: "Protéger la vie privée des utilisateurs" },
+          { id: "2", goal: "Créer une messagerie fiable" },
+          { id: "3", goal: "Respecter le RGPD" },
         ],
       },
       {
@@ -764,7 +1170,26 @@ export const mockDashboardData: MyProjectType[] = [
           id: "user-15",
           name: "Isabella Silva",
           avatarUrl: "/icons/exemplebyronIcon.svg",
-          email: "isabella.silva@email.com",
+          skills: [
+            {
+              id: "26",
+              name: "Go",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg",
+            },
+            {
+              id: "30",
+              name: "Gin",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gin/gin-original.svg",
+            },
+            {
+              id: "27",
+              name: "WebRTC",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webrtc/webrtc-original.svg",
+            },
+          ],
         },
         projectRole: {
           id: "role-13",
@@ -783,19 +1208,26 @@ export const mockDashboardData: MyProjectType[] = [
               iconUrl:
                 "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gin/gin-original.svg",
             },
+            {
+              id: "27",
+              name: "WebRTC",
+              iconUrl:
+                "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/webrtc/webrtc-original.svg",
+            },
           ],
-          roleCount: 1,
         },
         appliedAt: new Date("2024-01-18T15:30:00Z"),
         motivationLetter:
           "Développeuse Go avec une passion pour la sécurité. J'ai une forte expérience en développement backend et je peux contribuer à créer une architecture robuste et performante.",
         selectedKeyFeatures: [
-          { feature: "API REST sécurisée" },
-          { feature: "Performance optimisée" },
+          { id: "1", feature: "API REST sécurisée" },
+          { id: "2", feature: "Performance optimisée" },
+          { id: "3", feature: "WebRTC pour appels vidéo" },
         ],
         selectedProjectGoals: [
-          { goal: "Protéger la vie privée des utilisateurs" },
-          { goal: "Créer une messagerie fiable" },
+          { id: "1", goal: "Protéger la vie privée des utilisateurs" },
+          { id: "2", goal: "Créer une messagerie fiable" },
+          { id: "3", goal: "Permettre la communication vidéo sécurisée" },
         ],
       },
     ],
@@ -809,6 +1241,17 @@ export const mockDashboardData: MyProjectType[] = [
         techStacks: [
           { id: "28", name: "WebCrypto" },
           { id: "29", name: "Signal Protocol" },
+        ],
+      },
+      {
+        id: "member-7",
+        name: "Isabella Silva",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Go Developer",
+        joinedAt: new Date("2024-01-18T15:30:00Z"),
+        techStacks: [
+          { id: "26", name: "Go" },
+          { id: "30", name: "Gin" },
         ],
       },
     ],

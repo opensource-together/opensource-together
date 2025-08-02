@@ -125,7 +125,7 @@ const SheetContent = React.forwardRef<
       const desktopWidth = responsiveWidth?.desktop || "w-[400px]";
 
       return isMobile
-        ? `h-[75vh] ${mobileWidth}` // Mobile: hauteur 70vh, largeur complète
+        ? `h-[85vh] ${mobileWidth}` // Mobile: hauteur 85vh, largeur complète
         : `h-full ${desktopWidth}`; // Desktop: hauteur complète, largeur personnalisée
     };
 
@@ -191,7 +191,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Title
     ref={ref}
-    className={cn("text-foreground text-lg font-semibold", className)}
+    className={cn("text-foreground text-lg", className)}
     {...props}
   />
 ));
