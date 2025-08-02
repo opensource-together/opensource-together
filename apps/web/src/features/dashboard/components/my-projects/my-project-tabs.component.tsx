@@ -66,7 +66,7 @@ export default function MyProjectTabs({
   ];
 
   return (
-    <div>
+    <div className="sticky top-0 z-10">
       {/* Tabs */}
       <div className="flex border-b border-black/10 tracking-tighter">
         {tabs.map((tab) => (
