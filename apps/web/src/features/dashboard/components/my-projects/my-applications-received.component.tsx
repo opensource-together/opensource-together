@@ -1,12 +1,11 @@
 "use client";
 
+import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
-import { Modal } from "@/shared/components/ui/modal";
 import {
   Table,
   TableBody,
@@ -15,11 +14,11 @@ import {
 } from "@/shared/components/ui/table";
 import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
-import AcceptOrRejectApplicationForm from "../../forms/accept-or-reject-application.form";
-import { ApplicationReceived } from "../../types/my-projects.type";
+import ApplicationDetailsSheet from "../../forms/accept-or-reject-application.form";
+import { ApplicationType } from "../../types/my-projects.type";
 
 interface MyApplicationsReceivedProps {
-  applications: ApplicationReceived[];
+  applications: ApplicationType[];
   onApplicationDecision?: (
     applicationId: string,
     decision: "ACCEPTED" | "REJECTED",
@@ -32,8 +31,7 @@ export default function MyApplicationsReceived({
   onApplicationDecision,
 }: MyApplicationsReceivedProps) {
   const [selectedApplication, setSelectedApplication] =
-    useState<ApplicationReceived | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+    useState<ApplicationType | null>(null);
 
   if (applications.length === 0) {
     return (
@@ -44,14 +42,12 @@ export default function MyApplicationsReceived({
     );
   }
 
-  const handleOpenModal = (application: ApplicationReceived) => {
+  const handleApplicationSelect = (application: ApplicationType) => {
     setSelectedApplication(application);
-    setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseSheet = () => {
     setSelectedApplication(null);
-    setIsModalOpen(false);
   };
 
   const handleDecision = (
@@ -60,17 +56,21 @@ export default function MyApplicationsReceived({
   ) => {
     if (selectedApplication) {
       onApplicationDecision?.(selectedApplication.id, decision, reason);
-      handleCloseModal();
+      handleCloseSheet();
     }
   };
 
   return (
     <>
-      <div className="rounded-lg border border-black/10">
+      <div className="overflow-hidden rounded-lg border border-black/10">
         <Table>
           <TableBody>
             {applications.map((application) => (
-              <TableRow key={application.id}>
+              <TableRow
+                key={application.id}
+                onClick={() => handleApplicationSelect(application)}
+                className="hover:bg-muted/50 active:bg-muted/70 cursor-pointer transition-colors duration-200"
+              >
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar
@@ -140,15 +140,9 @@ export default function MyApplicationsReceived({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleOpenModal(application)}
-                    disabled={application.status !== "PENDING"}
-                    className="flex-shrink-0"
-                  >
-                    Inspecter
-                  </Button>
+                  <div className="flex items-center justify-end">
+                    <ArrowUpRight className="text-muted-foreground h-4 w-4" />
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -156,19 +150,15 @@ export default function MyApplicationsReceived({
         </Table>
       </div>
 
-      <Modal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        title={`Candidature de ${selectedApplication?.applicant.name}`}
-        size="xl"
-      >
-        {selectedApplication && (
-          <AcceptOrRejectApplicationForm
-            application={selectedApplication}
-            onDecision={handleDecision}
-          />
-        )}
-      </Modal>
+      {selectedApplication && (
+        <ApplicationDetailsSheet
+          application={selectedApplication}
+          isOpen={!!selectedApplication}
+          onClose={handleCloseSheet}
+          onAccept={() => handleDecision("ACCEPTED")}
+          onReject={(_, reason) => handleDecision("REJECTED", reason)}
+        />
+      )}
     </>
   );
 }

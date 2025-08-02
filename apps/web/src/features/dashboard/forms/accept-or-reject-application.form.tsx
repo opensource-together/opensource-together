@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -11,40 +10,54 @@ import { Button } from "@/shared/components/ui/button";
 import { Form, FormLabel } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/shared/components/ui/sheet";
 
-import { ApplicationReceived } from "../types/my-projects.type";
-
-const applicationDecisionSchema = z.object({
-  decision: z.enum(["ACCEPTED", "REJECTED"]),
-  rejectionReason: z.string().optional(),
-});
-
-type ApplicationDecisionForm = z.infer<typeof applicationDecisionSchema>;
+import { ApplicationType } from "../types/my-projects.type";
+import {
+  ApplicationDecisionForm,
+  applicationDecisionSchema,
+} from "../validations/accept-or-reject.schema";
 
 interface AcceptOrRejectApplicationFormProps {
-  application: ApplicationReceived;
-  onDecision: (decision: "ACCEPTED" | "REJECTED", reason?: string) => void;
+  application: ApplicationType;
+  isOpen: boolean;
+  onClose: () => void;
+  onAccept: (applicationId: string) => void;
+  onReject: (applicationId: string, reason: string) => void;
 }
 
 export default function AcceptOrRejectApplicationForm({
   application,
-  onDecision,
+  isOpen,
+  onClose,
+  onAccept,
+  onReject,
 }: AcceptOrRejectApplicationFormProps) {
-  const [_selectedDecision, setSelectedDecision] = useState<
+  const [selectedDecision, setSelectedDecision] = useState<
     "ACCEPTED" | "REJECTED" | null
   >(null);
+  const [rejectionReason, _setRejectionReason] = useState("");
 
   const form = useForm<ApplicationDecisionForm>({
     resolver: zodResolver(applicationDecisionSchema),
   });
 
-  const onSubmit = (data: ApplicationDecisionForm) => {
-    onDecision(data.decision, data.rejectionReason);
-  };
-
   const handleDecisionSelect = (decision: "ACCEPTED" | "REJECTED") => {
     setSelectedDecision(decision);
     form.setValue("decision", decision);
+  };
+
+  const handleSubmit = () => {
+    if (selectedDecision === "ACCEPTED") {
+      onAccept(application.id);
+    } else if (selectedDecision === "REJECTED") {
+      onReject(application.id, rejectionReason);
+    }
   };
 
   const getStatusText = (status: string) => {
@@ -72,126 +85,162 @@ export default function AcceptOrRejectApplicationForm({
         return "text-black/70";
     }
   };
+
   return (
-    <div className="space-y-7 scroll-auto">
-      <div className="mt-4 flex items-center gap-3">
-        <div className="flex-shrink-0">
-          <Avatar
-            src={application.applicant.avatarUrl}
-            name={application.applicant.name}
-            alt={application.applicant.name}
-            size="lg"
-          />
-        </div>
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex flex-wrap items-center gap-2">
-            <Label className="truncate text-lg font-semibold">
-              {application.applicant.name}
-            </Label>
-            <span
-              className={`text-sm font-medium tracking-tighter ${getStatusStyle(application.status)}`}
-            >
-              {getStatusText(application.status)}
-            </span>
-          </div>
-
-          <span className="text-xs text-black/50">
-            Postulé le{" "}
-            {new Date(application.appliedAt).toLocaleDateString("fr-FR")}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label className="text-base">
-          {application.projectRole.title}{" "}
-          <span className="font-normal text-black/50">
-            — {application.projectTitle}
-          </span>
-        </Label>
-        {application.projectRole.description && (
-          <p className="mt-1 text-sm text-black/70">
-            {application.projectRole.description}
-          </p>
-        )}
-      </div>
-
-      {application.projectRole.techStacks.length > 0 && (
-        <div>
-          <Label>Stack technique</Label>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {application.projectRole.techStacks.map((tech) => (
-              <StackLogo
-                key={tech.id}
-                name={tech.name}
-                icon={tech.iconUrl || ""}
-                alt={tech.name}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {application.motivationLetter && (
-        <div>
-          <Label>Lettre de motivation</Label>
-          <p className="mt-2 rounded-md bg-black/5 px-4 py-3 text-sm whitespace-pre-wrap text-black/70">
-            {application.motivationLetter}
-          </p>
-        </div>
-      )}
-
-      {application.selectedKeyFeatures?.length > 0 && (
-        <div>
-          <Label>Fonctionnalités sélectionnées</Label>
-          <ul className="my-4 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
-            {application.selectedKeyFeatures.map((feature) => (
-              <li key={feature.feature}>{feature.feature}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {application.selectedProjectGoals?.length > 0 && (
-        <div>
-          <Label>Objectifs sélectionnés</Label>
-          <ul className="my-4 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
-            {application.selectedProjectGoals.map((goal) => (
-              <li key={goal.goal}>{goal.goal}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {application.status === "PENDING" && (
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent
+        side="right"
+        className="w-full overflow-y-auto sm:w-[600px] lg:w-[700px]"
+      >
+        <SheetHeader className="bg-background sticky top-0 z-10 border-b pb-4">
+          <SheetTitle className="flex items-center gap-3">
+            <Avatar
+              src={application.applicant.avatarUrl}
+              name={application.applicant.name}
+              alt={application.applicant.name}
+              size="lg"
+            />
             <div>
-              <FormLabel required>Décision</FormLabel>
-              <div className="mt-4 flex gap-3">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => handleDecisionSelect("REJECTED")}
-                  className="flex-1"
-                >
-                  Refuser
-                  <Icon name="cross" size="xs" variant="white" />
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => handleDecisionSelect("ACCEPTED")}
-                  className="flex-1"
-                >
-                  Accepter
-                  <Icon name="check" size="xs" variant="white" />
-                </Button>
+              <h2 className="text-xl font-medium">
+                {application.applicant.name}
+              </h2>
+              <p className="text-muted-foreground text-sm font-normal">
+                {application.projectRole.title}
+              </p>
+            </div>
+          </SheetTitle>
+        </SheetHeader>
+
+        <div className="mt-6 space-y-6">
+          {/* Informations de base */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">Statut</span>
+              <span
+                className={`text-sm font-medium ${getStatusStyle(application.status)}`}
+              >
+                {getStatusText(application.status)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground text-sm">Postulé le</span>
+              <span className="text-sm font-medium">
+                {new Date(application.appliedAt).toLocaleDateString("fr-FR")}
+              </span>
+            </div>
+          </div>
+
+          {application.projectRole.techStacks.length > 0 && (
+            <div>
+              <Label className="text-sm font-medium">Stack technique</Label>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {application.projectRole.techStacks.map((tech) => (
+                  <StackLogo
+                    key={tech.id}
+                    name={tech.name}
+                    icon={tech.iconUrl || ""}
+                    alt={tech.name}
+                  />
+                ))}
               </div>
             </div>
-          </form>
-        </Form>
-      )}
-    </div>
+          )}
+
+          {/* Lettre de motivation */}
+          {application.motivationLetter && (
+            <div>
+              <Label className="text-sm font-medium">
+                Lettre de motivation
+              </Label>
+              <div className="bg-muted/50 mt-2 rounded-md p-4">
+                <p className="text-muted-foreground text-sm whitespace-pre-wrap">
+                  {application.motivationLetter}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Fonctionnalités sélectionnées */}
+          {application.selectedKeyFeatures &&
+            application.selectedKeyFeatures.length > 0 && (
+              <div>
+                <Label className="text-sm font-medium">
+                  Fonctionnalités sélectionnées
+                </Label>
+                <ul className="mt-2 space-y-1">
+                  {application.selectedKeyFeatures.map((feature, index) => (
+                    <li
+                      key={index}
+                      className="text-muted-foreground flex items-center gap-2 text-sm"
+                    >
+                      <div className="bg-primary h-1.5 w-1.5 rounded-full" />
+                      {feature.feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+          {/* Objectifs sélectionnés */}
+          {application.selectedProjectGoals &&
+            application.selectedProjectGoals.length > 0 && (
+              <div>
+                <Label className="text-sm font-medium">
+                  Objectifs sélectionnés
+                </Label>
+                <ul className="mt-2 space-y-1">
+                  {application.selectedProjectGoals.map((goal, index) => (
+                    <li
+                      key={index}
+                      className="text-muted-foreground flex items-center gap-2 text-sm"
+                    >
+                      <div className="bg-primary h-1.5 w-1.5 rounded-full" />
+                      {goal.goal}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+          {/* Actions pour les candidatures en attente */}
+          {application.status === "PENDING" && (
+            <div className="bg-background sticky bottom-0 mt-6 border-t pt-4">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(handleSubmit)}
+                  className="space-y-4"
+                >
+                  <div>
+                    <FormLabel className="text-sm font-medium">
+                      Décision
+                    </FormLabel>
+                    <div className="mt-3 flex gap-3">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => handleDecisionSelect("REJECTED")}
+                        className="flex-1"
+                      >
+                        Refuser
+                        <Icon name="cross" size="xs" />
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => handleDecisionSelect("ACCEPTED")}
+                        className="flex-1"
+                      >
+                        Accepter
+                        <Icon name="check" size="xs" variant="white" />
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </Form>
+            </div>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
