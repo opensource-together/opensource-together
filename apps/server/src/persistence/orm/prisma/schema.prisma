@@ -68,8 +68,7 @@ model Project {
   keyFeatures      KeyFeature[]
   projectGoals     ProjectGoal[]
   projectRoleApplication ProjectRoleApplication[]
-  author           User?                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId         String?
+  owner           User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   image            String?
   coverImages      String[]              // Array of cover image URLs (1 to 4)
   readme           String?
