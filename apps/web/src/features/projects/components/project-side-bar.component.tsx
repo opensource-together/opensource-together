@@ -90,6 +90,24 @@ export default function ProjectSideBar({
     },
   ];
 
+  const formatUrl = (url: string) => {
+    if (!url) return "";
+    try {
+      const urlObj = new URL(url);
+      return urlObj.hostname + urlObj.pathname;
+    } catch {
+      return url;
+    }
+  };
+
+  const externalLinksConfig = [
+    { key: "github", icon: "/icons/github-gray-icon.svg", alt: "GitHub" },
+    { key: "twitter", icon: "/icons/x-gray-icon.svg", alt: "Twitter/X" },
+    { key: "linkedin", icon: "/icons/linkedin-gray-icon.svg", alt: "LinkedIn" },
+    { key: "discord", icon: "/icons/discord-gray.svg", alt: "Discord" },
+    { key: "website", icon: "/icons/link-gray-icon.svg", alt: "Website" },
+  ];
+
   return (
     <div className="flex flex-col gap-5">
       {/* Breadcrumb */}
@@ -273,52 +291,35 @@ export default function ProjectSideBar({
 
       {/* Links Section */}
       {externalLinks.length > 0 && (
-        <div className="flex flex-col">
-          <h2 className="text-md font-medium tracking-tight">Liens Sociaux</h2>
-          <div className="mt-3 flex flex-wrap gap-3">
-            {externalLinks.map((link, index) => {
-              let iconSrc = "";
-              let iconAlt = "";
-
-              switch (link.type) {
-                case "github":
-                  iconSrc = "/icons/github-gray-icon.svg";
-                  iconAlt = "GitHub";
-                  break;
-                case "twitter":
-                  iconSrc = "/icons/x-gray-icon.svg";
-                  iconAlt = "Twitter/X";
-                  break;
-                case "linkedin":
-                  iconSrc = "/icons/linkedin-gray-icon.svg";
-                  iconAlt = "LinkedIn";
-                  break;
-                case "discord":
-                  iconSrc = "/icons/discord-gray.svg";
-                  iconAlt = "Discord";
-                  break;
-                case "other":
-                case "website":
-                default:
-                  iconSrc = "/icons/link-gray-icon.svg";
-                  iconAlt = "Website";
-                  break;
-              }
+        <div className="mb-2 flex flex-col">
+          <h2 className="text-md mb-4 font-medium tracking-tight text-black">
+            Liens externes
+          </h2>
+          <div className="flex flex-col gap-6">
+            {externalLinksConfig.map((config) => {
+              const link = externalLinks.find((l) =>
+                config.key === "website"
+                  ? l.type === "website" || l.type === "other"
+                  : l.type === config.key
+              );
+              if (!link) return null;
 
               return (
                 <Link
-                  key={index}
+                  key={config.key}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="group text-muted-foreground flex items-center gap-2 text-sm transition-colors hover:text-black"
                 >
                   <Image
-                    src={iconSrc}
-                    alt={iconAlt}
+                    src={config.icon}
+                    alt={config.alt}
                     width={24}
                     height={24}
-                    className="size-6"
+                    className="size-5 opacity-50 transition-opacity group-hover:opacity-100"
                   />
+                  <span className="truncate">{formatUrl(link.url)}</span>
                 </Link>
               );
             })}
