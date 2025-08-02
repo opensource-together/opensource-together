@@ -15,7 +15,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   const { techStacks = [], socialLinks = {} } = profile;
   const breadcrumbItems = [
     {
-      label: "Discover",
+      label: "Découvrir",
       href: "/",
       isActive: false,
     },

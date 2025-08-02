@@ -86,8 +86,8 @@ export default function useAuth() {
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
         sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
 
-        // Rediriger vers l'URL d'origine ou vers /profile par défaut
-        router.push(redirectUrl || "/profile");
+        // Rediriger vers l'URL d'origine ou vers / par défaut
+        router.push(redirectUrl || "/");
       },
       onError: () => router.push("/auth/login"),
     },
@@ -106,8 +106,8 @@ export default function useAuth() {
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
         sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
 
-        // Rediriger vers l'URL d'origine ou vers /profile par défaut
-        router.push(redirectUrl || "/profile");
+        // Rediriger vers l'URL d'origine ou vers / par défaut
+        router.push(redirectUrl || "/");
       },
       onError: () => router.push("/auth/login"),
     },
