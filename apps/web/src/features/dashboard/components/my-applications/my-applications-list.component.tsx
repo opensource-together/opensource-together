@@ -17,6 +17,7 @@ const STATUS_TABS = [
   { label: "En attente", value: "PENDING" },
   { label: "Acceptée", value: "ACCEPTED" },
   { label: "Refusée", value: "REJECTED" },
+  { label: "Annulée", value: "CANCELLED" },
 ] as const;
 
 function ApplicationSkeleton() {
