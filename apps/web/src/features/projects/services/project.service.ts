@@ -38,6 +38,7 @@ export const getProjects = async (): Promise<Project[]> => {
 
     if (!response.ok) {
       const error = await response.json();
+      console.error(error);
       throw new Error(error.message || "Error fetching projects");
     }
 

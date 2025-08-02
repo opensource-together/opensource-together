@@ -23,12 +23,12 @@ enum Difficulty {
 
 model User {
   id                     String                   @id @default(uuid())
-  username               String                   @unique
+  username               String?                  @unique
   email                  String                   @unique
   jobTitle               String?
   // name              String
   provider               String                   @default("email")
-  login                  String
+  login                  String?
   avatarUrl              String?
   location               String?
   company                String?
@@ -41,7 +41,7 @@ model User {
   socialLinks            UserSocialLink[]
   projects               Project[]
   projectRoleApplication ProjectRoleApplication[]
-  name                   String
+  name                   String?
   emailVerified          Boolean
   image                  String?
   sessions               Session[]

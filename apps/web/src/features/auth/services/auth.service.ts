@@ -111,7 +111,7 @@ export const signInWithGitHub = async () => {
     });
     await newAuthClient.signIn.social({
       provider: "github",
-      callbackURL: "/auth/callback/github",
+      callbackURL: "http://localhost:3000/auth/callback/github",
       // callbackURL: "/dashboard",
       // errorCallbackURL: "/auth/error",
       // newUserCallbackURL: "/welcome",

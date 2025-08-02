@@ -26,12 +26,12 @@ export class PrismaProfileMapper {
     // 2. Reconstituer l'entité Profile
     const profileEntity = User.reconstitute({
       id: raw.id,
-      username: raw.username,
+      username: raw.username || '',
       email: raw.email,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
       provider: raw.provider,
-      login: raw.login,
+      login: raw.login || '',
       avatarUrl: raw.avatarUrl || undefined,
       bio: raw.bio || undefined,
       location: raw.location || undefined,

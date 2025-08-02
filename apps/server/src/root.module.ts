@@ -7,6 +7,7 @@ import { MediaInfrastructure } from './media/infrastructure/media.infrastructure
 // import { AuthModule } from './auth/auth.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './libs/auth';
+import { BetterAuthGithubHook } from './auth/hooks/better-auth-github.hook';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { auth } from './libs/auth';
     MediaInfrastructure,
   ],
   controllers: [],
-  providers: [],
+  providers: [BetterAuthGithubHook],
 })
 export class RootModule {}

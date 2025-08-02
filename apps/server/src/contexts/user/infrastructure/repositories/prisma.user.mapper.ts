@@ -116,7 +116,7 @@ export class PrismaUserMapper {
       const prismaUser = prismaUserWithRelations;
 
       // Validation des VOs
-      const username = Username.create(prismaUser.username);
+      const username = Username.create(prismaUser.username || '');
       const email = Email.create(prismaUser.email);
 
       if (!username.success) {
@@ -202,11 +202,11 @@ export class PrismaUserMapper {
 
       const userResult = User.reconstitute({
         id: prismaUser.id,
-        username: prismaUser.username,
+        username: prismaUser.username || '',
         email: prismaUser.email,
         // name: prismaUser.name,
         provider: prismaUser.provider,
-        login: prismaUser.login,
+        login: prismaUser.login || '',
         avatarUrl: prismaUser.avatarUrl ?? undefined,
         location: prismaUser.location ?? undefined,
         company: prismaUser.company ?? undefined,

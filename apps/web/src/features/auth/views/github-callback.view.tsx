@@ -6,13 +6,17 @@ import { useEffect } from "react";
 
 import AuthIllustration from "../components/auth-illustration.component";
 import useAuth from "../hooks/use-auth.hook";
+import { useRouter } from "next/navigation";
 
 export default function GithubCallbackView() {
-  const { redirectAfterGitHub } = useAuth();
+  const { session } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    redirectAfterGitHub();
-  }, [redirectAfterGitHub]);
+    if (session) {
+      router.push("/");
+    }
+  }, [session]);
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
