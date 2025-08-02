@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Button } from "@/shared/components/ui/button";
 import { Label } from "@/shared/components/ui/label";
@@ -13,23 +15,22 @@ export function MyApplicationDetails({
   application: ProjectRoleApplicationType;
 }) {
   return (
-    <div className="relative top-[-47px] space-y-4">
-      {/* Boutons alignés avec le statut */}
-      <div className="relative -top-2 flex justify-end gap-3">
+    <div className="sticky top-6">
+      <div className="relative -top-3 flex justify-end gap-3">
         <Button variant="ghost" size="sm">
           Annuler candidature
         </Button>
-        <Button variant="outline" size="sm">
-          Voir projet
-        </Button>
+        <Link href={`/projects/${application.project.id}`}>
+          <Button variant="outline" size="sm">
+            Voir projet
+          </Button>
+        </Link>
       </div>
-
-      {/* Détails de l'application - La feuille */}
-      <div className="sticky top-4 space-y-8 rounded-[20px] border border-[black]/6 p-6">
-        {/* Description et statut */}
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <Label className="text-xl">
+      <div className="top-6 space-y-8 rounded-[20px] border border-[black]/6 p-6">
+        {/* Description */}
+        <div className="flex justify-between">
+          <div>
+            <Label className="flex flex-col text-xl md:flex-row">
               {application.projectRole.title}{" "}
               <span className="font-normal text-black/50">
                 — {application.project.title}
@@ -39,7 +40,7 @@ export function MyApplicationDetails({
               {application.projectRole.description}
             </p>
           </div>
-          <div className="flex flex-col items-end">
+          <div>
             <span
               className={`text-sm font-medium tracking-tighter text-nowrap ${getStatusStyle(application.status)}`}
             >
