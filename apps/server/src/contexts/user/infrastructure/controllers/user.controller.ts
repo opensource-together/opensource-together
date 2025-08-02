@@ -1,6 +1,7 @@
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { User } from '@/contexts/user/domain/user.entity';
 import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
@@ -422,9 +423,10 @@ export class UserController {
   ) {
     // Si type=owner, récupérer les candidatures reçues pour les projets de l'utilisateur
     if (type === 'owner') {
-      const applications: Result<any[], string> = await this.queryBus.execute(
-        new GetAllApplicationsByProjectsOwnerQuery(userId),
-      );
+      const applications: Result<ProjectRoleApplication[], string> =
+        await this.queryBus.execute(
+          new GetAllApplicationsByProjectsOwnerQuery(userId),
+        );
       if (!applications.success) {
         throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
       }

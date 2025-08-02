@@ -188,6 +188,16 @@ export class InMemoryProjectRepository {
       projectGoals: projectInMemory.projectGoals,
       createdAt: projectInMemory.createdAt,
       updatedAt: projectInMemory.updatedAt,
+      owner: {
+        id: projectInMemory.ownerId,
+        username: '',
+        login: '',
+        avatarUrl: '',
+        email: '',
+        provider: '',
+        createdAt: projectInMemory.createdAt || new Date(),
+        updatedAt: projectInMemory.updatedAt || new Date(),
+      },
     });
 
     if (!projectResult.success) {

@@ -154,7 +154,7 @@ export class PrismaProjectRoleApplicationRepository
             include: {
               keyFeatures: true,
               projectGoals: true,
-              author: true,
+              owner: true,
             },
           },
         },
@@ -251,12 +251,12 @@ export class PrismaProjectRoleApplicationRepository
             image: application.project.image || undefined,
             author: {
               ownerId:
-                application.project.authorId || application.project.ownerId,
+                application.project.ownerId || application.project.ownerId,
               name:
-                application.project.author?.username ||
-                application.project.author?.login ||
+                application.project.owner?.username ||
+                application.project.owner?.login ||
                 'Unknown',
-              avatarUrl: application.project.author?.avatarUrl || undefined,
+              avatarUrl: application.project.owner?.avatarUrl || undefined,
             },
           },
           projectRole: {
@@ -577,7 +577,7 @@ export class PrismaProjectRoleApplicationRepository
             include: {
               keyFeatures: true,
               projectGoals: true,
-              author: true,
+              owner: true,
             },
           },
           user: true,
@@ -675,12 +675,12 @@ export class PrismaProjectRoleApplicationRepository
             image: application.project.image || undefined,
             author: {
               ownerId:
-                application.project.authorId || application.project.ownerId,
+                application.project.ownerId || application.project.ownerId,
               name:
-                application.project.author?.username ||
-                application.project.author?.login ||
+                application.project.owner?.username ||
+                application.project.owner?.login ||
                 'Unknown',
-              avatarUrl: application.project.author?.avatarUrl || undefined,
+              avatarUrl: application.project.owner?.avatarUrl || undefined,
             },
           },
           projectRole: {

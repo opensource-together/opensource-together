@@ -8,20 +8,13 @@ import {
   Body,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetAllApplicationsByProjectsOwnerQuery } from '../../use-cases/queries/get-all-applications-by-projects-owner.query';
 import { Session } from 'supertokens-nestjs';
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 import { Result } from '@/libs/result';
 import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 @Controller('applications')
 export class ApplicationController {
   constructor(
