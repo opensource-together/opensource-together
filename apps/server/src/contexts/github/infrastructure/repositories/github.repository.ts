@@ -216,29 +216,17 @@ export class GithubRepository implements GithubRepositoryPort {
       const response = await octokit.rest.repos.listForAuthenticatedUser({
         visibility: 'public',
         per_page: 50,
+        affiliation: 'owner,organization_member',
         headers: {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
-
-      // Récupérer les informations de l'utilisateur authentifié
-      const userResponse = await octokit.rest.users.getAuthenticated({
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      });
-      const authenticatedUser = userResponse.data.login;
-
-      // Filtrer pour ne garder que les repositories dont l'utilisateur est le propriétaire
-      const ownedRepositories = response.data.filter(
-        (repo) => repo.owner.login === authenticatedUser,
-      );
 
       this.Logger.log(
-        `Found ${ownedRepositories.length} owned repositories out of ${response.data.length} total repositories`,
+        `Found ${response.data.length} matching repositories.`,
       );
 
-      const repositories = ownedRepositories
+      const repositories = response.data
         .map((repo) => {
           const rep = toGithubRepositoryDto(repo);
           if (rep.success) {
