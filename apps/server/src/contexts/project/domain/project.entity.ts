@@ -11,6 +11,7 @@ import {
 import { Result } from '@/libs/result';
 import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
 import { Description, ShortDescription, Title } from './vo';
+import { User } from '@/contexts/user/domain/user.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -55,6 +56,16 @@ export type ProjectData = {
     createdAt?: Date;
     updatedAt?: Date;
   }[];
+  owner?: {
+    id: string;
+    username: string;
+    login: string;
+    avatarUrl: string;
+    email: string;
+    provider: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
   image?: string;
@@ -80,6 +91,7 @@ export type ProjectProps = {
   categories: Category[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoals[];
+  owner?: User;
   image?: string;
   coverImages?: string[];
   readme?: string;
@@ -99,6 +111,7 @@ export class Project {
   private categories: Category[];
   private keyFeatures: KeyFeature[];
   private projectGoals: ProjectGoals[];
+  private owner?: User;
   private image?: string;
   private coverImages?: string[];
   private readme?: string;
@@ -119,6 +132,7 @@ export class Project {
     this.categories = props.categories;
     this.keyFeatures = props.keyFeatures;
     this.projectGoals = props.projectGoals;
+    this.owner = props.owner;
     this.image = props.image;
     this.coverImages = props.coverImages;
     this.readme = props.readme;
@@ -174,6 +188,16 @@ export class Project {
         : ProjectRole.reconstituteMany(props.projectRoles),
       keyFeatures: KeyFeature.createMany(props.keyFeatures),
       projectGoals: ProjectGoals.createMany(props.projectGoals),
+      owner: props.owner
+        ? User.reconstitute({
+            ...props.owner,
+            techStacks: [],
+            experiences: [],
+            projects: [],
+            socialLinks: undefined,
+            githubStats: undefined,
+          })
+        : Result.ok(undefined),
     };
     //extract the error from the validation results
     Object.entries(voValidationResults).forEach(([key, result]) => {
@@ -191,6 +215,7 @@ export class Project {
       categories,
       keyFeatures,
       projectGoals,
+      owner,
     } = Object.fromEntries(
       Object.entries(voValidationResults).map(([key, result]) => [
         key,
@@ -205,6 +230,7 @@ export class Project {
       categories: Category[];
       keyFeatures: KeyFeature[];
       projectGoals: ProjectGoals[];
+      owner?: User;
     };
 
     if (Object.keys(validationErrors).length > 0)
@@ -221,6 +247,7 @@ export class Project {
         categories,
         keyFeatures,
         projectGoals,
+        owner,
       }),
     );
   }
@@ -253,6 +280,18 @@ export class Project {
       readme: this.readme,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      owner: this.owner
+        ? {
+            id: this.ownerId,
+            username: this.owner.getUsername(),
+            login: this.owner.getLogin(),
+            avatarUrl: this.owner.toPrimitive().avatarUrl,
+            email: this.owner.toPrimitive().email,
+            provider: this.owner.toPrimitive().provider,
+            createdAt: this.owner.toPrimitive().createdAt || new Date(),
+            updatedAt: this.owner.toPrimitive().updatedAt || new Date(),
+          }
+        : undefined,
     };
   }
 

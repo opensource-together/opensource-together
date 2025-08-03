@@ -20,6 +20,7 @@ import {
   TECHSTACK_REPOSITORY_PORT,
   TechStackRepositoryPort,
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+
 import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
@@ -125,7 +126,7 @@ export class CreateProjectCommandHandler
 
     //ont créer un project pour valider des regles métier
     const projectResult = Project.create({
-      ownerId,
+      ownerId: ownerId,
       title,
       shortDescription,
       description,

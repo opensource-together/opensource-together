@@ -1,105 +1,26 @@
+import { Result } from '@/libs/result';
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Param,
   Patch,
-  Body,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetAllApplicationsByProjectsOwnerQuery } from '../../use-cases/queries/get-all-applications-by-projects-owner.query';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
-import { Result } from '@/libs/result';
-import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
 @Controller('applications')
 export class ApplicationController {
   constructor(
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
-  @Get()
-  @ApiTags('Applications')
-  @ApiOperation({ summary: 'Get all applications by projects owner' })
-  @ApiResponse({
-    status: 200,
-    description: 'Applications retrieved successfully',
-    type: ProjectRoleApplication,
-    isArray: true,
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          status: { type: 'string' },
-          projectId: { type: 'string' },
-          projectTitle: { type: 'string' },
-          projectDescription: { type: 'string' },
-          projectRoleId: { type: 'string' },
-          projectRoleTitle: { type: 'string' },
-          appliedAt: { type: 'string' },
-          decidedAt: { type: 'string' },
-          decidedBy: { type: 'string' },
-          userProfile: {
-            type: 'object',
-          },
-        },
-      },
-    },
-    example: [
-      {
-        appplicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
-        projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
-        projectRoleTitle: 'Dev back',
-        projectRoleDescription: 'lol lol lo,l olo lol olol ol ',
-        status: 'PENDING',
-        selectedKeyFeatures: [
-          {
-            id: '88abc2a0-7e0b-4457-b68b-9ca060bd26d5',
-            feature: 'auth',
-          },
-        ],
-        selectedProjectGoals: [
-          {
-            id: 'a55d2155-67b2-4794-9aea-c1bb4031c91c',
-            goal: 'app de revision',
-          },
-        ],
-        appliedAt: '2025-07-29T09:07:15.289Z',
-        decidedAt: '2025-07-29T18:14:27.974Z',
-        decidedBy: '',
-        rejectionReason: '',
-        motivationLetter:
-          'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
-        userProfile: {
-          id: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
-          username: 'Lucalhost',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
-        },
-      },
-    ],
-  })
-  async getApplications(@Session('userId') userId: string) {
-    const applications: Result<ProjectRoleApplication[], string> =
-      await this.queryBus.execute(
-        new GetAllApplicationsByProjectsOwnerQuery(userId),
-      );
-    if (!applications.success) {
-      throw new HttpException(applications.error, HttpStatus.BAD_REQUEST);
-    }
-    return applications.value;
-  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get application details' })
@@ -111,48 +32,156 @@ export class ApplicationController {
     schema: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
-        status: { type: 'string' },
-        projectId: { type: 'string' },
-        projectTitle: { type: 'string' },
-        projectDescription: { type: 'string' },
+        applicationId: { type: 'string' },
         projectRoleId: { type: 'string' },
         projectRoleTitle: { type: 'string' },
-        appliedAt: { type: 'string' },
-        decidedAt: { type: 'string' },
-        decidedBy: { type: 'string' },
+        project: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' },
+            shortDescription: { type: 'string' },
+            image: { type: 'string', nullable: true },
+            author: {
+              type: 'object',
+              properties: {
+                ownerId: { type: 'string' },
+                name: { type: 'string' },
+                avatarUrl: { type: 'string', nullable: true },
+              },
+            },
+          },
+        },
+        projectRole: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            projectId: { type: 'string', nullable: true },
+            title: { type: 'string' },
+            description: { type: 'string' },
+            techStacks: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  name: { type: 'string' },
+                  iconUrl: { type: 'string', nullable: true },
+                },
+              },
+            },
+            roleCount: { type: 'number', nullable: true },
+            projectGoal: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'string', nullable: true },
+                  projectId: { type: 'string', nullable: true },
+                  goal: { type: 'string' },
+                },
+              },
+              nullable: true,
+            },
+          },
+        },
+        status: {
+          type: 'string',
+          enum: ['PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED'],
+        },
+        selectedKeyFeatures: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              feature: { type: 'string' },
+            },
+          },
+        },
+        selectedProjectGoals: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              goal: { type: 'string' },
+            },
+          },
+        },
+        appliedAt: { type: 'string', format: 'date-time' },
+        decidedAt: { type: 'string', format: 'date-time' },
+        decidedBy: { type: 'string', nullable: true },
+        rejectionReason: { type: 'string', nullable: true },
+        motivationLetter: { type: 'string' },
         userProfile: {
           type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            avatarUrl: { type: 'string', nullable: true },
+          },
         },
       },
     },
     example: {
-      id: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
-      projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
-      projectTitle: 'studydi',
-      projectDescription: 'asgdafsgadsfgdasfg',
-      projectRoleTitle: 'Dev back',
+      applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
       projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
+      projectRoleTitle: 'Dev back',
+      project: {
+        id: '0247bb88-93cc-408d-8635-d149fa5b7604',
+        title: 'studydi',
+        shortDescription: 'Application de révision interactive',
+        image: 'https://example.com/project-image.jpg',
+        author: {
+          ownerId: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
+          name: 'Lucalhost',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+        },
+      },
+      projectRole: {
+        id: '3715420c-d33e-4541-8e9a-e547eb169ba1',
+        projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
+        title: 'Dev back',
+        description: 'Développement backend avec Node.js et Express',
+        techStacks: [
+          {
+            id: 'tech-1',
+            name: 'Node.js',
+            iconUrl: 'https://example.com/nodejs.svg',
+          },
+          {
+            id: 'tech-2',
+            name: 'Express',
+            iconUrl: 'https://example.com/express.svg',
+          },
+        ],
+        roleCount: 1,
+        projectGoal: [
+          {
+            id: 'goal-1',
+            projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
+            goal: 'Créer une API REST robuste',
+          },
+        ],
+      },
       status: 'PENDING',
-      motivationLetter: 'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
       selectedKeyFeatures: [
         {
-          id: '88abc2a0-7e0b-4457-b68b-9ca060bd26d5',
-          projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
           feature: 'auth',
         },
       ],
       selectedProjectGoals: [
         {
-          id: 'a55d2155-67b2-4794-9aea-c1bb4031c91c',
-          projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
           goal: 'app de revision',
         },
       ],
       appliedAt: '2025-07-29T09:07:15.289Z',
+      decidedAt: '2025-07-29T18:14:27.974Z',
+      decidedBy: null,
+      rejectionReason: null,
+      motivationLetter: 'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
       userProfile: {
         id: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
-        username: 'Lucalhost',
+        name: 'Lucalhost',
         avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
       },
     },
@@ -177,34 +206,66 @@ export class ApplicationController {
       ACCEPTED: {
         summary: 'Application accepted successfully',
         value: {
-          id: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
-          projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
-          projectTitle: 'studydi',
-          projectDescription: 'asgdafsgadsfgdasfg',
-          projectRoleTitle: 'Dev back',
+          applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
           projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
-          status: 'APPROVAL',
-          motivationLetter:
-            'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
+          projectRoleTitle: 'Dev back',
+          project: {
+            id: '0247bb88-93cc-408d-8635-d149fa5b7604',
+            title: 'studydi',
+            shortDescription: 'Application de révision interactive',
+            image: 'https://example.com/project-image.jpg',
+            author: {
+              ownerId: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
+              name: 'Lucalhost',
+              avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            },
+          },
+          projectRole: {
+            id: '3715420c-d33e-4541-8e9a-e547eb169ba1',
+            projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
+            title: 'Dev back',
+            description: 'Développement backend avec Node.js et Express',
+            techStacks: [
+              {
+                id: 'tech-1',
+                name: 'Node.js',
+                iconUrl: 'https://example.com/nodejs.svg',
+              },
+              {
+                id: 'tech-2',
+                name: 'Express',
+                iconUrl: 'https://example.com/express.svg',
+              },
+            ],
+            roleCount: 1,
+            projectGoal: [
+              {
+                id: 'goal-1',
+                projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
+                goal: 'Créer une API REST robuste',
+              },
+            ],
+          },
+          status: 'ACCEPTED',
           selectedKeyFeatures: [
             {
-              id: '88abc2a0-7e0b-4457-b68b-9ca060bd26d5',
-              projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
               feature: 'auth',
             },
           ],
           selectedProjectGoals: [
             {
-              id: 'a55d2155-67b2-4794-9aea-c1bb4031c91c',
-              projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
               goal: 'app de revision',
             },
           ],
-          rejectionReason: '',
           appliedAt: '2025-07-29T09:07:15.289Z',
+          decidedAt: '2025-07-29T18:14:27.974Z',
+          decidedBy: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
+          rejectionReason: null,
+          motivationLetter:
+            'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
           userProfile: {
             id: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
-            username: 'Lucalhost',
+            name: 'Lucalhost',
             avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
           },
         },
@@ -212,34 +273,66 @@ export class ApplicationController {
       REJECTED: {
         summary: 'Application rejected successfully',
         value: {
-          id: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
-          projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
-          projectTitle: 'studydi',
-          projectDescription: 'asgdafsgadsfgdasfg',
-          projectRoleTitle: 'Dev back',
+          applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
           projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
+          projectRoleTitle: 'Dev back',
+          project: {
+            id: '0247bb88-93cc-408d-8635-d149fa5b7604',
+            title: 'studydi',
+            shortDescription: 'Application de révision interactive',
+            image: 'https://example.com/project-image.jpg',
+            author: {
+              ownerId: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
+              name: 'Lucalhost',
+              avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+            },
+          },
+          projectRole: {
+            id: '3715420c-d33e-4541-8e9a-e547eb169ba1',
+            projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
+            title: 'Dev back',
+            description: 'Développement backend avec Node.js et Express',
+            techStacks: [
+              {
+                id: 'tech-1',
+                name: 'Node.js',
+                iconUrl: 'https://example.com/nodejs.svg',
+              },
+              {
+                id: 'tech-2',
+                name: 'Express',
+                iconUrl: 'https://example.com/express.svg',
+              },
+            ],
+            roleCount: 1,
+            projectGoal: [
+              {
+                id: 'goal-1',
+                projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
+                goal: 'Créer une API REST robuste',
+              },
+            ],
+          },
           status: 'REJECTED',
-          motivationLetter:
-            'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
           selectedKeyFeatures: [
             {
-              id: '88abc2a0-7e0b-4457-b68b-9ca060bd26d5',
-              projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
               feature: 'auth',
             },
           ],
           selectedProjectGoals: [
             {
-              id: 'a55d2155-67b2-4794-9aea-c1bb4031c91c',
-              projectId: '0247bb88-93cc-408d-8635-d149fa5b7604',
               goal: 'app de revision',
             },
           ],
-          rejectionReason: 'tes laid',
           appliedAt: '2025-07-29T09:07:15.289Z',
+          decidedAt: '2025-07-29T18:14:27.974Z',
+          decidedBy: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
+          rejectionReason: 'tes laid',
+          motivationLetter:
+            'dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj',
           userProfile: {
             id: '936d4402-83ff-4be1-a3f7-6e5fba8fa052',
-            username: 'Lucalhost',
+            name: 'Lucalhost',
             avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
           },
         },
@@ -261,7 +354,7 @@ export class ApplicationController {
     schema: {
       type: 'object',
       properties: {
-        status: { type: 'string', enum: ['APPROVAL', 'REJECTED'] },
+        status: { type: 'string', enum: ['ACCEPTED', 'REJECTED'] },
         rejectionReason: { type: 'string', nullable: true },
       },
       required: ['status'],
@@ -269,10 +362,10 @@ export class ApplicationController {
   })
   async acceptOrRejectApplication(
     @Param('id') id: string,
-    @Body() body: { status: 'APPROVAL' | 'REJECTED'; rejectionReason?: string },
+    @Body() body: { status: 'ACCEPTED' | 'REJECTED'; rejectionReason?: string },
     @Session('userId') userId: string,
   ) {
-    if (body.status === 'APPROVAL') {
+    if (body.status === 'ACCEPTED') {
       const acceptedApplication: Result<ProjectRoleApplication, string> =
         await this.commandBus.execute(
           new AcceptUserApplicationCommand({

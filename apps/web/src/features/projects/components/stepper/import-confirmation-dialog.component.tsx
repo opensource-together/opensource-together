@@ -45,7 +45,7 @@ export function ProjectImportationConfirmDialog({
               <div className="rounded-lg bg-blue-50 p-3">
                 <div className="flex items-start gap-2">
                   <p className="text-sm text-blue-800">
-                    <strong>À savoir :</strong> Votre repository GitHub reste
+                    <strong>À savoir :</strong> Votre repository Github reste
                     inchangé. Seules les informations du projet seront
                     synchronisées avec la plateforme pour permettre aux
                     contributeurs de vous découvrir.
