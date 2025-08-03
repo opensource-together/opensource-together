@@ -222,9 +222,7 @@ export class GithubRepository implements GithubRepositoryPort {
         },
       });
 
-      this.Logger.log(
-        `Found ${response.data.length} matching repositories.`,
-      );
+      this.Logger.log(`Found ${response.data.length} matching repositories.`);
 
       const repositories = response.data
         .map((repo) => {
