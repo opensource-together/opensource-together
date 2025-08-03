@@ -114,35 +114,6 @@ export const getGithubRepos = async (): Promise<GithubRepoType[]> => {
 };
 
 /**
- * Fetch GitHub organization repositories for the authenticated user.
- *
- * @returns A promise that resolves to an array of GitHub organization repositories.
- */
-export const getGithubOrgRepos = async (): Promise<GithubRepoType[]> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/github/orgs/repos`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || "Failed to fetch GitHub organization repositories"
-      );
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching GitHub organization repositories:", error);
-    throw error;
-  }
-};
-
-/**
  * Creates a new project with optional image upload.
  *
  * @param storeData - The data for the new project.
