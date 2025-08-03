@@ -66,14 +66,15 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const headerDashboard = pathname.startsWith("/dashboard");
-  const { isAuthenticated, currentUser, logout, requireAuth } = useAuth();
+  const { isAuthenticated, currentUser, logout, requireAuth, isLoading } =
+    useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
 
   const handleProfile = () =>
-    requireAuth(() => router.push("/profile"), "/profile");
+    requireAuth(() => router.push("/profile/me"), "/profile/me");
 
   const handleDashboard = () =>
     requireAuth(() => router.push("/dashboard"), "/dashboard");
@@ -82,6 +83,8 @@ export default function Header() {
     logout();
     router.push("/");
   };
+
+  const showLoadingState = isLoading && !currentUser;
 
   return (
     <>
@@ -173,13 +176,21 @@ export default function Header() {
 
           {/* Profile mobile */}
           {isAuthenticated && (
-            <NavLink href="/profile" className="w-full py-1.5">
+            <NavLink href="/profile/me" className="w-full py-1.5">
               Mon Profil
             </NavLink>
           )}
 
+          {/* État de chargement mobile */}
+          {showLoadingState && (
+            <div className="space-y-2">
+              <div className="h-10 w-full animate-pulse rounded-md bg-gray-200" />
+              <div className="h-10 w-full animate-pulse rounded-full bg-gray-200" />
+            </div>
+          )}
+
           {/* Star Us mobile - visible seulement si pas connecté */}
-          {!isAuthenticated && (
+          {!isAuthenticated && !showLoadingState && (
             <Link
               href="https://github.com/opensource-together"
               target="_blank"
@@ -208,8 +219,15 @@ export default function Header() {
 
         {/* Desktop */}
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
+          {/* État de chargement */}
+          {showLoadingState && (
+            <div className="flex items-center gap-2">
+              <div className="h-9 w-24 animate-pulse rounded-full bg-gray-200" />
+            </div>
+          )}
+
           {/* Star Us - visible seulement si pas connecté */}
-          {!isAuthenticated && (
+          {!isAuthenticated && !showLoadingState && (
             <div className="flex items-center gap-2">
               <Link
                 href="https://github.com/opensource-together"
@@ -222,7 +240,7 @@ export default function Header() {
             </div>
           )}
 
-          {!isAuthenticated && (
+          {!isAuthenticated && !showLoadingState && (
             <Button
               asChild
               variant="default"
@@ -232,7 +250,7 @@ export default function Header() {
             </Button>
           )}
 
-          {isAuthenticated && (
+          {isAuthenticated && !showLoadingState && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -293,7 +311,10 @@ export default function Header() {
         {/* Actions mobile affichées dans le menu */}
         {mobileMenuOpen && (
           <div className="mt-3 flex w-full justify-center md:hidden">
-            {!isAuthenticated && (
+            {showLoadingState && (
+              <div className="h-10 w-full max-w-[220px] animate-pulse rounded-full bg-gray-200" />
+            )}
+            {!isAuthenticated && !showLoadingState && (
               <Button
                 asChild
                 variant="default"

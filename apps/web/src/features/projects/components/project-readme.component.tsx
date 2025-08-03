@@ -107,7 +107,11 @@ export default function ProjectReadme({
           </div>
         </div>
       </SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
+      <SheetContent
+        responsive
+        responsiveWidth={{ desktop: "w-[600px]" }}
+        className="overflow-y-auto"
+      >
         <SheetHeader>
           <SheetTitle className="sticky top-0 border-b border-black/10 bg-white pb-4 text-left">
             README - {projectTitle}

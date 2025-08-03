@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { Project } from "@/features/projects/types/project.type";
-
-import { mockMyProjects } from "../mocks/my-projects.mock";
+import { mockDashboardData } from "../mocks/my-projects.mock";
+import { MyProjectType } from "../types/my-projects.type";
 
 /**
  * Fetches the list of projects for the current user.
@@ -10,8 +9,8 @@ import { mockMyProjects } from "../mocks/my-projects.mock";
  * @returns A React Query result containing the list of projects.
  */
 export function useMyProjects() {
-  return useQuery<Project[]>({
+  return useQuery<MyProjectType[]>({
     queryKey: ["my-projects"],
-    queryFn: () => Promise.resolve(mockMyProjects),
+    queryFn: () => Promise.resolve(mockDashboardData),
   });
 }

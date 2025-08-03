@@ -12,10 +12,12 @@ import {
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
 
-import { Project, TechStack } from "@/features/projects/types/project.type";
+import { TechStack } from "@/features/projects/types/project.type";
+
+import { MyProjectType } from "../../types/my-projects.type";
 
 interface MyProjectsCardProps {
-  project: Project;
+  project: MyProjectType;
   techStacks?: TechStack[];
   className?: string;
   isSelected?: boolean;

@@ -1,4 +1,5 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { Metadata } from "next";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
@@ -10,6 +11,28 @@ interface PublicProfilePageProps {
   params: Promise<{
     userId: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PublicProfilePageProps): Promise<Metadata> {
+  const { userId } = await params;
+  const user = await getUserById(userId);
+
+  return {
+    title: `${user.username} | OpenSource Together`,
+    description: user.bio,
+    openGraph: {
+      title: `${user.username} | OpenSource Together`,
+      description: user.bio,
+      images: [user.avatarUrl || ""],
+      url: `https://opensourcetogether.com/profile/${userId}`,
+      type: "website",
+      siteName: "OpenSource Together",
+      locale: "fr_FR",
+      countryName: "France",
+    },
+  };
 }
 
 export default async function PublicProfilePage({

@@ -28,7 +28,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           </div>
         </div>
 
-        <Link href="/profile/edit">
+        <Link href="/profile/me/edit">
           <Button className="font-normal">
             Modifier le profil <Icon name="pencil" size="xs" variant="white" />
           </Button>

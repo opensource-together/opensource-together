@@ -267,7 +267,7 @@ export default function ProfileEditMainForm({
           />
 
           <div className="mt-10 flex w-full justify-end gap-2">
-            <Link href="/profile">
+            <Link href="/profile/me">
               <Button variant="outline" disabled={isUpdating}>
                 Annuler
               </Button>
