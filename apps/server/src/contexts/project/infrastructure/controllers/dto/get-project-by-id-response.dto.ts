@@ -1,6 +1,5 @@
 import { Project, ProjectData } from '@/contexts/project/domain/project.entity';
 import {
-  Author,
   Contributor,
   LastCommit,
   RepositoryInfo,
@@ -8,32 +7,24 @@ import {
 
 export class GetProjectByIdResponseDto {
   public static toResponse(props: {
-    author: Author;
     project: Project;
     repositoryInfo: RepositoryInfo;
     commits: number;
     lastCommit: LastCommit;
     contributors: Contributor[];
   }): Omit<ProjectData, 'ownerId'> & {
-    author: Author;
     projectStats: RepositoryInfo & {
       commits: number;
       lastCommit: LastCommit;
       contributors: Contributor[];
     };
   } {
-    const {
-      project,
-      repositoryInfo,
-      author,
-      lastCommit,
-      contributors,
-      commits,
-    } = props;
+    const { project, repositoryInfo, lastCommit, contributors, commits } =
+      props;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { ownerId, ...projectData } = project.toPrimitive();
+    // console.log('author', author);
     return {
-      author,
       ...projectData,
       projectStats: {
         forks: repositoryInfo.forks,

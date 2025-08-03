@@ -38,7 +38,7 @@ export class GetApplicationByRoleIdQueryHandler
       return Result.fail(project.error);
     }
     const projectData = project.value.toPrimitive();
-    if (projectData.ownerId !== userId) {
+    if (projectData.id !== userId) {
       return Result.fail('You are not the owner of this project');
     }
 

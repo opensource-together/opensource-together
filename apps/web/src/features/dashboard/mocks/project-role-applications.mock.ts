@@ -9,77 +9,72 @@ const codequestProject = mockProjects.find((p) => p.slug === "codequest");
 
 export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
   {
-    appplicationId: "1",
-    projectRoleId: "role1",
-    projectRoleTitle: "Developeur Full Stack",
+    applicationId: "d78b2322-65db-4c8b-a2d0-6cf65afae882",
+    projectRoleId: "3715420c-d33e-4541-8e9a-e547eb169ba1",
+    projectRoleTitle: "Dev back",
     project: {
-      id: gitifyProject?.id || "1",
-      title: gitifyProject?.title || "Gitify",
-      shortDescription:
-        gitifyProject?.shortDescription ||
-        "Gitify is a tool for managing code source for developers.",
-      image: gitifyProject?.image,
-      author: gitifyProject?.author || {
-        ownerId: "1",
-        name: "69Killian",
-        avatarUrl: "/icons/killiancodes-icon.jpg",
+      id: "0247bb88-93cc-408d-8635-d149fa5b7604",
+      title: "studydi",
+      shortDescription: "Application de révision interactive",
+      image: "https://example.com/project-image.jpg",
+      owner: {
+        id: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
+        username: "Lucalhost",
+        avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
     },
     projectRole: {
-      id: "role1",
-      title: "Developeur Full Stack",
-      description:
-        "Nous recherchons un développeur full stack pour aider à développer Gitify, un outil de gestion de code source pour les développeurs.",
+      id: "3715420c-d33e-4541-8e9a-e547eb169ba1",
+      projectId: "0247bb88-93cc-408d-8635-d149fa5b7604",
+      title: "Dev back",
+      description: "Développement backend avec Node.js et Express",
       techStacks: [
         {
-          id: "1",
-          name: "React",
+          id: "tech-1",
+          name: "Node.js",
           iconUrl:
-            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
         },
         {
-          id: "2",
-          name: "TypeScript",
+          id: "tech-2",
+          name: "Express",
           iconUrl:
-            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
         },
+      ],
+      roleCount: 1,
+      projectGoal: [
         {
-          id: "3",
-          name: "Tailwind CSS",
-          iconUrl:
-            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+          id: "goal-1",
+          projectId: "0247bb88-93cc-408d-8635-d149fa5b7604",
+          goal: "Créer une API REST robuste",
         },
       ],
     },
     status: "PENDING",
     selectedKeyFeatures: [
       {
-        feature: "Système de challenges open source",
-      },
-      {
-        feature: "Interface moderne et intuitive",
+        feature: "auth",
       },
     ],
     selectedProjectGoals: [
       {
-        goal: "Gamifier la contribution à l'open source",
-      },
-      {
-        goal: "Créer une communauté de contributeurs actifs",
+        goal: "app de revision",
       },
     ],
-    appliedAt: new Date("2024-02-20"),
-    decidedAt: new Date(),
-    motivationLetter:
-      "Je suis passionné par l'open source et je souhaite contribuer à ce projet innovant...",
+    appliedAt: new Date("2025-07-29T09:07:15.289Z"),
+    decidedAt: new Date("2025-07-29T18:14:27.974Z"),
+    decidedBy: undefined,
+    rejectionReason: undefined,
+    motivationLetter: "dfsajhksadfhjkasdfhjkdsafghjkdgsahkjadgshjksadfgklhj",
     userProfile: {
-      id: "user1",
-      name: "Alice Smith",
-      avatarUrl: "/icons/exemplebyronIcon.svg",
+      id: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
+      name: "Lucalhost",
+      avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
     },
   },
   {
-    appplicationId: "2",
+    applicationId: "2",
     projectRoleId: "role2",
     projectRoleTitle: "Backend Developer",
     project: {
@@ -90,15 +85,16 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         "LeetGrind is a tool for managing code source for developers.",
       image:
         "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
-      author: leetgrindProject?.author || {
-        ownerId: "1",
-        name: "y2_dev",
+      owner: {
+        id: "1",
+        username: "y2_dev",
         avatarUrl:
           "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
       },
     },
     projectRole: {
       id: "role2",
+      projectId: "2",
       title: "Backend Developer",
       description:
         "Nous recherchons un développeur backend pour aider à développer LeetGrind, un outil de gestion de code source pour les développeurs.",
@@ -122,6 +118,19 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
         },
       ],
+      roleCount: 2,
+      projectGoal: [
+        {
+          id: "goal-1",
+          projectId: "2",
+          goal: "Aider 1000+ développeurs à améliorer leurs compétences en algorithmie",
+        },
+        {
+          id: "goal-2",
+          projectId: "2",
+          goal: "Créer une communauté active et bienveillante",
+        },
+      ],
     },
     status: "ACCEPTED",
     selectedKeyFeatures: [
@@ -142,6 +151,8 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     ],
     appliedAt: new Date("2024-02-15"),
     decidedAt: new Date("2024-02-18"),
+    decidedBy: "admin-user-id",
+    rejectionReason: undefined,
     motivationLetter:
       "J'ai une solide expérience en développement backend et je suis passionné par l'algorithmie...",
     userProfile: {
@@ -150,9 +161,8 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       avatarUrl: "https://github.com/bobjohnson.png",
     },
   },
-  // MOCK 3
   {
-    appplicationId: "3",
+    applicationId: "3",
     projectRoleId: "role3",
     projectRoleTitle: "UI/UX Designer",
     project: {
@@ -162,14 +172,15 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         opensourcifyProject?.shortDescription ||
         "OpenSourcify is a tool for managing code source for developers.",
       image: opensourcifyProject?.image || "/icons/opensourcify.png",
-      author: opensourcifyProject?.author || {
-        ownerId: "2",
-        name: "Jane Doe",
+      owner: {
+        id: "2",
+        username: "Jane Doe",
         avatarUrl: "/icons/janedoe.png",
       },
     },
     projectRole: {
       id: "role3",
+      projectId: "3",
       title: "UI/UX Designer",
       description:
         "Nous recherchons un designer pour améliorer l'expérience utilisateur de notre plateforme.",
@@ -185,6 +196,19 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
           name: "Adobe XD",
           iconUrl:
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/xd/xd-original.svg",
+        },
+      ],
+      roleCount: 1,
+      projectGoal: [
+        {
+          id: "goal-1",
+          projectId: "3",
+          goal: "Améliorer l'accessibilité",
+        },
+        {
+          id: "goal-2",
+          projectId: "3",
+          goal: "Augmenter l'engagement utilisateur",
         },
       ],
     },
@@ -207,6 +231,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     ],
     appliedAt: new Date("2024-03-01"),
     decidedAt: new Date("2024-03-05"),
+    decidedBy: "admin-user-id",
     rejectionReason: "Profil trop junior pour ce poste.",
     motivationLetter:
       "J'adore concevoir des interfaces et je veux rendre l'open source plus accessible à tous.",
@@ -216,9 +241,8 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       avatarUrl: "/icons/charlielee.png",
     },
   },
-  // MOCK 4
   {
-    appplicationId: "4",
+    applicationId: "4",
     projectRoleId: "role4",
     projectRoleTitle: "DevOps Engineer",
     project: {
@@ -228,14 +252,15 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         codequestProject?.shortDescription ||
         "CodeQuest is a tool for managing code source for developers.",
       image: codequestProject?.image || "/icons/codequest.png",
-      author: codequestProject?.author || {
-        ownerId: "3",
-        name: "Maxime Dupont",
+      owner: {
+        id: "3",
+        username: "Maxime Dupont",
         avatarUrl: "/icons/maximedupont.png",
       },
     },
     projectRole: {
       id: "role4",
+      projectId: "4",
       title: "DevOps Engineer",
       description:
         "Nous avons besoin d'un DevOps pour automatiser nos déploiements et améliorer la CI/CD.",
@@ -259,6 +284,19 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg",
         },
       ],
+      roleCount: 1,
+      projectGoal: [
+        {
+          id: "goal-1",
+          projectId: "4",
+          goal: "Réduire le temps de mise en production",
+        },
+        {
+          id: "goal-2",
+          projectId: "4",
+          goal: "Augmenter la fiabilité des releases",
+        },
+      ],
     },
     status: "PENDING",
     selectedKeyFeatures: [
@@ -278,7 +316,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       },
     ],
     appliedAt: new Date("2024-03-10"),
-    decidedAt: new Date(),
+    decidedAt: undefined,
+    decidedBy: undefined,
+    rejectionReason: undefined,
     motivationLetter:
       "J'ai une grande expérience DevOps et je souhaite aider à scaler CodeQuest.",
     userProfile: {
@@ -287,9 +327,8 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       avatarUrl: "/icons/sophiemartin.png",
     },
   },
-  // MOCK 5
   {
-    appplicationId: "5",
+    applicationId: "5",
     projectRoleId: "role5",
     projectRoleTitle: "Frontend Developer",
     project: {
@@ -299,14 +338,15 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         gitifyProject?.shortDescription ||
         "Gitify is a tool for managing code source for developers.",
       image: gitifyProject?.image,
-      author: gitifyProject?.author || {
-        ownerId: "1",
-        name: "69Killian",
+      owner: {
+        id: "1",
+        username: "69Killian",
         avatarUrl: "/icons/killiancodes-icon.jpg",
       },
     },
     projectRole: {
       id: "role5",
+      projectId: "1",
       title: "Frontend Developer",
       description:
         "Nous recherchons un développeur frontend pour améliorer l'interface utilisateur.",
@@ -324,6 +364,14 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
             "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vite/vite-original.svg",
         },
       ],
+      roleCount: 1,
+      projectGoal: [
+        {
+          id: "goal-1",
+          projectId: "1",
+          goal: "Augmenter la rapidité de l'UI",
+        },
+      ],
     },
     status: "CANCELLED",
     selectedKeyFeatures: [
@@ -338,6 +386,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     ],
     appliedAt: new Date("2024-03-12"),
     decidedAt: new Date("2024-03-13"),
+    decidedBy: "user5",
     rejectionReason: "Candidature annulée par l'utilisateur.",
     motivationLetter:
       "Je souhaite contribuer à l'amélioration de l'expérience utilisateur sur Gitify.",

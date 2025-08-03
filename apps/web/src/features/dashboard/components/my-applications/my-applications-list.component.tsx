@@ -17,6 +17,7 @@ const STATUS_TABS = [
   { label: "En attente", value: "PENDING" },
   { label: "Acceptée", value: "ACCEPTED" },
   { label: "Refusée", value: "REJECTED" },
+  { label: "Annulée", value: "CANCELLED" },
 ] as const;
 
 function ApplicationSkeleton() {
@@ -112,12 +113,12 @@ export function MyApplicationsList() {
             filteredApplications.map(
               (application: ProjectRoleApplicationType) => (
                 <MyApplicationsCard
-                  key={application.appplicationId}
+                  key={application.applicationId}
                   application={application}
                   onClick={() => handleApplicationClick(application)}
                   isSelected={
-                    selectedApplication?.appplicationId ===
-                    application.appplicationId
+                    selectedApplication?.applicationId ===
+                    application.applicationId
                   }
                 />
               )

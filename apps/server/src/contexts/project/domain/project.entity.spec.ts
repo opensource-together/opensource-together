@@ -480,6 +480,16 @@ const getProjectProps = (
       goal: 'Test Project Goal',
     },
   ],
+  owner: {
+    id: '123',
+    username: 'testuser',
+    login: 'testuser',
+    avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+    email: 'test@example.com',
+    provider: 'github',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
   ...overrides,
 });
 

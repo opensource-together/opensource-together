@@ -37,12 +37,12 @@ export function ProjectCreationConfirmDialog({
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-3">
             <Icon name="github" size="md" />
-            Création du repository GitHub
+            Création du repository Github
           </AlertDialogTitle>
           <AlertDialogDescription asChild>
             <div className="space-y-3">
               <p>
-                Un repository GitHub <strong>public</strong> sera
+                Un repository Github <strong>public</strong> sera
                 automatiquement créé sur votre compte avec le nom "
                 <strong>{repositoryName}</strong>".
               </p>
@@ -51,8 +51,8 @@ export function ProjectCreationConfirmDialog({
                   <span className="text-yellow-600">⚠️</span>
                   <p className="text-sm text-yellow-800">
                     <strong>Important :</strong> Ce repository sera visible par
-                    tous sur GitHub. Vous pourrez le modifier ou le supprimer
-                    depuis votre compte GitHub à tout moment.
+                    tous sur Github. Vous pourrez le modifier ou le supprimer
+                    depuis votre compte Github à tout moment.
                   </p>
                 </div>
               </div>

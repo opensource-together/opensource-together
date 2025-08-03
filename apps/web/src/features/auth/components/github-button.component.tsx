@@ -13,7 +13,7 @@ interface GitHubButtonProps {
 }
 
 export default function GitHubButton({
-  text = "Continuer avec GitHub",
+  text = "Continuer avec Github",
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {

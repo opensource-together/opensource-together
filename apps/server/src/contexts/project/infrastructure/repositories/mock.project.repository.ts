@@ -33,6 +33,16 @@ type ProjectInMemory = {
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
   projectMembers: { id: string; userId: string }[];
+  owner?: {
+    id: string;
+    username: string;
+    login: string;
+    avatarUrl: string;
+    email: string;
+    provider: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -78,6 +88,16 @@ export class InMemoryProjectRepository {
         { id: 'member1', userId: '456' }, // Utilisateur 456 est membre de ce projet
         { id: 'member2', userId: '789' }, // Utilisateur 789 est membre de ce projet
       ],
+      owner: {
+        id: '123',
+        username: 'testuser',
+        login: 'testuser',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+        email: 'test@example.com',
+        provider: 'github',
+        createdAt: new Date('2024-01-01T09:00:00Z'),
+        updatedAt: new Date('2024-01-01T10:00:00Z'),
+      },
       createdAt: new Date('2024-01-01T09:00:00Z'),
       updatedAt: new Date('2024-01-01T10:00:00Z'),
     },
@@ -103,6 +123,16 @@ export class InMemoryProjectRepository {
       projectMembers: [
         { id: 'member3', userId: '123' }, // Utilisateur 123 est membre de ce projet
       ],
+      owner: {
+        id: '456',
+        username: 'seconduser',
+        login: 'seconduser',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/456?v=4',
+        email: 'second@example.com',
+        provider: 'github',
+        createdAt: new Date('2024-01-02T09:00:00Z'),
+        updatedAt: new Date('2024-01-02T10:00:00Z'),
+      },
       createdAt: new Date('2024-01-02T09:00:00Z'),
       updatedAt: new Date('2024-01-02T10:00:00Z'),
     },
@@ -142,6 +172,7 @@ export class InMemoryProjectRepository {
       keyFeatures: projectPrimitive.keyFeatures,
       projectGoals: projectPrimitive.projectGoals,
       projectMembers: [],
+      owner: projectPrimitive.owner,
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
     };
@@ -188,6 +219,16 @@ export class InMemoryProjectRepository {
       projectGoals: projectInMemory.projectGoals,
       createdAt: projectInMemory.createdAt,
       updatedAt: projectInMemory.updatedAt,
+      owner: projectInMemory.owner || {
+        id: projectInMemory.ownerId,
+        username: 'testuser',
+        login: 'testuser',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+        email: 'test@example.com',
+        provider: 'github',
+        createdAt: projectInMemory.createdAt || new Date(),
+        updatedAt: projectInMemory.updatedAt || new Date(),
+      },
     });
 
     if (!projectResult.success) {

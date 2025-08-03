@@ -31,6 +31,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           keyFeatures: true,
           projectGoals: true,
           externalLinks: true,
+          owner: true,
         },
       });
       const domainProject = PrismaProjectMapper.toDomain(savedProject);
@@ -123,6 +124,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             keyFeatures: true,
             projectGoals: true,
             externalLinks: true,
+            owner: true,
           },
         });
 
@@ -263,6 +265,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           projectRoles: {
             include: { techStacks: true },
           },
+          owner: true,
           projectMembers: true,
           categories: true,
           keyFeatures: true,
@@ -301,6 +304,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           keyFeatures: true,
           projectGoals: true,
           externalLinks: true,
+          owner: true,
         },
       });
 
@@ -349,6 +353,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           keyFeatures: true,
           projectGoals: true,
           externalLinks: true,
+          owner: true,
         },
       });
 
@@ -388,6 +393,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           keyFeatures: true,
           projectGoals: true,
           externalLinks: true,
+          owner: true,
         },
       });
 
@@ -625,6 +631,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             keyFeatures: true,
             projectGoals: true,
             externalLinks: true,
+            owner: true,
           },
         });
 

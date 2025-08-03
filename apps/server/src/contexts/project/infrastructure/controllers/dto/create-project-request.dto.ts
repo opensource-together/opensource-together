@@ -40,7 +40,6 @@ export class CreateProjectDtoRequest {
 
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   image: string;
 
   @IsArray()
