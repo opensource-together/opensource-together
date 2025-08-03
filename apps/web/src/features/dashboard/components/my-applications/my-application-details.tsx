@@ -20,7 +20,7 @@ export function MyApplicationDetails({
 
   const handleCancelApplication = () => {
     // TODO: Implement cancel application
-    console.log("Annulation de candidature pour:", application.appplicationId);
+    console.log("Annulation de candidature pour:", application.applicationId);
     setIsConfirmDialogOpen(false);
   };
 

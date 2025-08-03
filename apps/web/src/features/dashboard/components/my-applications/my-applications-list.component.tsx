@@ -113,12 +113,12 @@ export function MyApplicationsList() {
             filteredApplications.map(
               (application: ProjectRoleApplicationType) => (
                 <MyApplicationsCard
-                  key={application.appplicationId}
+                  key={application.applicationId}
                   application={application}
                   onClick={() => handleApplicationClick(application)}
                   isSelected={
-                    selectedApplication?.appplicationId ===
-                    application.appplicationId
+                    selectedApplication?.applicationId ===
+                    application.applicationId
                   }
                 />
               )
