@@ -11,6 +11,8 @@ export const mockDashboardData: MyProjectType[] = [
     owner: {
       ownerId: "user-1",
       username: "69Kilian",
+      avatarUrl: "/icons/user-placeholder.svg",
+    },
     techStacks: [
       {
         id: "1",
@@ -55,8 +57,15 @@ export const mockDashboardData: MyProjectType[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg",
       },
     ],
-      avatarUrl: "/icons/user-placeholder.svg",
-    },
+    teamMembers: [
+      {
+        id: "user-2",
+        name: "Byron Love",
+        avatarUrl: "/icons/exemplebyronIcon.svg",
+        role: "Front-End Developer",
+        joinedAt: new Date("2024-01-14T09:30:00Z"),
+      },
+    ],
     applications: [
       {
         id: "app-1",
@@ -368,46 +377,6 @@ export const mockDashboardData: MyProjectType[] = [
         ],
       },
     ],
-    teamMembers: [
-      {
-        id: "member-1",
-        name: "69Kilian",
-        avatarUrl: "/icons/user-placeholder.svg",
-        role: "Project Lead",
-        joinedAt: new Date("2024-01-01T00:00:00Z"),
-        techStacks: [
-          { id: "1", name: "React" },
-          { id: "2", name: "TypeScript" },
-          { id: "4", name: "Node.js" },
-          { id: "5", name: "Express" },
-        ],
-      },
-      {
-        id: "member-3",
-        name: "Lucas Rodriguez",
-        avatarUrl: "/icons/exemplebyronIcon.svg",
-        role: "Full-Stack Developer",
-        joinedAt: new Date("2024-01-11T14:30:00Z"),
-        techStacks: [
-          { id: "1", name: "React" },
-          { id: "4", name: "Node.js" },
-          { id: "6", name: "GraphQL" },
-          { id: "7", name: "Docker" },
-        ],
-      },
-      {
-        id: "member-4",
-        name: "Sarah Johnson",
-        avatarUrl: "/icons/exemplebyronIcon.svg",
-        role: "Backend Developer",
-        joinedAt: new Date("2024-01-13T15:45:00Z"),
-        techStacks: [
-          { id: "4", name: "Node.js" },
-          { id: "5", name: "Express" },
-          { id: "6", name: "PostgreSQL" },
-        ],
-      },
-    ],
   },
   {
     id: "2",
@@ -419,6 +388,8 @@ export const mockDashboardData: MyProjectType[] = [
     owner: {
       ownerId: "user-1",
       username: "69Kilian",
+      avatarUrl: "/icons/user-placeholder.svg",
+    },
     techStacks: [
       {
         id: "7",
@@ -445,8 +416,6 @@ export const mockDashboardData: MyProjectType[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg",
       },
     ],
-      avatarUrl: "/icons/user-placeholder.svg",
-    },
     applications: [
       {
         id: "app-7",
@@ -642,9 +611,9 @@ export const mockDashboardData: MyProjectType[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rxjs/rxjs-original.svg",
       },
     ],
-    author: {
-      id: "user-1",
-      name: "69Kilian",
+    owner: {
+      ownerId: "user-1",
+      username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
     applications: [
@@ -774,9 +743,9 @@ export const mockDashboardData: MyProjectType[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sveltekit/sveltekit-original.svg",
       },
     ],
-    author: {
-      id: "user-1",
-      name: "69Kilian",
+    owner: {
+      ownerId: "user-1",
+      username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
     applications: [
@@ -956,9 +925,9 @@ export const mockDashboardData: MyProjectType[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/numpy/numpy-original.svg",
       },
     ],
-    author: {
-      id: "user-1",
-      name: "69Kilian",
+    owner: {
+      ownerId: "user-1",
+      username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
     applications: [
@@ -1095,9 +1064,9 @@ export const mockDashboardData: MyProjectType[] = [
           "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gin/gin-original.svg",
       },
     ],
-    author: {
-      id: "user-1",
-      name: "69Kilian",
+    owner: {
+      ownerId: "user-1",
+      username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
     applications: [

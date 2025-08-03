@@ -9,7 +9,7 @@ const codequestProject = mockProjects.find((p) => p.slug === "codequest");
 
 export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
   {
-    appplicationId: "d78b2322-65db-4c8b-a2d0-6cf65afae882",
+    applicationId: "d78b2322-65db-4c8b-a2d0-6cf65afae882",
     projectRoleId: "3715420c-d33e-4541-8e9a-e547eb169ba1",
     projectRoleTitle: "Dev back",
     project: {
@@ -74,7 +74,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "2",
+    applicationId: "2",
     projectRoleId: "role2",
     projectRoleTitle: "Backend Developer",
     project: {
@@ -162,7 +162,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "3",
+    applicationId: "3",
     projectRoleId: "role3",
     projectRoleTitle: "UI/UX Designer",
     project: {
@@ -242,7 +242,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "4",
+    applicationId: "4",
     projectRoleId: "role4",
     projectRoleTitle: "DevOps Engineer",
     project: {
@@ -328,7 +328,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "5",
+    applicationId: "5",
     projectRoleId: "role5",
     projectRoleTitle: "Frontend Developer",
     project: {

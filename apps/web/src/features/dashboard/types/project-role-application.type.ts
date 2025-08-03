@@ -10,7 +10,7 @@ import { Owner } from "@/features/projects/types/project.type";
  * @example
  * ```typescript
  * const application: ProjectRoleApplicationType = {
- *   appplicationId: "uuid",
+ *   applicationId: "uuid",
  *   projectRoleId: "uuid",
  *   projectRoleTitle: "Développeur Frontend",
  *   project: {
@@ -55,7 +55,7 @@ import { Owner } from "@/features/projects/types/project.type";
  */
 export interface ProjectRoleApplicationType {
   /** ID unique de la candidature */
-  appplicationId: string;
+  applicationId: string;
 
   /** ID du rôle de projet pour lequel la candidature a été soumise */
   projectRoleId: string;

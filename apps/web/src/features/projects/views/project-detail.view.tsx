@@ -29,7 +29,7 @@ export default function ProjectDetailView({
   const { currentUser } = useAuth();
 
   // Determine if the current user is the maintainer of the project
-  const isMaintainer = currentUser?.id === project?.author?.ownerId;
+  const isMaintainer = currentUser?.id === project?.owner?.ownerId;
 
   if (isLoading || isProjectRolesLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailError />;
