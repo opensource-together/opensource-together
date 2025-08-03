@@ -42,8 +42,26 @@ export class PrismaProjectRoleApplicationRepository
         },
       });
 
-      const domainApplication =
-        PrismaProjectRoleApplicationMapper.toDomain(created);
+      const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+        ...created,
+        project: {
+          ...created.project,
+          owner: {
+            id: created.project.ownerId || 'unknown',
+            username: 'unknown',
+            login: 'unknown',
+            email: 'unknown',
+            provider: 'unknown',
+            jobTitle: null,
+            location: null,
+            company: null,
+            bio: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            avatarUrl: null,
+          },
+        },
+      });
       if (!domainApplication.success) {
         return Result.fail(
           typeof domainApplication.error === 'string'
@@ -96,10 +114,15 @@ export class PrismaProjectRoleApplicationRepository
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -172,10 +195,15 @@ export class PrismaProjectRoleApplicationRepository
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -249,14 +277,18 @@ export class PrismaProjectRoleApplicationRepository
             title: application.project.title,
             shortDescription: application.project.shortDescription,
             image: application.project.image || undefined,
-            author: {
-              ownerId:
-                application.project.ownerId || application.project.ownerId,
-              name:
-                application.project.owner?.username ||
-                application.project.owner?.login ||
+            owner: {
+              id:
+                application.project.owner?.id ||
+                application.project.ownerId ||
                 'Unknown',
-              avatarUrl: application.project.owner?.avatarUrl || undefined,
+              username: application.project.owner?.username || 'Unknown',
+              login: application.project.owner?.login || 'Unknown',
+              email: application.project.owner?.email || 'Unknown',
+              provider: application.project.owner?.provider || 'Unknown',
+              createdAt: application.project.owner?.createdAt || new Date(),
+              updatedAt: application.project.owner?.updatedAt || new Date(),
+              avatarUrl: application.project.owner?.avatarUrl || 'Unknown',
             },
           },
           projectRole: {
@@ -370,8 +402,26 @@ export class PrismaProjectRoleApplicationRepository
       }[] = [];
 
       for (const application of applications) {
-        const domainApplication =
-          PrismaProjectRoleApplicationMapper.toDomain(application);
+        const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+          ...application,
+          project: {
+            ...application.project,
+            owner: {
+              id: application.project.ownerId || 'unknown',
+              username: 'unknown',
+              login: 'unknown',
+              email: 'unknown',
+              provider: 'unknown',
+              jobTitle: null,
+              location: null,
+              company: null,
+              bio: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              avatarUrl: null,
+            },
+          },
+        });
         if (!domainApplication.success) {
           return Result.fail(
             'Une erreur est survenue lors de la récupération des candidatures',
@@ -446,7 +496,23 @@ export class PrismaProjectRoleApplicationRepository
       const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
         ...application,
         projectRole: application.projectRole,
-        project: application.project,
+        project: {
+          ...application.project,
+          owner: {
+            id: application.project.ownerId || 'unknown',
+            username: 'unknown',
+            login: 'unknown',
+            email: 'unknown',
+            provider: 'unknown',
+            jobTitle: null,
+            location: null,
+            company: null,
+            bio: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            avatarUrl: null,
+          },
+        },
         user: application.user,
       });
       if (!domainApplication.success) {
@@ -491,7 +557,23 @@ export class PrismaProjectRoleApplicationRepository
       const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
         ...application,
         projectRole: application.projectRole,
-        project: application.project,
+        project: {
+          ...application.project,
+          owner: {
+            id: application.project.ownerId || 'unknown',
+            username: 'unknown',
+            login: 'unknown',
+            email: 'unknown',
+            provider: 'unknown',
+            jobTitle: null,
+            location: null,
+            company: null,
+            bio: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            avatarUrl: null,
+          },
+        },
         user: application.user,
       });
       this.Logger.log('domainApplication acceptApplication', domainApplication);
@@ -520,10 +602,15 @@ export class PrismaProjectRoleApplicationRepository
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -596,10 +683,15 @@ export class PrismaProjectRoleApplicationRepository
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -673,14 +765,18 @@ export class PrismaProjectRoleApplicationRepository
             title: application.project.title,
             shortDescription: application.project.shortDescription,
             image: application.project.image || undefined,
-            author: {
-              ownerId:
-                application.project.ownerId || application.project.ownerId,
-              name:
-                application.project.owner?.username ||
-                application.project.owner?.login ||
+            owner: {
+              id:
+                application.project.owner?.id ||
+                application.project.ownerId ||
                 'Unknown',
-              avatarUrl: application.project.owner?.avatarUrl || undefined,
+              username: application.project.owner?.username || 'Unknown',
+              login: application.project.owner?.login || 'Unknown',
+              email: application.project.owner?.email || 'Unknown',
+              provider: application.project.owner?.provider || 'Unknown',
+              createdAt: application.project.owner?.createdAt || new Date(),
+              updatedAt: application.project.owner?.updatedAt || new Date(),
+              avatarUrl: application.project.owner?.avatarUrl || 'Unknown',
             },
           },
           projectRole: {
@@ -739,6 +835,7 @@ export class PrismaProjectRoleApplicationRepository
             include: {
               keyFeatures: true,
               projectGoals: true,
+              owner: true,
             },
           },
           user: true,
@@ -750,9 +847,15 @@ export class PrismaProjectRoleApplicationRepository
       const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
         ...application,
         projectRole: application.projectRole,
-        project: application.project,
+        project: {
+          ...application.project,
+          keyFeatures: application.project.keyFeatures,
+          projectGoals: application.project.projectGoals,
+          owner: application.project.owner,
+        },
         user: application.user,
       });
+      console.log('domainApplication', domainApplication);
       if (!domainApplication.success) {
         return Result.fail(
           typeof domainApplication.error === 'string'

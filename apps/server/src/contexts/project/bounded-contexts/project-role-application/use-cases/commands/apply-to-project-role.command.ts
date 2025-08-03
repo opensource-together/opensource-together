@@ -150,8 +150,27 @@ export class ApplyToProjectRoleCommandHandler
     // 8. Créer la candidature
     const applicationResult = ProjectRoleApplication.create({
       projectId: projectData.id!,
-      projectTitle: projectData.title,
-      projectDescription: projectData.description,
+      project: {
+        id: projectData.id!,
+        title: projectData.title,
+        shortDescription: projectData.shortDescription,
+        description: projectData.description,
+        image: projectData.image,
+        owner: {
+          id: projectData.ownerId,
+          username: projectData.owner?.username || 'unknown',
+          login: projectData.owner?.login || 'unknown',
+          email: projectData.owner?.email || 'unknown',
+          provider: projectData.owner?.provider || 'unknown',
+          jobTitle: null,
+          location: null,
+          company: null,
+          bio: null,
+          createdAt: projectData.owner?.createdAt || new Date(),
+          updatedAt: projectData.owner?.updatedAt || new Date(),
+          avatarUrl: projectData.owner?.avatarUrl || null,
+        },
+      },
       projectRoleTitle: projectRole.toPrimitive().title,
       projectRoleId,
       selectedKeyFeatures: validKeyFeatures.map((kf) => ({

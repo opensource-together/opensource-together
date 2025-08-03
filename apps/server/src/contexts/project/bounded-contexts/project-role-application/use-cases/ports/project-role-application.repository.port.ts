@@ -24,10 +24,15 @@ export interface ProjectRoleApplicationRepositoryPort {
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -133,10 +138,15 @@ export interface ProjectRoleApplicationRepositoryPort {
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {

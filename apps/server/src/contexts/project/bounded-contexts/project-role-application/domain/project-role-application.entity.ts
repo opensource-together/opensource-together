@@ -20,8 +20,27 @@ export type ProjectRoleApplicationValidationErrors = {
 export type ProjectRoleApplicationCreateData = {
   id?: string;
   projectId: string;
-  projectTitle: string;
-  projectDescription?: string;
+  project: {
+    id: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    image?: string;
+    owner: {
+      id: string;
+      username: string;
+      login: string;
+      email: string;
+      provider: string;
+      jobTitle: string | null;
+      location: string | null;
+      company: string | null;
+      bio: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      avatarUrl: string | null;
+    };
+  };
   projectRoleTitle: string;
   projectRoleId: string;
   motivationLetter?: string;
@@ -37,8 +56,27 @@ export type ProjectRoleApplicationCreateData = {
 export class ProjectRoleApplication {
   public readonly id?: string;
   public readonly projectId: string;
-  public readonly projectTitle: string;
-  public readonly projectDescription?: string;
+  public readonly project: {
+    id: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    image?: string;
+    owner: {
+      id: string;
+      username: string;
+      login: string;
+      email: string;
+      provider: string;
+      jobTitle: string | null;
+      location: string | null;
+      company: string | null;
+      bio: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      avatarUrl: string | null;
+    };
+  };
   public readonly projectRoleTitle: string;
   public readonly projectRoleId: string;
   public status: ApplicationStatus;
@@ -58,8 +96,27 @@ export class ProjectRoleApplication {
   private constructor(props: {
     id?: string;
     projectId: string;
-    projectTitle: string;
-    projectDescription?: string;
+    project: {
+      id: string;
+      title: string;
+      shortDescription: string;
+      description: string;
+      image?: string;
+      owner: {
+        id: string;
+        username: string;
+        login: string;
+        email: string;
+        provider: string;
+        jobTitle: string | null;
+        location: string | null;
+        company: string | null;
+        bio: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        avatarUrl: string | null;
+      };
+    };
     projectRoleTitle: string;
     projectRoleId: string;
     status: ApplicationStatus;
@@ -78,8 +135,7 @@ export class ProjectRoleApplication {
   }) {
     this.id = props.id;
     this.projectId = props.projectId;
-    this.projectTitle = props.projectTitle;
-    this.projectDescription = props.projectDescription;
+    this.project = props.project;
     this.projectRoleTitle = props.projectRoleTitle;
     this.projectRoleId = props.projectRoleId;
     this.status = props.status;
@@ -145,6 +201,27 @@ export class ProjectRoleApplication {
     projectId: string;
     projectTitle: string;
     projectDescription?: string;
+    project: {
+      id: string;
+      title: string;
+      shortDescription: string;
+      description: string;
+      image?: string;
+      owner: {
+        id: string;
+        username: string;
+        login: string;
+        email: string;
+        provider: string;
+        jobTitle: string | null;
+        location: string | null;
+        company: string | null;
+        bio: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        avatarUrl: string | null;
+      };
+    };
     projectRoleTitle: string;
     projectRoleId: string;
     status: ApplicationStatus;
@@ -298,8 +375,7 @@ export class ProjectRoleApplication {
     return {
       id: this.id,
       projectId: this.projectId,
-      projectTitle: this.projectTitle,
-      projectDescription: this.projectDescription,
+      project: this.project,
       projectRoleTitle: this.projectRoleTitle,
       projectRoleId: this.projectRoleId,
       status: this.status,

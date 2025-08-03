@@ -35,7 +35,61 @@ export class GetAllApplicationsByProjectsOwnerQueryHandler
     if (!projects.success) {
       return Result.fail(projects.error);
     }
-    const applications: any[] = [];
+    const applications: {
+      appplicationId: string;
+      projectRoleId: string;
+      projectRoleTitle: string;
+      project: {
+        id: string;
+        title: string;
+        shortDescription: string;
+        image?: string;
+        owner: {
+          id: string;
+          username: string;
+          login: string;
+          email: string;
+          provider: string;
+          createdAt: Date;
+          updatedAt: Date;
+          avatarUrl: string;
+        };
+      };
+      projectRole: {
+        id: string;
+        projectId?: string;
+        title: string;
+        description: string;
+        techStacks: {
+          id: string;
+          name: string;
+          iconUrl?: string;
+        }[];
+        roleCount?: number;
+        projectGoal?: {
+          id?: string;
+          projectId?: string;
+          goal: string;
+        }[];
+      };
+      status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+      selectedKeyFeatures: {
+        feature: string;
+      }[];
+      selectedProjectGoals: {
+        goal: string;
+      }[];
+      appliedAt: Date;
+      decidedAt: Date;
+      decidedBy?: string;
+      rejectionReason?: string;
+      motivationLetter: string;
+      userProfile: {
+        id: string;
+        name: string;
+        avatarUrl?: string;
+      };
+    }[] = [];
     for (const project of projects.value) {
       if (!project.toPrimitive().id) {
         continue;

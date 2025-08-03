@@ -26,8 +26,8 @@ export class PrismaProjectRoleApplicationMapper {
           id: domainEntity.projectId,
         },
       },
-      projectTitle: domainEntity.projectTitle,
-      projectDescription: domainEntity.projectDescription,
+      projectTitle: domainEntity.project.title,
+      projectDescription: domainEntity.project.description,
       projectRoleTitle: domainEntity.projectRoleTitle,
       status: domainEntity.status,
       motivationLetter: domainEntity.motivationLetter,
@@ -55,6 +55,7 @@ export class PrismaProjectRoleApplicationMapper {
           include: {
             keyFeatures: true;
             projectGoals: true;
+            owner?: true;
           };
         };
       };
@@ -67,6 +68,42 @@ export class PrismaProjectRoleApplicationMapper {
       id: prismaEntity.id,
       projectId: prismaEntity.projectId,
       projectTitle: prismaEntity.projectTitle,
+      project: {
+        id: prismaEntity.project.id,
+        title: prismaEntity.project.title,
+        shortDescription: prismaEntity.project.shortDescription,
+        description: prismaEntity.project.description,
+        image: prismaEntity.project.image ?? undefined,
+        owner: prismaEntity.project.owner
+          ? {
+              id: prismaEntity.project.owner.id,
+              username: prismaEntity.project.owner.username,
+              login: prismaEntity.project.owner.login,
+              email: prismaEntity.project.owner.email,
+              provider: prismaEntity.project.owner.provider,
+              jobTitle: prismaEntity.project.owner.jobTitle,
+              location: prismaEntity.project.owner.location,
+              company: prismaEntity.project.owner.company,
+              bio: prismaEntity.project.owner.bio,
+              createdAt: prismaEntity.project.owner.createdAt,
+              updatedAt: prismaEntity.project.owner.updatedAt,
+              avatarUrl: prismaEntity.project.owner.avatarUrl,
+            }
+          : {
+              id: 'unknown',
+              username: 'unknown',
+              login: 'unknown',
+              email: 'unknown',
+              provider: 'unknown',
+              jobTitle: null,
+              location: null,
+              company: null,
+              bio: null,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              avatarUrl: null,
+            },
+      },
       projectDescription: prismaEntity.projectDescription ?? undefined,
       projectRoleId: prismaEntity.projectRole.id,
       projectRoleTitle: prismaEntity.projectRole.title,
