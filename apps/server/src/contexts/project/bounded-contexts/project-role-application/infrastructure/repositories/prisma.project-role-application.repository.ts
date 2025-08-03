@@ -1,9 +1,8 @@
-import { Logger } from '@nestjs/common';
-import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
-import { ProjectRoleApplicationRepositoryPort } from '../../use-cases/ports/project-role-application.repository.port';
-import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 import { Result } from '@/libs/result';
-import { Injectable } from '@nestjs/common';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
+import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
+import { ProjectRoleApplicationRepositoryPort } from '../../use-cases/ports/project-role-application.repository.port';
 import { PrismaProjectRoleApplicationMapper } from './prisma.project-role-application.mapper';
 
 @Injectable()
@@ -106,7 +105,7 @@ export class PrismaProjectRoleApplicationRepository
   async findAllByProjectId(projectId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -187,7 +186,7 @@ export class PrismaProjectRoleApplicationRepository
       }
 
       const projectRoleApplications: {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -269,7 +268,7 @@ export class PrismaProjectRoleApplicationRepository
         }));
 
         projectRoleApplications.push({
-          appplicationId: domainApplication.value.id!,
+          applicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
           projectRoleTitle: application.projectRole.title,
           project: {
@@ -340,7 +339,7 @@ export class PrismaProjectRoleApplicationRepository
   async findByRoleId(roleId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         projectRoleDescription: string;
@@ -382,7 +381,7 @@ export class PrismaProjectRoleApplicationRepository
       }
 
       const projectRoleApplications: {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         projectRoleDescription: string;
@@ -428,7 +427,7 @@ export class PrismaProjectRoleApplicationRepository
           );
         }
         projectRoleApplications.push({
-          appplicationId: domainApplication.value.id!,
+          applicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
           projectRoleTitle: application.projectRole.title, // Utilise le titre actuel du role
           projectRoleDescription: application.projectRole.description, // Ajoute la description actuelle du role
@@ -594,7 +593,7 @@ export class PrismaProjectRoleApplicationRepository
   async findAllByUserId(userId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -675,7 +674,7 @@ export class PrismaProjectRoleApplicationRepository
       }
 
       const projectRoleApplications: {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -757,7 +756,7 @@ export class PrismaProjectRoleApplicationRepository
         }));
 
         projectRoleApplications.push({
-          appplicationId: domainApplication.value.id!,
+          applicationId: domainApplication.value.id!,
           projectRoleId: domainApplication.value.projectRoleId,
           projectRoleTitle: application.projectRole.title,
           project: {
@@ -855,7 +854,7 @@ export class PrismaProjectRoleApplicationRepository
         },
         user: application.user,
       });
-      console.log('domainApplication', domainApplication);
+      this.Logger.log('domainApplication', domainApplication);
       if (!domainApplication.success) {
         return Result.fail(
           typeof domainApplication.error === 'string'

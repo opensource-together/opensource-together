@@ -16,7 +16,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   findAllByUserId(userId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -130,7 +130,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   findAllByProjectId(projectId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -194,7 +194,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   findByRoleId(roleId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         projectRoleDescription: string;

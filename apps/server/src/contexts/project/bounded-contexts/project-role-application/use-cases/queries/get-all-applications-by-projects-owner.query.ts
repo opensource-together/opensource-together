@@ -1,15 +1,15 @@
-import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import {
-  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-  ProjectRoleApplicationRepositoryPort,
-} from '../ports/project-role-application.repository.port';
-import { Inject } from '@nestjs/common';
+import { Project } from '@/contexts/project/domain/project.entity';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';
-import { Project } from '@/contexts/project/domain/project.entity';
+import { Inject } from '@nestjs/common';
+import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import {
+  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
+} from '../ports/project-role-application.repository.port';
 
 export class GetAllApplicationsByProjectsOwnerQuery implements IQuery {
   constructor(public readonly ownerId: string) {}
@@ -36,7 +36,7 @@ export class GetAllApplicationsByProjectsOwnerQueryHandler
       return Result.fail(projects.error);
     }
     const applications: {
-      appplicationId: string;
+      applicationId: string;
       projectRoleId: string;
       projectRoleTitle: string;
       project: {

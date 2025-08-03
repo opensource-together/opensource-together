@@ -1,10 +1,10 @@
-import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import {
+  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
+} from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
 import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
-import {
-  ProjectRoleApplicationRepositoryPort,
-  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-} from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
+import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 export class FindUserApplicationsQuery implements IQuery {
   constructor(
@@ -27,7 +27,7 @@ export class FindUserApplicationsQueryHandler
     const { userId } = query.props;
     const applications: Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
