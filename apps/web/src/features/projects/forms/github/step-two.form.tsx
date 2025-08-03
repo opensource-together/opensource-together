@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
@@ -45,8 +47,11 @@ export default function StepTwoForm() {
               <Label className="text-lg">README.md</Label>
             </div>
           </div>
-          <div className="mb-3 line-clamp-5 text-sm leading-6 text-black/50">
-            <ReactMarkdown>
+          <div className="mb-3 line-clamp-5 h-[100px] text-sm leading-6 text-black/50">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+            >
               {formData.selectedRepository?.readme ||
                 "Aucune description disponible. Vous pourrez en ajouter une à l'étape suivante."}
             </ReactMarkdown>
