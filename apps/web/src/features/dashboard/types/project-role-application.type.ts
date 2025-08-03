@@ -19,7 +19,7 @@ import { Owner } from "@/features/projects/types/project.type";
  *     shortDescription: "Description courte",
  *     image: "https://example.com/image.jpg",
  *     owner: {
- *       ownerId: "uuid",
+ *       id: "uuid",
  *       username: "John Doe",
  *       avatarUrl: "https://example.com/avatar.jpg"
  *     }

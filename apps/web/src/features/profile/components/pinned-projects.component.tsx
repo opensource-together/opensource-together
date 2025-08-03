@@ -59,7 +59,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
               })) ?? []
             }
             owner={{
-              ownerId: project.owner.ownerId,
+              id: project.owner.id,
               username: project.owner.username,
               avatarUrl: project.owner.avatarUrl,
             }}

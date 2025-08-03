@@ -48,7 +48,7 @@ export default function ProjectCardComponent({
   className = "",
   image = "",
   owner = {
-    ownerId: "",
+    id: "",
     username: "",
     avatarUrl: "",
   },

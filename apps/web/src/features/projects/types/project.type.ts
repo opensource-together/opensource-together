@@ -1,5 +1,5 @@
 export interface Owner {
-  ownerId: string;
+  id: string;
   username: string;
   avatarUrl?: string;
 }
@@ -72,7 +72,6 @@ export interface ProjectGoal {
 
 export interface Project {
   id?: string;
-  ownerId?: string;
   slug?: string;
   title: string;
   image?: string;

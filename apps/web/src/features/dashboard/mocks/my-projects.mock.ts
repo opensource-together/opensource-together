@@ -9,7 +9,7 @@ export const mockDashboardData: MyProjectType[] = [
     image: "/icons/gitifyIcon.png",
     status: "PUBLISHED",
     owner: {
-      ownerId: "user-1",
+      id: "user-1",
       username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
@@ -386,7 +386,7 @@ export const mockDashboardData: MyProjectType[] = [
     image: "/icons/gitifyIcon.png",
     status: "DRAFT",
     owner: {
-      ownerId: "user-1",
+      id: "user-1",
       username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
@@ -612,7 +612,7 @@ export const mockDashboardData: MyProjectType[] = [
       },
     ],
     owner: {
-      ownerId: "user-1",
+      id: "user-1",
       username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
@@ -744,7 +744,7 @@ export const mockDashboardData: MyProjectType[] = [
       },
     ],
     owner: {
-      ownerId: "user-1",
+      id: "user-1",
       username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
@@ -926,7 +926,7 @@ export const mockDashboardData: MyProjectType[] = [
       },
     ],
     owner: {
-      ownerId: "user-1",
+      id: "user-1",
       username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },
@@ -1065,7 +1065,7 @@ export const mockDashboardData: MyProjectType[] = [
       },
     ],
     owner: {
-      ownerId: "user-1",
+      id: "user-1",
       username: "69Kilian",
       avatarUrl: "/icons/user-placeholder.svg",
     },

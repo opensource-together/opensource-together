@@ -18,7 +18,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       shortDescription: "Application de révision interactive",
       image: "https://example.com/project-image.jpg",
       owner: {
-        ownerId: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
+        id: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
         username: "Lucalhost",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
@@ -86,7 +86,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       image:
         "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
       owner: {
-        ownerId: "1",
+        id: "1",
         username: "y2_dev",
         avatarUrl:
           "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
@@ -173,7 +173,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         "OpenSourcify is a tool for managing code source for developers.",
       image: opensourcifyProject?.image || "/icons/opensourcify.png",
       owner: {
-        ownerId: "2",
+        id: "2",
         username: "Jane Doe",
         avatarUrl: "/icons/janedoe.png",
       },
@@ -253,7 +253,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         "CodeQuest is a tool for managing code source for developers.",
       image: codequestProject?.image || "/icons/codequest.png",
       owner: {
-        ownerId: "3",
+        id: "3",
         username: "Maxime Dupont",
         avatarUrl: "/icons/maximedupont.png",
       },
@@ -339,7 +339,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         "Gitify is a tool for managing code source for developers.",
       image: gitifyProject?.image,
       owner: {
-        ownerId: "1",
+        id: "1",
         username: "69Killian",
         avatarUrl: "/icons/killiancodes-icon.jpg",
       },

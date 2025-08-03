@@ -95,7 +95,7 @@ export const mockPublicProfile: Profile = {
       image:
         "https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=Awesome+Project",
       owner: {
-        ownerId: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
+        id: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
         username: "John Doe",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
@@ -143,7 +143,7 @@ export const mockPublicProfile: Profile = {
       image:
         "https://via.placeholder.com/300x200/10B981/FFFFFF?text=Open+Source+Lib",
       owner: {
-        ownerId: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
+        id: "43a39f90-1718-470d-bcef-c7ebeb972c0d",
         username: "John Doe",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
