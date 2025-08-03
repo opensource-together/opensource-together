@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
@@ -13,9 +13,19 @@ import {
   FormItem,
   FormMessage,
 } from "@/shared/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
 
 import FormNavigationButtons from "../../components/stepper/stepper-navigation-buttons.component";
-import { useGithubRepos } from "../../hooks/use-projects.hook";
+import {
+  useGithubOrgRepos,
+  useGithubRepos,
+} from "../../hooks/use-projects.hook";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 import { GithubRepoType } from "../../types/project.type";
 import {
@@ -26,7 +36,13 @@ import {
 export default function StepOneForm() {
   const router = useRouter();
   const { selectRepository, formData } = useProjectCreateStore();
-  const { data: githubRepos, isLoading } = useGithubRepos();
+  const { data: githubRepos, isLoading: isLoadingUserRepos } = useGithubRepos();
+  const { data: githubOrgRepos, isLoading: isLoadingOrgRepos } =
+    useGithubOrgRepos();
+  const [selectedRepoType, setSelectedRepoType] = useState<"user" | "org">(
+    "user"
+  );
+
   const form = useForm<SelectedRepoFormData>({
     resolver: zodResolver(selectedRepoSchema),
     defaultValues: {
@@ -44,6 +60,11 @@ export default function StepOneForm() {
 
   const selectedRepository = watch("selectedRepository");
 
+  // Reset selection when switching repository types
+  useEffect(() => {
+    setValue("selectedRepository", null);
+  }, [selectedRepoType, setValue]);
+
   // Scrollbar logic
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
@@ -52,7 +73,11 @@ export default function StepOneForm() {
   const [dragStartScroll, setDragStartScroll] = useState(0);
 
   const itemHeight = 64; // px
-  const totalCount = githubRepos?.length || 0;
+  const currentRepos =
+    selectedRepoType === "user" ? githubRepos : githubOrgRepos;
+  const isLoading =
+    selectedRepoType === "user" ? isLoadingUserRepos : isLoadingOrgRepos;
+  const totalCount = currentRepos?.length || 0;
   const totalHeight = itemHeight * totalCount;
   const visibleHeight = 320;
   const scrollbarHeight = Math.max(
@@ -111,6 +136,41 @@ export default function StepOneForm() {
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="w-full">
+        {/* Repository Type Selector */}
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Select
+              value={selectedRepoType}
+              onValueChange={(value) =>
+                setSelectedRepoType(value as "user" | "org")
+              }
+            >
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Sélectionner un compte" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">Mes repositories</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="org">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">Organisations</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {currentRepos && (
+            <span className="text-sm text-gray-600">
+              {currentRepos.length} repository
+              {currentRepos.length > 1 ? "s" : ""} trouvé
+              {currentRepos.length > 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+
         <FormField
           control={control}
           name="selectedRepository"
@@ -130,7 +190,7 @@ export default function StepOneForm() {
                       {isLoading ? (
                         <GithubRepoSkeleton />
                       ) : (
-                        githubRepos?.map((repo, idx) => (
+                        currentRepos?.map((repo, idx) => (
                           <div
                             key={idx}
                             className={`flex h-[64px] items-center justify-between px-6 transition-colors ${

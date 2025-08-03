@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
+  private readonly logger = new Logger(PrismaProjectRepository.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async create(project: Project): Promise<Result<Project, string>> {
@@ -61,6 +62,7 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         }
       }
       // Catch any other errors that are not PrismaClientKnownRequestError
+      this.logger.error('Project creation error:', error);
       return Result.fail(`Unknown error during project creation`);
     }
   }

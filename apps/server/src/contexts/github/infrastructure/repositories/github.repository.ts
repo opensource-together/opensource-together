@@ -216,29 +216,15 @@ export class GithubRepository implements GithubRepositoryPort {
       const response = await octokit.rest.repos.listForAuthenticatedUser({
         visibility: 'public',
         per_page: 50,
+        affiliation: 'owner,organization_member',
         headers: {
           'X-GitHub-Api-Version': '2022-11-28',
         },
       });
 
-      // Récupérer les informations de l'utilisateur authentifié
-      const userResponse = await octokit.rest.users.getAuthenticated({
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      });
-      const authenticatedUser = userResponse.data.login;
+      this.Logger.log(`Found ${response.data.length} matching repositories.`);
 
-      // Filtrer pour ne garder que les repositories dont l'utilisateur est le propriétaire
-      const ownedRepositories = response.data.filter(
-        (repo) => repo.owner.login === authenticatedUser,
-      );
-
-      this.Logger.log(
-        `Found ${ownedRepositories.length} owned repositories out of ${response.data.length} total repositories`,
-      );
-
-      const repositories = ownedRepositories
+      const repositories = response.data
         .map((repo) => {
           const rep = toGithubRepositoryDto(repo);
           if (rep.success) {
@@ -297,6 +283,220 @@ export class GithubRepository implements GithubRepositoryPort {
     } catch (e) {
       this.Logger.error('error fetching user repositories', e);
       return Result.fail('Failed to fetch user repositories');
+    }
+  }
+
+  async findRepositoriesOfOrganizations(
+    octokit: Octokit,
+  ): Promise<Result<GithubRepoListInput[], string>> {
+    try {
+      // Initialiser la liste des repositories d'organisations
+      const allOrgRepositories: GithubRepoListInput[] = [];
+
+      // Récupérer les informations de l'utilisateur pour vérifier les scopes
+      const userResponse = await octokit.rest.users.getAuthenticated({
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+
+      this.Logger.log('Authenticated user:', userResponse.data.login);
+      this.Logger.log('User scopes:', userResponse.headers['x-oauth-scopes']);
+
+      // Récupérer les organisations de l'utilisateur authentifié
+      const orgsResponse = await octokit.rest.orgs.listForAuthenticatedUser({
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+
+      this.Logger.log(`Found ${orgsResponse.data.length} organizations`);
+      this.Logger.log(
+        'Organizations:',
+        orgsResponse.data.map((org) => org.login),
+      );
+
+      // Test direct avec les organisations connues si aucune n'est trouvée
+      if (orgsResponse.data.length === 0) {
+        this.Logger.log(
+          'No organizations found via API, trying direct access...',
+        );
+        const knownOrgs = ['LeetGrindBot', 'opensource-together', 'y2-Corp'];
+
+        for (const orgName of knownOrgs) {
+          try {
+            const orgReposResponse = await octokit.rest.repos.listForOrg({
+              org: orgName,
+              type: 'all',
+              per_page: 50,
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28',
+              },
+            });
+
+            this.Logger.log(
+              `Direct access to ${orgName}: ${orgReposResponse.data.length} repositories`,
+            );
+
+            // Transformer les repositories de l'organisation
+            const orgRepositories = orgReposResponse.data
+              .map((repo) => {
+                const rep = toGithubRepositoryDto(repo);
+                if (rep.success) {
+                  return rep.value;
+                } else {
+                  this.Logger.error(
+                    'Failed to transform organization repository to DTO:',
+                    rep.error,
+                  );
+                  return undefined;
+                }
+              })
+              .filter((v) => v !== undefined)
+              .map((repo) => {
+                const rep = toGithubRepoListInput(repo);
+                if (rep.success) {
+                  return rep.value;
+                } else {
+                  this.Logger.error(
+                    'Failed to transform organization repository to list input:',
+                    rep.error,
+                  );
+                  return undefined;
+                }
+              })
+              .filter((v) => v !== undefined);
+
+            // Récupérer les README pour chaque repository de l'organisation
+            const orgRepositoriesWithReadme = await Promise.all(
+              orgRepositories.map(async (repo) => {
+                try {
+                  const readmeResult = await this.getRepositoryReadme(
+                    repo.owner,
+                    repo.title,
+                    octokit,
+                  );
+                  if (readmeResult.success) {
+                    return { ...repo, readme: readmeResult.value };
+                  } else {
+                    this.Logger.warn(
+                      `Failed to fetch README for ${repo.owner}/${repo.title}: ${readmeResult.error}`,
+                    );
+                    return repo;
+                  }
+                } catch (error) {
+                  this.Logger.error(
+                    `Error fetching README for ${repo.owner}/${repo.title}:`,
+                    error,
+                  );
+                  return repo;
+                }
+              }),
+            );
+
+            allOrgRepositories.push(...orgRepositoriesWithReadme);
+          } catch (error) {
+            this.Logger.error(`Direct access failed for ${orgName}:`, error);
+          }
+        }
+      }
+
+      // Récupérer les repositories de toutes les organisations
+      // Test direct avec les organisations connues si aucune n'est trouvée
+
+      for (const org of orgsResponse.data) {
+        try {
+          const orgReposResponse = await octokit.rest.repos.listForOrg({
+            org: org.login,
+            type: 'all', // Inclure public et privé pour le test
+            per_page: 50,
+            headers: {
+              'X-GitHub-Api-Version': '2022-11-28',
+            },
+          });
+
+          this.Logger.log(
+            `Found ${orgReposResponse.data.length} repositories in organization ${org.login}`,
+          );
+
+          // Transformer les repositories de l'organisation
+          const orgRepositories = orgReposResponse.data
+            .map((repo) => {
+              const rep = toGithubRepositoryDto(repo);
+              if (rep.success) {
+                return rep.value;
+              } else {
+                this.Logger.error(
+                  'Failed to transform organization repository to DTO:',
+                  rep.error,
+                );
+                return undefined;
+              }
+            })
+            .filter((v) => v !== undefined)
+            .map((repo) => {
+              const rep = toGithubRepoListInput(repo);
+              if (rep.success) {
+                return rep.value;
+              } else {
+                this.Logger.error(
+                  'Failed to transform organization repository to list input:',
+                  rep.error,
+                );
+                return undefined;
+              }
+            })
+            .filter((v) => v !== undefined);
+
+          // Récupérer les README pour chaque repository de l'organisation
+          const orgRepositoriesWithReadme = await Promise.all(
+            orgRepositories.map(async (repo) => {
+              try {
+                const readmeResult = await this.getRepositoryReadme(
+                  repo.owner,
+                  repo.title,
+                  octokit,
+                );
+                if (readmeResult.success) {
+                  return { ...repo, readme: readmeResult.value };
+                } else {
+                  this.Logger.warn(
+                    `Failed to fetch README for ${repo.owner}/${repo.title}: ${readmeResult.error}`,
+                  );
+                  return repo;
+                }
+              } catch (error) {
+                this.Logger.error(
+                  `Error fetching README for ${repo.owner}/${repo.title}:`,
+                  error,
+                );
+                return repo;
+              }
+            }),
+          );
+
+          allOrgRepositories.push(...orgRepositoriesWithReadme);
+        } catch (orgError) {
+          this.Logger.error(
+            `Error fetching repositories for organization ${org.login}:`,
+            orgError,
+          );
+          this.Logger.error(
+            `Error details for ${org.login}:`,
+            JSON.stringify(orgError, null, 2),
+          );
+          // Continuer avec les autres organisations même si une échoue
+        }
+      }
+
+      this.Logger.log(
+        `Total repositories from organizations: ${allOrgRepositories.length}`,
+      );
+
+      return Result.ok(allOrgRepositories);
+    } catch (e) {
+      this.Logger.error('error fetching organization repositories', e);
+      return Result.fail('Failed to fetch organization repositories');
     }
   }
 

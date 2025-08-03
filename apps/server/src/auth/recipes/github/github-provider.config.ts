@@ -8,6 +8,7 @@ export const githubProviderConfig = (configService: ConfigService) => {
         scope: [
           'read:user',
           'user:email',
+          'read:org',
           'repo',
           'write:repo_hook',
           'admin:repo_hook',

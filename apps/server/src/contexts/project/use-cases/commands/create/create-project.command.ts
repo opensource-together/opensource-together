@@ -22,7 +22,7 @@ import {
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 
 import { Result } from '@/libs/result';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { Octokit } from '@octokit/rest';
 
@@ -56,6 +56,7 @@ export class CreateProjectCommand implements ICommand {
 export class CreateProjectCommandHandler
   implements ICommandHandler<CreateProjectCommand>
 {
+  private readonly logger = new Logger(CreateProjectCommandHandler.name);
   constructor(
     @Inject(PROJECT_REPOSITORY_PORT)
     private readonly projectRepo: ProjectRepositoryPort,
@@ -70,6 +71,11 @@ export class CreateProjectCommandHandler
   async execute(
     createProjectCommand: CreateProjectCommand,
   ): Promise<Result<Project, ProjectValidationErrors | string>> {
+    this.logger.log('CreateProjectCommand received:', {
+      method: createProjectCommand.props.method,
+      title: createProjectCommand.props.title,
+      externalLinks: createProjectCommand.props.externalLinks,
+    });
     // const errors: CreateProjectCommandErrors = {};
     const {
       ownerId,
@@ -163,7 +169,10 @@ export class CreateProjectCommandHandler
     const projectValidated = projectResult.value;
     //si valide alors on enregistre le projet dans la persistance
     let savedProject = await this.projectRepo.create(projectValidated);
-    if (!savedProject.success) return Result.fail('Unable to create project');
+    if (!savedProject.success) {
+      this.logger.error('Failed to save project:', savedProject.error);
+      return Result.fail('Unable to create project');
+    }
 
     switch (method) {
       //si le projet est valide alors on créer un github repository
@@ -178,6 +187,12 @@ export class CreateProjectCommandHandler
       //si le projet est créé depuis github, on ne fait rien de plus
       case 'github':
         savedProject = this.validateGithubProject(savedProject.value);
+        if (!savedProject.success) {
+          this.logger.error(
+            'GitHub project validation failed:',
+            savedProject.error,
+          );
+        }
         break;
       default:
         break;
