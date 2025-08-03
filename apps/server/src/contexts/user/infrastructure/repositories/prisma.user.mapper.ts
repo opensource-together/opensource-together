@@ -119,6 +119,8 @@ export class PrismaUserMapper {
       const username = Username.create(prismaUser.username || '');
       const email = Email.create(prismaUser.email);
 
+      console.log('username', username);
+      console.log('email', email);
       if (!username.success) {
         return Result.fail(
           "Une erreur est survenue lors de la récupération des données de l'utilisateur",

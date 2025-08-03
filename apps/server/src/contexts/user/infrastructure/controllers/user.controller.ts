@@ -28,7 +28,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { PublicAccess, Session } from 'supertokens-nestjs';
+// import { PublicAccess, Session } from 'supertokens-nestjs';
+import { Session, UserSession } from '@thallesp/nestjs-better-auth';
+
 // DTO simple pour la mise à jour d'utilisateur
 // export class UpdateUserRequestDto {
 //   username?: string;
@@ -116,7 +118,9 @@ export class UserController {
     status: 404,
     description: 'Utilisateur non trouvé',
   })
-  async getMyProfile(@Session('userId') userId: string) {
+  async getMyProfile(@Session() session: UserSession) {
+    const userId = session.user.id;
+    console.log('userId', userId);
     const result: Result<User, string> = await this.queryBus.execute(
       new FindUserByIdQuery({
         userId,
@@ -291,7 +295,7 @@ export class UserController {
   }
 
   //PUBLIC ENDPOINTS
-  @PublicAccess()
+  // @PublicAccess()
   @Get(':id')
   @ApiOperation({ summary: 'Récupérer un utilisateur par son ID' })
   @ApiParam({
@@ -366,7 +370,7 @@ export class UserController {
     return userPrimitive;
   }
 
-  @PublicAccess()
+  // @PublicAccess()
   @Get(':userId/projects')
   @ApiOperation({ summary: "Récupérer les projets d'un utilisateur" })
   @ApiParam({

@@ -31,6 +31,7 @@ export class FindUserByIdQueryHandler
     const { userId, authenticatedUserId } = query.props;
     const result = await this.userRepo.findById(userId);
 
+    console.log('result', result);
     if (!result.success) {
       return Result.fail('User not found');
     }

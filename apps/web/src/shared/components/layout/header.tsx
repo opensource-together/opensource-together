@@ -66,17 +66,15 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const headerDashboard = pathname.startsWith("/dashboard");
-  const { isAuthenticated, currentUser, logout, requireAuth } = useAuth();
+  const { session, logout } = useAuth();
 
   if (pathname.startsWith("/auth")) {
     return null;
   }
 
-  const handleProfile = () =>
-    requireAuth(() => router.push("/profile"), "/profile");
+  const handleProfile = () => router.push("/profile");
 
-  const handleDashboard = () =>
-    requireAuth(() => router.push("/dashboard"), "/dashboard");
+  const handleDashboard = () => router.push("/dashboard");
 
   const handleLogout = () => {
     logout();
@@ -106,7 +104,7 @@ export default function Header() {
             <NavLink href="/">Découvrir</NavLink>
 
             {/* Dashboard */}
-            {isAuthenticated ? (
+            {session ? (
               <NavLink startWith href="/dashboard">
                 Gestion de projet
               </NavLink>
@@ -157,7 +155,7 @@ export default function Header() {
           </NavLink>
 
           {/* Dashboard mobile */}
-          {isAuthenticated ? (
+          {session ? (
             <NavLink href="/dashboard" className="w-full py-1.5">
               Dashboard
             </NavLink>
@@ -172,14 +170,14 @@ export default function Header() {
           )}
 
           {/* Profile mobile */}
-          {isAuthenticated && (
+          {session && (
             <NavLink href="/profile" className="w-full py-1.5">
               Mon Profil
             </NavLink>
           )}
 
           {/* Star Us mobile - visible seulement si pas connecté */}
-          {!isAuthenticated && (
+          {!session && (
             <Link
               href="https://github.com/opensource-together"
               target="_blank"
@@ -195,7 +193,7 @@ export default function Header() {
           )}
 
           {/* Déconnexion mobile */}
-          {isAuthenticated && (
+          {session && (
             <Button
               variant="ghost"
               onClick={handleLogout}
@@ -209,7 +207,7 @@ export default function Header() {
         {/* Desktop */}
         <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
           {/* Star Us - visible seulement si pas connecté */}
-          {!isAuthenticated && (
+          {!session && (
             <div className="flex items-center gap-2">
               <Link
                 href="https://github.com/opensource-together"
@@ -222,7 +220,7 @@ export default function Header() {
             </div>
           )}
 
-          {!isAuthenticated && (
+          {!session && (
             <Button
               asChild
               variant="default"
@@ -232,7 +230,7 @@ export default function Header() {
             </Button>
           )}
 
-          {isAuthenticated && (
+          {session && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -240,13 +238,13 @@ export default function Header() {
                   className="flex items-center gap-1 px-2"
                 >
                   <Avatar
-                    src={currentUser?.avatarUrl}
-                    name={currentUser?.username}
-                    alt={currentUser?.username}
+                    src={session?.user?.image}
+                    name={session?.user?.name}
+                    alt={session?.user?.name}
                     size="xs"
                   />
                   <span className="font-medium tracking-tighter">
-                    {currentUser?.username}
+                    {session?.user?.name}
                   </span>
                   <Icon name="chevron-down" size="md" />
                 </Button>
@@ -293,7 +291,7 @@ export default function Header() {
         {/* Actions mobile affichées dans le menu */}
         {mobileMenuOpen && (
           <div className="mt-3 flex w-full justify-center md:hidden">
-            {!isAuthenticated && (
+            {!session && (
               <Button
                 asChild
                 variant="default"

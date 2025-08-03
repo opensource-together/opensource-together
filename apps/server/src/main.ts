@@ -14,7 +14,6 @@ async function bootstrap() {
 
   app.setGlobalPrefix('v1'); // Disabled for Better Auth compatibility
 
-
   // Activation de la validation automatique des DTOs
   app.useGlobalPipes(
     new ValidationPipe({

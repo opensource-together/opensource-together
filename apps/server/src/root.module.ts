@@ -5,9 +5,10 @@ import { ContextsModule } from './contexts/contexts.module';
 import { HealthModule } from './health/health.module';
 import { MediaInfrastructure } from './media/infrastructure/media.infrastructure';
 // import { AuthModule } from './auth/auth.module';
-import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { AuthGuard, AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './libs/auth';
 import { BetterAuthGithubHook } from './auth/hooks/better-auth-github.hook';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -25,6 +26,12 @@ import { BetterAuthGithubHook } from './auth/hooks/better-auth-github.hook';
     MediaInfrastructure,
   ],
   controllers: [],
-  providers: [BetterAuthGithubHook],
+  providers: [
+    BetterAuthGithubHook,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class RootModule {}

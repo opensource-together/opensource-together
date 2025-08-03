@@ -20,6 +20,7 @@ export class PrismaUserRepository implements UserRepositoryPort {
           techStacks: true,
         },
       });
+      console.log('userResult', userResult);
 
       if (!userResult) return Result.fail('User not found');
 
