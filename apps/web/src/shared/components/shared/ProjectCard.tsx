@@ -15,7 +15,7 @@ import {
 
 import { ProjectRole } from "@/features/projects/types/project-role.type";
 import {
-  Author,
+  Owner,
   ProjectStats,
   TechStack,
 } from "@/features/projects/types/project.type";
@@ -34,7 +34,7 @@ interface ProjectCardProps {
   showViewProject?: boolean;
   className?: string;
   image?: string;
-  author?: Author;
+  owner?: Owner;
   projectStats?: ProjectStats;
 }
 
@@ -47,9 +47,9 @@ export default function ProjectCardComponent({
   showViewProject = true,
   className = "",
   image = "",
-  author = {
-    ownerId: "",
-    name: "",
+  owner = {
+    id: "",
+    username: "",
     avatarUrl: "",
   },
   projectStats = {
@@ -77,7 +77,7 @@ export default function ProjectCardComponent({
             <ProjectCardInfo>
               <ProjectCardTitle>{title}</ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {author.name}
+                by {owner.username}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>

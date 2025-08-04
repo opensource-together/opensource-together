@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Button } from "@/shared/components/ui/button";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { Label } from "@/shared/components/ui/label";
 import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
@@ -14,10 +16,22 @@ export function MyApplicationDetails({
 }: {
   application: ProjectRoleApplicationType;
 }) {
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
+  const handleCancelApplication = () => {
+    // TODO: Implement cancel application
+    console.log("Annulation de candidature pour:", application.applicationId);
+    setIsConfirmDialogOpen(false);
+  };
+
   return (
     <div className="sticky top-6">
       <div className="relative -top-3 flex justify-end gap-3">
-        <Button variant="ghost" size="sm">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsConfirmDialogOpen(true)}
+        >
           Annuler candidature
         </Button>
         <Link href={`/projects/${application.project.id}`}>
@@ -26,6 +40,20 @@ export function MyApplicationDetails({
           </Button>
         </Link>
       </div>
+
+      <ConfirmDialog
+        open={isConfirmDialogOpen}
+        onOpenChange={setIsConfirmDialogOpen}
+        title="Annuler la candidature"
+        description={`Êtes-vous sûr de vouloir annuler votre candidature pour le poste "${application.projectRole.title}" du projet "${application.project.title}" ? Cette action est irréversible.`}
+        isLoading={false}
+        onConfirm={handleCancelApplication}
+        onCancel={() => setIsConfirmDialogOpen(false)}
+        confirmText="Annuler candidature"
+        confirmVariant="destructive"
+        confirmIcon="trash"
+      />
+
       <div className="top-6 space-y-8 rounded-[20px] border border-[black]/6 p-6">
         {/* Description */}
         <div className="flex justify-between">

@@ -9,7 +9,7 @@ const codequestProject = mockProjects.find((p) => p.slug === "codequest");
 
 export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
   {
-    appplicationId: "d78b2322-65db-4c8b-a2d0-6cf65afae882",
+    applicationId: "d78b2322-65db-4c8b-a2d0-6cf65afae882",
     projectRoleId: "3715420c-d33e-4541-8e9a-e547eb169ba1",
     projectRoleTitle: "Dev back",
     project: {
@@ -17,9 +17,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
       title: "studydi",
       shortDescription: "Application de révision interactive",
       image: "https://example.com/project-image.jpg",
-      author: {
-        ownerId: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
-        name: "Lucalhost",
+      owner: {
+        id: "936d4402-83ff-4be1-a3f7-6e5fba8fa052",
+        username: "Lucalhost",
         avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
       },
     },
@@ -74,7 +74,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "2",
+    applicationId: "2",
     projectRoleId: "role2",
     projectRoleTitle: "Backend Developer",
     project: {
@@ -85,9 +85,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         "LeetGrind is a tool for managing code source for developers.",
       image:
         "https://www.google.com/s2/favicons?sz=256&domain_url=https%3A%2F%2Fwww.leetgrindbot.com%2F",
-      author: leetgrindProject?.author || {
-        ownerId: "1",
-        name: "y2_dev",
+      owner: {
+        id: "1",
+        username: "y2_dev",
         avatarUrl:
           "https://pbs.twimg.com/profile_images/1799769138413391872/USSwdetq_400x400.jpg",
       },
@@ -162,7 +162,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "3",
+    applicationId: "3",
     projectRoleId: "role3",
     projectRoleTitle: "UI/UX Designer",
     project: {
@@ -172,9 +172,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         opensourcifyProject?.shortDescription ||
         "OpenSourcify is a tool for managing code source for developers.",
       image: opensourcifyProject?.image || "/icons/opensourcify.png",
-      author: opensourcifyProject?.author || {
-        ownerId: "2",
-        name: "Jane Doe",
+      owner: {
+        id: "2",
+        username: "Jane Doe",
         avatarUrl: "/icons/janedoe.png",
       },
     },
@@ -242,7 +242,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "4",
+    applicationId: "4",
     projectRoleId: "role4",
     projectRoleTitle: "DevOps Engineer",
     project: {
@@ -252,9 +252,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         codequestProject?.shortDescription ||
         "CodeQuest is a tool for managing code source for developers.",
       image: codequestProject?.image || "/icons/codequest.png",
-      author: codequestProject?.author || {
-        ownerId: "3",
-        name: "Maxime Dupont",
+      owner: {
+        id: "3",
+        username: "Maxime Dupont",
         avatarUrl: "/icons/maximedupont.png",
       },
     },
@@ -328,7 +328,7 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
   {
-    appplicationId: "5",
+    applicationId: "5",
     projectRoleId: "role5",
     projectRoleTitle: "Frontend Developer",
     project: {
@@ -338,9 +338,9 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
         gitifyProject?.shortDescription ||
         "Gitify is a tool for managing code source for developers.",
       image: gitifyProject?.image,
-      author: gitifyProject?.author || {
-        ownerId: "1",
-        name: "69Killian",
+      owner: {
+        id: "1",
+        username: "69Killian",
         avatarUrl: "/icons/killiancodes-icon.jpg",
       },
     },

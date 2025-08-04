@@ -1,6 +1,6 @@
-export interface Author {
-  ownerId: string;
-  name: string;
+export interface Owner {
+  id: string;
+  username: string;
   avatarUrl?: string;
 }
 
@@ -72,13 +72,12 @@ export interface ProjectGoal {
 
 export interface Project {
   id?: string;
-  ownerId?: string;
   slug?: string;
   title: string;
   image?: string;
   coverImages?: string[];
   readme?: string;
-  author: Author;
+  owner: Owner;
   shortDescription: string;
   longDescription?: string;
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";

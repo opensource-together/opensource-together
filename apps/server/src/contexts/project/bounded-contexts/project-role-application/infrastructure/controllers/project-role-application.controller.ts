@@ -1,7 +1,7 @@
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { ApplyToProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/apply-to-project-role.command';
-import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/dto/apply-to-role-request.dto';
 import { GetAllProjectApplicationsQueryByProjectId } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-project-application.query';
+import { ApplyToRoleRequestDto } from '@/contexts/project/bounded-contexts/project-role/infrastructure/controllers/dto/apply-to-role-request.dto';
 import { Result } from '@/libs/result';
 import {
   Body,
@@ -9,9 +9,9 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Post,
-  Logger,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -154,7 +154,7 @@ export class ProjectRoleApplicationController {
     description: 'Liste des candidatures',
     example: [
       {
-        appplicationId: '135e59ec-ce39-4e2e-9070-cc34b894f8fb',
+        applicationId: '135e59ec-ce39-4e2e-9070-cc34b894f8fb',
         projectRoleId: '82711be8-6e93-4fd3-bfc2-7f0d63592e85',
         projectRoleTitle: 'dev angular',
         status: 'PENDING',
@@ -171,7 +171,7 @@ export class ProjectRoleApplicationController {
         },
       },
       {
-        appplicationId: '8a84e2cd-aa8c-4688-b733-60f64be48a34',
+        applicationId: '8a84e2cd-aa8c-4688-b733-60f64be48a34',
         projectRoleId: '1c7e97aa-3077-4806-873f-4c06197654a5',
         projectRoleTitle: 'dev node',
         status: 'PENDING',
@@ -188,7 +188,7 @@ export class ProjectRoleApplicationController {
         },
       },
       {
-        appplicationId: '26f22bed-b27c-4e96-9eb6-98f558df7400',
+        applicationId: '26f22bed-b27c-4e96-9eb6-98f558df7400',
         projectRoleId: '8c7e1125-b2fc-455c-8db3-2ba94e3a46d3',
         projectRoleTitle: 'dev react',
         status: 'PENDING',
@@ -220,7 +220,7 @@ export class ProjectRoleApplicationController {
   ) {
     const applications: Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         projectRoleDescription: string;
@@ -251,7 +251,7 @@ export class ProjectRoleApplicationController {
     description: 'Applications récupérées avec succès',
     example: [
       {
-        appplicationId: 'd32ffdab-127c-43cd-b05c-f523003e25f1',
+        applicationId: 'd32ffdab-127c-43cd-b05c-f523003e25f1',
         projectRoleId: '178210fe-8166-4fa0-824e-d9858072076d',
         projectRoleTitle: 'Dév web',
         status: 'PENDING',
@@ -288,7 +288,7 @@ export class ProjectRoleApplicationController {
     this.Logger.log('userId', userId);
     const applications: Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         projectRoleDescription: string;

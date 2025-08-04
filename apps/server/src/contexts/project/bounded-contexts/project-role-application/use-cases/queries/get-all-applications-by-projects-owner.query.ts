@@ -1,15 +1,15 @@
-import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import {
-  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-  ProjectRoleApplicationRepositoryPort,
-} from '../ports/project-role-application.repository.port';
-import { Inject } from '@nestjs/common';
+import { Project } from '@/contexts/project/domain/project.entity';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';
-import { Project } from '@/contexts/project/domain/project.entity';
+import { Inject } from '@nestjs/common';
+import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import {
+  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
+} from '../ports/project-role-application.repository.port';
 
 export class GetAllApplicationsByProjectsOwnerQuery implements IQuery {
   constructor(public readonly ownerId: string) {}
@@ -35,7 +35,61 @@ export class GetAllApplicationsByProjectsOwnerQueryHandler
     if (!projects.success) {
       return Result.fail(projects.error);
     }
-    const applications: any[] = [];
+    const applications: {
+      applicationId: string;
+      projectRoleId: string;
+      projectRoleTitle: string;
+      project: {
+        id: string;
+        title: string;
+        shortDescription: string;
+        image?: string;
+        owner: {
+          id: string;
+          username: string;
+          login: string;
+          email: string;
+          provider: string;
+          createdAt: Date;
+          updatedAt: Date;
+          avatarUrl: string;
+        };
+      };
+      projectRole: {
+        id: string;
+        projectId?: string;
+        title: string;
+        description: string;
+        techStacks: {
+          id: string;
+          name: string;
+          iconUrl?: string;
+        }[];
+        roleCount?: number;
+        projectGoal?: {
+          id?: string;
+          projectId?: string;
+          goal: string;
+        }[];
+      };
+      status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+      selectedKeyFeatures: {
+        feature: string;
+      }[];
+      selectedProjectGoals: {
+        goal: string;
+      }[];
+      appliedAt: Date;
+      decidedAt: Date;
+      decidedBy?: string;
+      rejectionReason?: string;
+      motivationLetter: string;
+      userProfile: {
+        id: string;
+        name: string;
+        avatarUrl?: string;
+      };
+    }[] = [];
     for (const project of projects.value) {
       if (!project.toPrimitive().id) {
         continue;

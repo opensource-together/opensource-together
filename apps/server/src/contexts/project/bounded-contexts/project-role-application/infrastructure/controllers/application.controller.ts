@@ -1,20 +1,20 @@
+import { Result } from '@/libs/result';
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Param,
   Patch,
-  Body,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
 import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
-import { Result } from '@/libs/result';
-import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
 import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
 import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
 @Controller('applications')
 export class ApplicationController {
   constructor(
@@ -32,7 +32,7 @@ export class ApplicationController {
     schema: {
       type: 'object',
       properties: {
-        appplicationId: { type: 'string' },
+        applicationId: { type: 'string' },
         projectRoleId: { type: 'string' },
         projectRoleTitle: { type: 'string' },
         project: {
@@ -123,7 +123,7 @@ export class ApplicationController {
       },
     },
     example: {
-      appplicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
+      applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
       projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
       projectRoleTitle: 'Dev back',
       project: {
@@ -206,7 +206,7 @@ export class ApplicationController {
       ACCEPTED: {
         summary: 'Application accepted successfully',
         value: {
-          appplicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
+          applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
           projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
           projectRoleTitle: 'Dev back',
           project: {
@@ -273,7 +273,7 @@ export class ApplicationController {
       REJECTED: {
         summary: 'Application rejected successfully',
         value: {
-          appplicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
+          applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
           projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
           projectRoleTitle: 'Dev back',
           project: {

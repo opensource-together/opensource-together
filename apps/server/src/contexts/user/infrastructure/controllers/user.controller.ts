@@ -1,14 +1,14 @@
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
+import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
-import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { User } from '@/contexts/user/domain/user.entity';
 import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
 import { FindUserApplicationsQuery } from '@/contexts/user/use-cases/queries/find-user-applications.query';
 import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
-import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
 import { Result } from '@/libs/result';
 import {
   Body,
@@ -259,7 +259,7 @@ export class UserController {
       items: {
         type: 'object',
         properties: {
-          appplicationId: { type: 'string' },
+          applicationId: { type: 'string' },
           projectRoleId: { type: 'string' },
           projectRoleTitle: { type: 'string' },
           project: {
@@ -352,7 +352,7 @@ export class UserController {
     },
     example: [
       {
-        appplicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
+        applicationId: 'd78b2322-65db-4c8b-a2d0-6cf65afae882',
         projectRoleId: '3715420c-d33e-4541-8e9a-e547eb169ba1',
         projectRoleTitle: 'Dev back',
         project: {
@@ -436,7 +436,7 @@ export class UserController {
     // Sinon, récupérer les candidatures soumises par l'utilisateur (comportement par défaut)
     const applications: Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {

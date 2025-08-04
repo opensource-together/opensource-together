@@ -16,7 +16,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   findAllByUserId(userId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -24,10 +24,15 @@ export interface ProjectRoleApplicationRepositoryPort {
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -125,7 +130,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   findAllByProjectId(projectId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         project: {
@@ -133,10 +138,15 @@ export interface ProjectRoleApplicationRepositoryPort {
           title: string;
           shortDescription: string;
           image?: string;
-          author: {
-            ownerId: string;
-            name: string;
-            avatarUrl?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
           };
         };
         projectRole: {
@@ -184,7 +194,7 @@ export interface ProjectRoleApplicationRepositoryPort {
   findByRoleId(roleId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
         projectRoleDescription: string;

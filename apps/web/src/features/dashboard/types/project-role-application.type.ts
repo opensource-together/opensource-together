@@ -1,4 +1,4 @@
-import { Author } from "@/features/projects/types/project.type";
+import { Owner } from "@/features/projects/types/project.type";
 
 /**
  * Type représentant une candidature à un rôle de projet
@@ -10,7 +10,7 @@ import { Author } from "@/features/projects/types/project.type";
  * @example
  * ```typescript
  * const application: ProjectRoleApplicationType = {
- *   appplicationId: "uuid",
+ *   applicationId: "uuid",
  *   projectRoleId: "uuid",
  *   projectRoleTitle: "Développeur Frontend",
  *   project: {
@@ -18,9 +18,9 @@ import { Author } from "@/features/projects/types/project.type";
  *     title: "Mon Projet",
  *     shortDescription: "Description courte",
  *     image: "https://example.com/image.jpg",
- *     author: {
- *       ownerId: "uuid",
- *       name: "John Doe",
+ *     owner: {
+ *       id: "uuid",
+ *       username: "John Doe",
  *       avatarUrl: "https://example.com/avatar.jpg"
  *     }
  *   },
@@ -55,7 +55,7 @@ import { Author } from "@/features/projects/types/project.type";
  */
 export interface ProjectRoleApplicationType {
   /** ID unique de la candidature */
-  appplicationId: string;
+  applicationId: string;
 
   /** ID du rôle de projet pour lequel la candidature a été soumise */
   projectRoleId: string;
@@ -78,7 +78,7 @@ export interface ProjectRoleApplicationType {
     image?: string;
 
     /** Informations de l'auteur du projet */
-    author: Author;
+    owner: Owner;
   };
 
   /** Informations complètes du rôle de projet */

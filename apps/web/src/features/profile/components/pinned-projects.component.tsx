@@ -58,10 +58,10 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
                 iconUrl: tech.iconUrl,
               })) ?? []
             }
-            author={{
-              ownerId: project.author.ownerId,
-              name: project.author.name,
-              avatarUrl: project.author.avatarUrl,
+            owner={{
+              id: project.owner.id,
+              username: project.owner.username,
+              avatarUrl: project.owner.avatarUrl,
             }}
             projectStats={{
               forks: project.projectStats?.forks || 0,

@@ -11,13 +11,19 @@ interface StepperWrapperProps {
   children: React.ReactNode;
 }
 
-export function StepperWrapper({ currentStep, children }: StepperWrapperProps) {
+export function StepperWrapper({
+  currentStep,
+  method,
+  children,
+}: StepperWrapperProps) {
+  const totalSteps = method === "github" ? 6 : 4;
+
   return (
     <div className="mx-auto mt-8 max-w-md">
       <div className="my-24 flex flex-col items-center justify-center">
         <StepperIndicatorComponent
           currentStep={currentStep}
-          totalSteps={4}
+          totalSteps={totalSteps}
           className="mb-20"
         />
         {children}

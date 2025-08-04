@@ -20,10 +20,10 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 
-import { TeamMember } from "../../types/my-projects.type";
+import { TeamMemberType } from "../../types/my-projects.type";
 
 interface MyTeamMembersProps {
-  members: TeamMember[];
+  members: TeamMemberType[];
 }
 
 export default function MyTeamMembers({ members }: MyTeamMembersProps) {
@@ -89,7 +89,7 @@ export default function MyTeamMembers({ members }: MyTeamMembersProps) {
                 <div className="flex flex-col">
                   <span className="text-xs text-black/50">Rejoint le</span>
                   <span className="text-sm font-medium tracking-tighter">
-                    {new Date(member.joinedAt).toLocaleDateString("fr-FR")}
+                    {member.joinedAt.toLocaleDateString("fr-FR")}
                   </span>
                 </div>
               </TableCell>

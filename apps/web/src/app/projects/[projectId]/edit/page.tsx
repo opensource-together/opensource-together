@@ -15,17 +15,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `Modifier ${project.title} | OpenSource Together`,
     description: project.shortDescription,
-    openGraph: {
-      title: `Modifier ${project.title} | OpenSource Together`,
-      description: project.shortDescription,
-      images: [project.image || ""],
-      url: `https://opensourcetogether.com/projects/${projectId}/edit`,
-      type: "website",
-      siteName: "OpenSource Together",
-      locale: "fr_FR",
-      countryName: "France",
-      emails: ["contact@opensourcetogether.com"],
-    },
   };
 }
 
