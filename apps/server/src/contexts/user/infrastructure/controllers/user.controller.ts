@@ -537,7 +537,7 @@ export class UserController {
       );
     }
 
-    const result = await this.commandBus.execute(
+    const result: Result<void, string> = await this.commandBus.execute(
       new CancelApplicationCommand({ applicationId: id, userId }),
     );
 

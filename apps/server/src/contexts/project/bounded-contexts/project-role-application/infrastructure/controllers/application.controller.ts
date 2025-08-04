@@ -13,15 +13,12 @@ import {
   Patch,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
-import { AcceptRejectApplicationRequestDto } from './dto/accept-reject-application-request.dto';
+import {
+  AcceptRejectApplicationRequestDto,
+  ApplicationStatus,
+} from './dto/accept-reject-application-request.dto';
 @Controller('applications')
 export class ApplicationController {
   constructor(
@@ -372,7 +369,7 @@ export class ApplicationController {
     @Body() body: AcceptRejectApplicationRequestDto,
     @Session('userId') userId: string,
   ) {
-    if (body.status === 'ACCEPTED') {
+    if (body.status === ApplicationStatus.ACCEPTED) {
       const acceptedApplication: Result<ProjectRoleApplication, string> =
         await this.commandBus.execute(
           new AcceptUserApplicationCommand({
@@ -387,7 +384,7 @@ export class ApplicationController {
         );
       }
       return acceptedApplication.value;
-    } else {
+    } else if (body.status === ApplicationStatus.REJECTED) {
       const rejectedApplication: Result<ProjectRoleApplication, string> =
         await this.commandBus.execute(
           new RejectUserApplicationCommand({
