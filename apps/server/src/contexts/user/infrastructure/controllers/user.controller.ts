@@ -1,6 +1,7 @@
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
+import { CancelApplicationCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/cancel-application.command';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
 import { User } from '@/contexts/user/domain/user.entity';
@@ -497,13 +498,52 @@ export class UserController {
   @Patch('me/applications/:id')
   @ApiOperation({ summary: 'Cancel an application' })
   @ApiParam({ name: 'id', description: 'Application ID' })
+  @ApiBody({
+    description: 'Cancel application data',
+    schema: {
+      type: 'object',
+      properties: {
+        cancel: {
+          type: 'boolean',
+          description: 'Set to true to cancel the application',
+        },
+      },
+      required: ['cancel'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Application cancelled successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Application cannot be cancelled',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Application not found',
+  })
   async cancelApplication(
     @Param('id') id: string,
     @Session('userId') userId: string,
+    @Body() body: { cancel: boolean },
   ) {
-    return await this.commandBus.execute(
-      new CancelApplicationCommand(id, userId),
+    if (!body.cancel) {
+      throw new HttpException(
+        'Cancel must be true to cancel application',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const result = await this.commandBus.execute(
+      new CancelApplicationCommand({ applicationId: id, userId }),
     );
+
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+
+    return { message: 'Application cancelled successfully' };
   }
 
   //PUBLIC ENDPOINTS

@@ -371,6 +371,28 @@ export class ProjectRoleApplication {
     return Result.ok(undefined);
   }
 
+  public cancel(
+    userId: string,
+  ): Result<void, ProjectRoleApplicationValidationErrors | string> {
+    if (this.status !== 'PENDING') {
+      return Result.fail({
+        status: 'Application must be pending to be cancelled',
+      });
+    }
+
+    if (this.userProfile?.id !== userId) {
+      return Result.fail({
+        status: 'Only the applicant can cancel their own application',
+      });
+    }
+
+    this.status = 'CANCELLED';
+    this.decidedAt = new Date();
+    this.decidedBy = userId;
+
+    return Result.ok(undefined);
+  }
+
   public toPrimitive() {
     return {
       id: this.id,
