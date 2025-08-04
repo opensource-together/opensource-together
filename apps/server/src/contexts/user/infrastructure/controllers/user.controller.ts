@@ -33,6 +33,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PublicAccess, Session } from 'supertokens-nestjs';
+import { CancelApplicationRequestDto } from './dto/cancel-application-request.dto';
+
 // DTO simple pour la mise à jour d'utilisateur
 // export class UpdateUserRequestDto {
 //   username?: string;
@@ -526,7 +528,7 @@ export class UserController {
   async cancelApplication(
     @Param('id') id: string,
     @Session('userId') userId: string,
-    @Body() body: { cancel: boolean },
+    @Body() body: CancelApplicationRequestDto,
   ) {
     if (!body.cancel) {
       throw new HttpException(
