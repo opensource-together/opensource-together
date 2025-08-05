@@ -1,14 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getMyProjects } from "../services/my-projects.service";
+import { MyProjectType } from "../types/my-projects.type";
 
 /**
- * Hook pour récupérer les projets de l'utilisateur courant
+ * Fetches the list of projects for the current user.
  *
- * @returns Un objet contenant les données des projets, l'état de chargement et les erreurs
+ * @returns A React Query result containing the list of projects.
  */
 export function useMyProjects() {
-  return useQuery({
+  return useQuery<MyProjectType[]>({
     queryKey: ["my-projects"],
     queryFn: getMyProjects,
   });

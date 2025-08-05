@@ -3,9 +3,9 @@ import { API_BASE_URL } from "@/config/config";
 import { MyProjectType } from "../types/my-projects.type";
 
 /**
- * Récupère les projets de l'utilisateur courant avec leurs détails
+ * Fetches the list of projects for the current user.
  *
- * @returns Promise<MyProjectType[]> - Liste des projets avec détails
+ * @returns A promise that resolves to an array of projects.
  */
 export const getMyProjects = async (): Promise<MyProjectType[]> => {
   try {
@@ -22,23 +22,9 @@ export const getMyProjects = async (): Promise<MyProjectType[]> => {
       throw new Error(error.message || "Failed to fetch my projects");
     }
 
-    const data = await response.json();
-
-    // Convertir les dates string en objets Date
-    return data.map((project: any) => ({
-      ...project,
-      applications: project.applications?.map((app: any) => ({
-        ...app,
-        appliedAt: new Date(app.appliedAt),
-        decidedAt: app.decidedAt ? new Date(app.decidedAt) : undefined,
-      })) || [],
-      teamMembers: project.teamMembers?.map((member: any) => ({
-        ...member,
-        joinedAt: new Date(member.joinedAt),
-      })) || [],
-    }));
+    return await response.json();
   } catch (error) {
     console.error("Error fetching my projects:", error);
     throw error;
   }
-}; 
+};
