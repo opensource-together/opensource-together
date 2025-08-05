@@ -217,3 +217,35 @@ export async function applyToProjectRole(
     throw error;
   }
 }
+
+/**
+ * Annule une candidature par son ID
+ *
+ * @param applicationId - L'ID de la candidature à annuler
+ * @returns Promise<void> - Résolution de la promesse
+ */
+export async function cancelApplicationById(
+  applicationId: string
+): Promise<void> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/user/me/applications/${applicationId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ cancel: true }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de l'annulation de la candidature."
+      );
+    }
+  } catch (error) {
+    console.error("[cancelApplicationById]", error);
+    throw error;
+  }
+}

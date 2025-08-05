@@ -9,6 +9,7 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { Label } from "@/shared/components/ui/label";
 import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
+import { useCancelApplication } from "../../hooks/use-project-role-application.hook";
 import { ProjectRoleApplicationType } from "../../types/project-role-application.type";
 
 export function MyApplicationDetails({
@@ -17,23 +18,26 @@ export function MyApplicationDetails({
   application: ProjectRoleApplicationType;
 }) {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const cancelApplicationMutation = useCancelApplication();
 
-  const handleCancelApplication = () => {
-    // TODO: Implement cancel application
-    console.log("Annulation de candidature pour:", application.applicationId);
+  const handleCancelApplication = async () => {
+    await cancelApplicationMutation.mutateAsync(application.applicationId);
     setIsConfirmDialogOpen(false);
   };
 
   return (
     <div className="sticky top-6">
       <div className="relative -top-3 flex justify-end gap-3">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsConfirmDialogOpen(true)}
-        >
-          Annuler candidature
-        </Button>
+        {application.status === "PENDING" && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsConfirmDialogOpen(true)}
+            disabled={cancelApplicationMutation.isPending}
+          >
+            Annuler candidature
+          </Button>
+        )}
         <Link href={`/projects/${application.project.id}`}>
           <Button variant="outline" size="sm">
             Voir projet
@@ -46,7 +50,7 @@ export function MyApplicationDetails({
         onOpenChange={setIsConfirmDialogOpen}
         title="Annuler la candidature"
         description={`Êtes-vous sûr de vouloir annuler votre candidature pour le poste "${application.projectRole.title}" du projet "${application.project.title}" ? Cette action est irréversible.`}
-        isLoading={false}
+        isLoading={cancelApplicationMutation.isPending}
         onConfirm={handleCancelApplication}
         onCancel={() => setIsConfirmDialogOpen(false)}
         confirmText="Annuler candidature"
