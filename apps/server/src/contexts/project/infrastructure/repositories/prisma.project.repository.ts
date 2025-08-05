@@ -450,7 +450,6 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
         },
       });
 
-      console.log('projectPrisma', projectsPrisma);
       if (!projectsPrisma || projectsPrisma.length === 0) return Result.ok([]);
 
       const domainProjects: ProjectWithDetails[] = [];

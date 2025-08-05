@@ -1,6 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { Project } from '@/contexts/project/domain/project.entity';
 import { Inject } from '@nestjs/common';
 import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';

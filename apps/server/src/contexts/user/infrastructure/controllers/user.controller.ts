@@ -2,8 +2,6 @@ import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controll
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
 import { CancelApplicationCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/cancel-application.command';
-import { Project } from '@/contexts/project/domain/project.entity';
-import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
 import { FindUserProjectsWithDetailsQuery } from '@/contexts/project/use-cases/queries/find-user-projects-with-details/find-user-projects-with-details.handler';
 import { User } from '@/contexts/user/domain/user.entity';
 import { ProjectWithDetails } from '@/contexts/project/infrastructure/repositories/prisma.project.mapper';
