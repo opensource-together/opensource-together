@@ -4,6 +4,7 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
 import {
   acceptProjectRoleApplication,
+  cancelApplication,
   getApplicationById,
   getMyApplications,
   getProjectRolesApplications,
@@ -107,5 +108,37 @@ export function useRejectProjectRoleApplication() {
     rejectApplication: mutation.mutate,
     isRejecting: mutation.isPending,
     isRejectError: mutation.isError,
+  };
+}
+
+/**
+ * Cancels a project role application.
+ *
+ * @returns An object containing:
+ * - cancelApplication: function to trigger the application cancellation
+ * - isCanceling: boolean indicating if the cancellation is in progress
+ * - isCancelError: boolean indicating if an error occurred
+ */
+export function useCancelApplication() {
+  const queryClient = useQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: (applicationId: string) => cancelApplication(applicationId),
+    loadingMessage: "Annulation de la candidature en cours...",
+    successMessage: "Candidature annulée avec succès",
+    errorMessage: "Erreur lors de l'annulation de la candidature",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["my-project-roles-applications"],
+        });
+      },
+    },
+  });
+
+  return {
+    cancelApplication: mutation.mutate,
+    isCanceling: mutation.isPending,
+    isCancelError: mutation.isError,
   };
 }
