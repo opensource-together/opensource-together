@@ -6,36 +6,10 @@ import { ApplicationType, TeamMemberType } from "../../types/my-projects.type";
 import MyApplicationsReceived from "./my-applications-received.component";
 import MyTeamMembers from "./my-team-members.component";
 
-// Mock data for the team members (to be replaced by your real data)
-const mockTeamMembers: TeamMemberType[] = [
-  {
-    id: "1",
-    name: "Byron Love",
-    avatarUrl: "/icons/exemplebyronIcon.svg",
-    role: "Frontend Developer",
-    joinedAt: new Date("2024-01-15"),
-    techStacks: [
-      { id: "1", name: "React" },
-      { id: "2", name: "TypeScript" },
-      { id: "3", name: "Tailwind" },
-    ],
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    avatarUrl: "/icons/exemplebyronIcon.svg",
-    role: "Backend Developer",
-    joinedAt: new Date("2024-01-20"),
-    techStacks: [
-      { id: "4", name: "Node.js" },
-      { id: "5", name: "PostgreSQL" },
-    ],
-  },
-];
-
 interface MyProjectTabsProps {
   applications: ApplicationType[];
   teamMembers?: TeamMemberType[];
+  isLoading?: boolean;
   onApplicationDecision?: (
     applicationId: string,
     decision: "ACCEPTED" | "REJECTED",
@@ -47,7 +21,8 @@ type TabType = "applications" | "members";
 
 export default function MyProjectTabs({
   applications,
-  teamMembers = mockTeamMembers,
+  teamMembers = [],
+  isLoading = false,
   onApplicationDecision,
 }: MyProjectTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("applications");
@@ -98,10 +73,13 @@ export default function MyProjectTabs({
         {activeTab === "applications" && (
           <MyApplicationsReceived
             applications={applications}
+            isLoading={isLoading}
             onApplicationDecision={onApplicationDecision}
           />
         )}
-        {activeTab === "members" && <MyTeamMembers members={teamMembers} />}
+        {activeTab === "members" && (
+          <MyTeamMembers members={teamMembers} isLoading={isLoading} />
+        )}
       </div>
     </div>
   );

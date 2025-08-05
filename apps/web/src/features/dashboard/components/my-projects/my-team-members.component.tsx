@@ -21,12 +21,21 @@ import {
 } from "@/shared/components/ui/table";
 
 import { TeamMemberType } from "../../types/my-projects.type";
+import MyTeamMembersSkeleton from "./skeletons/my-team-members-skeleton.component";
 
 interface MyTeamMembersProps {
   members: TeamMemberType[];
+  isLoading?: boolean;
 }
 
-export default function MyTeamMembers({ members }: MyTeamMembersProps) {
+export default function MyTeamMembers({
+  members,
+  isLoading = false,
+}: MyTeamMembersProps) {
+  if (isLoading) {
+    return <MyTeamMembersSkeleton />;
+  }
+
   if (members.length === 0) {
     return (
       <EmptyState

@@ -16,9 +16,11 @@ import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
 import ApplicationDetailsSheet from "../../forms/accept-or-reject-application.form";
 import { ApplicationType } from "../../types/my-projects.type";
+import MyApplicationsReceivedSkeleton from "./skeletons/my-applications-received-skeleton.component";
 
 interface MyApplicationsReceivedProps {
   applications: ApplicationType[];
+  isLoading?: boolean;
   onApplicationDecision?: (
     applicationId: string,
     decision: "ACCEPTED" | "REJECTED",
@@ -28,10 +30,15 @@ interface MyApplicationsReceivedProps {
 
 export default function MyApplicationsReceived({
   applications,
+  isLoading = false,
   onApplicationDecision,
 }: MyApplicationsReceivedProps) {
   const [selectedApplication, setSelectedApplication] =
     useState<ApplicationType | null>(null);
+
+  if (isLoading) {
+    return <MyApplicationsReceivedSkeleton />;
+  }
 
   if (applications.length === 0) {
     return (

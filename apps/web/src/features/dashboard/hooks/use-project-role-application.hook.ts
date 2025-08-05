@@ -71,6 +71,9 @@ export function useAcceptProjectRoleApplication() {
         queryClient.invalidateQueries({
           queryKey: ["project-roles-applications"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["my-projects"],
+        });
       },
     },
   });
@@ -100,6 +103,9 @@ export function useRejectProjectRoleApplication() {
         });
         queryClient.invalidateQueries({
           queryKey: ["project-roles-applications"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["my-projects"],
         });
       },
     },
