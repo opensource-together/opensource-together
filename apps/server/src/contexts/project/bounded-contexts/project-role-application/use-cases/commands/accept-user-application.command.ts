@@ -1,4 +1,9 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import {
+  CommandBus,
+  CommandHandler,
+  ICommand,
+  ICommandHandler,
+} from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
 import {
   PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
@@ -16,6 +21,7 @@ import {
   ProjectRoleRepositoryPort,
 } from '../../../project-role/use-cases/ports/project-role.repository.port';
 import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
+import { AddTeamMemberCommand } from '../../../team-member/use-cases/commands/add-team-member.command';
 
 export class AcceptUserApplicationCommand implements ICommand {
   constructor(
@@ -38,6 +44,7 @@ export class AcceptUserApplicationCommandHandler
     private readonly projectRoleApplicationRepository: ProjectRoleApplicationRepositoryPort,
     @Inject(PROJECT_ROLE_REPOSITORY_PORT)
     private readonly projectRoleRepository: ProjectRoleRepositoryPort,
+    private readonly commandBus: CommandBus,
   ) {}
 
   async execute(command: AcceptUserApplicationCommand) {
@@ -71,6 +78,21 @@ export class AcceptUserApplicationCommandHandler
       });
     if (!acceptedApplication.success) {
       return Result.fail(acceptedApplication.error);
+    }
+
+    // Ajouter l'utilisateur candidat comme membre d'équipe
+    const addTeamMemberResult = await this.commandBus.execute(
+      new AddTeamMemberCommand({
+        userId: application.toPrimitive().userProfile.id,
+        projectId: application.toPrimitive().projectId,
+      }),
+    );
+
+    if (!addTeamMemberResult.success) {
+      this.Logger.warn(
+        `Failed to add user ${application.toPrimitive().userProfile.id} as team member: ${addTeamMemberResult.error}`,
+      );
+      // On continue même si l'ajout du membre d'équipe échoue
     }
 
     const projectRole: Result<ProjectRole, string> =
