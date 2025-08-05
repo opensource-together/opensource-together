@@ -18,11 +18,17 @@ export function MyApplicationDetails({
   application: ProjectRoleApplicationType;
 }) {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const cancelApplicationMutation = useCancelApplication();
+  const { cancelApplicationAsync, isCanceling, isCancelError, cancelError } =
+    useCancelApplication();
 
   const handleCancelApplication = async () => {
-    await cancelApplicationMutation.mutateAsync(application.applicationId);
-    setIsConfirmDialogOpen(false);
+    try {
+      await cancelApplicationAsync(application.applicationId);
+      setIsConfirmDialogOpen(false);
+    } catch (error) {
+      // L'erreur est déjà gérée par le toast dans le hook
+      console.error("Erreur lors de l'annulation:", error);
+    }
   };
 
   return (
@@ -33,7 +39,7 @@ export function MyApplicationDetails({
             variant="ghost"
             size="sm"
             onClick={() => setIsConfirmDialogOpen(true)}
-            disabled={cancelApplicationMutation.isPending}
+            disabled={isCanceling}
           >
             Annuler candidature
           </Button>
@@ -50,7 +56,7 @@ export function MyApplicationDetails({
         onOpenChange={setIsConfirmDialogOpen}
         title="Annuler la candidature"
         description={`Êtes-vous sûr de vouloir annuler votre candidature pour le poste "${application.projectRole.title}" du projet "${application.project.title}" ? Cette action est irréversible.`}
-        isLoading={cancelApplicationMutation.isPending}
+        isLoading={isCanceling}
         onConfirm={handleCancelApplication}
         onCancel={() => setIsConfirmDialogOpen(false)}
         confirmText="Annuler candidature"

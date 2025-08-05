@@ -110,12 +110,12 @@ export function useRejectProjectRoleApplication() {
 /**
  * Cancels a project role application.
  *
- * @returns A React Query mutation for canceling applications.
+ * @returns A React Query mutation for canceling applications with all states.
  */
 export function useCancelApplication() {
   const queryClient = useQueryClient();
 
-  return useToastMutation({
+  const mutation = useToastMutation({
     mutationFn: cancelApplicationById,
     loadingMessage: "Annulation de la candidature en cours...",
     successMessage: "Candidature annulée avec succès",
@@ -126,7 +126,19 @@ export function useCancelApplication() {
         queryClient.invalidateQueries({
           queryKey: ["my-applications"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["my-projects"],
+        });
       },
     },
   });
+
+  return {
+    cancelApplication: mutation.mutate,
+    cancelApplicationAsync: mutation.mutateAsync,
+    isCanceling: mutation.isPending,
+    isCancelError: mutation.isError,
+    cancelError: mutation.error,
+    resetCancelError: mutation.reset,
+  };
 }
