@@ -4,7 +4,9 @@ import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bound
 import { CancelApplicationCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/cancel-application.command';
 import { Project } from '@/contexts/project/domain/project.entity';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
+import { FindUserProjectsWithDetailsQuery } from '@/contexts/project/use-cases/queries/find-user-projects-with-details/find-user-projects-with-details.handler';
 import { User } from '@/contexts/user/domain/user.entity';
+import { ProjectWithDetails } from '@/contexts/project/infrastructure/repositories/prisma.project.mapper';
 import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
@@ -624,31 +626,222 @@ export class UserController {
     return userPrimitive;
   }
 
-  @PublicAccess()
-  @Get(':userId/projects')
-  @ApiOperation({ summary: "Récupérer les projets d'un utilisateur" })
-  @ApiParam({
-    name: 'userId',
-    description: "ID de l'utilisateur",
-    example: '43a39f90-1718-470d-bcef-c7ebeb972c0d',
+  @Get('me/projects')
+  @ApiOperation({
+    summary:
+      "Récupérer les projets de l'utilisateur courant avec tous les détails",
   })
+  @ApiCookieAuth('sAccessToken')
   @ApiResponse({
     status: 200,
-    description: 'Projets retournés avec succès',
+    description: 'Projets avec détails retournés avec succès',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          title: { type: 'string' },
+          shortDescription: { type: 'string' },
+          description: { type: 'string' },
+          image: { type: 'string', nullable: true },
+          status: { type: 'string' },
+          owner: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              username: { type: 'string' },
+              avatarUrl: { type: 'string', nullable: true },
+            },
+          },
+          techStacks: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+                iconUrl: { type: 'string' },
+              },
+            },
+          },
+          teamMembers: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+                avatarUrl: { type: 'string', nullable: true },
+                role: { type: 'string' },
+                joinedAt: { type: 'string', format: 'date-time' },
+                techStacks: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'string' },
+                      name: { type: 'string' },
+                      iconUrl: { type: 'string', nullable: true },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          applications: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                status: { type: 'string' },
+                applicant: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string' },
+                    name: { type: 'string' },
+                    avatarUrl: { type: 'string', nullable: true },
+                    skills: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string' },
+                          name: { type: 'string' },
+                          iconUrl: { type: 'string' },
+                        },
+                      },
+                    },
+                  },
+                },
+                projectRole: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string' },
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                    techStacks: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string' },
+                          name: { type: 'string' },
+                          iconUrl: { type: 'string' },
+                        },
+                      },
+                    },
+                  },
+                },
+                appliedAt: { type: 'string', format: 'date-time' },
+                decidedAt: {
+                  type: 'string',
+                  format: 'date-time',
+                  nullable: true,
+                },
+                decidedBy: { type: 'string', nullable: true },
+                motivationLetter: { type: 'string' },
+                selectedKeyFeatures: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'string' },
+                      feature: { type: 'string' },
+                    },
+                  },
+                },
+                selectedProjectGoals: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'string' },
+                      goal: { type: 'string' },
+                    },
+                  },
+                },
+                rejectionReason: { type: 'string', nullable: true },
+              },
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 404,
     description: 'Utilisateur non trouvé',
   })
-  async getUserProjects(@Param('userId') userId: string) {
-    const result: Result<Project[], string> = await this.queryBus.execute(
-      new FindProjectsByUserIdQuery(userId),
-    );
+  async getMyProjectsWithDetails(@Session('userId') userId: string) {
+    const result: Result<ProjectWithDetails[], string> =
+      await this.queryBus.execute(new FindUserProjectsWithDetailsQuery(userId));
 
     if (!result.success) {
       throw new NotFoundException(result.error);
     }
 
-    return result.value.map((_) => _.toPrimitive());
+    // Transformer les données pour correspondre au format attendu par le frontend
+    const projectsWithDetails = result.value.map((projectWithDetails) => {
+      const project = projectWithDetails.project;
+      const projectPrimitive = project.toPrimitive();
+
+      // Transformer les applications pour correspondre au format attendu
+      const applications = projectWithDetails.projectRoleApplication.map(
+        (application) => ({
+          id: application.id,
+          status: application.status,
+          applicant: {
+            id: application.user.id,
+            name: application.user.username,
+            avatarUrl: application.user.avatarUrl,
+            skills: application.user.techStacks || [],
+          },
+          projectRole: {
+            id: application.projectRole.id,
+            title: application.projectRole.title,
+            description: application.projectRole.description,
+            techStacks: application.projectRole.techStacks || [],
+          },
+          appliedAt: application.appliedAt,
+          decidedAt: application.decidedAt,
+          decidedBy: application.decidedBy,
+          motivationLetter: application.motivationLetter || '',
+          selectedKeyFeatures: application.selectedKeyFeatures || [],
+          selectedProjectGoals: application.selectedProjectGoals || [],
+          rejectionReason: application.rejectionReason,
+        }),
+      );
+
+      // Transformer les membres d'équipe
+      const teamMembers = projectWithDetails.projectMembers.map((member) => ({
+        id: member.id,
+        name: member.user?.username || 'Unknown',
+        avatarUrl: member.user?.avatarUrl,
+        role: member.projectRole?.[0]?.title || 'Member',
+        joinedAt: member.joinedAt,
+        techStacks: member.user?.techStacks || [],
+      }));
+
+      return {
+        id: projectPrimitive.id,
+        title: projectPrimitive.title,
+        shortDescription: projectPrimitive.shortDescription,
+        description: projectPrimitive.description,
+        image: projectPrimitive.image,
+        status: 'PUBLISHED', // À adapter selon votre logique métier
+        owner: {
+          id: projectPrimitive.owner?.id || '',
+          username: projectPrimitive.owner?.username || '',
+          avatarUrl: projectPrimitive.owner?.avatarUrl || '',
+        },
+        techStacks: projectPrimitive.techStacks || [],
+        teamMembers,
+        applications,
+      };
+    });
+
+    return projectsWithDetails;
   }
 }
