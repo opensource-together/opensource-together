@@ -219,14 +219,12 @@ export async function applyToProjectRole(
 }
 
 /**
- * Annule une candidature par son ID
+ * Cancels an application by its ID
  *
- * @param applicationId - L'ID de la candidature à annuler
- * @returns Promise<void> - Résolution de la promesse
+ * @param applicationId - The ID of the application to cancel
+ * @returns A promise that resolves to void
  */
-export async function cancelApplicationById(
-  applicationId: string
-): Promise<void> {
+export async function cancelApplication(applicationId: string): Promise<void> {
   try {
     const response = await fetch(
       `${API_BASE_URL}/user/me/applications/${applicationId}`,
@@ -244,8 +242,10 @@ export async function cancelApplicationById(
         error.message || "Erreur lors de l'annulation de la candidature."
       );
     }
+
+    return await response.json();
   } catch (error) {
-    console.error("[cancelApplicationById]", error);
+    console.error("[cancelApplication]", error);
     throw error;
   }
 }

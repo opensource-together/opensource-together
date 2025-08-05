@@ -18,17 +18,11 @@ export function MyApplicationDetails({
   application: ProjectRoleApplicationType;
 }) {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
-  const { cancelApplicationAsync, isCanceling, isCancelError, cancelError } =
-    useCancelApplication();
+  const { cancelApplication, isCanceling } = useCancelApplication();
 
-  const handleCancelApplication = async () => {
-    try {
-      await cancelApplicationAsync(application.applicationId);
-      setIsConfirmDialogOpen(false);
-    } catch (error) {
-      // L'erreur est déjà gérée par le toast dans le hook
-      console.error("Erreur lors de l'annulation:", error);
-    }
+  const handleCancelApplication = () => {
+    cancelApplication(application.applicationId);
+    setIsConfirmDialogOpen(false);
   };
 
   return (
