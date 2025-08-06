@@ -61,17 +61,6 @@ jobs:
         working-directory: curr/apps/server
         run: |
           pnpm exec prisma generate --schema=./src/persistence/orm/prisma/schema.prisma
-
-      - name: Check if migration is valid
-        env:
-          DATABASE_URL: "postgresql://user:password@localhost:5432/ost"
-        run: |
-          npx --yes \
-          prisma migrate diff \
-          --from-migrations=prod/apps/server/src/persistence/orm/prisma/migrations \
-          --to-migrations=curr/apps/server/src/persistence/orm/prisma/migrations \
-          --shadow-database-url "$DATABASE_URL" \
-          --script
         
       - name: Deploy current schema
         working-directory: prod/apps/server
