@@ -78,13 +78,13 @@ export class FindUserProjectsWithDetailsHandler
               userId: member.userId,
               joinedAt: new Date(member.joinedAt),
               user: {
-                id: member.user!.id,
-                username: member.user!.username,
-                avatarUrl: member.user!.avatarUrl,
-                jobTitle: member.user!.jobTitle,
-                company: member.user!.company,
-                location: member.user!.location,
-                techStacks: member.user!.techStacks.map((techStack) => ({
+                id: member.user.id,
+                username: member.user.username,
+                avatarUrl: member.user.avatarUrl,
+                jobTitle: member.user.jobTitle,
+                company: member.user.company,
+                location: member.user.location,
+                techStacks: member.user.techStacks.map((techStack) => ({
                   id: techStack.id,
                   name: techStack.name,
                   iconUrl: techStack.iconUrl,

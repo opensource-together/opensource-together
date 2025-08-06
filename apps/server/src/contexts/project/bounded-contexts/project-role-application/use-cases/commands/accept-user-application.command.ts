@@ -22,6 +22,7 @@ import {
 } from '../../../project-role/use-cases/ports/project-role.repository.port';
 import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { AddTeamMemberCommand } from '../../../team-member/use-cases/commands/add-team-member.command';
+import { TeamMember } from '../../../team-member/domain/team-member.entity';
 
 export class AcceptUserApplicationCommand implements ICommand {
   constructor(
@@ -81,12 +82,13 @@ export class AcceptUserApplicationCommandHandler
     }
 
     // Ajouter l'utilisateur candidat comme membre d'équipe
-    const addTeamMemberResult = await this.commandBus.execute(
-      new AddTeamMemberCommand({
-        userId: application.toPrimitive().userProfile.id,
-        projectId: application.toPrimitive().projectId,
-      }),
-    );
+    const addTeamMemberResult: Result<TeamMember, string> =
+      await this.commandBus.execute(
+        new AddTeamMemberCommand({
+          userId: application.toPrimitive().userProfile.id,
+          projectId: application.toPrimitive().projectId,
+        }),
+      );
 
     if (!addTeamMemberResult.success) {
       this.Logger.warn(
