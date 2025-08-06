@@ -62,7 +62,7 @@ jobs:
         run: |
           pnpm exec prisma generate --schema=./src/persistence/orm/prisma/schema.prisma
 
-      - name: Check for destructive migrations
+      - name: Check if migration is valid
         env:
           DATABASE_URL: "postgresql://user:password@localhost:5432/ost"
         run: |
@@ -72,3 +72,22 @@ jobs:
           --to-migrations=curr/apps/server/src/persistence/orm/prisma/migrations \
           --shadow-database-url "$DATABASE_URL" \
           --script
+        
+      - name: Deploy current schema
+        working-directory: prod/apps/server
+        env: 
+          DATABASE_URL: "postgresql://user:password@localhost:5432/ost"
+        run: |
+          npx --yes \
+          prisma migrate deploy \
+          --schema=./src/persistence/orm/prisma/schema.prisma
+
+      - name: Check if migration is destructive
+        working-directory: curr/apps/server
+        env: 
+          DATABASE_URL: "postgresql://user:password@localhost:5432/ost"
+        run: |
+          npx --yes \
+          prisma db push \
+          --schema=./src/persistence/orm/prisma/schema.prisma \
+          --skip-generate
