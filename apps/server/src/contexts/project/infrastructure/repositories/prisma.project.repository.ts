@@ -415,6 +415,11 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
           },
           projectMembers: {
             include: {
+              user: {
+                include: {
+                  techStacks: true,
+                },
+              },
               projectRole: {
                 include: {
                   techStacks: true,

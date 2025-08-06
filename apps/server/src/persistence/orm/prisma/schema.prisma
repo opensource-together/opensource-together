@@ -41,6 +41,7 @@ model User {
   socialLinks       UserSocialLink[]
   projects          Project[]
   projectRoleApplication ProjectRoleApplication[]
+  teamMembers       teamMember[]
 }
 
 model UserGitHubCredentials {
@@ -108,6 +109,7 @@ model teamMember {
   joinedAt    DateTime      @default(now())
   projectRole ProjectRole[]
   project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ProjectRole {
