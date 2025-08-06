@@ -106,12 +106,6 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
               ...state.formData,
               selectedRepository: repo,
               readme: repo.readme || "",
-              externalLinks: [
-                ...state.formData.externalLinks.filter(
-                  (link) => link.type !== "github"
-                ),
-                { type: "github", url: repo.url },
-              ],
             },
           })),
 

@@ -217,3 +217,35 @@ export async function applyToProjectRole(
     throw error;
   }
 }
+
+/**
+ * Cancels an application by its ID
+ *
+ * @param applicationId - The ID of the application to cancel
+ * @returns A promise that resolves to void
+ */
+export async function cancelApplication(applicationId: string): Promise<void> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/user/me/applications/${applicationId}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ cancel: true }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(
+        error.message || "Erreur lors de l'annulation de la candidature."
+      );
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("[cancelApplication]", error);
+    throw error;
+  }
+}

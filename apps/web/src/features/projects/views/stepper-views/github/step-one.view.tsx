@@ -8,7 +8,7 @@ export default function StepOneView() {
     <StepperWrapper currentStep={1} method="github">
       <StepperHeaderComponent
         title="Importer un repository Github"
-        description="Choisissez le repository Github public que vous souhaitez importer."
+        description="Choisissez le repository Github que vous souhaitez importer."
       />
       <StepOneForm />
     </StepperWrapper>

@@ -76,9 +76,9 @@ export interface ProjectRoleApplicationRepositoryPort {
   /**
    * Met à jour une candidature existante
    */
-  // update(
-  //   application: ProjectRoleApplication,
-  // ): Promise<Result<ProjectRoleApplication, string>>;
+  update(
+    application: ProjectRoleApplication,
+  ): Promise<Result<ProjectRoleApplication, string>>;
 
   /**
    * Trouve une candidature par son ID

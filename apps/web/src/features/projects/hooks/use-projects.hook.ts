@@ -7,7 +7,6 @@ import { getQueryClient } from "@/shared/lib/query-client";
 import {
   createProject,
   deleteProject,
-  getGithubOrgRepos,
   getGithubRepos,
   getProjectDetails,
   getProjects,
@@ -55,18 +54,6 @@ export function useGithubRepos() {
   return useQuery<GithubRepoType[]>({
     queryKey: ["github-repos"],
     queryFn: getGithubRepos,
-  });
-}
-
-/**
- * Fetches the list of GitHub organization repositories for the authenticated user.
- *
- * @returns A React Query result containing the list of GitHub organization repositories.
- */
-export function useGithubOrgRepos() {
-  return useQuery<GithubRepoType[]>({
-    queryKey: ["github-org-repos"],
-    queryFn: getGithubOrgRepos,
   });
 }
 
