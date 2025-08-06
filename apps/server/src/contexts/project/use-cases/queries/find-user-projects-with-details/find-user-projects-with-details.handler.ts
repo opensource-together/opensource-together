@@ -76,7 +76,7 @@ export class FindUserProjectsWithDetailsHandler
             .map((member) => ({
               id: member.id,
               userId: member.userId,
-              joinedAt: member.joinedAt,
+              joinedAt: new Date(member.joinedAt),
               user: {
                 id: member.user!.id,
                 username: member.user!.username,

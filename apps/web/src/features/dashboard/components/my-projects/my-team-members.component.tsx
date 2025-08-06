@@ -23,6 +23,16 @@ import {
 import { TeamMemberType } from "../../types/my-projects.type";
 import MyTeamMembersSkeleton from "./skeletons/my-team-members-skeleton.component";
 
+// Fonction utilitaire pour formater une date de manière sécurisée
+const formatDate = (dateInput: Date | string): string => {
+  try {
+    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    return date.toLocaleDateString("fr-FR");
+  } catch (error) {
+    return "Date inconnue";
+  }
+};
+
 interface MyTeamMembersProps {
   members: TeamMemberType[];
   isLoading?: boolean;
@@ -98,7 +108,7 @@ export default function MyTeamMembers({
                 <div className="flex flex-col">
                   <span className="text-xs text-black/50">Rejoint le</span>
                   <span className="text-sm font-medium tracking-tighter">
-                    {member.joinedAt.toLocaleDateString("fr-FR")}
+                    {formatDate(member.joinedAt)}
                   </span>
                 </div>
               </TableCell>
