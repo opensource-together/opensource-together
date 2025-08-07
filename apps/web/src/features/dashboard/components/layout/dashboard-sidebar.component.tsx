@@ -24,7 +24,7 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-16 flex-col border border-[black]/5 bg-stone-50/50 px-2 pt-5 lg:flex lg:w-80 lg:px-6">
+    <aside className="hidden w-16 flex-col border border-[black]/5 bg-stone-50/50 px-2 pt-5 lg:flex lg:w-72 lg:px-6">
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
         <Button asChild className="hidden w-full lg:flex">
           <Link href="/projects/create">

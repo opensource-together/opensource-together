@@ -21,7 +21,7 @@ import {
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import { Avatar } from "../ui/avatar";
-import Icon from "../ui/icon";
+import Icon, { IconName } from "../ui/icon";
 
 const HeaderBackdrop = () => {
   const pathname = usePathname();
@@ -29,7 +29,7 @@ const HeaderBackdrop = () => {
 
   return (
     <div
-      className={`pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent md:top-[81px] ${
+      className={`pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent lg:top-[81px] ${
         headerDashboard ? "hidden" : ""
       }`}
     />
@@ -119,7 +119,7 @@ function DashboardNavItems({ onClose }: { onClose?: () => void }) {
               }`}
             >
               <Icon
-                name={item.icon as any}
+                name={item.icon as IconName}
                 size="sm"
                 variant={isActive ? "default" : "gray"}
                 className="size-4"
@@ -171,11 +171,11 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal md:py-6 lg:px-20 ${
+        className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal lg:px-20 lg:py-6 ${
           headerDashboard ? "border-b border-black/5" : ""
         }`}
       >
-        <section className="flex items-center space-x-2 sm:space-x-4 md:space-x-8">
+        <section className="flex items-center space-x-2 sm:space-x-4 lg:space-x-8">
           <Link href="/">
             <Image
               src="/ostogether-logo.svg"
@@ -187,7 +187,7 @@ export default function Header() {
           </Link>
 
           {/* Navigation pour desktop et tablette */}
-          <nav className="hidden items-center space-x-3 tracking-tighter md:flex lg:space-x-6">
+          <nav className="hidden items-center space-x-3 tracking-tighter lg:flex lg:space-x-6">
             <NavLink href="/">Découvrir</NavLink>
 
             {/* Dashboard */}
@@ -209,7 +209,7 @@ export default function Header() {
 
         {/* Bouton menu mobile avec Sheet */}
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetTrigger asChild className="md:hidden">
+          <SheetTrigger asChild className="lg:hidden">
             <Button size="ghostIcon">
               <div className="flex flex-col items-center justify-center space-y-1">
                 <span
@@ -389,7 +389,7 @@ export default function Header() {
         </Sheet>
 
         {/* Desktop */}
-        <section className="hidden items-center space-x-2 sm:space-x-3 md:flex md:space-x-4">
+        <section className="hidden items-center space-x-2 sm:space-x-3 lg:flex lg:space-x-4">
           {/* État de chargement */}
           {showLoadingState && (
             <div className="flex items-center gap-2">
