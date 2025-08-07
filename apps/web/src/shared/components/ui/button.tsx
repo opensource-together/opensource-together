@@ -26,6 +26,8 @@ const buttonVariants = cva(
         sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 font-medium px-6 has-[>svg]:px-4",
         icon: "size-9 p-2.5 border border-black/5 rounded-full hover:bg-black/5 transition-colors ",
+        ghostIcon:
+          "size-9 p-2.5 bg-transparent shadow-none rounded-full hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
       },
     },
     defaultVariants: {
