@@ -1,6 +1,6 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject, Logger } from '@nestjs/common';
 import { Result } from '@/libs/result';
+import { Inject, Logger } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { TeamMember } from '../../domain/team-member.entity';
 import {
   TEAM_MEMBER_REPOSITORY_PORT,
@@ -12,6 +12,7 @@ export class AddTeamMemberCommand implements ICommand {
     public readonly props: {
       userId: string;
       projectId: string;
+      projectRoleId?: string; // Ajout du projectRoleId optionnel
     },
   ) {}
 }
@@ -30,7 +31,7 @@ export class AddTeamMemberCommandHandler
   async execute(
     command: AddTeamMemberCommand,
   ): Promise<Result<TeamMember, string>> {
-    const { userId, projectId } = command.props;
+    const { userId, projectId, projectRoleId } = command.props;
 
     // Vérifier si l'utilisateur est déjà membre du projet
     const existingMember =
@@ -44,6 +45,17 @@ export class AddTeamMemberCommandHandler
     }
 
     if (existingMember.value) {
+      // Si l'utilisateur existe déjà, on peut essayer d'ajouter le rôle s'il est fourni
+      if (projectRoleId && existingMember.value.id) {
+        const updatedMember = await this.teamMemberRepository.addRoleToMember(
+          existingMember.value.id,
+          projectRoleId,
+        );
+        if (!updatedMember.success) {
+          return Result.fail(updatedMember.error);
+        }
+        return Result.ok(updatedMember.value);
+      }
       return Result.fail('User is already a member of this project');
     }
 
@@ -52,6 +64,7 @@ export class AddTeamMemberCommandHandler
       userId,
       projectId,
       joinedAt: new Date(),
+      projectRoleIds: projectRoleId ? [projectRoleId] : [], // Utiliser projectRoleIds au lieu de projectRoleId
     });
 
     if (!teamMemberResult.success) {
@@ -68,7 +81,7 @@ export class AddTeamMemberCommandHandler
     }
 
     this.Logger.log(
-      `User ${userId} successfully added as team member to project ${projectId}`,
+      `User ${userId} successfully added as team member to project ${projectId} with role ${projectRoleId || 'none'}`,
     );
 
     return Result.ok(savedTeamMember.value);

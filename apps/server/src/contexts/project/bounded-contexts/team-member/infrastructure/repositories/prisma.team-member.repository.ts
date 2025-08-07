@@ -13,11 +13,30 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
   async create(teamMember: TeamMember): Promise<Result<TeamMember, string>> {
     try {
       const primitive = teamMember.toPrimitive();
+
+      // Préparer les données pour la création
+      const createData: {
+        userId: string;
+        projectId: string;
+        joinedAt: Date;
+        projectRole?: { connect: { id: string }[] };
+      } = {
+        userId: primitive.userId,
+        projectId: primitive.projectId,
+        joinedAt: primitive.joinedAt,
+      };
+
+      // Ajouter les rôles s'ils existent
+      if (primitive.projectRoleIds && primitive.projectRoleIds.length > 0) {
+        createData.projectRole = {
+          connect: primitive.projectRoleIds.map((roleId) => ({ id: roleId })),
+        };
+      }
+
       const created = await this.prisma.teamMember.create({
-        data: {
-          userId: primitive.userId,
-          projectId: primitive.projectId,
-          joinedAt: primitive.joinedAt,
+        data: createData,
+        include: {
+          projectRole: true,
         },
       });
 
@@ -26,6 +45,7 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
         userId: created.userId,
         projectId: created.projectId,
         joinedAt: created.joinedAt,
+        projectRoleIds: created.projectRole.map((role) => role.id),
       });
 
       if (!domainTeamMember.success) {
@@ -49,6 +69,7 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
         where: { projectId },
         include: {
           project: true,
+          projectRole: true,
         },
       });
 
@@ -60,6 +81,7 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
           userId: teamMember.userId,
           projectId: teamMember.projectId,
           joinedAt: teamMember.joinedAt,
+          projectRoleIds: teamMember.projectRole.map((role) => role.id),
         });
 
         if (!domainTeamMember.success) {
@@ -84,6 +106,7 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
         where: { userId },
         include: {
           project: true,
+          projectRole: true,
         },
       });
 
@@ -95,6 +118,7 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
           userId: teamMember.userId,
           projectId: teamMember.projectId,
           joinedAt: teamMember.joinedAt,
+          projectRoleIds: teamMember.projectRole.map((role) => role.id),
         });
 
         if (!domainTeamMember.success) {
@@ -123,6 +147,9 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
           projectId,
           userId,
         },
+        include: {
+          projectRole: true,
+        },
       });
 
       if (!teamMember) {
@@ -134,6 +161,7 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
         userId: teamMember.userId,
         projectId: teamMember.projectId,
         joinedAt: teamMember.joinedAt,
+        projectRoleIds: teamMember.projectRole.map((role) => role.id),
       });
 
       if (!domainTeamMember.success) {
@@ -160,6 +188,75 @@ export class PrismaTeamMemberRepository implements TeamMemberRepositoryPort {
       this.Logger.error(error);
       return Result.fail(
         "Une erreur est survenue lors de la suppression du membre d'équipe",
+      );
+    }
+  }
+
+  async addRoleToMember(
+    memberId: string,
+    roleId: string,
+  ): Promise<Result<TeamMember, string>> {
+    try {
+      // Récupérer le membre d'équipe existant
+      const existingMember = await this.prisma.teamMember.findUnique({
+        where: { id: memberId },
+        include: {
+          projectRole: true,
+        },
+      });
+
+      if (!existingMember) {
+        return Result.fail('Team member not found');
+      }
+
+      // Vérifier si le rôle existe
+      const role = await this.prisma.projectRole.findUnique({
+        where: { id: roleId },
+      });
+
+      if (!role) {
+        return Result.fail('Project role not found');
+      }
+
+      // Vérifier si le rôle est déjà associé au membre
+      const hasRole = existingMember.projectRole.some(
+        (role) => role.id === roleId,
+      );
+      if (hasRole) {
+        return Result.fail('Role is already assigned to this member');
+      }
+
+      // Ajouter le rôle au membre
+      const updatedMember = await this.prisma.teamMember.update({
+        where: { id: memberId },
+        data: {
+          projectRole: {
+            connect: { id: roleId },
+          },
+        },
+        include: {
+          projectRole: true,
+        },
+      });
+
+      // Créer l'entité de domaine avec les rôles
+      const domainTeamMember = TeamMember.create({
+        id: updatedMember.id,
+        userId: updatedMember.userId,
+        projectId: updatedMember.projectId,
+        joinedAt: updatedMember.joinedAt,
+        projectRoleIds: updatedMember.projectRole.map((role) => role.id),
+      });
+
+      if (!domainTeamMember.success) {
+        return Result.fail(domainTeamMember.error);
+      }
+
+      return Result.ok(domainTeamMember.value);
+    } catch (error) {
+      this.Logger.error(error);
+      return Result.fail(
+        "Une erreur est survenue lors de l'ajout du rôle au membre d'équipe",
       );
     }
   }

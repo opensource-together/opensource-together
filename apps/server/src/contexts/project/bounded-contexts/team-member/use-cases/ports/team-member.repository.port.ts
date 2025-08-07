@@ -14,4 +14,8 @@ export interface TeamMemberRepositoryPort {
     userId: string,
   ): Promise<Result<TeamMember | null, string>>;
   delete(id: string): Promise<Result<boolean, string>>;
+  addRoleToMember(
+    memberId: string,
+    roleId: string,
+  ): Promise<Result<TeamMember, string>>;
 }

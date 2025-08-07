@@ -1,28 +1,28 @@
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
+import {
+  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
+} from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
+import { Project } from '@/contexts/project/domain/project.entity';
+import {
+  PROJECT_REPOSITORY_PORT,
+  ProjectRepositoryPort,
+} from '@/contexts/project/use-cases/ports/project.repository.port';
+import { Result } from '@/libs/result';
+import { Inject, Logger } from '@nestjs/common';
 import {
   CommandBus,
   CommandHandler,
   ICommand,
   ICommandHandler,
 } from '@nestjs/cqrs';
-import { Inject, Logger } from '@nestjs/common';
-import {
-  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-  ProjectRoleApplicationRepositoryPort,
-} from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
-import { Result } from '@/libs/result';
-import { Project } from '@/contexts/project/domain/project.entity';
-import {
-  PROJECT_REPOSITORY_PORT,
-  ProjectRepositoryPort,
-} from '@/contexts/project/use-cases/ports/project.repository.port';
-import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import {
   PROJECT_ROLE_REPOSITORY_PORT,
   ProjectRoleRepositoryPort,
 } from '../../../project-role/use-cases/ports/project-role.repository.port';
-import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import { AddTeamMemberCommand } from '../../../team-member/use-cases/commands/add-team-member.command';
 import { TeamMember } from '../../../team-member/domain/team-member.entity';
+import { AddTeamMemberCommand } from '../../../team-member/use-cases/commands/add-team-member.command';
 
 export class AcceptUserApplicationCommand implements ICommand {
   constructor(
@@ -87,6 +87,7 @@ export class AcceptUserApplicationCommandHandler
         new AddTeamMemberCommand({
           userId: application.toPrimitive().userProfile.id,
           projectId: application.toPrimitive().projectId,
+          projectRoleId: application.toPrimitive().projectRoleId,
         }),
       );
 
