@@ -112,7 +112,7 @@ function DashboardNavItems({ onClose }: { onClose?: () => void }) {
             <button
               key={item.label}
               onClick={() => handleDashboardNav(item.href)}
-              className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-colors ${
+              className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 ${
                 isActive
                   ? "bg-stone-100 font-medium text-black"
                   : "text-black/50 hover:bg-stone-100"
@@ -182,7 +182,7 @@ export default function Header() {
               alt="ost-logo"
               width={209}
               height={12}
-              className="max-h-[16px] lg:max-h-[25px]"
+              className="max-h-[20px] lg:max-h-[25px]"
             />
           </Link>
 
@@ -213,27 +213,27 @@ export default function Header() {
             <Button size="ghostIcon">
               <div className="flex flex-col items-center justify-center space-y-1">
                 <span
-                  className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                  className={`block h-0.5 w-4 bg-black transition-all duration-300 ease-in-out ${
                     mobileMenuOpen ? "translate-y-1.5 rotate-45" : ""
                   }`}
                 />
                 <span
-                  className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                  className={`block h-0.5 w-4 bg-black transition-all duration-300 ease-in-out ${
                     mobileMenuOpen ? "opacity-0" : ""
                   }`}
                 />
                 <span
-                  className={`block h-0.5 w-4 bg-black transition-all duration-200 ${
+                  className={`block h-0.5 w-4 bg-black transition-all duration-300 ease-in-out ${
                     mobileMenuOpen ? "-translate-y-1.5 -rotate-45" : ""
                   }`}
                 />
               </div>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[320px] p-0">
+          <SheetContent side="left" className="w-[280px] p-0">
             <div className="flex h-full flex-col">
               {/* Header avec logo */}
-              <div className="border-b border-black/5 bg-white p-6">
+              <div className="border-b border-black/5 p-6">
                 <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                   <Image
                     src="/ostogether-logo.svg"
@@ -258,15 +258,19 @@ export default function Header() {
                       router.push("/");
                       setMobileMenuOpen(false);
                     }}
-                    className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-black/70 transition-colors hover:bg-stone-100"
+                    className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 ${
+                      pathname === "/"
+                        ? "bg-stone-100 font-medium text-black"
+                        : "text-black/50 hover:bg-stone-100"
+                    }`}
                   >
                     <Icon
                       name="search"
                       size="sm"
-                      variant="gray"
+                      variant={pathname === "/" ? "default" : "gray"}
                       className="size-4"
                     />
-                    <span className="text-sm text-black/50">Découvrir</span>
+                    <span className="text-sm">Découvrir</span>
                   </button>
 
                   {/* Dashboard */}
@@ -276,17 +280,21 @@ export default function Header() {
                         router.push("/dashboard");
                         setMobileMenuOpen(false);
                       }}
-                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-black/70 transition-colors hover:bg-stone-100"
+                      className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 ${
+                        pathname.startsWith("/dashboard")
+                          ? "bg-stone-100 font-medium text-black"
+                          : "text-black/50 hover:bg-stone-100"
+                      }`}
                     >
                       <Icon
                         name="bagpack"
                         size="sm"
-                        variant="gray"
+                        variant={
+                          pathname.startsWith("/dashboard") ? "default" : "gray"
+                        }
                         className="size-4"
                       />
-                      <span className="text-sm text-black/50">
-                        Gestion de projet
-                      </span>
+                      <span className="text-sm">Gestion de projet</span>
                     </button>
                   ) : (
                     <button
@@ -294,7 +302,7 @@ export default function Header() {
                         handleDashboard();
                         setMobileMenuOpen(false);
                       }}
-                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-black/70 transition-colors hover:bg-stone-100"
+                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-black/50 transition-all duration-200 hover:bg-stone-100"
                     >
                       <Icon
                         name="bagpack"
@@ -302,9 +310,7 @@ export default function Header() {
                         variant="gray"
                         className="size-4"
                       />
-                      <span className="text-sm text-black/50">
-                        Gestion de projet
-                      </span>
+                      <span className="text-sm">Gestion de projet</span>
                     </button>
                   )}
 
@@ -315,15 +321,21 @@ export default function Header() {
                         router.push("/profile/me");
                         setMobileMenuOpen(false);
                       }}
-                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-black/70 transition-colors hover:bg-stone-100"
+                      className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left transition-all duration-200 ${
+                        pathname.startsWith("/profile")
+                          ? "bg-stone-100 font-medium text-black"
+                          : "text-black/50 hover:bg-stone-100"
+                      }`}
                     >
                       <Icon
                         name="user"
                         size="sm"
-                        variant="gray"
+                        variant={
+                          pathname.startsWith("/profile") ? "default" : "gray"
+                        }
                         className="size-4"
                       />
-                      <span className="text-sm text-black/50">Mon Profil</span>
+                      <span className="text-sm">Mon Profil</span>
                     </button>
                   )}
                 </div>
