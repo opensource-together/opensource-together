@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// schema.prisma
+
 generator client {
   provider        = "prisma-client-js"
   binaryTargets   = ["native", "linux-musl-arm64-openssl-3.0.x"]
@@ -80,6 +82,7 @@ model Project {
   image                  String?
   coverImages            String[] // Array of cover image URLs (1 to 4)
   readme                 String?
+
   // Index composite pour recherche + tri par date
   // Index pour recherche textuelle sur le titre
   @@index([createdAt(sort: Desc)], name: "idx_project_date")
@@ -130,6 +133,7 @@ model ProjectRole {
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
   projectRoleApplication ProjectRoleApplication[]
+
   // Index pour recherche par projet et rôle
   // UPDATED
   @@index([projectId, title], name: "idx_project_roles")
@@ -162,9 +166,8 @@ model UserSocialLink {
   type      String // ex: "github", "twitter", "linkedin", "website"
   url       String
   createdAt DateTime @default(now())
-
   // Relation
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Un utilisateur ne peut avoir qu'un seul lien d'un type donné.
   @@unique([userId, type])

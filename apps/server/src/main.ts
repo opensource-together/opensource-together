@@ -3,6 +3,10 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { RootModule } from './root.module';
 import { AllExceptionsFilter } from './libs/filters/all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import express from 'express';
+import { toNodeHandler } from 'better-auth/node';
+import { auth } from '@/libs/auth';
+import { setAppRef } from '@/app-context';
 // import { auth } from './libs/auth';
 // import { RequestHandler } from 'express';
 
@@ -12,8 +16,18 @@ async function bootstrap() {
     bodyParser: false, // Required for Better Auth
   });
 
-  app.setGlobalPrefix('v1'); // Disabled for Better Auth compatibility
+  const expressApp = express();
 
+  expressApp.use((req, res, next) => {
+    console.log(`[GLOBAL] ${req.method} ${req.url}`);
+    next();
+  });
+
+  expressApp.all('/api/auth/*splat', toNodeHandler(auth));
+  expressApp.use(express.json());
+  app.use(expressApp);
+
+  app.setGlobalPrefix('v1'); // Disabled for Better Auth compatibility
 
   // Activation de la validation automatique des DTOs
   app.useGlobalPipes(
@@ -39,6 +53,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api-docs', app, document);
 
+  setAppRef(app);
   await app.listen(process.env.PORT ?? 4000);
 }
 bootstrap()
