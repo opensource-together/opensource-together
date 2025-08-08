@@ -14,6 +14,10 @@ export const projectSchema = z.object({
   shortDescription: z
     .string()
     .min(10, "La description doit contenir au moins 10 caractères"),
+  readme: z
+    .string()
+    .max(10000, "Le README ne peut pas dépasser 10000 caractères")
+    .optional(),
   keyFeatures: z
     .array(
       z.object({
@@ -106,6 +110,7 @@ export const updateProjectApiSchema = z.object({
   shortDescription: z.string().min(10, "Une description est requise"),
   image: z.string().optional(),
   coverImages: z.array(z.string()).max(4).optional(),
+  readme: z.string().max(10000).optional(),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
   keyFeatures: z
