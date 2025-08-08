@@ -1,25 +1,27 @@
 import {
-  WebSocketGateway,
-  WebSocketServer,
+  AuthenticatedSocket,
+  WebSocketAuthService,
+} from '@/auth/web-socket/websocket-auth.service';
+import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
+import { Result } from '@/libs/result';
+import { Inject, Logger } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import {
+  ConnectedSocket,
   OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
-  ConnectedSocket,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { Inject, Logger } from '@nestjs/common';
+import { User } from 'supertokens-node';
 import {
   NOTIFICATION_SERVICE_PORT,
-  NotificationServicePort,
   NotificationData,
+  NotificationServicePort,
 } from '../../use-cases/ports/notification.service.port';
-import {
-  WebSocketAuthService,
-  AuthenticatedSocket,
-} from '@/auth/web-socket/websocket-auth.service';
 import { WebSocketConnectionManager } from './websocket-connection.manager';
-import { QueryBus } from '@nestjs/cqrs';
-import { FindUserByIdQuery } from '@/contexts/user/use-cases/queries/find-user-by-id.query';
 
 /**
  * Gateway WebSocket pour les notifications en temps réel.
@@ -51,7 +53,7 @@ export class NotificationsGateway
     private readonly connectionManager: WebSocketConnectionManager,
     private readonly queryBus: QueryBus,
   ) {
-    console.log('NotificationsGateway constructor called'); // ← mets des logs ici
+    this.logger.log('NotificationsGateway constructor called');
   }
 
   /**
@@ -79,6 +81,9 @@ export class NotificationsGateway
       // Envoyer les notifications non lues
       await this.sendUnreadNotifications(userId, client);
     } catch (error) {
+      this.logger.error(
+        `Erreur lors de la connexion du client ${client.id}: ${error}`,
+      );
       client.disconnect();
     } finally {
       // Nettoyer le Set après traitement
@@ -123,8 +128,11 @@ export class NotificationsGateway
     notification: NotificationData,
   ): Promise<string | null> {
     // 1. Vérifier que l'utilisateur existe dans le système
-    const userExistsResult = await this.queryBus.execute(
-      new FindUserByIdQuery(notification.receiverId),
+    const userExistsResult: Result<User, string> = await this.queryBus.execute(
+      new FindUserByIdQuery({
+        userId: notification.receiverId,
+        authenticatedUserId: notification.receiverId,
+      }),
     );
 
     if (!userExistsResult.success) {
@@ -173,8 +181,11 @@ export class NotificationsGateway
     notification: NotificationData,
   ): Promise<string | null> {
     // 1. Vérifier que l'utilisateur existe dans le système
-    const userExistsResult = await this.queryBus.execute(
-      new FindUserByIdQuery(notification.receiverId),
+    const userExistsResult: Result<User, string> = await this.queryBus.execute(
+      new FindUserByIdQuery({
+        userId: notification.receiverId,
+        authenticatedUserId: notification.receiverId,
+      }),
     );
 
     if (!userExistsResult.success) {
@@ -239,16 +250,16 @@ export class NotificationsGateway
 
       if (result.success) {
         client.emit('unread-notifications', result.value);
-        console.log(
+        this.logger.log(
           `📬 ${result.value.length} notification(s) non lue(s) envoyées à ${userId}`,
         );
       } else {
-        console.log(
+        this.logger.error(
           `❌ Erreur récupération notifications pour ${userId}: ${result.error}`,
         );
       }
     } catch (error) {
-      console.log(`💥 Erreur envoi notifications non lues:`, error.message);
+      this.logger.error(`💥 Erreur envoi notifications non lues: ${error}`);
     }
   }
 }

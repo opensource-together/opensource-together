@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateNotificationCommand } from '../../../../../notification/use-cases/commands/create-notification.command';
+import { OnEvent } from '@nestjs/event-emitter';
 import {
   ApplyProjectRequestAcceptedNotification,
   ApplyProjectRequestCreatedNotification,
   ApplyProjectRequestRejectedNotification,
   ProjectRoleApplicationCreatedEvent,
 } from '../../../../../notification/notification.interface';
+import { CreateNotificationCommand } from '../../../../../notification/use-cases/commands/create-notification.command';
 
 /**
  * Listener pour les événements liés aux projets.
@@ -60,9 +60,12 @@ export class ProjectRoleApplicationListener {
     const ownerNotificationCommand = new CreateNotificationCommand({
       object: 'Un utilisateur a postulé pour un rôle',
       receiverId: event.projectOwnerId,
-      senderId: event.applicantId,
+      senderId: event.projectAuthor.id,
       type: 'project.role.application.created',
-      payload: JSON.parse(JSON.stringify(notificationData)),
+      payload: JSON.parse(JSON.stringify(notificationData)) as Record<
+        string,
+        unknown
+      >,
       channels: ['realtime'],
     });
 
@@ -76,9 +79,9 @@ export class ProjectRoleApplicationListener {
     const command = new CreateNotificationCommand({
       object: 'Votre candidature a été acceptée',
       receiverId: event.userProfile.id,
-      senderId: event.project.author.userId,
+      senderId: event.project.author.id,
       type: event.type,
-      payload: JSON.parse(JSON.stringify(event)),
+      payload: JSON.parse(JSON.stringify(event)) as Record<string, unknown>,
       channels: ['realtime'],
     });
 
@@ -96,9 +99,9 @@ export class ProjectRoleApplicationListener {
     const command = new CreateNotificationCommand({
       object: 'Votre candidature a été rejetée',
       receiverId: event.userProfile.id,
-      senderId: event.project.author.userId,
+      senderId: event.project.author.id,
       type: event.type,
-      payload: JSON.parse(JSON.stringify(event)),
+      payload: JSON.parse(JSON.stringify(event)) as Record<string, unknown>,
       channels: ['realtime'],
     });
 

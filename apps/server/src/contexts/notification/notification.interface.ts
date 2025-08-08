@@ -1,4 +1,4 @@
-import { ProjectRole, Profile } from '@prisma/client';
+import { ProjectRole, User } from '@prisma/client';
 
 interface BaseNotification {
   object: string;
@@ -14,7 +14,7 @@ interface ApplyProjectRequest extends BaseNotification {
     title: string;
     shortDescription: string;
     image?: string;
-    author: Profile;
+    author: User;
   };
   projectRole: ProjectRole;
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
@@ -69,7 +69,7 @@ export interface ProjectRoleApplicationCreatedEvent {
   projectTitle: string;
   projectShortDescription: string;
   projectImage?: string;
-  projectAuthor: Profile;
+  projectAuthor: User;
   roleName: string;
   projectRole: ProjectRole;
   applicationId: string;
