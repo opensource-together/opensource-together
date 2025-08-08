@@ -18,6 +18,8 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   const { updateProject, isUpdating } = useUpdateProject();
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
+  const [newCoverFiles, setNewCoverFiles] = useState<File[]>([]);
+  const [removedCoverImages, setRemovedCoverImages] = useState<string[]>([]);
 
   const {
     image,
@@ -39,6 +41,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
       projectGoals: projectGoals || [],
       techStack: techStacks?.map((tech) => tech.id) || [],
       categories: categories?.map((category) => category.id) || [],
+      coverImages: project.coverImages || [],
       externalLinks:
         project.externalLinks?.reduce(
           (acc, link) => {
@@ -58,6 +61,10 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   });
 
   const { setValue } = form;
+
+  const visibleCoverImages = (project.coverImages || []).filter(
+    (url) => !removedCoverImages.includes(url)
+  );
 
   const handleImageSelect = (file: File | null) => {
     if (file) {
@@ -82,6 +89,8 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
       },
       newImageFile: selectedImageFile || undefined,
       shouldDeleteImage,
+      newCoverFiles,
+      removedCoverImages,
     });
   });
 
@@ -116,6 +125,13 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
         onSubmit={onSubmit}
         onImageSelect={handleImageSelect}
         isUpdating={isUpdating}
+        onCoverFilesChange={setNewCoverFiles}
+        onRemoveExistingCover={(imageUrl) =>
+          setRemovedCoverImages((prev) =>
+            prev.includes(imageUrl) ? prev : [...prev, imageUrl]
+          )
+        }
+        currentCoverImages={visibleCoverImages}
       />
     </>
   );

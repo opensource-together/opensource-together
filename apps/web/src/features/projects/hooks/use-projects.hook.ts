@@ -114,11 +114,22 @@ export function useUpdateProject() {
       updateData,
       newImageFile,
       shouldDeleteImage,
+      newCoverFiles,
+      removedCoverImages,
     }: {
       updateData: UpdateProjectData;
       newImageFile?: File;
       shouldDeleteImage?: boolean;
-    }) => updateProject(updateData, newImageFile, shouldDeleteImage),
+      newCoverFiles?: File[];
+      removedCoverImages?: string[];
+    }) =>
+      updateProject(
+        updateData,
+        newImageFile,
+        shouldDeleteImage,
+        newCoverFiles,
+        removedCoverImages
+      ),
     loadingMessage: "Mise à jour du projet en cours...",
     successMessage: "Projet mis à jour avec succès",
     errorMessage: "Erreur lors de la mise à jour du projet",

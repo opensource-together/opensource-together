@@ -202,7 +202,9 @@ export const createProject = async (
 export const updateProject = async (
   params: UpdateProjectData,
   newImageFile?: File,
-  shouldDeleteImage?: boolean
+  shouldDeleteImage?: boolean,
+  newCoverFiles: File[] = [],
+  removedCoverImages: string[] = []
 ): Promise<Project> => {
   try {
     // Validate input parameters
@@ -213,6 +215,7 @@ export const updateProject = async (
     const currentProject = await getProjectDetails(projectId);
 
     let imageUrl: string | undefined = currentProject.image;
+    let coverImages: string[] = currentProject.coverImages || [];
 
     // Handle image operations
     if (shouldDeleteImage && currentProject.image) {
@@ -233,10 +236,29 @@ export const updateProject = async (
       }
     }
 
+    // Handle cover images deletions
+    if (removedCoverImages.length > 0) {
+      const toDeleteSet = new Set(removedCoverImages);
+      // Delete removed images (safe)
+      await Promise.all(removedCoverImages.map((url) => safeDeleteMedia(url)));
+      // Keep only not-removed images
+      coverImages = coverImages.filter((url) => !toDeleteSet.has(url));
+    }
+
+    // Handle new cover images uploads in parallel
+    if (newCoverFiles.length > 0) {
+      const uploaded = await Promise.all(
+        newCoverFiles.map((f) => safeUploadMedia(f))
+      );
+      const uploadedUrls = uploaded.filter((u): u is string => Boolean(u));
+      coverImages = [...coverImages, ...uploadedUrls].slice(0, 4);
+    }
+
     // Transform data to API format
     const apiPayload = transformProjectForApiUpdate({
       ...data,
       image: imageUrl,
+      coverImages,
     });
 
     // Validate the API payload

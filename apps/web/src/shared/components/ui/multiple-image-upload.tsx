@@ -16,6 +16,7 @@ interface MultipleImageUploadProps {
   className?: string;
   disabled?: boolean;
   currentImages?: string[];
+  onRemoveCurrentImage?: (imageUrl: string, index: number) => void;
 }
 
 export function MultipleImageUpload({
@@ -26,6 +27,7 @@ export function MultipleImageUpload({
   className,
   disabled = false,
   currentImages = [],
+  onRemoveCurrentImage,
 }: MultipleImageUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -53,8 +55,10 @@ export function MultipleImageUpload({
       const newPreviews: string[] = [];
       let hasError = false;
 
-      // Check if adding these files would exceed the limit
-      if (files.length + selectedFiles.length > maxFiles) {
+      if (
+        currentImages.length + files.length + selectedFiles.length >
+        maxFiles
+      ) {
         setError(`Vous ne pouvez télécharger que ${maxFiles} images maximum`);
         return;
       }
@@ -139,6 +143,7 @@ export function MultipleImageUpload({
   );
 
   const allImages = [...currentImages, ...previews];
+  const totalCount = currentImages.length + files.length;
 
   return (
     <div className={cn("w-full", className)}>
@@ -165,7 +170,7 @@ export function MultipleImageUpload({
                 type="button"
                 variant="outline"
                 className="relative mt-2 overflow-hidden"
-                disabled={disabled || files.length >= maxFiles}
+                disabled={disabled || totalCount >= maxFiles}
               >
                 Parcourir
                 <input
@@ -173,7 +178,7 @@ export function MultipleImageUpload({
                   accept={accept}
                   onChange={handleFileSelect}
                   className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                  disabled={disabled || files.length >= maxFiles}
+                  disabled={disabled || totalCount >= maxFiles}
                   multiple
                 />
               </Button>
@@ -201,7 +206,16 @@ export function MultipleImageUpload({
                   fill
                   className="object-cover"
                 />
-                {index >= currentImages.length && (
+                {index < currentImages.length ? (
+                  <button
+                    type="button"
+                    onClick={() => onRemoveCurrentImage?.(image, index)}
+                    className="absolute top-2 right-2 rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+                    disabled={disabled}
+                  >
+                    <Icon name="trash" size="xs" className="text-gray-700" />
+                  </button>
+                ) : (
                   <button
                     type="button"
                     onClick={() => removeImage(index - currentImages.length)}
@@ -223,7 +237,7 @@ export function MultipleImageUpload({
 
         {/* Upload Progress */}
         <div className="text-center text-sm text-gray-600">
-          {files.length} / {maxFiles} images téléchargées
+          {totalCount} / {maxFiles} images
         </div>
       </div>
     </div>
