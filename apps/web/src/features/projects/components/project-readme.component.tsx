@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 import Icon from "@/shared/components/ui/icon";
 import {
@@ -33,6 +35,8 @@ export default function ProjectReadme({
           </div>
           <div className="mb-2 leading-7 text-black">
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
               components={{
                 h1: ({ children }) => (
                   <h1 className="mb-2 text-lg font-medium text-black">
@@ -90,6 +94,32 @@ export default function ProjectReadme({
                     {children}
                   </a>
                 ),
+                img: ({ src, alt, width, height }) => (
+                  <img
+                    src={src}
+                    alt={alt}
+                    width={width}
+                    height={height}
+                    className="h-auto max-w-full rounded"
+                  />
+                ),
+                table: ({ children }) => (
+                  <div className="mb-2 overflow-x-auto">
+                    <table className="min-w-full border-collapse border border-gray-300">
+                      {children}
+                    </table>
+                  </div>
+                ),
+                th: ({ children }) => (
+                  <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-medium">
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td className="border border-gray-300 px-3 py-2 text-sm">
+                    {children}
+                  </td>
+                ),
               }}
             >
               {readme?.slice(0, 300) +
@@ -113,12 +143,14 @@ export default function ProjectReadme({
         className="overflow-y-auto"
       >
         <SheetHeader>
-          <SheetTitle className="sticky top-0 border-b border-black/10 bg-white pb-4 text-left">
+          <SheetTitle className="sticky top-0 border-b border-black/10 pb-4 text-left font-medium">
             README - {projectTitle}
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 max-w-none text-sm leading-relaxed">
           <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
             components={{
               // Customize markdown components for better styling
               h1: ({ children }) => (
@@ -166,6 +198,32 @@ export default function ProjectReadme({
                 >
                   {children}
                 </a>
+              ),
+              img: ({ src, alt, width, height }) => (
+                <img
+                  src={src}
+                  alt={alt}
+                  width={width}
+                  height={height}
+                  className="my-3 h-auto max-w-full rounded"
+                />
+              ),
+              table: ({ children }) => (
+                <div className="mb-3 overflow-x-auto">
+                  <table className="min-w-full border-collapse border border-gray-300">
+                    {children}
+                  </table>
+                </div>
+              ),
+              th: ({ children }) => (
+                <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-medium">
+                  {children}
+                </th>
+              ),
+              td: ({ children }) => (
+                <td className="border border-gray-300 px-3 py-2 text-sm">
+                  {children}
+                </td>
               ),
             }}
           >

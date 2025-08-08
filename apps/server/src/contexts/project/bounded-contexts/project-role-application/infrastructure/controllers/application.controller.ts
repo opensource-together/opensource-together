@@ -1,3 +1,7 @@
+import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
+import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
+import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
+import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
 import { Result } from '@/libs/result';
 import {
   Body,
@@ -11,10 +15,10 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Session } from 'supertokens-nestjs';
-import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
-import { AcceptUserApplicationCommand } from '../../use-cases/commands/accept-user-application.command';
-import { RejectUserApplicationCommand } from '../../use-cases/commands/reject-user-application.command';
-import { GetApplicationByIdQuery } from '../../use-cases/queries/get-application-by-id.query';
+import {
+  AcceptRejectApplicationRequestDto,
+  ApplicationStatus,
+} from './dto/accept-reject-application-request.dto';
 @Controller('applications')
 export class ApplicationController {
   constructor(
@@ -362,10 +366,10 @@ export class ApplicationController {
   })
   async acceptOrRejectApplication(
     @Param('id') id: string,
-    @Body() body: { status: 'ACCEPTED' | 'REJECTED'; rejectionReason?: string },
+    @Body() body: AcceptRejectApplicationRequestDto,
     @Session('userId') userId: string,
   ) {
-    if (body.status === 'ACCEPTED') {
+    if (body.status === ApplicationStatus.ACCEPTED) {
       const acceptedApplication: Result<ProjectRoleApplication, string> =
         await this.commandBus.execute(
           new AcceptUserApplicationCommand({
@@ -380,7 +384,7 @@ export class ApplicationController {
         );
       }
       return acceptedApplication.value;
-    } else {
+    } else if (body.status === ApplicationStatus.REJECTED) {
       const rejectedApplication: Result<ProjectRoleApplication, string> =
         await this.commandBus.execute(
           new RejectUserApplicationCommand({

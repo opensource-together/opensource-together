@@ -76,6 +76,78 @@ export class PrismaProjectRoleApplicationRepository
     }
   }
 
+  async update(
+    application: ProjectRoleApplication,
+  ): Promise<Result<ProjectRoleApplication, string>> {
+    try {
+      if (!application.id) {
+        return Result.fail('Application ID is required for update');
+      }
+
+      const toRepo = PrismaProjectRoleApplicationMapper.toRepo(application);
+      if (!toRepo.success) {
+        return Result.fail(
+          typeof toRepo.error === 'string'
+            ? toRepo.error
+            : 'Erreur de validation',
+        );
+      }
+
+      const updated = await this.prisma.projectRoleApplication.update({
+        where: { id: application.id },
+        data: {
+          status: toRepo.value.status,
+          decidedAt: toRepo.value.decidedAt,
+          decidedBy: toRepo.value.decidedBy,
+          rejectionReason: toRepo.value.rejectionReason,
+        },
+        include: {
+          user: true,
+          projectRole: true,
+          project: {
+            include: {
+              keyFeatures: true,
+              projectGoals: true,
+            },
+          },
+        },
+      });
+
+      const domainApplication = PrismaProjectRoleApplicationMapper.toDomain({
+        ...updated,
+        project: {
+          ...updated.project,
+          owner: {
+            id: updated.project.ownerId || 'unknown',
+            username: 'unknown',
+            login: 'unknown',
+            email: 'unknown',
+            provider: 'unknown',
+            jobTitle: null,
+            location: null,
+            company: null,
+            bio: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            avatarUrl: null,
+          },
+        },
+      });
+      if (!domainApplication.success) {
+        return Result.fail(
+          typeof domainApplication.error === 'string'
+            ? domainApplication.error
+            : 'Erreur de conversion',
+        );
+      }
+
+      return Result.ok(domainApplication.value);
+    } catch (error) {
+      this.Logger.error(error);
+      return Result.fail('Une erreur est survenue lors de la mise à jour');
+    }
+  }
+
   async existsStatusApplication(
     userId: string,
     projectRoleId: string,
