@@ -9,10 +9,9 @@ export function middleware(request: NextRequest) {
 
   // Check presence of SuperTokens session cookies
   const hasSessionCookies =
-    request.cookies.has("sFrontToken") ||
-    request.cookies.has("sAccessToken") ||
-    request.cookies.has("st-access-token") ||
-    request.cookies.has("st-refresh-token");
+    request.cookies.has("better-auth.session_token") ||
+    request.cookies.has("better-auth.access_token") ||
+    request.cookies.has("better-auth.refresh_token");
 
   // If the user is authenticated and tries to access auth routes
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));

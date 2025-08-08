@@ -3,7 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 
 let appRef: INestApplicationContext;
 
-export function setAppRef(app: INestApplicationContext) {
+export function setAppRef(app: INestApplicationContext): void {
   appRef = app;
 }
 

@@ -5,7 +5,8 @@ import Footer from "@/shared/components/layout/footer";
 import Header from "@/shared/components/layout/header";
 import { Toaster } from "@/shared/components/ui/sonner";
 
-import { SuperTokensInitializer } from "@/features/auth/utils/supertokens-initializer";
+// import { SuperTokensInitializer } from "@/features/auth/utils/supertokens-initializer";
+// import { AuthProvider } from "@/features/auth/contexts/auth.provider";
 
 import "../../public/fonts/font-face.css";
 import "./globals.css";
@@ -42,13 +43,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
-        <SuperTokensInitializer />
-        <Providers>
-          <Header />
-          {children}
-          <Footer />
-          <Toaster />
-        </Providers>
+        {/* <SuperTokensInitializer /> */}
+        {/* <AuthProvider> */}
+          <Providers>
+            <Header />
+            {children}
+            <Footer />
+            <Toaster />
+          </Providers>
+        {/* </AuthProvider> */}
       </body>
     </html>
   );
