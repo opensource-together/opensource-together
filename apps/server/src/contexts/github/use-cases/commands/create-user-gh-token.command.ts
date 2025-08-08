@@ -44,8 +44,9 @@ export class CreateUserGhTokenCommandHandler
   async execute(
     command: CreateUserGhTokenCommand,
   ): Promise<Result<UserGitHubCredentialsData, string>> {
+    console.log(command.props);
     const { userId, githubUserId, githubAccessToken } = command.props;
-    const encryptedGithubAccessToken =
+    const encryptedGithubAccessToken: Result<string, string> =
       this.encryptionService.encrypt(githubAccessToken);
     if (!encryptedGithubAccessToken.success)
       return Result.fail(encryptedGithubAccessToken.error);
