@@ -232,6 +232,11 @@ export class GithubRepository implements GithubRepositoryPort {
                 watchers {
                   totalCount
                 } 
+                object(expression: "HEAD:README.md") {
+                  ... on Blob {
+                    text
+                  }
+                }
               }
             }
             organizations(first: $orgCount) {
@@ -255,6 +260,11 @@ export class GithubRepository implements GithubRepositoryPort {
                     watchers {
                       totalCount
                     } 
+                    object(expression: "HEAD:README.md") {
+                      ... on Blob {
+                        text
+                      }
+                    }
                   }
                 }
               }
