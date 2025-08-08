@@ -24,6 +24,7 @@ import { MEDIA_SERVICE_PORT } from '@/media/port/media.service.port';
 import { R2MediaService } from '@/media/infrastructure/services/r2.media.service';
 import { PROJECT_KEY_FEATURE_REPOSITORY_PORT } from '../bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
 import { PrismaProjectKeyFeatureRepository } from '../bounded-contexts/project-key-feature/infrastructure/repositories/prisma.project-key-feature.repository';
+import { ProjectNotificationsListener } from './listeners/project-notifications.listener';
 
 @Module({
   imports: [PersistenceInfrastructure],
@@ -72,6 +73,7 @@ import { PrismaProjectKeyFeatureRepository } from '../bounded-contexts/project-k
       useClass: PrismaProjectKeyFeatureRepository,
     },
     GithubInfrastructure,
+    ProjectNotificationsListener,
     ...projectUseCases,
   ],
   controllers: [ProjectController, ProjectKeyFeatureController],
