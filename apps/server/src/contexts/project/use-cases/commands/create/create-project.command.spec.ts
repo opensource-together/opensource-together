@@ -20,6 +20,7 @@ import {
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { Result } from '@/libs/result';
 import { MockClock } from '@/libs/time/mock-clock';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Octokit } from '@octokit/rest';
 import { PROJECT_VALIDATION_SERVICE_PORT } from '../../ports/project-validation.service.port';
@@ -31,6 +32,7 @@ import {
   CreateProjectCommand,
   CreateProjectCommandHandler,
 } from './create-project.command';
+
 // Mock Octokit
 const mockOctokit = {
   rest: {
@@ -43,6 +45,24 @@ const mockOctokit = {
 // Mock GitHub Repository
 const mockGithubRepository = {
   createGithubRepository: jest.fn(),
+};
+
+// Mock EventEmitter2
+const mockEventEmitter = {
+  emit: jest.fn(),
+  emitAsync: jest.fn(),
+  on: jest.fn(),
+  once: jest.fn(),
+  off: jest.fn(),
+  removeAllListeners: jest.fn(),
+  setMaxListeners: jest.fn(),
+  getMaxListeners: jest.fn(),
+  listeners: jest.fn(),
+  rawListeners: jest.fn(),
+  listenerCount: jest.fn(),
+  prependListener: jest.fn(),
+  prependOnceListener: jest.fn(),
+  eventNames: jest.fn(),
 };
 
 // Type pour les props du CreateProjectCommand
@@ -104,6 +124,10 @@ describe('CreateProjectCommandHandler', () => {
         {
           provide: CATEGORY_REPOSITORY_PORT,
           useValue: mockCategoryRepo,
+        },
+        {
+          provide: EventEmitter2,
+          useValue: mockEventEmitter,
         },
       ],
     }).compile();
