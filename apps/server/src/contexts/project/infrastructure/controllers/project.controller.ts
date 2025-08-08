@@ -17,13 +17,13 @@ import {
   Controller,
   Delete,
   Get,
-  // Query,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Patch,
   Post,
-  Req,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -37,13 +37,13 @@ import {
 } from '@nestjs/swagger';
 import { Octokit } from '@octokit/rest';
 import { PublicAccess, Session } from 'supertokens-nestjs';
+import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
 import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
 import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
 import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
 import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
-import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -59,10 +59,15 @@ export class ProjectController {
     description: 'Liste des projets',
     example: [
       {
-        author: {
-          ownerId: 'github_user123',
-          name: 'Lhourquin',
+        owner: {
+          id: 'github_user123',
+          username: 'Lhourquin',
+          login: 'Lhourquin',
           avatarUrl: 'https://avatars.githubusercontent.com/u/123456789?v=4',
+          email: 'lhourquin@example.com',
+          provider: 'github',
+          createdAt: '2025-01-15T10:30:00.000Z',
+          updatedAt: '2025-01-20T14:45:00.000Z',
         },
         id: '123e4567-e89b-12d3-a456-426614174000',
         title: 'E-commerce Platform',
@@ -70,8 +75,18 @@ export class ProjectController {
         shortDescription: 'E-commerce with React & Node.js',
         ownerId: 'github_user123',
         techStacks: [
-          { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-          { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+          {
+            id: '1',
+            name: 'React',
+            iconUrl: 'https://reactjs.org/logo.svg',
+            type: 'TECH',
+          },
+          {
+            id: '2',
+            name: 'Node.js',
+            iconUrl: 'https://nodejs.org/logo.svg',
+            type: 'TECH',
+          },
         ],
         categories: [{ id: '2', name: 'Développement Web' }],
         keyFeatures: [
@@ -100,6 +115,7 @@ export class ProjectController {
                 id: '1',
                 name: 'React',
                 iconUrl: 'https://reactjs.org/logo.svg',
+                type: 'TECH',
               },
             ],
             createdAt: '2025-01-15T10:30:00.000Z',
@@ -148,19 +164,34 @@ export class ProjectController {
         },
       },
       {
-        author: {
-          ownerId: 'github_user123',
-          name: 'Mac-Gyver',
+        owner: {
+          id: 'github_user456',
+          username: 'Mac-Gyver',
+          login: 'Mac-Gyver',
           avatarUrl: 'https://avatars.githubusercontent.com/u/123254210?v=4',
+          email: 'macgyver@example.com',
+          provider: 'github',
+          createdAt: '2025-01-15T10:30:00.000Z',
+          updatedAt: '2025-01-20T14:45:00.000Z',
         },
         id: '123e4567-e89b-12d3-a456-426614174001',
         title: 'E-commerce Platform',
         description: 'Modern e-commerce app with React',
         shortDescription: 'E-commerce with React & Node.js',
-        ownerId: 'github_user123',
+        ownerId: 'github_user456',
         techStacks: [
-          { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-          { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+          {
+            id: '1',
+            name: 'React',
+            iconUrl: 'https://reactjs.org/logo.svg',
+            type: 'TECH',
+          },
+          {
+            id: '2',
+            name: 'Node.js',
+            iconUrl: 'https://nodejs.org/logo.svg',
+            type: 'TECH',
+          },
         ],
         categories: [{ id: '2', name: 'Développement Web' }],
         keyFeatures: [
@@ -189,6 +220,7 @@ export class ProjectController {
                 id: '1',
                 name: 'React',
                 iconUrl: 'https://reactjs.org/logo.svg',
+                type: 'TECH',
               },
             ],
             createdAt: '2025-01-15T10:30:00.000Z',
@@ -270,18 +302,34 @@ export class ProjectController {
     status: 200,
     description: 'Détails du projet',
     example: {
-      author: {
-        ownerId: '4d9c454e-6932-464a-97fb-f7f64e2dad23',
-        name: 'Lucalhost',
+      owner: {
+        id: '4d9c454e-6932-464a-97fb-f7f64e2dad23',
+        username: 'Lucalhost',
+        login: 'Lucalhost',
         avatarUrl: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+        email: 'lucalhost@example.com',
+        provider: 'github',
+        createdAt: '2025-01-15T10:30:00.000Z',
+        updatedAt: '2025-01-20T14:45:00.000Z',
       },
       id: '123e4567-e89b-12d3-a456-426614174000',
       title: 'E-commerce Platform',
       description: 'Modern e-commerce app with React and Node.js',
       shortDescription: 'E-commerce with React & Node.js',
+      ownerId: '4d9c454e-6932-464a-97fb-f7f64e2dad23',
       techStacks: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-        { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/logo.svg',
+          type: 'TECH',
+        },
+        {
+          id: '2',
+          name: 'Node.js',
+          iconUrl: 'https://nodejs.org/logo.svg',
+          type: 'TECH',
+        },
       ],
       categories: [{ id: '2', name: 'Développement Web' }],
       keyFeatures: [
@@ -306,7 +354,12 @@ export class ProjectController {
           description: 'React developer needed',
           isFilled: false,
           techStacks: [
-            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+            {
+              id: '1',
+              name: 'React',
+              iconUrl: 'https://reactjs.org/logo.svg',
+              type: 'TECH',
+            },
           ],
           createdAt: '2025-01-15T10:30:00.000Z',
           updatedAt: '2025-01-15T10:30:00.000Z',
@@ -380,17 +433,9 @@ export class ProjectController {
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.NOT_FOUND);
     }
-    const {
-      author,
-      project,
-      repositoryInfo,
-      lastCommit,
-      contributors,
-      commits,
-    } = projectRes.value;
-    console.log('projectRes', projectRes.value);
+    const { project, repositoryInfo, lastCommit, contributors, commits } =
+      projectRes.value;
     return GetProjectByIdResponseDto.toResponse({
-      author,
       project,
       repositoryInfo: repositoryInfo,
       lastCommit: lastCommit,
@@ -498,6 +543,16 @@ export class ProjectController {
     example: {
       id: '5f4cbe9b-1305-43a2-95ca-23d7be707717',
       ownerId: 'bedb6486-1cbb-4333-b541-59d4af7da7f5',
+      owner: {
+        id: 'bedb6486-1cbb-4333-b541-59d4af7da7f5',
+        username: 'john_doe',
+        login: 'john_doe',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123456789?v=4',
+        email: 'john@example.com',
+        provider: 'github',
+        createdAt: '2025-07-05T14:59:31.560Z',
+        updatedAt: '2025-07-05T14:59:31.560Z',
+      },
       title: 'Mon Projet',
       shortDescription: 'Description courte',
       description: 'Description du projet',
@@ -505,8 +560,18 @@ export class ProjectController {
         { type: 'github', url: 'https://github.com/user/mon-projet' },
       ],
       techStacks: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
-        { id: '2', name: 'Node.js', iconUrl: 'https://nodejs.org/logo.svg' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/logo.svg',
+          type: 'TECH',
+        },
+        {
+          id: '2',
+          name: 'Node.js',
+          iconUrl: 'https://nodejs.org/logo.svg',
+          type: 'TECH',
+        },
       ],
       categories: [{ id: '1', name: 'Développement Web' }],
       keyFeatures: [
@@ -531,7 +596,12 @@ export class ProjectController {
           description: 'Role description',
           isFilled: false,
           techStacks: [
-            { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+            {
+              id: '1',
+              name: 'React',
+              iconUrl: 'https://reactjs.org/logo.svg',
+              type: 'TECH',
+            },
           ],
           createdAt: '2025-07-05T14:59:31.560Z',
           updatedAt: '2025-07-05T14:59:31.560Z',
@@ -553,11 +623,11 @@ export class ProjectController {
   })
   async createProject(
     @Session('userId') ownerId: string,
-    @Req() req: Request,
+    @Query('method') method: string,
     @GitHubOctokit() octokit: Octokit,
     @Body() project: CreateProjectDtoRequest,
   ) {
-    console.log({ image: project.image });
+    Logger.log({ image: project.image });
     const projectRes: Result<Project> = await this.commandBus.execute(
       new CreateProjectCommand({
         ownerId: ownerId,
@@ -579,7 +649,10 @@ export class ProjectController {
           goal: goal,
         })),
         octokit: octokit,
+        method: method,
         image: project.image,
+        coverImages: project.coverImages,
+        readme: project.readme,
       }),
     );
     if (!projectRes.success) {
@@ -649,8 +722,23 @@ export class ProjectController {
       description: 'Description mise à jour',
       shortDescription: 'Description courte mise à jour',
       ownerId: 'github_user123',
+      owner: {
+        id: 'github_user123',
+        username: 'john_doe',
+        login: 'john_doe',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123456789?v=4',
+        email: 'john@example.com',
+        provider: 'github',
+        createdAt: '2025-01-15T10:30:00.000Z',
+        updatedAt: '2025-01-20T14:45:00.000Z',
+      },
       techStacks: [
-        { id: '1', name: 'React', iconUrl: 'https://reactjs.org/logo.svg' },
+        {
+          id: '1',
+          name: 'React',
+          iconUrl: 'https://reactjs.org/logo.svg',
+          type: 'TECH',
+        },
       ],
       categories: [{ id: '1', name: 'Développement Web' }],
       createdAt: '2025-01-15T10:30:00.000Z',

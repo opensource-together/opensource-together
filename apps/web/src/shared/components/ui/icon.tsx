@@ -54,7 +54,12 @@ export type IconName =
   | "logout"
   | "created-projects"
   | "trash"
-  | "bagpack";
+  | "bagpack"
+  | "home"
+  | "file-text"
+  | "mix"
+  | "contact"
+  | "commit";
 
 // Mapping of the icon names to the SVG files
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
@@ -197,8 +202,8 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
 
   user: {
     default: "/icons/user.svg",
-    gray: "/icons/user.svg",
-    white: "/icons/user.svg",
+    gray: "/icons/user-gray.svg",
+    white: "/icons/user-white.svg",
     black: "/icons/user.svg",
     filled: "/icons/user.svg",
     outline: "/icons/user.svg",
@@ -290,6 +295,46 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/bagpack.svg",
     filled: "/icons/bagpack.svg",
     outline: "/icons/bagpack.svg",
+  },
+  home: {
+    default: "/icons/home.svg",
+    gray: "/icons/home-gray.svg",
+    white: "/icons/home-white.svg",
+    black: "/icons/home.svg",
+    filled: "/icons/home.svg",
+    outline: "/icons/home.svg",
+  },
+  "file-text": {
+    default: "/icons/file-text.svg",
+    gray: "/icons/file-text-gray.svg",
+    white: "/icons/file-text.svg",
+    black: "/icons/file-text.svg",
+    filled: "/icons/file-text.svg",
+    outline: "/icons/file-text.svg",
+  },
+  mix: {
+    default: "/icons/mix.svg",
+    gray: "/icons/mix-gray.svg",
+    white: "/icons/mix.svg",
+    black: "/icons/mix.svg",
+    filled: "/icons/mix.svg",
+    outline: "/icons/mix.svg",
+  },
+  commit: {
+    default: "/icons/commit.svg",
+    gray: "/icons/commit-gray.svg",
+    white: "/icons/commit.svg",
+    black: "/icons/commit.svg",
+    filled: "/icons/commit.svg",
+    outline: "/icons/commit.svg",
+  },
+  contact: {
+    default: "/icons/contact-icon.svg",
+    gray: "/icons/contact-icon.svg",
+    white: "/icons/contact-icon.svg",
+    black: "/icons/contact-icon.svg",
+    filled: "/icons/contact-icon.svg",
+    outline: "/icons/contact-icon.svg",
   },
 };
 

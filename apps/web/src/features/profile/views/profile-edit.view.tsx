@@ -14,9 +14,11 @@ export default function ProfileEditView() {
 
   return (
     <div className="mx-auto mt-12 max-w-[1300px]">
-      <div className="mx-auto mt-2 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-40">
-        <div className="flex flex-col gap-8">
-          <ProfileEditForm profile={currentUser} />
+      <div className="mx-auto mt-2 mb-20 max-w-[1300px] px-4 sm:px-6 md:px-8 lg:px-24 xl:px-33">
+        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[350px_1fr] lg:gap-12">
+          <div className="lg:contents">
+            <ProfileEditForm profile={currentUser} />
+          </div>
         </div>
       </div>
     </div>

@@ -19,6 +19,10 @@ export class Email {
     return this.email;
   }
 
+  public hideEmail(): Email {
+    return new Email('');
+  }
+
   public static fromPersistence(email: string): Email {
     return new Email(email);
   }

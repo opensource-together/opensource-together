@@ -1,16 +1,16 @@
-import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import {
+  PROJECT_REPOSITORY_PORT,
+  ProjectRepositoryPort,
+} from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
+import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import {
-  ProjectRoleApplicationRepositoryPort,
   PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
 } from '../ports/project-role-application.repository.port';
-import {
-  ProjectRepositoryPort,
-  PROJECT_REPOSITORY_PORT,
-} from '@/contexts/project/use-cases/ports/project.repository.port';
 
-export class GetAllProjectApplicationsQuery implements IQuery {
+export class GetAllProjectApplicationsQueryByProjectId implements IQuery {
   constructor(
     public readonly props: {
       projectId: string;
@@ -19,9 +19,9 @@ export class GetAllProjectApplicationsQuery implements IQuery {
   ) {}
 }
 
-@QueryHandler(GetAllProjectApplicationsQuery)
-export class GetAllProjectApplicationsQueryHandler
-  implements IQueryHandler<GetAllProjectApplicationsQuery>
+@QueryHandler(GetAllProjectApplicationsQueryByProjectId)
+export class GetAllProjectApplicationsQueryByProjectIdHandler
+  implements IQueryHandler<GetAllProjectApplicationsQueryByProjectId>
 {
   constructor(
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
@@ -30,7 +30,7 @@ export class GetAllProjectApplicationsQueryHandler
     private readonly projectRepository: ProjectRepositoryPort,
   ) {}
 
-  async execute(query: GetAllProjectApplicationsQuery) {
+  async execute(query: GetAllProjectApplicationsQueryByProjectId) {
     const { projectId, userId } = query.props;
     const project = await this.projectRepository.findById(projectId);
     if (!project.success) {
@@ -42,20 +42,58 @@ export class GetAllProjectApplicationsQueryHandler
     }
     const applications: Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
-          avatarUrl: string;
+          avatarUrl?: string;
         };
       }[]
     > =

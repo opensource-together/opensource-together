@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { KeyFeature } from '@/contexts/project/bounded-contexts/project-key-feature/domain/key-feature.entity';
@@ -10,6 +11,7 @@ import { PrismaProjectKeyFeatureMapper } from '@/contexts/project/bounded-contex
 export class PrismaProjectKeyFeatureRepository
   implements ProjectKeyFeatureRepositoryPort
 {
+  private readonly Logger = new Logger(PrismaProjectKeyFeatureRepository.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async create(
@@ -69,7 +71,7 @@ export class PrismaProjectKeyFeatureRepository
     keyFeatures: KeyFeature[],
   ): Promise<Result<KeyFeature[], string>> {
     try {
-      console.log('updateMany', keyFeatures);
+      this.Logger.log('updateMany', keyFeatures);
       await this.prisma.$transaction(async (tx) => {
         const repoKeyFeatures = keyFeatures.map((kf) =>
           PrismaProjectKeyFeatureMapper.toRepo(kf),
@@ -127,7 +129,7 @@ export class PrismaProjectKeyFeatureRepository
       });
       return Result.ok(keyFeatures);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail(error);
     }
   }

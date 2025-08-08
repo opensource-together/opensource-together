@@ -29,7 +29,7 @@ services:
       context: ../../apps/web
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000/v1}
     restart: unless-stopped
     ports:
       - "${FRONT_PORT:-3000}:3000"
@@ -68,6 +68,7 @@ services:
       - R2_ENDPOINT=${R2_ENDPOINT}
       - R2_URL=${R2_URL}
       - GH_TOKEN_OST_PUBLIC=${GH_TOKEN_OST_PUBLIC}
+      - NODE_ENV=${NODE_ENV}
     ports:
       - "${API_PORT:-4000}:3000"
     networks:
@@ -77,8 +78,6 @@ services:
         condition: service_healthy
       supertokens:
         condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
@@ -137,28 +136,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  migrate:
-    build:
-      context: ../../apps/server
-      dockerfile: Dockerfile
-    restart: no
-    command:
-      [
-        "npx",
-        "prisma",
-        "db",
-        "push",
-        "--schema=/app/schema/schema.prisma",
-        "--skip-generate",
-      ]
-    environment:
-      - DATABASE_URL=postgresql://${BUSINESS_DB_USER:-business_user}:${BUSINESS_DB_PASSWORD:-business_password}@postgres:5432/${BUSINESS_DB_NAME:-business}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - app_network
 
 volumes:
   postgres_data:

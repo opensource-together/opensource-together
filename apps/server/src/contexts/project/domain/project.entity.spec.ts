@@ -6,7 +6,8 @@ import {
   ProjectValidationErrors,
 } from './project.entity';
 import { User } from '@/contexts/user/domain/user.entity';
-import { ProjectRole } from '../bounded-contexts/project-role/domain/project-role.entity';
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
+import { Logger } from '@nestjs/common';
 
 describe('Domain Project Entity', () => {
   describe('create', () => {
@@ -92,7 +93,7 @@ describe('Domain Project Entity', () => {
             )}`,
           );
         } else {
-          console.log('projectResult.error', projectResult.error);
+          Logger.log('projectResult.error', projectResult.error);
           expect(projectResult.error).toEqual(expectedError);
         }
       },
@@ -179,10 +180,10 @@ describe('Domain Project Entity', () => {
         throw new Error('Project creation should have succeeded');
       }
       const primitive = project.value.toPrimitive();
-      console.group('without id and createdAt and updatedAt');
-      console.log('props', JSON.stringify(props, null, 2));
-      console.log('primitive', JSON.stringify(primitive, null, 2));
-      console.groupEnd();
+      Logger.log('without id and createdAt and updatedAt');
+      Logger.log('props', JSON.stringify(props, null, 2));
+      Logger.log('primitive', JSON.stringify(primitive, null, 2));
+      Logger.log('end');
       expect(primitive).toEqual(props);
     });
     it('should convert a project to a primitive object (with id)', () => {
@@ -196,10 +197,10 @@ describe('Domain Project Entity', () => {
         throw new Error('Project creation should have succeeded');
       }
       const primitive = project.value.toPrimitive();
-      console.group('with id and createdAt and updatedAt');
-      console.log('props', JSON.stringify(props, null, 2));
-      console.log('primitive', JSON.stringify(primitive, null, 2));
-      console.groupEnd();
+      Logger.log('with id and createdAt and updatedAt');
+      Logger.log('props', JSON.stringify(props, null, 2));
+      Logger.log('primitive', JSON.stringify(primitive, null, 2));
+      Logger.log('end');
       expect(primitive).toEqual(props);
     });
   });
@@ -218,6 +219,7 @@ describe('Domain Project Entity', () => {
         id: '1',
         name: 'React',
         iconUrl: 'https://react.dev/favicon.ico',
+        type: 'TECH',
       });
       if (!techStack.success) {
         throw new Error(JSON.stringify(techStack.error));
@@ -256,6 +258,7 @@ describe('Domain Project Entity', () => {
         id: '1',
         name: 'React',
         iconUrl: 'https://react.dev/favicon.ico',
+        type: 'TECH',
       });
       if (!techStack.success) {
         throw new Error(JSON.stringify(techStack.error));
@@ -336,7 +339,9 @@ describe('Domain Project Entity', () => {
       const user = User.create({
         id: '123',
         username: 'test',
+        provider: 'email',
         email: 'test@test.com',
+        login: 'test',
       });
       if (!user.success) {
         throw new Error('User creation should have succeeded');
@@ -355,7 +360,9 @@ describe('Domain Project Entity', () => {
       const user = User.create({
         id: '456',
         username: 'test',
+        provider: 'email',
         email: 'test@test.com',
+        login: 'test',
       });
       if (!user.success) {
         throw new Error('User creation should have succeeded');
@@ -381,15 +388,13 @@ describe('Domain Project Entity', () => {
         throw new Error('Project creation should have succeeded');
       }
       const techStacks = project.value.toPrimitive().techStacks;
-      console.log('techStacks', JSON.stringify(techStacks, null, 2));
-      console.log(
-        'props.techStacks',
-        JSON.stringify(props.techStacks, null, 2),
-      );
+      Logger.log('techStacks', JSON.stringify(techStacks, null, 2));
+      Logger.log('props.techStacks', JSON.stringify(props.techStacks, null, 2));
       techStacks.push({
         id: '2',
         name: 'php',
         iconUrl: 'https://php.net/favicon.ico',
+        type: 'TECH',
       });
       // expect(techStacks).toBeInstanceOf(Array);
       expect(props.techStacks).toHaveLength(1);
@@ -475,6 +480,16 @@ const getProjectProps = (
       goal: 'Test Project Goal',
     },
   ],
+  owner: {
+    id: '123',
+    username: 'testuser',
+    login: 'testuser',
+    avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+    email: 'test@example.com',
+    provider: 'github',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
   ...overrides,
 });
 
@@ -483,6 +498,7 @@ const createTechStack = (id: string, name: string, iconUrl: string) => {
     id,
     name,
     iconUrl,
+    type: 'TECH',
   });
   if (!result.success) {
     throw new Error('Failed to create tech stack');

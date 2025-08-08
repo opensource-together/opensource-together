@@ -1,6 +1,6 @@
-export interface Author {
-  ownerId: string;
-  name: string;
+export interface Owner {
+  id: string;
+  username: string;
   avatarUrl?: string;
 }
 
@@ -72,11 +72,12 @@ export interface ProjectGoal {
 
 export interface Project {
   id?: string;
-  ownerId?: string;
   slug?: string;
   title: string;
   image?: string;
-  author: Author;
+  coverImages?: string[];
+  readme?: string;
+  owner: Owner;
   shortDescription: string;
   longDescription?: string;
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
@@ -101,4 +102,16 @@ export interface ProjectEditForm {
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoal[];
   categories?: Category[];
+}
+
+export interface GithubRepoType {
+  owner?: string;
+  title: string;
+  readme?: string;
+  description?: string | null;
+  url: string;
+}
+
+export interface GithubReposResponse {
+  repositories: GithubRepoType[];
 }

@@ -1,26 +1,12 @@
 import { Result } from '@/libs/result';
+import { KeyFeature } from '../../project-key-feature/domain/key-feature.entity';
+import { ProjectGoals } from '../../project-goals/domain/project-goals.entity';
 
-export type ApplicationStatus = 'PENDING' | 'APPROVAL' | 'REJECTED';
-
-export type ProjectRoleApplicationData = {
-  id?: string;
-  projectId: string;
-  projectRoleTitle: string;
-  projectRoleId: string;
-  status: ApplicationStatus;
-  motivationLetter?: string;
-  selectedKeyFeatures: string[];
-  selectedProjectGoals: string[];
-  rejectionReason?: string;
-  appliedAt?: Date;
-  decidedAt?: Date;
-  decidedBy?: string;
-  userProfile: {
-    id: string;
-    name: string;
-    avatarUrl?: string;
-  };
-};
+export type ApplicationStatus =
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CANCELLED';
 
 export type ProjectRoleApplicationValidationErrors = {
   projectRoleId?: string;
@@ -31,46 +17,125 @@ export type ProjectRoleApplicationValidationErrors = {
   status?: string;
 };
 
+export type ProjectRoleApplicationCreateData = {
+  id?: string;
+  projectId: string;
+  project: {
+    id: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    image?: string;
+    owner: {
+      id: string;
+      username: string;
+      login: string;
+      email: string;
+      provider: string;
+      jobTitle: string | null;
+      location: string | null;
+      company: string | null;
+      bio: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      avatarUrl: string | null;
+    };
+  };
+  projectRoleTitle: string;
+  projectRoleId: string;
+  motivationLetter?: string;
+  selectedKeyFeatures: { id: string; feature: string }[];
+  selectedProjectGoals: { id: string; goal: string }[];
+  userProfile: {
+    id: string;
+    username: string;
+    avatarUrl?: string;
+  };
+};
+
 export class ProjectRoleApplication {
   public readonly id?: string;
   public readonly projectId: string;
+  public readonly project: {
+    id: string;
+    title: string;
+    shortDescription: string;
+    description: string;
+    image?: string;
+    owner: {
+      id: string;
+      username: string;
+      login: string;
+      email: string;
+      provider: string;
+      jobTitle: string | null;
+      location: string | null;
+      company: string | null;
+      bio: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+      avatarUrl: string | null;
+    };
+  };
   public readonly projectRoleTitle: string;
   public readonly projectRoleId: string;
   public status: ApplicationStatus;
   public readonly motivationLetter?: string;
-  public readonly selectedKeyFeatures: string[];
-  public readonly selectedProjectGoals: string[];
+  public readonly selectedKeyFeatures: KeyFeature[];
+  public readonly selectedProjectGoals: ProjectGoals[];
   public rejectionReason?: string;
   public readonly appliedAt: Date;
   public decidedAt?: Date;
   public decidedBy?: string;
   public readonly userProfile: {
     id: string;
-    name: string;
+    username: string;
     avatarUrl?: string;
   };
 
   private constructor(props: {
     id?: string;
     projectId: string;
+    project: {
+      id: string;
+      title: string;
+      shortDescription: string;
+      description: string;
+      image?: string;
+      owner: {
+        id: string;
+        username: string;
+        login: string;
+        email: string;
+        provider: string;
+        jobTitle: string | null;
+        location: string | null;
+        company: string | null;
+        bio: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        avatarUrl: string | null;
+      };
+    };
     projectRoleTitle: string;
     projectRoleId: string;
     status: ApplicationStatus;
     motivationLetter?: string;
-    selectedKeyFeatures: string[];
-    selectedProjectGoals: string[];
+    selectedKeyFeatures: KeyFeature[];
+    selectedProjectGoals: ProjectGoals[];
     rejectionReason?: string;
     appliedAt?: Date;
     decidedAt?: Date;
     decidedBy?: string;
     userProfile: {
       id: string;
-      name: string;
+      username: string;
       avatarUrl?: string;
     };
   }) {
     this.id = props.id;
     this.projectId = props.projectId;
+    this.project = props.project;
     this.projectRoleTitle = props.projectRoleTitle;
     this.projectRoleId = props.projectRoleId;
     this.status = props.status;
@@ -84,9 +149,143 @@ export class ProjectRoleApplication {
     this.userProfile = props.userProfile!;
   }
 
-  private static validate(
-    props: ProjectRoleApplicationData,
-  ): Result<void, ProjectRoleApplicationValidationErrors | string> {
+  public static create(
+    props: ProjectRoleApplicationCreateData,
+  ): Result<
+    ProjectRoleApplication,
+    ProjectRoleApplicationValidationErrors | string
+  > {
+    const propsWithStatus = {
+      ...props,
+      status: 'PENDING' as ApplicationStatus,
+    };
+
+    const selectedKeyFeaturesResult = props.selectedKeyFeatures.map((kf) =>
+      KeyFeature.reconstitute({
+        id: kf.id,
+        projectId: props.projectId,
+        feature: kf.feature,
+      }),
+    );
+    const selectedProjectGoalsResult = props.selectedProjectGoals.map((pg) =>
+      ProjectGoals.reconstitute({
+        id: pg.id,
+        projectId: props.projectId,
+        goal: pg.goal,
+      }),
+    );
+
+    if (!selectedKeyFeaturesResult.every((kf) => kf.success)) {
+      return Result.fail('Invalid key features');
+    }
+
+    if (!selectedProjectGoalsResult.every((pg) => pg.success)) {
+      return Result.fail('Invalid project goals');
+    }
+    const validationResult = this.validate(propsWithStatus);
+    if (!validationResult.success) {
+      return Result.fail(validationResult.error);
+    }
+
+    return Result.ok(
+      new ProjectRoleApplication({
+        ...propsWithStatus,
+        selectedKeyFeatures: selectedKeyFeaturesResult.map((kf) => kf.value),
+        selectedProjectGoals: selectedProjectGoalsResult.map((pg) => pg.value),
+      }),
+    );
+  }
+
+  public static reconstitute(props: {
+    id?: string;
+    projectId: string;
+    projectTitle: string;
+    projectDescription?: string;
+    project: {
+      id: string;
+      title: string;
+      shortDescription: string;
+      description: string;
+      image?: string;
+      owner: {
+        id: string;
+        username: string;
+        login: string;
+        email: string;
+        provider: string;
+        jobTitle: string | null;
+        location: string | null;
+        company: string | null;
+        bio: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+        avatarUrl: string | null;
+      };
+    };
+    projectRoleTitle: string;
+    projectRoleId: string;
+    status: ApplicationStatus;
+    motivationLetter?: string;
+    selectedKeyFeatures: { id: string; feature: string }[];
+    selectedProjectGoals: { id: string; goal: string }[];
+    rejectionReason?: string;
+    appliedAt?: Date;
+    decidedAt?: Date;
+    decidedBy?: string;
+    userProfile: {
+      id: string;
+      username: string;
+      avatarUrl?: string;
+    };
+  }): Result<
+    ProjectRoleApplication,
+    ProjectRoleApplicationValidationErrors | string
+  > {
+    const validationResult = this.validate(props);
+    const selectedKeyFeaturesResult = props.selectedKeyFeatures.map((kf) =>
+      KeyFeature.reconstitute({
+        id: kf.id,
+        projectId: props.projectId,
+        feature: kf.feature,
+      }),
+    );
+    const selectedProjectGoalsResult = props.selectedProjectGoals.map((pg) =>
+      ProjectGoals.reconstitute({
+        id: pg.id,
+        projectId: props.projectId,
+        goal: pg.goal,
+      }),
+    );
+
+    if (!selectedKeyFeaturesResult.every((kf) => kf.success)) {
+      return Result.fail('Invalid key features');
+    }
+
+    if (!selectedProjectGoalsResult.every((pg) => pg.success)) {
+      return Result.fail('Invalid project goals');
+    }
+
+    if (!validationResult.success) {
+      return Result.fail(validationResult.error);
+    }
+
+    return Result.ok(
+      new ProjectRoleApplication({
+        ...props,
+        selectedKeyFeatures: selectedKeyFeaturesResult.map((kf) => kf.value),
+        selectedProjectGoals: selectedProjectGoalsResult.map((pg) => pg.value),
+      }),
+    );
+  }
+
+  private static validate(props: {
+    projectRoleId: string;
+    selectedKeyFeatures: { id: string; feature: string }[];
+    selectedProjectGoals: { id: string; goal: string }[];
+    motivationLetter?: string;
+    rejectionReason?: string;
+    status?: ApplicationStatus;
+  }): Result<void, ProjectRoleApplicationValidationErrors | string> {
     const errors: ProjectRoleApplicationValidationErrors = {};
 
     if (!props.projectRoleId || props.projectRoleId.trim() === '') {
@@ -117,9 +316,10 @@ export class ProjectRoleApplication {
 
     if (
       props.status &&
-      !['PENDING', 'APPROVAL', 'REJECTED'].includes(props.status)
+      !['PENDING', 'ACCEPTED', 'REJECTED', 'CANCELLED'].includes(props.status)
     ) {
-      errors.status = 'Status must be PENDING, APPROVAL, or REJECTED';
+      errors.status =
+        'Status must be PENDING, ACCEPTED, REJECTED, or CANCELLED';
     }
 
     // userProfile est optionnel, pas de validation nécessaire
@@ -130,40 +330,6 @@ export class ProjectRoleApplication {
 
     return Result.ok(undefined);
   }
-
-  public static create(
-    props: Omit<ProjectRoleApplicationData, 'status'>,
-  ): Result<
-    ProjectRoleApplication,
-    ProjectRoleApplicationValidationErrors | string
-  > {
-    const propsWithStatus: ProjectRoleApplicationData = {
-      ...props,
-      status: 'PENDING',
-    };
-
-    const validationResult = this.validate(propsWithStatus);
-    if (!validationResult.success) {
-      return Result.fail(validationResult.error);
-    }
-
-    return Result.ok(new ProjectRoleApplication(propsWithStatus));
-  }
-
-  public static reconstitute(
-    props: ProjectRoleApplicationData,
-  ): Result<
-    ProjectRoleApplication,
-    ProjectRoleApplicationValidationErrors | string
-  > {
-    const validationResult = this.validate(props);
-    if (!validationResult.success) {
-      return Result.fail(validationResult.error);
-    }
-
-    return Result.ok(new ProjectRoleApplication(props));
-  }
-
   public approve(
     decidedBy: string,
   ): Result<void, ProjectRoleApplicationValidationErrors | string> {
@@ -173,7 +339,7 @@ export class ProjectRoleApplication {
       });
     }
 
-    this.status = 'APPROVAL';
+    this.status = 'ACCEPTED';
     this.decidedAt = new Date();
     this.decidedBy = decidedBy;
     this.rejectionReason = undefined;
@@ -205,16 +371,45 @@ export class ProjectRoleApplication {
     return Result.ok(undefined);
   }
 
-  public toPrimitive(): ProjectRoleApplicationData {
+  public cancel(
+    userId: string,
+  ): Result<void, ProjectRoleApplicationValidationErrors | string> {
+    if (this.status !== 'PENDING') {
+      return Result.fail({
+        status: 'Application must be pending to be cancelled',
+      });
+    }
+
+    if (this.userProfile?.id !== userId) {
+      return Result.fail({
+        status: 'Only the applicant can cancel their own application',
+      });
+    }
+
+    this.status = 'CANCELLED';
+    this.decidedAt = new Date();
+    this.decidedBy = userId;
+
+    return Result.ok(undefined);
+  }
+
+  public toPrimitive() {
     return {
       id: this.id,
       projectId: this.projectId,
+      project: this.project,
       projectRoleTitle: this.projectRoleTitle,
       projectRoleId: this.projectRoleId,
       status: this.status,
       motivationLetter: this.motivationLetter,
-      selectedKeyFeatures: [...this.selectedKeyFeatures],
-      selectedProjectGoals: [...this.selectedProjectGoals],
+      selectedKeyFeatures: this.selectedKeyFeatures.map((kf) => ({
+        id: kf.toPrimitive().id!,
+        feature: kf.toPrimitive().feature,
+      })),
+      selectedProjectGoals: this.selectedProjectGoals.map((pg) => ({
+        id: pg.toPrimitive().id!,
+        goal: pg.toPrimitive().goal,
+      })),
       rejectionReason: this.rejectionReason,
       appliedAt: this.appliedAt,
       decidedAt: this.decidedAt,
@@ -232,7 +427,7 @@ export class ProjectRoleApplication {
   }
 
   public isApproved(): boolean {
-    return this.status === 'APPROVAL';
+    return this.status === 'ACCEPTED';
   }
 
   public isRejected(): boolean {

@@ -83,7 +83,6 @@ export class FindProjectByIdHandler
     if (!ownerProjectInfo.success) {
       return Result.fail(ownerProjectInfo.error);
     }
-    console.log('ownerProjectInfo', ownerProjectInfo);
     const ownerLogin = ownerProjectInfo.value.toPrimitive().login;
     const ownerName = ownerProjectInfo.value.toPrimitive().name;
     const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;
@@ -139,6 +138,10 @@ export class FindProjectByIdHandler
 
     const projectStats: ProjectStats = { ...defaultProjectStats };
 
+    commits = Result.ok({
+      lastCommit: null,
+      commitsNumber: 0,
+    });
     if (commits.success) {
       projectStats.commits = commits.value.commitsNumber;
       projectStats.lastCommit = commits.value.lastCommit || null;
@@ -163,10 +166,15 @@ export class FindProjectByIdHandler
         avatarUrl: ownerAvatarUrl,
       },
       project: project.value,
-      repositoryInfo: projectStats,
-      lastCommit: projectStats.lastCommit,
-      contributors: projectStats.contributors,
-      commits: projectStats.commits,
+      repositoryInfo: {
+        forks: 0,
+        stars: 0,
+        watchers: 0,
+        openIssues: 0,
+      },
+      lastCommit: null,
+      contributors: [],
+      commits: 0,
     });
   }
 }

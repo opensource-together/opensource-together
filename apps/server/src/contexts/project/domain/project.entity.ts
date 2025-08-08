@@ -1,16 +1,17 @@
-import { Result } from '@/libs/result';
-import {
-  TechStack,
-  TechStackValidationErrors,
-} from '@/contexts/techstack/domain/techstack.entity';
+import { Category } from '@/contexts/category/domain/category.entity';
+import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
 import {
   ProjectRole,
   ProjectRoleValidationErrors,
 } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import { Description, ShortDescription, Title } from './vo';
-import { Category } from '@/contexts/category/domain/category.entity';
+import {
+  TechStack,
+  TechStackValidationErrors,
+} from '@/contexts/techstack/domain/techstack.entity';
+import { Result } from '@/libs/result';
 import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
-import { ProjectGoals } from '@/contexts/project/bounded-contexts/project-goals/domain/project-goals.entity';
+import { Description, ShortDescription, Title } from './vo';
+import { User } from '@/contexts/user/domain/user.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -34,20 +35,42 @@ export type ProjectData = {
   description: string;
   categories: { id: string; name: string }[];
   externalLinks?: { type: string; url: string }[];
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  techStacks: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }[];
   projectRoles: {
     projectId?: string;
     id?: string;
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
     createdAt?: Date;
     updatedAt?: Date;
   }[];
+  owner?: {
+    id: string;
+    username: string;
+    login: string;
+    avatarUrl: string;
+    email: string;
+    provider: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
   image?: string;
+  coverImages?: string[]; // Array of cover image URLs (1 to 4)
+  readme?: string; // Ajout du champ README
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -68,7 +91,10 @@ export type ProjectProps = {
   categories: Category[];
   keyFeatures: KeyFeature[];
   projectGoals: ProjectGoals[];
+  owner?: User;
   image?: string;
+  coverImages?: string[];
+  readme?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -85,7 +111,10 @@ export class Project {
   private categories: Category[];
   private keyFeatures: KeyFeature[];
   private projectGoals: ProjectGoals[];
+  private owner?: User;
   private image?: string;
+  private coverImages?: string[];
+  private readme?: string;
   private createdAt?: Date;
   private updatedAt?: Date;
 
@@ -103,7 +132,10 @@ export class Project {
     this.categories = props.categories;
     this.keyFeatures = props.keyFeatures;
     this.projectGoals = props.projectGoals;
+    this.owner = props.owner;
     this.image = props.image;
+    this.coverImages = props.coverImages;
+    this.readme = props.readme;
   }
 
   //utiliser uniquement pour créer un nouveau projet
@@ -127,7 +159,6 @@ export class Project {
     if (props.createdAt > props.updatedAt) {
       return Result.fail('createdAt must be before updatedAt');
     }
-    console.log('props', props);
 
     return Project.validate(props);
   }
@@ -157,6 +188,16 @@ export class Project {
         : ProjectRole.reconstituteMany(props.projectRoles),
       keyFeatures: KeyFeature.createMany(props.keyFeatures),
       projectGoals: ProjectGoals.createMany(props.projectGoals),
+      owner: props.owner
+        ? User.reconstitute({
+            ...props.owner,
+            techStacks: [],
+            experiences: [],
+            projects: [],
+            socialLinks: undefined,
+            githubStats: undefined,
+          })
+        : Result.ok(undefined),
     };
     //extract the error from the validation results
     Object.entries(voValidationResults).forEach(([key, result]) => {
@@ -174,6 +215,7 @@ export class Project {
       categories,
       keyFeatures,
       projectGoals,
+      owner,
     } = Object.fromEntries(
       Object.entries(voValidationResults).map(([key, result]) => [
         key,
@@ -188,6 +230,7 @@ export class Project {
       categories: Category[];
       keyFeatures: KeyFeature[];
       projectGoals: ProjectGoals[];
+      owner?: User;
     };
 
     if (Object.keys(validationErrors).length > 0)
@@ -204,6 +247,7 @@ export class Project {
         categories,
         keyFeatures,
         projectGoals,
+        owner,
       }),
     );
   }
@@ -223,14 +267,31 @@ export class Project {
       shortDescription: this.shortDescription.getShortDescription(),
       description: this.description.getDescription(),
       externalLinks: this.externalLinks,
-      techStacks: this.techStacks.map((ts) => ts.toPrimitive()),
+      techStacks: this.techStacks.map((ts) => {
+        const { id, name, iconUrl, type } = ts.toPrimitive();
+        return { id, name, iconUrl, type };
+      }),
       projectRoles: this.projectRoles?.map((pr) => pr.toPrimitive()) || [],
       categories: this.categories.map((c) => c.toPrimitive()),
       keyFeatures: this.keyFeatures.map((kf) => kf.toPrimitive()),
       projectGoals: this.projectGoals.map((pg) => pg.toPrimitive()),
       image: this.image,
+      coverImages: this.coverImages,
+      readme: this.readme,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      owner: this.owner
+        ? {
+            id: this.ownerId,
+            username: this.owner.getUsername(),
+            login: this.owner.getLogin(),
+            avatarUrl: this.owner.toPrimitive().avatarUrl,
+            email: this.owner.toPrimitive().email,
+            provider: this.owner.toPrimitive().provider,
+            createdAt: this.owner.toPrimitive().createdAt || new Date(),
+            updatedAt: this.owner.toPrimitive().updatedAt || new Date(),
+          }
+        : undefined,
     };
   }
 
@@ -249,7 +310,12 @@ export class Project {
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
   }): Result<ProjectRole, ProjectRoleValidationErrors | string> {
     const projectId = this.id;
     const projectRoleResult = ProjectRole.create({
@@ -267,7 +333,12 @@ export class Project {
       title: string;
       description: string;
       isFilled: boolean;
-      techStacks: { id: string; name: string; iconUrl: string }[];
+      techStacks: {
+        id: string;
+        name: string;
+        iconUrl: string;
+        type: 'LANGUAGE' | 'TECH';
+      }[];
     }[],
   ): Result<ProjectRole[], ProjectRoleValidationErrors | string> {
     const projectRolesResults = ProjectRole.createMany(projectRoles);
@@ -370,5 +441,35 @@ export class Project {
 
     this.keyFeatures = [...remainingKeyFeatures, ...updatedKeyFeatures];
     return Result.ok(this.keyFeatures);
+  }
+
+  public hasKeyFeature(keyFeatureId: string): boolean {
+    return this.keyFeatures.some((kf) => kf.toPrimitive().id === keyFeatureId);
+  }
+
+  public hasProjectGoal(projectGoalId: string): boolean {
+    return this.projectGoals.some(
+      (pg) => pg.toPrimitive().id === projectGoalId,
+    );
+  }
+
+  public getKeyFeature(keyFeatureId: string): Result<KeyFeature, string> {
+    const keyFeature = this.keyFeatures.find(
+      (kf) => kf.toPrimitive().id === keyFeatureId,
+    );
+    if (!keyFeature) {
+      return Result.fail('Key feature not found');
+    }
+    return Result.ok(keyFeature);
+  }
+
+  public getProjectGoal(projectGoalId: string): Result<ProjectGoals, string> {
+    const projectGoal = this.projectGoals.find(
+      (pg) => pg.toPrimitive().id === projectGoalId,
+    );
+    if (!projectGoal) {
+      return Result.fail('Project goal not found');
+    }
+    return Result.ok(projectGoal);
   }
 }

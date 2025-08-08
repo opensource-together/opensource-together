@@ -1,20 +1,18 @@
-import { Module } from '@nestjs/common';
-import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
-import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { PrismaProjectRoleApplicationRepository } from '@/contexts/project/bounded-contexts/project-role-application/infrastructure/repositories/prisma.project-role-application.repository';
-import { projectRoleApplicationUseCases } from '../use-cases/project-role-application.use-cases';
-import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
+import { PROJECT_ROLE_APPLICATION_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
 import { PrismaProjectRoleRepository } from '@/contexts/project/bounded-contexts/project-role/infrastructure/repositories/prisma.project-role.repository';
-import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
+import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
 import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repositories/prisma.project.repository';
-import { MAILING_SERVICE_PORT } from '@/mailing/ports/mailing.service.port';
-import { ResendMailingService } from '@/mailing/infrastructure/resend.mailing.service';
-import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
+import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
-import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { PrismaProfileRepository } from '@/contexts/profile/infrastructure/repositories/prisma.profile.repository';
+import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
+import { ResendMailingService } from '@/mailing/infrastructure/resend.mailing.service';
+import { MAILING_SERVICE_PORT } from '@/mailing/ports/mailing.service.port';
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
+import { Module } from '@nestjs/common';
+import { projectRoleApplicationUseCases } from '../use-cases/project-role-application.use-cases';
+import { ApplicationController } from './controllers/application.controller';
 import { ProjectRoleApplicationController } from './controllers/project-role-application.controller';
-import { ProjectRoleApplicationListener } from './listenner/project-role-notifications.listener';
 
 @Module({
   imports: [PersistenceInfrastructure],
@@ -40,13 +38,8 @@ import { ProjectRoleApplicationListener } from './listenner/project-role-notific
       provide: USER_REPOSITORY_PORT,
       useClass: PrismaUserRepository,
     },
-    {
-      provide: PROFILE_REPOSITORY_PORT,
-      useClass: PrismaProfileRepository,
-    },
-    ProjectRoleApplicationListener,
   ],
-  controllers: [ProjectRoleApplicationController],
+  controllers: [ProjectRoleApplicationController, ApplicationController],
   exports: [
     PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
     PROJECT_ROLE_REPOSITORY_PORT,

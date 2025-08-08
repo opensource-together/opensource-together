@@ -1,51 +1,67 @@
 import {
-  Profile as PrismaProfile,
+  User as PrismaUser,
   UserSocialLink as PrismaSocialLink,
+  TechStack as PrismaTechStack,
 } from '@prisma/client';
-import { Profile } from '@/contexts/profile/domain/profile.entity';
-import {
-  SocialLink,
-  SocialLinkType,
-} from '@/contexts/profile/domain/social-link.vo';
+import { User } from '@/contexts/user/domain/user.entity';
 import { ProfileExperience } from '@/contexts/profile/domain/profile-experience.vo';
 
 // Un type helper pour représenter un objet Prisma avec ses relations
-type RawPrismaProfile = PrismaProfile & {
+type RawPrismaUser = PrismaUser & {
   socialLinks: PrismaSocialLink[];
+  techStacks: PrismaTechStack[];
 };
 
 export class PrismaProfileMapper {
   /**
    * Traduit un objet brut de Prisma vers une entité du domaine.
    */
-  public static toDomain(raw: RawPrismaProfile): Profile {
-    // 1. Reconstituer les VOs à partir des données brutes
-    const socialLinks = raw.socialLinks
-      .map((link) =>
-        SocialLink.create({ type: link.type as SocialLinkType, url: link.url }),
-      )
-      .filter((result) => result.success) // On ignore les liens invalides
-      .map((result) => result.value);
+  public static toDomain(raw: RawPrismaUser): User {
+    // 1. Convertir les UserSocialLink[] vers l'objet socialLinks simple
+    const socialLinksObject = raw.socialLinks.map((link) => ({
+      type: link.type,
+      url: link.url,
+    }));
 
-    // 2. Reconstituer l'entité Profile.
-    // NOTE: Ceci nécessite une méthode `reconstitute` sur l'entité Profile
-    // pour la recréer à partir de données existantes, sans appliquer la logique de "création".
-    const profileEntity = Profile.reconstitute({
-      userId: raw.userId,
-      name: raw.name,
+    // 2. Reconstituer l'entité Profile
+    const profileEntity = User.reconstitute({
+      id: raw.id,
+      username: raw.username,
+      email: raw.email,
+      createdAt: raw.createdAt,
+      updatedAt: raw.updatedAt,
+      provider: raw.provider,
       login: raw.login,
       avatarUrl: raw.avatarUrl || undefined,
       bio: raw.bio || undefined,
       location: raw.location || undefined,
       company: raw.company || undefined,
-      socialLinks: socialLinks,
-      skills: [],
+      socialLinks: socialLinksObject as {
+        github?: string;
+        website?: string;
+        twitter?: string;
+        linkedin?: string;
+        discord?: string;
+      },
+      techStacks: raw.techStacks.map((techStack) => ({
+        id: techStack.id,
+        name: techStack.name,
+        iconUrl: techStack.iconUrl,
+        type: techStack.type,
+      })),
       experiences: [],
       projects: [],
-      updatedAt: raw.updatedAt,
     });
 
-    return profileEntity;
+    if (!profileEntity.success) {
+      throw new Error(
+        typeof profileEntity.error === 'string'
+          ? profileEntity.error
+          : 'Erreur de validation',
+      );
+    }
+
+    return profileEntity.value;
   }
 
   /**
@@ -54,21 +70,39 @@ export class PrismaProfileMapper {
   public static toRepo(profile: {
     userId: string;
     name: string;
+    provider: string;
     login: string;
     avatarUrl: string;
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks: SocialLink[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
     experiences: ProfileExperience[];
   }) {
     const profileState = profile;
+
+    // Convertir l'objet socialLinks vers les données pour UserSocialLink[]
+    const socialLinksData: { type: string; url: string }[] = [];
+    if (profileState.socialLinks) {
+      Object.entries(profileState.socialLinks).forEach(([type, url]) => {
+        if (url && url.trim() !== '') {
+          socialLinksData.push({ type, url });
+        }
+      });
+    }
 
     return {
       // Données pour la table `Profile`
       profileData: {
         userId: profileState.userId,
         name: profileState.name,
+        provider: profileState.provider,
         login: profileState.login,
         avatarUrl: profileState.avatarUrl,
         bio: profileState.bio,
@@ -76,10 +110,7 @@ export class PrismaProfileMapper {
         company: profileState.company,
       },
       // Données pour la table liée `UserSocialLink`
-      socialLinksData: profileState.socialLinks.map((link) => ({
-        type: link.type,
-        url: link.url,
-      })),
+      socialLinksData,
     };
   }
 }

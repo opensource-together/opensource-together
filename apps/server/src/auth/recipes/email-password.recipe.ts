@@ -1,4 +1,5 @@
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
+import { Logger } from '@nestjs/common';
 import { Result } from '@/libs/result';
 import { Email } from '@/contexts/user/domain/email.vo';
 import { Username } from '@/contexts/user/domain/username.vo';
@@ -26,7 +27,7 @@ export const emailPasswordRecipe = (
             // first we check for if it's an email
             const validEmail: Result<Email> = Email.create(value);
             if (!validEmail.success) {
-              console.log({ value });
+              Logger.log({ value });
               const validUsername: Result<Username> = Username.create(value);
               if (validUsername.success) {
                 return undefined;
@@ -94,13 +95,23 @@ export const emailPasswordRecipe = (
             )?.value as string;
 
             const createUserResult: Result<User> = await commandBus.execute(
-              new CreateUserCommand(
-                responseSignUpPOSTSupertokens.user.id,
-                usernameForCreateUser,
-                emailForCreateUser,
-              ),
+              new CreateUserCommand({
+                id: responseSignUpPOSTSupertokens.user.id,
+                email: emailForCreateUser,
+                username: usernameForCreateUser,
+                provider: 'email',
+                name: '',
+                login: '',
+                avatarUrl: '',
+                location: '',
+                company: '',
+                bio: '',
+                socialLinks: {},
+                experiences: [],
+                projects: [],
+              }),
             );
-            console.log(
+            Logger.log(
               'je suis dans le createUserResult de signUpPOST',
               createUserResult,
             );
@@ -109,7 +120,7 @@ export const emailPasswordRecipe = (
                 responseSignUpPOSTSupertokens.user.id,
               );
               if (deleteUserResult.status === 'OK') {
-                console.log(
+                Logger.log(
                   'je suis dans le deleteUserResult.status === OK de signUpPOST',
                 );
                 return {
@@ -130,7 +141,7 @@ export const emailPasswordRecipe = (
           if (validEmail.success) {
             const responseSignInPOST = await original.signInPOST!(input);
             if (responseSignInPOST.status === 'WRONG_CREDENTIALS_ERROR') {
-              console.log(
+              Logger.log(
                 'je suis dans le WRONG_CREDENTIALS_ERROR de signInPOST',
               );
               return {
@@ -145,7 +156,7 @@ export const emailPasswordRecipe = (
           const user: Result<User> = await queryBus.execute(
             new FindUserByUsernameQuery(identifier),
           );
-          console.log({ user });
+          Logger.log({ user });
           if (!user.success) {
             return {
               status: 'GENERAL_ERROR',

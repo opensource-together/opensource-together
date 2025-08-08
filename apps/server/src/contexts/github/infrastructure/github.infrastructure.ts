@@ -16,14 +16,17 @@ import {
   // UserGitHubCredentialsRepositoryPort,
 } from '../use-cases/ports/user-github-credentials.repository.port';
 import { PrismaUserGitHubCredentialsRepository } from './repositories/prisma.user-github-credentials.repository';
+import { GithubController } from './controllers/github.controller';
+import { GitHubStatsService } from './services/github-stats.service';
 
 @Module({
   imports: [HttpModule, ConfigModule, PersistenceInfrastructure],
 
+  controllers: [GithubController],
   providers: [
-    GithubRepository,
     ...githubUseCases,
     OctokitProvider,
+    GitHubStatsService,
     {
       provide: USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
       useClass: PrismaUserGitHubCredentialsRepository,
@@ -41,6 +44,7 @@ import { PrismaUserGitHubCredentialsRepository } from './repositories/prisma.use
     GITHUB_REPOSITORY_PORT,
     USER_GITHUB_CREDENTIALS_REPOSITORY_PORT,
     OctokitProvider,
+    GitHubStatsService,
   ],
 })
 export class GithubInfrastructure {}

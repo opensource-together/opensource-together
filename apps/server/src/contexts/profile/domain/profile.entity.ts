@@ -1,10 +1,10 @@
 import { Result } from '@/libs/result';
-import { SocialLink } from './social-link.vo';
+// import { SocialLink } from './social-link.vo';
 import { ProfileExperience } from './profile-experience.vo';
-import { ProfileSkill } from './profile-skill.vo';
+// import { ProfileSkill } from './profile-skill.vo';
 import { ProfileProject } from './profile-project.vo';
-import { SocialLinkType } from './social-link.vo';
-import { SkillLevel } from './profile-skill.vo';
+// import { SocialLinkType } from './social-link.vo';
+// import { SkillLevel } from './profile-skill.vo';
 
 export class Profile {
   private readonly userId: string;
@@ -15,8 +15,19 @@ export class Profile {
   private location: string;
   private company: string;
 
-  private socialLinks: SocialLink[];
-  private skills: ProfileSkill[];
+  private socialLinks?: {
+    github?: string;
+    website?: string;
+    twitter?: string;
+    linkedin?: string;
+    discord?: string;
+  };
+  private techStacks: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }[];
   private experiences: ProfileExperience[];
   private projects: ProfileProject[];
   private updatedAt?: Date;
@@ -29,8 +40,19 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks?: SocialLink[];
-    skills?: ProfileSkill[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
+    techStacks?: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
     experiences?: ProfileExperience[];
     projects?: ProfileProject[];
     updatedAt?: Date;
@@ -42,8 +64,8 @@ export class Profile {
     this.bio = props.bio || '';
     this.location = props.location || '';
     this.company = props.company || '';
-    this.socialLinks = props.socialLinks || [];
-    this.skills = props.skills || [];
+    this.socialLinks = props.socialLinks;
+    this.techStacks = props.techStacks || [];
     this.experiences = props.experiences || [];
     this.projects = props.projects || [];
     this.updatedAt = props.updatedAt;
@@ -57,8 +79,19 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks?: { type: string; url: string }[];
-    skills?: { name: string; level: string }[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
+    techStacks?: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
     experiences?: {
       company: string;
       position: string;
@@ -75,19 +108,19 @@ export class Profile {
       return Result.fail('Bio must be less than 1000 characters.');
     }
 
-    const socialLinkVOs: SocialLink[] = [];
-    for (const linkData of props.socialLinks || []) {
-      if (!linkData.url) continue;
+    // const sociallinkvos: sociallink[] = [];
+    // for (const linkData of props.socialLinks || []) {
+    //   if (!linkData.url) continue;
 
-      const socialLinkResult = SocialLink.create({
-        type: linkData.type as SocialLinkType,
-        url: linkData.url,
-      });
-      if (!socialLinkResult.success) {
-        return Result.fail(socialLinkResult.error);
-      }
-      socialLinkVOs.push(socialLinkResult.value);
-    }
+    //   const socialLinkResult = SocialLink.create({
+    //     type: linkData.type as SocialLinkType,
+    //     url: linkData.url,
+    //   });
+    //   if (!socialLinkResult.success) {
+    //     return Result.fail(socialLinkResult.error);
+    //   }
+    //   socialLinkVOs.push(socialLinkResult.value);
+    // }
 
     const experienceVOs: ProfileExperience[] = [];
     for (const expData of props.experiences || []) {
@@ -107,17 +140,12 @@ export class Profile {
       projectVOs.push(projectResult.value);
     }
 
-    const skillVOs: ProfileSkill[] = [];
-    for (const skillData of props.skills || []) {
-      const skillResult = ProfileSkill.create({
-        name: skillData.name,
-        level: skillData.level as SkillLevel,
-      });
-      if (!skillResult.success) {
-        return Result.fail(skillResult.error);
-      }
-      skillVOs.push(skillResult.value);
-    }
+    // const techStackVOs: {
+    //   id: string;
+    //   name: string;
+    //   iconUrl: string;
+    //   type: 'LANGUAGE' | 'TECH';
+    // }[] = [];
 
     return Result.ok(
       new Profile({
@@ -128,8 +156,8 @@ export class Profile {
         bio: props.bio,
         location: props.location,
         company: props.company,
-        socialLinks: socialLinkVOs,
-        skills: skillVOs,
+        socialLinks: props.socialLinks,
+        techStacks: props.techStacks || [],
         experiences: experienceVOs,
         projects: projectVOs,
       }),
@@ -144,8 +172,19 @@ export class Profile {
     bio?: string;
     location?: string;
     company?: string;
-    socialLinks?: SocialLink[];
-    skills?: ProfileSkill[];
+    socialLinks?: {
+      github?: string;
+      website?: string;
+      twitter?: string;
+      linkedin?: string;
+      discord?: string;
+    };
+    techStacks?: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
     experiences?: ProfileExperience[];
     projects?: ProfileProject[];
     updatedAt: Date;
@@ -159,14 +198,14 @@ export class Profile {
     this.experiences.push(experience);
   }
 
-  public addSocialLink(link: SocialLink): Result<string, string> {
-    const existingLink = this.socialLinks.find((l) => l.type === link.type);
-    if (existingLink) {
-      return Result.fail(`A social link of type ${link.type} already exists.`);
-    }
-    this.socialLinks.push(link);
-    return Result.ok('');
-  }
+  // public addSocialLink(link: SocialLink): Result<string, string> {
+  //   const existingLink = this.socialLinks.find((l) => l.type === link.type);
+  //   if (existingLink) {
+  //     return Result.fail(`A social link of type ${link.type} already exists.`);
+  //   }
+  //   this.socialLinks.push(link);
+  //   return Result.ok('');
+  // }
 
   public addProject(project: ProfileProject): Result<string, string> {
     const existingProject = this.projects.find((p) => p.name === project.name);
@@ -190,7 +229,7 @@ export class Profile {
       company: this.company,
       updatedAt: this.updatedAt,
       socialLinks: this.socialLinks,
-      skills: this.skills,
+      techStacks: this.techStacks,
       experiences: this.experiences,
       projects: this.projects,
     };

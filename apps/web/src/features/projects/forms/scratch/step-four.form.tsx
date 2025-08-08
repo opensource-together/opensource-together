@@ -92,7 +92,8 @@ export function StepFourForm() {
 
     const finalFormData = {
       ...formData,
-      // Don't put image URL here - it will be handled by the service
+      // Include coverImages from store data
+      coverImages: formData.coverImages || [],
       externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
@@ -105,6 +106,7 @@ export function StepFourForm() {
     createProject({
       projectData: finalFormData,
       imageFile: pendingFormData.logo, // Pass the File object directly
+      method: "scratch",
     });
   };
 
@@ -145,7 +147,7 @@ export function StepFourForm() {
           />
 
           <div className="mt-4 flex flex-col gap-4">
-            <FormLabel tooltip="Partagez les liens vers vos réseaux sociaux, repository GitHub, serveur Discord ou site web. Ces liens aident les contributeurs à en savoir plus et à vous contacter.">
+            <FormLabel tooltip="Partagez les liens vers vos réseaux sociaux, repository Github, serveur Discord ou site web. Ces liens aident les contributeurs à en savoir plus et à vous contacter.">
               Liens externes
             </FormLabel>
 

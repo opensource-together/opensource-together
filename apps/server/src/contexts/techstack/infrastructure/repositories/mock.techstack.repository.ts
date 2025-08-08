@@ -2,8 +2,8 @@ import {
   TechStack,
   TechStackPrimitive,
 } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/libs/result';
 import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import { Result } from '@/libs/result';
 
 // On implémente la même interface que le vrai repository
 export class InMemoryTechStackRepository implements TechStackRepositoryPort {
@@ -23,6 +23,7 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
       id: newTechStack.id,
       name: newTechStack.name,
       iconUrl: newTechStack.iconUrl,
+      type: newTechStack.type,
     });
     return Promise.resolve(
       techStackReconstituted.success
@@ -37,6 +38,7 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
         id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
+        type: ts.type,
       }),
     );
     const result = techStacks.map((ts) =>
@@ -65,6 +67,7 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
         id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
+        type: ts.type,
       }),
     );
 
@@ -86,7 +89,6 @@ export class InMemoryTechStackRepository implements TechStackRepositoryPort {
       return Promise.resolve(Result.fail('Tech stack not found'));
     }
     this.techStacks = this.techStacks.filter((ts) => ts.id !== id);
-    console.log('techStacks', this.techStacks);
     return Promise.resolve(Result.ok(true));
   }
 

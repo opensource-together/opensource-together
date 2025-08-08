@@ -9,7 +9,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 
-import { Project } from "../types/project.type";
+import { GithubContributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
@@ -48,9 +48,9 @@ export default function ProjectSideBar({
   // Create a list that includes the owner first, then the contributors
   const allContributors = (() => {
     const ownerContributor = {
-      login: project.author?.name || "Owner",
-      avatar_url: project.author?.avatarUrl || "",
-      html_url: `https://github.com/${project.author?.name}`,
+      login: project.owner?.username || "Owner",
+      avatar_url: project.owner?.avatarUrl || "",
+      html_url: `https://github.com/${project.owner?.username}`,
       contributions: 999, // To ensure it's first
     };
 
@@ -60,7 +60,7 @@ export default function ProjectSideBar({
     );
 
     // If the owner is not already in the list, add it first
-    if (!isOwnerInContributors && project.author) {
+    if (!isOwnerInContributors && project.owner) {
       return [ownerContributor, ...contributors];
     }
 
@@ -69,6 +69,13 @@ export default function ProjectSideBar({
 
   const handleEditClick = () => {
     router.push(`/projects/${project.id}/edit`);
+  };
+
+  const handleContributorClick = (contributor: GithubContributor) => {
+    // Pour l'instant, utiliser le login GitHub comme ID
+    // TODO: Remplacer par le vrai ID utilisateur quand disponible
+    const userId = contributor.login;
+    router.push(`/profile/${userId}`);
   };
 
   const breadcrumbItems = [
@@ -81,6 +88,24 @@ export default function ProjectSideBar({
       label: title,
       isActive: true,
     },
+  ];
+
+  const formatUrl = (url: string) => {
+    if (!url) return "";
+    try {
+      const urlObj = new URL(url);
+      return urlObj.hostname + urlObj.pathname;
+    } catch {
+      return url;
+    }
+  };
+
+  const externalLinksConfig = [
+    { key: "github", icon: "/icons/github-gray-icon.svg", alt: "GitHub" },
+    { key: "twitter", icon: "/icons/x-gray-icon.svg", alt: "Twitter/X" },
+    { key: "linkedin", icon: "/icons/linkedin-gray-icon.svg", alt: "LinkedIn" },
+    { key: "discord", icon: "/icons/discord-gray.svg", alt: "Discord" },
+    { key: "website", icon: "/icons/link-gray-icon.svg", alt: "Website" },
   ];
 
   return (
@@ -246,7 +271,8 @@ export default function ProjectSideBar({
                   name={contributor.login}
                   alt={contributor.login}
                   size="sm"
-                  className="-ml-4 border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  className="-ml-4 cursor-pointer border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  onClick={() => handleContributorClick(contributor)}
                 />
               </div>
             ))}
@@ -265,52 +291,35 @@ export default function ProjectSideBar({
 
       {/* Links Section */}
       {externalLinks.length > 0 && (
-        <div className="flex flex-col">
-          <h2 className="text-md font-medium tracking-tight">Liens Sociaux</h2>
-          <div className="mt-3 flex flex-wrap gap-3">
-            {externalLinks.map((link, index) => {
-              let iconSrc = "";
-              let iconAlt = "";
-
-              switch (link.type) {
-                case "github":
-                  iconSrc = "/icons/github-gray-icon.svg";
-                  iconAlt = "GitHub";
-                  break;
-                case "twitter":
-                  iconSrc = "/icons/x-gray-icon.svg";
-                  iconAlt = "Twitter/X";
-                  break;
-                case "linkedin":
-                  iconSrc = "/icons/linkedin-gray-icon.svg";
-                  iconAlt = "LinkedIn";
-                  break;
-                case "discord":
-                  iconSrc = "/icons/discord-gray.svg";
-                  iconAlt = "Discord";
-                  break;
-                case "other":
-                case "website":
-                default:
-                  iconSrc = "/icons/link-gray-icon.svg";
-                  iconAlt = "Website";
-                  break;
-              }
+        <div className="mb-2 flex flex-col">
+          <h2 className="text-md mb-4 font-medium tracking-tight text-black">
+            Liens externes
+          </h2>
+          <div className="flex flex-col gap-6">
+            {externalLinksConfig.map((config) => {
+              const link = externalLinks.find((l) =>
+                config.key === "website"
+                  ? l.type === "website" || l.type === "other"
+                  : l.type === config.key
+              );
+              if (!link) return null;
 
               return (
                 <Link
-                  key={index}
+                  key={config.key}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="group text-muted-foreground flex items-center gap-2 text-sm transition-colors hover:text-black"
                 >
                   <Image
-                    src={iconSrc}
-                    alt={iconAlt}
+                    src={config.icon}
+                    alt={config.alt}
                     width={24}
                     height={24}
-                    className="size-6"
+                    className="size-5 opacity-50 transition-opacity group-hover:opacity-100"
                   />
+                  <span className="truncate">{formatUrl(link.url)}</span>
                 </Link>
               );
             })}

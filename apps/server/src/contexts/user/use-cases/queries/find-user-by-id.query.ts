@@ -5,10 +5,15 @@ import {
 } from '../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
 import { Result } from '@/libs/result';
-import { User } from '@/contexts/user/domain/user.entity';
+import { User, UserPublic } from '@/contexts/user/domain/user.entity';
 
 export class FindUserByIdQuery implements IQuery {
-  constructor(public readonly id: string) {}
+  constructor(
+    public readonly props: {
+      userId: string;
+      authenticatedUserId: string;
+    },
+  ) {}
 }
 
 @QueryHandler(FindUserByIdQuery)
@@ -20,11 +25,19 @@ export class FindUserByIdQueryHandler
     private readonly userRepo: UserRepositoryPort,
   ) {}
 
-  async execute(query: FindUserByIdQuery): Promise<Result<User, string>> {
-    const result = await this.userRepo.findById(query.id);
+  async execute(
+    query: FindUserByIdQuery,
+  ): Promise<Result<User | UserPublic, string>> {
+    const { userId, authenticatedUserId } = query.props;
+    const result = await this.userRepo.findById(userId);
 
     if (!result.success) {
       return Result.fail('User not found');
+    }
+
+    if (userId !== authenticatedUserId) {
+      result.value.hideEmail(true);
+      result.value.hideLogin(true);
     }
 
     return Result.ok(result.value);

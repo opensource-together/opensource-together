@@ -4,7 +4,7 @@ import StepSuccessView from "@/features/projects/views/stepper-views/step-succes
 
 export default function page() {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <StepSuccessView />
     </Suspense>
   );

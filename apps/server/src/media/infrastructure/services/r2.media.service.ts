@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Result } from '@/libs/result';
 import {
-  S3Client,
-  PutObjectCommand,
   DeleteObjectCommand,
   HeadObjectCommand,
   NotFound,
+  PutObjectCommand,
+  S3Client,
 } from '@aws-sdk/client-s3';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MediaServicePort } from '../../port/media.service.port';
-import { Result } from '@/libs/result';
 
 @Injectable()
 export class R2MediaService implements MediaServicePort {
@@ -16,6 +16,7 @@ export class R2MediaService implements MediaServicePort {
   private bucket: string;
   private url: string;
 
+  private readonly Logger = new Logger(R2MediaService.name);
   constructor(private configService: ConfigService) {
     this.bucket = this.configService.get('R2_BUCKET_NAME') as string;
     this.s3 = new S3Client({
@@ -52,7 +53,7 @@ export class R2MediaService implements MediaServicePort {
       const imageUrl = `${this.url}/${key}`;
       return Result.ok(imageUrl);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Failed to upload media');
     }
   }
@@ -75,7 +76,7 @@ export class R2MediaService implements MediaServicePort {
       }
       return Result.fail('Failed to delete media');
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Failed to delete media');
     }
   }
@@ -118,7 +119,7 @@ export class R2MediaService implements MediaServicePort {
       await this.delete(oldKey);
       return Result.ok(uploadResult.value);
     } catch (error) {
-      console.error(error);
+      this.Logger.error(error);
       return Result.fail('Failed to change media');
     }
   }

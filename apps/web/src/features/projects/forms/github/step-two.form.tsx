@@ -1,6 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
@@ -8,13 +11,23 @@ import { Label } from "@/shared/components/ui/label";
 import FormNavigationButtons from "../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../stores/project-create.store";
 
-export default function StepTwoView() {
+export default function StepTwoForm() {
   const router = useRouter();
-  const { formData } = useProjectCreateStore();
+  const { formData, updateProjectInfo } = useProjectCreateStore();
 
   const handlePrevious = () => router.push("/projects/create/github/step-one");
 
-  const handleNext = () => router.push("/projects/create/github/step-three");
+  const handleNext = () => {
+    if (formData.selectedRepository) {
+      updateProjectInfo({
+        title: formData.selectedRepository.title,
+        shortDescription:
+          formData.selectedRepository.readme ||
+          "README à compléter pour ce projet.",
+      });
+    }
+    router.push("/projects/create/github/step-three");
+  };
 
   return (
     <div className="w-full">
@@ -24,7 +37,7 @@ export default function StepTwoView() {
             <Label className="text-lg">Nom du repository</Label>
           </div>
           <div className="mt-2 font-normal text-black/50">
-            {formData.selectedRepository?.name}
+            {formData.selectedRepository?.title}
           </div>
         </div>
         <div className="my-4 h-px border-t-2 border-black/5" />
@@ -34,13 +47,14 @@ export default function StepTwoView() {
               <Label className="text-lg">README.md</Label>
             </div>
           </div>
-          <div className="mb-3 line-clamp-5 text-sm leading-6 text-black/50">
-            Nous, membres, contributeurs et leaders, nous nous engageons à faire
-            de la participation à notre communauté une expérience sans
-            harcèlement pour tous, quelle que soit l'âge, la taille, le handicap
-            visible ou invisible, l'ethnicité, les caractéristiques sexuelles,
-            l'identité et l'expression de genre, le niveau d'expérience,
-            l'éducation, le statut socio-économique, la nationalité ...
+          <div className="mb-3 line-clamp-5 h-[100px] text-sm leading-6 text-black/50">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw]}
+            >
+              {formData.selectedRepository?.readme ||
+                "Aucune description disponible. Vous pourrez en ajouter une à l'étape suivante."}
+            </ReactMarkdown>
           </div>
         </div>
         <div className="my-4 h-px border-t-2 border-black/5" />
@@ -51,10 +65,7 @@ export default function StepTwoView() {
           <div className="mt-2 flex items-center gap-2">
             <Icon name="link" variant="gray" size="sm" />
             <span className="line-clamp-1 text-sm font-normal break-all text-black/50">
-              https://github.com/opensource-together/
-              {formData.selectedRepository?.name
-                .toLowerCase()
-                .replace(/\s+/g, "-")}
+              {formData.selectedRepository?.url}
             </span>
           </div>
         </div>
@@ -64,7 +75,8 @@ export default function StepTwoView() {
           onNext={handleNext}
           onPrevious={handlePrevious}
           previousLabel="Retour"
-          nextLabel="Confirmer"
+          nextLabel="Suivant"
+          nextType="button"
         />
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { Project } from '@/contexts/project/domain/project.entity';
-import { Result } from '@/libs/result';
-import { Inject, Injectable } from '@nestjs/common';
-import { CLOCK_PORT, ClockPort } from '@/libs/time';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
+import { Result } from '@/libs/result';
+import { CLOCK_PORT, ClockPort } from '@/libs/time';
+import { Inject, Injectable } from '@nestjs/common';
 
 type ProjectInMemory = {
   id: string;
@@ -11,18 +11,38 @@ type ProjectInMemory = {
   shortDescription: string;
   description: string;
   externalLinks?: { type: string; url: string }[];
-  techStacks: { id: string; name: string; iconUrl: string }[];
+  techStacks: {
+    id: string;
+    name: string;
+    iconUrl: string;
+    type: 'LANGUAGE' | 'TECH';
+  }[];
   projectRoles: {
     id?: string;
     title: string;
     description: string;
     isFilled: boolean;
-    techStacks: { id: string; name: string; iconUrl: string }[];
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
   }[];
   categories: { id: string; name: string }[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
   projectMembers: { id: string; userId: string }[];
+  owner?: {
+    id: string;
+    username: string;
+    login: string;
+    avatarUrl: string;
+    email: string;
+    provider: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -41,9 +61,24 @@ export class InMemoryProjectRepository {
       description: 'une description plus détaillée du projet de test',
       externalLinks: [{ type: 'github', url: 'https://github.com/test/repo' }],
       techStacks: [
-        { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
-        { id: '2', name: 'react', iconUrl: 'https://reactjs.org/favicon.ico' },
-        { id: '3', name: 'nodejs', iconUrl: 'https://nodejs.org/favicon.ico' },
+        {
+          id: '1',
+          name: 'php',
+          iconUrl: 'https://php.net/favicon.ico',
+          type: 'LANGUAGE',
+        },
+        {
+          id: '2',
+          name: 'react',
+          iconUrl: 'https://reactjs.org/favicon.ico',
+          type: 'TECH',
+        },
+        {
+          id: '3',
+          name: 'nodejs',
+          iconUrl: 'https://nodejs.org/favicon.ico',
+          type: 'TECH',
+        },
       ],
       projectRoles: [],
       categories: [{ id: '1', name: 'Web Development' }],
@@ -53,6 +88,16 @@ export class InMemoryProjectRepository {
         { id: 'member1', userId: '456' }, // Utilisateur 456 est membre de ce projet
         { id: 'member2', userId: '789' }, // Utilisateur 789 est membre de ce projet
       ],
+      owner: {
+        id: '123',
+        username: 'testuser',
+        login: 'testuser',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+        email: 'test@example.com',
+        provider: 'github',
+        createdAt: new Date('2024-01-01T09:00:00Z'),
+        updatedAt: new Date('2024-01-01T10:00:00Z'),
+      },
       createdAt: new Date('2024-01-01T09:00:00Z'),
       updatedAt: new Date('2024-01-01T10:00:00Z'),
     },
@@ -64,7 +109,12 @@ export class InMemoryProjectRepository {
       description: 'Description du deuxième projet',
       externalLinks: [],
       techStacks: [
-        { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
+        {
+          id: '1',
+          name: 'php',
+          iconUrl: 'https://php.net/favicon.ico',
+          type: 'LANGUAGE',
+        },
       ],
       projectRoles: [],
       categories: [{ id: '1', name: 'Web Development' }],
@@ -73,6 +123,16 @@ export class InMemoryProjectRepository {
       projectMembers: [
         { id: 'member3', userId: '123' }, // Utilisateur 123 est membre de ce projet
       ],
+      owner: {
+        id: '456',
+        username: 'seconduser',
+        login: 'seconduser',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/456?v=4',
+        email: 'second@example.com',
+        provider: 'github',
+        createdAt: new Date('2024-01-02T09:00:00Z'),
+        updatedAt: new Date('2024-01-02T10:00:00Z'),
+      },
       createdAt: new Date('2024-01-02T09:00:00Z'),
       updatedAt: new Date('2024-01-02T10:00:00Z'),
     },
@@ -91,6 +151,7 @@ export class InMemoryProjectRepository {
         id: tech.id,
         name: tech.name,
         iconUrl: tech.iconUrl,
+        type: tech.type,
       })),
       projectRoles: projectPrimitive.projectRoles.map((role) => ({
         id: '1',
@@ -101,6 +162,7 @@ export class InMemoryProjectRepository {
           id: tech.id,
           name: tech.name,
           iconUrl: tech.iconUrl,
+          type: tech.type,
         })),
         projectId: '1',
         createdAt: this.clock.now(),
@@ -110,6 +172,7 @@ export class InMemoryProjectRepository {
       keyFeatures: projectPrimitive.keyFeatures,
       projectGoals: projectPrimitive.projectGoals,
       projectMembers: [],
+      owner: projectPrimitive.owner,
       createdAt: this.clock.now(),
       updatedAt: this.clock.now(),
     };
@@ -131,6 +194,7 @@ export class InMemoryProjectRepository {
         id: ts.id,
         name: ts.name,
         iconUrl: ts.iconUrl,
+        type: ts.type,
       }),
     );
 
@@ -155,6 +219,16 @@ export class InMemoryProjectRepository {
       projectGoals: projectInMemory.projectGoals,
       createdAt: projectInMemory.createdAt,
       updatedAt: projectInMemory.updatedAt,
+      owner: projectInMemory.owner || {
+        id: projectInMemory.ownerId,
+        username: 'testuser',
+        login: 'testuser',
+        avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+        email: 'test@example.com',
+        provider: 'github',
+        createdAt: projectInMemory.createdAt || new Date(),
+        updatedAt: projectInMemory.updatedAt || new Date(),
+      },
     });
 
     if (!projectResult.success) {
@@ -201,6 +275,7 @@ export class InMemoryProjectRepository {
         id: tech.id,
         name: tech.name,
         iconUrl: tech.iconUrl,
+        type: tech.type,
       })),
       projectRoles: projectPrimitive.projectRoles.map((role) => ({
         id: role.id,
@@ -211,6 +286,7 @@ export class InMemoryProjectRepository {
           id: tech.id,
           name: tech.name,
           iconUrl: tech.iconUrl,
+          type: tech.type,
         })),
       })),
       categories: projectPrimitive.categories,
@@ -286,16 +362,23 @@ export class InMemoryProjectRepository {
           { type: 'github', url: 'https://github.com/test/repo' },
         ],
         techStacks: [
-          { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
+          {
+            id: '1',
+            name: 'php',
+            iconUrl: 'https://php.net/favicon.ico',
+            type: 'LANGUAGE',
+          },
           {
             id: '2',
             name: 'react',
             iconUrl: 'https://reactjs.org/favicon.ico',
+            type: 'TECH',
           },
           {
             id: '3',
             name: 'nodejs',
             iconUrl: 'https://nodejs.org/favicon.ico',
+            type: 'TECH',
           },
         ],
         projectRoles: [],
@@ -317,7 +400,12 @@ export class InMemoryProjectRepository {
         description: 'Description du deuxième projet',
         externalLinks: [],
         techStacks: [
-          { id: '1', name: 'php', iconUrl: 'https://php.net/favicon.ico' },
+          {
+            id: '1',
+            name: 'php',
+            iconUrl: 'https://php.net/favicon.ico',
+            type: 'LANGUAGE',
+          },
         ],
         projectRoles: [],
         categories: [{ id: '1', name: 'Web Development' }],

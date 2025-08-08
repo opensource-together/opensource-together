@@ -1,36 +1,39 @@
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
+import { CreateProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/create-project-role.command';
+import { DeleteProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/delete-project-role.command';
+import { UpdateProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/update-project-role.command';
+import { GetProjectRolesQuery } from '@/contexts/project/bounded-contexts/project-role/use-cases/queries/get-project-roles.query';
+import { OptionalSession } from '@/libs/decorators/optional-session.decorator';
+import { Result } from '@/libs/result';
 import {
   Body,
   Controller,
-  Param,
-  Post,
-  Patch,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Logger,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/create-project-role.command';
-import { UpdateProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/update-project-role.command';
-import { DeleteProjectRoleCommand } from '@/contexts/project/bounded-contexts/project-role/use-cases/commands/delete-project-role.command';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PublicAccess, Session } from 'supertokens-nestjs';
-import { OptionalSession } from '@/libs/decorators/optional-session.decorator';
 import { CreateProjectRoleDtoRequest } from './dto/create-project-role-request.dto';
 import { UpdateProjectRoleDtoRequest } from './dto/update-project-role-request.dto';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { Result } from '@/libs/result';
-import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiCookieAuth,
-  ApiParam,
-  ApiBody,
-  ApiResponse,
-} from '@nestjs/swagger';
-import { GetProjectRolesQuery } from '@/contexts/project/bounded-contexts/project-role/use-cases/queries/get-project-roles.query';
 
 @ApiTags('Project Roles')
 @Controller('projects/:projectId/roles')
 export class ProjectRolesController {
+  private readonly Logger = new Logger(ProjectRolesController.name);
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
@@ -62,6 +65,7 @@ export class ProjectRolesController {
             id: '4',
             name: 'React Native',
             iconUrl: 'https://reactnative.dev/img/header_logo.svg',
+            type: 'TECH',
           },
         ],
         createdAt: '2025-07-05T15:30:00.000Z',
@@ -79,6 +83,7 @@ export class ProjectRolesController {
             id: '4',
             name: 'React Native',
             iconUrl: 'https://reactnative.dev/img/header_logo.svg',
+            type: 'TECH',
           },
         ],
         createdAt: '2025-07-05T15:30:00.000Z',
@@ -167,6 +172,7 @@ export class ProjectRolesController {
           id: '4',
           name: 'React Native',
           iconUrl: 'https://reactnative.dev/img/header_logo.svg',
+          type: 'TECH',
         },
       ],
       createdAt: '2025-07-05T15:30:00.000Z',
@@ -201,8 +207,8 @@ export class ProjectRolesController {
     @Param('projectId') projectId: string,
     @Body() body: CreateProjectRoleDtoRequest,
   ) {
-    console.log('body', body);
-    console.log('projectId', projectId);
+    this.Logger.log('body', body);
+    this.Logger.log('projectId', projectId);
     const { title, description, techStacks } = body;
     const command = new CreateProjectRoleCommand({
       projectId,
@@ -278,6 +284,7 @@ export class ProjectRolesController {
           name: 'Next.js',
           iconUrl:
             'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+          type: 'TECH',
         },
       ],
       createdAt: '2025-07-14T12:35:08.064Z',

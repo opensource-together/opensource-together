@@ -21,6 +21,7 @@ export const transformProjectForApi = (
     description: storeData.shortDescription,
     shortDescription: storeData.shortDescription,
     image: storeData.image || undefined,
+    readme: storeData.readme || undefined,
     externalLinks: storeData.externalLinks || [],
     techStacks: storeData.techStack.map((tech) => tech.id),
     categories: storeData.categories.map((cat) => cat.id),

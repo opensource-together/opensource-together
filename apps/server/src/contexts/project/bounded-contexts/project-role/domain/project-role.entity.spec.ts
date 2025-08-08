@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
@@ -16,11 +13,13 @@ describe('ProjectRole Entity', () => {
       id: '1',
       name: 'React',
       iconUrl: 'https://reactjs.org/favicon.ico',
+      type: 'TECH',
     });
     const typescriptResult = TechStack.reconstitute({
       id: '2',
       name: 'TypeScript',
       iconUrl: 'https://typescriptlang.org/favicon.ico',
+      type: 'LANGUAGE',
     });
 
     if (reactResult.success && typescriptResult.success) {
@@ -269,6 +268,7 @@ describe('ProjectRole Entity', () => {
         id: '2',
         name: 'TypeScript',
         iconUrl: 'https://typescriptlang.org/favicon.ico',
+        type: 'LANGUAGE',
       });
     });
 

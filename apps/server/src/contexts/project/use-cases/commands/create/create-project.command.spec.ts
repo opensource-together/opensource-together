@@ -1,33 +1,36 @@
+import { Logger } from '@nestjs/common';
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
-import { Test, TestingModule } from '@nestjs/testing';
+import { MockCategoryRepository } from '@/contexts/category/infrastructure/repositories/mock.category.repository';
+import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
+import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
+import { InMemoryProjectRoleRepository } from '@/contexts/project/bounded-contexts/project-role/infrastructure/repositories/mock.project-role.repository';
+import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
 import {
-  CreateProjectCommand,
-  CreateProjectCommandHandler,
-} from './create-project.command';
+  Project,
+  ProjectValidationErrors,
+} from '@/contexts/project/domain/project.entity';
+import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
+import { ProjectValidationService } from '@/contexts/project/infrastructure/services/project-validation.service';
+import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
+import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
+import {
+  TECHSTACK_REPOSITORY_PORT,
+  TechStackRepositoryPort,
+} from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
+import { Result } from '@/libs/result';
+import { MockClock } from '@/libs/time/mock-clock';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Octokit } from '@octokit/rest';
+import { PROJECT_VALIDATION_SERVICE_PORT } from '../../ports/project-validation.service.port';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '../../ports/project.repository.port';
 import {
-  Project,
-  ProjectValidationErrors,
-} from '@/contexts/project/domain/project.entity';
-import { TechStackRepositoryPort } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
-import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
-import { InMemoryTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/mock.techstack.repository';
-import { InMemoryProjectRepository } from '@/contexts/project/infrastructure/repositories/mock.project.repository';
-import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
-import { Result } from '@/libs/result';
-import { MockClock } from '@/libs/time/mock-clock';
-import { PROJECT_VALIDATION_SERVICE_PORT } from '../../ports/project-validation.service.port';
-import { ProjectValidationService } from '@/contexts/project/infrastructure/services/project-validation.service';
-import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
-import { InMemoryProjectRoleRepository } from '@/contexts/project/bounded-contexts/project-role/infrastructure/repositories/mock.project-role.repository';
-import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
-import { Octokit } from '@octokit/rest';
-import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
-import { MockCategoryRepository } from '@/contexts/category/infrastructure/repositories/mock.category.repository';
+  CreateProjectCommand,
+  CreateProjectCommandHandler,
+} from './create-project.command';
 // Mock Octokit
 const mockOctokit = {
   rest: {
@@ -60,6 +63,7 @@ type CreateProjectCommandProps = {
   categories: string[];
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
+  method: string;
   octokit: any; // Changé de Octokit à any
 };
 
@@ -146,9 +150,20 @@ describe('CreateProjectCommandHandler', () => {
             id: '1',
             name: 'react',
             iconUrl: 'https://reactjs.org/favicon.ico',
+            type: 'TECH',
           },
         ],
         ownerId: '1',
+        owner: {
+          id: '1',
+          username: 'testuser',
+          login: 'testuser',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+          email: 'test@example.com',
+          provider: 'github',
+          createdAt: mockClock.now(),
+          updatedAt: mockClock.now(),
+        },
         categories: [
           {
             id: '1',
@@ -235,6 +250,7 @@ describe('CreateProjectCommandHandler', () => {
                 id: '1',
                 name: 'react',
                 iconUrl: 'https://reactjs.org/favicon.ico',
+                type: 'TECH',
               },
             ],
             createdAt: mockClock.now(),
@@ -246,9 +262,20 @@ describe('CreateProjectCommandHandler', () => {
             id: '1',
             name: 'react',
             iconUrl: 'https://reactjs.org/favicon.ico',
+            type: 'TECH',
           },
         ],
         ownerId: '1',
+        owner: {
+          id: '1',
+          username: 'testuser',
+          login: 'testuser',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+          email: 'test@example.com',
+          provider: 'github',
+          createdAt: mockClock.now(),
+          updatedAt: mockClock.now(),
+        },
         categories: [
           {
             id: '1',
@@ -273,7 +300,7 @@ describe('CreateProjectCommandHandler', () => {
       if (!projectResultExpected.success) {
         throw new Error(JSON.stringify(projectResultExpected.error));
       }
-      console.log(
+      Logger.log(
         'projectResultExpected',
         projectResultExpected.value.toPrimitive(),
       );
@@ -304,6 +331,7 @@ describe('CreateProjectCommandHandler', () => {
             goal: 'Test Project Goal',
           },
         ],
+        method: 'scratch',
         octokit: mockOctokit,
       });
 
@@ -354,7 +382,7 @@ describe('CreateProjectCommandHandler', () => {
         // await deleteTechStacksInMemory(techStackRepo, props.categories);
         // throw new Error(JSON.stringify(result.error));
       } else {
-        console.log('result', result.value.toPrimitive());
+        Logger.log('result', result.value.toPrimitive());
         throw new Error('Test should have failed but succeeded');
       }
     });
@@ -385,6 +413,7 @@ const getCommandProps = (
         goal: 'Test Project Goal',
       },
     ],
+    method: 'scratch',
     octokit: mockOctokit, // Utiliser le mock
     ...override,
   };
@@ -412,6 +441,7 @@ const getMinimalPropsNeeded = (): CreateProjectCommandProps => {
         goal: 'Test Project Goal',
       },
     ],
+    method: 'scratch',
     octokit: mockOctokit, // Utiliser le mock
   };
 };
@@ -424,11 +454,13 @@ const createTechStacksInMemory = async (
     id: '1',
     name: 'react',
     iconUrl: 'https://reactjs.org/favicon.ico',
+    type: 'TECH',
   });
   const techStack2 = TechStack.reconstitute({
     id: '2',
     name: 'angular',
     iconUrl: 'https://angular.io/favicon.ico',
+    type: 'TECH',
   });
   if (!techStack1.success || !techStack2.success) {
     throw new Error('Tech stacks not created');

@@ -6,6 +6,17 @@ import { urlWithDomainCheck } from "@/shared/validations/url-with-domain-check.s
 // STEPPER FORM SCHEMAS
 // ========================================
 
+export const selectedRepoSchema = z.object({
+  selectedRepository: z
+    .object({
+      owner: z.string().optional(),
+      readme: z.string().optional(),
+      title: z.string(),
+      url: z.string(),
+    })
+    .nullable(),
+});
+
 // Step 1: Basic Project Information
 export const stepOneSchema = z.object({
   title: z
@@ -13,7 +24,9 @@ export const stepOneSchema = z.object({
     .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
   shortDescription: z
     .string()
-    .min(10, "La description doit contenir au moins 10 caractères"),
+    .min(10, "La description doit contenir au moins 10 caractères")
+    .max(100, "La description ne peut pas dépasser 100 caractères"),
+  coverImages: z.array(z.instanceof(File)).optional(),
   keyFeatures: z
     .array(
       z.object({
@@ -97,18 +110,13 @@ export const createProjectSchema = z.object({
   ...stepOneSchema.shape,
   ...stepTwoSchema.shape,
   ...stepThreeSchema.shape,
-  selectedRepository: z
-    .object({
-      name: z.string(),
-      date: z.string(),
-    })
-    .nullable(),
+  selectedRepository: selectedRepoSchema,
 });
 
 // ========================================
 // TYPE EXPORTS
 // ========================================
-
+export type SelectedRepoFormData = z.infer<typeof selectedRepoSchema>;
 export type StepOneFormData = z.infer<typeof stepOneSchema>;
 export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
 export type RoleFormData = z.infer<typeof roleSchema>;

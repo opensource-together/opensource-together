@@ -10,11 +10,11 @@ import {
   KeyFeature,
   Prisma,
   Project as PrismaProject,
+  ProjectExternalLink,
   ProjectGoal,
   ProjectRole,
   teamMember,
   TechStack,
-  ProjectExternalLink,
 } from '@prisma/client';
 
 // Type temporaire en attendant la génération du client Prisma
@@ -28,6 +28,22 @@ type PrismaProjectWithIncludes = PrismaProject & {
   projectGoals: ProjectGoal[];
   externalLinks: ProjectExternalLink[];
   image?: string | null;
+  readme?: string | null;
+  ownerId: string;
+  owner: {
+    id: string;
+    username: string;
+    email: string;
+    provider: string;
+    login: string;
+    avatarUrl: string | null;
+    location: string | null;
+    company: string | null;
+    bio: string | null;
+    jobTitle: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  };
 };
 
 export class PrismaProjectMapper {
@@ -37,7 +53,9 @@ export class PrismaProjectMapper {
       title: projectData.title,
       description: projectData.description,
       shortDescription: projectData.shortDescription,
+      readme: projectData.readme,
       image: projectData.image,
+      coverImages: projectData.coverImages || [],
       externalLinks: {
         create:
           projectData.externalLinks
@@ -47,7 +65,11 @@ export class PrismaProjectMapper {
               url: link.url,
             })) || [],
       },
-      ownerId: projectData.ownerId,
+      owner: {
+        connect: {
+          id: projectData.ownerId,
+        },
+      },
       techStacks: {
         connect: projectData.techStacks.map((techStack) => ({
           id: techStack.id,
@@ -89,6 +111,7 @@ export class PrismaProjectMapper {
   ): Result<Project, ProjectValidationErrors | string> {
     const projectData: ProjectData = {
       id: prismaProject.id,
+      ownerId: prismaProject.ownerId,
       title: prismaProject.title,
       shortDescription: prismaProject.shortDescription,
       description: prismaProject.description,
@@ -96,14 +119,26 @@ export class PrismaProjectMapper {
         type: link.type,
         url: link.url,
       })),
-      ownerId: prismaProject.ownerId,
       createdAt: prismaProject.createdAt,
       updatedAt: prismaProject.updatedAt,
+      coverImages: prismaProject.coverImages || [],
+      readme: prismaProject.readme || undefined,
       techStacks: prismaProject.techStacks.map((techStack) => ({
         id: techStack.id,
         name: techStack.name,
         iconUrl: techStack.iconUrl,
+        type: techStack.type,
       })),
+      owner: {
+        id: prismaProject.owner.id,
+        username: prismaProject.owner.username,
+        login: prismaProject.owner.login,
+        avatarUrl: prismaProject.owner.avatarUrl || '',
+        email: prismaProject.owner.email,
+        provider: prismaProject.owner.provider,
+        createdAt: prismaProject.owner.createdAt,
+        updatedAt: prismaProject.owner.updatedAt,
+      },
       categories: prismaProject.categories.map((c) => ({
         id: c.id,
         name: c.name,
@@ -128,6 +163,7 @@ export class PrismaProjectMapper {
           id: techStack.id,
           name: techStack.name,
           iconUrl: techStack.iconUrl,
+          type: techStack.type,
         })),
         createdAt: role.createdAt,
         updatedAt: role.updatedAt,

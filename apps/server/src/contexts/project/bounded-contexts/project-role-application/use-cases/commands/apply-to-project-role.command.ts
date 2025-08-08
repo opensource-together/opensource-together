@@ -1,35 +1,35 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { Result } from '@/libs/result';
-import {
-  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-  ProjectRoleApplicationRepositoryPort,
-} from '../ports/project-role-application.repository.port';
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import {
   PROJECT_ROLE_REPOSITORY_PORT,
   ProjectRoleRepositoryPort,
 } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
+import { Project } from '@/contexts/project/domain/project.entity';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 import {
-  ProjectRoleApplication,
-  ProjectRoleApplicationValidationErrors,
-} from '../../domain/project-role-application.entity';
-import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
-import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
-import {
-  PROFILE_REPOSITORY_PORT,
-  ProfileRepositoryPort,
-} from '@/contexts/profile/use-cases/ports/profile.repository.port';
+  USER_REPOSITORY_PORT,
+  UserRepositoryPort,
+} from '@/contexts/user/use-cases/ports/user.repository.port';
+import { Result } from '@/libs/result';
 import {
   MAILING_SERVICE_PORT,
   MailingServicePort,
-  SendEmailPayload,
 } from '@/mailing/ports/mailing.service.port';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ProjectGoals } from '../../../project-goals/domain/project-goals.entity';
+import { KeyFeature } from '../../../project-key-feature/domain/key-feature.entity';
+import {
+  ProjectRoleApplication,
+  ProjectRoleApplicationValidationErrors,
+} from '../../domain/project-role-application.entity';
+import {
+  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
+} from '../ports/project-role-application.repository.port';
 
 export class ApplyToProjectRoleCommand implements ICommand {
   constructor(
@@ -50,8 +50,6 @@ export class ApplyToProjectRoleCommandHandler
   constructor(
     @Inject(USER_REPOSITORY_PORT)
     private readonly userRepo: UserRepositoryPort,
-    @Inject(PROFILE_REPOSITORY_PORT)
-    private readonly profileRepo: ProfileRepositoryPort,
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
     private readonly applicationRepo: ProjectRoleApplicationRepositoryPort,
     @Inject(PROJECT_ROLE_REPOSITORY_PORT)
@@ -94,9 +92,8 @@ export class ApplyToProjectRoleCommandHandler
     }
 
     // 3. Récupérer le projet pour valider les keyFeatures et projectGoals
-    const projectResult = await this.projectRepo.findById(
-      projectRole.toPrimitive().projectId!,
-    );
+    const projectResult: Result<Project, string> =
+      await this.projectRepo.findById(projectRole.toPrimitive().projectId!);
     if (!projectResult.success) {
       return Result.fail('Project not found');
     }
@@ -104,31 +101,33 @@ export class ApplyToProjectRoleCommandHandler
     const projectData = project.toPrimitive();
 
     // 4. Valider et récupérer les keyFeatures sélectionnées
-    const validKeyFeatures: string[] = [];
+    const validKeyFeatures: KeyFeature[] = [];
     for (const selectedId of selectedKeyFeatures) {
-      const keyFeature = projectData.keyFeatures.find(
-        (kf) => kf.id === selectedId,
-      );
-      if (!keyFeature) {
+      if (!project.hasKeyFeature(selectedId)) {
         return Result.fail(
           'Some selected key features do not belong to this project',
         );
       }
-      validKeyFeatures.push(keyFeature.feature);
+      const keyFeatureResult = project.getKeyFeature(selectedId);
+      if (!keyFeatureResult.success) {
+        return Result.fail(keyFeatureResult.error);
+      }
+      validKeyFeatures.push(keyFeatureResult.value);
     }
 
     // 5. Valider et récupérer les projectGoals sélectionnés
-    const validProjectGoals: string[] = [];
+    const validProjectGoals: ProjectGoals[] = [];
     for (const selectedId of selectedProjectGoals) {
-      const projectGoal = projectData.projectGoals.find(
-        (pg) => pg.id === selectedId,
-      );
-      if (!projectGoal) {
+      if (!project.hasProjectGoal(selectedId)) {
         return Result.fail(
           'Some selected project goals do not belong to this project',
         );
       }
-      validProjectGoals.push(projectGoal.goal);
+      const projectGoalResult = project.getProjectGoal(selectedId);
+      if (!projectGoalResult.success) {
+        return Result.fail(projectGoalResult.error);
+      }
+      validProjectGoals.push(projectGoalResult.value);
     }
 
     // 6. Vérifier qu'il n'y a pas déjà une candidature PENDING pour ce couple utilisateur/rôle
@@ -152,18 +151,61 @@ export class ApplyToProjectRoleCommandHandler
       return Result.fail('You cannot apply to your own project');
     }
 
-    // 8. Créer la candidature
+    // 8. Récupérer les informations de l'utilisateur candidat
+    const userResult = await this.userRepo.findById(userId);
+    if (!userResult.success) {
+      return Result.fail('User not found');
+    }
+    const userData = userResult.value.toPrimitive();
+
+    // 9. Récupérer les informations de l'utilisateur propriétaire du projet
+    const projectOwnerResult = await this.userRepo.findById(
+      projectData.ownerId,
+    );
+    if (!projectOwnerResult.success) {
+      return Result.fail('Project owner not found');
+    }
+    const projectOwnerData = projectOwnerResult.value.toPrimitive();
+
+    // 10. Créer la candidature
     const applicationResult = ProjectRoleApplication.create({
       projectId: projectData.id!,
+      project: {
+        id: projectData.id!,
+        title: projectData.title,
+        shortDescription: projectData.shortDescription,
+        description: projectData.description,
+        image: projectData.image,
+        owner: {
+          id: projectOwnerData.id,
+          username: projectOwnerData.username,
+          login: projectOwnerData.login,
+          email: projectOwnerData.email,
+          provider: projectOwnerData.provider,
+          jobTitle: projectOwnerData.jobTitle,
+          location: projectOwnerData.location,
+          company: projectOwnerData.company,
+          bio: projectOwnerData.bio,
+          createdAt: projectOwnerData.createdAt || new Date(),
+          updatedAt: projectOwnerData.updatedAt || new Date(),
+          avatarUrl: projectOwnerData.avatarUrl,
+        },
+      },
       projectRoleTitle: projectRole.toPrimitive().title,
       projectRoleId,
-      selectedKeyFeatures: validKeyFeatures,
-      selectedProjectGoals: validProjectGoals,
+      selectedKeyFeatures: validKeyFeatures.map((kf) => ({
+        id: kf.toPrimitive().id!,
+        feature: kf.toPrimitive().feature,
+      })),
+      selectedProjectGoals: validProjectGoals.map((pg) => ({
+        id: pg.toPrimitive().id!,
+        goal: pg.toPrimitive().goal,
+      })),
       motivationLetter,
       userProfile: {
         id: userId,
-        name: '', // Sera rempli par le mapper depuis le profile
-        avatarUrl: undefined,
+        username: userData.username,
+        avatarUrl: userData.avatarUrl,
       },
     });
 
@@ -171,38 +213,25 @@ export class ApplyToProjectRoleCommandHandler
       return Result.fail(applicationResult.error);
     }
 
-    // 9. Sauvegarder la candidature
+    // 11. Sauvegarder la candidature
     const savedApplication = await this.applicationRepo.create(
       applicationResult.value,
     );
     if (!savedApplication.success) {
       return Result.fail('Unable to create application');
     }
-    // 10. Récupérer le profil de l'auteur du projet pour l'événement
-    const projectOwner = await this.userRepo.findById(projectData.ownerId);
-    if (!projectOwner.success) {
-      return Result.fail('Unable to find project owner');
-    }
 
-    const projectAuthorProfileResult = await this.profileRepo.findById(
-      projectData.ownerId,
-    );
-    if (!projectAuthorProfileResult.success) {
-      return Result.fail('Project owner profile not found');
-    }
-    const projectAuthorProfile = projectAuthorProfileResult.value.toPrimitive();
-
-    // Émettre l'événement de candidature pour déclencher les notifications
+    // 12. Émettre l'événement de candidature pour déclencher les notifications
     const savedApplicationData = savedApplication.value.toPrimitive();
     this.eventEmitter.emit('project.role.application.created', {
       projectOwnerId: projectData.ownerId,
       applicantId: userId,
-      applicantName: savedApplicationData.userProfile.name,
+      applicantName: userData.username,
       projectId: projectData.id!,
       projectTitle: projectData.title,
       projectShortDescription: projectData.shortDescription,
       projectImage: projectData.image,
-      projectAuthor: projectAuthorProfile,
+      projectAuthor: projectOwnerData,
       roleName: projectRole.toPrimitive().title,
       projectRole: projectRole.toPrimitive(),
       applicationId: savedApplicationData.id,

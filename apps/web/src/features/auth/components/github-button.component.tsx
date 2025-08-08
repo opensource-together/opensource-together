@@ -13,7 +13,7 @@ interface GitHubButtonProps {
 }
 
 export default function GitHubButton({
-  text = "Continuer avec GitHub",
+  text = "Continuer avec Github",
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {
@@ -27,10 +27,10 @@ export default function GitHubButton({
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
-      className="w-[420px] text-base"
+      className={`w-[420px] text-base ${
+        isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
+      }`}
     >
-      <span>{text}</span>
-
       {isLoading ? (
         <div
           className={`size-4 animate-spin rounded-full border-2 ${
@@ -40,13 +40,16 @@ export default function GitHubButton({
       ) : (
         <Image
           src={
-            isOutlineVariant ? "/icons/github.svg" : "/icons/github-white.svg"
+            isOutlineVariant
+              ? "/icons/new-github-icon-black.svg"
+              : "/icons/new-github-icon.svg"
           }
           alt="GitHub"
           width={16}
           height={16}
         />
       )}
+      <span className="ml-0">{text}</span>
     </Button>
   );
 }

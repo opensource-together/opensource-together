@@ -1,5 +1,6 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
+import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
 
 import { getProjects } from "@/features/projects/services/project.service";
@@ -18,6 +19,7 @@ export default async function HomePage() {
   return (
     <HydrationBoundary state={dehydratedState}>
       <HomepageViews />
+      <CTAFooter imageIllustration="/illustrations/angel.png" />
     </HydrationBoundary>
   );
 }

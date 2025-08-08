@@ -1,14 +1,14 @@
-import DashboardSidebar from "@/features/dashboard/components/dashboard-sidebar.component";
+import { ReactNode } from "react";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
+import DashboardSidebar from "@/features/dashboard/components/layout/dashboard-sidebar.component";
 
-export default function DashboardLayout({ children }: LayoutProps) {
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-[calc(100vh-65px)] overflow-hidden md:h-[calc(100vh-85px)]">
       <DashboardSidebar />
-      <main className="flex-1 overflow-y-auto px-14 pt-12">{children}</main>
+      <main className="flex-1 overflow-y-auto px-8 pt-12 sm:px-14">
+        {children}
+      </main>
     </div>
   );
 }

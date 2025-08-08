@@ -14,14 +14,13 @@ export class ProfileMapper {
       location: profileState.location,
       company: profileState.company,
 
-      socialLinks: profileState.socialLinks.map((link) => ({
-        type: link.type,
-        url: link.url,
-      })),
+      socialLinks: profileState.socialLinks || {},
 
-      skills: profileState.skills.map((skill) => ({
+      techStacks: profileState.techStacks.map((skill) => ({
         name: skill.name,
-        level: skill.level,
+        id: skill.id,
+        type: skill.type,
+        iconUrl: skill.iconUrl,
       })),
 
       experiences: profileState.experiences.map((experience) => ({

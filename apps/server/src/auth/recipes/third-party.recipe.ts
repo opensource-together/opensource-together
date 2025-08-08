@@ -1,14 +1,20 @@
+// import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import ThirdParty from 'supertokens-node/recipe/thirdparty';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
+import ThirdParty from 'supertokens-node/recipe/thirdparty';
+// import { CreateUserCommand } from '@/contexts/user/use-cases/commands/create-user.command';
 import { deleteUser } from 'supertokens-node';
-import { Result } from '@/libs/result';
-import { User } from '@/contexts/user/domain/user.entity';
-import { CreateProfileCommand } from '@/contexts/profile/use-cases/commands/create-profile.command';
-import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
-import { CreateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
+// import { Result } from '@/libs/result';
+// import { User } from '@/contexts/user/domain/user.entity';
+// import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
+// import { CreateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
+// import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
 import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
+import { Logger } from '@nestjs/common';
+import { githubProviderConfig } from './github/github-provider.config';
+import { handleGithubSignUp } from './github/github-signInUp';
+import { googleProviderConfig } from './google/google-provider.config';
+import { handleGoogleSignUp } from './google/google-signInUp';
 
 interface GithubUserInfo {
   user: {
@@ -36,24 +42,10 @@ export const thirdPartyRecipe = ({
     signInAndUpFeature: {
       providers: [
         {
-          config: {
-            thirdPartyId: 'github',
-            clients: [
-              {
-                scope: [
-                  'read:user',
-                  'user:email',
-                  'repo',
-                  'write:repo_hook',
-                  'admin:repo_hook',
-                ],
-                clientId: configService.get('GITHUB_CLIENT_ID') as string,
-                clientSecret: configService.get(
-                  'GITHUB_CLIENT_SECRET',
-                ) as string,
-              },
-            ],
-          },
+          config: googleProviderConfig(configService),
+        },
+        {
+          config: githubProviderConfig(configService),
         },
       ],
     },
@@ -84,111 +76,155 @@ export const thirdPartyRecipe = ({
             const response = await originalImplementation.signInUp(input);
 
             if (response.status === 'OK') {
-              const githubUserInfo = response.rawUserInfoFromProvider
-                .fromUserInfoAPI as GithubUserInfo | undefined;
-
-              if (!githubUserInfo?.user) {
-                if (response.createdNewRecipeUser) {
-                  await deleteUser(response.user.id);
-                }
-                throw new Error(
-                  'Failed to retrieve user information from GitHub.',
-                );
-              }
-              const { user: githubUser } = githubUserInfo;
-              const { id, emails } = response.user;
-              if (response.createdNewRecipeUser) {
-                try {
-                  const createUserCommand = new CreateUserCommand(
-                    id,
-                    githubUser.login,
-                    emails[0],
+              if (input.thirdPartyId === 'github') {
+                const { id, emails } = response.user;
+                const githubUserInfo = response.rawUserInfoFromProvider
+                  .fromUserInfoAPI as GithubUserInfo | undefined;
+                // const { user: githubUser } = githubUserInfo;
+                if (!githubUserInfo?.user) {
+                  if (response.createdNewRecipeUser) {
+                    await deleteUser(response.user.id);
+                  }
+                  throw new Error(
+                    'Failed to retrieve user information from GitHub.',
                   );
-
-                  const socialLinksData: { type: string; url: string }[] = [];
-                  if (githubUser.html_url) {
-                    socialLinksData.push({
-                      type: 'github',
-                      url: githubUser.html_url,
-                    });
-                  }
-                  if (githubUser.twitter_username) {
-                    socialLinksData.push({
-                      type: 'twitter',
-                      url: `https://x.com/${githubUser.twitter_username}`,
-                    });
-                  }
-                  if (githubUser.blog) {
-                    socialLinksData.push({
-                      type: 'website',
-                      url: githubUser.blog,
-                    });
-                  }
-
-                  const createProfileCommand = new CreateProfileCommand({
-                    userId: id,
-                    name: githubUser.name || githubUser.login,
-                    login: githubUser.login,
-                    avatarUrl: githubUser.avatar_url,
-                    bio: githubUser.bio ?? '',
-                    location: githubUser.location ?? '',
-                    company: githubUser.company ?? '',
-                    socialLinks: socialLinksData,
-                    experiences: [],
-                  });
-
-                  const newUserResult: Result<User> =
-                    await commandBus.execute(createUserCommand);
-                  if (!newUserResult.success) {
-                    console.log({ newUserResult });
-                    await commandBus.execute(new DeleteUserCommand(id));
-
-                    await deleteUser(id);
-                    throw new Error(newUserResult.error);
-                  }
-
-                  const newProfileResult: Result<any> =
-                    await commandBus.execute(createProfileCommand);
-                  if (!newProfileResult.success) {
-                    await commandBus.execute(new DeleteUserCommand(id));
-                    await deleteUser(id);
-                    throw new Error(
-                      `Failed to create profile: ${newProfileResult.error}`,
-                    );
-                  }
-
+                }
+                if (response.createdNewRecipeUser) {
+                  const userInfo = {
+                    id,
+                    email: emails[0],
+                    githubUser: githubUserInfo.user,
+                    response: {
+                      oAuthTokens: {
+                        access_token: response.oAuthTokens
+                          .access_token as string,
+                      },
+                    },
+                  };
+                  await handleGithubSignUp(userInfo, commandBus);
+                } else {
                   const accessToken = response?.oAuthTokens
                     .access_token as string;
-                  if (typeof accessToken !== 'string') {
-                    throw new Error('Invalid GitHub access token received');
+                  if (typeof accessToken === 'string') {
+                    const saveUserGhTokenCommand = new UpdateUserGhTokenCommand(
+                      id,
+                      String(githubUserInfo.user.id),
+                      accessToken,
+                    );
+                    await commandBus.execute(saveUserGhTokenCommand);
                   }
-
-                  const createUserGhTokenCommand = new CreateUserGhTokenCommand(
-                    {
-                      userId: id,
-                      githubUserId: String(githubUser.id),
-                      githubAccessToken: accessToken,
-                    },
-                  );
-                  await commandBus.execute(createUserGhTokenCommand);
-                } catch (error) {
-                  console.error('Error during sign up process:', error);
-                  await deleteUser(id);
                 }
-              } else {
-                const accessToken = response?.oAuthTokens
-                  .access_token as string;
-                if (typeof accessToken === 'string') {
-                  const saveUserGhTokenCommand = new UpdateUserGhTokenCommand(
-                    id,
-                    String(githubUser.id),
-                    accessToken,
-                  );
+              }
 
-                  await commandBus.execute(saveUserGhTokenCommand);
+              // Traiter seulement les nouveaux utilisateurs
+              if (input.thirdPartyId === 'google') {
+                Logger.log('response', response);
+                if (response.createdNewRecipeUser) {
+                  const { picture, email } = response.rawUserInfoFromProvider
+                    .fromUserInfoAPI as {
+                    picture: string;
+                    email: string;
+                  };
+                  const userInfo = {
+                    id: response.user.id,
+                    email,
+                    // provider: 'google',
+                    picture,
+                  };
+                  await handleGoogleSignUp(userInfo, commandBus);
+                } else {
+                  return response;
                 }
               }
             }
+            // if (response.status === 'OK') {
+            //   const githubUserInfo = response.rawUserInfoFromProvider
+            //     .fromUserInfoAPI as GithubUserInfo | undefined;
+
+            //   if (!githubUserInfo?.user) {
+            //     if (response.createdNewRecipeUser) {
+            //       await deleteUser(response.user.id);
+            //     }
+            //     throw new Error(
+            //       'Failed to retrieve user information from GitHub.',
+            //     );
+            //   }
+            //   const { user: githubUser } = githubUserInfo;
+            //   const { id, emails } = response.user;
+            //   if (response.createdNewRecipeUser) {
+            //     try {
+            //       const createUserCommand = new CreateUserCommand({
+            //         id,
+            //         username: githubUser.login,
+            //         email: emails[0],
+            //         name: githubUser.name || githubUser.login,
+            //         login: githubUser.login,
+            //         avatarUrl: githubUser.avatar_url,
+            //         bio: githubUser.bio ?? '',
+            //       });
+
+            //       const socialLinksData: { type: string; url: string }[] = [];
+            //       if (githubUser.html_url) {
+            //         socialLinksData.push({
+            //           type: 'github',
+            //           url: githubUser.html_url,
+            //         });
+            //       }
+            //       if (githubUser.twitter_username) {
+            //         socialLinksData.push({
+            //           type: 'twitter',
+            //           url: `https://x.com/${githubUser.twitter_username}`,
+            //         });
+            //       }
+            //       if (githubUser.blog) {
+            //         socialLinksData.push({
+            //           type: 'website',
+            //           url: githubUser.blog,
+            //         });
+            //       }
+
+            //       const newUserResult: Result<User> =
+            //         await commandBus.execute(createUserCommand);
+            //       if (!newUserResult.success) {
+            //         Logger.log({ newUserResult });
+            //         await commandBus.execute(new DeleteUserCommand(id));
+
+            //         await deleteUser(id);
+            //         throw new Error(newUserResult.error);
+            //       }
+
+            //       const accessToken = response?.oAuthTokens
+            //         .access_token as string;
+            //       if (typeof accessToken !== 'string') {
+            //         throw new Error('Invalid GitHub access token received');
+            //       }
+
+            //       const createUserGhTokenCommand = new CreateUserGhTokenCommand(
+            //         {
+            //           userId: id,
+            //           githubUserId: String(githubUser.id),
+            //           githubAccessToken: accessToken,
+            //         },
+            //       );
+            //       await commandBus.execute(createUserGhTokenCommand);
+            //     } catch (error) {
+            //       Logger.error('Error during sign up process:', error);
+            //       await deleteUser(id);
+            //     }
+            //   } else {
+            //     const accessToken = response?.oAuthTokens
+            //       .access_token as string;
+            //     if (typeof accessToken === 'string') {
+            //       const saveUserGhTokenCommand = new UpdateUserGhTokenCommand(
+            //         id,
+            //         String(githubUser.id),
+            //         accessToken,
+            //       );
+
+            //       await commandBus.execute(saveUserGhTokenCommand);
+            //     }
+            //   }
+            // }
             return response;
           },
         };

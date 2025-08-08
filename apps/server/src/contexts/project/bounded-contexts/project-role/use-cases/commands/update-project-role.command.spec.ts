@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   UpdateProjectRoleCommand,
@@ -71,11 +66,13 @@ describe('UpdateProjectRoleCommandHandler', () => {
       id: '1',
       name: 'React',
       iconUrl: 'https://reactjs.org/favicon.ico',
+      type: 'TECH',
     });
     const typescript = TechStack.reconstitute({
       id: '2',
       name: 'TypeScript',
       iconUrl: 'https://typescriptlang.org/favicon.ico',
+      type: 'LANGUAGE',
     });
     if (!react.success || !typescript.success) {
       throw new Error('Failed to create tech stacks');

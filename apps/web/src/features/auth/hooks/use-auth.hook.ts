@@ -7,7 +7,9 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import {
   getCurrentUser,
   getGitHubAuthUrl,
+  getGoogleAuthUrl,
   handleGitHubCallback,
+  handleGoogleCallback,
   logout,
 } from "../services/auth.service";
 
@@ -55,14 +57,25 @@ export default function useAuth() {
       window.location.assign(authUrl);
       return authUrl;
     },
-    loadingMessage: "Redirection vers GitHub...",
+    loadingMessage: "Redirection vers Github...",
     successMessage: "Redirection en cours...",
-    errorMessage: "Erreur lors de la redirection vers GitHub",
+    errorMessage: "Erreur lors de la redirection vers Github",
+  });
+
+  const googleSignInMutation = useToastMutation({
+    mutationFn: async () => {
+      const authUrl = await getGoogleAuthUrl();
+      window.location.assign(authUrl);
+      return authUrl;
+    },
+    loadingMessage: "Redirection vers Google...",
+    successMessage: "Redirection en cours...",
+    errorMessage: "Erreur lors de la redirection vers Google",
   });
 
   const githubCallbackMutation = useToastMutation({
     mutationFn: handleGitHubCallback,
-    loadingMessage: "Vérification de vos informations GitHub...",
+    loadingMessage: "Vérification de vos informations Github...",
     successMessage: "Connexion réussie !",
     errorMessage: "Une erreur est survenue lors de la connexion",
     options: {
@@ -73,8 +86,28 @@ export default function useAuth() {
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
         sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
 
-        // Rediriger vers l'URL d'origine ou vers /profile par défaut
-        router.push(redirectUrl || "/profile");
+        // Rediriger vers l'URL d'origine ou vers / par défaut
+        router.push(redirectUrl || "/");
+      },
+      onError: () => router.push("/auth/login"),
+    },
+  });
+
+  const googleCallbackMutation = useToastMutation({
+    mutationFn: handleGoogleCallback,
+    loadingMessage: "Vérification de vos informations Google...",
+    successMessage: "Connexion réussie !",
+    errorMessage: "Une erreur est survenue lors de la connexion",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+
+        // Récupérer l'URL de redirection depuis le sessionStorage
+        const redirectUrl = sessionStorage.getItem("auth_redirect_url");
+        sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
+
+        // Rediriger vers l'URL d'origine ou vers / par défaut
+        router.push(redirectUrl || "/");
       },
       onError: () => router.push("/auth/login"),
     },
@@ -122,7 +155,9 @@ export default function useAuth() {
 
     // Actions
     signInWithGitHub: githubSignInMutation.mutate,
+    signInWithGoogle: googleSignInMutation.mutate,
     redirectAfterGitHub: githubCallbackMutation.mutate,
+    redirectAfterGoogle: googleCallbackMutation.mutate,
     logout: logoutMutation.mutate,
     redirectToLogin, // Fonction helper pour redirection manuelle
     requireAuth, // Fonction helper pour actions protégées

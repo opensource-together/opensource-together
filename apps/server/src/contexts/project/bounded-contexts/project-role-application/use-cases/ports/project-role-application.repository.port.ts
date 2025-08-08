@@ -1,5 +1,5 @@
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { Result } from '@/libs/result';
-import { ProjectRoleApplication } from '../../domain/project-role-application.entity';
 
 export const PROJECT_ROLE_APPLICATION_REPOSITORY_PORT = Symbol(
   'ProjectRoleApplicationRepository',
@@ -13,17 +13,77 @@ export interface ProjectRoleApplicationRepositoryPort {
     application: ProjectRoleApplication,
   ): Promise<Result<ProjectRoleApplication, string>>;
 
+  findAllByUserId(userId: string): Promise<
+    Result<
+      {
+        applicationId: string;
+        projectRoleId: string;
+        projectRoleTitle: string;
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
+        appliedAt: Date;
+        decidedAt: Date;
+        decidedBy?: string;
+        rejectionReason?: string;
+        motivationLetter: string;
+        userProfile: {
+          id: string;
+          name: string;
+          avatarUrl?: string;
+        };
+      }[],
+      string
+    >
+  >;
   /**
    * Met à jour une candidature existante
    */
-  // update(
-  //   application: ProjectRoleApplication,
-  // ): Promise<Result<ProjectRoleApplication, string>>;
+  update(
+    application: ProjectRoleApplication,
+  ): Promise<Result<ProjectRoleApplication, string>>;
 
   /**
    * Trouve une candidature par son ID
    */
-  // findById(id: string): Promise<Result<ProjectRoleApplication, string>>;
+  findById(id: string): Promise<Result<ProjectRoleApplication, string>>;
 
   /**
    * Trouve toutes les candidatures d'un utilisateur
@@ -70,20 +130,58 @@ export interface ProjectRoleApplicationRepositoryPort {
   findAllByProjectId(projectId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
-        status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        project: {
+          id: string;
+          title: string;
+          shortDescription: string;
+          image?: string;
+          owner: {
+            id: string;
+            username: string;
+            login: string;
+            email: string;
+            provider: string;
+            createdAt: Date;
+            updatedAt: Date;
+            avatarUrl: string;
+          };
+        };
+        projectRole: {
+          id: string;
+          projectId?: string;
+          title: string;
+          description: string;
+          techStacks: {
+            id: string;
+            name: string;
+            iconUrl?: string;
+          }[];
+          roleCount?: number;
+          projectGoal?: {
+            id?: string;
+            projectId?: string;
+            goal: string;
+          }[];
+        };
+        status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+        selectedKeyFeatures: {
+          feature: string;
+        }[];
+        selectedProjectGoals: {
+          goal: string;
+        }[];
         appliedAt: Date;
         decidedAt: Date;
-        decidedBy: string;
-        rejectionReason: string;
+        decidedBy?: string;
+        rejectionReason?: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
           name: string;
-          avatarUrl: string;
+          avatarUrl?: string;
         };
       }[],
       string
@@ -96,19 +194,21 @@ export interface ProjectRoleApplicationRepositoryPort {
   findByRoleId(roleId: string): Promise<
     Result<
       {
-        appplicationId: string;
+        applicationId: string;
         projectRoleId: string;
         projectRoleTitle: string;
+        projectRoleDescription: string;
         status: string;
-        selectedKeyFeatures: string[];
-        selectedProjectGoals: string[];
+        selectedKeyFeatures: { id: string; feature: string }[];
+        selectedProjectGoals: { id: string; goal: string }[];
         appliedAt: Date;
         decidedAt: Date;
         decidedBy: string;
         rejectionReason: string;
+        motivationLetter: string;
         userProfile: {
           id: string;
-          name: string;
+          username: string;
           avatarUrl: string;
         };
       }[],
