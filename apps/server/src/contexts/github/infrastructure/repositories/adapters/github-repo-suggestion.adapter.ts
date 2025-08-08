@@ -1,12 +1,12 @@
 import { Result } from '@/libs/result';
-import { GithubRepoListInput } from '../inputs/github-repo-list.input';
+import { GithubRepoSuggestionInput } from '../inputs/github-repo-suggestion.input';
 import { GithubRepositoryDto } from '../dto/github-repository.dto';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
 
-export function toGithubRepoListInput<T extends GithubRepositoryDto>(
+export function toGithubRepoSuggestionInput<T extends GithubRepositoryDto>(
   data: T,
-): Result<GithubRepoListInput> {
+): Result<GithubRepoSuggestionInput> {
   try {
     // Transformer les propriétés pour correspondre à GithubRepoListInput
     const transformedData = {
@@ -17,7 +17,7 @@ export function toGithubRepoListInput<T extends GithubRepositoryDto>(
       readme: '',
     };
 
-    const input = plainToInstance(GithubRepoListInput, transformedData);
+    const input = plainToInstance(GithubRepoSuggestionInput, transformedData);
     const validationErrors = validateSync(input);
     if (validationErrors.length > 0) {
       return Result.fail(validationErrors.toString());

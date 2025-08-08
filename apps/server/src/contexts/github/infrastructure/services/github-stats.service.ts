@@ -5,7 +5,7 @@ import {
   GITHUB_REPOSITORY_PORT,
   GithubRepositoryPort,
 } from '../../use-cases/ports/github-repository.port';
-import { GithubRepoListInput } from '../repositories/inputs/github-repo-list.input';
+import { GithubRepoSuggestionInput } from '../repositories/inputs/github-repo-suggestion.input';
 import { RepositoryInfo } from '../../use-cases/ports/github-repository.port';
 
 export interface GitHubStatsResult {
@@ -30,7 +30,7 @@ export class GitHubStatsService {
       this.logger.log('Starting GitHub stats calculation');
 
       // 1. Récupérer tous les repositories de l'utilisateur
-      const reposResult: Result<GithubRepoListInput[], string> =
+      const reposResult: Result<GithubRepoSuggestionInput[], string> =
         await this.githubRepository.findRepositoriesOfAuthenticatedUser(
           octokit,
         );
@@ -42,7 +42,7 @@ export class GitHubStatsService {
         return Result.fail('Failed to fetch user repositories');
       }
 
-      const repositories: GithubRepoListInput[] = reposResult.value;
+      const repositories: GithubRepoSuggestionInput[] = reposResult.value;
       this.logger.log(`Found ${repositories.length} repositories`);
 
       // 2. Calculer le total des stars
@@ -72,7 +72,7 @@ export class GitHubStatsService {
   }
 
   private async calculateTotalStars(
-    repositories: GithubRepoListInput[],
+    repositories: GithubRepoSuggestionInput[],
     octokit: Octokit,
   ): Promise<number> {
     let totalStars = 0;
@@ -104,7 +104,7 @@ export class GitHubStatsService {
   }
 
   private async calculateCommitsThisYear(
-    repositories: GithubRepoListInput[],
+    repositories: GithubRepoSuggestionInput[],
     octokit: Octokit,
   ): Promise<number> {
     let totalCommitsThisYear = 0;
