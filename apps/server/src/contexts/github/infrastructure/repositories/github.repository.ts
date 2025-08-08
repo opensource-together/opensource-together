@@ -7,7 +7,6 @@ import { Result } from '@/libs/result';
 import { Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { toGithubInvitationDto } from './adapters/github-invitation.adapter';
-import { toGithubRepoListInput } from './adapters/github-repo-list.adapter';
 import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
@@ -213,76 +212,99 @@ export class GithubRepository implements GithubRepositoryPort {
     octokit: Octokit,
   ): Promise<Result<GithubRepoListInput[], string>> {
     try {
-      const response = await octokit.rest.repos.listForAuthenticatedUser({
-        visibility: 'public',
-        per_page: 50,
-        affiliation: 'owner,organization_member',
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
+      const getUserAndOrgReposQuery = `
+        query GetUserAndOrgRepos($repoCount: Int = 100, $orgCount: Int = 100) {
+          viewer {
+            repositories(first: $repoCount, affiliations: [OWNER], ownerAffiliations: [OWNER], privacy: PUBLIC, isFork: false) {
+              nodes {
+                id
+                name
+                owner {
+                  login
+                  id
+                  avatarUrl
+                  url
+                }
+                url
+                description
+                forkCount
+                stargazerCount
+                watchers {
+                  totalCount
+                } 
+              }
+            }
+            organizations(first: $orgCount) {
+              nodes {
+                name
+                viewerCanAdminister
+                repositories(first: $repoCount, privacy: PUBLIC, ownerAffiliations: ORGANIZATION_MEMBER, isFork: false) {
+                  nodes {
+                    id
+                    name
+                    owner {
+                      login
+                      id
+                      avatarUrl
+                      url
+                    }
+                    url
+                    description
+                    forkCount
+                    stargazerCount
+                    watchers {
+                      totalCount
+                    } 
+                  }
+                }
+              }
+            }
+          }
+        }`;
+
+      const response = await octokit.graphql<any>(getUserAndOrgReposQuery, {
+        //GetUserAndOrgReposQueryResponse
+        repoCount: 100,
+        orgCount: 100,
       });
 
-      this.Logger.log(`Found ${response.data.length} matching repositories.`);
+      const { viewer } = response;
 
-      const repositories = response.data
-        .map((repo) => {
-          const rep = toGithubRepositoryDto(repo);
-          if (rep.success) {
-            return rep.value;
-          } else {
-            this.Logger.error(
-              'Failed to transform repository to DTO:',
-              rep.error,
-            );
-            return undefined;
-          }
-        })
-        .filter((v) => v !== undefined)
-        .map((repo) => {
-          const rep = toGithubRepoListInput(repo);
-          if (rep.success) {
-            return rep.value;
-          } else {
-            this.Logger.error(
-              'Failed to transform repository to list input:',
-              rep.error,
-            );
-            return undefined;
-          }
-        })
-        .filter((v) => v !== undefined);
-
-      // Récupérer les README pour chaque repository
-      const repositoriesWithReadme = await Promise.all(
-        repositories.map(async (repo) => {
-          try {
-            const readmeResult = await this.getRepositoryReadme(
-              repo.owner,
-              repo.title,
-              octokit,
-            );
-            if (readmeResult.success) {
-              return { ...repo, readme: readmeResult.value };
-            } else {
-              this.Logger.warn(
-                `Failed to fetch README for ${repo.owner}/${repo.title}: ${readmeResult.error}`,
-              );
-              return repo;
-            }
-          } catch (error) {
-            this.Logger.error(
-              `Error fetching README for ${repo.owner}/${repo.title}:`,
-              error,
-            );
-            return repo;
-          }
-        }),
+      const ownedRepos: GithubRepoListInput[] = viewer.repositories.nodes.map(
+        (repo) => {
+          return {
+            owner: repo.owner.login,
+            title: repo.name,
+            description: repo.description || '',
+            url: repo.url,
+          };
+        },
       );
 
-      return Result.ok(repositoriesWithReadme);
-    } catch (e) {
-      this.Logger.error('error fetching user repositories', e);
-      return Result.fail('Failed to fetch user repositories');
+      const orgRepos: GithubRepoListInput[] = viewer.organizations.nodes
+        .filter((org) => org.viewerCanAdminister)
+        .flatMap((org) =>
+          org.repositories.nodes.map((repo) => {
+            return {
+              owner: repo.owner.login,
+              title: repo.name,
+              description: repo.description || '',
+              url: repo.url,
+            };
+          }),
+        );
+
+      const allReposMap = new Map<string, GithubRepoListInput>();
+
+      ownedRepos.forEach((repo) => allReposMap.set(repo.url, repo));
+      orgRepos.forEach((repo) => allReposMap.set(repo.url, repo));
+
+      const allAccessibleRepos = Array.from(allReposMap.values());
+
+      return Result.ok(allAccessibleRepos);
+    } catch (e: any) {
+      this.Logger.error('error fetching repositories of authenticated user', e);
+      return Result.fail('Failed to fetch repositories of authenticated user');
     }
   }
 
