@@ -13,7 +13,10 @@ import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
 import { GithubRepositoryDto } from './dto/github-repository.dto';
 import { GithubRepoSuggestionInput } from './inputs/github-repo-suggestion.input';
 import { InviteUserToRepoInput } from './inputs/invite-user-to-repo.inputs.dto';
-import { adaptGraphqlResponse, GithubRepositorySuggestionGraphqlResponse } from './graphql/github-repository-suggestion.graphql';
+import {
+  adaptGraphqlResponse,
+  GithubRepositorySuggestionGraphqlResponse,
+} from './graphql/github-repository-suggestion.graphql';
 import { toGithubRepoSuggestionInput } from './adapters/github-repo-suggestion.adapter';
 
 @Injectable()

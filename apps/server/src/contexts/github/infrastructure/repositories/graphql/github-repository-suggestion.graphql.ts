@@ -135,19 +135,19 @@ export function adaptGraphqlRepo(repo: RepositoryDto): GithubRepositoryDto {
     forks_count: repo.forkCount,
     watchers_count: repo.watchers.totalCount,
     stargazers_count: repo.stargazerCount,
-    readme: repo.object?.text || undefined
+    readme: repo.object?.text || undefined,
   };
 }
 
 export function adaptGraphqlResponse(
-  graphqlResponse: GithubRepositorySuggestionGraphqlResponse
+  graphqlResponse: GithubRepositorySuggestionGraphqlResponse,
 ): GithubRepositoryDto[] {
-  const viewerRepos = graphqlResponse.viewer.repositories.nodes.map(adaptGraphqlRepo);
+  const viewerRepos =
+    graphqlResponse.viewer.repositories.nodes.map(adaptGraphqlRepo);
 
   const orgRepos = graphqlResponse.viewer.organizations.nodes
-    .filter(org => org.viewerCanAdminister)
-    .flatMap(org => org.repositories.nodes.map(adaptGraphqlRepo));
+    .filter((org) => org.viewerCanAdminister)
+    .flatMap((org) => org.repositories.nodes.map(adaptGraphqlRepo));
 
   return [...viewerRepos, ...orgRepos];
 }
-
