@@ -7,13 +7,17 @@ import { Result } from '@/libs/result';
 import { Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { toGithubInvitationDto } from './adapters/github-invitation.adapter';
-import { toGithubRepoListInput } from './adapters/github-repo-list.adapter';
 import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
 import { GithubRepositoryDto } from './dto/github-repository.dto';
-import { GithubRepoListInput } from './inputs/github-repo-list.input';
+import { GithubRepoSuggestionInput } from './inputs/github-repo-suggestion.input';
 import { InviteUserToRepoInput } from './inputs/invite-user-to-repo.inputs.dto';
+import {
+  adaptGraphqlResponse,
+  GithubRepositorySuggestionGraphqlResponse,
+} from './graphql/github-repository-suggestion.graphql';
+import { toGithubRepoSuggestionInput } from './adapters/github-repo-suggestion.adapter';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
@@ -211,92 +215,90 @@ export class GithubRepository implements GithubRepositoryPort {
 
   async findRepositoriesOfAuthenticatedUser(
     octokit: Octokit,
-  ): Promise<Result<GithubRepoListInput[], string>> {
+  ): Promise<Result<GithubRepoSuggestionInput[], string>> {
     try {
-      const response = await octokit.rest.repos.listForAuthenticatedUser({
-        visibility: 'public',
-        per_page: 50,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      });
-
-      // Récupérer les informations de l'utilisateur authentifié
-      const userResponse = await octokit.rest.users.getAuthenticated({
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      });
-      const authenticatedUser = userResponse.data.login;
-
-      // Filtrer pour ne garder que les repositories dont l'utilisateur est le propriétaire
-      const ownedRepositories = response.data.filter(
-        (repo) => repo.owner.login === authenticatedUser,
-      );
-
-      this.Logger.log(
-        `Found ${ownedRepositories.length} owned repositories out of ${response.data.length} total repositories`,
-      );
-
-      const repositories = ownedRepositories
-        .map((repo) => {
-          const rep = toGithubRepositoryDto(repo);
-          if (rep.success) {
-            return rep.value;
-          } else {
-            this.Logger.error(
-              'Failed to transform repository to DTO:',
-              rep.error,
-            );
-            return undefined;
-          }
-        })
-        .filter((v) => v !== undefined)
-        .map((repo) => {
-          const rep = toGithubRepoListInput(repo);
-          if (rep.success) {
-            return rep.value;
-          } else {
-            this.Logger.error(
-              'Failed to transform repository to list input:',
-              rep.error,
-            );
-            return undefined;
-          }
-        })
-        .filter((v) => v !== undefined);
-
-      // Récupérer les README pour chaque repository
-      const repositoriesWithReadme = await Promise.all(
-        repositories.map(async (repo) => {
-          try {
-            const readmeResult = await this.getRepositoryReadme(
-              repo.owner,
-              repo.title,
-              octokit,
-            );
-            if (readmeResult.success) {
-              return { ...repo, readme: readmeResult.value };
-            } else {
-              this.Logger.warn(
-                `Failed to fetch README for ${repo.owner}/${repo.title}: ${readmeResult.error}`,
-              );
-              return repo;
+      const getUserAndOrgReposQuery = `
+        query GetUserAndOrgRepos($repoCount: Int = 100, $orgCount: Int = 100) {
+          viewer {
+            repositories(first: $repoCount, affiliations: [OWNER], ownerAffiliations: [OWNER], privacy: PUBLIC, isFork: false) {
+              nodes {
+                id
+                name
+                owner {
+                  login
+                  id
+                  avatarUrl
+                  url
+                }
+                url
+                description
+                forkCount
+                stargazerCount
+                watchers {
+                  totalCount
+                } 
+                object(expression: "HEAD:README.md") {
+                  ... on Blob {
+                    text
+                  }
+                }
+              }
             }
-          } catch (error) {
-            this.Logger.error(
-              `Error fetching README for ${repo.owner}/${repo.title}:`,
-              error,
-            );
-            return repo;
+            organizations(first: $orgCount) {
+              nodes {
+                name
+                viewerCanAdminister
+                repositories(first: $repoCount, privacy: PUBLIC, ownerAffiliations: ORGANIZATION_MEMBER, isFork: false) {
+                  nodes {
+                    id
+                    name
+                    owner {
+                      login
+                      id
+                      avatarUrl
+                      url
+                    }
+                    url
+                    description
+                    forkCount
+                    stargazerCount
+                    watchers {
+                      totalCount
+                    } 
+                    object(expression: "HEAD:README.md") {
+                      ... on Blob {
+                        text
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
-        }),
-      );
+        }`;
 
-      return Result.ok(repositoriesWithReadme);
-    } catch (e) {
-      this.Logger.error('error fetching user repositories', e);
-      return Result.fail('Failed to fetch user repositories');
+      const response =
+        await octokit.graphql<GithubRepositorySuggestionGraphqlResponse>(
+          getUserAndOrgReposQuery,
+          {
+            repoCount: 100,
+            orgCount: 100,
+          },
+        );
+
+      const mapped = adaptGraphqlResponse(response);
+      const accessibleRepos = mapped.flatMap((repo) => {
+        const suggestion = toGithubRepoSuggestionInput(repo);
+        if (!suggestion.success) {
+          return [];
+        }
+        return suggestion.value;
+      });
+
+      return Result.ok(accessibleRepos);
+    } catch (e: any) {
+      this.Logger.error('error fetching repositories of authenticated user', e);
+      return Result.fail('Failed to fetch repositories of authenticated user');
     }
   }
 
