@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.4.0](https://github.com/opensource-together/opensource-together/compare/v0.3.0...v0.4.0) (2025-08-09)
+
+
+### Features
+
+* add graphql request for fetching repo data, including org repos ([50da0e2](https://github.com/opensource-together/opensource-together/commit/50da0e2247619e2b354afe2fb14f8435ee7c5fc3))
+* add image, coverImages, and readme fields to project model and update related DTOs and commands ([8974e1a](https://github.com/opensource-together/opensource-together/commit/8974e1ae30b2836c68d0320d190139b20eb65634))
+* add new SVG icons and update dashboard layout and navigation ([029950b](https://github.com/opensource-together/opensource-together/commit/029950bc924f5368c2143653417a958d7da27bb6))
+* add optional readme field to project schema with character limit validation ([b2d4f9b](https://github.com/opensource-together/opensource-together/commit/b2d4f9b9349256129e72786a602f0db6ce14d13e))
+* add orgs repos to the repo list ([2678362](https://github.com/opensource-together/opensource-together/commit/267836250f9b58018be0251758c180da1054509e))
+* add README to graphql github repo request ([a891c05](https://github.com/opensource-together/opensource-together/commit/a891c05a007e956686d11ca483a55ec3250b16f4))
+* implement cover image upload and management in project edit forms ([5321f3d](https://github.com/opensource-together/opensource-together/commit/5321f3d25429d68d901bad17df292384c0e6aed7))
+* integrate react-dropzone for file uploads in avatar and multiple image upload components ([9a5428c](https://github.com/opensource-together/opensource-together/commit/9a5428c3ec77748b973be6ec718e04c5763bc6db))
+
+
+### Miscellaneous
+
+* fix linting ([d4b5d0f](https://github.com/opensource-together/opensource-together/commit/d4b5d0f2805392f33aecc9f4b69546f538f2f1f8))
+* linter ([01da9e1](https://github.com/opensource-together/opensource-together/commit/01da9e15ef4f6313703343fb2c985a0f00ffd974))
+* remove unused scopes ([a24f3e1](https://github.com/opensource-together/opensource-together/commit/a24f3e16e6ce9de67239acf4799def6bbe9ef10c))
+* remove unused scopes ([246ad25](https://github.com/opensource-together/opensource-together/commit/246ad259803e2dfb7a93d66c6376517a3b8fea19))
+* rename github-repo-list to github-repo-suggestion ([5979f86](https://github.com/opensource-together/opensource-together/commit/5979f865a65f015476f5136fb2a7170c3430433f))
+
+
+### Code Refactoring
+
+* enhance header component styles and improve mobile menu transitions ([14a0c62](https://github.com/opensource-together/opensource-together/commit/14a0c62b987680ca773487ad6c348a25a4788ea8))
+* update dashboard sidebar width and adjust header layout for improved responsiveness ([0109a5f](https://github.com/opensource-together/opensource-together/commit/0109a5feb6e2602e7487411a62121d036a522b5e))
+
 ## [0.3.0](https://github.com/opensource-together/opensource-together/compare/v0.2.0...v0.3.0) (2025-08-06)
 
 
