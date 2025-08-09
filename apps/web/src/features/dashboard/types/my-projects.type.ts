@@ -15,7 +15,11 @@ export interface MyProjectType {
   teamMembers: TeamMemberType[];
 }
 
-export type ApplicationStatus = "PENDING" | "ACCEPTED" | "REJECTED";
+export type ApplicationStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "CANCELLED";
 
 // Candidature optimisée avec compétences du candidat
 export interface ApplicationType {

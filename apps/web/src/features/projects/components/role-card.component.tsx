@@ -24,6 +24,12 @@ interface RoleCardProps {
   projectId?: string;
 }
 
+// Fonction pour tronquer le texte
+const truncateText = (text: string, maxLength: number = 120) => {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength).trim() + "...";
+};
+
 export default function RoleCard({
   role,
   projectGoals = [],
@@ -101,7 +107,7 @@ export default function RoleCard({
 
       {/* Role Description */}
       <p className="mt-4 text-sm leading-snug font-medium tracking-tighter text-black/70">
-        {description}
+        {truncateText(description, 90)}
       </p>
 
       {/* Ligne de séparation */}

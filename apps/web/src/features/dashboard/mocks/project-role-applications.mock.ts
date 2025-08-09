@@ -1,4 +1,4 @@
-import { mockProjects } from "@/features/projects/mocks/project.mock";
+/*import { mockProjects } from "@/features/projects/mocks/project.mock";
 
 import { ProjectRoleApplicationType } from "../types/project-role-application.type";
 
@@ -397,3 +397,4 @@ export const mockProjectRoleApplications: ProjectRoleApplicationType[] = [
     },
   },
 ];
+*/
