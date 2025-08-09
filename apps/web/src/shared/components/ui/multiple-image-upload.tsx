@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FileRejection, useDropzone } from "react-dropzone";
 
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -30,158 +31,144 @@ export function MultipleImageUpload({
   onRemoveCurrentImage,
 }: MultipleImageUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
-  const [isDragOver, setIsDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const validateFile = useCallback(
-    (file: File): string | null => {
-      if (maxSize && file.size > maxSize * 1024 * 1024) {
-        return `La taille du fichier doit être inférieure à ${maxSize}MB`;
-      }
+  // Derive previews from files using Object URLs
+  const previews = useMemo(() => {
+    return files.map((file) => URL.createObjectURL(file));
+  }, [files]);
 
-      if (accept === "image/*" && !file.type.startsWith("image/")) {
-        return "Veuillez sélectionner un fichier image";
-      }
+  // Cleanup Object URLs when component unmounts or files change
+  useEffect(() => {
+    return () => {
+      previews.forEach((preview) => URL.revokeObjectURL(preview));
+    };
+  }, [previews]);
 
-      return null;
-    },
-    [maxSize, accept]
+  // Memoized computed values
+  const allImages = useMemo(
+    () => [...currentImages, ...previews],
+    [currentImages, previews]
+  );
+  const totalCount = useMemo(
+    () => currentImages.length + files.length,
+    [currentImages.length, files.length]
   );
 
-  const handleFiles = useCallback(
-    (selectedFiles: FileList) => {
-      const newFiles: File[] = [];
-      const newPreviews: string[] = [];
-      let hasError = false;
+  // Determine accept format for dropzone
+  const dropzoneAccept = useMemo(() => {
+    if (accept === "image/*") {
+      return { "image/*": [] };
+    }
+    // Handle specific MIME types or extensions
+    const mimeTypes = accept.split(",").map((type) => type.trim());
+    const acceptObj: Record<string, string[]> = {};
+    mimeTypes.forEach((type) => {
+      acceptObj[type] = [];
+    });
+    return acceptObj;
+  }, [accept]);
 
-      if (
-        currentImages.length + files.length + selectedFiles.length >
-        maxFiles
-      ) {
-        setError(`Vous ne pouvez télécharger que ${maxFiles} images maximum`);
-        return;
-      }
+  const handleAcceptedFiles = useCallback(
+    (acceptedFiles: File[]) => {
+      setError(null);
+      const updatedFiles = [...files, ...acceptedFiles];
+      setFiles(updatedFiles);
+      onFilesChange(updatedFiles);
+    },
+    [files, onFilesChange]
+  );
 
-      Array.from(selectedFiles).forEach((file) => {
-        const validationError = validateFile(file);
-        if (validationError) {
-          setError(validationError);
-          hasError = true;
-          return;
+  const handleRejectedFiles = useCallback(
+    (rejectedFiles: FileRejection[]) => {
+      const rejection = rejectedFiles[0];
+      if (rejection?.errors?.length > 0) {
+        const error = rejection.errors[0];
+        switch (error.code) {
+          case "file-too-large":
+            setError(
+              `La taille du fichier doit être inférieure à ${maxSize}MB`
+            );
+            break;
+          case "file-invalid-type":
+            setError("Type de fichier non supporté");
+            break;
+          case "too-many-files":
+            setError(
+              `Vous ne pouvez télécharger que ${maxFiles} images maximum`
+            );
+            break;
+          default:
+            setError("Erreur lors du téléchargement du fichier");
         }
-
-        newFiles.push(file);
-
-        // Create preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          newPreviews.push(e.target?.result as string);
-
-          // Update state when all files are processed
-          if (newPreviews.length === newFiles.length && !hasError) {
-            setError(null);
-            const updatedFiles = [...files, ...newFiles];
-            const updatedPreviews = [...previews, ...newPreviews];
-            setFiles(updatedFiles);
-            setPreviews(updatedPreviews);
-            onFilesChange(updatedFiles);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    },
-    [files, previews, maxFiles, validateFile, onFilesChange]
-  );
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      setIsDragOver(false);
-
-      if (disabled) return;
-
-      handleFiles(e.dataTransfer.files);
-    },
-    [handleFiles, disabled]
-  );
-
-  const handleDragOver = useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      if (!disabled) {
-        setIsDragOver(true);
       }
     },
-    [disabled]
+    [maxSize, maxFiles]
   );
 
-  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  }, []);
+  // Disable dropzone if max images reached or disabled prop is true
+  const isDropzoneDisabled = disabled || totalCount >= maxFiles;
 
-  const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
-        handleFiles(e.target.files);
-      }
-    },
-    [handleFiles]
-  );
+  const { getRootProps, getInputProps, isDragActive, isDragReject } =
+    useDropzone({
+      onDrop: handleAcceptedFiles,
+      onDropRejected: handleRejectedFiles,
+      accept: dropzoneAccept,
+      maxFiles: Math.max(0, maxFiles - currentImages.length - files.length),
+      maxSize: maxSize * 1024 * 1024,
+      disabled: isDropzoneDisabled,
+      multiple: true,
+    });
 
   const removeImage = useCallback(
     (index: number) => {
       const updatedFiles = files.filter((_, i) => i !== index);
-      const updatedPreviews = previews.filter((_, i) => i !== index);
       setFiles(updatedFiles);
-      setPreviews(updatedPreviews);
       onFilesChange(updatedFiles);
       setError(null);
     },
-    [files, previews, onFilesChange]
+    [files, onFilesChange]
   );
-
-  const allImages = [...currentImages, ...previews];
-  const totalCount = currentImages.length + files.length;
 
   return (
     <div className={cn("w-full", className)}>
       <div className="space-y-4">
         {/* Upload Zone */}
         <div
+          {...getRootProps()}
           className={cn(
             "relative rounded-lg border-2 border-dashed p-6 text-center transition-all duration-200",
-            isDragOver ? "border-blue-500 bg-blue-50" : "border-gray-300",
+            !isDropzoneDisabled && "cursor-pointer",
+            isDragActive && !isDragReject
+              ? "border-blue-500 bg-blue-50"
+              : "border-gray-300",
+            isDragReject && "border-red-500 bg-red-50",
             error && "border-red-400",
-            disabled && "cursor-not-allowed opacity-50"
+            isDropzoneDisabled &&
+              "pointer-events-none cursor-not-allowed opacity-50"
           )}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
+          tabIndex={isDropzoneDisabled ? -1 : 0}
+          aria-disabled={isDropzoneDisabled}
         >
+          <input {...getInputProps()} />
           <div className="flex flex-col items-center gap-3">
             <Icon name="download" size="2xl" className="text-gray-400" />
             <div>
               <p className="text-sm font-medium text-gray-700">
-                Glissez-déposez vos images ici ou
+                {isDragActive
+                  ? "Déposez vos images ici..."
+                  : "Glissez-déposez vos images ici ou cliquez pour parcourir"}
               </p>
-              <Button
-                type="button"
-                variant="outline"
-                className="relative mt-2 overflow-hidden"
-                disabled={disabled || totalCount >= maxFiles}
-              >
-                Parcourir
-                <input
-                  type="file"
-                  accept={accept}
-                  onChange={handleFileSelect}
-                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                  disabled={disabled || totalCount >= maxFiles}
-                  multiple
-                />
-              </Button>
+              {!isDragActive && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-2"
+                  disabled={isDropzoneDisabled}
+                >
+                  Parcourir
+                </Button>
+              )}
             </div>
             <p className="text-xs text-gray-500">
               JPG, PNG, GIF jusqu'à {maxSize}MB • Maximum {maxFiles} images
@@ -198,38 +185,43 @@ export function MultipleImageUpload({
             {allImages.map((image, index) => (
               <div
                 key={index}
-                className="group relative aspect-video overflow-hidden rounded-lg border border-gray-200"
+                className="group relative aspect-video rounded-lg border border-gray-200"
               >
-                <Image
-                  src={image}
-                  alt={`Image de couverture ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
+                {/* zone qui clippe l'image */}
+                <div className="absolute inset-0 overflow-hidden rounded-lg">
+                  <Image
+                    src={image}
+                    alt={`Image de couverture ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
+                    <p className="text-xs font-medium text-white">
+                      Image {index + 1}
+                    </p>
+                  </div>
+                </div>
+
+                {/* bouton au-dessus, non clippé */}
                 {index < currentImages.length ? (
                   <button
                     type="button"
                     onClick={() => onRemoveCurrentImage?.(image, index)}
-                    className="absolute top-2 right-2 rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+                    className="absolute -top-1 -right-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
                     disabled={disabled}
                   >
-                    <Icon name="trash" size="xs" className="text-gray-700" />
+                    <Icon name="trash" size="xs" />
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => removeImage(index - currentImages.length)}
-                    className="absolute top-2 right-2 rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+                    className="absolute -top-1 -right-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
                     disabled={disabled}
                   >
-                    <Icon name="cross" size="xs" className="text-gray-700" />
+                    <Icon name="cross" size="xs" />
                   </button>
                 )}
-                <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/50 to-transparent p-2">
-                  <p className="text-xs font-medium text-white">
-                    Image {index + 1}
-                  </p>
-                </div>
               </div>
             ))}
           </div>
