@@ -710,6 +710,9 @@ export class ProjectController {
             ],
           },
         },
+        image: { type: 'string' },
+        coverImages: { type: 'array', items: { type: 'string' } },
+        readme: { type: 'string' },
       },
     },
   })
@@ -776,6 +779,8 @@ export class ProjectController {
         keyFeatures: project.keyFeatures,
         projectGoals: project.projectGoals,
         image: project.image,
+        coverImages: project.coverImages,
+        readme: project.readme,
       }),
     );
 

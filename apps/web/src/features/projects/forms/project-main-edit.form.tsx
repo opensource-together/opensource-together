@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
+import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-upload";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Project } from "../types/project.type";
@@ -25,6 +26,9 @@ interface ProjectMainEditFormProps {
   onSubmit: () => void;
   onImageSelect: (file: File | null) => void;
   isUpdating: boolean;
+  onCoverFilesChange?: (files: File[]) => void;
+  onRemoveExistingCover?: (imageUrl: string, index: number) => void;
+  currentCoverImages?: string[];
 }
 
 export default function ProjectMainEditForm({
@@ -33,6 +37,9 @@ export default function ProjectMainEditForm({
   onSubmit,
   onImageSelect,
   isUpdating,
+  onCoverFilesChange,
+  onRemoveExistingCover,
+  currentCoverImages,
 }: ProjectMainEditFormProps) {
   const { control, watch, setValue } = form;
   const [newFeature, setNewFeature] = useState("");
@@ -178,6 +185,34 @@ export default function ProjectMainEditForm({
 
           {/* separator */}
           <div className="mt-10 h-[2px] w-full bg-black/3" />
+
+          {/* Cover Images */}
+          <FormField
+            control={control}
+            name="coverImages"
+            render={() => (
+              <FormItem>
+                <FormLabel tooltip="Ajoutez jusqu'à 4 images de couverture.">
+                  Images de couverture
+                </FormLabel>
+                <FormControl>
+                  <MultipleImageUpload
+                    accept="image/*"
+                    maxFiles={4}
+                    maxSize={5}
+                    currentImages={
+                      currentCoverImages ?? project.coverImages ?? []
+                    }
+                    onFilesChange={(files) => onCoverFilesChange?.(files)}
+                    onRemoveCurrentImage={(imageUrl, index) =>
+                      onRemoveExistingCover?.(imageUrl, index)
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Key Features */}
           <FormField

@@ -1,27 +1,27 @@
-import { ICommand, ICommandHandler, CommandHandler } from '@nestjs/cqrs';
-import { Result } from '@/libs/result';
-import { Inject } from '@nestjs/common';
+import { Category } from '@/contexts/category/domain/category.entity';
 import {
-  PROJECT_REPOSITORY_PORT,
-  ProjectRepositoryPort,
-} from '@/contexts/project/use-cases/ports/project.repository.port';
+  CATEGORY_REPOSITORY_PORT,
+  CategoryRepositoryPort,
+} from '@/contexts/category/use-cases/ports/category.repository.port';
 import {
   Project,
   ProjectValidationErrors,
 } from '@/contexts/project/domain/project.entity';
 import {
+  PROJECT_REPOSITORY_PORT,
+  ProjectRepositoryPort,
+} from '@/contexts/project/use-cases/ports/project.repository.port';
+import {
   TECHSTACK_REPOSITORY_PORT,
   TechStackRepositoryPort,
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
-import {
-  CATEGORY_REPOSITORY_PORT,
-  CategoryRepositoryPort,
-} from '@/contexts/category/use-cases/ports/category.repository.port';
-import { Category } from '@/contexts/category/domain/category.entity';
+import { Result } from '@/libs/result';
 import {
   MEDIA_SERVICE_PORT,
   MediaServicePort,
 } from '@/media/port/media.service.port';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
 export class UpdateProjectCommand implements ICommand {
   constructor(
@@ -37,6 +37,8 @@ export class UpdateProjectCommand implements ICommand {
       keyFeatures?: (string | { id: string; feature: string })[];
       projectGoals?: (string | { id: string; goal: string })[];
       image?: string;
+      coverImages?: string[];
+      readme?: string;
     },
   ) {}
 }
@@ -190,6 +192,8 @@ export class UpdateProjectCommandHandler
       keyFeatures: updatedKeyFeatures,
       projectGoals: updatedProjectGoals,
       image: props.image ?? existingData.image,
+      coverImages: props.coverImages ?? existingData.coverImages,
+      readme: props.readme ?? existingData.readme,
     };
 
     // Valider les données mises à jour
