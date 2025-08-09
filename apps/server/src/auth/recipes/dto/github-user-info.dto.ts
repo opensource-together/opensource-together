@@ -1,9 +1,14 @@
-export class GithubUserInfoDto {
-  user: {
-    id: number;
-    login: string;
-    avatar_url: string;
-    bio: string;
-    html_url: string;
-  };
+export class GitHubUserInfoDto {
+  id: string;
+  login: string;
+  name: string;
+  email: string;
+  bio: string | null;
+  avatar_url: string;
+  location: string | null;
+  company: string | null;
+
+  constructor(partial: Partial<GitHubUserInfoDto>) {
+    Object.assign(this, partial);
+  }
 }

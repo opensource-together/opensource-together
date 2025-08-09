@@ -2,12 +2,13 @@ import { PrismaClient } from '@prisma/client';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import * as process from 'node:process';
-// import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { GitHubUserInfoDto } from '@/auth/recipes/dto/github-user-info.dto';
 
-// const prisma: PrismaService = new PrismaService();
 const prisma = new PrismaClient();
 
-export const auth: any = betterAuth({
+export const auth: {
+  handler: (req: Request) => Promise<Response>;
+} = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
@@ -34,12 +35,18 @@ export const auth: any = betterAuth({
   },
   socialProviders: {
     github: {
-      clientId: 'Ov23liAbmidu21MMZejU',
+      clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
       redirectURL: 'http://localhost:4000/api/auth/callback/github',
       overrideUserInfoOnSignIn: true,
-      mapProfileToUser: (profile: any) => {
-        console.log('profile', profile);
+      mapProfileToUser: (
+        profile: GitHubUserInfoDto,
+      ): {
+        login: string;
+        bio: string | null;
+        location: string | null;
+        company: string | null;
+      } => {
         return {
           bio: profile.bio,
           login: profile.login,
@@ -64,11 +71,3 @@ export const auth: any = betterAuth({
     },
   },
 });
-
-console.log('✅ Better Auth initialized');
-console.log('🔍 Routes exposées :', Object.keys(auth?.api || {}));
-console.log('🔍 Routes exposées :', Object.keys(auth?.api.options || {}));
-console.log(
-  '🔍 Providers configurés :',
-  Object.keys(auth?.options?.socialProviders || {}),
-);

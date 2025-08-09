@@ -1,10 +1,7 @@
-/* import { Module } from '@nestjs/common';
-import { BetterAuthGithubHook } from '@/auth/hooks/better-auth-github.hook';
-import { CreateUserGhTokenCommandHandler } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
+import { Module } from '@nestjs/common';
+import { AuthController } from '@/auth/controllers/auth.controller';
 
 @Module({
-  imports: [],
-  providers: [BetterAuthGithubHook],
+  controllers: [AuthController],
 })
 export class AuthModule {}
-*/

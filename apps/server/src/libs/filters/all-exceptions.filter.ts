@@ -9,7 +9,8 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     if (exception instanceof Error) {
       if (exception.message.includes('Getting userInfo failed with 401')) {
         this.Logger.warn(
-          `[Supertokens] Suppressed internal error: ${exception.message}`,
+          `Suppressed internal error: ${exception.message}`,
+          'BETTER_AUTH',
         );
         return;
       }
