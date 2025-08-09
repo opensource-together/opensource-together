@@ -11,8 +11,10 @@ import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
 import { GithubRepositoryDto } from './dto/github-repository.dto';
-import { GithubRepoListInput } from './inputs/github-repo-list.input';
+import { GithubRepoSuggestionInput } from './inputs/github-repo-suggestion.input';
 import { InviteUserToRepoInput } from './inputs/invite-user-to-repo.inputs.dto';
+import { adaptGraphqlResponse, GithubRepositorySuggestionGraphqlResponse } from './graphql/github-repository-suggestion.graphql';
+import { toGithubRepoSuggestionInput } from './adapters/github-repo-suggestion.adapter';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
@@ -210,7 +212,7 @@ export class GithubRepository implements GithubRepositoryPort {
 
   async findRepositoriesOfAuthenticatedUser(
     octokit: Octokit,
-  ): Promise<Result<GithubRepoListInput[], string>> {
+  ): Promise<Result<GithubRepoSuggestionInput[], string>> {
     try {
       const getUserAndOrgReposQuery = `
         query GetUserAndOrgRepos($repoCount: Int = 100, $orgCount: Int = 100) {
@@ -272,46 +274,25 @@ export class GithubRepository implements GithubRepositoryPort {
           }
         }`;
 
-      const response = await octokit.graphql<any>(getUserAndOrgReposQuery, {
-        //GetUserAndOrgReposQueryResponse
-        repoCount: 100,
-        orgCount: 100,
-      });
-
-      const { viewer } = response;
-
-      const ownedRepos: GithubRepoListInput[] = viewer.repositories.nodes.map(
-        (repo) => {
-          return {
-            owner: repo.owner.login,
-            title: repo.name,
-            description: repo.description || '',
-            url: repo.url,
-          };
-        },
-      );
-
-      const orgRepos: GithubRepoListInput[] = viewer.organizations.nodes
-        .filter((org) => org.viewerCanAdminister)
-        .flatMap((org) =>
-          org.repositories.nodes.map((repo) => {
-            return {
-              owner: repo.owner.login,
-              title: repo.name,
-              description: repo.description || '',
-              url: repo.url,
-            };
-          }),
+      const response =
+        await octokit.graphql<GithubRepositorySuggestionGraphqlResponse>(
+          getUserAndOrgReposQuery,
+          {
+            repoCount: 100,
+            orgCount: 100,
+          },
         );
 
-      const allReposMap = new Map<string, GithubRepoListInput>();
+      const mapped = adaptGraphqlResponse(response);
+      const accessibleRepos = mapped.flatMap((repo) => {
+        const suggestion = toGithubRepoSuggestionInput(repo);
+        if (!suggestion.success) {
+          return [];
+        }
+        return suggestion.value;
+      });
 
-      ownedRepos.forEach((repo) => allReposMap.set(repo.url, repo));
-      orgRepos.forEach((repo) => allReposMap.set(repo.url, repo));
-
-      const allAccessibleRepos = Array.from(allReposMap.values());
-
-      return Result.ok(allAccessibleRepos);
+      return Result.ok(accessibleRepos);
     } catch (e: any) {
       this.Logger.error('error fetching repositories of authenticated user', e);
       return Result.fail('Failed to fetch repositories of authenticated user');

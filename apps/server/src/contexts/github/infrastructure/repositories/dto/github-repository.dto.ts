@@ -40,4 +40,8 @@ export class GithubRepositoryDto {
 
   @IsNumber()
   stargazers_count: number;
+
+  @IsOptional()
+  @IsString()
+  readme?: string;
 }
