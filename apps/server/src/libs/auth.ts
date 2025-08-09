@@ -14,6 +14,14 @@ export const auth: any = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    additionalFields: {
+      bio: { type: 'string', required: false, input: false },
+      login: { type: 'string', required: false, input: false },
+      location: { type: 'string', required: false, input: false },
+      company: { type: 'string', required: false, input: false },
+    },
+  },
   logger: {
     level: 'debug',
     transport: {
@@ -29,14 +37,15 @@ export const auth: any = betterAuth({
       clientId: 'Ov23liAbmidu21MMZejU',
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
       redirectURL: 'http://localhost:4000/api/auth/callback/github',
-      userInfoMap: {
-        username: 'login',
-        name: 'name',
-        email: 'email',
-        image: 'avatar_url',
-        bio: 'bio',
-        location: 'location',
-        company: 'company',
+      overrideUserInfoOnSignIn: true,
+      mapProfileToUser: (profile: any) => {
+        console.log('profile', profile);
+        return {
+          bio: profile.bio,
+          login: profile.login,
+          location: profile.location,
+          company: profile.company,
+        };
       },
     },
     google: {
