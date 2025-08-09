@@ -11,6 +11,7 @@ export const githubProviderConfig = (configService: ConfigService) => {
           'repo',
           'write:repo_hook',
           'admin:repo_hook',
+          'read:org',
         ],
 
         clientId: configService.get('GITHUB_CLIENT_ID') as string,
