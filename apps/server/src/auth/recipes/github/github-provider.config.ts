@@ -9,8 +9,6 @@ export const githubProviderConfig = (configService: ConfigService) => {
           'read:user',
           'user:email',
           'repo',
-          'write:repo_hook',
-          'admin:repo_hook',
           'read:org',
         ],
 
