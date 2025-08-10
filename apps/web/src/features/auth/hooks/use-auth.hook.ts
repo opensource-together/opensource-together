@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -8,6 +8,7 @@ import {
   getCurrentUser,
   getGitHubAuthUrl,
   getGoogleAuthUrl,
+  getWebSocketToken,
   handleGitHubCallback,
   handleGoogleCallback,
   logout,
@@ -17,6 +18,7 @@ export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
+  const [wsToken, setWsToken] = useState<string | null>(null);
 
   // Gérer la sauvegarde de l'URL de redirection depuis les search params
   useEffect(() => {
@@ -50,6 +52,28 @@ export default function useAuth() {
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: false,
   });
+
+  // Effect pour récupérer le token WebSocket quand l'utilisateur est connecté
+  useEffect(() => {
+    const fetchWsToken = async () => {
+      if (currentUser) {
+        try {
+          const token = await getWebSocketToken();
+          if (token) {
+            setWsToken(token);
+            localStorage.setItem("wsToken", token);
+          }
+        } catch (error) {
+          console.error("Failed to fetch WebSocket token:", error);
+        }
+      } else {
+        setWsToken(null);
+        localStorage.removeItem("wsToken");
+      }
+    };
+
+    fetchWsToken();
+  }, [currentUser]);
 
   const githubSignInMutation = useToastMutation({
     mutationFn: async () => {
@@ -121,6 +145,8 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.setQueryData(["user/me"], null);
+        setWsToken(null);
+        localStorage.removeItem("wsToken");
         router.push("/");
       },
     },
@@ -152,6 +178,7 @@ export default function useAuth() {
     isAuthenticated: !!currentUser,
     isLoading,
     isError,
+    wsToken,
 
     // Actions
     signInWithGitHub: githubSignInMutation.mutate,
