@@ -59,7 +59,8 @@ export type IconName =
   | "file-text"
   | "mix"
   | "contact"
-  | "commit";
+  | "commit"
+  | "bell";
 
 // Mapping of the icon names to the SVG files
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
@@ -327,6 +328,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/commit.svg",
     filled: "/icons/commit.svg",
     outline: "/icons/commit.svg",
+  },
+  bell: {
+    default: "/icons/bell.svg",
+    gray: "/icons/bell-gray.svg",
+    white: "/icons/bell-white.svg",
+    black: "/icons/bell.svg",
+    filled: "/icons/bell.svg",
+    outline: "/icons/bell.svg",
   },
   contact: {
     default: "/icons/contact-icon.svg",
