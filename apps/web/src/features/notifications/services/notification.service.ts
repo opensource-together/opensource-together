@@ -1,10 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import {
-  MarkAllNotificationsReadResponse,
-  MarkNotificationReadResponse,
-  UnreadNotificationsResponse,
-} from "../types/notification.type";
+import { UnreadNotificationsResponse } from "../types/notification.type";
 
 export async function getUnreadNotifications(): Promise<UnreadNotificationsResponse> {
   try {
