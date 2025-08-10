@@ -13,6 +13,7 @@ import { Module } from '@nestjs/common';
 import { projectRoleApplicationUseCases } from '../use-cases/project-role-application.use-cases';
 import { ApplicationController } from './controllers/application.controller';
 import { ProjectRoleApplicationController } from './controllers/project-role-application.controller';
+import { ProjectRoleApplicationListener } from './listenner/project-role-notifications.listener';
 
 @Module({
   imports: [PersistenceInfrastructure],
@@ -38,6 +39,8 @@ import { ProjectRoleApplicationController } from './controllers/project-role-app
       provide: USER_REPOSITORY_PORT,
       useClass: PrismaUserRepository,
     },
+    // 🎧 Ajouter le listener pour capturer les événements
+    ProjectRoleApplicationListener,
   ],
   controllers: [ProjectRoleApplicationController, ApplicationController],
   exports: [
