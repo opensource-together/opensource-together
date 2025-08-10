@@ -1,29 +1,83 @@
-import { useSession } from "@/lib/auth-client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
+import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
 import {
+  getCurrentUser,
   logout,
-  signInWithEmail,
-  signInWithGitHub,
-  signInWithGoogle,
-  signUpWithEmail,
-} from "../services/auth.service";
+  signInWithProvider,
+} from "@/features/auth/services/auth.service";
 
-const useAuth = () => {
-  const { data: session, isPending, error, refetch } = useSession();
+/**
+ * Custom hook for authentication operations with integrated toast notifications
+ */
+export default function useAuth() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const {
+    data: currentUser,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["user/me"],
+    queryFn: getCurrentUser,
+  });
+
+  const signInWithGitHubMutation = useToastMutation({
+    mutationFn: () => signInWithProvider("github"),
+    loadingMessage: "Connexion avec GitHub...",
+    successMessage: "Redirection vers GitHub...",
+    errorMessage: "Erreur lors de la connexion avec GitHub",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        router.push("/");
+      },
+    },
+  });
+
+  const signInWithGoogleMutation = useToastMutation({
+    mutationFn: () => signInWithProvider("google"),
+    loadingMessage: "Connexion avec Google...",
+    successMessage: "Redirection vers Google...",
+    errorMessage: "Erreur lors de la connexion avec Google",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        router.push("/");
+      },
+    },
+  });
+
+  const logoutMutation = useToastMutation({
+    mutationFn: logout,
+    loadingMessage: "Déconnexion...",
+    successMessage: "Déconnexion réussie",
+    errorMessage: "Erreur lors de la déconnexion",
+    options: {
+      onSuccess: () => {
+        queryClient.setQueryData(["user/me"], null);
+        router.push("/");
+      },
+    },
+  });
 
   return {
-    session,
-    isPending,
-    error,
-    refetch,
-    isAuthenticated: !!session,
-    user: session?.user,
-    signInWithEmail,
-    signUpWithEmail,
-    signInWithGitHub,
-    signInWithGoogle,
-    logout,
-  };
-};
+    // Query states
+    currentUser,
+    isLoading,
+    isError,
 
-export default useAuth;
+    // Mutation states
+    signInWithGitHub: signInWithGitHubMutation.mutate,
+    signInWithGoogle: signInWithGoogleMutation.mutate,
+    logout: logoutMutation.mutate,
+
+    // Loading states
+    isSigningInWithGitHub: signInWithGitHubMutation.isPending,
+    isSigningInWithGoogle: signInWithGoogleMutation.isPending,
+    isLoggingOut: logoutMutation.isPending,
+  };
+}

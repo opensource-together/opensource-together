@@ -1,9 +1,7 @@
-import { authClient } from "@/lib/auth-client";
-
 import { API_BASE_URL } from "@/config/config";
 
+import { authClient } from "@/features/auth/utils/auth-client";
 import { Profile } from "@/features/profile/types/profile.type";
-import { createAuthClient } from "better-auth/react";
 
 /**
  * Check if session exists
@@ -53,89 +51,34 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
 };
 
 /**
- * Sign in with email and password
+ * Sign in with a social provider using Better Auth
  */
-export const signInWithEmail = async (email: string, password: string) => {
+export const signInWithProvider = async (
+  provider: "github" | "google"
+): Promise<void> => {
   try {
-    const { data, error } = await authClient.signIn.email({
-      email,
-      password,
-      callbackURL: "/dashboard",
+    const response = await fetch(`${API_BASE_URL}/auth/sign-in/social`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ provider }),
     });
 
-    if (error) {
-      throw new Error(error.message);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return { success: true, data };
-  } catch (error) {
-    console.error("signInWithEmail error:", error);
-    throw error;
-  }
-};
-
-/**
- * Sign up with email and password
- */
-export const signUpWithEmail = async (
-  email: string,
-  password: string,
-  name: string
-) => {
-  try {
-    const { data, error } = await authClient.signUp.email({
-      email,
-      password,
-      name,
-      callbackURL: "/dashboard",
-    });
-
-    if (error) {
-      throw new Error(error.message);
+    const data = await response.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error("No OAuth URL received from server");
     }
-
-    return { success: true, data };
   } catch (error) {
-    console.error("signUpWithEmail error:", error);
-    throw error;
-  }
-};
-
-/**
- * Sign in with GitHub
- */
-export const signInWithGitHub = async () => {
-  try {
-    const newAuthClient = createAuthClient({
-      baseURL: "http://localhost:4000",
-    });
-    await newAuthClient.signIn.social({
-      provider: "github",
-      callbackURL: "http://localhost:3000/auth/callback/github",
-      // callbackURL: "/dashboard",
-      // errorCallbackURL: "/auth/error",
-      // newUserCallbackURL: "/welcome",
-    });
-  } catch (error) {
-    console.error("signInWithGitHub error:", error);
-    throw error;
-  }
-};
-
-/**
- * Sign in with Google
- */
-export const signInWithGoogle = async () => {
-  try {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-      errorCallbackURL: "/auth/error",
-      newUserCallbackURL: "/welcome",
-    });
-  } catch (error) {
-    console.error("signInWithGoogle error:", error);
-    throw error;
+    console.error(`Error signing in with ${provider}:`, error);
+    throw new Error(`Failed to sign in with ${provider}`);
   }
 };
 
@@ -147,7 +90,6 @@ export const logout = async (): Promise<void> => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          // Redirection vers la page de login après déconnexion
           window.location.href = "/auth/login";
         },
       },
