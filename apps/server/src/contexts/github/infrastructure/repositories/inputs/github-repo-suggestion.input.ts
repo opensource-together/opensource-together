@@ -1,6 +1,6 @@
 import { IsString, IsOptional } from 'class-validator';
 
-export class GithubRepoListInput {
+export class GithubRepoSuggestionInput {
   @IsString()
   owner: string;
 

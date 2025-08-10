@@ -202,8 +202,8 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
 
   user: {
     default: "/icons/user.svg",
-    gray: "/icons/user.svg",
-    white: "/icons/user.svg",
+    gray: "/icons/user-gray.svg",
+    white: "/icons/user-white.svg",
     black: "/icons/user.svg",
     filled: "/icons/user.svg",
     outline: "/icons/user.svg",
