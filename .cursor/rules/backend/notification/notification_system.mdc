@@ -1,0 +1,416 @@
+---
+description: expliques la facon dont on ajoute un nouvel evenement au systeme de notifications, comment s'en servir coté frontend et comment le systeme fonctionne coté backend. Tres
+alwaysApply: false
+---
+
+# 🔔 Système de Notifications - Guide d'Utilisation
+
+## 🎯 Vue d'ensemble
+
+Système de notifications temps réel utilisant WebSocket + EventEmitter2. Architecture event-driven : **Action → Event → Listener → Notification → WebSocket → Client**.
+
+## 🚀 Comment s'en servir côté Frontend
+
+### 1. Connexion WebSocket
+
+```javascript
+// 1. Récupérer le token JWT
+const response = await fetch("/v1/notifications/ws-token");
+const { wsToken } = await response.json();
+
+// 2. Se connecter
+const socket = io("ws://localhost:4000/notifications", {
+  query: { "x-ws-token": wsToken },
+});
+```
+
+### 2. Écouter les événements
+
+```javascript
+// Connexion établie
+socket.on("connect", () => {
+  console.log("✅ Connecté aux notifications");
+});
+
+// Notifications non lues reçues à la connexion
+socket.on("unread-notifications", (notifications) => {
+  displayUnreadNotifications(notifications);
+});
+
+// Nouvelles notifications en temps réel
+socket.on("new-notification", (notification) => {
+  showNotificationToast(notification.payload.message);
+  addNotificationToList(notification);
+});
+
+// Notification marquée comme lue
+socket.on("notification-read", (notification) => {
+  updateNotificationStatus(notification.id, "read");
+});
+```
+
+### 3. Émettre des actions
+
+```javascript
+// Marquer une notification comme lue
+socket.emit("mark-read", { notificationId: "uuid-123" });
+
+// Marquer toutes comme lues
+socket.emit("mark-all-read");
+
+// Rafraîchir les non lues
+socket.emit("refresh-unread");
+```
+
+## ➕ Comment ajouter de nouveaux événements
+
+### 1. Émettre l'événement dans le Command Handler
+
+```typescript
+// Dans CreateProjectCommandHandler
+@CommandHandler(CreateProjectCommand)
+export class CreateProjectCommandHandler {
+  constructor(
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2
+  ) {}
+
+  async execute(
+    command: CreateProjectCommand
+  ): Promise<Result<Project, string>> {
+    // ... logique métier ...
+
+    // 🎯 Émettre l'événement
+    this.eventEmitter.emit("project.created", {
+      projectId: savedProject.value.toPrimitive().id,
+      projectTitle: savedProject.value.toPrimitive().title,
+      ownerId: command.props.ownerId,
+      ownerName: "John Doe",
+    });
+
+    return Result.ok(savedProject.value);
+  }
+}
+```
+
+### 2. Créer le Listener
+
+```typescript
+@Injectable()
+export class ProjectNotificationsListener {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @OnEvent("project.created")
+  async handleProjectCreated(event: {
+    projectId: string;
+    projectTitle: string;
+    ownerId: string;
+    ownerName: string;
+  }) {
+    const command = new CreateNotificationCommand({
+      object: "project.created",
+      receiverId: event.ownerId,
+      senderId: event.ownerId,
+      type: "project.created",
+      payload: {
+        projectId: event.projectId,
+        projectTitle: event.projectTitle,
+        message: `🎉 Votre projet "${event.projectTitle}" a été créé.`,
+      },
+      channels: ["realtime"],
+    });
+
+    await this.commandBus.execute(command);
+  }
+}
+```
+
+### 3. Types d'événements recommandés
+
+```typescript
+// Projets
+"project.created", "project.updated", "project.deleted";
+
+// Rôles et candidatures
+"project.role.application.created", "project.role.application.accepted";
+
+// Collaboration
+"project.member.joined", "project.invite.sent";
+
+// Messagerie
+"message.received", "conversation.created";
+```
+
+## ⚙️ Comment le système fonctionne côté Backend
+
+### 1. Architecture des composants
+
+```
+src/contexts/notification/
+├── domain/                    # Entités et logique métier
+├── use-cases/                # Commands/Queries CQRS
+├── infrastructure/
+│   ├── controllers/          # REST API endpoints
+│   ├── gateways/            # WebSocket Gateway
+│   ├── listeners/            # Event Listeners
+│   └── services/            # Services métier
+```
+
+### 2. Flux de données
+
+```
+Action Métier → Command Handler → EventEmitter.emit() → @OnEvent Listener →
+Notification Command → Service → RealtimeNotifierAdapter → WebSocket Gateway → Client
+```
+
+### 3. Authentification WebSocket
+
+```typescript
+// Dans NotificationsGateway
+async handleConnection(client: AuthenticatedSocket): Promise<void> {
+  // 1. Authentification JWT
+  const userId = await this.webSocketAuthService.authenticateSocket(client);
+  if (!userId) {
+    client.disconnect();
+    return;
+  }
+
+  // 2. Enregistrement connexion
+  this.connectionManager.registerConnection(userId, client);
+
+  // 3. Envoi notifications non lues
+  await this.sendUnreadNotifications(userId, client);
+}
+```
+
+### 4. Endpoints REST disponibles
+
+```http
+POST   /v1/notifications              # Créer notification
+GET    /v1/notifications/unread       # Récupérer non lues
+PATCH  /v1/notifications/{id}/read    # Marquer comme lue
+PATCH  /v1/notifications/mark-all-read # Marquer toutes comme lues
+GET    /v1/notifications/ws-token     # Token WebSocket
+```
+
+### 5. Configuration requise
+
+```bash
+# .env
+JWT_SECRET=your-secret-key-here
+
+# package.json
+"@nestjs/websockets": "^11.1.3",
+"@nestjs/platform-socket.io": "^11.1.4",
+"@nestjs/event-emitter": "^3.0.1"
+```
+
+---
+
+**Note** : Le système gère automatiquement la persistance des notifications et la reconnexion des clients. Les tokens WebSocket expirent après 1h.
+
+# 🔔 Système de Notifications - Guide d'Utilisation
+
+## 🎯 Vue d'ensemble
+
+Système de notifications temps réel utilisant WebSocket + EventEmitter2. Architecture event-driven : **Action → Event → Listener → Notification → WebSocket → Client**.
+
+## 🚀 Comment s'en servir côté Frontend
+
+### 1. Connexion WebSocket
+
+```javascript
+// 1. Récupérer le token JWT
+const response = await fetch("/v1/notifications/ws-token");
+const { wsToken } = await response.json();
+
+// 2. Se connecter
+const socket = io("ws://localhost:4000/notifications", {
+  query: { "x-ws-token": wsToken },
+});
+```
+
+### 2. Écouter les événements
+
+```javascript
+// Connexion établie
+socket.on("connect", () => {
+  console.log("✅ Connecté aux notifications");
+});
+
+// Notifications non lues reçues à la connexion
+socket.on("unread-notifications", (notifications) => {
+  displayUnreadNotifications(notifications);
+});
+
+// Nouvelles notifications en temps réel
+socket.on("new-notification", (notification) => {
+  showNotificationToast(notification.payload.message);
+  addNotificationToList(notification);
+});
+
+// Notification marquée comme lue
+socket.on("notification-read", (notification) => {
+  updateNotificationStatus(notification.id, "read");
+});
+```
+
+### 3. Émettre des actions
+
+```javascript
+// Marquer une notification comme lue
+socket.emit("mark-read", { notificationId: "uuid-123" });
+
+// Marquer toutes comme lues
+socket.emit("mark-all-read");
+
+// Rafraîchir les non lues
+socket.emit("refresh-unread");
+```
+
+## ➕ Comment ajouter de nouveaux événements
+
+### 1. Émettre l'événement dans le Command Handler
+
+```typescript
+// Dans CreateProjectCommandHandler
+@CommandHandler(CreateProjectCommand)
+export class CreateProjectCommandHandler {
+  constructor(
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2
+  ) {}
+
+  async execute(
+    command: CreateProjectCommand
+  ): Promise<Result<Project, string>> {
+    // ... logique métier ...
+
+    // 🎯 Émettre l'événement
+    this.eventEmitter.emit("project.created", {
+      projectId: savedProject.value.toPrimitive().id,
+      projectTitle: savedProject.value.toPrimitive().title,
+      ownerId: command.props.ownerId,
+      ownerName: "John Doe",
+    });
+
+    return Result.ok(savedProject.value);
+  }
+}
+```
+
+### 2. Créer le Listener
+
+```typescript
+@Injectable()
+export class ProjectNotificationsListener {
+  constructor(private readonly commandBus: CommandBus) {}
+
+  @OnEvent("project.created")
+  async handleProjectCreated(event: {
+    projectId: string;
+    projectTitle: string;
+    ownerId: string;
+    ownerName: string;
+  }) {
+    const command = new CreateNotificationCommand({
+      object: "project.created",
+      receiverId: event.ownerId,
+      senderId: event.ownerId,
+      type: "project.created",
+      payload: {
+        projectId: event.projectId,
+        projectTitle: event.projectTitle,
+        message: `🎉 Votre projet "${event.projectTitle}" a été créé.`,
+      },
+      channels: ["realtime"],
+    });
+
+    await this.commandBus.execute(command);
+  }
+}
+```
+
+### 3. Types d'événements recommandés
+
+```typescript
+// Projets
+"project.created", "project.updated", "project.deleted";
+
+// Rôles et candidatures
+"project.role.application.created", "project.role.application.accepted";
+
+// Collaboration
+"project.member.joined", "project.invite.sent";
+
+// Messagerie
+"message.received", "conversation.created";
+```
+
+## ⚙️ Comment le système fonctionne côté Backend
+
+### 1. Architecture des composants
+
+```
+src/contexts/notification/
+├── domain/                    # Entités et logique métier
+├── use-cases/                # Commands/Queries CQRS
+├── infrastructure/
+│   ├── controllers/          # REST API endpoints
+│   ├── gateways/            # WebSocket Gateway
+│   ├── listeners/            # Event Listeners
+│   └── services/            # Services métier
+```
+
+### 2. Flux de données
+
+```
+Action Métier → Command Handler → EventEmitter.emit() → @OnEvent Listener →
+Notification Command → Service → RealtimeNotifierAdapter → WebSocket Gateway → Client
+```
+
+### 3. Authentification WebSocket
+
+```typescript
+// Dans NotificationsGateway
+async handleConnection(client: AuthenticatedSocket): Promise<void> {
+  // 1. Authentification JWT
+  const userId = await this.webSocketAuthService.authenticateSocket(client);
+  if (!userId) {
+    client.disconnect();
+    return;
+  }
+
+  // 2. Enregistrement connexion
+  this.connectionManager.registerConnection(userId, client);
+
+  // 3. Envoi notifications non lues
+  await this.sendUnreadNotifications(userId, client);
+}
+```
+
+### 4. Endpoints REST disponibles
+
+```http
+POST   /v1/notifications              # Créer notification
+GET    /v1/notifications/unread       # Récupérer non lues
+PATCH  /v1/notifications/{id}/read    # Marquer comme lue
+PATCH  /v1/notifications/mark-all-read # Marquer toutes comme lues
+GET    /v1/notifications/ws-token     # Token WebSocket
+```
+
+### 5. Configuration requise
+
+```bash
+# .env
+JWT_SECRET=your-secret-key-here
+
+# package.json
+"@nestjs/websockets": "^11.1.3",
+"@nestjs/platform-socket.io": "^11.1.4",
+"@nestjs/event-emitter": "^3.0.1"
+```
+
+---
+
+**Note** : Le système gère automatiquement la persistance des notifications et la reconnexion des clients. Les tokens WebSocket expirent après 1h.
