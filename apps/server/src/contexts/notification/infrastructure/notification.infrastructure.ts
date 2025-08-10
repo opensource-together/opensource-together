@@ -1,8 +1,8 @@
+import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NOTIFICATION_SERVICE_PORT } from '../use-cases/ports/notification.service.port';
-import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 
 // Services et adapters
 import { NotificationService } from './services/notification.service';
@@ -13,12 +13,12 @@ import { NotificationService } from './services/notification.service';
 import { notificationUseCases } from '../use-cases/notification.use-cases';
 
 // Controller
-import { NotificationsController } from './controllers/notifications.controller';
 import { WebSocketAuthModule } from '@/auth/web-socket/websocket-auth.module';
-import { NotificationsGateway } from './gateways/notifications.gateway';
-import { RealtimeNotifierAdapter } from './services/realtime-notifier.adapter';
-import { WebSocketConnectionManager } from './gateways/websocket-connection.manager';
 import { NOTIFICATION_GATEWAY_PORT } from '../use-cases/ports/notification.gateway.port';
+import { NotificationsController } from './controllers/notifications.controller';
+import { NotificationsGateway } from './gateways/notifications.gateway';
+import { WebSocketConnectionManager } from './gateways/websocket-connection.manager';
+import { RealtimeNotifierAdapter } from './services/realtime-notifier.adapter';
 // import { GatewayModule } from './gateways/gateway.module';
 
 /**
@@ -65,7 +65,5 @@ import { NOTIFICATION_GATEWAY_PORT } from '../use-cases/ports/notification.gatew
   ],
 })
 export class NotificationInfrastructure {
-  constructor() {
-    console.log('NotificationInfrastructure constructor called'); // ← mets des logs ici
-  }
+  constructor() {}
 }

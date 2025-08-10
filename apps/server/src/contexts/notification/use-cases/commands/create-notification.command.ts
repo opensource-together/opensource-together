@@ -1,12 +1,12 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
 import { Result } from '@/libs/result';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { Notification } from '../../domain/notification.entity';
 import {
   NOTIFICATION_SERVICE_PORT,
   NotificationServicePort,
   SendNotificationPayload,
 } from '../ports/notification.service.port';
-import { Notification } from '../../domain/notification.entity';
 
 /**
  * Command pour créer et envoyer une notification.
@@ -31,8 +31,6 @@ export class CreateNotificationCommandHandler
   async execute(
     command: CreateNotificationCommand,
   ): Promise<Result<void, string>> {
-    console.log('CreateNotificationCommandHandler');
-    console.log('command', command);
     // 1. Valider les données avec l'entité du domaine
     const notificationEntity = Notification.create({
       object: command.payload.object,

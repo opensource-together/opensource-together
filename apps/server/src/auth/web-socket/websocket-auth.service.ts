@@ -34,6 +34,7 @@ export class WebSocketAuthService {
       (client as AuthenticatedSocket).userId = userId;
       return userId;
     } catch (error) {
+      this.logger.error('Error authenticating socket:', error);
       return null;
     }
   }

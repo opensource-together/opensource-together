@@ -4,8 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { WsJwtService } from './ws-jwt.service';
 import { Socket } from 'socket.io';
+import { WsJwtService } from './ws-jwt.service';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
@@ -18,7 +18,6 @@ export class WsAuthGuard implements CanActivate {
       .getClient<Socket & { userId?: string }>();
     // Token via handshake query ou headers
     const token = this.extractTokenFromHandshake(client);
-    console.log('token passe par le guard', token);
     if (!token) {
       throw new UnauthorizedException('Token manquant');
     }
@@ -38,7 +37,7 @@ export class WsAuthGuard implements CanActivate {
       client.handshake.query &&
       typeof client.handshake.query['x-ws-token'] === 'string'
     ) {
-      return client.handshake.query['x-ws-token'] as string;
+      return client.handshake.query['x-ws-token'];
     }
     if (
       client.handshake &&

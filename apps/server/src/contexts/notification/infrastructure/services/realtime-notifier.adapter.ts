@@ -1,9 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { NotificationData } from '../../use-cases/ports/notification.service.port';
 import {
   NOTIFICATION_GATEWAY_PORT,
   NotificationGatewayPort,
 } from '../../use-cases/ports/notification.gateway.port';
+import { NotificationData } from '../../use-cases/ports/notification.service.port';
 
 /**
  * Adapter pour l'envoi de notifications en temps réel via WebSocket.
@@ -14,9 +14,7 @@ export class RealtimeNotifierAdapter {
   constructor(
     @Inject(forwardRef(() => NOTIFICATION_GATEWAY_PORT))
     private readonly notificationsGateway: NotificationGatewayPort,
-  ) {
-    console.log('RealtimeNotifierAdapter constructor called'); // ← mets des logs ici
-  }
+  ) {}
 
   /**
    * Envoie une notification en temps réel à un utilisateur

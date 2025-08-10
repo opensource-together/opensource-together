@@ -11,7 +11,7 @@ export class WebSocketConnectionManager {
    */
   registerConnection(userId: string, socket: AuthenticatedSocket): void {
     // Fermer l'ancienne connexion si elle existe
-    const existingSocket = this.userSockets.get(userId);
+    // const existingSocket = this.userSockets.get(userId);
     // if (existingSocket) {
     //   this.logger.log(
     //     `Fermeture de l'ancienne connexion pour l'utilisateur ${userId}`,

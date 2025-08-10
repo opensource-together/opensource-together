@@ -1,38 +1,38 @@
+import { WsJwtService } from '@/auth/web-socket/jwt/ws-jwt.service';
+import { Result } from '@/libs/result';
 import {
+  BadRequestException,
   Body,
   Controller,
-  Post,
   Get,
-  Patch,
-  Param,
-  HttpStatus,
   HttpException,
-  BadRequestException,
+  HttpStatus,
   NotFoundException,
+  Param,
+  Patch,
+  Post,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
-import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
-import { MarkAllNotificationsReadCommand } from '../../use-cases/commands/mark-all-notifications-read.command';
-import { GetUnreadNotificationsQuery } from '../../use-cases/queries/get-unread-notifications.query';
-import { Session } from 'supertokens-nestjs';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
   ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { Result } from '@/libs/result';
-import { WsJwtService } from '@/auth/web-socket/jwt/ws-jwt.service';
+import { Session } from 'supertokens-nestjs';
+import { Notification } from '../../domain/notification.entity';
+import { CreateNotificationCommand } from '../../use-cases/commands/create-notification.command';
+import { MarkAllNotificationsReadCommand } from '../../use-cases/commands/mark-all-notifications-read.command';
+import { MarkNotificationReadCommand } from '../../use-cases/commands/mark-notification-read.command';
+import { GetUnreadNotificationsQuery } from '../../use-cases/queries/get-unread-notifications.query';
 import { CreateNotificationRequestDto } from './dto/create-notification-request.dto';
 import { CreateNotificationResponseDto } from './dto/create-notification-response.dto';
 import { GetUnreadNotificationsResponseDto } from './dto/get-unread-notifications-response.dto';
-import { MarkNotificationReadResponseDto } from './dto/mark-notification-read-response.dto';
 import { MarkAllNotificationsReadResponseDto } from './dto/mark-all-notifications-read-response.dto';
+import { MarkNotificationReadResponseDto } from './dto/mark-notification-read-response.dto';
 import { WsTokenResponseDto } from './dto/ws-token-response.dto';
-import { Notification } from '../../domain/notification.entity';
 
 @ApiTags('Notifications')
 @Controller('notifications')
@@ -41,9 +41,7 @@ export class NotificationsController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly wsJwtService: WsJwtService,
-  ) {
-    console.log('NotificationsController constructor called'); // ← mets des logs ici
-  }
+  ) {}
 
   /**
    * Créer une nouvelle notification (endpoint de test)
@@ -169,16 +167,17 @@ export class NotificationsController {
         );
       }
 
-      const result = await this.commandBus.execute(
-        new CreateNotificationCommand({
-          object: dto.object,
-          receiverId: dto.receiverId,
-          senderId: senderId,
-          type: dto.type,
-          payload: dto.payload,
-          channels: dto.channels || ['realtime'],
-        }),
-      );
+      const result: Result<{ success: boolean; error?: string }, string> =
+        await this.commandBus.execute(
+          new CreateNotificationCommand({
+            object: dto.object,
+            receiverId: dto.receiverId,
+            senderId: senderId,
+            type: dto.type,
+            payload: dto.payload,
+            channels: dto.channels || ['realtime'],
+          }),
+        );
 
       if (!result.success) {
         // Différencier les types d'erreurs
@@ -599,7 +598,8 @@ export class NotificationsController {
       return WsTokenResponseDto.create(wsToken);
     } catch (error) {
       throw new HttpException(
-        'Une erreur interne est survenue lors de la génération du token',
+        'Une erreur interne est survenue lors de la génération du token' +
+          error,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

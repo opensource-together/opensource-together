@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Result } from '@/libs/result';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import {
+  NotificationData,
   NotificationServicePort,
   SendNotificationPayload,
-  NotificationData,
 } from '../../use-cases/ports/notification.service.port';
-import { Result } from '@/libs/result';
 import { RealtimeNotifierAdapter } from './realtime-notifier.adapter';
-import { Prisma } from '@prisma/client';
+
 /**
  * Service d'implémentation du port NotificationServicePort.
  * Responsable de la persistance et de la livraison technique.
@@ -15,6 +16,7 @@ import { Prisma } from '@prisma/client';
  */
 @Injectable()
 export class NotificationService implements NotificationServicePort {
+  private readonly logger = new Logger(NotificationService.name);
   constructor(
     private readonly prisma: PrismaService,
     private readonly realtimeAdapter: RealtimeNotifierAdapter,
@@ -72,17 +74,19 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok(undefined);
     } catch (error) {
-      console.error('Error sending notification:', error);
+      this.logger.error('Error sending notification:', error);
 
       // Gestion spécifique des erreurs de contrainte de clé étrangère
-      if (error.code === 'P2003') {
-        if (error.meta?.constraint === 'Notification_senderId_fkey') {
-          return Result.fail(
-            `L'utilisateur expéditeur n'existe pas ou n'est pas connecté`,
-          );
-        }
-        if (error.meta?.constraint === 'Notification_receiverId_fkey') {
-          return Result.fail(`L'utilisateur destinataire n'existe pas`);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2003') {
+          if (error.meta?.constraint === 'Notification_senderId_fkey') {
+            return Result.fail(
+              `L'utilisateur expéditeur n'existe pas ou n'est pas connecté`,
+            );
+          }
+          if (error.meta?.constraint === 'Notification_receiverId_fkey') {
+            return Result.fail(`L'utilisateur destinataire n'existe pas`);
+          }
         }
       }
 
@@ -122,7 +126,7 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok(notificationData);
     } catch (error) {
-      console.error('Error fetching unread notifications:', error);
+      this.logger.error('Error fetching unread notifications:', error);
       return Result.fail('Failed to fetch unread notifications');
     }
   }
@@ -167,7 +171,7 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok(undefined);
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      this.logger.error('Error marking notification as read:', error);
       return Result.fail('Failed to mark notification as read');
     }
   }
@@ -222,7 +226,7 @@ export class NotificationService implements NotificationServicePort {
         // Note: Pour markAllNotificationsAsRead, on ne fait pas échouer toute l'opération
         // si une notification individuelle ne peut pas être envoyée en temps réel
         if (updateError) {
-          console.warn(
+          this.logger.warn(
             `Avertissement lors de l'envoi de la mise à jour: ${updateError}`,
           );
         }
@@ -230,7 +234,7 @@ export class NotificationService implements NotificationServicePort {
 
       return Result.ok(undefined);
     } catch (error) {
-      console.error('Error marking all notifications as read:', error);
+      this.logger.error('Error marking all notifications as read:', error);
       return Result.fail('Failed to mark all notifications as read');
     }
   }
@@ -258,7 +262,7 @@ export class NotificationService implements NotificationServicePort {
         readAt: notification.readAt,
       });
     } catch (error) {
-      console.error('Error fetching notification:', error);
+      this.logger.error('Error fetching notification:', error);
       return Result.fail('Failed to fetch notification');
     }
   }
