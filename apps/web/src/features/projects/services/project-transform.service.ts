@@ -49,6 +49,7 @@ export const transformProjectForApiUpdate = (
     description: formData.shortDescription,
     shortDescription: formData.shortDescription,
     image: formData.image || undefined,
+    coverImages: formData.coverImages || [],
     externalLinks: formData.externalLinks
       ? Object.entries(formData.externalLinks)
           .filter(([_, url]) => typeof url === "string" && url.trim())

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
 import { Result } from '@/libs/result';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaProjectMapper } from './prisma.project.mapper';
 
@@ -445,6 +445,8 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
             description: projectData.description,
             shortDescription: projectData.shortDescription,
             image: projectData.image,
+            coverImages: projectData.coverImages,
+            readme: projectData.readme,
             externalLinks: {
               deleteMany: {},
               create:

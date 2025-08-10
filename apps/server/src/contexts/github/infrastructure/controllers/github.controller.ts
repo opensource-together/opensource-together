@@ -15,7 +15,7 @@ import {
 import { GitHubOctokit } from '../decorators/github-octokit.decorator';
 import { Octokit } from '@octokit/rest';
 import { GithubAuthGuard } from '../guards/github-auth.guard';
-import { GithubRepoListInput } from '../repositories/inputs/github-repo-list.input';
+import { GithubRepoSuggestionInput } from '../repositories/inputs/github-repo-suggestion.input';
 import {
   GITHUB_REPOSITORY_PORT,
   GithubRepositoryPort,
@@ -61,7 +61,7 @@ export class GithubController {
   })
   async getMyRepositories(
     @GitHubOctokit() octokit: Octokit,
-  ): Promise<GithubRepoListInput[]> {
+  ): Promise<GithubRepoSuggestionInput[]> {
     const repos =
       await this.githubRepository.findRepositoriesOfAuthenticatedUser(octokit);
     if (!repos.success) {

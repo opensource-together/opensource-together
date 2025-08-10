@@ -1,8 +1,8 @@
-import { IsString, IsArray, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
-import { Title } from '@/contexts/project/domain/vo/title.vo';
 import { Description } from '@/contexts/project/domain/vo/description.vo';
 import { ShortDescription } from '@/contexts/project/domain/vo/short-description.vo.';
+import { Title } from '@/contexts/project/domain/vo/title.vo';
+import { Type } from 'class-transformer';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProjectDtoRequest {
   @IsString()
@@ -43,4 +43,12 @@ export class UpdateProjectDtoRequest {
   @IsString()
   @IsOptional()
   image?: string;
+
+  @IsArray()
+  @IsOptional()
+  coverImages?: string[];
+
+  @IsString()
+  @IsOptional()
+  readme?: string;
 }
