@@ -5,8 +5,8 @@ export interface Notification {
   senderId: string;
   type: NotificationType;
   payload: Record<string, unknown>;
-  createdAt: string;
-  readAt: string | null;
+  createdAt: Date;
+  readAt: Date | null;
 }
 
 export type NotificationType =

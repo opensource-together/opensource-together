@@ -48,6 +48,12 @@ export const useNotificationStore = create<
 
       addNotification: (notification) => {
         const { notifications, unreadCount } = get();
+
+        const notificationExists = notifications.some(
+          (n) => n.id === notification.id
+        );
+        if (notificationExists) return;
+
         const newNotifications = [notification, ...notifications];
         const newUnreadCount = notification.readAt
           ? unreadCount
@@ -61,9 +67,7 @@ export const useNotificationStore = create<
       markAsRead: (notificationId) => {
         const { notifications, unreadCount } = get();
         const updatedNotifications = notifications.map((n) =>
-          n.id === notificationId
-            ? { ...n, readAt: new Date().toISOString() }
-            : n
+          n.id === notificationId ? { ...n, readAt: new Date() } : n
         );
         const newUnreadCount = Math.max(0, unreadCount - 1);
         set({
@@ -76,7 +80,7 @@ export const useNotificationStore = create<
         const { notifications } = get();
         const updatedNotifications = notifications.map((n) => ({
           ...n,
-          readAt: n.readAt || new Date().toISOString(),
+          readAt: n.readAt || new Date(),
         }));
         set({
           notifications: updatedNotifications,
