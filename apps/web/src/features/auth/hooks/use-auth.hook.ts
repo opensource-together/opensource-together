@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
+import { disconnectWebSocket } from "@/features/notifications/services/websocket.service";
+
 import {
   getCurrentUser,
   getGitHubAuthUrl,
@@ -147,6 +149,7 @@ export default function useAuth() {
         queryClient.setQueryData(["user/me"], null);
         setWsToken(null);
         localStorage.removeItem("wsToken");
+        disconnectWebSocket();
         router.push("/");
       },
     },
