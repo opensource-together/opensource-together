@@ -19,6 +19,7 @@ import {
 } from "@/shared/components/ui/sheet";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { NotificationDropdown } from "@/features/notifications/components/notification-dropdown.component";
 
 import { Avatar } from "../ui/avatar";
 import Icon, { IconName } from "../ui/icon";
@@ -314,6 +315,25 @@ export default function Header() {
                     </button>
                   )}
 
+                  {/* Notifications */}
+                  {isAuthenticated && (
+                    <button
+                      onClick={() => {
+                        // TODO: Open notifications panel
+                        setMobileMenuOpen(false);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-black/50 transition-all duration-200 hover:bg-stone-100"
+                    >
+                      <Icon
+                        name="bell"
+                        size="sm"
+                        variant="gray"
+                        className="size-4"
+                      />
+                      <span className="text-sm">Notifications</span>
+                    </button>
+                  )}
+
                   {/* Profile */}
                   {isAuthenticated && (
                     <button
@@ -434,60 +454,65 @@ export default function Header() {
           )}
 
           {isAuthenticated && !showLoadingState && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex items-center gap-1 px-2"
-                >
-                  <Avatar
-                    src={currentUser?.avatarUrl}
-                    name={currentUser?.username}
-                    alt={currentUser?.username}
-                    size="xs"
-                  />
-                  <span className="font-medium tracking-tighter">
-                    {currentUser?.username}
-                  </span>
-                  <Icon name="chevron-down" size="md" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 p-2">
-                <DropdownMenuItem onClick={handleProfile}>
-                  <div className="flex w-full items-center justify-between">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-medium">Mon Profil</span>
-                      <p className="text-xs text-gray-500">
-                        Modifiez votre profil
-                      </p>
+            <>
+              <NotificationDropdown />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-1 px-2"
+                  >
+                    <Avatar
+                      src={currentUser?.avatarUrl}
+                      name={currentUser?.username}
+                      alt={currentUser?.username}
+                      size="xs"
+                    />
+                    <span className="font-medium tracking-tighter">
+                      {currentUser?.username}
+                    </span>
+                    <Icon name="chevron-down" size="md" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64 p-2">
+                  <DropdownMenuItem onClick={handleProfile}>
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium">Mon Profil</span>
+                        <p className="text-xs text-gray-500">
+                          Modifiez votre profil
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Icon name="user" size="sm" variant="gray" />
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Icon name="user" size="sm" variant="gray" />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDashboard}>
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium">Dashboard</span>
+                        <p className="text-xs text-gray-500">
+                          Gestion de projet
+                        </p>
+                      </div>
+                      <Icon name="bagpack" size="sm" />
                     </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDashboard}>
-                  <div className="flex w-full items-center justify-between">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-medium">Dashboard</span>
-                      <p className="text-xs text-gray-500">Gestion de projet</p>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium">Déconnexion</span>
+                        <p className="text-xs text-gray-500">
+                          Déconnexion de votre compte
+                        </p>
+                      </div>
+                      <Icon name="logout" size="sm" variant="gray" />
                     </div>
-                    <Icon name="bagpack" size="sm" />
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout}>
-                  <div className="flex w-full items-center justify-between">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-medium">Déconnexion</span>
-                      <p className="text-xs text-gray-500">
-                        Déconnexion de votre compte
-                      </p>
-                    </div>
-                    <Icon name="logout" size="sm" variant="gray" />
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           )}
         </section>
       </header>
