@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import { socket } from "@/shared/realtime/socket";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import { useNotifications } from "../hooks/use-notifications.hook";
-import {
-  connectWebSocket,
-  disconnectWebSocket,
-} from "../services/websocket.service";
 import { useNotificationStore } from "../stores/notification.store";
 
 export default function NotificationTest() {
@@ -123,13 +120,13 @@ export default function NotificationTest() {
       ]);
 
       // Déconnecter d'abord
-      disconnectWebSocket();
+      socket.disconnect();
 
       // Attendre un peu
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Reconnecter
-      connectWebSocket(wsToken);
+      socket.connect(wsToken);
 
       // Attendre un peu pour que la connexion s'établisse
       await new Promise((resolve) => setTimeout(resolve, 2000));

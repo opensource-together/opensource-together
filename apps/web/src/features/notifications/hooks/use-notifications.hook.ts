@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
+import { notificationSocketService } from "../services/notification-socket.service";
 import { getUnreadNotifications } from "../services/notification.service";
-import { subscribeToNotifications } from "../services/websocket.service";
 import { useNotificationStore } from "../stores/notification.store";
-import { useWebSocketState } from "./use-websocket-state.hook";
 
 export const useNotifications = () => {
   const { isAuthenticated, wsToken } = useAuth();
@@ -21,8 +20,8 @@ export const useNotifications = () => {
     addNotification,
   } = useNotificationStore();
 
-  // Hook WebSocket - se connecte automatiquement quand le token est disponible
-  const { isConnected: wsConnected } = useWebSocketState(wsToken);
+  // État de connexion WebSocket
+  const [wsConnected, setWsConnected] = useState(false);
 
   const {
     data: unreadNotificationsData,
@@ -70,55 +69,30 @@ export const useNotifications = () => {
     }
   }, [unreadError, setError]);
 
-  // Effect pour s'abonner aux notifications WebSocket
+  // Effect pour gérer la connexion WebSocket et l'écoute des notifications
   useEffect(() => {
-    if (!wsConnected) {
+    if (!wsToken) {
+      setWsConnected(false);
       return;
     }
 
-    console.log("🔔 S'abonnant aux notifications WebSocket...");
+    // Démarrer l'écoute des notifications via le service
+    notificationSocketService.startListening(wsToken);
+    setWsConnected(true);
 
-    // S'abonner aux nouvelles notifications
-    const unsubscribe = subscribeToNotifications((message) => {
-      console.log("🔔 Nouvelle notification reçue dans le hook:", message);
-
-      // Le backend envoie directement la notification, pas dans payload
-      const notificationData = message as any;
-
-      // Vérifier que c'est bien une notification complète
-      if (notificationData.id && notificationData.type) {
-        console.log("🔔 Ajout de la notification au store:", notificationData);
-
-        // Transformer createdAt en Date si c'est une string
-        const notification = {
-          ...notificationData,
-          createdAt: notificationData.createdAt
-            ? new Date(notificationData.createdAt)
-            : new Date(),
-          readAt: notificationData.readAt
-            ? new Date(notificationData.readAt)
-            : null,
-        };
-
-        addNotification(notification);
-
-        // Vérifier que le store a été mis à jour
-        const updatedState = useNotificationStore.getState();
-        console.log("🔔 État du store après ajout:", {
-          notificationsCount: updatedState.notifications.length,
-          unreadCount: updatedState.unreadCount,
-        });
-      } else {
-        console.warn(
-          "🔔 Message reçu mais pas une notification valide:",
-          message
-        );
-      }
+    // S'abonner aux notifications du service
+    const unsubscribe = notificationSocketService.subscribe((notification) => {
+      console.log("🔔 Notification reçue dans le hook:", notification);
+      addNotification(notification);
     });
 
-    // Nettoyage de l'abonnement
-    return unsubscribe;
-  }, [wsConnected, addNotification]);
+    // Nettoyage
+    return () => {
+      unsubscribe();
+      notificationSocketService.stopListening();
+      setWsConnected(false);
+    };
+  }, [wsToken, addNotification]);
 
   const openNotifications = () => setIsOpen(true);
   const closeNotifications = () => setIsOpen(false);

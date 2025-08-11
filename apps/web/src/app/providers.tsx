@@ -7,16 +7,12 @@ import { ReactNode } from "react";
 
 import { getQueryClient } from "@/shared/lib/query-client";
 
-import { WebSocketProvider } from "@/features/notifications/components/websocket-provider.component";
-
 export function Providers({ children }: { children: ReactNode }) {
   const queryClient = getQueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>
-        <WebSocketProvider>{children}</WebSocketProvider>
-      </ReactQueryStreamedHydration>
+      <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

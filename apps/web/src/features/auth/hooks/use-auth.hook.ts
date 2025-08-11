@@ -3,8 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
-
-import { disconnectWebSocket } from "@/features/notifications/services/websocket.service";
+import { socket } from "@/shared/realtime/socket";
 
 import {
   getCurrentUser,
@@ -149,7 +148,7 @@ export default function useAuth() {
         queryClient.setQueryData(["user/me"], null);
         setWsToken(null);
         localStorage.removeItem("wsToken");
-        disconnectWebSocket();
+        socket.disconnect();
         router.push("/");
       },
     },
