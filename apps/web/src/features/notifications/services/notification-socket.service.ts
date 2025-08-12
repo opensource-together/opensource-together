@@ -37,6 +37,18 @@ class NotificationSocketService {
         this.notifyListeners(formattedNotification);
       });
     });
+
+    socket.on("notification-read", (message: any) => {
+      if (message.id && message.type) {
+        const updatedNotification = {
+          ...message,
+          createdAt: new Date(message.createdAt),
+          readAt: message.readAt ? new Date(message.readAt) : null,
+        };
+
+        this.notifyListeners(updatedNotification);
+      }
+    });
   }
 
   stopListening() {
