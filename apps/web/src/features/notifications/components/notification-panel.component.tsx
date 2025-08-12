@@ -13,7 +13,7 @@ import { useNotifications } from "../hooks/use-notifications.hook";
 import NotificationList from "./notification-list.component";
 
 export const NotificationPanel = () => {
-  const { unreadCount, useMarkAllAsRead } = useNotifications();
+  const { unreadCount, markAllAsRead } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNotificationClick = () => setIsOpen(false);
@@ -42,7 +42,7 @@ export const NotificationPanel = () => {
               <h3 className="font-medium">Notifications</h3>
               {unreadCount > 0 && (
                 <p
-                  onClick={useMarkAllAsRead}
+                  onClick={markAllAsRead}
                   className="cursor-pointer rounded-full bg-black/3 px-2 py-1 text-xs text-black/80"
                 >
                   Marquer tout comme lu

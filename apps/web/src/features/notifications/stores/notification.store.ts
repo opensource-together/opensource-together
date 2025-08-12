@@ -1,19 +1,19 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import { Notification } from "../types/notification.type";
+import { NotificationType } from "../types/notification.type";
 
 interface NotificationState {
-  notifications: Notification[];
+  notifications: NotificationType[];
   unreadCount: number;
   isLoading: boolean;
   error: string | null;
 }
 
 interface NotificationActions {
-  setNotifications: (notifications: Notification[]) => void;
-  addNotification: (notification: Notification) => void;
-  updateNotification: (notification: Notification) => void;
+  setNotifications: (notifications: NotificationType[]) => void;
+  addNotification: (notification: NotificationType) => void;
+  updateNotification: (notification: NotificationType) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;

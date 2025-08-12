@@ -1,6 +1,9 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { UnreadNotificationsResponse } from "../types/notification.type";
+import {
+  MarkNotificationReadResponse,
+  UnreadNotificationsResponse,
+} from "../types/notification.type";
 
 export async function getUnreadNotifications(): Promise<UnreadNotificationsResponse> {
   try {
@@ -23,7 +26,7 @@ export async function getUnreadNotifications(): Promise<UnreadNotificationsRespo
 
 export async function markNotificationAsRead(
   notificationId: string
-): Promise<void> {
+): Promise<MarkNotificationReadResponse> {
   try {
     const response = await fetch(
       `${API_BASE_URL}/notifications/${notificationId}/read`,
@@ -39,12 +42,14 @@ export async function markNotificationAsRead(
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    return response.json();
   } catch (error) {
     throw new Error(`Failed to mark notification as read: ${error}`);
   }
 }
 
-export async function markAllNotificationsAsRead(): Promise<void> {
+export async function markAllNotificationsAsRead(): Promise<MarkNotificationReadResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/read-all`, {
       method: "PATCH",
@@ -57,6 +62,8 @@ export async function markAllNotificationsAsRead(): Promise<void> {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    return response.json();
   } catch (error) {
     throw new Error(`Failed to mark all notifications as read: ${error}`);
   }

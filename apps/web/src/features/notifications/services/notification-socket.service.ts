@@ -1,9 +1,9 @@
 import { socket } from "@/shared/realtime/socket";
 
-import { Notification } from "../types/notification.type";
+import { NotificationType } from "../types/notification.type";
 
 class NotificationSocketService {
-  private listeners: Set<(notification: Notification) => void> = new Set();
+  private listeners: Set<(notification: NotificationType) => void> = new Set();
   private isListening = false;
 
   startListening(token?: string) {
@@ -15,37 +15,23 @@ class NotificationSocketService {
       socket.connect(token);
     }
 
-    socket.on("new-notification", (message: any) => {
+    socket.on("new-notification", (message: NotificationType) => {
       if (message.id && message.type) {
-        const notification = {
-          ...message,
-          createdAt: new Date(message.createdAt),
-          readAt: message.readAt ? new Date(message.readAt) : null,
-        };
-
+        const notification = message;
         this.notifyListeners(notification);
       }
     });
 
-    socket.on("unread-notifications", (notifications: any[]) => {
+    socket.on("unread-notifications", (notifications: NotificationType[]) => {
       notifications.forEach((notification) => {
-        const formattedNotification = {
-          ...notification,
-          createdAt: new Date(notification.createdAt),
-          readAt: notification.readAt ? new Date(notification.readAt) : null,
-        };
+        const formattedNotification = notification;
         this.notifyListeners(formattedNotification);
       });
     });
 
-    socket.on("notification-read", (message: any) => {
+    socket.on("notification-read", (message: NotificationType) => {
       if (message.id && message.type) {
-        const updatedNotification = {
-          ...message,
-          createdAt: new Date(message.createdAt),
-          readAt: message.readAt ? new Date(message.readAt) : null,
-        };
-
+        const updatedNotification = message;
         this.notifyListeners(updatedNotification);
       }
     });
@@ -57,7 +43,7 @@ class NotificationSocketService {
     this.isListening = false;
   }
 
-  subscribe(callback: (notification: Notification) => void): () => void {
+  subscribe(callback: (notification: NotificationType) => void): () => void {
     this.listeners.add(callback);
 
     return () => {
@@ -65,7 +51,7 @@ class NotificationSocketService {
     };
   }
 
-  private notifyListeners(notification: Notification) {
+  private notifyListeners(notification: NotificationType) {
     this.listeners.forEach((callback) => {
       try {
         callback(notification);

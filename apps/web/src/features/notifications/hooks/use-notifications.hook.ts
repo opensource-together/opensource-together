@@ -103,11 +103,11 @@ export const useNotifications = () => {
     };
   }, [wsToken, addNotification, updateNotification, notifications]);
 
-  const useMarkAsRead = (notificationId: string) => {
+  const markAsRead = (notificationId: string) => {
     markNotificationAsRead(notificationId);
   };
 
-  const useMarkAllAsRead = () => {
+  const markAllAsRead = () => {
     markAllNotificationsAsRead();
   };
 
@@ -124,7 +124,7 @@ export const useNotifications = () => {
     wsConnected,
 
     // Actions
-    useMarkAsRead,
-    useMarkAllAsRead,
+    markAsRead,
+    markAllAsRead,
   };
 };

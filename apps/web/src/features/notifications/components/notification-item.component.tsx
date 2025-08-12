@@ -6,22 +6,22 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
 
 import { useNotifications } from "../hooks/use-notifications.hook";
-import { Notification } from "../types/notification.type";
+import { NotificationType } from "../types/notification.type";
 
 export default function NotificationItem({
   notification,
   onNotificationClick,
 }: {
-  notification: Notification;
+  notification: NotificationType;
   onNotificationClick: () => void;
 }) {
-  const { useMarkAsRead } = useNotifications();
+  const { markAsRead } = useNotifications();
   const router = useRouter();
   const isRead = !!notification.readAt;
 
   const handleNotificationClick = () => {
     if (!isRead) {
-      useMarkAsRead(notification.id);
+      markAsRead(notification.id);
     }
 
     // Redirection selon le type de notification
@@ -33,14 +33,19 @@ export default function NotificationItem({
     onNotificationClick();
   };
 
-  const getNotificationDetails = (notification: Notification) => {
-    const payload = notification.payload as any;
+  const getNotificationDetails = (notification: NotificationType) => {
+    const payload = notification.payload as {
+      project: { title: string };
+      projectRole: { title: string };
+      userProfile: { name: string; avatarUrl: string };
+      message: string;
+    };
 
     switch (notification.type) {
       case "project.role.application.created":
         if (payload?.project && payload?.projectRole && payload?.userProfile) {
           return {
-            title: `a candidaté à votre rôle`,
+            title: "a candidaté à votre rôle",
             message: payload.message,
             user: payload.userProfile.name,
             project: payload.project.title,
@@ -144,7 +149,7 @@ export default function NotificationItem({
                       addSuffix: true,
                       locale: fr,
                     });
-                  } catch (error) {
+                  } catch (_error) {
                     return "Date invalide";
                   }
                 })()}
