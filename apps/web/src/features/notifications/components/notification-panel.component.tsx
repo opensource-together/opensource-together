@@ -13,7 +13,7 @@ import { useNotifications } from "../hooks/use-notifications.hook";
 import NotificationList from "./notification-list.component";
 
 export const NotificationPanel = () => {
-  const { unreadCount } = useNotifications();
+  const { unreadCount, useMarkAllAsRead } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNotificationClick = () => setIsOpen(false);
@@ -37,9 +37,17 @@ export const NotificationPanel = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-96 p-0" align="end">
         <div className="p-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between tracking-tighter">
             <div className="flex items-center gap-2">
-              <h3 className="font-medium tracking-tighter">Notifications</h3>
+              <h3 className="font-medium">Notifications</h3>
+              {unreadCount > 0 && (
+                <p
+                  onClick={useMarkAllAsRead}
+                  className="cursor-pointer rounded-full bg-black/3 px-2 py-1 text-xs text-black/80"
+                >
+                  Marquer tout comme lu
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -31,7 +31,7 @@ export default function NotificationList({
 
   if (error) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-center text-black/50">
         <Icon name="cross" size="sm" variant="gray" className="mx-auto mb-2" />
         <p className="text-sm">Erreur lors du chargement des notifications</p>
       </div>
@@ -40,7 +40,7 @@ export default function NotificationList({
 
   if (notifications.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-center text-black/50">
         <Icon name="bell" size="md" variant="gray" className="mx-auto mb-2" />
         <p className="text-sm">Aucune notification</p>
       </div>

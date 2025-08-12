@@ -6,6 +6,7 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { notificationSocketService } from "../services/notification-socket.service";
 import {
   getUnreadNotifications,
+  markAllNotificationsAsRead,
   markNotificationAsRead,
 } from "../services/notification.service";
 import { useNotificationStore } from "../stores/notification.store";
@@ -102,8 +103,13 @@ export const useNotifications = () => {
     };
   }, [wsToken, addNotification, updateNotification, notifications]);
 
-  const useMarkAsRead = (notificationId: string) =>
+  const useMarkAsRead = (notificationId: string) => {
     markNotificationAsRead(notificationId);
+  };
+
+  const useMarkAllAsRead = () => {
+    markAllNotificationsAsRead();
+  };
 
   // État combiné
   const isLoading = storeLoading || isLoadingUnread;
@@ -119,5 +125,6 @@ export const useNotifications = () => {
 
     // Actions
     useMarkAsRead,
+    useMarkAllAsRead,
   };
 };

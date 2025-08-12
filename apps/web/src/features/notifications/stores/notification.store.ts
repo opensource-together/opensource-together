@@ -14,11 +14,6 @@ interface NotificationActions {
   setNotifications: (notifications: Notification[]) => void;
   addNotification: (notification: Notification) => void;
   updateNotification: (notification: Notification) => void;
-  markAsRead: (notificationId: string) => void;
-  markAllAsRead: () => void;
-  setUnreadCount: (count: number) => void;
-  incrementUnreadCount: () => void;
-  decrementUnreadCount: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
@@ -76,42 +71,6 @@ export const useNotificationStore = create<
           notifications: updatedNotifications,
           unreadCount: newUnreadCount,
         });
-      },
-
-      markAsRead: (notificationId) => {
-        const { notifications, unreadCount } = get();
-        const updatedNotifications = notifications.map((n) =>
-          n.id === notificationId ? { ...n, readAt: new Date() } : n
-        );
-        const newUnreadCount = Math.max(0, unreadCount - 1);
-        set({
-          notifications: updatedNotifications,
-          unreadCount: newUnreadCount,
-        });
-      },
-
-      markAllAsRead: () => {
-        const { notifications } = get();
-        const updatedNotifications = notifications.map((n) => ({
-          ...n,
-          readAt: n.readAt || new Date(),
-        }));
-        set({
-          notifications: updatedNotifications,
-          unreadCount: 0,
-        });
-      },
-
-      setUnreadCount: (count) => set({ unreadCount: count }),
-
-      incrementUnreadCount: () => {
-        const { unreadCount } = get();
-        set({ unreadCount: unreadCount + 1 });
-      },
-
-      decrementUnreadCount: () => {
-        const { unreadCount } = get();
-        set({ unreadCount: Math.max(0, unreadCount - 1) });
       },
 
       setLoading: (loading) => set({ isLoading: loading }),
