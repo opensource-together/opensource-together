@@ -10,6 +10,7 @@ import { deleteUser } from 'supertokens-node';
 // import { CreateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/create-user-gh-token.command';
 // import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
 import { UpdateUserGhTokenCommand } from '@/contexts/github/use-cases/commands/update-user-gh-token.command';
+import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
 import { Logger } from '@nestjs/common';
 import { githubProviderConfig } from './github/github-provider.config';
 import { handleGithubSignUp } from './github/github-signInUp';
@@ -112,6 +113,14 @@ export const thirdPartyRecipe = ({
                       accessToken,
                     );
                     await commandBus.execute(saveUserGhTokenCommand);
+
+                    const updateUserCommand = new UpdateUserCommand(id, {
+                      avatarUrl: githubUserInfo.user.avatar_url,
+                      bio: githubUserInfo.user.bio || undefined,
+                      location: githubUserInfo.user.location || undefined,
+                      company: githubUserInfo.user.company || undefined,
+                    });
+                    await commandBus.execute(updateUserCommand);
                   }
                 }
               }
