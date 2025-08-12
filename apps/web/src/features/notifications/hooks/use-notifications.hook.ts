@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import { notificationSocketService } from "../services/notification-socket.service";
-import { getUnreadNotifications } from "../services/notification.service";
+import {
+  getUnreadNotifications,
+  markNotificationAsRead,
+} from "../services/notification.service";
 import { useNotificationStore } from "../stores/notification.store";
 
 export const useNotifications = () => {
@@ -18,6 +21,7 @@ export const useNotifications = () => {
     setIsOpen,
     setError,
     addNotification,
+    updateNotification,
   } = useNotificationStore();
 
   // État de connexion WebSocket
@@ -82,8 +86,14 @@ export const useNotifications = () => {
 
     // S'abonner aux notifications du service
     const unsubscribe = notificationSocketService.subscribe((notification) => {
-      console.log("🔔 Notification reçue dans le hook:", notification);
-      addNotification(notification);
+      const existingNotification = notifications.find(
+        (n) => n.id === notification.id
+      );
+      if (existingNotification) {
+        updateNotification(notification);
+      } else {
+        addNotification(notification);
+      }
     });
 
     // Nettoyage
@@ -92,10 +102,14 @@ export const useNotifications = () => {
       notificationSocketService.stopListening();
       setWsConnected(false);
     };
-  }, [wsToken, addNotification]);
+  }, [wsToken, addNotification, updateNotification, notifications]);
 
   const openNotifications = () => setIsOpen(true);
   const closeNotifications = () => setIsOpen(false);
+
+  const useMarkAsRead = async (notificationId: string) => {
+    await markNotificationAsRead(notificationId);
+  };
 
   // État combiné
   const isLoading = storeLoading || isLoadingUnread;
@@ -113,5 +127,6 @@ export const useNotifications = () => {
     // Actions
     openNotifications,
     closeNotifications,
+    useMarkAsRead,
   };
 };

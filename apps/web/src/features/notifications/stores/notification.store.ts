@@ -14,6 +14,7 @@ interface NotificationState {
 interface NotificationActions {
   setNotifications: (notifications: Notification[]) => void;
   addNotification: (notification: Notification) => void;
+  updateNotification: (notification: Notification) => void;
   markAsRead: (notificationId: string) => void;
   markAllAsRead: () => void;
   setUnreadCount: (count: number) => void;
@@ -60,6 +61,22 @@ export const useNotificationStore = create<
           : unreadCount + 1;
         set({
           notifications: newNotifications,
+          unreadCount: newUnreadCount,
+        });
+      },
+
+      updateNotification: (updatedNotification) => {
+        const { notifications } = get();
+        const updatedNotifications = notifications.map((n) =>
+          n.id === updatedNotification.id ? updatedNotification : n
+        );
+
+        const newUnreadCount = updatedNotifications.filter(
+          (n) => !n.readAt
+        ).length;
+
+        set({
+          notifications: updatedNotifications,
           unreadCount: newUnreadCount,
         });
       },

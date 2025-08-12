@@ -18,7 +18,12 @@ export default function NotificationItem({
 }: {
   notification: Notification;
 }) {
+  const { useMarkAsRead } = useNotifications();
   const isRead = !!notification.readAt;
+
+  const handleNotificationClick = async () => {
+    if (!isRead) await useMarkAsRead(notification.id);
+  };
 
   const getNotificationText = (notification: Notification) => {
     switch (notification.type) {
@@ -98,6 +103,7 @@ export default function NotificationItem({
       className={`cursor-pointer rounded-xl border-b border-gray-100 p-4 transition-colors last:border-b-0 hover:bg-gray-50 ${
         isRead ? "bg-gray-50" : "bg-white"
       }`}
+      onClick={handleNotificationClick}
     >
       <div className="flex items-start gap-3">
         <div className="mt-1 flex-shrink-0">
