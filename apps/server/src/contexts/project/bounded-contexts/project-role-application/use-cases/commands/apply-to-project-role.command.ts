@@ -1,33 +1,35 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
-import { Result } from '@/libs/result';
-import {
-  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
-  ProjectRoleApplicationRepositoryPort,
-} from '../ports/project-role-application.repository.port';
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import {
   PROJECT_ROLE_REPOSITORY_PORT,
   ProjectRoleRepositoryPort,
 } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';
+import { Project } from '@/contexts/project/domain/project.entity';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
 import {
-  ProjectRoleApplication,
-  ProjectRoleApplicationValidationErrors,
-} from '../../domain/project-role-application.entity';
-import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import { USER_REPOSITORY_PORT } from '@/contexts/user/use-cases/ports/user.repository.port';
-import { UserRepositoryPort } from '@/contexts/user/use-cases/ports/user.repository.port';
+  USER_REPOSITORY_PORT,
+  UserRepositoryPort,
+} from '@/contexts/user/use-cases/ports/user.repository.port';
+import { Result } from '@/libs/result';
 import {
   MAILING_SERVICE_PORT,
   MailingServicePort,
-  SendEmailPayload,
 } from '@/mailing/ports/mailing.service.port';
-import { KeyFeature } from '../../../project-key-feature/domain/key-feature.entity';
+import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ProjectGoals } from '../../../project-goals/domain/project-goals.entity';
-import { Project } from '@/contexts/project/domain/project.entity';
+import { KeyFeature } from '../../../project-key-feature/domain/key-feature.entity';
+import {
+  ProjectRoleApplication,
+  ProjectRoleApplicationValidationErrors,
+} from '../../domain/project-role-application.entity';
+import {
+  PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
+  ProjectRoleApplicationRepositoryPort,
+} from '../ports/project-role-application.repository.port';
 
 export class ApplyToProjectRoleCommand implements ICommand {
   constructor(
@@ -56,6 +58,8 @@ export class ApplyToProjectRoleCommandHandler
     private readonly projectRepo: ProjectRepositoryPort,
     @Inject(MAILING_SERVICE_PORT)
     private readonly mailingService: MailingServicePort,
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(
@@ -147,7 +151,23 @@ export class ApplyToProjectRoleCommandHandler
       return Result.fail('You cannot apply to your own project');
     }
 
-    // 8. Créer la candidature
+    // 8. Récupérer les informations de l'utilisateur candidat
+    const userResult = await this.userRepo.findById(userId);
+    if (!userResult.success) {
+      return Result.fail('User not found');
+    }
+    const userData = userResult.value.toPrimitive();
+
+    // 9. Récupérer les informations de l'utilisateur propriétaire du projet
+    const projectOwnerResult = await this.userRepo.findById(
+      projectData.ownerId,
+    );
+    if (!projectOwnerResult.success) {
+      return Result.fail('Project owner not found');
+    }
+    const projectOwnerData = projectOwnerResult.value.toPrimitive();
+
+    // 10. Créer la candidature
     const applicationResult = ProjectRoleApplication.create({
       projectId: projectData.id!,
       project: {
@@ -157,18 +177,18 @@ export class ApplyToProjectRoleCommandHandler
         description: projectData.description,
         image: projectData.image,
         owner: {
-          id: projectData.ownerId,
-          username: projectData.owner?.username || 'unknown',
-          login: projectData.owner?.login || 'unknown',
-          email: projectData.owner?.email || 'unknown',
-          provider: projectData.owner?.provider || 'unknown',
-          jobTitle: null,
-          location: null,
-          company: null,
-          bio: null,
-          createdAt: projectData.owner?.createdAt || new Date(),
-          updatedAt: projectData.owner?.updatedAt || new Date(),
-          avatarUrl: projectData.owner?.avatarUrl || null,
+          id: projectOwnerData.id,
+          username: projectOwnerData.username,
+          login: projectOwnerData.login,
+          email: projectOwnerData.email,
+          provider: projectOwnerData.provider,
+          jobTitle: projectOwnerData.jobTitle,
+          location: projectOwnerData.location,
+          company: projectOwnerData.company,
+          bio: projectOwnerData.bio,
+          createdAt: projectOwnerData.createdAt || new Date(),
+          updatedAt: projectOwnerData.updatedAt || new Date(),
+          avatarUrl: projectOwnerData.avatarUrl,
         },
       },
       projectRoleTitle: projectRole.toPrimitive().title,
@@ -184,8 +204,8 @@ export class ApplyToProjectRoleCommandHandler
       motivationLetter,
       userProfile: {
         id: userId,
-        username: '', // Sera rempli par le mapper depuis le profile
-        avatarUrl: undefined,
+        username: userData.username,
+        avatarUrl: userData.avatarUrl,
       },
     });
 
@@ -193,34 +213,34 @@ export class ApplyToProjectRoleCommandHandler
       return Result.fail(applicationResult.error);
     }
 
-    // 9. Sauvegarder la candidature
+    // 11. Sauvegarder la candidature
     const savedApplication = await this.applicationRepo.create(
       applicationResult.value,
     );
     if (!savedApplication.success) {
       return Result.fail('Unable to create application');
     }
-    // 10. Envoyer un email au propriétaire du projet
-    const projectOwner = await this.userRepo.findById(projectData.ownerId);
-    if (!projectOwner.success) {
-      return Result.fail('Unable to find project owner');
-    }
-    const projectOwnerData = projectOwner.value.toPrimitive();
-    const projectOwnerEmail = projectOwnerData.email;
-    const projectOwnerUsername = projectOwnerData.username;
 
-    const emailPayload: SendEmailPayload = {
-      to: projectOwnerEmail,
-      subject: `Nouvelle candidature pour le rôle ${projectRole.toPrimitive().title} dans le projet ${projectData.title}`,
-      html: `
-        <p>Salut ${projectOwnerUsername},</p>
-        <p>Une nouvelle candidature a été soumise pour le rôle ${projectRole.toPrimitive().title} dans votre projet ${projectData.title}.</p>
-        <p>Vous pouvez la consulter <a href="${process.env.FRONTEND_URL}/projects/${projectData.id}/applications">ici</a>.</p>
-        <p>Cordialement,</p>
-        <p>L'équipe Open Source Together</p>
-      `,
-    };
-    await this.mailingService.sendEmail(emailPayload);
+    // 12. Émettre l'événement de candidature pour déclencher les notifications
+    const savedApplicationData = savedApplication.value.toPrimitive();
+    this.eventEmitter.emit('project.role.application.created', {
+      projectOwnerId: projectData.ownerId,
+      applicantId: userId,
+      applicantName: userData.username,
+      applicantAvatarUrl: userData.avatarUrl,
+      projectId: projectData.id!,
+      projectTitle: projectData.title,
+      projectShortDescription: projectData.shortDescription,
+      projectImage: projectData.image,
+      projectAuthor: projectOwnerData,
+      roleName: projectRole.toPrimitive().title,
+      projectRole: projectRole.toPrimitive(),
+      applicationId: savedApplicationData.id,
+      selectedKeyFeatures: validKeyFeatures.map((feature) => ({ feature })),
+      selectedProjectGoals: validProjectGoals.map((goal) => ({ goal })),
+      motivationLetter: motivationLetter,
+      message: `Une nouvelle candidature a été soumise pour le rôle ${projectRole.toPrimitive().title} dans votre projet ${projectData.title}.`,
+    });
 
     return Result.ok(savedApplication.value);
   }
