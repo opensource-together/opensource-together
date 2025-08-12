@@ -65,6 +65,7 @@ export interface ProjectRoleApplicationCreatedEvent {
   projectOwnerId: string;
   applicantId: string;
   applicantName: string;
+  applicantAvatarUrl?: string;
   projectId: string;
   projectTitle: string;
   projectShortDescription: string;

@@ -227,6 +227,7 @@ export class ApplyToProjectRoleCommandHandler
       projectOwnerId: projectData.ownerId,
       applicantId: userId,
       applicantName: userData.username,
+      applicantAvatarUrl: userData.avatarUrl,
       projectId: projectData.id!,
       projectTitle: projectData.title,
       projectShortDescription: projectData.shortDescription,

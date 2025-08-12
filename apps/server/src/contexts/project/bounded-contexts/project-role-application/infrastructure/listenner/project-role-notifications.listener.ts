@@ -52,7 +52,7 @@ export class ProjectRoleApplicationListener {
       userProfile: {
         id: event.applicantId,
         name: event.applicantName,
-        avatarUrl: undefined, // Sera récupéré côté frontend si nécessaire
+        avatarUrl: event.applicantAvatarUrl,
       },
     };
 
