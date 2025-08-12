@@ -36,66 +36,59 @@ export const useNotifications = () => {
     enabled: isAuthenticated,
   });
 
-  // Effect pour traiter les données reçues de l'API
+  // Effect to handle API notification data and merge with existing notifications
   useEffect(() => {
     if (unreadNotificationsData?.success) {
-      // Fusionner avec les notifications existantes au lieu de les écraser
       const { notifications: existingNotifications } =
         useNotificationStore.getState();
 
-      // Créer un Map des notifications existantes par ID pour éviter les doublons
-      const existingNotificationsMap = new Map(
-        existingNotifications.map((n) => [n.id, n])
-      );
+      // Map existing notifications by ID to avoid duplicates
+      const existingMap = new Map(existingNotifications.map((n) => [n.id, n]));
 
-      // Ajouter les nouvelles notifications de l'API
+      // Add new notifications from API if not already present
       unreadNotificationsData.data.forEach((apiNotification) => {
-        if (!existingNotificationsMap.has(apiNotification.id)) {
-          existingNotificationsMap.set(apiNotification.id, apiNotification);
+        if (!existingMap.has(apiNotification.id)) {
+          existingMap.set(apiNotification.id, apiNotification);
         }
       });
 
-      // Convertir le Map en array et mettre à jour le store
-      const mergedNotifications = Array.from(existingNotificationsMap.values());
-      setNotifications(mergedNotifications);
+      // Update the store with the merged notifications
+      setNotifications(Array.from(existingMap.values()));
     }
   }, [unreadNotificationsData, setNotifications]);
 
-  // Effect pour traiter les erreurs
+  // Effect to handle errors from the API
   useEffect(() => {
     if (unreadError) {
       setError(
         unreadError instanceof Error
           ? unreadError.message
-          : "Erreur lors du chargement des notifications"
+          : "Error loading notifications"
       );
     }
   }, [unreadError, setError]);
 
-  // Effect pour gérer la connexion WebSocket et l'écoute des notifications
+  // Effect to manage WebSocket connection and real-time notifications
   useEffect(() => {
     if (!wsToken) {
       setWsConnected(false);
       return;
     }
 
-    // Démarrer l'écoute des notifications via le service
     notificationSocketService.startListening(wsToken);
     setWsConnected(true);
 
-    // S'abonner aux notifications du service
+    // Subscribe to real-time notifications
     const unsubscribe = notificationSocketService.subscribe((notification) => {
-      const existingNotification = notifications.find(
-        (n) => n.id === notification.id
-      );
-      if (existingNotification) {
+      const exists = notifications.find((n) => n.id === notification.id);
+      if (exists) {
         updateNotification(notification);
       } else {
         addNotification(notification);
       }
     });
 
-    // Nettoyage
+    // Cleanup on unmount or token change
     return () => {
       unsubscribe();
       notificationSocketService.stopListening();

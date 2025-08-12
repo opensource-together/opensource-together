@@ -2,10 +2,19 @@ import { socket } from "@/shared/realtime/socket";
 
 import { NotificationType } from "../types/notification.type";
 
+/**
+ * Notification socket service
+ * @description Service responsible for managing real-time notifications via WebSocket.
+ * Allows you to listen, broadcast and subscribe to server notifications.
+ */
 class NotificationSocketService {
   private listeners: Set<(notification: NotificationType) => void> = new Set();
   private isListening = false;
 
+  /**
+   * Start listening for notifications
+   * @param token - The token to connect to the WebSocket
+   */
   startListening(token?: string) {
     if (this.isListening) return;
 
@@ -15,6 +24,10 @@ class NotificationSocketService {
       socket.connect(token);
     }
 
+    /**
+     * Event triggered when a new notification is received.
+     * @param message - The notification message
+     */
     socket.on("new-notification", (message: NotificationType) => {
       if (message.id && message.type) {
         const notification = message;
@@ -22,6 +35,10 @@ class NotificationSocketService {
       }
     });
 
+    /**
+     * Event triggered when unread notifications are received.
+     * @param notifications - The unread notifications
+     */
     socket.on("unread-notifications", (notifications: NotificationType[]) => {
       notifications.forEach((notification) => {
         const formattedNotification = notification;
@@ -29,6 +46,10 @@ class NotificationSocketService {
       });
     });
 
+    /**
+     * Event triggered when a notification is read.
+     * @param message - The notification message
+     */
     socket.on("notification-read", (message: NotificationType) => {
       if (message.id && message.type) {
         const updatedNotification = message;
@@ -43,6 +64,11 @@ class NotificationSocketService {
     this.isListening = false;
   }
 
+  /**
+   * Subscribe to notifications
+   * @param callback - The callback to handle the notification
+   * @returns A function to unsubscribe from the notifications
+   */
   subscribe(callback: (notification: NotificationType) => void): () => void {
     this.listeners.add(callback);
 
@@ -51,6 +77,10 @@ class NotificationSocketService {
     };
   }
 
+  /**
+   * Notify listeners of a notification
+   * @param notification - The notification to notify listeners of
+   */
   private notifyListeners(notification: NotificationType) {
     this.listeners.forEach((callback) => {
       try {

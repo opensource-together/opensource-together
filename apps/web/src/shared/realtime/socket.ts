@@ -1,9 +1,18 @@
 import { Socket, io } from "socket.io-client";
 
+/**
+ * Socket service
+ * @description Service responsible for managing WebSocket connections.
+ * Allows you to connect, disconnect, emit and listen to events.
+ */
 export class SocketService {
   private socket: Socket | null = null;
   private token: string | null = null;
 
+  /**
+   * Connect to WebSocket server with auth token.
+   * Avoids reconnecting if already connected with the same token.
+   */
   connect(token: string) {
     if (this.socket?.connected && this.token === token) return;
 

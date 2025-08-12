@@ -5,6 +5,10 @@ import {
   UnreadNotificationsResponse,
 } from "../types/notification.type";
 
+/**
+ * Get unread notifications
+ * @returns Unread notifications
+ */
 export async function getUnreadNotifications(): Promise<UnreadNotificationsResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/unread`, {
@@ -24,6 +28,11 @@ export async function getUnreadNotifications(): Promise<UnreadNotificationsRespo
   }
 }
 
+/**
+ * Mark a notification as read
+ * @param notificationId - The ID of the notification to mark as read
+ * @returns The response from the API
+ */
 export async function markNotificationAsRead(
   notificationId: string
 ): Promise<MarkNotificationReadResponse> {
@@ -49,6 +58,10 @@ export async function markNotificationAsRead(
   }
 }
 
+/**
+ * Mark all notifications as read
+ * @returns The response from the API
+ */
 export async function markAllNotificationsAsRead(): Promise<MarkNotificationReadResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/notifications/read-all`, {
