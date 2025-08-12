@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 
+import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
 import {
   Popover,
@@ -52,6 +53,7 @@ export default function NotificationItem({
             user: payload.userProfile.name,
             project: payload.project.title,
             role: payload.projectRole.title,
+            userProfile: payload.userProfile,
           };
         }
         break;
@@ -104,7 +106,20 @@ export default function NotificationItem({
               isRead ? "bg-gray-200" : "bg-blue-100"
             }`}
           >
-            <Icon name="bell" size="sm" variant={isRead ? "gray" : "default"} />
+            {details.userProfile?.avatarUrl ? (
+              <Avatar
+                src={details.userProfile.avatarUrl}
+                name={details.userProfile.name}
+                alt={details.userProfile.name}
+                className="h-full w-full"
+              />
+            ) : (
+              <Icon
+                name="bell"
+                size="sm"
+                variant={isRead ? "gray" : "default"}
+              />
+            )}
           </div>
         </div>
 
