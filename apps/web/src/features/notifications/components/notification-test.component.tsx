@@ -9,13 +9,8 @@ import { useNotifications } from "../hooks/use-notifications.hook";
 import { useNotificationStore } from "../stores/notification.store";
 
 export default function NotificationTest() {
-  const {
-    notifications,
-    unreadCount,
-    wsConnected,
-    openNotifications,
-    useMarkAsRead,
-  } = useNotifications();
+  const { notifications, unreadCount, wsConnected, useMarkAsRead } =
+    useNotifications();
 
   // Accès direct au store pour le débogage
   const storeState = useNotificationStore();
@@ -222,9 +217,6 @@ export default function NotificationTest() {
         <h3 className="font-semibold">🎮 Actions de Test:</h3>
 
         <div className="space-x-2">
-          <Button onClick={openNotifications}>
-            Ouvrir Modal ({unreadCount})
-          </Button>
           <Button onClick={addTestNotification} variant="outline">
             Ajouter Test Notification
           </Button>

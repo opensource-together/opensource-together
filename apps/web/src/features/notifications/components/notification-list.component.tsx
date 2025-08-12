@@ -2,9 +2,13 @@ import Icon from "@/shared/components/ui/icon";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useNotifications } from "../hooks/use-notifications.hook";
-import NotificationItem from "./notification-panel.component";
+import NotificationItem from "./notification-item.component";
 
-export default function NotificationList() {
+export default function NotificationList({
+  onNotificationClick,
+}: {
+  onNotificationClick: () => void;
+}) {
   const { notifications, isLoading, error } = useNotifications();
 
   if (isLoading) {
@@ -48,7 +52,13 @@ export default function NotificationList() {
       {notifications.map((notification, index) => {
         const key = notification.id || `notification-${index}`;
 
-        return <NotificationItem key={key} notification={notification} />;
+        return (
+          <NotificationItem
+            key={key}
+            notification={notification}
+            onNotificationClick={onNotificationClick}
+          />
+        );
       })}
     </div>
   );

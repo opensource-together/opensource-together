@@ -14,11 +14,9 @@ export const useNotifications = () => {
   const { isAuthenticated, wsToken } = useAuth();
   const {
     notifications,
-    isOpen,
     isLoading: storeLoading,
     error: storeError,
     setNotifications,
-    setIsOpen,
     setError,
     addNotification,
     updateNotification,
@@ -104,12 +102,8 @@ export const useNotifications = () => {
     };
   }, [wsToken, addNotification, updateNotification, notifications]);
 
-  const openNotifications = () => setIsOpen(true);
-  const closeNotifications = () => setIsOpen(false);
-
-  const useMarkAsRead = async (notificationId: string) => {
-    await markNotificationAsRead(notificationId);
-  };
+  const useMarkAsRead = (notificationId: string) =>
+    markNotificationAsRead(notificationId);
 
   // État combiné
   const isLoading = storeLoading || isLoadingUnread;
@@ -119,14 +113,11 @@ export const useNotifications = () => {
     // State
     notifications,
     unreadCount: useNotificationStore.getState().unreadCount,
-    isOpen,
     isLoading,
     error,
     wsConnected,
 
     // Actions
-    openNotifications,
-    closeNotifications,
     useMarkAsRead,
   };
 };

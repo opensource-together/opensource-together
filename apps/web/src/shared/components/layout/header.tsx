@@ -19,7 +19,7 @@ import {
 } from "@/shared/components/ui/sheet";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
-import { NotificationDropdown } from "@/features/notifications/components/notification-dropdown.component";
+import { NotificationPanel } from "@/features/notifications/components/notification-panel.component";
 
 import { Avatar } from "../ui/avatar";
 import Icon, { IconName } from "../ui/icon";
@@ -455,7 +455,7 @@ export default function Header() {
 
           {isAuthenticated && !showLoadingState && (
             <>
-              <NotificationDropdown />
+              <NotificationPanel />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -479,7 +479,7 @@ export default function Header() {
                     <div className="flex w-full items-center justify-between">
                       <div className="flex flex-col gap-1">
                         <span className="font-medium">Mon Profil</span>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-black/50">
                           Modifiez votre profil
                         </p>
                       </div>
@@ -492,7 +492,7 @@ export default function Header() {
                     <div className="flex w-full items-center justify-between">
                       <div className="flex flex-col gap-1">
                         <span className="font-medium">Dashboard</span>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-black/50">
                           Gestion de projet
                         </p>
                       </div>
@@ -503,7 +503,7 @@ export default function Header() {
                     <div className="flex w-full items-center justify-between">
                       <div className="flex flex-col gap-1">
                         <span className="font-medium">Déconnexion</span>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-black/50">
                           Déconnexion de votre compte
                         </p>
                       </div>

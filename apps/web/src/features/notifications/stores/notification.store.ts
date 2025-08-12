@@ -6,7 +6,6 @@ import { Notification } from "../types/notification.type";
 interface NotificationState {
   notifications: Notification[];
   unreadCount: number;
-  isOpen: boolean;
   isLoading: boolean;
   error: string | null;
 }
@@ -20,7 +19,6 @@ interface NotificationActions {
   setUnreadCount: (count: number) => void;
   incrementUnreadCount: () => void;
   decrementUnreadCount: () => void;
-  setIsOpen: (isOpen: boolean) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   clearError: () => void;
@@ -30,7 +28,6 @@ interface NotificationActions {
 const initialState: NotificationState = {
   notifications: [],
   unreadCount: 0,
-  isOpen: false,
   isLoading: false,
   error: null,
 };
@@ -116,8 +113,6 @@ export const useNotificationStore = create<
         const { unreadCount } = get();
         set({ unreadCount: Math.max(0, unreadCount - 1) });
       },
-
-      setIsOpen: (isOpen) => set({ isOpen }),
 
       setLoading: (loading) => set({ isLoading: loading }),
 

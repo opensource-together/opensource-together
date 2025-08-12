@@ -1,198 +1,50 @@
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { useState } from "react";
 
-import { Avatar } from "@/shared/components/ui/avatar";
-import Icon from "@/shared/components/ui/icon";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/shared/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
+import Icon from "@/shared/components/ui/icon";
 
 import { useNotifications } from "../hooks/use-notifications.hook";
-import { Notification } from "../types/notification.type";
 import NotificationList from "./notification-list.component";
 
-export default function NotificationItem({
-  notification,
-}: {
-  notification: Notification;
-}) {
-  const { useMarkAsRead } = useNotifications();
-  const isRead = !!notification.readAt;
+export const NotificationPanel = () => {
+  const { unreadCount } = useNotifications();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleNotificationClick = async () => {
-    if (!isRead) await useMarkAsRead(notification.id);
-  };
-
-  const getNotificationText = (notification: Notification) => {
-    switch (notification.type) {
-      case "project.role.application.created":
-        return "Nouvelle candidature pour votre projet";
-      case "project.role.application.accepted":
-        return "Votre candidature a été acceptée";
-      case "project.role.application.rejected":
-        return "Votre candidature a été refusée";
-      case "project.created":
-        return "Nouveau projet créé";
-      case "project.updated":
-        return "Projet mis à jour";
-      case "project.deleted":
-        return "Projet supprimé";
-      case "message.received":
-        return "Nouveau message reçu";
-      default:
-        return notification.object || "Nouvelle notification";
-    }
-  };
-
-  const getNotificationDetails = (notification: Notification) => {
-    const payload = notification.payload as any;
-
-    switch (notification.type) {
-      case "project.role.application.created":
-        if (payload?.project && payload?.projectRole && payload?.userProfile) {
-          return {
-            title: `a candidaté à votre rôle`,
-            message: payload.message,
-            user: payload.userProfile.name,
-            project: payload.project.title,
-            role: payload.projectRole.title,
-            userProfile: payload.userProfile,
-          };
-        }
-        break;
-      case "project.role.application.accepted":
-        if (payload?.project && payload?.projectRole) {
-          return {
-            title: "Votre candidature a été acceptée",
-            message: `Votre candidature pour ${payload.projectRole.title} a été acceptée`,
-            project: payload.project.title,
-            role: payload.projectRole.title,
-          };
-        }
-        break;
-      case "project.role.application.rejected":
-        if (payload?.project && payload?.projectRole) {
-          return {
-            title: "Votre candidature a été refusée",
-            message: `Votre candidature pour ${payload.projectRole.title} a été refusée`,
-            project: payload.project.title,
-            role: payload.projectRole.title,
-          };
-        }
-        break;
-      default:
-        return {
-          title: notification.object,
-          subtitle: "",
-          message: "",
-        };
-    }
-
-    return {
-      title: notification.object,
-      message: "",
-    };
-  };
-
-  const details = getNotificationDetails(notification);
+  const handleNotificationClick = () => setIsOpen(false);
 
   return (
-    <div
-      className={`cursor-pointer rounded-xl border-b border-gray-100 p-4 transition-colors last:border-b-0 hover:bg-gray-50 ${
-        isRead ? "bg-gray-50" : "bg-white"
-      }`}
-      onClick={handleNotificationClick}
-    >
-      <div className="flex items-start gap-3">
-        <div className="mt-1 flex-shrink-0">
-          <div
-            className={`flex h-10 w-10 items-center justify-center rounded-full ${
-              isRead ? "bg-gray-200" : "bg-blue-100"
-            }`}
-          >
-            {details.userProfile?.avatarUrl ? (
-              <Avatar
-                src={details.userProfile.avatarUrl}
-                name={details.userProfile.name}
-                alt={details.userProfile.name}
-                className="h-full w-full"
-              />
-            ) : (
-              <Icon
-                name="bell"
-                size="sm"
-                variant={isRead ? "gray" : "default"}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <p
-                className={`text-sm font-medium ${
-                  isRead ? "text-gray-600" : "text-gray-900"
-                }`}
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <div className="relative">
+            <Icon name="bell" size="md" />
+            {unreadCount > 0 && (
+              <Badge
+                variant="destructive"
+                className="absolute -top-3 -right-4 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs font-medium"
               >
-                {details.user} {details.title}
-              </p>
-
-              {details.message && (
-                <p className="mt-2 text-sm text-gray-700">{details.message}</p>
-              )}
-
-              <p className="mt-2 text-xs text-gray-500">
-                {(() => {
-                  try {
-                    const date = new Date(notification.createdAt);
-                    if (isNaN(date.getTime())) {
-                      return "Date invalide";
-                    }
-                    return formatDistanceToNow(date, {
-                      addSuffix: true,
-                      locale: fr,
-                    });
-                  } catch (error) {
-                    return "Date invalide";
-                  }
-                })()}
-              </p>
-            </div>
-
-            {!isRead && (
-              <div className="ml-2 flex-shrink-0">
-                <div className="size-2 rounded-full bg-blue-500" />
-              </div>
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </Badge>
             )}
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export const NotificationPanel: React.FC = () => {
-  const { isOpen, closeNotifications } = useNotifications();
-
-  return (
-    <Popover open={isOpen} onOpenChange={closeNotifications}>
-      <PopoverTrigger asChild>
-        <div />
-      </PopoverTrigger>
-      <PopoverContent className="w-96 p-0" align="end">
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-96 p-0" align="end">
         <div className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h3 className="font-medium">Notifications</h3>
+              <h3 className="font-medium tracking-tighter">Notifications</h3>
             </div>
           </div>
         </div>
-
-        <NotificationList />
-      </PopoverContent>
-    </Popover>
+        <NotificationList onNotificationClick={handleNotificationClick} />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
