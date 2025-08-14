@@ -1,10 +1,10 @@
 import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
-import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
 import { CancelApplicationCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/cancel-application.command';
+import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
+import { ProjectWithDetails } from '@/contexts/project/infrastructure/repositories/prisma.project.mapper';
 import { FindUserProjectsWithDetailsQuery } from '@/contexts/project/use-cases/queries/find-user-projects-with-details/find-user-projects-with-details.handler';
 import { User } from '@/contexts/user/domain/user.entity';
-import { ProjectWithDetails } from '@/contexts/project/infrastructure/repositories/prisma.project.mapper';
 import { CalculateGitHubStatsUseCase } from '@/contexts/user/use-cases/calculate-github-stats.use-case';
 import { DeleteUserCommand } from '@/contexts/user/use-cases/commands/delete-user.command';
 import { UpdateUserCommand } from '@/contexts/user/use-cases/commands/update-user.command';
@@ -814,7 +814,7 @@ export class UserController {
 
       // Transformer les membres d'équipe
       const teamMembers = projectWithDetails.projectMembers.map((member) => ({
-        id: member.id,
+        id: member.userId,
         name: member.user?.username || 'Unknown',
         avatarUrl: member.user?.avatarUrl,
         role: member.projectRole?.[0]?.title || 'Member',

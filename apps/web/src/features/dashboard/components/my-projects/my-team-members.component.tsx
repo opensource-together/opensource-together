@@ -1,6 +1,7 @@
 "use client";
 
 import { EllipsisVertical } from "lucide-react";
+import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -124,17 +125,19 @@ export default function MyTeamMembers({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64 p-2">
                     <DropdownMenuItem>
-                      <div className="flex w-full items-center justify-between">
-                        <div className="flex flex-col gap-1">
-                          <span className="font-medium">Voir profil</span>
-                          <p className="text-xs text-gray-500">
-                            Voir le profil du membre
-                          </p>
+                      <Link href={`/profile/${member.id}`} className="w-full">
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-medium">Voir profil</span>
+                            <p className="text-xs text-gray-500">
+                              Voir le profil du membre
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Icon name="user" size="sm" variant="gray" />
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Icon name="user" size="sm" variant="gray" />
-                        </div>
-                      </div>
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <div className="flex w-full items-center justify-between">

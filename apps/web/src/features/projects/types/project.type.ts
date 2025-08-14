@@ -4,6 +4,13 @@ export interface Owner {
   avatarUrl?: string;
 }
 
+export interface Contributor {
+  id: string;
+  username: string;
+  avatarUrl: string | null;
+  contributions: number;
+}
+
 export interface TechStack {
   id: string;
   name: string;
@@ -13,14 +20,6 @@ export interface TechStack {
 export interface ExternalLink {
   type: "github" | "website" | "discord" | "twitter" | "linkedin" | "other";
   url: string;
-}
-
-export interface GithubContributor {
-  id: string;
-  login: string;
-  avatar_url: string;
-  html_url: string;
-  contributions: number;
 }
 
 export interface LastCommit {
@@ -36,7 +35,7 @@ export interface LastCommit {
 }
 
 export interface ProjectStats {
-  contributors?: GithubContributor[];
+  contributors?: Contributor[];
   stars?: number;
   forks?: number;
   watchers?: number;

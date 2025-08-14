@@ -9,7 +9,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 
-import { GithubContributor, Project } from "../types/project.type";
+import { Contributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
@@ -49,15 +49,15 @@ export default function ProjectSideBar({
   const allContributors = (() => {
     const ownerContributor = {
       id: project.owner?.id,
-      login: project.owner?.username || "Owner",
-      avatar_url: project.owner?.avatarUrl || "",
-      html_url: `https://github.com/${project.owner?.username}`,
+      username: project.owner?.username || "Owner",
+      avatarUrl: project.owner?.avatarUrl || "",
+      htmlUrl: `https://github.com/${project.owner?.username}`,
       contributions: 999, // To ensure it's first
     };
 
     // Check if the owner is already in the contributors
     const isOwnerInContributors = contributors.some(
-      (contributor) => contributor.login === ownerContributor.login
+      (contributor) => contributor.username === ownerContributor.username
     );
 
     // If the owner is not already in the list, add it first
@@ -72,9 +72,7 @@ export default function ProjectSideBar({
     router.push(`/projects/${project.id}/edit`);
   };
 
-  const handleContributorClick = (contributor: GithubContributor) => {
-    // Pour l'instant, utiliser le login GitHub comme ID
-    // TODO: Remplacer par le vrai ID utilisateur quand disponible
+  const handleContributorClick = (contributor: Contributor) => {
     const userId = contributor.id;
     router.push(`/profile/${userId}`);
   };
@@ -263,14 +261,14 @@ export default function ProjectSideBar({
           <div className="ml-3 flex gap-2">
             {allContributors.slice(0, 5).map((contributor) => (
               <div
-                key={contributor.login}
+                key={contributor.id}
                 className="flex items-center gap-2"
-                title={contributor.login}
+                title={contributor.username}
               >
                 <Avatar
-                  src={contributor.avatar_url}
-                  name={contributor.login}
-                  alt={contributor.login}
+                  src={contributor.avatarUrl}
+                  name={contributor.username}
+                  alt={contributor.username}
                   size="sm"
                   className="-ml-4 cursor-pointer border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
                   onClick={() => handleContributorClick(contributor)}
@@ -281,7 +279,7 @@ export default function ProjectSideBar({
           <div className="text-muted-foreground mt-3 text-xs">
             {allContributors
               .slice(0, 3)
-              .map((contributor) => contributor.login)
+              .map((contributor) => contributor.username)
               .join(", ")}
             {allContributors.length > 3 && (
               <> &amp; {allContributors.length - 3} autres</>

@@ -64,12 +64,7 @@ export class FindProjectByIdHandler
       openIssues: number;
       commits: number;
       lastCommit: LastCommit | null;
-      contributors: {
-        login: string;
-        avatar_url: string;
-        html_url: string;
-        contributions: number;
-      }[];
+      contributors: Contributor[];
     };
 
     const { id, octokit } = query.props;
@@ -77,9 +72,8 @@ export class FindProjectByIdHandler
     if (!project.success) {
       return Result.fail(project.error);
     }
-    const ownerProjectInfo = await this.profileRepo.findById(
-      project.value.toPrimitive().ownerId,
-    );
+    const ownerId = project.value.toPrimitive().ownerId;
+    const ownerProjectInfo = await this.profileRepo.findById(ownerId);
     if (!ownerProjectInfo.success) {
       return Result.fail(ownerProjectInfo.error);
     }
@@ -88,15 +82,32 @@ export class FindProjectByIdHandler
     const ownerAvatarUrl = ownerProjectInfo.value.toPrimitive().avatarUrl;
     const repoName = project.value.toPrimitive().title;
 
+    const projectWithDetails =
+      await this.projectRepo.findUserProjectsWithDetails(ownerId);
+    let contributors: Contributor[] = [];
+
+    if (projectWithDetails.success && projectWithDetails.value.length > 0) {
+      const projectDetails = projectWithDetails.value.find(
+        (p) => p.project.toPrimitive().id === id,
+      );
+      if (projectDetails) {
+        contributors = projectDetails.projectMembers.map((member) => ({
+          id: member.userId,
+          username: member.user.username,
+          avatarUrl: member.user.avatarUrl,
+          contributions: 1,
+        }));
+      }
+    }
+
     let commits: Result<
       { lastCommit: LastCommit | null; commitsNumber: number },
       string
     >;
     let repoInfo: Result<RepositoryInfo, string>;
-    let contributors: Result<Contributor[], string>;
 
     if (octokit) {
-      [commits, repoInfo, contributors] = await Promise.all([
+      [commits, repoInfo] = await Promise.all([
         this.githubRepo.findCommitsByRepository(
           ownerLogin,
           repoName.replace(/\s+/g, '-'),
@@ -107,17 +118,10 @@ export class FindProjectByIdHandler
           repoName.replace(/\s+/g, '-'),
           octokit,
         ),
-        this.githubRepo.findContributorsByRepository(
-          ownerLogin,
-          repoName.replace(/\s+/g, '-'),
-          octokit,
-        ),
       ]);
     } else {
-      // Valeurs par défaut si pas d'octokit
       commits = Result.fail('No authentication');
       repoInfo = Result.fail('No authentication');
-      contributors = Result.fail('No authentication');
     }
 
     const defaultProjectStats: ProjectStats = {
@@ -155,8 +159,8 @@ export class FindProjectByIdHandler
       projectStats.openIssues = openIssues;
     }
 
-    if (contributors.success) {
-      projectStats.contributors = contributors.value;
+    if (contributors.length > 0) {
+      projectStats.contributors = contributors;
     }
 
     return Result.ok({
@@ -167,14 +171,14 @@ export class FindProjectByIdHandler
       },
       project: project.value,
       repositoryInfo: {
-        forks: 0,
-        stars: 0,
-        watchers: 0,
-        openIssues: 0,
+        forks: projectStats.forks,
+        stars: projectStats.stars,
+        watchers: projectStats.watchers,
+        openIssues: projectStats.openIssues,
       },
-      lastCommit: null,
-      contributors: [],
-      commits: 0,
+      lastCommit: projectStats.lastCommit,
+      contributors: projectStats.contributors,
+      commits: projectStats.commits,
     });
   }
 }

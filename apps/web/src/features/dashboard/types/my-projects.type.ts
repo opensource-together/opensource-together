@@ -50,7 +50,7 @@ export interface ApplicationType {
 export interface TeamMemberType {
   id: string;
   name: string;
-  avatarUrl?: string;
+  avatarUrl: string | null;
   role: string;
   joinedAt: Date;
   techStacks?: Array<{

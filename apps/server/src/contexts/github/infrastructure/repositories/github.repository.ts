@@ -7,17 +7,17 @@ import { Result } from '@/libs/result';
 import { Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { toGithubInvitationDto } from './adapters/github-invitation.adapter';
+import { toGithubRepoSuggestionInput } from './adapters/github-repo-suggestion.adapter';
 import { toGithubRepositoryDto } from './adapters/github-repository.adapter';
 import { GithubInvitationDto } from './dto/github-invitation.dto';
 import { GithubRepositoryPermissionsDto } from './dto/github-permissions.dto';
 import { GithubRepositoryDto } from './dto/github-repository.dto';
-import { GithubRepoSuggestionInput } from './inputs/github-repo-suggestion.input';
-import { InviteUserToRepoInput } from './inputs/invite-user-to-repo.inputs.dto';
 import {
   adaptGraphqlResponse,
   GithubRepositorySuggestionGraphqlResponse,
 } from './graphql/github-repository-suggestion.graphql';
-import { toGithubRepoSuggestionInput } from './adapters/github-repo-suggestion.adapter';
+import { GithubRepoSuggestionInput } from './inputs/github-repo-suggestion.input';
+import { InviteUserToRepoInput } from './inputs/invite-user-to-repo.inputs.dto';
 
 @Injectable()
 export class GithubRepository implements GithubRepositoryPort {
@@ -163,55 +163,6 @@ export class GithubRepository implements GithubRepositoryPort {
         commitsNumber: 0,
       });
       // return Result.fail('Failed to fetch commits');
-    }
-  }
-
-  async findContributorsByRepository(
-    owner: string,
-    repo: string,
-    octokit: Octokit,
-  ): Promise<
-    Result<
-      Array<{
-        id: number;
-        login: string;
-        avatar_url: string;
-        html_url: string;
-        contributions: number;
-      }>,
-      string
-    >
-  > {
-    try {
-      const response = await octokit.rest.repos.listContributors({
-        owner,
-        repo,
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      });
-      if (!Array.isArray(response.data)) {
-        this.Logger.error(
-          'Unexpected response format for contributors',
-          response.data,
-        );
-        return Result.ok([]);
-      }
-
-      const contributors = response.data.map((contributor) => ({
-        id: contributor.id as number,
-        login: contributor.login as string,
-        avatar_url: contributor.avatar_url as string,
-        html_url: contributor.html_url as string,
-        contributions: contributor.contributions,
-      }));
-      return Result.ok(contributors);
-    } catch (e: any) {
-      this.Logger.error('error fetching contributors', e);
-      // if (e.status === 409 && e.message.includes('Git Repository is empty')) {
-      // }
-      return Result.ok([]);
-      // return Result.fail('Failed to fetch contributors');
     }
   }
 
