@@ -53,9 +53,5 @@ export interface TeamMemberType {
   avatarUrl: string | null;
   role: string;
   joinedAt: Date;
-  techStacks?: Array<{
-    id: string;
-    name: string;
-    iconUrl?: string;
-  }>;
+  techStacks?: TechStack[];
 }

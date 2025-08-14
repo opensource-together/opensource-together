@@ -2,6 +2,7 @@ export interface Owner {
   id: string;
   username: string;
   avatarUrl?: string;
+  techStacks?: TechStack[];
 }
 
 export interface Contributor {

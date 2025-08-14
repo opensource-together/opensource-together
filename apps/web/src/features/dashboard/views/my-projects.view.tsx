@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
@@ -17,6 +19,7 @@ import { ApplicationType } from "../types/my-projects.type";
 
 export default function MyProjectsView() {
   const { data: projects = [], isLoading } = useMyProjects();
+  const { currentUser } = useAuth();
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
@@ -69,7 +72,7 @@ export default function MyProjectsView() {
     <div>
       <DashboardHeading
         title="Mes projets"
-        description="Gérez vos projets Open Source et les candidatures reçues."
+        description="Gérez vos projets Open Source et vos candidatures reçues."
       />
 
       {/* Layout responsive */}
@@ -89,6 +92,9 @@ export default function MyProjectsView() {
               applications={selectedProjectApplications as ApplicationType[]}
               teamMembers={selectedProjectTeamMembers}
               onApplicationDecision={handleApplicationDecision}
+              projectOwnerId={selectedProject?.owner.id}
+              currentUserId={currentUser?.id}
+              projectOwner={selectedProject?.owner}
             />
           ) : (
             <EmptyState
@@ -140,6 +146,9 @@ export default function MyProjectsView() {
               applications={selectedProjectApplications as ApplicationType[]}
               teamMembers={selectedProjectTeamMembers}
               onApplicationDecision={handleApplicationDecision}
+              projectOwnerId={selectedProject?.owner.id}
+              currentUserId={currentUser?.id}
+              projectOwner={selectedProject?.owner}
             />
           )}
 

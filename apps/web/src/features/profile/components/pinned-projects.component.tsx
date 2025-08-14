@@ -16,7 +16,11 @@ interface PinnedProjectsProps {
 
 export default function PinnedProjects({ profile }: PinnedProjectsProps) {
   const { currentUser } = useAuth();
-  const { data: joinedProjects = [], isLoading } = useMyProjects("joined");
+  const { data: myProjects = [], isLoading } = useMyProjects();
+
+  const joinedProjects = myProjects.filter(
+    (project) => project.owner.id !== profile.id
+  );
 
   return (
     <div className="flex w-full flex-col gap-4">

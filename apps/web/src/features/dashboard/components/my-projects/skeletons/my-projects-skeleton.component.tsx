@@ -5,7 +5,7 @@ export default function MyProjectsSkeletonComponent() {
     <div>
       <DashboardHeading
         title="Mes projets"
-        description="Gérez vos projets Open Source et les candidatures reçues."
+        description="Gérez vos projets Open Source et vos candidatures reçues."
       />
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
         {/* Section Mes Projets - Desktop */}
