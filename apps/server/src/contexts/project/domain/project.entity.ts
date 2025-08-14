@@ -8,10 +8,10 @@ import {
   TechStack,
   TechStackValidationErrors,
 } from '@/contexts/techstack/domain/techstack.entity';
+import { User } from '@/contexts/user/domain/user.entity';
 import { Result } from '@/libs/result';
 import { KeyFeature } from '../bounded-contexts/project-key-feature/domain/key-feature.entity';
 import { Description, ShortDescription, Title } from './vo';
-import { User } from '@/contexts/user/domain/user.entity';
 
 export type ProjectValidationErrors = {
   ownerId?: string;
@@ -65,6 +65,12 @@ export type ProjectData = {
     provider: string;
     createdAt: Date;
     updatedAt: Date;
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
   };
   keyFeatures: { id?: string; feature: string }[];
   projectGoals: { id?: string; goal: string }[];
@@ -191,7 +197,7 @@ export class Project {
       owner: props.owner
         ? User.reconstitute({
             ...props.owner,
-            techStacks: [],
+            techStacks: props.owner.techStacks || [],
             experiences: [],
             projects: [],
             socialLinks: undefined,
@@ -290,6 +296,7 @@ export class Project {
             provider: this.owner.toPrimitive().provider,
             createdAt: this.owner.toPrimitive().createdAt || new Date(),
             updatedAt: this.owner.toPrimitive().updatedAt || new Date(),
+            techStacks: this.owner.toPrimitive().techStacks,
           }
         : undefined,
     };

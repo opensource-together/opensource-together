@@ -833,6 +833,7 @@ export class UserController {
           id: projectPrimitive.owner?.id || '',
           username: projectPrimitive.owner?.username || '',
           avatarUrl: projectPrimitive.owner?.avatarUrl || '',
+          techStacks: projectPrimitive.owner?.techStacks || [],
         },
         techStacks: projectPrimitive.techStacks || [],
         teamMembers,

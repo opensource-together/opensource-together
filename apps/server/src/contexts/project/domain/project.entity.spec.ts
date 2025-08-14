@@ -1,13 +1,13 @@
-import { Result } from '@/libs/result';
+import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
 import { TechStack } from '@/contexts/techstack/domain/techstack.entity';
+import { User } from '@/contexts/user/domain/user.entity';
+import { Result } from '@/libs/result';
+import { Logger } from '@nestjs/common';
 import {
   Project,
   ProjectCreateProps,
   ProjectValidationErrors,
 } from './project.entity';
-import { User } from '@/contexts/user/domain/user.entity';
-import { ProjectRole } from '@/contexts/project/bounded-contexts/project-role/domain/project-role.entity';
-import { Logger } from '@nestjs/common';
 
 describe('Domain Project Entity', () => {
   describe('create', () => {
@@ -487,6 +487,14 @@ const getProjectProps = (
     avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
     email: 'test@example.com',
     provider: 'github',
+    techStacks: [
+      {
+        id: '1',
+        name: 'React',
+        iconUrl: 'https://react.dev/favicon.ico',
+        type: 'TECH',
+      },
+    ],
     createdAt: new Date(),
     updatedAt: new Date(),
   },

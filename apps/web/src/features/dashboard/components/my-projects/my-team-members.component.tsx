@@ -83,7 +83,7 @@ export default function MyTeamMembers({
                       size="md"
                     />
                     <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <h4 className="font-medium tracking-tighter">
                           {member.name}
                         </h4>

@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { TechStack } from "@/features/projects/types/project.type";
+
 import { ApplicationType, TeamMemberType } from "../../types/my-projects.type";
 import MyApplicationsReceived from "./my-applications-received.component";
 import MyTeamMembers from "./my-team-members.component";
@@ -16,6 +18,7 @@ interface MyProjectTabsProps {
     id: string;
     username: string;
     avatarUrl?: string;
+    techStacks?: TechStack[];
   };
   onApplicationDecision?: (
     applicationId: string,
@@ -54,7 +57,7 @@ export default function MyProjectTabs({
       avatarUrl: projectOwner.avatarUrl || null,
       role: "Propriétaire",
       joinedAt: new Date(),
-      techStacks: [],
+      techStacks: projectOwner.techStacks || [],
     };
 
     return [ownerAsMember, ...teamMembers];

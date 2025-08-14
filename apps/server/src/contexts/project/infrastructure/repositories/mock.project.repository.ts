@@ -40,6 +40,12 @@ type ProjectInMemory = {
     avatarUrl: string;
     email: string;
     provider: string;
+    techStacks: {
+      id: string;
+      name: string;
+      iconUrl: string;
+      type: 'LANGUAGE' | 'TECH';
+    }[];
     createdAt: Date;
     updatedAt: Date;
   };
@@ -95,6 +101,14 @@ export class InMemoryProjectRepository {
         avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
         email: 'test@example.com',
         provider: 'github',
+        techStacks: [
+          {
+            id: '1',
+            name: 'php',
+            iconUrl: 'https://php.net/favicon.ico',
+            type: 'LANGUAGE',
+          },
+        ],
         createdAt: new Date('2024-01-01T09:00:00Z'),
         updatedAt: new Date('2024-01-01T10:00:00Z'),
       },
@@ -130,6 +144,7 @@ export class InMemoryProjectRepository {
         avatarUrl: 'https://avatars.githubusercontent.com/u/456?v=4',
         email: 'second@example.com',
         provider: 'github',
+        techStacks: [],
         createdAt: new Date('2024-01-02T09:00:00Z'),
         updatedAt: new Date('2024-01-02T10:00:00Z'),
       },
@@ -228,6 +243,7 @@ export class InMemoryProjectRepository {
         provider: 'github',
         createdAt: projectInMemory.createdAt || new Date(),
         updatedAt: projectInMemory.updatedAt || new Date(),
+        techStacks: projectInMemory.techStacks,
       },
     });
 
@@ -389,6 +405,24 @@ export class InMemoryProjectRepository {
           { id: 'member1', userId: '456' },
           { id: 'member2', userId: '789' },
         ],
+        owner: {
+          id: '123',
+          username: 'testuser',
+          login: 'testuser',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/123?v=4',
+          email: 'test@example.com',
+          provider: 'github',
+          techStacks: [
+            {
+              id: '1',
+              name: 'php',
+              iconUrl: 'https://php.net/favicon.ico',
+              type: 'LANGUAGE',
+            },
+          ],
+          createdAt: new Date('2024-01-01T09:00:00Z'),
+          updatedAt: new Date('2024-01-01T10:00:00Z'),
+        },
         createdAt: new Date('2024-01-01T09:00:00Z'),
         updatedAt: new Date('2024-01-01T10:00:00Z'),
       },
