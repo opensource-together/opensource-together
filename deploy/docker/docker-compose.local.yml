@@ -29,7 +29,7 @@ services:
       context: ../../apps/web
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:4000/v1}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://server:3000/v1}
     restart: unless-stopped
     ports:
       - "${FRONT_PORT:-3000}:3000"
