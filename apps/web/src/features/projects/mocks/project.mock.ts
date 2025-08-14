@@ -1,4 +1,4 @@
-import { Project } from "../types/project.type";
+/*import { Project } from "../types/project.type";
 
 export const mockProjects: Project[] = [
   {
@@ -897,4 +897,4 @@ export const mockProjects: Project[] = [
       { id: "4", goal: "Atteindre 50k+ documents créés" },
     ],
   },
-];
+];*/

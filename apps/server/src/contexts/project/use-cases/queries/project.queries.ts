@@ -14,6 +14,10 @@ import {
   FindProjectsByUserIdHandler,
   FindProjectsByUserIdQuery,
 } from './find-by-user-id/find-projects-by-user-id.handler';
+import {
+  FindUserProjectsWithDetailsHandler,
+  FindUserProjectsWithDetailsQuery,
+} from './find-user-projects-with-details/find-user-projects-with-details.handler';
 
 export const projectQueriesContainer = [
   // FindProjectByFiltersHandler,
@@ -24,4 +28,6 @@ export const projectQueriesContainer = [
   GetProjectsQuery,
   FindProjectsByUserIdHandler,
   FindProjectsByUserIdQuery,
+  FindUserProjectsWithDetailsHandler,
+  FindUserProjectsWithDetailsQuery,
 ];

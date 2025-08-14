@@ -54,11 +54,14 @@ export function useApplicationById(applicationId: string) {
 /**
  * Accepts a project role application.
  *
- * @returns A React Query mutation for accepting applications.
+ * @returns An object containing:
+ * - acceptApplication: function to trigger the application acceptance
+ * - isAccepting: boolean indicating if the acceptance is in progress
+ * - isAcceptError: boolean indicating if an error occurred
  */
 export function useAcceptProjectRoleApplication() {
   const queryClient = useQueryClient();
-  return useToastMutation<void, Error, string>({
+  const mutation = useToastMutation({
     mutationFn: (applicationId: string) =>
       acceptProjectRoleApplication(applicationId),
     loadingMessage: "Acceptation de la candidature en cours...",
@@ -66,45 +69,46 @@ export function useAcceptProjectRoleApplication() {
     errorMessage: "Erreur lors de l'acceptation de la candidature.",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["my-project-roles-applications"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["project-roles-applications"],
-        });
+        queryClient.invalidateQueries({ queryKey: ["my-projects"] });
       },
     },
   });
+
+  return {
+    acceptApplication: mutation.mutate,
+    isAccepting: mutation.isPending,
+    isAcceptError: mutation.isError,
+  };
 }
 
 /**
  * Rejects a project role application.
  *
- * @returns A React Query mutation for rejecting applications.
+ * @returns An object containing:
+ * - rejectApplication: function to trigger the application rejection
+ * - isRejecting: boolean indicating if the rejection is in progress
+ * - isRejectError: boolean indicating if an error occurred
  */
 export function useRejectProjectRoleApplication() {
   const queryClient = useQueryClient();
-  return useToastMutation<
-    void,
-    Error,
-    { applicationId: string; rejectionReason?: string }
-  >({
-    mutationFn: ({ applicationId, rejectionReason }) =>
+  const mutation = useToastMutation({
+    mutationFn: (applicationId: string, rejectionReason?: string) =>
       rejectProjectRoleApplication(applicationId, rejectionReason),
     loadingMessage: "Rejet de la candidature en cours...",
     successMessage: "Candidature refusée avec succès !",
     errorMessage: "Erreur lors du rejet de la candidature.",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ["my-project-roles-applications"],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["project-roles-applications"],
-        });
+        queryClient.invalidateQueries({ queryKey: ["my-projects"] });
       },
     },
   });
+
+  return {
+    rejectApplication: mutation.mutate,
+    isRejecting: mutation.isPending,
+    isRejectError: mutation.isError,
+  };
 }
 
 /**

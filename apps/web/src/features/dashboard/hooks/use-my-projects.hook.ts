@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { mockDashboardData } from "../mocks/my-projects.mock";
+import { getMyProjects } from "../services/my-projects.service";
 import { MyProjectType } from "../types/my-projects.type";
 
 /**
@@ -11,6 +11,6 @@ import { MyProjectType } from "../types/my-projects.type";
 export function useMyProjects() {
   return useQuery<MyProjectType[]>({
     queryKey: ["my-projects"],
-    queryFn: () => Promise.resolve(mockDashboardData),
+    queryFn: getMyProjects,
   });
 }

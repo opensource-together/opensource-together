@@ -4,20 +4,31 @@ import { useEffect, useState } from "react";
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
+import MyProjectsSkeletonComponent from "../components/my-projects/skeletons/my-projects-skeleton.component";
 import { useMyProjects } from "../hooks/use-my-projects.hook";
+import {
+  useAcceptProjectRoleApplication,
+  useRejectProjectRoleApplication,
+} from "../hooks/use-project-role-application.hook";
 import { ApplicationType } from "../types/my-projects.type";
 
 export default function MyProjectsView() {
-  const { data: projects = [] } = useMyProjects();
+  const { data: projects = [], isLoading } = useMyProjects();
+  const { currentUser } = useAuth();
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null
   );
   const [activeTab, setActiveTab] = useState<"projects" | "details">(
     "projects"
   );
+
+  const acceptApplicationMutation = useAcceptProjectRoleApplication();
+  const rejectApplicationMutation = useRejectProjectRoleApplication();
 
   // Sélectionner automatiquement le premier projet par défaut
   useEffect(() => {
@@ -39,22 +50,29 @@ export default function MyProjectsView() {
 
   const handleApplicationDecision = (
     applicationId: string,
-    decision: "ACCEPTED" | "REJECTED",
-    reason?: string
+    decision: "ACCEPTED" | "REJECTED"
   ) => {
-    // TODO: Implémenter la logique de décision
-    console.log("Application decision:", { applicationId, decision, reason });
+    if (decision === "ACCEPTED") {
+      acceptApplicationMutation.acceptApplication(applicationId);
+    } else {
+      rejectApplicationMutation.rejectApplication(applicationId);
+    }
   };
 
   // Récupérer les applications du projet sélectionné
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
-  const selectedProjectApplications = selectedProject?.applications || [];
+  const selectedProjectApplications =
+    selectedProject?.applications.filter((app) => app.status !== "CANCELLED") ||
+    [];
+  const selectedProjectTeamMembers = selectedProject?.teamMembers || [];
+
+  if (isLoading) return <MyProjectsSkeletonComponent />;
 
   return (
     <div>
       <DashboardHeading
         title="Mes projets"
-        description="Gérez vos projets Open Source et les candidatures reçues."
+        description="Gérez vos projets Open Source et vos candidatures reçues."
       />
 
       {/* Layout responsive */}
@@ -72,7 +90,11 @@ export default function MyProjectsView() {
           {selectedProjectId ? (
             <MyProjectTabs
               applications={selectedProjectApplications as ApplicationType[]}
+              teamMembers={selectedProjectTeamMembers}
               onApplicationDecision={handleApplicationDecision}
+              projectOwnerId={selectedProject?.owner.id}
+              currentUserId={currentUser?.id}
+              projectOwner={selectedProject?.owner}
             />
           ) : (
             <EmptyState
@@ -122,7 +144,11 @@ export default function MyProjectsView() {
           {activeTab === "details" && selectedProjectId && (
             <MyProjectTabs
               applications={selectedProjectApplications as ApplicationType[]}
+              teamMembers={selectedProjectTeamMembers}
               onApplicationDecision={handleApplicationDecision}
+              projectOwnerId={selectedProject?.owner.id}
+              currentUserId={currentUser?.id}
+              projectOwner={selectedProject?.owner}
             />
           )}
 

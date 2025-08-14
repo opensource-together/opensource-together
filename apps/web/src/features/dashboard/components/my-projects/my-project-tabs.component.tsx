@@ -1,41 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { TechStack } from "@/features/projects/types/project.type";
 
 import { ApplicationType, TeamMemberType } from "../../types/my-projects.type";
 import MyApplicationsReceived from "./my-applications-received.component";
 import MyTeamMembers from "./my-team-members.component";
 
-// Mock data for the team members (to be replaced by your real data)
-const mockTeamMembers: TeamMemberType[] = [
-  {
-    id: "1",
-    name: "Byron Love",
-    avatarUrl: "/icons/exemplebyronIcon.svg",
-    role: "Frontend Developer",
-    joinedAt: new Date("2024-01-15"),
-    techStacks: [
-      { id: "1", name: "React" },
-      { id: "2", name: "TypeScript" },
-      { id: "3", name: "Tailwind" },
-    ],
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    avatarUrl: "/icons/exemplebyronIcon.svg",
-    role: "Backend Developer",
-    joinedAt: new Date("2024-01-20"),
-    techStacks: [
-      { id: "4", name: "Node.js" },
-      { id: "5", name: "PostgreSQL" },
-    ],
-  },
-];
-
 interface MyProjectTabsProps {
   applications: ApplicationType[];
   teamMembers?: TeamMemberType[];
+  isLoading?: boolean;
+  projectOwnerId?: string;
+  currentUserId?: string;
+  projectOwner?: {
+    id: string;
+    username: string;
+    avatarUrl?: string;
+    techStacks?: TechStack[];
+  };
   onApplicationDecision?: (
     applicationId: string,
     decision: "ACCEPTED" | "REJECTED",
@@ -47,23 +31,58 @@ type TabType = "applications" | "members";
 
 export default function MyProjectTabs({
   applications,
-  teamMembers = mockTeamMembers,
+  teamMembers = [],
+  isLoading = false,
+  projectOwnerId,
+  currentUserId,
+  projectOwner,
   onApplicationDecision,
 }: MyProjectTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("applications");
+
+  const canViewApplications =
+    projectOwnerId && currentUserId && projectOwnerId === currentUserId;
+
+  const allTeamMembers = useMemo(() => {
+    if (!projectOwner || !projectOwnerId) return teamMembers;
+
+    const ownerExists = teamMembers.some(
+      (member) => member.id === projectOwnerId
+    );
+    if (ownerExists) return teamMembers;
+
+    const ownerAsMember: TeamMemberType = {
+      id: projectOwner.id,
+      name: projectOwner.username,
+      avatarUrl: projectOwner.avatarUrl || null,
+      role: "Propriétaire",
+      joinedAt: new Date(),
+      techStacks: projectOwner.techStacks || [],
+    };
+
+    return [ownerAsMember, ...teamMembers];
+  }, [teamMembers, projectOwner, projectOwnerId]);
 
   const tabs = [
     {
       id: "applications" as TabType,
       label: "Candidatures",
       count: applications.length,
+      disabled: !canViewApplications,
     },
     {
       id: "members" as TabType,
       label: "Membres du projet",
-      count: teamMembers.length,
+      count: allTeamMembers.length,
+      disabled: false,
     },
   ];
+
+  useEffect(() => {
+    if (!canViewApplications && activeTab === "applications") {
+      setActiveTab("members");
+    }
+  }, [canViewApplications, activeTab]);
 
   return (
     <div className="sticky top-0 z-10">
@@ -72,11 +91,14 @@ export default function MyProjectTabs({
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => !tab.disabled && setActiveTab(tab.id)}
+            disabled={tab.disabled}
             className={`relative px-4 py-3 text-sm font-medium transition-colors ${
-              activeTab === tab.id
-                ? "text-black"
-                : "text-black/50 hover:text-black/70"
+              tab.disabled
+                ? "cursor-not-allowed text-black/30"
+                : activeTab === tab.id
+                  ? "text-black"
+                  : "text-black/50 hover:text-black/70"
             }`}
           >
             {tab.label}
@@ -95,13 +117,21 @@ export default function MyProjectTabs({
 
       {/* Content of the tabs */}
       <div className="mt-6">
-        {activeTab === "applications" && (
+        {activeTab === "applications" && canViewApplications && (
           <MyApplicationsReceived
             applications={applications}
+            isLoading={isLoading}
             onApplicationDecision={onApplicationDecision}
           />
         )}
-        {activeTab === "members" && <MyTeamMembers members={teamMembers} />}
+        {activeTab === "members" && (
+          <MyTeamMembers
+            members={allTeamMembers}
+            isLoading={isLoading}
+            projectOwnerId={projectOwnerId}
+            currentUserId={currentUserId}
+          />
+        )}
       </div>
     </div>
   );
