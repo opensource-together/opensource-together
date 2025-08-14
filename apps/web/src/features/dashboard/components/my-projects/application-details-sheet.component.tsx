@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -80,10 +82,12 @@ export default function ApplicationDetailsSheet({
               </p>
             </div>
 
-            <Button variant="outline" size="sm" className="font-medium">
-              Voir profil
-              <Icon name="user" size="xs" />
-            </Button>
+            <Link href={`/profile/${application.applicant.id}`}>
+              <Button variant="outline" size="sm" className="font-medium">
+                Voir profil
+                <Icon name="user" size="xs" />
+              </Button>
+            </Link>
           </SheetTitle>
         </SheetHeader>
 
