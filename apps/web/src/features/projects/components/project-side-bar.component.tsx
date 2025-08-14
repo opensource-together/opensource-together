@@ -48,6 +48,7 @@ export default function ProjectSideBar({
   // Create a list that includes the owner first, then the contributors
   const allContributors = (() => {
     const ownerContributor = {
+      id: project.owner?.id,
       login: project.owner?.username || "Owner",
       avatar_url: project.owner?.avatarUrl || "",
       html_url: `https://github.com/${project.owner?.username}`,
@@ -74,7 +75,7 @@ export default function ProjectSideBar({
   const handleContributorClick = (contributor: GithubContributor) => {
     // Pour l'instant, utiliser le login GitHub comme ID
     // TODO: Remplacer par le vrai ID utilisateur quand disponible
-    const userId = contributor.login;
+    const userId = contributor.id;
     router.push(`/profile/${userId}`);
   };
 

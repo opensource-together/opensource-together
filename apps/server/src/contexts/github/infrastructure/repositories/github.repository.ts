@@ -173,6 +173,7 @@ export class GithubRepository implements GithubRepositoryPort {
   ): Promise<
     Result<
       Array<{
+        id: number;
         login: string;
         avatar_url: string;
         html_url: string;
@@ -198,6 +199,7 @@ export class GithubRepository implements GithubRepositoryPort {
       }
 
       const contributors = response.data.map((contributor) => ({
+        id: contributor.id as number,
         login: contributor.login as string,
         avatar_url: contributor.avatar_url as string,
         html_url: contributor.html_url as string,
