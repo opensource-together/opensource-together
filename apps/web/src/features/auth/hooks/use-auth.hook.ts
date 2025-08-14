@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import { socket } from "@/shared/realtime/socket";
@@ -19,7 +19,6 @@ export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
-  const [wsToken, setWsToken] = useState<string | null>(null);
 
   // Gérer la sauvegarde de l'URL de redirection depuis les search params
   useEffect(() => {
@@ -50,31 +49,23 @@ export default function useAuth() {
   } = useQuery({
     queryKey: ["user/me"],
     queryFn: getCurrentUser,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: false,
   });
 
-  // Effect pour récupérer le token WebSocket quand l'utilisateur est connecté
-  useEffect(() => {
-    const fetchWsToken = async () => {
-      if (currentUser) {
-        try {
-          const token = await getWebSocketToken();
-          if (token) {
-            setWsToken(token);
-            localStorage.setItem("wsToken", token);
-          }
-        } catch (error) {
-          console.error("Failed to fetch WebSocket token:", error);
-        }
-      } else {
-        setWsToken(null);
-        localStorage.removeItem("wsToken");
-      }
-    };
+  // Query to get the WebSocket token
+  const { data: wsToken } = useQuery({
+    queryKey: ["ws-token"],
+    queryFn: getWebSocketToken,
+    enabled: !!currentUser,
+  });
 
-    fetchWsToken();
-  }, [currentUser]);
+  // Effect to manage the WebSocket token in the localStorage
+  useEffect(() => {
+    if (wsToken) {
+      localStorage.setItem("wsToken", wsToken);
+    } else if (!currentUser) {
+      localStorage.removeItem("wsToken");
+    }
+  }, [wsToken, currentUser]);
 
   const githubSignInMutation = useToastMutation({
     mutationFn: async () => {
@@ -106,6 +97,7 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["ws-token"] });
 
         // Récupérer l'URL de redirection depuis le sessionStorage
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
@@ -126,6 +118,7 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["ws-token"] });
 
         // Récupérer l'URL de redirection depuis le sessionStorage
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
@@ -146,7 +139,7 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.setQueryData(["user/me"], null);
-        setWsToken(null);
+        queryClient.setQueryData(["ws-token"], null);
         localStorage.removeItem("wsToken");
         socket.disconnect();
         router.push("/");
