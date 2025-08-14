@@ -42,6 +42,8 @@ model User {
   projects          Project[]
   projectRoleApplication ProjectRoleApplication[]
   teamMembers       teamMember[]
+  notificationsSent     Notification[] @relation("NotificationsSent")
+  notificationsReceived Notification[] @relation("NotificationsReceived")
 }
 
 model UserGitHubCredentials {
@@ -199,4 +201,24 @@ model GitHubStats {
   
   // Relation vers User
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+	id						String	@id @default(uuid())
+	object				String
+	senderId			String
+	receiverId		String
+	type					String
+	payload				Json
+	createdAt			DateTime		@default(now())
+	readAt				DateTime?
+	
+	// Relations explicites vers User
+	sender				User		@relation("NotificationsSent", fields: [senderId], references: [id], onDelete: Cascade)
+	receiver			User		@relation("NotificationsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+	
+	// Index optimisés pour les requêtes courantes
+	@@index([receiverId, readAt, createdAt(sort: Desc)], name: "idx_receiver_unread_notifications")
+	@@index([senderId, createdAt(sort: Desc)], name: "idx_sender_notifications")
+	@@index([type, createdAt(sort: Desc)], name: "idx_notification_type")
 }

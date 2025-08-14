@@ -54,13 +54,13 @@ export class ProjectRoleApplicationController {
           type: 'array',
           items: { type: 'string' },
           description: 'Liste des ID des fonctionnalités clés sélectionnées',
-          example: ['test'],
+          example: ['keyFeatureId1', 'keyFeatureId2'],
         },
         projectGoals: {
           type: 'array',
           items: { type: 'string' },
           description: 'Liste des ID des objectifs de projet sélectionnés',
-          example: ['test'],
+          example: ['projectGoalId1', 'projectGoalId2'],
         },
         motivationLetter: {
           type: 'string',

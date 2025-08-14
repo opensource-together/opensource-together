@@ -5,6 +5,8 @@ import { TechStackInfrastructure } from './techstack/infrastructure/techstack.in
 import { ProjectRoleInfrastructure } from './project/bounded-contexts/project-role/infrastructure/project-role.infrastructure';
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';
 import { CategoryInfrastructure } from './category/infrastructure/category.infrastructure';
+import { NotificationInfrastructure } from './notification/infrastructure/notification.infrastructure';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProjectRoleApplicationInfrastructure } from './project/bounded-contexts/project-role-application/infrastructure/project-role-application.infrastructure';
 import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastructure';
 import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/project-key-feature/infrastructure/project-key-feature.infrastructure';
@@ -19,9 +21,11 @@ import { TeamMemberInfrastructure } from './project/bounded-contexts/team-member
     GithubInfrastructure,
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
+    EventEmitterModule.forRoot(),
     MailingInfrastructure,
     ProjectKeyFeatureInfrastructure,
     TeamMemberInfrastructure,
+    NotificationInfrastructure,
   ],
   exports: [
     UserInfrastructure,
@@ -33,6 +37,7 @@ import { TeamMemberInfrastructure } from './project/bounded-contexts/team-member
     ProjectRoleApplicationInfrastructure,
     ProjectKeyFeatureInfrastructure,
     TeamMemberInfrastructure,
+    NotificationInfrastructure,
   ],
 })
 export class ContextsModule {}

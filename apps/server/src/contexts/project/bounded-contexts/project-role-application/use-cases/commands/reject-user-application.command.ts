@@ -1,16 +1,17 @@
-import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { Inject, Logger } from '@nestjs/common';
+import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import {
   PROJECT_ROLE_APPLICATION_REPOSITORY_PORT,
   ProjectRoleApplicationRepositoryPort,
 } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/ports/project-role-application.repository.port';
-import { Result } from '@/libs/result';
 import { Project } from '@/contexts/project/domain/project.entity';
 import {
   PROJECT_REPOSITORY_PORT,
   ProjectRepositoryPort,
 } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
+import { Result } from '@/libs/result';
+import { Inject, Logger } from '@nestjs/common';
+import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 export class RejectUserApplicationCommand implements ICommand {
   constructor(
@@ -32,6 +33,8 @@ export class RejectUserApplicationCommandHandler
     private readonly projectRepo: ProjectRepositoryPort,
     @Inject(PROJECT_ROLE_APPLICATION_REPOSITORY_PORT)
     private readonly projectRoleApplicationRepository: ProjectRoleApplicationRepositoryPort,
+    @Inject(EventEmitter2)
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(command: RejectUserApplicationCommand) {
@@ -63,6 +66,18 @@ export class RejectUserApplicationCommandHandler
       return Result.fail(applicationRejected.error);
     }
 
-    return Result.ok(applicationRejected.value);
+    this.eventEmitter.emit('project.role.application.rejected', {
+      object: 'Le statut de la candidature a été mis à jour',
+      payload: {
+        applicantId: application.toPrimitive().userProfile.id,
+        applicantName: application.toPrimitive().userProfile.username,
+        projectId: application.toPrimitive().projectId,
+        projectTitle: project.toPrimitive().title,
+        roleName: project.toPrimitive().title,
+        message: `Votre candidature pour le rôle ${project.toPrimitive().title} a été rejetée.`,
+      },
+    });
+
+    return Result.ok(application);
   }
 }
