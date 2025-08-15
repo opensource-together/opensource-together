@@ -52,8 +52,8 @@ export default function ProjectDiscoveryHero() {
 
         <span className="text-muted-foreground mt-6 mb-10 flex h-[40px] w-[260px] items-center justify-center gap-1 rounded-full bg-[#FAFAF9] text-center text-xs font-normal tracking-tight md:mt-5">
           <Image
-            src="/icons/project-icons.svg"
-            alt="project-icons"
+            src="/project-icons-example.svg"
+            alt="project-icons-example"
             width={66}
             height={20}
           />

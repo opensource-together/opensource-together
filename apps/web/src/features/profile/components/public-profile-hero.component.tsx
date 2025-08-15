@@ -32,7 +32,7 @@ export default function PublicProfileHero({ profile }: PublicProfileHeroProps) {
         </div>
 
         <Button className="font-normal">
-          <Icon name="contact" size="xs" variant="white" /> Contact
+          <Icon name="chat" size="xs" variant="white" /> Contact
         </Button>
       </div>
 

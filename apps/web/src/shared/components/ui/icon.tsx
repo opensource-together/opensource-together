@@ -55,7 +55,7 @@ export type IconName =
   | "home"
   | "file-text"
   | "mix"
-  | "contact"
+  | "chat"
   | "commit";
 
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
@@ -96,7 +96,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     gray: "/icons/star-gray.svg",
     white: "/icons/star-white.svg",
     black: "/icons/star.svg",
-    filled: "/icons/star-filled-in-black.svg",
+    filled: "/icons/star.svg",
     outline: "/icons/empty-star.svg",
   },
   fork: {
@@ -111,8 +111,8 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     default: "/icons/people.svg",
     gray: "/icons/people-gray.svg",
     white: "/icons/people.svg",
-    black: "/icons/people-filled-in-black.svg",
-    filled: "/icons/people-filled-in-black.svg",
+    black: "/icons/people.svg",
+    filled: "/icons/people-filled.svg",
     outline: "/icons/people.svg",
   },
   search: {
@@ -324,13 +324,13 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/commit.svg",
     outline: "/icons/commit.svg",
   },
-  contact: {
-    default: "/icons/contact-icon.svg",
-    gray: "/icons/contact-icon.svg",
-    white: "/icons/contact-icon.svg",
-    black: "/icons/contact-icon.svg",
-    filled: "/icons/contact-icon.svg",
-    outline: "/icons/contact-icon.svg",
+  chat: {
+    default: "/icons/chat.svg",
+    gray: "/icons/chat-gray.svg",
+    white: "/icons/chat-white.svg",
+    black: "/icons/chat.svg",
+    filled: "/icons/chat.svg",
+    outline: "/icons/chat.svg",
   },
 };
 
