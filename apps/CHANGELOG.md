@@ -1,5 +1,63 @@
 # Changelog
 
+## [0.4.0](https://github.com/opensource-together/opensource-together/compare/v0.3.0...v0.4.0) (2025-08-15)
+
+
+### Features
+
+* add graphql request for fetching repo data, including org repos ([50da0e2](https://github.com/opensource-together/opensource-together/commit/50da0e2247619e2b354afe2fb14f8435ee7c5fc3))
+* add image, coverImages, and readme fields to project model and update related DTOs and commands ([8974e1a](https://github.com/opensource-together/opensource-together/commit/8974e1ae30b2836c68d0320d190139b20eb65634))
+* add new SVG icons and update dashboard layout and navigation ([029950b](https://github.com/opensource-together/opensource-together/commit/029950bc924f5368c2143653417a958d7da27bb6))
+* add optional readme field to project schema with character limit validation ([b2d4f9b](https://github.com/opensource-together/opensource-together/commit/b2d4f9b9349256129e72786a602f0db6ce14d13e))
+* add orgs repos to the repo list ([2678362](https://github.com/opensource-together/opensource-together/commit/267836250f9b58018be0251758c180da1054509e))
+* add README to graphql github repo request ([a891c05](https://github.com/opensource-together/opensource-together/commit/a891c05a007e956686d11ca483a55ec3250b16f4))
+* add Separator component to various profile and project components for improved layout consistency ([5396a33](https://github.com/opensource-together/opensource-together/commit/5396a33a14bdeff9fa1f0064a9e26d25726dd37f))
+* add techStacks support to project entity and related components ([e4b0550](https://github.com/opensource-together/opensource-together/commit/e4b0550127dca49a8a9c9000132af48805cfe790))
+* ajout d'un guide complet pour l'architecture et l'implémentation des systèmes WebSocket ([a2fdfec](https://github.com/opensource-together/opensource-together/commit/a2fdfecd1946291ac4985eeb88186991eebf992d))
+* ajout d'un listener pour la capture des événements de notification dans le module de rôle de projet ([d21d510](https://github.com/opensource-together/opensource-together/commit/d21d5103347da5a27831eba48154b5940a48cea6))
+* ajout de la gestion des rôles pour les membres d'équipe ([2c086c7](https://github.com/opensource-together/opensource-together/commit/2c086c73da8066769bfe0eec6421b91691d4acb9))
+* enhance MyProjectTabs and MyTeamMembers components with project owner details and conditional rendering ([efa932c](https://github.com/opensource-together/opensource-together/commit/efa932c66362f4ca2c23a4c37a7e830ec81ad177))
+* implement cover image upload and management in project edit forms ([5321f3d](https://github.com/opensource-together/opensource-together/commit/5321f3d25429d68d901bad17df292384c0e6aed7))
+* implement PaginationNavigation component and replace Pagination in HomepageView for improved navigation ([edba156](https://github.com/opensource-together/opensource-together/commit/edba156274eb812b9b9c665fec152278601eb1a2))
+* integrate joined projects loading state and update project data structure in PinnedProjects component ([936b640](https://github.com/opensource-together/opensource-together/commit/936b640441dd26d356add8769e3f6b2fb3fc0abd))
+* integrate react-dropzone for file uploads in avatar and multiple image upload components ([9a5428c](https://github.com/opensource-together/opensource-together/commit/9a5428c3ec77748b973be6ec718e04c5763bc6db))
+* link user profile to project contributors ([0ceeafb](https://github.com/opensource-together/opensource-together/commit/0ceeafb5a0c348a194265c14dd341329aacf621d))
+* wrap user profile button in a link for navigation ([e79a855](https://github.com/opensource-together/opensource-together/commit/e79a855844423b902d354778298cad665cabf35a))
+
+
+### Bug Fixes
+
+* improve error logging and clean up code in notification services and WebSocket authentication ([bd4ba13](https://github.com/opensource-together/opensource-together/commit/bd4ba13743813b0bbecf8cc07cb32db5821de95a))
+
+
+### Miscellaneous
+
+* fix linting ([d4b5d0f](https://github.com/opensource-together/opensource-together/commit/d4b5d0f2805392f33aecc9f4b69546f538f2f1f8))
+* linter ([01da9e1](https://github.com/opensource-together/opensource-together/commit/01da9e15ef4f6313703343fb2c985a0f00ffd974))
+* remove unused scopes ([a24f3e1](https://github.com/opensource-together/opensource-together/commit/a24f3e16e6ce9de67239acf4799def6bbe9ef10c))
+* remove unused scopes ([246ad25](https://github.com/opensource-together/opensource-together/commit/246ad259803e2dfb7a93d66c6376517a3b8fea19))
+* rename github-repo-list to github-repo-suggestion ([5979f86](https://github.com/opensource-together/opensource-together/commit/5979f865a65f015476f5136fb2a7170c3430433f))
+
+
+### Code Refactoring
+
+* enhance header component styles and improve mobile menu transitions ([14a0c62](https://github.com/opensource-together/opensource-together/commit/14a0c62b987680ca773487ad6c348a25a4788ea8))
+* remove unused markdown files and clean up code comments across various components ([1fef4d7](https://github.com/opensource-together/opensource-together/commit/1fef4d721c53b5ba02fe7c44c8110784dfc927d3))
+* rename skills to techStacks in user-related components and … ([1c0fdc1](https://github.com/opensource-together/opensource-together/commit/1c0fdc1a011edde1461e02acc19a395d62453ccf))
+* rename skills to techStacks in user-related components and types for consistency ([ea6b91f](https://github.com/opensource-together/opensource-together/commit/ea6b91fbfa2acbe6bf37452122ae8430ab1dab73))
+* replace and update icon references in components ([2207e65](https://github.com/opensource-together/opensource-together/commit/2207e65d4b9352cf66dfceb26e8b6e10d698906b))
+* replace BreadcrumbComponent with BreadcrumbNavigation in profile and project components for consistency ([884c44b](https://github.com/opensource-together/opensource-together/commit/884c44bbb7bff15477750873aeac3b445a66d8df))
+* update contributor data structure and remove unused findContributorsByRepository method ([b328825](https://github.com/opensource-together/opensource-together/commit/b328825a5185da7c5a55792b99450816f76a67f3))
+* update dashboard sidebar width and adjust header layout for improved responsiveness ([0109a5f](https://github.com/opensource-together/opensource-together/commit/0109a5feb6e2602e7487411a62121d036a522b5e))
+* update import paths for skeleton components and add new skeleton components for applications, projects, and team members ([1371892](https://github.com/opensource-together/opensource-together/commit/1371892ecaa048a60eeb4ae42aca262852219ccf))
+* update notification interfaces and improve WebSocket gateway for better user handling ([54e40ca](https://github.com/opensource-together/opensource-together/commit/54e40ca241a74ac7f169dc8b7cf61df3fda742cb))
+* update user information with GitHub profile data ([c85ab93](https://github.com/opensource-together/opensource-together/commit/c85ab939aa86184a7fad026ef3c72ae666ab153c))
+
+
+### Tests
+
+* add EventEmitter2 mock to CreateProjectCommandHandler tests ([b2a9ef0](https://github.com/opensource-together/opensource-together/commit/b2a9ef04b900d99bfc4641a7593e017429f2827c))
+
 ## [0.3.0](https://github.com/opensource-together/opensource-together/compare/v0.2.0...v0.3.0) (2025-08-06)
 
 
