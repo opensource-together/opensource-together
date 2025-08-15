@@ -19,6 +19,7 @@ import {
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
 import { Modal } from "@/shared/components/ui/modal";
+import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useApplyToProject } from "../hooks/use-project-apply.hook";
@@ -126,7 +127,7 @@ export default function RoleApplicationForm({
             ))}
           </div>
 
-          <div className="h-[1px] w-full bg-black/5" />
+          <Separator />
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

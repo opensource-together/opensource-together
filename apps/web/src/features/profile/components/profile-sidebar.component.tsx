@@ -3,6 +3,7 @@ import Link from "next/link";
 import StackLogo from "@/shared/components/logos/stack-logo";
 import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 import Icon, { IconName } from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 
 import { Profile } from "../types/profile.type";
 
@@ -68,7 +69,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
+              <Separator />
             </div>
             <span className="text-sm font-medium text-black">
               {stats.starsEarned}
@@ -83,7 +84,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
+              <Separator />
             </div>
             <span className="text-sm font-medium text-black">
               {stats.joinedProjects}
@@ -98,7 +99,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
-              <div className="h-[1px] w-full bg-black/5" />
+              <Separator />
             </div>
             <span className="text-sm font-medium text-black">
               {stats.contributions}

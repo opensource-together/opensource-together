@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
@@ -44,7 +45,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       <div className="mt-2">
         <p className="text-md mb-0 font-medium">{shortDescription}</p>
 
-        <div className="my-5 h-[2px] w-full bg-black/3" />
+        <Separator className="my-5" />
 
         {coverImages.length > 0 && (
           <div className="mt-2 flex flex-row gap-1">

@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
+import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Profile } from "../types/profile.type";
@@ -154,7 +155,7 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <div className="h-[2px] w-full bg-black/5" />
+          <Separator />
 
           <FormField
             control={control}

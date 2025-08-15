@@ -7,6 +7,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 
 import { Contributor, Project } from "../types/project.type";
 
@@ -139,7 +140,7 @@ export default function ProjectSideBar({
             <span className="text-sm font-normal text-black/50">Stars</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {projectStats.stars}
@@ -157,7 +158,7 @@ export default function ProjectSideBar({
             <span className="text-sm font-normal text-black/50">Forks</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {projectStats.forks}
@@ -172,7 +173,7 @@ export default function ProjectSideBar({
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {projectStats.lastCommit?.date
@@ -196,7 +197,7 @@ export default function ProjectSideBar({
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {allContributors.length}

@@ -15,6 +15,7 @@ import {
 import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-upload";
+import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Project } from "../types/project.type";
@@ -181,7 +182,7 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <div className="mt-10 h-[2px] w-full bg-black/3" />
+          <Separator />
 
           <FormField
             control={control}

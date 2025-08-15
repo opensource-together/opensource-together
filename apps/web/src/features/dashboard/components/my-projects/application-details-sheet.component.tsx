@@ -7,6 +7,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
+import { Separator } from "@/shared/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -96,7 +97,7 @@ export default function ApplicationDetailsSheet({
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">Statut</span>
               <div className="mx-4 flex flex-1 items-center">
-                <div className="h-[1px] w-full bg-black/5" />
+                <Separator />
               </div>
               <span
                 className={`text-sm font-medium ${getStatusStyle(application.status)}`}
@@ -107,7 +108,7 @@ export default function ApplicationDetailsSheet({
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">Postulé le</span>
               <div className="mx-4 flex flex-1 items-center">
-                <div className="h-[1px] w-full bg-black/5" />
+                <Separator />
               </div>
               <span className="text-sm font-medium">
                 {new Date(application.appliedAt).toLocaleDateString("fr-FR")}
@@ -118,7 +119,7 @@ export default function ApplicationDetailsSheet({
                 Postulé pour le rôle
               </span>
               <div className="mx-4 flex flex-1 items-center">
-                <div className="h-[1px] w-full bg-black/5" />
+                <Separator />
               </div>
               <span className="text-sm font-medium">
                 {application.projectRole.title}
@@ -154,7 +155,7 @@ export default function ApplicationDetailsSheet({
               </div>
             )}
 
-          <div className="h-[1px] w-full bg-black/5" />
+          <Separator />
 
           {application.motivationLetter && (
             <div>
