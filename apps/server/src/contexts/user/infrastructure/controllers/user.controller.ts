@@ -794,7 +794,7 @@ export class UserController {
             id: application.user.id,
             name: application.user.username,
             avatarUrl: application.user.avatarUrl,
-            skills: application.user.techStacks || [],
+            techStacks: application.user.techStacks || [],
           },
           projectRole: {
             id: application.projectRole.id,
