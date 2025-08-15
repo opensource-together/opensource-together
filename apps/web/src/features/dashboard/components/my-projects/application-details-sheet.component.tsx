@@ -174,14 +174,14 @@ export default function ApplicationDetailsSheet({
           )}
 
           {/* Candidat skills */}
-          {application.applicant.skills &&
-            application.applicant.skills.length > 0 && (
+          {application.applicant.techStacks &&
+            application.applicant.techStacks.length > 0 && (
               <div>
                 <Label className="text-sm font-medium">
                   Compétences du candidat
                 </Label>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {application.applicant.skills.map((skill) => (
+                  {application.applicant.techStacks.map((skill) => (
                     <StackLogo
                       key={skill.id}
                       name={skill.name}

@@ -29,7 +29,7 @@ export interface ApplicationType {
     id: string;
     name: string;
     avatarUrl?: string;
-    skills?: TechStack[];
+    techStacks?: TechStack[];
   };
   projectRole: ProjectRole;
   appliedAt: Date;
