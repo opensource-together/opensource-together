@@ -108,7 +108,6 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Name */}
           <FormField
             control={control}
             name="username"
@@ -123,7 +122,6 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Title */}
           <FormField
             control={control}
             name="jobTitle"
@@ -138,7 +136,6 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Description */}
           <FormField
             control={control}
             name="bio"
@@ -157,10 +154,8 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Separator */}
           <div className="h-[2px] w-full bg-black/5" />
 
-          {/* Experiences */}
           <FormField
             control={control}
             name="experiences"

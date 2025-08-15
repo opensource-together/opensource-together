@@ -66,10 +66,8 @@ export function Combobox({
     const optionId = option.id;
 
     if (value.includes(optionId)) {
-      // Remove selection
       onChange(value.filter((id) => id !== optionId));
     } else {
-      // Add selection if under limit
       if (!maxSelections || value.length < maxSelections) {
         onChange([...value, optionId]);
       }
@@ -84,7 +82,6 @@ export function Combobox({
 
   return (
     <div className={cn("flex w-full flex-col gap-3", className)}>
-      {/* Selected items display */}
       {showTags && selectedOptions.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selectedOptions.map((option) => (

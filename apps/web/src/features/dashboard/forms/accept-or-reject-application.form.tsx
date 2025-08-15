@@ -51,7 +51,6 @@ export default function AcceptOrRejectApplicationForm({
     setSelectedDecision(decision);
     form.setValue("decision", decision);
 
-    // Open the confirmation dialog
     setConfirmDialog({
       open: true,
       type: decision,
@@ -65,7 +64,6 @@ export default function AcceptOrRejectApplicationForm({
       onReject(application.id, rejectionReason);
     }
 
-    // Close the confirmation dialog
     setConfirmDialog({
       open: false,
       type: null,

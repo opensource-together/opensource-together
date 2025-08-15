@@ -70,11 +70,11 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
     if (file) {
       setSelectedImageFile(file);
       setShouldDeleteImage(false);
-      setValue("image", "new-image-selected"); // Indicator that new image is selected
+      setValue("image", "new-image-selected");
     } else {
       setSelectedImageFile(null);
       setShouldDeleteImage(true);
-      setValue("image", ""); // Clear image
+      setValue("image", "");
     }
   };
 
@@ -83,7 +83,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
       updateData: {
         data: {
           ...data,
-          image: shouldDeleteImage ? undefined : data.image, // Let service handle the actual URL
+          image: shouldDeleteImage ? undefined : data.image,
         },
         projectId: project.id || "",
       },

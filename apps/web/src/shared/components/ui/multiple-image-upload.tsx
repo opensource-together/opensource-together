@@ -33,19 +33,16 @@ export function MultipleImageUpload({
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Derive previews from files using Object URLs
   const previews = useMemo(() => {
     return files.map((file) => URL.createObjectURL(file));
   }, [files]);
 
-  // Cleanup Object URLs when component unmounts or files change
   useEffect(() => {
     return () => {
       previews.forEach((preview) => URL.revokeObjectURL(preview));
     };
   }, [previews]);
 
-  // Memoized computed values
   const allImages = useMemo(
     () => [...currentImages, ...previews],
     [currentImages, previews]
@@ -55,12 +52,10 @@ export function MultipleImageUpload({
     [currentImages.length, files.length]
   );
 
-  // Determine accept format for dropzone
   const dropzoneAccept = useMemo(() => {
     if (accept === "image/*") {
       return { "image/*": [] };
     }
-    // Handle specific MIME types or extensions
     const mimeTypes = accept.split(",").map((type) => type.trim());
     const acceptObj: Record<string, string[]> = {};
     mimeTypes.forEach((type) => {
@@ -106,7 +101,6 @@ export function MultipleImageUpload({
     [maxSize, maxFiles]
   );
 
-  // Disable dropzone if max images reached or disabled prop is true
   const isDropzoneDisabled = disabled || totalCount >= maxFiles;
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
@@ -133,7 +127,6 @@ export function MultipleImageUpload({
   return (
     <div className={cn("w-full", className)}>
       <div className="space-y-4">
-        {/* Upload Zone */}
         <div
           {...getRootProps()}
           className={cn(
@@ -176,10 +169,8 @@ export function MultipleImageUpload({
           </div>
         </div>
 
-        {/* Error Message */}
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        {/* Image Previews */}
         {allImages.length > 0 && (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {allImages.map((image, index) => (
@@ -187,7 +178,6 @@ export function MultipleImageUpload({
                 key={index}
                 className="group relative aspect-video rounded-lg border border-gray-200"
               >
-                {/* zone qui clippe l'image */}
                 <div className="absolute inset-0 overflow-hidden rounded-lg">
                   <Image
                     src={image}
@@ -202,7 +192,6 @@ export function MultipleImageUpload({
                   </div>
                 </div>
 
-                {/* bouton au-dessus, non clippé */}
                 {index < currentImages.length ? (
                   <button
                     type="button"
@@ -227,7 +216,6 @@ export function MultipleImageUpload({
           </div>
         )}
 
-        {/* Upload Progress */}
         <div className="text-center text-sm text-gray-600">
           {totalCount} / {maxFiles} images
         </div>

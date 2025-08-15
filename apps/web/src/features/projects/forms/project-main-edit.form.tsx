@@ -149,7 +149,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* Title */}
           <FormField
             control={control}
             name="title"
@@ -164,7 +163,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* Description */}
           <FormField
             control={control}
             name="shortDescription"
@@ -183,10 +181,8 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* separator */}
           <div className="mt-10 h-[2px] w-full bg-black/3" />
 
-          {/* Cover Images */}
           <FormField
             control={control}
             name="coverImages"
@@ -214,7 +210,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* Key Features */}
           <FormField
             control={control}
             name="keyFeatures"
@@ -317,7 +312,7 @@ export default function ProjectMainEditForm({
               </FormItem>
             )}
           />
-          {/* Project Goals */}
+
           <FormField
             control={control}
             name="projectGoals"

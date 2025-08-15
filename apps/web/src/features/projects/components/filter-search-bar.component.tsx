@@ -23,7 +23,6 @@ export default function FilterSearchBar() {
   return (
     <div className="flex h-15 w-[729px] items-center justify-center">
       <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
-        {/* Zone des filtres avec hover */}
         <div className="rounded-fulltransition-colors flex h-full w-full items-center gap-4 duration-200 hover:rounded-full hover:bg-black/5">
           <div className="flex items-center">
             <div className="relative">
@@ -51,7 +50,6 @@ export default function FilterSearchBar() {
           </div>
         </div>
 
-        {/* Bouton en position absolue, en dehors de la zone hover */}
         <Button className="pointer-events-auto absolute right-2 h-9 px-4">
           Chercher un Projet <Icon name="search" size="xs" variant="white" />
         </Button>

@@ -15,7 +15,7 @@ export const getRoleBadgeVariant = (
   if (lowerRole.includes("backend") || lowerRole.includes("core")) {
     return "success";
   }
-  return "info"; // default variant
+  return "info";
 };
 
 export const getTechBadgeVariant = (
@@ -98,5 +98,5 @@ export const getTechBadgeVariant = (
   ) {
     return "success";
   }
-  return "info"; // default variant
+  return "info";
 };

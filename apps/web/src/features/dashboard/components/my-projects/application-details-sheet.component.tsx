@@ -92,7 +92,6 @@ export default function ApplicationDetailsSheet({
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
-          {/* Basic information */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground text-sm">Statut</span>
@@ -127,7 +126,6 @@ export default function ApplicationDetailsSheet({
             </div>
           </div>
 
-          {/* Role description */}
           {application.projectRole.description && (
             <div>
               <Label className="text-sm font-medium">Description du rôle</Label>
@@ -137,7 +135,6 @@ export default function ApplicationDetailsSheet({
             </div>
           )}
 
-          {/* Candidat skills */}
           {application.projectRole.techStacks &&
             application.projectRole.techStacks.length > 0 && (
               <div>
@@ -159,7 +156,6 @@ export default function ApplicationDetailsSheet({
 
           <div className="h-[1px] w-full bg-black/5" />
 
-          {/* Motivation letter */}
           {application.motivationLetter && (
             <div>
               <Label className="text-sm font-medium">
@@ -173,7 +169,6 @@ export default function ApplicationDetailsSheet({
             </div>
           )}
 
-          {/* Candidat skills */}
           {application.applicant.techStacks &&
             application.applicant.techStacks.length > 0 && (
               <div>
@@ -193,7 +188,6 @@ export default function ApplicationDetailsSheet({
               </div>
             )}
 
-          {/* Selected features */}
           {application.selectedKeyFeatures &&
             application.selectedKeyFeatures.length > 0 && (
               <div>
@@ -214,7 +208,6 @@ export default function ApplicationDetailsSheet({
               </div>
             )}
 
-          {/* Selected goals */}
           {application.selectedProjectGoals &&
             application.selectedProjectGoals.length > 0 && (
               <div>
@@ -235,7 +228,6 @@ export default function ApplicationDetailsSheet({
               </div>
             )}
 
-          {/* Rejection reason */}
           {application.status === "REJECTED" && application.rejectionReason && (
             <div>
               <Label className="text-sm font-medium text-red-600">
@@ -249,7 +241,6 @@ export default function ApplicationDetailsSheet({
             </div>
           )}
 
-          {/* Actions for pending applications */}
           {application.status === "PENDING" && children && (
             <div className="bg-background sticky bottom-0 mt-6 border-t pt-4">
               {children}

@@ -57,20 +57,17 @@ export const updateProfile = async (
 
     let avatarUrl: string | undefined = validatedData.avatarUrl;
 
-    // Handle avatar operations
     if (shouldDeleteAvatar && params.avatarUrl) {
       await safeDeleteMedia(params.avatarUrl);
       avatarUrl = undefined;
     } else if (avatarFile) {
       if (params.avatarUrl) {
-        // Replace existing avatar
         const newAvatarUrl = await safeReplaceMedia(
           params.avatarUrl,
           avatarFile
         );
         avatarUrl = newAvatarUrl || undefined;
       } else {
-        // Upload new avatar
         const newAvatarUrl = await safeUploadMedia(avatarFile);
         avatarUrl = newAvatarUrl || undefined;
       }
@@ -94,8 +91,8 @@ export const updateProfile = async (
     }
 
     return response.json();
-  } catch (e) {
-    console.error(e);
-    throw e;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    throw error;
   }
 };

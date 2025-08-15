@@ -5,7 +5,6 @@ import FilterSearchBar from "./filter-search-bar.component";
 export default function ProjectDiscoveryHero() {
   return (
     <div className="relative mx-auto min-h-[266px] w-full max-w-[3000px] overflow-hidden">
-      {/* Images de fond, hors du hero */}
       <Image
         src="/illustrations/bible-left-2.png"
         alt="Bible gauche"
@@ -22,7 +21,6 @@ export default function ProjectDiscoveryHero() {
         style={{ transform: "rotate(8deg)" }}
       />
 
-      {/* Images de fond, visibles uniquement à partir de md */}
       <Image
         src="/illustrations/bible-left-2.png"
         alt="Bible gauche"
@@ -39,7 +37,6 @@ export default function ProjectDiscoveryHero() {
         style={{ transform: "rotate(8deg)" }}
       />
 
-      {/* Hero principal, sans overflow ni images */}
       <div className="relative z-10 mx-auto mb-5 flex min-h-[266px] w-full max-w-[1094px] flex-col items-center justify-center">
         <h1
           className="mt-3 text-center text-3xl leading-none tracking-tighter md:text-5xl"
