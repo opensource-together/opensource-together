@@ -3,11 +3,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
+import { socket } from "@/shared/realtime/socket";
 
 import {
   getCurrentUser,
   getGitHubAuthUrl,
   getGoogleAuthUrl,
+  getWebSocketToken,
   handleGitHubCallback,
   handleGoogleCallback,
   logout,
@@ -47,9 +49,23 @@ export default function useAuth() {
   } = useQuery({
     queryKey: ["user/me"],
     queryFn: getCurrentUser,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: false,
   });
+
+  // Query to get the WebSocket token
+  const { data: wsToken } = useQuery({
+    queryKey: ["ws-token"],
+    queryFn: getWebSocketToken,
+    enabled: !!currentUser,
+  });
+
+  // Effect to manage the WebSocket token in the localStorage
+  useEffect(() => {
+    if (wsToken) {
+      localStorage.setItem("wsToken", wsToken);
+    } else if (!currentUser) {
+      localStorage.removeItem("wsToken");
+    }
+  }, [wsToken, currentUser]);
 
   const githubSignInMutation = useToastMutation({
     mutationFn: async () => {
@@ -81,6 +97,7 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["ws-token"] });
 
         // Récupérer l'URL de redirection depuis le sessionStorage
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
@@ -101,6 +118,7 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["ws-token"] });
 
         // Récupérer l'URL de redirection depuis le sessionStorage
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
@@ -121,6 +139,9 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.setQueryData(["user/me"], null);
+        queryClient.setQueryData(["ws-token"], null);
+        localStorage.removeItem("wsToken");
+        socket.disconnect();
         router.push("/");
       },
     },
@@ -152,6 +173,7 @@ export default function useAuth() {
     isAuthenticated: !!currentUser,
     isLoading,
     isError,
+    wsToken,
 
     // Actions
     signInWithGitHub: githubSignInMutation.mutate,
