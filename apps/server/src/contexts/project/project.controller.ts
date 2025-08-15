@@ -7,7 +7,7 @@ import {
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
+// import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
 import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
 import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
@@ -37,13 +37,15 @@ import {
 } from '@nestjs/swagger';
 import { Octokit } from '@octokit/rest';
 import { PublicAccess, Session } from 'supertokens-nestjs';
-import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
-import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
-import { CreateProjectResponseDto } from './dto/create-project-response.dto';
-import { GetProjectByIdResponseDto } from './dto/get-project-by-id-response.dto';
-import { GetProjectsResponseDto } from './dto/get-projects-response.dto';
-import { UpdateProjectDtoRequest } from './dto/update-project-request.dto';
-import { UpdateProjectResponseDto } from './dto/update-project-response.dto';
+import { DeleteProjectCommand } from './use-cases/commands/delete/delete-project.command';
+import { CreateProjectDtoRequest } from './controllers/dto/create-project-request.dto';
+import { CreateProjectResponseDto } from './controllers/dto/create-project-response.dto';
+import { GetProjectByIdResponseDto } from './controllers/dto/get-project-by-id-response.dto';
+import { GetProjectsResponseDto } from './controllers/dto/get-projects-response.dto';
+import { UpdateProjectDtoRequest } from './controllers/dto/update-project-request.dto';
+import { UpdateProjectResponseDto } from './controllers/dto/update-project-response.dto';
+import { ProjectService } from './project.service';
+import { ProjectValidationErrors } from '@/contexts/project/domain/project.entity';
 
 @ApiTags('Projects')
 @Controller('projects')
@@ -51,6 +53,7 @@ export class ProjectController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
+    private readonly projectService: ProjectService,
   ) {}
 
   @ApiOperation({ summary: 'Récupérer tous les projets' })
@@ -628,8 +631,8 @@ export class ProjectController {
     @Body() project: CreateProjectDtoRequest,
   ) {
     Logger.log({ image: project.image });
-    const projectRes: Result<Project> = await this.commandBus.execute(
-      new CreateProjectCommand({
+    const projectRes: Result<Project, string | ProjectValidationErrors> =
+      await this.projectService.create({
         ownerId: ownerId,
         title: project.title,
         description: project.description,
@@ -653,8 +656,7 @@ export class ProjectController {
         image: project.image,
         coverImages: project.coverImages,
         readme: project.readme,
-      }),
-    );
+      });
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
     }

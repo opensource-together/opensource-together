@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserInfrastructure } from './user/infrastructure/user.infrastructure';
-import { ProjectInfrastructure } from './project/infrastructure/project.infrastructure';
+import { ProjectInfrastructure } from './project/project.infrastructure';
 import { TechStackInfrastructure } from './techstack/infrastructure/techstack.infrastructure';
 import { ProjectRoleInfrastructure } from './project/bounded-contexts/project-role/infrastructure/project-role.infrastructure';
 import { GithubInfrastructure } from './github/infrastructure/github.infrastructure';

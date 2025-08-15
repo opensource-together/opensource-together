@@ -10,7 +10,7 @@ import {
   FullProfileData,
 } from '@/contexts/profile/use-cases/queries/find-profile-by-id.query';
 import { Project } from '@/contexts/project/domain/project.entity';
-import { GetProjectsByUserIdResponseDto } from '@/contexts/project/infrastructure/controllers/dto/get-projects-by-user-id-response.dto';
+import { GetProjectsByUserIdResponseDto } from '@/contexts/project/controllers/dto/get-projects-by-user-id-response.dto';
 import { FindProjectsByUserIdQuery } from '@/contexts/project/use-cases/queries/find-by-user-id/find-projects-by-user-id.handler';
 import { Result } from '@/libs/result';
 import {

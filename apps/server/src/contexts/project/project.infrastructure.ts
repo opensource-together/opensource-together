@@ -7,7 +7,7 @@ import { PrismaProjectRepository } from '@/contexts/project/infrastructure/repos
 import { PrismaProjectRoleRepository } from '@/contexts/project/bounded-contexts/project-role/infrastructure/repositories/prisma.project-role.repository';
 import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
-import { ProjectController } from '@/contexts/project/infrastructure/controllers/project.controller';
+import { ProjectController } from '@/contexts/project/project.controller';
 import { ProjectKeyFeatureController } from '@/contexts/project/bounded-contexts/project-key-feature/infrastructure/controllers/project-key-feature.controller';
 import { GithubRepository } from '@/contexts/github/infrastructure/repositories/github.repository';
 import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
@@ -22,9 +22,10 @@ import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/prof
 import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
 import { MEDIA_SERVICE_PORT } from '@/media/port/media.service.port';
 import { R2MediaService } from '@/media/infrastructure/services/r2.media.service';
-import { PROJECT_KEY_FEATURE_REPOSITORY_PORT } from '../bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
-import { PrismaProjectKeyFeatureRepository } from '../bounded-contexts/project-key-feature/infrastructure/repositories/prisma.project-key-feature.repository';
-import { ProjectNotificationsListener } from './listeners/project-notifications.listener';
+import { PROJECT_KEY_FEATURE_REPOSITORY_PORT } from './bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
+import { PrismaProjectKeyFeatureRepository } from './bounded-contexts/project-key-feature/infrastructure/repositories/prisma.project-key-feature.repository';
+import { ProjectNotificationsListener } from './infrastructure/listeners/project-notifications.listener';
+import { ProjectService } from './project.service';
 
 @Module({
   imports: [PersistenceInfrastructure],
@@ -74,6 +75,7 @@ import { ProjectNotificationsListener } from './listeners/project-notifications.
     },
     GithubInfrastructure,
     ProjectNotificationsListener,
+    ProjectService,
     ...projectUseCases,
   ],
   controllers: [ProjectController, ProjectKeyFeatureController],
