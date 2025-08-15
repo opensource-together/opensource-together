@@ -3,7 +3,6 @@ import React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-// Type for the icon size
 export type IconSize = "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type IconVariant =
   | "default"
@@ -13,7 +12,6 @@ export type IconVariant =
   | "filled"
   | "outline";
 
-// Mapping of the sizes with the Tailwind classes
 const iconSizes: Record<IconSize, string> = {
   xxs: "w-2 h-2", // 8px
   xs: "w-3 h-3", // 12px
@@ -24,7 +22,6 @@ const iconSizes: Record<IconSize, string> = {
   "2xl": "w-10 h-10", // 40px
 };
 
-// List of the available icons based on the existing files
 export type IconName =
   | "github"
   | "twitter"
@@ -58,10 +55,9 @@ export type IconName =
   | "home"
   | "file-text"
   | "mix"
-  | "contact"
+  | "chat"
   | "commit";
 
-// Mapping of the icon names to the SVG files
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   github: {
     default: "/icons/github.svg",
@@ -98,9 +94,9 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   star: {
     default: "/icons/empty-star.svg",
     gray: "/icons/star-gray.svg",
-    white: "/icons/empty-star.svg",
+    white: "/icons/star-white.svg",
     black: "/icons/star.svg",
-    filled: "/icons/star-filled-in-black.svg",
+    filled: "/icons/star.svg",
     outline: "/icons/empty-star.svg",
   },
   fork: {
@@ -115,8 +111,8 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     default: "/icons/people.svg",
     gray: "/icons/people-gray.svg",
     white: "/icons/people.svg",
-    black: "/icons/people-filled-in-black.svg",
-    filled: "/icons/people-filled-in-black.svg",
+    black: "/icons/people.svg",
+    filled: "/icons/people-filled.svg",
     outline: "/icons/people.svg",
   },
   search: {
@@ -241,12 +237,12 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/pencil-outline.svg",
   },
   pinned: {
-    default: "/icons/pinned-icon.svg",
-    gray: "/icons/pinned-icon.svg",
-    white: "/icons/pinned-icon.svg",
-    black: "/icons/pinned-icon.svg",
-    filled: "/icons/pinned-icon.svg",
-    outline: "/icons/pinned-icon.svg",
+    default: "/icons/pinned.svg",
+    gray: "/icons/pinned-gray.svg",
+    white: "/icons/pinned-white.svg",
+    black: "/icons/pinned.svg",
+    filled: "/icons/pinned.svg",
+    outline: "/icons/pinned.svg",
   },
   joined: {
     default: "/icons/joined.svg",
@@ -273,12 +269,12 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/created-projects-icon.svg",
   },
   "last-commit": {
-    default: "/icons/last-commit-icon.svg",
-    gray: "/icons/last-commit-icon.svg",
-    white: "/icons/last-commit-icon.svg",
-    black: "/icons/last-commit-icon.svg",
-    filled: "/icons/last-commit-icon.svg",
-    outline: "/icons/last-commit-icon.svg",
+    default: "/icons/last-commit.svg",
+    gray: "/icons/last-commit-gray.svg",
+    white: "/icons/last-commit-white.svg",
+    black: "/icons/last-commit.svg",
+    filled: "/icons/last-commit.svg",
+    outline: "/icons/last-commit.svg",
   },
   trash: {
     default: "/icons/trash.svg",
@@ -328,28 +324,22 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     filled: "/icons/commit.svg",
     outline: "/icons/commit.svg",
   },
-  contact: {
-    default: "/icons/contact-icon.svg",
-    gray: "/icons/contact-icon.svg",
-    white: "/icons/contact-icon.svg",
-    black: "/icons/contact-icon.svg",
-    filled: "/icons/contact-icon.svg",
-    outline: "/icons/contact-icon.svg",
+  chat: {
+    default: "/icons/chat.svg",
+    gray: "/icons/chat-gray.svg",
+    white: "/icons/chat-white.svg",
+    black: "/icons/chat.svg",
+    filled: "/icons/chat.svg",
+    outline: "/icons/chat.svg",
   },
 };
 
 export interface IconProps {
-  /** Icon name */
   name: IconName;
-  /** Icon size */
   size?: IconSize;
-  /** Icon variant */
   variant?: IconVariant;
-  /** Additional CSS classes */
   className?: string;
-  /** Alternative text for accessibility */
   alt?: string;
-  /** If the icon should be interactive (hover effects) */
   interactive?: boolean;
 }
 

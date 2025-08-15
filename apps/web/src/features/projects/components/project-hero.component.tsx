@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
@@ -27,34 +28,27 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
   return (
     <section className="flex flex-col bg-white">
-      {/* Header with logo and stars */}
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-        {/* Project Icon and Title */}
         <div className="flex items-center gap-3 sm:gap-4">
           <Avatar src={image} name={title} alt={title} size="xl" />
-          {/* Project Title */}
           <h1 className="text-start text-2xl font-medium tracking-tighter text-black sm:text-3xl">
             {title}
           </h1>
         </div>
 
-        {/* Stars button */}
         <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
           <span>{stars}</span>
           <Icon name="star" size="sm" />
         </button>
       </div>
 
-      {/* Description */}
       <div className="mt-2">
         <p className="text-md mb-0 font-medium">{shortDescription}</p>
 
-        {/* separator */}
-        <div className="my-5 h-[2px] w-full bg-black/3" />
+        <Separator className="my-5" />
 
         {coverImages.length > 0 && (
           <div className="mt-2 flex flex-row gap-1">
-            {/* Main large image */}
             <div className="flex-1">
               <Image
                 src={coverImages[0]}
@@ -65,7 +59,6 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                 priority
                 onError={(e) => {
                   console.warn(`Failed to load image: ${coverImages[0]}`);
-                  // Hide the image container and show a placeholder
                   const target = e.target as HTMLImageElement;
                   const container = target.closest("div");
                   if (container) {
@@ -78,7 +71,6 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                 }}
               />
             </div>
-            {/* Thumbnails on the right */}
             {coverImages.length > 1 && (
               <div className="flex min-w-[180px] flex-col gap-1">
                 {coverImages.slice(1, 4).map((img, idx) => (
@@ -91,7 +83,6 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
                       className="h-full w-full rounded-md object-cover"
                       onError={(e) => {
                         console.warn(`Failed to load image: ${img}`);
-                        // Hide the image and show a placeholder
                         const target = e.target as HTMLImageElement;
                         const container = target.closest("div");
                         if (container) {
@@ -155,7 +146,6 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 export function SkeletonProjectHero() {
   return (
     <section className="flex min-h-[634px] w-[710px] flex-col rounded-3xl border border-[black]/10 bg-white p-10 shadow-[0_0_0.5px_0_rgba(0,0,0,0.20)]">
-      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-5">
           <Skeleton className="h-[80px] w-[82px] rounded-[16px]" />
@@ -173,7 +163,6 @@ export function SkeletonProjectHero() {
         </div>
       </div>
 
-      {/* Description */}
       <div className="mt-2">
         <Skeleton className="mb-2 h-5 w-40" />
         <Skeleton className="mb-2 h-4 w-3/4" />
@@ -186,7 +175,6 @@ export function SkeletonProjectHero() {
 
       <div className="mt-8 mb-3 w-full border-t border-dashed border-black/10" />
 
-      {/* Technical Stack */}
       <div className="mt-2">
         <Skeleton className="mb-3 h-5 w-32" />
         <div className="flex gap-3">

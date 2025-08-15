@@ -7,8 +7,8 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Icon } from "@/shared/components/ui/icon";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import MyProjectsCardSkeleton from "../skeletons/my-projects-card-skeleton.component";
 import MyProjectsCard from "./my-projects-card.component";
-import MyProjectsCardSkeleton from "./skeletons/my-projects-card-skeleton.component";
 
 interface MyProjectsListProps {
   onProjectSelect?: (projectId: string) => void;

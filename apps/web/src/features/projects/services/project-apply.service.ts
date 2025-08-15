@@ -3,6 +3,14 @@ import { API_BASE_URL } from "@/config/config";
 import { ProjectRoleApplicationType } from "../../dashboard/types/project-role-application.type";
 import { RoleApplicationSchema } from "../validations/project-apply.schema";
 
+/**
+ * Applies to a project role.
+ *
+ * @param projectId - The ID of the project.
+ * @param roleId - The ID of the role.
+ * @param data - The data to apply to the role.
+ * @returns The project role application.
+ */
 export async function applyToProjectRole(
   projectId: string,
   roleId: string,

@@ -101,9 +101,6 @@ export const extractMediaKey = (mediaUrl: string): string => {
 };
 
 // ===== SAFE WRAPPERS =====
-// These functions are used to wrap the public calls and provide a safe way to handle media operations.
-// They will handle the case where the image is not found or the upload fails.
-// They will also handle the case where the image is not found or the upload fails.
 
 /**
  * Upload a new image (safe by default)
@@ -145,11 +142,8 @@ export const safeReplaceMedia = async (
     console.warn("Failed to change image, falling back to upload:", error);
 
     try {
-      // Fallback: upload new image and clean old one
       const response = await uploadMedia(newFile);
-      await deleteMedia(currentImageKey).catch(() => {
-        // Silent fail - old image cleanup is best effort
-      });
+      await deleteMedia(currentImageKey).catch(() => {});
       return response.url;
     } catch (uploadError) {
       console.error("Failed to upload replacement image:", uploadError);
@@ -173,6 +167,5 @@ export const safeDeleteMedia = async (imageUrl: string): Promise<void> => {
     await deleteMedia(key);
   } catch (error) {
     console.warn(`Failed to delete image "${imageUrl}":`, error);
-    // Silent fail - deletion is safe by default
   }
 };

@@ -30,10 +30,8 @@ export default function ProjectSidebarEditForm({
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Form */}
       <div className="flex flex-col space-y-10 md:max-w-[263px]">
         <Form {...form}>
-          {/* Tech Stack */}
           <FormField
             control={control}
             name="techStack"
@@ -61,7 +59,6 @@ export default function ProjectSidebarEditForm({
             )}
           />
 
-          {/* Categories */}
           <FormField
             control={control}
             name="categories"
@@ -89,7 +86,6 @@ export default function ProjectSidebarEditForm({
             )}
           />
 
-          {/* Links */}
           <div className="flex flex-col gap-4">
             <FormLabel>Liens sociaux</FormLabel>
 

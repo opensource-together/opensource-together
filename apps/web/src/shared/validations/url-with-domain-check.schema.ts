@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-// ========================================
-// URL WITH DOMAIN CHECK VALIDATION
-// ========================================
-
 export const urlWithDomainCheck = (
   allowedDomains: string[],
   errorMsg: string
@@ -12,7 +8,7 @@ export const urlWithDomainCheck = (
     .string()
     .trim()
     .transform((val) => {
-      if (!val) return ""; // accept empty fields
+      if (!val) return "";
       return val.startsWith("http://") || val.startsWith("https://")
         ? val
         : `https://${val}`;
@@ -43,13 +39,5 @@ export const urlWithDomainCheck = (
     )
     .optional()
     .or(z.literal(""));
-
-// ========================================
-// PREDEFINED DOMAIN VALIDATORS
-// ========================================
-
-// ========================================
-// TYPE EXPORTS
-// ========================================
 
 export type UrlWithDomainCheck = z.infer<ReturnType<typeof urlWithDomainCheck>>;
