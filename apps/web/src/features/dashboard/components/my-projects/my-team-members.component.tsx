@@ -22,7 +22,7 @@ import {
 } from "@/shared/components/ui/table";
 
 import { TeamMemberType } from "../../types/my-projects.type";
-import MyTeamMembersSkeleton from "./skeletons/my-team-members-skeleton.component";
+import MyTeamMembersSkeleton from "../skeletons/my-team-members-skeleton.component";
 
 const formatDate = (dateInput: Date | string): string => {
   const date = dateInput instanceof Date ? dateInput : new Date(dateInput);

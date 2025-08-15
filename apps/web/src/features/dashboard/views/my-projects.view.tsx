@@ -9,7 +9,7 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
-import MyProjectsSkeletonComponent from "../components/my-projects/skeletons/my-projects-skeleton.component";
+import MyProjectsSkeletonComponent from "../components/skeletons/my-projects-skeleton.component";
 import { useMyProjects } from "../hooks/use-my-projects.hook";
 import {
   useAcceptProjectRoleApplication,
