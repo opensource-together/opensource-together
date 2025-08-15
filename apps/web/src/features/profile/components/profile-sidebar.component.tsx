@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
-import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
+import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import Icon, { IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
 
@@ -53,7 +53,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
   return (
     <div className="flex w-[252px] flex-col gap-5">
-      <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
+      <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
       {shouldShowStats && (
         <div className="mb-2 flex flex-col md:max-w-[263px]">

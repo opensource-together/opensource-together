@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
+import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 
 import { useUpdateProject } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
@@ -115,7 +115,7 @@ export default function ProjectEditForm({ project }: ProjectEditFormProps) {
   return (
     <>
       <div>
-        <BreadcrumbComponent items={breadcrumbItems} className="mb-7" />
+        <BreadcrumbNavigation items={breadcrumbItems} className="mb-7" />
         <ProjectSidebarEditForm project={project} form={form} />
       </div>
 

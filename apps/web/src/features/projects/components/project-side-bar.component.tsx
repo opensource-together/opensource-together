@@ -2,9 +2,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
-import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
+import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
@@ -106,7 +106,7 @@ export default function ProjectSideBar({
 
   return (
     <div className="flex flex-col gap-5">
-      <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
+      <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (

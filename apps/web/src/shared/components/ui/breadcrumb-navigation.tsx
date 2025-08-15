@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../ui/breadcrumb";
+} from "./breadcrumb";
 
 interface BreadcrumbItemProps {
   label: string;
@@ -21,7 +21,7 @@ interface BreadcrumbProps {
   className?: string;
 }
 
-export default function BreadcrumbComponent({
+export default function BreadcrumbNavigation({
   items,
   className = "",
 }: BreadcrumbProps) {
