@@ -1,0 +1,23 @@
+name: ost-server-dev
+
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=ost_dev
+      - POSTGRES_USER=ost_user
+      - POSTGRES_PASSWORD=ost_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - ost_dev_network
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  ost_dev_network:
+    driver: bridge
