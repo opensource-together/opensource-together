@@ -1,5 +1,5 @@
 import { Description } from '@/contexts/project/domain/vo/description.vo';
-import { ShortDescription } from '@/contexts/project/domain/vo/short-description.vo.';
+import { ShortDescription } from '@/contexts/project/domain/vo/short-description.vo';
 import { Title } from '@/contexts/project/domain/vo/title.vo';
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, IsString } from 'class-validator';

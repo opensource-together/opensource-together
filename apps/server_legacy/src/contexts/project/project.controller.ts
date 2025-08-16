@@ -7,8 +7,6 @@ import {
   RepositoryInfo,
 } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
-// import { CreateProjectCommand } from '@/contexts/project/use-cases/commands/create/create-project.command';
-import { UpdateProjectCommand } from '@/contexts/project/use-cases/commands/update/update-project.command';
 import { FindProjectByIdQuery } from '@/contexts/project/use-cases/queries/find-by-id/find-project-by-id.handler';
 import { GetProjectsQuery } from '@/contexts/project/use-cases/queries/get-all/get-projects.handler';
 import { Result } from '@/libs/result';
@@ -26,7 +24,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { QueryBus } from '@nestjs/cqrs';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -37,8 +35,7 @@ import {
 } from '@nestjs/swagger';
 import { Octokit } from '@octokit/rest';
 import { PublicAccess, Session } from 'supertokens-nestjs';
-import { DeleteProjectCommand } from './use-cases/commands/delete/delete-project.command';
-import { CreateProjectDtoRequest } from './controllers/dto/create-project-request.dto';
+import { CreateProjectDto } from './controllers/dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './controllers/dto/create-project-response.dto';
 import { GetProjectByIdResponseDto } from './controllers/dto/get-project-by-id-response.dto';
 import { GetProjectsResponseDto } from './controllers/dto/get-projects-response.dto';
@@ -51,7 +48,6 @@ import { ProjectValidationErrors } from '@/contexts/project/domain/project.entit
 @Controller('projects')
 export class ProjectController {
   constructor(
-    private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly projectService: ProjectService,
   ) {}
@@ -485,60 +481,8 @@ export class ProjectController {
   @ApiOperation({ summary: 'Créer un nouveau projet' })
   @ApiCookieAuth('sAccessToken')
   @ApiBody({
-    description: 'Données du projet',
-    schema: {
-      type: 'object',
-      required: [
-        'title',
-        'description',
-        'shortDescription',
-        'techStacks',
-        'categories',
-        'keyFeatures',
-        'projectGoals',
-        'projectRoles',
-      ],
-      properties: {
-        title: { type: 'string', example: 'Mon Projet' },
-        description: { type: 'string', example: 'Description du projet' },
-        shortDescription: { type: 'string', example: 'Description courte' },
-        techStacks: {
-          type: 'array',
-          items: { type: 'string' },
-          example: ['1', '2'],
-        },
-        categories: {
-          type: 'array',
-          items: { type: 'string' },
-          example: ['1'],
-        },
-        keyFeatures: {
-          type: 'array',
-          items: { type: 'string' },
-          example: ['Feature 1'],
-        },
-        projectGoals: {
-          type: 'array',
-          items: { type: 'string' },
-          example: ['Goal 1'],
-        },
-        projectRoles: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              title: { type: 'string', example: 'Developer' },
-              description: { type: 'string', example: 'Role description' },
-              techStacks: {
-                type: 'array',
-                items: { type: 'string' },
-                example: ['1'],
-              },
-            },
-          },
-        },
-      },
-    },
+    type: CreateProjectDto,
+    description: 'Données du projet à créer',
   })
   @ApiResponse({
     status: 201,
@@ -628,34 +572,15 @@ export class ProjectController {
     @Session('userId') ownerId: string,
     @Query('method') method: string,
     @GitHubOctokit() octokit: Octokit,
-    @Body() project: CreateProjectDtoRequest,
+    @Body() project: CreateProjectDto,
   ) {
     Logger.log({ image: project.image });
     const projectRes: Result<Project, string | ProjectValidationErrors> =
       await this.projectService.create({
         ownerId: ownerId,
-        title: project.title,
-        description: project.description,
-        shortDescription: project.shortDescription,
-        externalLinks: project.externalLinks || [],
-        techStacks: project.techStacks,
-        projectRoles: project.projectRoles.map((role) => ({
-          title: role.title,
-          description: role.description,
-          techStacks: role.techStacks,
-        })),
-        categories: project.categories,
-        keyFeatures: project.keyFeatures.map((feature) => ({
-          feature: feature,
-        })),
-        projectGoals: project.projectGoals.map((goal) => ({
-          goal: goal,
-        })),
+        ...project,
         octokit: octokit,
         method: method,
-        image: project.image,
-        coverImages: project.coverImages,
-        readme: project.readme,
       });
     if (!projectRes.success) {
       throw new HttpException(projectRes.error, HttpStatus.BAD_REQUEST);
@@ -770,21 +695,24 @@ export class ProjectController {
     @Param('id') id: string,
     @Body() project: UpdateProjectDtoRequest,
   ) {
-    const projectRes: Result<Project, string> = await this.commandBus.execute(
-      new UpdateProjectCommand(id, ownerId, {
-        title: project.title,
-        description: project.description,
-        shortDescription: project.shortDescription,
-        externalLinks: project.externalLinks,
-        techStacks: project.techStacks,
-        categories: project.categories,
-        keyFeatures: project.keyFeatures,
-        projectGoals: project.projectGoals,
-        image: project.image,
-        coverImages: project.coverImages,
-        readme: project.readme,
-      }),
-    );
+    const projectRes: Result<Project, string | ProjectValidationErrors> =
+      await this.projectService.update({
+        id: id,
+        ownerId: ownerId,
+        projectProps: {
+          title: project.title,
+          description: project.description,
+          shortDescription: project.shortDescription,
+          externalLinks: project.externalLinks,
+          techStacks: project.techStacks,
+          categories: project.categories,
+          keyFeatures: project.keyFeatures,
+          projectGoals: project.projectGoals,
+          image: project.image,
+          coverImages: project.coverImages,
+          readme: project.readme,
+        },
+      });
 
     if (!projectRes.success) {
       if (projectRes.error === 'Project not found') {
@@ -831,9 +759,10 @@ export class ProjectController {
     @Session('userId') ownerId: string,
     @Param('id') id: string,
   ) {
-    const result: Result<Project> = await this.commandBus.execute(
-      new DeleteProjectCommand(id, ownerId),
-    );
+    const result: Result<boolean, string> = await this.projectService.delete({
+      projectId: id,
+      ownerId: ownerId,
+    });
 
     if (!result.success) {
       if (result.error === 'Project not found') {
