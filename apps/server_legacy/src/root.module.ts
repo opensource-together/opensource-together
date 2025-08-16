@@ -4,7 +4,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ContextsModule } from './contexts/contexts.module';
 import { HealthModule } from './health/health.module';
-import { MediaInfrastructure } from './media/infrastructure/media.infrastructure';
+import { MediaInfrastructure } from './media/media.module';
 @Module({
   imports: [
     CqrsModule.forRoot(),

@@ -117,10 +117,6 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1",
-      "^@application/(.*)$": "<rootDir>/application/$1",
-      "^@domain/(.*)$": "<rootDir>/domain/$1",
-      "^@infrastructures/(.*)$": "<rootDir>/infrastructures/$1",
-      "^@shared/(.*)$": "<rootDir>/shared/$1"
     }
   }
 }
