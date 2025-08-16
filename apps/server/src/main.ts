@@ -17,8 +17,11 @@ async function bootstrap() {
   // Config for Better Auth
   const expressApp: Express = express();
 
-  expressApp.all('/api/auth/*splat', toNodeHandler(auth));
-  expressApp.use(express.json());
+  expressApp.use((req, res, next) => {
+    console.log(`[GLOBAL] ${req.method} ${req.url}`);
+    next();
+  });
+
   app.use(expressApp);
 
   app.setGlobalPrefix('v1');

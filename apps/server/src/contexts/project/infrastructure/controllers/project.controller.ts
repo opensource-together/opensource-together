@@ -36,7 +36,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Octokit } from '@octokit/rest';
-import { PublicAccess, Session } from 'supertokens-nestjs';
+import { Public, Session } from '@thallesp/nestjs-better-auth';
 import { DeleteProjectCommand } from '../../use-cases/commands/delete/delete-project.command';
 import { CreateProjectDtoRequest } from './dto/create-project-request.dto';
 import { CreateProjectResponseDto } from './dto/create-project-response.dto';
@@ -261,7 +261,7 @@ export class ProjectController {
     ],
   })
   @ApiResponse({ status: 500, description: 'Erreur serveur' })
-  @PublicAccess()
+  @Public()
   @UseGuards(GithubAuthGuard)
   @Get()
   async getProjects(@GitHubOctokit() octokit?: Octokit) {
@@ -393,7 +393,7 @@ export class ProjectController {
     description: 'Projet non trouvé',
     example: { message: 'Project not found', statusCode: 404 },
   })
-  @PublicAccess()
+  @Public()
   @UseGuards(GithubAuthGuard)
   // @ApiCookieAuth('sAccessToken')
   @Get(':id')

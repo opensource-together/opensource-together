@@ -34,7 +34,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { PublicAccess, Session } from 'supertokens-nestjs';
+import { Public, Session } from '@thallesp/nestjs-better-auth';
 
 @ApiTags('Profile')
 @Controller('profile')
@@ -84,7 +84,7 @@ export class ProfileController {
     return this.getProfileById(userId);
   }
 
-  @PublicAccess()
+  @Public()
   @Get(':profileId/projects')
   @ApiOperation({ summary: "Récupérer tous les projets d'un profil" })
   @ApiParam({
@@ -191,7 +191,7 @@ export class ProfileController {
     return GetProjectsByUserIdResponseDto.toResponse(result.value);
   }
 
-  @PublicAccess()
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Récupérer un profil par son ID' })
   @ApiParam({

@@ -7,7 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { Session } from 'supertokens-nestjs';
+import { Session } from '@thallesp/nestjs-better-auth';
 import {
   ApiCookieAuth,
   ApiOperation,

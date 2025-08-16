@@ -1,14 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheckService, HealthCheck } from '@nestjs/terminus';
-import { PublicAccess } from 'supertokens-nestjs';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Public } from '@thallesp/nestjs-better-auth';
 
 @ApiTags('System')
 @Controller('health')
 export class HealthController {
   constructor(private health: HealthCheckService) {}
 
-  @PublicAccess()
+  @Public()
   @Get()
   @HealthCheck()
   @ApiOperation({

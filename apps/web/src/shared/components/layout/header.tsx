@@ -68,6 +68,7 @@ export default function Header() {
   const headerDashboard = pathname.startsWith("/dashboard");
   const { session, logout } = useAuth();
 
+
   if (pathname.startsWith("/auth")) {
     return null;
   }

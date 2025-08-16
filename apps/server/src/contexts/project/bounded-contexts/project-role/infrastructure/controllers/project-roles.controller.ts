@@ -26,7 +26,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { PublicAccess, Session } from 'supertokens-nestjs';
+import { Public, Session } from '@thallesp/nestjs-better-auth';
 import { CreateProjectRoleDtoRequest } from './dto/create-project-role-request.dto';
 import { UpdateProjectRoleDtoRequest } from './dto/update-project-role-request.dto';
 
@@ -39,7 +39,7 @@ export class ProjectRolesController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @PublicAccess()
+  @Public()
   @Get()
   @ApiOperation({ summary: "Récupérer tous les rôles d'un projet" })
   @ApiCookieAuth('sAccessToken')

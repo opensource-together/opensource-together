@@ -61,11 +61,11 @@ export const auth: {
       redirectURL: 'http://localhost:4000/api/auth/callback/google',
     },
   },
-  trustedOrigins: ['http://localhost:4000', 'http://localhost:3000'],
+  trustedOrigins: ['http://localhost:3000', 'http://localhost:4000'],
   baseURL: 'http://localhost:4000',
   advanced: {
     crossSubDomainCookies: {
-      enabled: true,
+      enabled: false,
       cookieName: 'better-auth',
       cookieDomain: 'localhost',
     },

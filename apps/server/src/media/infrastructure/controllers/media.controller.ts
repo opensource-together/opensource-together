@@ -21,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MEDIA_SERVICE_PORT } from '../../port/media.service.port';
+
 @Controller('media')
 export class MediaController {
   constructor(

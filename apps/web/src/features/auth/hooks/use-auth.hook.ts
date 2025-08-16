@@ -32,8 +32,8 @@ export default function useAuth() {
     errorMessage: "Erreur lors de la connexion avec GitHub",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        router.push("/");
+        // queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        // router.push("/");
       },
     },
   });
@@ -45,8 +45,8 @@ export default function useAuth() {
     errorMessage: "Erreur lors de la connexion avec Google",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        router.push("/");
+        // queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        // router.push("/");
       },
     },
   });

@@ -59,4 +59,5 @@ export class AuthController {
   signInWithSocial() {
     // ⚠️ La vraie logique est gérée par Better Auth (route/handler interne).
   }
+
 }

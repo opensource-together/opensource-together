@@ -21,7 +21,7 @@ import { AuthModule } from '@/auth/auth.module';
     BetterAuthModule.forRoot(auth, {
       disableTrustedOriginsCors: false,
       disableExceptionFilter: false,
-      disableBodyParser: false,
+      disableBodyParser: true,
     }),
     ContextsModule,
     HealthModule,

@@ -28,7 +28,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-// import { PublicAccess, Session } from 'supertokens-nestjs';
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 // DTO simple pour la mise à jour d'utilisateur

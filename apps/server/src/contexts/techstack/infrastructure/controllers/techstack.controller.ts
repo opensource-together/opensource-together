@@ -4,14 +4,14 @@ import { Result } from '@/libs/result';
 import { Controller, Get } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PublicAccess } from 'supertokens-nestjs';
+import { Public } from '@thallesp/nestjs-better-auth';
 
 @ApiTags('Tech Stacks')
 @Controller('techstacks')
 export class TechStackController {
   constructor(private readonly queryBus: QueryBus) {}
 
-  @PublicAccess()
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Récupérer toutes les technologies disponibles' })
   @ApiResponse({
