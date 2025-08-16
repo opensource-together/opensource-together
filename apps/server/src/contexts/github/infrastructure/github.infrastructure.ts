@@ -5,7 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { githubUseCases } from '@/contexts/github/use-cases/github.use-cases';
 // import { RepositoryModule } from '@/infrastructures/repositories/repository.module';
 import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
-import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
+import { EncryptionService } from '@/contexts/encryption/services/encryption.service';
 import { PersistenceInfrastructure } from '@/persistence/persistence.infrastructure';
 import { ConfigModule } from '@nestjs/config';
 import { OctokitProvider } from './providers/octokit.provider';

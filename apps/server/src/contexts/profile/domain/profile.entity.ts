@@ -1,10 +1,6 @@
 import { Result } from '@/libs/result';
-// import { SocialLink } from './social-link.vo';
 import { ProfileExperience } from './profile-experience.vo';
-// import { ProfileSkill } from './profile-skill.vo';
 import { ProfileProject } from './profile-project.vo';
-// import { SocialLinkType } from './social-link.vo';
-// import { SkillLevel } from './profile-skill.vo';
 
 export class Profile {
   private readonly userId: string;

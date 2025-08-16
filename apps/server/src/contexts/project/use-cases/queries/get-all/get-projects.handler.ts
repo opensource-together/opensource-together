@@ -15,7 +15,7 @@ import {
 import {
   PROFILE_REPOSITORY_PORT,
   ProfileRepositoryPort,
-} from '@/contexts/profile/use-cases/ports/profile.repository.port';
+} from '@/contexts/profile/ports/profile.repository.port';
 
 import { Octokit } from '@octokit/rest';
 export class GetProjectsQuery implements IQuery {

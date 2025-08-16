@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
-import { MockCategoryRepository } from '@/contexts/category/infrastructure/repositories/mock.category.repository';
-import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
+import { MockCategoryRepository } from '@/contexts/category/repositories/mock.category.repository';
+import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/ports/category.repository.port';
 import { GITHUB_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/github-repository.port';
 import { InMemoryProjectRoleRepository } from '@/contexts/project/bounded-contexts/project-role/infrastructure/repositories/mock.project-role.repository';
 import { PROJECT_ROLE_REPOSITORY_PORT } from '@/contexts/project/bounded-contexts/project-role/use-cases/ports/project-role.repository.port';

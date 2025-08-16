@@ -2,7 +2,7 @@ import { Category } from '@/contexts/category/domain/category.entity';
 import {
   CATEGORY_REPOSITORY_PORT,
   CategoryRepositoryPort,
-} from '@/contexts/category/use-cases/ports/category.repository.port';
+} from '@/contexts/category/ports/category.repository.port';
 import {
   Project,
   ProjectValidationErrors,
@@ -16,10 +16,6 @@ import {
   TechStackRepositoryPort,
 } from '@/contexts/techstack/use-cases/ports/techstack.repository.port';
 import { Result } from '@/libs/result';
-import {
-  MEDIA_SERVICE_PORT,
-  MediaServicePort,
-} from '@/media/port/media.service.port';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
 
@@ -54,8 +50,6 @@ export class UpdateProjectCommandHandler
     private readonly techStackRepo: TechStackRepositoryPort,
     @Inject(CATEGORY_REPOSITORY_PORT)
     private readonly categoryRepo: CategoryRepositoryPort,
-    @Inject(MEDIA_SERVICE_PORT)
-    private readonly mediaService: MediaServicePort,
   ) {}
 
   async execute(

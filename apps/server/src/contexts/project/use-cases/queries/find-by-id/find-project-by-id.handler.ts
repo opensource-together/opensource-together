@@ -8,7 +8,7 @@ import {
 import {
   PROFILE_REPOSITORY_PORT,
   ProfileRepositoryPort,
-} from '@/contexts/profile/use-cases/ports/profile.repository.port';
+} from '@/contexts/profile/ports/profile.repository.port';
 import { Project } from '@/contexts/project/domain/project.entity';
 import {
   PROJECT_REPOSITORY_PORT,

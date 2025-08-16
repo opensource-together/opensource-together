@@ -2,7 +2,7 @@ import { Category } from '@/contexts/category/domain/category.entity';
 import {
   CATEGORY_REPOSITORY_PORT,
   CategoryRepositoryPort,
-} from '@/contexts/category/use-cases/ports/category.repository.port';
+} from '@/contexts/category/ports/category.repository.port';
 import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 import {
   GITHUB_REPOSITORY_PORT,
@@ -24,7 +24,6 @@ import {
 import { Result } from '@/libs/result';
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommand, ICommandHandler } from '@nestjs/cqrs';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Octokit } from '@octokit/rest';
 
 export class CreateProjectCommand implements ICommand {
@@ -66,8 +65,6 @@ export class CreateProjectCommandHandler
     private readonly githubRepository: GithubRepositoryPort,
     @Inject(CATEGORY_REPOSITORY_PORT)
     private readonly categoryRepo: CategoryRepositoryPort,
-    @Inject(EventEmitter2)
-    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(

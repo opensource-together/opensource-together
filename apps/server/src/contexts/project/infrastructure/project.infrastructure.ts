@@ -15,11 +15,9 @@ import { GithubInfrastructure } from '@/contexts/github/infrastructure/github.in
 import { USER_GITHUB_CREDENTIALS_REPOSITORY_PORT } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
 import { PrismaUserGitHubCredentialsRepository } from '@/contexts/github/infrastructure/repositories/prisma.user-github-credentials.repository';
 import { ENCRYPTION_SERVICE_PORT } from '@/contexts/encryption/ports/encryption.service.port';
-import { EncryptionService } from '@/contexts/encryption/infrastructure/encryption.service';
-import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/use-cases/ports/category.repository.port';
-import { PrismaCategoryRepository } from '@/contexts/category/infrastructure/repositories/prisma.category.repository';
-import { PROFILE_REPOSITORY_PORT } from '@/contexts/profile/use-cases/ports/profile.repository.port';
-import { PrismaUserRepository } from '@/contexts/user/infrastructure/repositories/prisma.user.repository';
+import { EncryptionService } from '@/contexts/encryption/services/encryption.service';
+import { CATEGORY_REPOSITORY_PORT } from '@/contexts/category/ports/category.repository.port';
+import { PrismaCategoryRepository } from '@/contexts/category/repositories/prisma.category.repository';
 import { MEDIA_SERVICE_PORT } from '@/media/port/media.service.port';
 import { R2MediaService } from '@/media/infrastructure/services/r2.media.service';
 import { PROJECT_KEY_FEATURE_REPOSITORY_PORT } from '../bounded-contexts/project-key-feature/use-cases/ports/project-key-feature.repository.port';
@@ -60,10 +58,10 @@ import { ProjectNotificationsListener } from './listeners/project-notifications.
       provide: CATEGORY_REPOSITORY_PORT,
       useClass: PrismaCategoryRepository,
     },
-    {
+    /*{
       provide: PROFILE_REPOSITORY_PORT,
       useClass: PrismaUserRepository,
-    },
+    },*/
     {
       provide: MEDIA_SERVICE_PORT,
       useClass: R2MediaService,

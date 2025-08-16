@@ -1,4 +1,4 @@
-import { UpdateUserRequestDto } from '@/contexts/profile/infrastructure/controllers/dtos/update-user.request.dto';
+import { UpdateUserRequestDto } from '@/contexts/profile/controllers/dtos/update-user.request.dto';
 import { ProjectRoleApplication } from '@/contexts/project/bounded-contexts/project-role-application/domain/project-role-application.entity';
 import { GetAllApplicationsByProjectsOwnerQuery } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/queries/get-all-applications-by-projects-owner.query';
 import { CancelApplicationCommand } from '@/contexts/project/bounded-contexts/project-role-application/use-cases/commands/cancel-application.command';

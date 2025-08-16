@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { userUseCases } from '../use-cases/user.use-cases';
 import { UserController } from './controllers/user.controller';
 import { PrismaUserRepository } from './repositories/prisma.user.repository';
 import { USER_REPOSITORY_PORT } from '../use-cases/ports/user.repository.port';
@@ -10,7 +9,7 @@ import { TECHSTACK_REPOSITORY_PORT } from '@/contexts/techstack/use-cases/ports/
 import { PrismaTechStackRepository } from '@/contexts/techstack/infrastructure/repositories/prisma.techstack.repository';
 import { ProjectInfrastructure } from '@/contexts/project/infrastructure/project.infrastructure';
 import { GithubInfrastructure } from '@/contexts/github/infrastructure/github.infrastructure';
-import { EncryptionModule } from '@/contexts/encryption/infrastructure/encryption.module';
+import { EncryptionModule } from '@/contexts/encryption/encryption.module';
 import { CalculateGitHubStatsUseCase } from '../use-cases/calculate-github-stats.use-case';
 @Module({
   imports: [
@@ -33,9 +32,7 @@ import { CalculateGitHubStatsUseCase } from '../use-cases/calculate-github-stats
       useClass: PrismaTechStackRepository,
     },
     CalculateGitHubStatsUseCase,
-    ...userUseCases,
   ],
   controllers: [UserController],
-  exports: [...userUseCases],
 })
 export class UserInfrastructure {}
