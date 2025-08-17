@@ -23,7 +23,6 @@ export const useNotifications = () => {
     updateNotification,
   } = useNotificationStore();
 
-  // État de connexion WebSocket
   const [wsConnected, setWsConnected] = useState(false);
 
   const {
@@ -104,7 +103,6 @@ export const useNotifications = () => {
     markAllNotificationsAsRead();
   };
 
-  // État combiné
   const isLoading = storeLoading || isLoadingUnread;
   const error = storeError || unreadError;
 
