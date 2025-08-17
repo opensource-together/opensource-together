@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -50,11 +49,22 @@ model User {
 
   applicationsApplied ProjectRoleApplication[] @relation("applier")
   applicationsDecided ProjectRoleApplication[] @relation("decider")
-  
+
   notificationsSent     Notification[] @relation("NotificationsSent")
   notificationsReceived Notification[] @relation("NotificationsReceived")
 
   @@map("user")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }
 
 model Session {
@@ -196,7 +206,6 @@ model ProjectRoleApplication {
 
   projectRole ProjectRole @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
   user        User        @relation("applier", fields: [userId], references: [id], onDelete: Cascade)
-  // decidedBy est optionnel -> la relation doit être optionnelle aussi
   userDecider User?       @relation("decider", fields: [decidedBy], references: [id], onDelete: SetNull)
   project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
