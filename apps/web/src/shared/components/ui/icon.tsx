@@ -57,7 +57,8 @@ export type IconName =
   | "mix"
   | "contact"
   | "commit"
-  | "bell";
+  | "bell"
+  | "chat";
 
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
   github: {
@@ -340,6 +341,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/contact-icon.svg",
     filled: "/icons/contact-icon.svg",
     outline: "/icons/contact-icon.svg",
+  },
+  chat: {
+    default: "/icons/chat.svg",
+    gray: "/icons/chat-gray.svg",
+    white: "/icons/chat-white.svg",
+    black: "/icons/chat-black.svg",
+    filled: "/icons/chat-filled.svg",
+    outline: "/icons/chat-outline.svg",
   },
 };
 
