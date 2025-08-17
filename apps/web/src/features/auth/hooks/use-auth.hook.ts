@@ -20,9 +20,7 @@ export default function useAuth() {
   const queryClient = useQueryClient();
   const pathname = usePathname();
 
-  // Gérer la sauvegarde de l'URL de redirection depuis les search params
   useEffect(() => {
-    // Seulement sur les pages auth et pas sur callback GitHub
     if (
       !pathname?.startsWith("/auth") ||
       pathname?.includes("/auth/callback")
@@ -30,7 +28,6 @@ export default function useAuth() {
       return;
     }
 
-    // Utiliser window.location.search côté client pour éviter l'erreur Next.js
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       const redirectUrl = urlParams.get("redirect");
@@ -41,7 +38,6 @@ export default function useAuth() {
     }
   }, [pathname]);
 
-  // Query to get the current user
   const {
     data: currentUser,
     isLoading,
@@ -99,11 +95,9 @@ export default function useAuth() {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
         queryClient.invalidateQueries({ queryKey: ["ws-token"] });
 
-        // Récupérer l'URL de redirection depuis le sessionStorage
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
-        sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
+        sessionStorage.removeItem("auth_redirect_url");
 
-        // Rediriger vers l'URL d'origine ou vers / par défaut
         router.push(redirectUrl || "/");
       },
       onError: () => router.push("/auth/login"),
@@ -120,11 +114,9 @@ export default function useAuth() {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
         queryClient.invalidateQueries({ queryKey: ["ws-token"] });
 
-        // Récupérer l'URL de redirection depuis le sessionStorage
         const redirectUrl = sessionStorage.getItem("auth_redirect_url");
-        sessionStorage.removeItem("auth_redirect_url"); // Nettoyer après utilisation
+        sessionStorage.removeItem("auth_redirect_url");
 
-        // Rediriger vers l'URL d'origine ou vers / par défaut
         router.push(redirectUrl || "/");
       },
       onError: () => router.push("/auth/login"),
@@ -147,18 +139,12 @@ export default function useAuth() {
     },
   });
 
-  // Helper fonction pour rediriger vers login en sauvegardant l'URL actuelle
   const redirectToLogin = (customRedirectUrl?: string) => {
     const redirectUrl = customRedirectUrl || pathname;
     const encodedRedirectUrl = encodeURIComponent(redirectUrl);
     router.push(`/auth/login?redirect=${encodedRedirectUrl}`);
   };
 
-  /**
-   * Fonction qui vérifie l'authentification avant d'exécuter une action
-   * Si l'utilisateur n'est pas connecté, redirige vers login et sauvegarde l'URL actuelle
-   * Si l'utilisateur est connecté, exécute l'action
-   */
   const requireAuth = (action: () => void, customRedirectUrl?: string) => {
     if (!currentUser) {
       redirectToLogin(customRedirectUrl);
@@ -168,23 +154,20 @@ export default function useAuth() {
   };
 
   return {
-    // Data
     currentUser,
     isAuthenticated: !!currentUser,
     isLoading,
     isError,
     wsToken,
 
-    // Actions
     signInWithGitHub: githubSignInMutation.mutate,
     signInWithGoogle: googleSignInMutation.mutate,
     redirectAfterGitHub: githubCallbackMutation.mutate,
     redirectAfterGoogle: googleCallbackMutation.mutate,
     logout: logoutMutation.mutate,
-    redirectToLogin, // Fonction helper pour redirection manuelle
-    requireAuth, // Fonction helper pour actions protégées
+    redirectToLogin,
+    requireAuth,
 
-    // Loading states
     isSigningIn: githubSignInMutation.isPending,
     isProcessingCallback: githubCallbackMutation.isPending,
     isLoggingOut: logoutMutation.isPending,

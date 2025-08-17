@@ -1,11 +1,11 @@
-import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 import { GithubInvitationDto } from '@/contexts/github/infrastructure/repositories/dto/github-invitation.dto';
+import { GithubRepositoryDto } from '@/contexts/github/infrastructure/repositories/dto/github-repository.dto';
 // import { CreateGithubRepositoryInput } from '@/application/dto/inputs/create-github-repository-inputs.dto';
 import { InviteUserToRepoInput } from '@/contexts/github/infrastructure/repositories/inputs/invite-user-to-repo.inputs.dto';
+import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 import { Result } from '@/libs/result';
 import { Octokit } from '@octokit/rest';
 import { GithubRepoSuggestionInput } from '../../infrastructure/repositories/inputs/github-repo-suggestion.input';
-import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 
 export type LastCommit = {
   sha: string;
@@ -19,9 +19,9 @@ export type LastCommit = {
   };
 };
 export type Contributor = {
-  login: string;
-  avatar_url: string;
-  html_url: string;
+  id: string;
+  username: string;
+  avatarUrl: string | null;
   contributions: number;
 };
 export type Author = {
@@ -66,11 +66,6 @@ export interface GithubRepositoryPort {
       string
     >
   >;
-  findContributorsByRepository(
-    owner: string,
-    repo: string,
-    octokit: Octokit,
-  ): Promise<Result<Array<Contributor>, string>>;
   findRepositoriesOfAuthenticatedUser(
     octokit: Octokit,
   ): Promise<Result<GithubRepoSuggestionInput[], string>>;

@@ -1,5 +1,6 @@
 import { Result } from '@/libs/result';
 import { Project } from '@/contexts/project/domain/project.entity';
+import { ProjectWithDetails } from '@/contexts/project/infrastructure/repositories/prisma.project.mapper';
 
 export const PROJECT_REPOSITORY_PORT = Symbol('PROJECT_REPOSITORY_PORT');
 export interface ProjectRepositoryPort {
@@ -10,6 +11,9 @@ export interface ProjectRepositoryPort {
   findById(id: string): Promise<Result<Project, string>>;
   getAllProjects(): Promise<Result<Project[], string>>;
   findProjectsByUserId(userId: string): Promise<Result<Project[], string>>;
+  findUserProjectsWithDetails(
+    userId: string,
+  ): Promise<Result<ProjectWithDetails[], string>>;
   // findProjectByFilters(filters: ProjectFilterInputsDto): Promise<Result<Project[], string>>;
   // updateProjectById(
   //   id: string,

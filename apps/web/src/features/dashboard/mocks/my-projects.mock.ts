@@ -1,4 +1,4 @@
-import { MyProjectType } from "../types/my-projects.type";
+/*import { MyProjectType } from "../types/my-projects.type";
 
 // Mock principal contenant tous les projets avec leurs applications et membres d'équipe
 export const mockDashboardData: MyProjectType[] = [
@@ -1226,3 +1226,4 @@ export const mockDashboardData: MyProjectType[] = [
     ],
   },
 ];
+*/

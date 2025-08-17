@@ -4,7 +4,10 @@ import { Result } from '@/libs/result';
 import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { PrismaProjectMapper } from './prisma.project.mapper';
+import {
+  PrismaProjectMapper,
+  ProjectWithDetails,
+} from './prisma.project.mapper';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepositoryPort {
@@ -370,6 +373,104 @@ export class PrismaProjectRepository implements ProjectRepositoryPort {
               : JSON.stringify(domainProject.error),
           );
         }
+        domainProjects.push(domainProject.value);
+      }
+
+      return Result.ok(domainProjects);
+    } catch (error) {
+      return Result.fail(`Unknown error : ${error}`);
+    }
+  }
+
+  async findUserProjectsWithDetails(
+    userId: string,
+  ): Promise<Result<ProjectWithDetails[], string>> {
+    try {
+      const projectsPrisma = await this.prisma.project.findMany({
+        where: {
+          OR: [
+            // Projets où l'utilisateur est propriétaire
+            { ownerId: userId },
+            // Projets où l'utilisateur est membre
+            { projectMembers: { some: { userId } } },
+          ],
+        },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: {
+              techStacks: true,
+              projectRoleApplication: {
+                include: {
+                  user: {
+                    include: {
+                      techStacks: true,
+                    },
+                  },
+                  selectedKeyFeatures: true,
+                  selectedProjectGoals: true,
+                },
+              },
+            },
+          },
+          projectMembers: {
+            include: {
+              user: {
+                include: {
+                  techStacks: true,
+                },
+              },
+              projectRole: {
+                include: {
+                  techStacks: true,
+                },
+              },
+            },
+          },
+          categories: true,
+          keyFeatures: true,
+          projectGoals: true,
+          externalLinks: true,
+          owner: {
+            include: {
+              techStacks: true,
+            },
+          },
+          projectRoleApplication: {
+            include: {
+              user: {
+                include: {
+                  techStacks: true,
+                },
+              },
+              selectedKeyFeatures: true,
+              selectedProjectGoals: true,
+              projectRole: {
+                include: {
+                  techStacks: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!projectsPrisma || projectsPrisma.length === 0) return Result.ok([]);
+
+      const domainProjects: ProjectWithDetails[] = [];
+
+      for (const projectPrisma of projectsPrisma) {
+        const domainProject = PrismaProjectMapper.toDomainWithDetails(
+          projectPrisma as any,
+        );
+        if (!domainProject.success) {
+          return Result.fail(
+            typeof domainProject.error === 'string'
+              ? domainProject.error
+              : JSON.stringify(domainProject.error),
+          );
+        }
+
         domainProjects.push(domainProject.value);
       }
 

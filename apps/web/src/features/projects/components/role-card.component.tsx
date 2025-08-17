@@ -24,6 +24,11 @@ interface RoleCardProps {
   projectId?: string;
 }
 
+const truncateText = (text: string, maxLength: number = 120) => {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength).trim() + "...";
+};
+
 export default function RoleCard({
   role,
   projectGoals = [],
@@ -52,7 +57,6 @@ export default function RoleCard({
       className={`w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)] ${className}`}
       onClick={handleCheckClick}
     >
-      {/* Role Title */}
       <div className="flex items-start justify-between">
         <h3 className="text-lg font-medium tracking-tighter text-black">
           {role.title}
@@ -99,17 +103,13 @@ export default function RoleCard({
         )}
       </div>
 
-      {/* Role Description */}
       <p className="mt-4 text-sm leading-snug font-medium tracking-tighter text-black/70">
-        {description}
+        {truncateText(description, 90)}
       </p>
 
-      {/* Ligne de séparation */}
       <div className="my-4 border-t border-black/3"></div>
 
-      {/* Bottom Section */}
       <div className="flex w-full items-center gap-3 overflow-hidden text-xs">
-        {/* Tech Badges */}
         <div className="flex gap-3">
           {roleTechStacks.length > 0 &&
             roleTechStacks.map((techStack: TechStack) => (

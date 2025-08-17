@@ -10,6 +10,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ProjectRoleApplicationInfrastructure } from './project/bounded-contexts/project-role-application/infrastructure/project-role-application.infrastructure';
 import { MailingInfrastructure } from '@/mailing/infrastructure/mailing.infrastructure';
 import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/project-key-feature/infrastructure/project-key-feature.infrastructure';
+import { TeamMemberInfrastructure } from './project/bounded-contexts/team-member/infrastructure/team-member.infrastructure';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/proj
     EventEmitterModule.forRoot(),
     MailingInfrastructure,
     ProjectKeyFeatureInfrastructure,
+    TeamMemberInfrastructure,
     NotificationInfrastructure,
   ],
   exports: [
@@ -34,6 +36,7 @@ import { ProjectKeyFeatureInfrastructure } from './project/bounded-contexts/proj
     CategoryInfrastructure,
     ProjectRoleApplicationInfrastructure,
     ProjectKeyFeatureInfrastructure,
+    TeamMemberInfrastructure,
     NotificationInfrastructure,
   ],
 })

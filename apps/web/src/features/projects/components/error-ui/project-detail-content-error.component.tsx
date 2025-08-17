@@ -1,4 +1,4 @@
-import Breadcrumb from "@/shared/components/shared/Breadcrumb";
+import Breadcrumb from "@/shared/components/ui/breadcrumb-navigation";
 
 export default function ProjectDetailContentError() {
   return (

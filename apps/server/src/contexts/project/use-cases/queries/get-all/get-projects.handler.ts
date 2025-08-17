@@ -1,13 +1,6 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { ProjectRepositoryPort } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { Project } from '@/contexts/project/domain/project.entity';
-import { Inject } from '@nestjs/common';
-import { PROJECT_REPOSITORY_PORT } from '@/contexts/project/use-cases/ports/project.repository.port';
-import { Result } from '@/libs/result';
-import { IQuery } from '@nestjs/cqrs';
 import {
-  GITHUB_REPOSITORY_PORT,
   Contributor,
+  GITHUB_REPOSITORY_PORT,
   GithubRepositoryPort,
   LastCommit,
   RepositoryInfo,
@@ -16,6 +9,14 @@ import {
   PROFILE_REPOSITORY_PORT,
   ProfileRepositoryPort,
 } from '@/contexts/profile/use-cases/ports/profile.repository.port';
+import { Project } from '@/contexts/project/domain/project.entity';
+import {
+  PROJECT_REPOSITORY_PORT,
+  ProjectRepositoryPort,
+} from '@/contexts/project/use-cases/ports/project.repository.port';
+import { Result } from '@/libs/result';
+import { Inject } from '@nestjs/common';
+import { IQuery, IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { Octokit } from '@octokit/rest';
 export class GetProjectsQuery implements IQuery {
@@ -71,26 +72,38 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
         const owner = ownerInfo.value.toPrimitive();
         const repoName = title.replace(/\s+/g, '-');
 
+        let contributors: Contributor[] = [];
+
+        const projectWithDetails =
+          await this.projectRepo.findUserProjectsWithDetails(ownerId);
+        if (projectWithDetails.success && projectWithDetails.value.length > 0) {
+          const projectDetails = projectWithDetails.value.find(
+            (p) => p.project.toPrimitive().id === projectPrimitive.id,
+          );
+          if (projectDetails) {
+            contributors = projectDetails.projectMembers.map((member) => ({
+              id: member.userId,
+              username: member.user.username,
+              avatarUrl: member.user.avatarUrl,
+              contributions: 1,
+            }));
+          }
+        }
+
         let repoInfo = Result.fail<RepositoryInfo>('No authentication');
         let commits = Result.fail<{
           lastCommit: LastCommit | null;
           commitsNumber: number;
         }>('No authentication');
-        let contributors = Result.fail<Contributor[]>('No authentication');
 
         if (octokit) {
-          [commits, repoInfo, contributors] = await Promise.all([
+          [commits, repoInfo] = await Promise.all([
             this.githubRepo.findCommitsByRepository(
               owner.login,
               repoName,
               octokit,
             ),
             this.githubRepo.findRepositoryByOwnerAndName(
-              owner.login,
-              repoName,
-              octokit,
-            ),
-            this.githubRepo.findContributorsByRepository(
               owner.login,
               repoName,
               octokit,
@@ -119,7 +132,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
           repositoryInfo: repoInfo.success ? repoInfo.value : defaultStats,
           lastCommit,
           commits: commits.success ? commits.value.commitsNumber : 0,
-          contributors: contributors.success ? contributors.value : [],
+          contributors: contributors,
         };
       }),
     );

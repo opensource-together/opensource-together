@@ -7,6 +7,7 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Icon } from "@/shared/components/ui/icon";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import MyProjectsCardSkeleton from "../skeletons/my-projects-card-skeleton.component";
 import MyProjectsCard from "./my-projects-card.component";
 
 interface MyProjectsListProps {
@@ -23,10 +24,8 @@ export default function MyProjectsList({
   if (isLoadingProjects) {
     return (
       <div className="space-y-3">
-        {[...Array(2)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="h-24 rounded-[20px] bg-gray-200"></div>
-          </div>
+        {[...Array(3)].map((_, i) => (
+          <MyProjectsCardSkeleton key={i} />
         ))}
       </div>
     );

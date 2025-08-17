@@ -187,6 +187,14 @@ describe('CreateProjectCommandHandler', () => {
           provider: 'github',
           createdAt: mockClock.now(),
           updatedAt: mockClock.now(),
+          techStacks: [
+            {
+              id: '1',
+              name: 'react',
+              iconUrl: 'https://reactjs.org/favicon.ico',
+              type: 'TECH',
+            },
+          ],
         },
         categories: [
           {
@@ -299,6 +307,14 @@ describe('CreateProjectCommandHandler', () => {
           provider: 'github',
           createdAt: mockClock.now(),
           updatedAt: mockClock.now(),
+          techStacks: [
+            {
+              id: '1',
+              name: 'react',
+              iconUrl: 'https://reactjs.org/favicon.ico',
+              type: 'TECH',
+            },
+          ],
         },
         categories: [
           {

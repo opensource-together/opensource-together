@@ -16,9 +16,11 @@ import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
 import ApplicationDetailsSheet from "../../forms/accept-or-reject-application.form";
 import { ApplicationType } from "../../types/my-projects.type";
+import MyApplicationsReceivedSkeleton from "../skeletons/my-applications-received-skeleton.component";
 
 interface MyApplicationsReceivedProps {
   applications: ApplicationType[];
+  isLoading?: boolean;
   onApplicationDecision?: (
     applicationId: string,
     decision: "ACCEPTED" | "REJECTED",
@@ -28,10 +30,15 @@ interface MyApplicationsReceivedProps {
 
 export default function MyApplicationsReceived({
   applications,
+  isLoading = false,
   onApplicationDecision,
 }: MyApplicationsReceivedProps) {
   const [selectedApplication, setSelectedApplication] =
     useState<ApplicationType | null>(null);
+
+  if (isLoading) {
+    return <MyApplicationsReceivedSkeleton />;
+  }
 
   if (applications.length === 0) {
     return (
@@ -83,11 +90,11 @@ export default function MyApplicationsReceived({
                       <h4 className="font-medium tracking-tighter">
                         {application.applicant.name}
                       </h4>
-                      {application.projectRole.techStacks &&
-                        application.projectRole.techStacks.length > 0 && (
+                      {application.applicant.techStacks &&
+                        application.applicant.techStacks.length > 0 && (
                           <div className="mt-1 flex items-center">
                             <div className="flex gap-1">
-                              {application.projectRole.techStacks
+                              {application.applicant.techStacks
                                 .slice(0, 3)
                                 .map((tech) => {
                                   return (
@@ -101,9 +108,9 @@ export default function MyApplicationsReceived({
                                   );
                                 })}
                             </div>
-                            {application.projectRole.techStacks.length > 3 && (
+                            {application.applicant.techStacks.length > 3 && (
                               <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                                +{application.projectRole.techStacks.length - 3}
+                                +{application.applicant.techStacks.length - 3}
                               </span>
                             )}
                           </div>

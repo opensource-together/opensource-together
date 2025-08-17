@@ -46,6 +46,100 @@ type PrismaProjectWithIncludes = PrismaProject & {
   };
 };
 
+// Types pour les données détaillées
+export type ProjectRoleApplicationWithDetails = {
+  id: string;
+  projectId: string;
+  projectTitle: string;
+  projectRoleId: string;
+  projectRoleTitle: string;
+  projectDescription?: string;
+  status: string;
+  motivationLetter?: string;
+  rejectionReason?: string;
+  decidedAt?: Date;
+  decidedBy?: string;
+  appliedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    provider: string;
+    login: string;
+    avatarUrl: string | null;
+    location: string | null;
+    company: string | null;
+    bio: string | null;
+    jobTitle: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    techStacks: TechStack[];
+  };
+  selectedKeyFeatures: KeyFeature[];
+  selectedProjectGoals: ProjectGoal[];
+  projectRole: ProjectRole & { techStacks: TechStack[] };
+};
+
+export type ProjectMemberWithDetails = teamMember & {
+  user: {
+    id: string;
+    username: string;
+    email: string;
+    provider: string;
+    login: string;
+    avatarUrl: string | null;
+    location: string | null;
+    company: string | null;
+    bio: string | null;
+    jobTitle: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    techStacks: TechStack[];
+  };
+  projectRole: (ProjectRole & { techStacks: TechStack[] })[];
+};
+
+export type ProjectWithDetails = {
+  project: Project;
+  projectRoleApplication: ProjectRoleApplicationWithDetails[];
+  projectMembers: ProjectMemberWithDetails[];
+};
+
+// Type pour les projets avec toutes les relations détaillées
+type PrismaProjectWithDetailedIncludes = PrismaProject & {
+  techStacks: TechStack[];
+  projectMembers: ProjectMemberWithDetails[];
+  projectRoles: (ProjectRole & {
+    techStacks: TechStack[];
+    projectRoleApplication: ProjectRoleApplicationWithDetails[];
+  })[];
+  categories: Category[];
+  keyFeatures: KeyFeature[];
+  projectGoals: ProjectGoal[];
+  externalLinks: ProjectExternalLink[];
+  image?: string | null;
+  readme?: string | null;
+  ownerId: string;
+  owner: {
+    id: string;
+    username: string;
+    email: string;
+    provider: string;
+    login: string;
+    avatarUrl: string | null;
+    location: string | null;
+    company: string | null;
+    bio: string | null;
+    jobTitle: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    techStacks: TechStack[];
+  };
+  projectRoleApplication: ProjectRoleApplicationWithDetails[];
+};
+
 export class PrismaProjectMapper {
   static toRepo(project: DomainProject): Result<Prisma.ProjectCreateInput> {
     const projectData = project.toPrimitive();
@@ -138,6 +232,12 @@ export class PrismaProjectMapper {
         provider: prismaProject.owner.provider,
         createdAt: prismaProject.owner.createdAt,
         updatedAt: prismaProject.owner.updatedAt,
+        techStacks: prismaProject.techStacks.map((techStack) => ({
+          id: techStack.id,
+          name: techStack.name,
+          iconUrl: techStack.iconUrl,
+          type: techStack.type,
+        })),
       },
       categories: prismaProject.categories.map((c) => ({
         id: c.id,
@@ -174,6 +274,93 @@ export class PrismaProjectMapper {
     if (!project.success)
       return Result.fail(project.error as ProjectValidationErrors);
     return Result.ok(project.value);
+  }
+
+  static toDomainWithDetails(
+    prismaProject: PrismaProjectWithDetailedIncludes,
+  ): Result<ProjectWithDetails, ProjectValidationErrors | string> {
+    // Créer les données du projet avec les techStacks de l'owner
+    const projectData: ProjectData = {
+      id: prismaProject.id,
+      ownerId: prismaProject.ownerId,
+      title: prismaProject.title,
+      shortDescription: prismaProject.shortDescription,
+      description: prismaProject.description,
+      externalLinks: prismaProject.externalLinks.map((link) => ({
+        type: link.type,
+        url: link.url,
+      })),
+      createdAt: prismaProject.createdAt,
+      updatedAt: prismaProject.updatedAt,
+      coverImages: prismaProject.coverImages || [],
+      readme: prismaProject.readme || undefined,
+      techStacks: prismaProject.techStacks.map((techStack) => ({
+        id: techStack.id,
+        name: techStack.name,
+        iconUrl: techStack.iconUrl,
+        type: techStack.type,
+      })),
+      owner: {
+        id: prismaProject.owner.id,
+        username: prismaProject.owner.username,
+        login: prismaProject.owner.login,
+        avatarUrl: prismaProject.owner.avatarUrl || '',
+        email: prismaProject.owner.email,
+        provider: prismaProject.owner.provider,
+        createdAt: prismaProject.owner.createdAt,
+        updatedAt: prismaProject.owner.updatedAt,
+        techStacks: prismaProject.owner.techStacks.map((techStack) => ({
+          id: techStack.id,
+          name: techStack.name,
+          iconUrl: techStack.iconUrl,
+          type: techStack.type,
+        })),
+      },
+      categories: prismaProject.categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+      })),
+      keyFeatures: prismaProject.keyFeatures.map((keyFeature) => ({
+        id: keyFeature.id,
+        projectId: prismaProject.id,
+        feature: keyFeature.feature,
+      })),
+      projectGoals: prismaProject.projectGoals.map((goal) => ({
+        id: goal.id,
+        projectId: prismaProject.id,
+        goal: goal.goal,
+      })),
+      projectRoles: prismaProject.projectRoles.map((role) => ({
+        id: role.id,
+        projectId: prismaProject.id,
+        title: role.title,
+        description: role.description,
+        isFilled: role.isFilled,
+        techStacks: role.techStacks.map((techStack) => ({
+          id: techStack.id,
+          name: techStack.name,
+          iconUrl: techStack.iconUrl,
+          type: techStack.type,
+        })),
+        createdAt: role.createdAt,
+        updatedAt: role.updatedAt,
+      })),
+      image: prismaProject.image || undefined,
+    };
+
+    const project = Project.reconstitute(projectData);
+    if (!project.success) {
+      return Result.fail(project.error as ProjectValidationErrors);
+    }
+
+    // Créer l'objet avec les détails supplémentaires
+    const projectWithDetails: ProjectWithDetails = {
+      project: project.value,
+      projectRoleApplication: prismaProject.projectRoleApplication || [],
+      projectMembers: prismaProject.projectMembers || [],
+    };
+
+    return Result.ok(projectWithDetails);
   }
 
   //   public static toPrismaDifficulty(

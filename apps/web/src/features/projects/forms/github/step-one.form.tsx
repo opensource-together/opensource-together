@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
@@ -44,28 +44,27 @@ export default function StepOneForm() {
 
   const selectedRepository = watch("selectedRepository");
 
-  // Scrollbar logic
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [dragStartY, setDragStartY] = useState(0);
   const [dragStartScroll, setDragStartScroll] = useState(0);
 
-  const itemHeight = 64; // px
+  const itemHeight = 64;
   const totalCount = githubRepos?.length || 0;
   const totalHeight = itemHeight * totalCount;
   const visibleHeight = 320;
   const scrollbarHeight = Math.max(
     (visibleHeight / totalHeight) * visibleHeight,
     40
-  ); // min 40px
+  );
   const maxScrollTop = totalHeight - visibleHeight;
   const scrollbarTop =
     maxScrollTop > 0
       ? (scrollTop / maxScrollTop) * (visibleHeight - scrollbarHeight)
       : 0;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!dragging) return;
     const onMouseMove = (e: MouseEvent) => {
       const deltaY = e.clientY - dragStartY;
@@ -165,7 +164,6 @@ export default function StepOneForm() {
                       )}
                     </div>
                   </div>
-                  {/* Custom scrollbar */}
                   <div
                     style={{
                       position: "absolute",
