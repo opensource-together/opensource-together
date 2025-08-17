@@ -24,12 +24,10 @@ export default function NotificationItem({
       markAsRead(notification.id);
     }
 
-    // Redirection selon le type de notification
     if (notification.type === "project.role.application.created") {
       router.push("/dashboard/my-projects");
     }
 
-    // Fermer le dropdown après le clic
     onNotificationClick();
   };
 
