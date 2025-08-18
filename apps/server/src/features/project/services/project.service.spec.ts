@@ -1,14 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectService } from './project.service';
 import { PROJECT_REPOSITORY } from '../repositories/project.repository.interface';
+import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
+import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
 import { Project } from '../domain/project';
 
 describe('ProjectService', () => {
   let service: ProjectService;
-  let mockRepository: any;
+  let mockProjectRepository: any;
+  let mockTechStackRepository: any;
+  let mockCategoryRepository: any;
 
   beforeEach(async () => {
-    mockRepository = {
+    mockProjectRepository = {
       findByTitle: jest.fn().mockResolvedValue({ success: false }),
       create: jest.fn().mockResolvedValue({
         success: true,
@@ -17,7 +21,13 @@ describe('ProjectService', () => {
           ownerId: 'user123',
           title: 'Test Project',
           description: 'This is a test project description',
-          categories: ['cat1'],
+          image: 'https://example.com/image.jpg',
+          categories: [
+            {
+              id: 'cat1',
+              name: 'Web Development',
+            },
+          ],
           techStacks: [
             {
               id: 'ts1',
@@ -30,7 +40,37 @@ describe('ProjectService', () => {
           teamMembers: [],
           createdAt: new Date(),
           updatedAt: new Date(),
-        } as unknown as Project,
+        } as Project,
+      }),
+    };
+
+    mockTechStackRepository = {
+      findByIds: jest.fn().mockImplementation((ids: string[]) => {
+        const techStacks = [
+          {
+            id: 'ts1',
+            name: 'React',
+            iconUrl: 'https://react.dev/favicon.ico',
+            type: 'TECH' as const,
+          },
+        ];
+        return Promise.resolve(
+          techStacks.filter((tech) => ids.includes(tech.id)),
+        );
+      }),
+    };
+
+    mockCategoryRepository = {
+      findByIds: jest.fn().mockImplementation((ids: string[]) => {
+        const categories = [
+          {
+            id: 'cat1',
+            name: 'Web Development',
+          },
+        ];
+        return Promise.resolve(
+          categories.filter((cat) => ids.includes(cat.id)),
+        );
       }),
     };
 
@@ -39,7 +79,15 @@ describe('ProjectService', () => {
         ProjectService,
         {
           provide: PROJECT_REPOSITORY,
-          useValue: mockRepository,
+          useValue: mockProjectRepository,
+        },
+        {
+          provide: TECH_STACK_REPOSITORY,
+          useValue: mockTechStackRepository,
+        },
+        {
+          provide: CATEGORY_REPOSITORY,
+          useValue: mockCategoryRepository,
         },
       ],
     }).compile();
@@ -58,17 +106,22 @@ describe('ProjectService', () => {
       description: 'This is a test project description',
       categories: ['cat1'],
       techStacks: ['ts1'],
+      projectRoles: [],
     };
 
     it('should create project with only required fields', async () => {
       const result = await service.createProject(validRequest);
 
       expect(result.success).toBe(true);
-      expect(mockRepository.create).toHaveBeenCalledWith(
+      expect(mockProjectRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           title: 'Test Project',
+          ownerId: 'user123',
+          description: 'This is a test project description',
+          image: '',
+          categories: ['cat1'],
+          techStacks: ['ts1'],
           projectRoles: [],
-          teamMembers: [],
         }),
       );
     });
@@ -80,14 +133,7 @@ describe('ProjectService', () => {
           {
             title: 'Frontend Developer',
             description: 'Responsible for UI development',
-            techStacks: [
-              {
-                id: 'ts1',
-                name: 'React',
-                iconUrl: 'https://react.dev/favicon.ico',
-                type: 'TECH' as const,
-              },
-            ],
+            techStacks: ['ts1'],
           },
         ],
       };
@@ -95,7 +141,7 @@ describe('ProjectService', () => {
       const result = await service.createProject(requestWithRoles);
 
       expect(result.success).toBe(true);
-      expect(mockRepository.create).toHaveBeenCalledWith(
+      expect(mockProjectRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           projectRoles: expect.arrayContaining([
             expect.objectContaining({
@@ -107,7 +153,7 @@ describe('ProjectService', () => {
     });
 
     it('should fail if project title already exists', async () => {
-      mockRepository.findByTitle.mockResolvedValue({ success: true });
+      mockProjectRepository.findByTitle.mockResolvedValue({ success: true });
 
       const result = await service.createProject(validRequest);
 
