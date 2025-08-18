@@ -123,7 +123,6 @@ model Project {
   ownerId                String
   title                  String
   description            String
-  shortDescription       String
   externalLinks          ProjectExternalLink[]
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
@@ -131,8 +130,6 @@ model Project {
   projectMembers         TeamMember[]
   projectRoles           ProjectRole[]
   categories             Category[]
-  keyFeatures            KeyFeature[]
-  projectGoals           ProjectGoal[]
   projectRoleApplication ProjectRoleApplication[]
   owner                  User                     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   image                  String?
@@ -196,8 +193,6 @@ model ProjectRoleApplication {
   projectRoleId        String
   status               ProjectRoleApplicationStatus
   motivationLetter     String?
-  selectedKeyFeatures  KeyFeature[]                 @relation("ProjectRoleApplicationKeyFeature")
-  selectedProjectGoals ProjectGoal[]                @relation("ProjectRoleApplicationProjectGoal")
   rejectionReason      String?
   decidedAt            DateTime?                    @updatedAt
   decidedBy            String?
@@ -226,24 +221,6 @@ model Category {
   id       String    @id @default(uuid())
   name     String
   projects Project[]
-}
-
-model KeyFeature {
-  id        String @id @default(uuid())
-  projectId String
-  feature   String
-
-  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationKeyFeature")
-}
-
-model ProjectGoal {
-  id        String @id @default(uuid())
-  projectId String
-  goal      String
-
-  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  ProjectRoleApplication ProjectRoleApplication[] @relation("ProjectRoleApplicationProjectGoal")
 }
 
 model GitHubStats {
