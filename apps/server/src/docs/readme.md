@@ -413,6 +413,91 @@ describe('ProjectService', () => {
 });
 ```
 
+## Finalisation de better-auth
+
+## Finalisation de better-auth
+
+J'ai modifié quelques lignes de code et rajouté en suivant la documentation de https://github.com/ThallesP/nestjs-better-auth . J'ai rencontré des problèmes lors des premiers requêtes `HTTP POST`. Le body parser ne fonctionnait plus. Étant donné qu'il est désactivé, je pense que c'est le AuthModule.forRoot() qui le réactive. Donc j'ai suivi la documentation et ça a réglé le problème.
+
+```typescript
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PrismaModule } from 'prisma/prisma.module';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { auth } from '@/auth/auth';
+import { FeaturesModule } from './features/features.module';
+
+@Module({
+  imports: [PrismaModule, AuthModule.forRoot(auth), FeaturesModule],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+J'ai aussi instancié le service prisma dans `auth.ts`:
+
+```typescript
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import * as process from 'node:process';
+import { PrismaService } from 'prisma/prisma.service';
+
+const prisma = new PrismaService();
+
+export const auth: {
+  handler: (req: Request) => Promise<Response>;
+} = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: 'postgresql',
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  user: {
+    additionalFields: {
+      bio: { type: 'string', required: false, input: false },
+      login: { type: 'string', required: false, input: false },
+      location: { type: 'string', required: false, input: false },
+      company: { type: 'string', required: false, input: false },
+    },
+  },
+  logger: {
+    level: 'debug',
+    transport: {
+      type: 'console',
+      options: {
+        colorize: true,
+        timestamp: true,
+      },
+    },
+  },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      redirectURL: 'http://localhost:4000/api/auth/callback/github',
+      overrideUserInfoOnSignIn: true,
+    },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      redirectURL: 'http://localhost:4000/api/auth/callback/google',
+    },
+  },
+  trustedOrigins: ['http://localhost:3000', 'http://localhost:4000'],
+  baseURL: 'http://localhost:4000',
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: false,
+      cookieName: 'better-auth',
+      cookieDomain: 'localhost',
+    },
+  },
+});
+```
+
 ## Points Clés de l'Implémentation
 
 1. **Validation Séparée** : Validation transport (DTO) + validation métier (domain) + validation références (service)
