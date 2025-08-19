@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { ProjectRoleRepository } from './project-role.repository.interface';
-import { ProjectRole } from '../domain/project-role';
+import {
+  CreateProjectRoleDto,
+  ProjectRoleRepository,
+} from './project-role.repository.interface';
 
 @Injectable()
 export class PrismaProjectRoleRepository implements ProjectRoleRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: ProjectRole[]): Promise<any> {
+  async create(data: CreateProjectRoleDto[]): Promise<any> {
     try {
       console.log('data', data);
       const result = await this.prisma.projectRole.createMany({
@@ -15,9 +17,9 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
           projectId: role.projectId,
           title: role.title,
           description: role.description,
-          isFilled: role.isFilled || false,
+          isFilled: false,
           techStacks: {
-            connect: role.techStacks.map((tech) => ({ id: tech.id })),
+            connect: role.techStacks.map((tech) => ({ id: tech })),
           },
         })),
       });

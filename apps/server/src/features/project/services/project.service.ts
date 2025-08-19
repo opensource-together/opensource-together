@@ -61,8 +61,13 @@ export class ProjectService {
       const validTechStacksProjectRoles =
         await this.techStackRepository.findByIds(projectRolesTechStacks);
       if (
-        validTechStacksProject.length !== request.techStacks.length ||
-        validTechStacksProjectRoles.length !== projectRolesTechStacks.length
+        (!validTechStacksProject.success &&
+          !validTechStacksProjectRoles.success) ||
+        (validTechStacksProject.success &&
+          validTechStacksProject.value.length !== request.techStacks.length) ||
+        (validTechStacksProjectRoles.success &&
+          validTechStacksProjectRoles.value.length !==
+            projectRolesTechStacks.length)
       ) {
         return Result.fail('TECH_STACK_NOT_FOUND' as ProjectServiceError);
       }
@@ -97,23 +102,6 @@ export class ProjectService {
           projectRolesValidation as unknown as ValidationErrors,
         );
       }
-
-      // const project = createProject({
-      //   ownerId: request.ownerId,
-      //   title: request.title,
-      //   shortDescription: request.description.slice(0, 100),
-      //   image: request.image || '',
-      //   description: request.description,
-      //   categories: validCategories,
-      //   // techStacks: request.techStacks,
-      // });
-      // const projectRoles = request.projectRoles?.map((role) =>
-      //   createProjectRole({
-      //     title: role.title,
-      //     description: role.description,
-      //     techStacks: role.techStacks.map((id) => id),
-      //   }),
-      // );
 
       const result = await this.projectRepository.create({
         ownerId: request.ownerId,

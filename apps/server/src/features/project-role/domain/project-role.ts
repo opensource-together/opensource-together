@@ -15,16 +15,22 @@ export interface ProjectRole {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface CreateProjectRoleDto {
+  projectId: string;
+  title: string;
+  description: string;
+  techStacks: string[];
+}
+
 export interface ValidationErrors {
   [key: string]: string;
 }
 export function validateProjectRole(
-  role: Partial<ProjectRole>,
+  role: Partial<CreateProjectRoleDto>,
 ): ValidationErrors | null {
   const errors: ValidationErrors = {};
 
-  if (!role.projectId?.trim())
-    errors.projectId = 'domain: Project ID is required';
   if (!role.title?.trim())
     errors.title = 'domain: Project role title is required';
   if (!role.description?.trim())

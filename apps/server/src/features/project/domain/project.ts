@@ -82,7 +82,7 @@ export interface TeamMember {
   id?: string;
   projectId?: string;
   userId: string;
-  role: string;
+  role: string; //TO DO : ajouter un enum pour les roles
   joinedAt?: Date;
 }
 
@@ -138,6 +138,7 @@ export function validateProjectRole(
   return Object.keys(errors).length > 0 ? errors : null;
 }
 
+//TO DO : améliorer la fonction pour vérifier les permissions
 export function canUserModifyProject(
   project: Project,
   userId: string,

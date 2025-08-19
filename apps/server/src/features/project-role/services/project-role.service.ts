@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   PROJECT_ROLE_REPOSITORY,
+  CreateProjectRoleDto,
   ProjectRoleRepository,
 } from '../repositories/project-role.repository.interface';
 import { validateProjectRole } from '../domain/project-role';
@@ -13,7 +14,7 @@ export class ProjectRoleService {
     private readonly projectRoleRepository: ProjectRoleRepository,
   ) {}
 
-  async createProjectRole(projectRole: any[]) {
+  async createProjectRole(projectRole: CreateProjectRoleDto[]) {
     const projectRoleValidation = projectRole.map((role) =>
       validateProjectRole(role),
     );
