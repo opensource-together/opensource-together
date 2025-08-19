@@ -1,9 +1,9 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import * as process from 'node:process';
-import { PrismaService } from '@/prisma/prisma.service';
+import { PrismaService } from 'prisma/prisma.service';
 
-const prisma = new PrismaService().getClient();
+const prisma = new PrismaService();
 
 export const auth: {
   handler: (req: Request) => Promise<Response>;

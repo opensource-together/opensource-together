@@ -1,0 +1,233 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Result } from '@/libs/result';
+import { PrismaService } from 'prisma/prisma.service';
+import {
+  Project as DomainProject,
+  TechStack as DomainTechStack,
+  ProjectRole as DomainProjectRole,
+  Category as DomainCategory,
+  ExternalLink as DomainExternalLink,
+} from '../domain/project';
+import {
+  Category as PrismaCategory,
+  ProjectRole as PrismaProjectRole,
+  TechStack as PrismaTechStack,
+  ProjectExternalLink as PrismaProjectExternalLink,
+  ProjectExternalLink,
+} from '@prisma/client';
+import {
+  CreateProjectData,
+  ProjectRepository,
+  ProjectRepositoryError,
+} from './project.repository.interface';
+
+@Injectable()
+export class PrismaProjectRepository implements ProjectRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(
+    projectData: CreateProjectData,
+  ): Promise<Result<DomainProject, string>> {
+    try {
+      const savedProject = await this.prisma.project.create({
+        data: {
+          ownerId: projectData.ownerId,
+          title: projectData.title,
+          description: projectData.description,
+          image: projectData.image,
+          coverImages: projectData.coverImages,
+          readme: projectData.readme,
+          techStacks: {
+            connect: projectData.techStacks.map((tech) => ({ id: tech })),
+          },
+          categories: {
+            connect: projectData.categories.map((cat) => ({ id: cat })),
+          },
+          projectRoles: {
+            create: projectData.projectRoles?.map((role) => ({
+              title: role.title,
+              description: role.description,
+              isFilled: false,
+              techStacks: {
+                connect: role.techStacks.map((tech) => ({ id: tech })),
+              },
+            })),
+          },
+          externalLinks: {
+            create:
+              projectData.externalLinks?.map((link) => ({
+                type: link.type,
+                url: link.url,
+              })) || [],
+          },
+        },
+        include: {
+          techStacks: true,
+          categories: true,
+          projectRoles: {
+            include: {
+              techStacks: true,
+            },
+          },
+          projectMembers: true,
+          externalLinks: true,
+          owner: true,
+        },
+      });
+
+      return Result.ok({
+        ownerId: savedProject.ownerId,
+        title: savedProject.title,
+        description: savedProject.description,
+        image: savedProject.image || '',
+        coverImages: savedProject.coverImages || [],
+        readme: savedProject.readme || '',
+        categories: savedProject.categories.map((cat) => ({
+          id: cat.id,
+          name: cat.name,
+        })),
+        techStacks: savedProject.techStacks.map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+          iconUrl: tech.iconUrl,
+          type: tech.type,
+        })),
+        projectRoles: savedProject.projectRoles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          description: role.description,
+          techStacks: role.techStacks.map((tech) => ({
+            id: tech.id,
+            name: tech.name,
+            iconUrl: tech.iconUrl,
+            type: tech.type,
+          })),
+        })),
+        externalLinks: savedProject.externalLinks.map((link) => ({
+          id: link.id,
+          type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+          url: link.url,
+        })),
+        createdAt: savedProject.createdAt,
+        updatedAt: savedProject.updatedAt,
+      });
+    } catch (error) {
+      console.log('error', error);
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          return Result.fail<DomainProject, ProjectRepositoryError>(
+            'DUPLICATE_PROJECT',
+          );
+        } else if (error.code === 'P2003') {
+          return Result.fail<DomainProject, ProjectRepositoryError>(
+            'VALIDATION_FAILED',
+          );
+        }
+      }
+      return Result.fail<DomainProject, ProjectRepositoryError>(
+        'DATABASE_ERROR',
+      );
+    }
+  }
+
+  async findByTitle(title: string): Promise<Result<DomainProject, string>> {
+    try {
+      const project = await this.prisma.project.findFirst({
+        where: { title },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { techStacks: true },
+          },
+          projectMembers: true,
+          categories: true,
+          externalLinks: true,
+          owner: true,
+        },
+      });
+
+      if (!project) {
+        return Result.fail<DomainProject, string>('PROJECT_NOT_FOUND');
+      }
+
+      return Result.ok({
+        ownerId: project.ownerId,
+        title: project.title,
+        description: project.description,
+        image: project.image || '',
+        coverImages: project.coverImages || [],
+        readme: project.readme || '',
+        categories: project.categories.map((cat) => ({
+          id: cat.id,
+          name: cat.name,
+        })),
+        techStacks: project.techStacks.map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+          iconUrl: tech.iconUrl,
+          type: tech.type,
+        })),
+        projectRoles: project.projectRoles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          description: role.description,
+          techStacks: role.techStacks.map((tech) => ({
+            id: tech.id,
+            name: tech.name,
+            iconUrl: tech.iconUrl,
+            type: tech.type,
+          })),
+        })),
+        externalLinks: project.externalLinks.map((link) => ({
+          id: link.id,
+          type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+          url: link.url,
+        })),
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+      });
+    } catch {
+      return Result.fail<DomainProject, string>('DATABASE_ERROR');
+    }
+  }
+
+  mapTechStackToPrisma(techStack: DomainTechStack): PrismaTechStack {
+    return {
+      id: techStack.id,
+      name: techStack.name,
+      iconUrl: techStack.iconUrl,
+      type: techStack.type,
+    };
+  }
+
+  mapProjectRoleToPrisma(
+    projectRole: DomainProjectRole,
+  ): Omit<PrismaProjectRole, 'projectId' | 'id'> {
+    return {
+      title: projectRole.title,
+      description: projectRole.description,
+      isFilled: false,
+      createdAt: projectRole.createdAt || new Date(),
+      updatedAt: projectRole.updatedAt || new Date(),
+    };
+  }
+
+  mapCategoryToPrisma(category: DomainCategory): PrismaCategory {
+    return {
+      id: category.id,
+      name: category.name,
+    };
+  }
+
+  mapExternalLinkToPrisma(
+    externalLink: DomainExternalLink & { projectId: string },
+  ): PrismaProjectExternalLink {
+    return {
+      projectId: externalLink.projectId,
+      id: externalLink.id || '',
+      type: externalLink.type as ProjectExternalLink['type'],
+      url: externalLink.url,
+    };
+  }
+}
