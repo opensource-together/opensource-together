@@ -60,5 +60,350 @@ Repository (ProjectRepository)
    ↓
 Infra (PrismaProjectRepository → Prisma)
    ↑
-Result<T, E> (ok/err) propagé jusqu’au controller
+Result<T, E> (ok/err) propagé jusqu'au controller
 ```
+
+## Exemples Concrets - Feature Project
+
+### 1. Domain - Types et Validations
+
+```typescript
+// domain/project.ts
+export interface Project {
+  id?: string;
+  ownerId: string;
+  title: string;
+  description: string;
+  image: string;
+  categories: Category[];
+  techStacks: TechStack[];
+  projectRoles?: ProjectRole[];
+  teamMembers?: TeamMember[];
+  coverImages?: string[];
+  readme?: string;
+  externalLinks?: ExternalLink[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export function validateProject(
+  project: Partial<ValidateProjectDto>,
+): ValidationErrors | null {
+  const errors: ValidationErrors = {};
+
+  if (!project.ownerId) errors.ownerId = 'domain: Owner ID is required';
+  if (!project.title?.trim()) errors.title = 'domain: Title is required';
+  if (project.title && project.title.length < 3)
+    errors.title = 'domain: Title must be at least 3 characters';
+  // ... autres validations
+
+  return Object.keys(errors).length > 0 ? errors : null;
+}
+```
+
+### 2. Repository Interface - Contrat
+
+```typescript
+// repositories/project.repository.interface.ts
+export interface CreateProjectData {
+  ownerId: string;
+  title: string;
+  description: string;
+  categories: string[];
+  techStacks: string[];
+  projectRoles?: {
+    title: string;
+    description: string;
+    techStacks: string[];
+  }[];
+  externalLinks?: { type: string; url: string }[];
+  image?: string;
+  coverImages?: string[];
+  readme?: string;
+}
+
+export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
+
+export interface ProjectRepository {
+  create(data: CreateProjectData): Promise<Result<Project, string>>;
+  findByTitle(title: string): Promise<Result<Project, string>>;
+}
+```
+
+### 3. Repository Implementation - Prisma
+
+```typescript
+// repositories/prisma.project.repository.ts
+@Injectable()
+export class PrismaProjectRepository implements ProjectRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(
+    projectData: CreateProjectData,
+  ): Promise<Result<DomainProject, string>> {
+    try {
+      const savedProject = await this.prisma.project.create({
+        data: {
+          ownerId: projectData.ownerId,
+          title: projectData.title,
+          description: projectData.description,
+          image: projectData.image,
+          techStacks: {
+            connect: projectData.techStacks.map((tech) => ({ id: tech })),
+          },
+          categories: {
+            connect: projectData.categories.map((cat) => ({ id: cat })),
+          },
+          projectRoles: {
+            create: projectData.projectRoles?.map((role) => ({
+              title: role.title,
+              description: role.description,
+              isFilled: false,
+              techStacks: {
+                connect: role.techStacks.map((tech) => ({ id: tech })),
+              },
+            })),
+          },
+        },
+        include: {
+          techStacks: true,
+          categories: true,
+          projectRoles: {
+            include: {
+              techStacks: true,
+            },
+          },
+          // ... autres includes
+        },
+      });
+
+      return Result.ok({
+        // Mapping vers le domaine
+        ownerId: savedProject.ownerId,
+        title: savedProject.title,
+        // ... autres propriétés
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          return Result.fail('DUPLICATE_PROJECT');
+        }
+      }
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
+}
+```
+
+### 4. Service - Logique Métier
+
+```typescript
+// services/project.service.ts
+@Injectable()
+export class ProjectService {
+  constructor(
+    @Inject(PROJECT_REPOSITORY)
+    private readonly projectRepository: ProjectRepository,
+    @Inject(TECH_STACK_REPOSITORY)
+    private readonly techStackRepository: TechStackRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: CategoryRepository,
+  ) {}
+
+  async createProject(
+    request: CreateProjectRequest,
+  ): Promise<Result<Project, any>> {
+    try {
+      // Vérification unicité
+      const existingProject = await this.projectRepository.findByTitle(
+        request.title,
+      );
+      if (existingProject.success) {
+        return Result.fail('DUPLICATE_PROJECT');
+      }
+
+      // Validation des références
+      const validTechStacksProject = await this.techStackRepository.findByIds(
+        request.techStacks,
+      );
+      if (!validTechStacksProject.success) {
+        return Result.fail('TECH_STACK_NOT_FOUND');
+      }
+
+      // Validation du domaine
+      const projectValidation = validateProject({
+        ownerId: request.ownerId,
+        title: request.title,
+        description: request.description,
+        techStacks: request.techStacks,
+        categories: request.categories,
+      });
+      if (projectValidation) {
+        return Result.fail(projectValidation);
+      }
+
+      // Validation des project roles
+      const projectRolesValidation = request.projectRoles?.map((role) =>
+        validateProjectRole({
+          title: role.title,
+          description: role.description,
+          techStacks: role.techStacks,
+        }),
+      );
+      if (projectRolesValidation?.some((validation) => validation)) {
+        return Result.fail(projectRolesValidation);
+      }
+
+      // Création
+      const result = await this.projectRepository.create({
+        ownerId: request.ownerId,
+        title: request.title,
+        image: request.image || '',
+        description: request.description,
+        categories: request.categories,
+        techStacks: request.techStacks,
+        projectRoles: request.projectRoles?.map((role) => ({
+          title: role.title,
+          description: role.description,
+          techStacks: role.techStacks.map((id) => id),
+        })),
+      });
+
+      if (!result.success) {
+        return Result.fail('DATABASE_ERROR');
+      }
+
+      return Result.ok(result.value);
+    } catch (error) {
+      this.logger.error('Error creating project', error);
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
+}
+```
+
+### 5. Controller - Point d'Entrée HTTP
+
+```typescript
+// controllers/project.controller.ts
+@Controller('projects')
+@UseGuards(AuthGuard)
+export class ProjectController {
+  constructor(private readonly projectService: ProjectService) {}
+
+  @Post()
+  async createProject(
+    @Session() session: UserSession,
+    @Body() createProjectDto: CreateProjectDto,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.createProject({
+      ownerId: userId,
+      title: createProjectDto.title,
+      description: createProjectDto.description,
+      categories: createProjectDto.categories,
+      techStacks: createProjectDto.techStacks,
+      projectRoles: createProjectDto.projectRoles || [],
+    });
+    
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    
+    return result.value;
+  }
+}
+```
+
+### 6. DTO - Validation Transport
+
+```typescript
+// controllers/dto/create-project.dto.ts
+export class CreateProjectDto {
+  @ApiProperty({ description: 'Project title', maxLength: 100 })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(100)
+  title: string;
+
+  @ApiProperty({ description: 'Full description', maxLength: 1000 })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(1000)
+  description: string;
+
+  @ApiProperty({ description: 'Project categories' })
+  @IsArray()
+  @ArrayMinSize(1)
+  categories: string[];
+
+  @ApiProperty({ description: 'Project tech stacks' })
+  @IsArray()
+  @ArrayMinSize(1)
+  techStacks: string[];
+
+  @ApiProperty({ description: 'Project roles (optional)' })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProjectRoleDto)
+  projectRoles?: ProjectRoleDto[];
+}
+```
+
+### 7. Module - Configuration
+
+```typescript
+// project.module.ts
+@Module({
+  imports: [PrismaModule, TechStackModule, CategoryModule, ProjectRoleModule],
+  controllers: [ProjectController],
+  providers: [
+    {
+      provide: PROJECT_REPOSITORY,
+      useClass: PrismaProjectRepository,
+    },
+    ProjectService,
+  ],
+  exports: [ProjectService],
+})
+export class ProjectModule {}
+```
+
+### 8. Tests - Couverture Complète
+
+```typescript
+// services/project.service.spec.ts
+describe('ProjectService', () => {
+  it('should create project with only required fields', async () => {
+    const result = await service.createProject(validRequest);
+    expect(result.success).toBe(true);
+    expect(mockProjectRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Test Project',
+        ownerId: 'user123',
+        // ...
+      }),
+    );
+  });
+
+  it('should fail if project title already exists', async () => {
+    mockProjectRepository.findByTitle.mockResolvedValue({ success: true });
+    const result = await service.createProject(validRequest);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBe('DUPLICATE_PROJECT');
+    }
+  });
+});
+```
+
+## Points Clés de l'Implémentation
+
+1. **Validation Séparée** : Validation transport (DTO) + validation métier (domain) + validation références (service)
+2. **Result Pattern** : Gestion explicite des erreurs sans exceptions non contrôlées
+3. **Dépendances Injectées** : Utilisation des tokens pour l'injection de dépendances
+4. **Mapping Prisma → Domain** : Transformation des données de la base vers le domaine
+5. **Tests Complets** : Couverture des cas de succès et d'erreur
+6. **Documentation OpenAPI** : Décoration des DTOs avec `@ApiProperty`
+7. **Gestion des Relations** : Création atomique avec `connect` et `create` Prisma
