@@ -6,7 +6,7 @@ import {
   UseGuards,
   BadRequestException,
 } from '@nestjs/common';
-import { ProjectService } from './services/project.service';
+import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 

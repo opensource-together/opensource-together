@@ -8,7 +8,7 @@ import {
 } from '../domain/project';
 import { ProjectRepository } from '../repositories/project.repository.interface';
 import { PROJECT_REPOSITORY } from '../repositories/project.repository.interface';
-import { CreateProjectDto } from '../dto/create-project.dto';
+import { CreateProjectDto } from '../controllers/dto/create-project.dto';
 import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import { TechStackRepository } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
