@@ -9,7 +9,7 @@ L’exemple présenté avec `projet` montre comment cela devrait s’appliquer p
 ## Général
 
 On enlève l'approche cqrs clean/archi etc, en suivant une approche Feature-First. Quelques éléments de la structure précédente conservent leurs emplacements, comme `auth`, `libs`, `media`, présents dans le dossier `src`.
-À la racine du serveur, c'est maintenant là qu'est placée la `persistance`, dans le dossier `prisma` contenant les `migrations`, le fameux `schema.prisma`, `service`,`module`. Le `PrismaModule` est ajouté dans les `imports` des modules où on en a besoin, cela rend le `PrismaService` instancié une fois. Ça respecte les standards classiques d'un projet NestJS. Le `schema.prisma` a été refactorisé et pensé pour fonctionner avec `better-auth` qui est maintenant la libraire d'auth que l'on va utiliser, il suffit maintenant juste d'une image postgres dans le `docker-compose.dev.yml` Ça respecte les standards classiques d'un projet NestJS. Le `schema.prisma` a été refactorisé et pensé pour fonctionner avec `better-auth` qui est maintenant la lib que l'on va utiliser pour l'auth, il suffit maintenant juste d'une image postgres dans le `docker-compose.dev.yml`
+À la racine du serveur, c'est maintenant là qu'est placée la `persistance`, dans le dossier `prisma` contenant les `migrations`, le fameux `schema.prisma`, `service`,`module`. Le `PrismaModule` est ajouté dans les `imports` des modules où on en a besoin, cela rend le `PrismaService` instancié une fois. Ça respecte les standards classiques d'un projet NestJS. Le `schema.prisma` a été refactorisé et pensé pour fonctionner avec `better-auth` qui est maintenant la libraire d'auth que l'on va utiliser, il suffit maintenant juste d'une image postgres dans le `docker-compose.dev.yml` Ça respecte les standards classiques d'un projet NestJS. 
 
 ## Structure générale
 
@@ -412,8 +412,6 @@ describe('ProjectService', () => {
   });
 });
 ```
-
-## Finalisation de better-auth
 
 ## Finalisation de better-auth
 
