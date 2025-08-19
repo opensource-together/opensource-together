@@ -4,6 +4,8 @@
 
 Ce document présente comment l'architecture a été repensée pour simplifier le back end, actuellement la modification devenait trop difficile à cause de ma volonté à appliquer des patterns complexe et potentiellement non approprié pour le début du projet. J'ai donc simplement réalisé une seule migration d'une fonctionnalité : **La création de projet**. Actuellement elle est incomplète et je vous laisse la finaliser avec les différentes parties de l'application à refactoriser et à migrer (telle que l'invitation d'un membre, la publication automatique du projet sur github etc.). Je vais expliquer comment je m'y suis pris et comment on devra appliquer de manière standard et conventionnelle la migration de `server_legacy`.
 
+L’exemple présenté avec `projet` montre comment cela devrait s’appliquer pour toutes les autres fonctionnalités futures, et celles à migrer/refactoriser.
+
 ## Général
 
 On enlève l'approche cqrs clean/archi etc, en suivant une approche Feature-First. Quelques éléments de la structure précédente conservent leurs emplacements, comme `auth`, `libs`, `media`, présents dans le dossier `src`.
@@ -34,7 +36,7 @@ feature-name/
 └── dto/                       # Data Transfer Objects (optionnel)
 ```
 
-`domain`: Contient les types et les fonctions métier de validations de base, j'ai volontairement fait le minimum pour réduire la friction et garder de la flexibilité, mais n'hésite pas à rajouter du typage et à repasser dessus si vous avez une solution. Vous pourrez consulter un exemple pour `project.ts`. On passe donc de classe complexe avec des `vo`des`method` à un fichier où on se contente de faire des Type qui représentent l'entité métier concrète, et des types de DTO pour les fonctions de validations. On essaie de conserver la logique métier dans cet endroit pour éviter de la dupliquer. Seules les validations critiques non duplicables doivent rester dans le domaine 
+`domain`: Contient les types et les fonctions métier de validations de base, j'ai volontairement fait le minimum pour réduire la friction et garder de la flexibilité, mais n'hésite pas à rajouter du typage et à repasser dessus si vous avez une solution. Vous pourrez consulter un exemple pour `project.ts`. On passe donc de classe complexe avec des `vo`des`method` à un fichier où on se contente de faire des Type qui représentent l'entité métier concrète, et des types de DTO pour les fonctions de validations. On essaie de conserver la logique métier dans cet endroit pour éviter de la dupliquer. Seules les validations critiques non duplicables doivent rester dans le domaine
 
 `repositories`: Classique, pas trop de changement si ce n'est que maintenant les `ports` que l'on avait dans `use-cases` autrefois sont dans ce dossier-là avec une autre nomination comme par exemple `project.repository.interface.ts`, on y inscrit tous nos contrats des méthodes que l'on souhaite implémenter concrètement dans `prisma.project.repository.ts`. On garde la structure de `Result` pattern.
 
@@ -49,6 +51,7 @@ Cette nouvelle structure suit les standard d'un projet nestjs classique.
 Ont utilise le `Result` patren principalement dans `repositories` et `services`. Cela évite les exceptions non contrôlées et rend les erreurs explicites
 
 ## Flux global
+
 ```
 HTTP POST /projects
    ↓ (DTO & validation transport)
@@ -84,6 +87,18 @@ export interface Project {
   externalLinks?: ExternalLink[];
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ValidateProjectDto {
+  ownerId: string;
+  title: string;
+  description: string;
+  image: string;
+  categories: string[];
+  techStacks: string[];
+  coverImages?: string[];
+  readme?: string;
+  externalLinks?: ExternalLink[];
 }
 
 export function validateProject(
@@ -305,11 +320,11 @@ export class ProjectController {
       techStacks: createProjectDto.techStacks,
       projectRoles: createProjectDto.projectRoles || [],
     });
-    
+
     if (!result.success) {
       throw new BadRequestException(result.error);
     }
-    
+
     return result.value;
   }
 }
@@ -407,3 +422,7 @@ describe('ProjectService', () => {
 5. **Tests Complets** : Couverture des cas de succès et d'erreur
 6. **Documentation OpenAPI** : Décoration des DTOs avec `@ApiProperty`
 7. **Gestion des Relations** : Création atomique avec `connect` et `create` Prisma
+
+## Point d'amélioration
+
+Mieux typer le retour des méthodes dans le service. N'hésitez pas si vous avez des solutions plus pertinentes. J'ai volontairement fait au plus simple pour gagner du temps et que tout le monde puisse commencer.
