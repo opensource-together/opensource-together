@@ -21,7 +21,6 @@ export type ApplicationStatus =
   | "REJECTED"
   | "CANCELLED";
 
-// Candidature optimisée avec compétences du candidat
 export interface ApplicationType {
   id: string;
   status: ApplicationStatus;

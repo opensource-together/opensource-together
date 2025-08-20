@@ -22,16 +22,11 @@ import {
 } from "@/shared/components/ui/table";
 
 import { TeamMemberType } from "../../types/my-projects.type";
-import MyTeamMembersSkeleton from "./skeletons/my-team-members-skeleton.component";
+import MyTeamMembersSkeleton from "../skeletons/my-team-members-skeleton.component";
 
-// Fonction utilitaire pour formater une date de manière sécurisée
 const formatDate = (dateInput: Date | string): string => {
-  try {
-    const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
-    return date.toLocaleDateString("fr-FR");
-  } catch (error) {
-    return "Date inconnue";
-  }
+  const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+  return date.toLocaleDateString("fr-FR");
 };
 
 interface MyTeamMembersProps {
@@ -155,7 +150,6 @@ export default function MyTeamMembers({
                         </Link>
                       </DropdownMenuItem>
 
-                      {/* L'owner peut retirer des membres (sauf lui-même) */}
                       {isCurrentUserOwner && !isCurrentUser && (
                         <DropdownMenuItem>
                           <div className="flex w-full items-center justify-between">
@@ -172,7 +166,6 @@ export default function MyTeamMembers({
                         </DropdownMenuItem>
                       )}
 
-                      {/* Les contributeurs peuvent quitter le projet pour eux-mêmes */}
                       {!isCurrentUserOwner && isCurrentUser && (
                         <DropdownMenuItem>
                           <div className="flex w-full items-center justify-between">

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "../ui/button";
+import { Icon } from "../ui/icon";
 
 interface CTAFooterProps {
   imageIllustration?: string;
@@ -10,7 +11,6 @@ interface CTAFooterProps {
 export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between px-4 py-8 md:flex-row md:px-7">
-      {/* Texte à gauche */}
       <div className="min-w-0 flex-shrink-0 text-start">
         <h1
           className="text-2xl leading-tight font-medium tracking-tighter md:text-2xl lg:text-5xl"
@@ -23,7 +23,6 @@ export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
           <br className="hidden md:block" />
           partageons et grandissons ensemble grâce à l&apos;open source
         </p>
-        {/* Boutons */}
         <div className="mt-6 flex flex-row gap-3">
           <Link
             href="https://github.com/opensource-together/opensource-together"
@@ -31,12 +30,7 @@ export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
             rel="noopener noreferrer"
           >
             <Button>
-              <Image
-                src="/icons/white-star.svg"
-                alt="star"
-                width={16}
-                height={16}
-              />{" "}
+              <Icon name="star" variant="white" size="sm" />
               Star Us on Github
             </Button>
           </Link>
@@ -49,7 +43,6 @@ export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
           </Link>
         </div>
       </div>
-      {/* Image décorative - visible sur mobile en dessous, à droite sur desktop */}
       <div className="mt-6 flex justify-center md:mt-0 md:ml-4 md:flex-shrink-0">
         <Image
           src={imageIllustration || "/background-footer.png"}

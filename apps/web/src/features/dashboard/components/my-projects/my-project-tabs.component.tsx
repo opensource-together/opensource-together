@@ -86,7 +86,6 @@ export default function MyProjectTabs({
 
   return (
     <div className="sticky top-0 z-10">
-      {/* Tabs */}
       <div className="flex border-b border-black/10 tracking-tighter">
         {tabs.map((tab) => (
           <button
@@ -107,7 +106,6 @@ export default function MyProjectTabs({
                 {tab.count}
               </span>
             )}
-            {/* Active tab */}
             {activeTab === tab.id && (
               <div className="absolute right-0 bottom-0 left-0 h-0.5 bg-black/50" />
             )}
@@ -115,7 +113,6 @@ export default function MyProjectTabs({
         ))}
       </div>
 
-      {/* Content of the tabs */}
       <div className="mt-6">
         {activeTab === "applications" && canViewApplications && (
           <MyApplicationsReceived

@@ -16,7 +16,7 @@ import { getStatusStyle, getStatusText } from "@/shared/lib/utils/status";
 
 import ApplicationDetailsSheet from "../../forms/accept-or-reject-application.form";
 import { ApplicationType } from "../../types/my-projects.type";
-import MyApplicationsReceivedSkeleton from "./skeletons/my-applications-received-skeleton.component";
+import MyApplicationsReceivedSkeleton from "../skeletons/my-applications-received-skeleton.component";
 
 interface MyApplicationsReceivedProps {
   applications: ApplicationType[];

@@ -152,7 +152,6 @@ export default function ProjectReadme({
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
             components={{
-              // Customize markdown components for better styling
               h1: ({ children }) => (
                 <h1 className="mb-4 text-2xl font-bold">{children}</h1>
               ),

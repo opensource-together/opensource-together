@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
+import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 
 import { useProfileUpdate } from "../hooks/use-profile.hook";
 import { Profile } from "../types/profile.type";
@@ -73,7 +73,7 @@ export default function ProfileEditForm({ profile }: ProfileEditFormProps) {
   return (
     <>
       <div>
-        <BreadcrumbComponent items={breadcrumbItems} className="mb-7" />
+        <BreadcrumbNavigation items={breadcrumbItems} className="mb-7" />
         <ProfileSidebarEditForm profile={profile} form={form} />
       </div>
       <ProfileEditMain

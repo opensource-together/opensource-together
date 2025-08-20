@@ -41,7 +41,6 @@ export function useTechStack() {
       type: tech.type,
     }));
 
-  // Liste groupée pour le combobox (langages d'abord)
   const techStackOptions: TechStackOption[] = [
     ...languageOptions,
     ...technologyOptions,
