@@ -210,6 +210,101 @@ Cookie: sAccessToken=your_session
 - ✅ **Port 4000** par défaut
 - ✅ **Namespace `/messaging`** pour WebSocket
 
+## 🔧 **Debug et Résolution des Problèmes**
+
+### **Problème : Événements qui fonctionnent une fois sur deux**
+
+Si vous rencontrez des problèmes avec `join-chat`, `leave-chat`, etc., utilisez ces commandes de debug :
+
+#### **1. Vérifier le statut de connexion**
+
+```json
+// Dans Postman WebSocket, envoyer :
+{
+  "event": "debug-status",
+  "data": {}
+}
+```
+
+**Réponse attendue :**
+
+```json
+{
+  "event": "debug-status",
+  "data": {
+    "userId": "alice",
+    "connected": true,
+    "socketId": "socket_123",
+    "chats": ["chat_abc", "chat_def"],
+    "totalUsers": 2,
+    "totalChats": 2
+  }
+}
+```
+
+#### **2. Vérifier les événements de confirmation**
+
+Maintenant, chaque action renvoie une confirmation :
+
+**Join Chat :**
+
+```json
+// Envoi
+{"event": "join-chat", "data": {"chatId": "chat_123"}}
+
+// Réponse de succès
+{"event": "chat-joined", "data": {"chatId": "chat_123", "status": "success"}}
+
+// Réponse d'erreur
+{"event": "error", "data": {"message": "User ID not found"}}
+```
+
+**Leave Chat :**
+
+```json
+// Envoi
+{"event": "leave-chat", "data": {"chatId": "chat_123"}}
+
+// Réponse de succès
+{"event": "chat-left", "data": {"chatId": "chat_123", "status": "success"}}
+```
+
+**Listen All Chats :**
+
+```json
+// Envoi
+{"event": "listen-all-chats", "data": {}}
+
+// Réponse de succès
+{"event": "listening-all-chats", "data": {"status": "success"}}
+```
+
+#### **3. Nettoyer et reconnecter si nécessaire**
+
+```bash
+# 1. Fermer la connexion WebSocket
+# 2. Attendre 2-3 secondes
+# 3. Reconnecter avec le même userId
+# 4. Vérifier le statut avec debug-status
+```
+
+### **4. Logs côté serveur**
+
+Vérifiez les logs du serveur pour voir :
+
+- ✅ `User alice joined chat chat_123`
+- ✅ `User alice left chat chat_123`
+- ✅ `User alice is now listening to all their chats`
+
+### **5. Problèmes courants et solutions**
+
+| Problème               | Symptôme                    | Solution                |
+| ---------------------- | --------------------------- | ----------------------- |
+| **Événements ignorés** | Pas de réponse              | Vérifier `debug-status` |
+| **Chat déjà rejoint**  | Message "already in chat"   | Normal, pas d'erreur    |
+| **Chat non rejoint**   | Message "not in chat"       | Normal, pas d'erreur    |
+| **Déconnexion**        | Événements ne marchent plus | Reconnecter WebSocket   |
+
 ## 🔄 Gestion des Abonnements Chat
 
 ### 🎯 Quand Utiliser leave-chat ?

@@ -84,6 +84,9 @@ export class MessagerieGateway
     const userId = this.findUserIdBySocketId(client.id);
 
     if (userId) {
+      // Nettoyer proprement tous les chats
+      this.cleanupUserChats(userId);
+
       this.userSockets.delete(userId);
       this.userChats.delete(userId);
       this.logger.log(`User ${userId} disconnected from messaging`);
@@ -99,9 +102,17 @@ export class MessagerieGateway
     @MessageBody() data: { chatId: string },
   ): void {
     const userId = client.userId;
-    if (!userId) return;
+    if (!userId) {
+      client.emit('error', { message: 'User ID not found' });
+      return;
+    }
 
-    this.joinChat(userId, data.chatId);
+    const result = this.joinChat(userId, data.chatId);
+    if (result) {
+      client.emit('error', { message: result });
+    } else {
+      client.emit('chat-joined', { chatId: data.chatId, status: 'success' });
+    }
   }
 
   /**
@@ -111,11 +122,25 @@ export class MessagerieGateway
   @SubscribeMessage('listen-all-chats')
   handleListenAllChats(@ConnectedSocket() client: AuthenticatedSocket): void {
     const userId = client.userId;
-    if (!userId) return;
+    if (!userId) {
+      client.emit('error', { message: 'User ID not found' });
+      return;
+    }
 
-    // Rejoindre un canal global pour cet utilisateur
-    client.join(`user-global:${userId}`);
-    this.logger.log(`User ${userId} is now listening to all their chats`);
+    try {
+      // Rejoindre un canal global pour cet utilisateur
+      client.join(`user-global:${userId}`);
+      this.logger.log(`User ${userId} is now listening to all their chats`);
+
+      // Confirmation au client
+      client.emit('listening-all-chats', { status: 'success' });
+    } catch (error) {
+      this.logger.error(
+        `Failed to listen all chats for user ${userId}:`,
+        error,
+      );
+      client.emit('error', { message: 'Failed to listen to all chats' });
+    }
   }
 
   @SubscribeMessage('leave-chat')
@@ -124,15 +149,33 @@ export class MessagerieGateway
     @MessageBody() data: { chatId: string },
   ): void {
     const userId = client.userId;
-    if (!userId) return;
-    this.leaveChat(userId, data.chatId);
+    if (!userId) {
+      client.emit('error', { message: 'User ID not found' });
+      return;
+    }
+
+    const result = this.leaveChat(userId, data.chatId);
+    if (result) {
+      client.emit('error', { message: result });
+    } else {
+      client.emit('chat-left', { chatId: data.chatId, status: 'success' });
+    }
   }
 
   @SubscribeMessage('leave-all-chats')
   handleLeaveAllChats(@ConnectedSocket() client: AuthenticatedSocket): void {
     const userId = client.userId;
-    if (!userId) return;
-    this.leaveAllChats(userId);
+    if (!userId) {
+      client.emit('error', { message: 'User ID not found' });
+      return;
+    }
+
+    const result = this.leaveAllChats(userId);
+    if (result) {
+      client.emit('error', { message: result });
+    } else {
+      client.emit('all-chats-left', { status: 'success' });
+    }
   }
 
   // === Implémentation MessageGatewayPort ===
@@ -206,6 +249,15 @@ export class MessagerieGateway
         return `User ${userId} not connected`;
       }
 
+      // Vérifier si l'utilisateur est déjà dans ce chat
+      if (
+        this.userChats.has(userId) &&
+        this.userChats.get(userId)!.has(chatId)
+      ) {
+        this.logger.log(`User ${userId} is already in chat ${chatId}`);
+        return null; // Pas d'erreur, juste déjà présent
+      }
+
       // Rejoindre le canal du chat
       socket.join(`chat:${chatId}`);
 
@@ -230,9 +282,18 @@ export class MessagerieGateway
         return `User ${userId} not connected`;
       }
 
-      socket.leave(`chat:${chatId}`);
+      // Vérifier si l'utilisateur est dans ce chat
+      if (
+        !this.userChats.has(userId) ||
+        !this.userChats.get(userId)!.has(chatId)
+      ) {
+        this.logger.log(`User ${userId} is not in chat ${chatId}`);
+        return null; // Pas d'erreur, juste pas présent
+      }
 
+      socket.leave(`chat:${chatId}`);
       this.userChats.get(userId)!.delete(chatId);
+
       this.logger.log(`User ${userId} left chat ${chatId}`);
       return null;
     } catch (error) {
@@ -248,15 +309,31 @@ export class MessagerieGateway
         return `User ${userId} not connected`;
       }
 
-      this.userChats.get(userId)!.forEach((chatId) => {
-        socket.leave(`chat:${chatId}`);
+      // Vérifier si l'utilisateur a des chats
+      if (
+        !this.userChats.has(userId) ||
+        this.userChats.get(userId)!.size === 0
+      ) {
+        this.logger.log(`User ${userId} has no chats to leave`);
+        return null;
+      }
+
+      // Quitter tous les chats
+      const userChats = this.userChats.get(userId)!;
+      userChats.forEach((chatId) => {
+        try {
+          socket.leave(`chat:${chatId}`);
+        } catch (error) {
+          this.logger.warn(`Failed to leave chat ${chatId}:`, error);
+        }
       });
-      this.userChats.get(userId)!.clear();
+
+      userChats.clear();
       this.logger.log(`User ${userId} left all chats`);
       return null;
     } catch (error) {
-      this.logger.error(`Failed to leave chat:`, error);
-      return `Failed to leave: ${error}`;
+      this.logger.error(`Failed to leave all chats:`, error);
+      return `Failed to leave all chats: ${error}`;
     }
   }
 
@@ -360,5 +437,57 @@ export class MessagerieGateway
       this.logger.error('Error extracting userId from socket:', error);
       return null;
     }
+  }
+
+  // === Méthodes de debug et nettoyage ===
+
+  /**
+   * 🧹 Nettoyer proprement les chats d'un utilisateur
+   */
+  private cleanupUserChats(userId: string): void {
+    try {
+      const socket = this.userSockets.get(userId);
+      if (!socket) return;
+
+      const userChats = this.userChats.get(userId);
+      if (userChats) {
+        userChats.forEach((chatId) => {
+          try {
+            socket.leave(`chat:${chatId}`);
+            this.logger.debug(`Cleaned up chat ${chatId} for user ${userId}`);
+          } catch (error) {
+            this.logger.warn(`Failed to cleanup chat ${chatId}:`, error);
+          }
+        });
+      }
+    } catch (error) {
+      this.logger.error(`Failed to cleanup chats for user ${userId}:`, error);
+    }
+  }
+
+  /**
+   * 📊 Obtenir le statut de debug d'un utilisateur
+   */
+  @SubscribeMessage('debug-status')
+  handleDebugStatus(@ConnectedSocket() client: AuthenticatedSocket): void {
+    const userId = client.userId;
+    if (!userId) {
+      client.emit('error', { message: 'User ID not found' });
+      return;
+    }
+
+    const socket = this.userSockets.get(userId);
+    const userChats = this.userChats.get(userId);
+
+    const status = {
+      userId,
+      connected: !!socket,
+      socketId: socket?.id,
+      chats: userChats ? Array.from(userChats) : [],
+      totalUsers: this.userSockets.size,
+      totalChats: this.userChats.size,
+    };
+
+    client.emit('debug-status', status);
   }
 }
