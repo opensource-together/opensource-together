@@ -17,7 +17,7 @@ import {
   adaptGraphqlResponse,
   GithubRepositorySuggestionGraphqlResponse,
 } from '../services/dto/github-repository-suggestion.graphql.dto';
-import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
+//import { ContributionGraph } from '@/contexts/user/domain/github-stats.vo';
 
 @Injectable()
 export class GithubRepository implements IGithubRepository {
