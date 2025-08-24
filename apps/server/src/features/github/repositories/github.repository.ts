@@ -679,7 +679,7 @@ export class GithubRepository implements IGithubRepository {
     }
   }
 
-  async getUserContributionGraph(
+  /*async getUserContributionGraph(
     octokit: Octokit,
   ): Promise<Result<ContributionGraph, string>> {
     try {
@@ -769,5 +769,5 @@ export class GithubRepository implements IGithubRepository {
         'Failed to fetch user contribution graph with GraphQL',
       );
     }
-  }
+  }*/
 }
