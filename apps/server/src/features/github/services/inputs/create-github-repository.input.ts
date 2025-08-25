@@ -1,5 +1,5 @@
-import { Octokit } from "@octokit/rest";
-import { IsString } from "class-validator";
+import { Octokit } from '@octokit/rest';
+import { IsString } from 'class-validator';
 
 export class CreateGithubRepositoryInput {
   @IsString()

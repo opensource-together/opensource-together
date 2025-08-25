@@ -8,7 +8,12 @@ import { FeaturesModule } from './features/features.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule.forRoot(auth), FeaturesModule, HealthModule],
+  imports: [
+    PrismaModule,
+    AuthModule.forRoot(auth),
+    FeaturesModule,
+    HealthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

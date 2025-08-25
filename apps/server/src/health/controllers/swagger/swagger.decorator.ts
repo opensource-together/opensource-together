@@ -1,15 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function HealthCheckSwagger() {
   return applyDecorators(
     ApiOperation({
       summary: "Vérifier l'état de santé de l'API",
       description:
-      "Endpoint pour vérifier si l'API est opérationnelle. Utilisé pour les health checks et monitoring.",
+        "Endpoint pour vérifier si l'API est opérationnelle. Utilisé pour les health checks et monitoring.",
     }),
     ApiResponse({
       status: 200,
@@ -39,4 +36,3 @@ export function HealthCheckSwagger() {
     }),
   );
 }
-

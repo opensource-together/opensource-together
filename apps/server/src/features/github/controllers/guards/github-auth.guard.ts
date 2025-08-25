@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { UserSession } from '@thallesp/nestjs-better-auth';
-import { ACCOUNT_REPOSITORY, IAccountRepository } from '../../repositories/account.repository.interface';
+import {
+  ACCOUNT_REPOSITORY,
+  IAccountRepository,
+} from '../../repositories/account.repository.interface';
 
 export interface GithubAuthRequest extends UserSession {
   octokit: Octokit;
@@ -34,8 +37,9 @@ export class GithubAuthGuard implements CanActivate {
     }
 
     const userId = request.session.userId;
-    const userGhTokenResult = await this.accountRepository.getUserGithubToken(userId);
-    if(!userGhTokenResult.success) {
+    const userGhTokenResult =
+      await this.accountRepository.getUserGithubToken(userId);
+    if (!userGhTokenResult.success) {
       return false;
     }
 

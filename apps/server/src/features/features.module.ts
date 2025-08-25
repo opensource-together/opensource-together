@@ -6,7 +6,13 @@ import { ProjectRoleModule } from './project-role/project-role.module';
 import { GithubModule } from './github/github.module';
 
 @Module({
-  imports: [ProjectModule, TechStackModule, CategoryModule, ProjectRoleModule, GithubModule],
+  imports: [
+    ProjectModule,
+    TechStackModule,
+    CategoryModule,
+    ProjectRoleModule,
+    GithubModule,
+  ],
   controllers: [],
   providers: [],
   exports: [ProjectModule, TechStackModule, CategoryModule, ProjectRoleModule],

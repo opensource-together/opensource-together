@@ -1,15 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import {
-    ApiCookieAuth,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function GetGithubRepositorySwagger() {
   return applyDecorators(
     ApiOperation({
       summary:
-      "Récupérer la liste des repository github de l'utilisateur courant",
+        "Récupérer la liste des repository github de l'utilisateur courant",
     }),
     ApiCookieAuth('sAccessToken'),
     ApiResponse({
@@ -37,4 +33,3 @@ export function GetGithubRepositorySwagger() {
     }),
   );
 }
-

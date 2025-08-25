@@ -6,9 +6,7 @@ import {
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
-import {
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { GitHubOctokit } from './github-octokit.decorator';
 import { Octokit } from '@octokit/rest';
 import { GithubAuthGuard } from './guards/github-auth.guard';
