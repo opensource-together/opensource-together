@@ -8,7 +8,12 @@ import {
 } from '@nestjs/common';
 import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
+import {
+  AuthGuard,
+  Public,
+  Session,
+  UserSession,
+} from '@thallesp/nestjs-better-auth';
 
 @Controller('projects')
 @UseGuards(AuthGuard)
@@ -16,9 +21,11 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Get()
+  @Public()
   getProjects() {
     return [];
   }
+
   @Post()
   async createProject(
     @Session() session: UserSession,

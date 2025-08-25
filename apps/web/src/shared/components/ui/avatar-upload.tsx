@@ -113,7 +113,6 @@ export function AvatarUpload({
   return (
     <div className={cn("w-full", className)}>
       <div className="flex items-center justify-between">
-        {/* Avatar Preview */}
         <div className="relative flex items-center gap-3">
           <div
             {...getRootProps()}
@@ -154,14 +153,12 @@ export function AvatarUpload({
         </div>
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
-        {/* Upload Info and Button */}
         <Button
           type="button"
           variant="outline"
           className="font-medium"
           disabled={disabled}
           onClick={() => {
-            // Trigger file dialog when button is clicked
             const input = document.createElement("input");
             input.type = "file";
             input.accept = accept;

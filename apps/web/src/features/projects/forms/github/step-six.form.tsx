@@ -63,7 +63,6 @@ export function StepSixForm() {
     setValue("logo", file || undefined);
   };
 
-  // Convert form inputs to ExternalLink array format
   const convertToExternalLinksArray = (
     formLinks: StepFourFormData["externalLinks"]
   ) => {
@@ -72,7 +71,6 @@ export function StepSixForm() {
       url: string;
     }> = [];
 
-    // Always add the GitHub repository URL first (since this is a GitHub import)
     if (formData.selectedRepository?.url) {
       links.push({
         type: "github",
@@ -80,7 +78,6 @@ export function StepSixForm() {
       });
     }
 
-    // Add other external links from the form (excluding GitHub to avoid duplicates)
     if (formLinks) {
       Object.entries(formLinks)
         .filter(([type, url]) => {
@@ -114,20 +111,17 @@ export function StepSixForm() {
 
     const finalFormData = {
       ...formData,
-      // Don't put image URL here - it will be handled by the service
       externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
-    // Update the store with final data (without image for now)
     updateProjectInfo({
       externalLinks: finalFormData.externalLinks,
     });
 
-    // Create project with consolidated data and pass the file separately
     createProject({
       projectData: finalFormData,
       method: "github",
-      imageFile: pendingFormData.logo, // Pass the File object directly
+      imageFile: pendingFormData.logo,
     });
   };
 

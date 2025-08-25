@@ -14,6 +14,7 @@ import {
 } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
+import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Profile } from "../types/profile.type";
@@ -108,7 +109,6 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Name */}
           <FormField
             control={control}
             name="username"
@@ -123,7 +123,6 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Title */}
           <FormField
             control={control}
             name="jobTitle"
@@ -138,7 +137,6 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Description */}
           <FormField
             control={control}
             name="bio"
@@ -157,10 +155,8 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          {/* Separator */}
-          <div className="h-[2px] w-full bg-black/5" />
+          <Separator />
 
-          {/* Experiences */}
           <FormField
             control={control}
             name="experiences"

@@ -48,7 +48,6 @@ export function StepFiveForm() {
 
   const isEditMode = editingRoleIndex !== null;
 
-  // Main form for managing roles
   const mainForm = useForm<StepThreeFormData>({
     resolver: zodResolver(stepThreeSchema),
     defaultValues: {
@@ -77,7 +76,6 @@ export function StepFiveForm() {
     name: "roles",
   });
 
-  // Role form for modal
   const roleForm = useForm<RoleFormData>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
@@ -160,7 +158,6 @@ export function StepFiveForm() {
     resetRoleForm();
   };
 
-  // Convert form role data to ProjectRole format for RoleCard
   const convertToProjectRole = (
     role: RoleFormData,
     index: number
@@ -227,7 +224,6 @@ export function StepFiveForm() {
                           isMaintainer={true}
                           projectId=""
                         />
-                        {/* Overlay for edit/delete actions */}
                         <div className="absolute top-4 right-4 flex items-center gap-1 rounded-full bg-white/80 p-1 backdrop-blur-sm">
                           <Button
                             type="button"

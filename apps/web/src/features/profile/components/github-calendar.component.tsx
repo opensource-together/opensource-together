@@ -23,15 +23,15 @@ export default function GithubCalendar({
   const getSquareColor = (level: number): string => {
     switch (level) {
       case 0:
-        return "bg-[#E8EAEE]"; // Gris clair
+        return "bg-[#E8EAEE]";
       case 1:
-        return "bg-[#8EC5FF]"; // Bleu très clair
+        return "bg-[#8EC5FF]";
       case 2:
-        return "bg-[#51A2FF]"; // Bleu clair
+        return "bg-[#51A2FF]";
       case 3:
-        return "bg-[#2B7FFF]"; // Bleu moyen
+        return "bg-[#2B7FFF]";
       case 4:
-        return "bg-[#193CB8]"; // Bleu foncé
+        return "bg-[#193CB8]";
       default:
         return "bg-[#E8EAEE]";
     }
@@ -62,7 +62,6 @@ export default function GithubCalendar({
     setTooltip(null);
   };
 
-  // Si pas de données de contribution, afficher un message
   if (
     !contributionGraph ||
     !contributionGraph.weeks ||
@@ -84,7 +83,6 @@ export default function GithubCalendar({
     );
   }
 
-  // Afficher tous les mois de l'année
   const months = [
     "Jan",
     "Feb",
@@ -109,7 +107,6 @@ export default function GithubCalendar({
         </h3>
 
         <div className="relative">
-          {/* Mois en haut */}
           <div className="mb-2 flex px-2">
             {months.map((month, index) => (
               <div key={index} className="flex-1 text-center">
@@ -121,7 +118,6 @@ export default function GithubCalendar({
           </div>
 
           <div className="flex">
-            {/* Jours à gauche */}
             <div className="mr-1 flex flex-col justify-between py-1 md:mr-2">
               {days.map((day, index) => (
                 <span
@@ -133,7 +129,6 @@ export default function GithubCalendar({
               ))}
             </div>
 
-            {/* Calendrier principal */}
             <div
               className="h-[60px] w-full max-w-[598.07px] rounded-lg border border-black/5 p-1 md:h-[97px] md:p-2"
               onMouseMove={handleMouseMove}
@@ -160,7 +155,6 @@ export default function GithubCalendar({
         </div>
       </div>
 
-      {/* Tooltip */}
       {tooltip && (
         <div
           ref={tooltipRef}

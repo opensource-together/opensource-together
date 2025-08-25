@@ -5,9 +5,9 @@ services:
     image: postgres:17
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=ost_dev
-      - POSTGRES_USER=ost_user
-      - POSTGRES_PASSWORD=ost_password
+      - POSTGRES_DB=${BUSINESS_DB_NAME:-business}
+      - POSTGRES_USER=${BUSINESS_USER:-business_user}
+      - POSTGRES_PASSWORD=${BUSINESS_PASSWORD:-business_password}
     ports:
       - '5432:5432'
     volumes:
