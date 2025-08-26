@@ -31,6 +31,7 @@ export class GithubAuthGuard implements CanActivate {
     const t = cookies['better-auth.session_token'] as string;
     const token = t.substring(0, t.indexOf('.'));
 
+
     if (!token) {
       const octokit = new Octokit({
         auth: process.env.GH_TOKEN_OST_PUBLIC,
