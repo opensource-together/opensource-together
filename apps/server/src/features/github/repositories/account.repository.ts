@@ -8,21 +8,37 @@ export class AccountRepository implements IAccountRepository {
   private readonly Logger = new Logger(AccountRepository.name);
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getUserGithubToken(userId: string): Promise<Result<string>> {
+  async getUserGithubToken(cookie: string): Promise<Result<string>> {
     try {
-      const result = await this.prismaService.account.findUnique({
+      const result = await this.prismaService.session.findUnique({
         where: {
-          userId: userId,
+          token: cookie,
         },
         select: {
-          accessToken: true,
+          user: {
+            select: {
+              accounts: {
+                select: {
+                  accessToken: true,
+                },
+                where: {
+                  providerId: 'github',
+                },
+              },
+            },
+          },
         },
       });
 
-      if (!result || !result.accessToken) {
+      const accounts = result?.user.accounts;
+      if (!accounts || accounts?.length == 0) {
         return Result.fail("Failed to fetch user's github token");
       }
-      return Result.ok(result?.accessToken);
+      const token = accounts[0].accessToken;
+      if (!result || !token) {
+        return Result.fail("Failed to fetch user's github token");
+      }
+      return Result.ok(token);
     } catch (e) {
       this.Logger.error(`Failed to fetch user's github token : ${e}`);
       return Result.fail("Failed to fetch user's github token");

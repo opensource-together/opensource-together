@@ -2,11 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, Logger } from '@nestjs/common';
 import { createApiDocs } from '@/docs/openapi';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule, {
     bodyParser: false,
   });
+
+  app.use(cookieParser());
 
   createApiDocs(app);
 
