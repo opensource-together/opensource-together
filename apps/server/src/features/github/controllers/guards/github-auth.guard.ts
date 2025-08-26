@@ -27,7 +27,7 @@ export class GithubAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<GithubAuthRequest>();
 
-    if (!request.session?.userId) {
+    if (!request.user?.id) {
       // throw new UnauthorizedException('User not authenticated');
       const octokit = new Octokit({
         auth: process.env.GH_TOKEN_OST_PUBLIC,
@@ -36,7 +36,7 @@ export class GithubAuthGuard implements CanActivate {
       return true;
     }
 
-    const userId = request.session.userId;
+    const userId = request.user.id;
     const userGhTokenResult =
       await this.accountRepository.getUserGithubToken(userId);
     if (!userGhTokenResult.success) {

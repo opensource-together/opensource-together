@@ -4,6 +4,7 @@ import { GithubAuthRequest } from './guards/github-auth.guard';
 export const GitHubOctokit = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<GithubAuthRequest>();
+    console.log('request.octokit', request.octokit);
     return request.octokit;
   },
 );
