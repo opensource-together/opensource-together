@@ -145,4 +145,12 @@ export class ProjectService {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
   }
+
+  async getAll() {
+    const result = await this.projectRepository.findAll();
+    if (!result.success) {
+      return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    }
+    return Result.ok(result.value);
+  }
 }
