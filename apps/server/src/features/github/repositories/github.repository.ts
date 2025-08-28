@@ -1,6 +1,8 @@
 import {
   IGithubRepository,
+  LastCommit,
   RepositoryInfo,
+  RepositoryStats,
 } from '@/features/github/repositories/github.repository.interface';
 import { Result } from '@/libs/result';
 import { Injectable, Logger } from '@nestjs/common';
@@ -23,6 +25,41 @@ import {
 export class GithubRepository implements IGithubRepository {
   private readonly Logger = new Logger(GithubRepository.name);
   constructor() {}
+
+  async getRepositoryStats(
+    octokit: Octokit,
+    owner: string,
+    repo: string,
+  ): Promise<Result<RepositoryStats, string>> {
+    const result = await this.findRepositoryByOwnerAndName(
+      owner,
+      repo,
+      octokit,
+    );
+    if (!result.success) {
+      return Result.fail('GITHUB_ERROR');
+    }
+    const stats = await this.findCommitsByRepository(owner, repo, octokit);
+    if (!stats.success) {
+      return Result.fail('GITHUB_ERROR');
+    }
+    const contributors = await this.findContributorsByRepository(
+      owner,
+      repo,
+      octokit,
+    );
+    if (!contributors.success) {
+      return Result.fail('GITHUB_ERROR');
+    }
+    return Result.ok({
+      stats: result.value,
+      contributors: contributors.value,
+      commits: {
+        lastCommit: stats.value.lastCommit as LastCommit,
+        commitsNumber: stats.value.commitsNumber,
+      },
+    });
+  }
 
   async createGithubRepository(
     input: {

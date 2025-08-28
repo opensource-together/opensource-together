@@ -34,6 +34,14 @@ export type RepositoryInfo = {
   watchers: number;
   openIssues: number;
 };
+export type RepositoryStats = {
+  stats: RepositoryInfo;
+  contributors: Contributor[];
+  commits: {
+    lastCommit: LastCommit;
+    commitsNumber: number;
+  };
+};
 export const GITHUB_REPOSITORY = Symbol('GITHUB_REPOSITORY');
 export interface IGithubRepository {
   createGithubRepository(
@@ -80,4 +88,9 @@ export interface IGithubRepository {
   /*getUserContributionGraph(
     octokit: Octokit,
   ): Promise<Result<ContributionGraph, string>>;*/
+  getRepositoryStats(
+    octokit: Octokit,
+    owner: string,
+    repo: string,
+  ): Promise<Result<RepositoryStats, string>>;
 }

@@ -235,8 +235,8 @@ export class ProjectController {
   @UseGuards(GithubAuthGuard)
   @Get()
   @Public()
-  async getProjects() {
-    const result = await this.projectService.getAll();
+  async getProjects(@GitHubOctokit() octokit: Octokit) {
+    const result = await this.projectService.getAll(octokit);
     if (!result.success) {
       throw new BadRequestException(result.error);
     }

@@ -13,8 +13,10 @@ import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-s
 import { TechStackRepository } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
 import { CategoryRepository } from '@/features/category/repositories/category.repository.interface';
-import { GithubRepository } from '@/features/github/repositories/github.repository';
-import { GITHUB_REPOSITORY } from '@/features/github/repositories/github.repository.interface';
+import {
+  GITHUB_REPOSITORY,
+  IGithubRepository,
+} from '@/features/github/repositories/github.repository.interface';
 import { Octokit } from '@octokit/rest';
 
 export type CreateProjectRequest = CreateProjectDto;
@@ -39,7 +41,7 @@ export class ProjectService {
     @Inject(CATEGORY_REPOSITORY)
     private readonly categoryRepository: CategoryRepository,
     @Inject(GITHUB_REPOSITORY)
-    private readonly githubRepository: GithubRepository,
+    private readonly githubRepository: IGithubRepository,
   ) {}
 
   async createProject(
@@ -146,11 +148,28 @@ export class ProjectService {
     }
   }
 
-  async getAll() {
+  async getAll(octokit: Octokit) {
     const result = await this.projectRepository.findAll();
-    if (!result.success) {
+    if (!result.success)
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    const projects = await Promise.all(
+      result.value.map((project) => this.getProjectStats(octokit, project)),
+    );
+    return Result.ok(projects);
+  }
+
+  async getProjectStats(octokit: Octokit, project: Project) {
+    const result = await this.githubRepository.getRepositoryStats(
+      octokit,
+      project.ownerId!,
+      project.title.toLowerCase().replace(/\s+/g, '-'),
+    );
+    if (!result.success) {
+      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
     }
-    return Result.ok(result.value);
+    return Result.ok({
+      ...project,
+      stats: result.value,
+    });
   }
 }
