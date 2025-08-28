@@ -16,7 +16,7 @@
  */
 export interface Project {
   id?: string;
-  ownerId: string;
+  ownerId?: string;
   title: string;
   description: string;
   image: string;

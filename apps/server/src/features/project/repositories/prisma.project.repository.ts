@@ -192,7 +192,14 @@ export class PrismaProjectRepository implements ProjectRepository {
     }
   }
 
-  async findAll(): Promise<Result<DomainProject[], string>> {
+  async findAll(): Promise<
+    Result<
+      (DomainProject & {
+        owner: { id: string; name: string; image: string };
+      })[],
+      string
+    >
+  > {
     try {
       const results = await this.prisma.project.findMany({
         include: {
@@ -203,14 +210,24 @@ export class PrismaProjectRepository implements ProjectRepository {
           projectMembers: true,
           categories: true,
           externalLinks: true,
-          owner: true,
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
         },
       });
       if (!results) return Result.ok([]);
 
       return Result.ok(
         results.map((project) => ({
-          ownerId: project.ownerId,
+          owner: {
+            id: project.owner.id,
+            name: project.owner.name || '',
+            image: project.owner.image || '',
+          },
           title: project.title,
           description: project.description,
           image: project.image || '',
@@ -247,7 +264,12 @@ export class PrismaProjectRepository implements ProjectRepository {
         })),
       );
     } catch {
-      return Result.fail<DomainProject[], string>('DATABASE_ERROR');
+      return Result.fail<
+        (DomainProject & {
+          owner: { id: string; name: string; image: string };
+        })[],
+        string
+      >('DATABASE_ERROR');
     }
   }
 
