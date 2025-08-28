@@ -32,13 +32,8 @@ export class ProjectController {
       {
         owner: {
           id: 'github_user123',
-          username: 'Lhourquin',
-          login: 'Lhourquin',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/123456789?v=4',
-          email: 'lhourquin@example.com',
-          provider: 'github',
-          createdAt: '2025-01-15T10:30:00.000Z',
-          updatedAt: '2025-01-20T14:45:00.000Z',
+          name: 'Lhourquin',
+          image: 'https://avatars.githubusercontent.com/u/123456789?v=4',
         },
         id: '123e4567-e89b-12d3-a456-426614174000',
         title: 'E-commerce Platform',
@@ -137,13 +132,8 @@ export class ProjectController {
       {
         owner: {
           id: 'github_user456',
-          username: 'Mac-Gyver',
-          login: 'Mac-Gyver',
-          avatarUrl: 'https://avatars.githubusercontent.com/u/123254210?v=4',
-          email: 'macgyver@example.com',
-          provider: 'github',
-          createdAt: '2025-01-15T10:30:00.000Z',
-          updatedAt: '2025-01-20T14:45:00.000Z',
+          name: 'Mac-Gyver',
+          image: 'https://avatars.githubusercontent.com/u/123254210?v=4',
         },
         id: '123e4567-e89b-12d3-a456-426614174001',
         title: 'E-commerce Platform',
