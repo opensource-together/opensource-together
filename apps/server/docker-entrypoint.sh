@@ -67,7 +67,7 @@ run_migrations() {
         local migration_success=false
        
         if [ "$NODE_ENV" == "development" ]; then
-            if timeout $MIGRATION_TIMEOUT npx prisma db push --schema /app/schema/schema.prisma --accept-data-loss --skip-generate; then
+            if timeout $MIGRATION_TIMEOUT npx prisma db push --schema /app/schema/schema.prisma --force-reset --skip-generate; then
                 log_success "Development migrations completed successfully"
                 migration_success=true
             fi
