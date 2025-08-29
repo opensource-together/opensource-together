@@ -6,6 +6,7 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@/auth/auth';
 import { FeaturesModule } from './features/features.module';
 import { ProfileModule } from '@/features/profile/profile.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ProfileModule } from '@/features/profile/profile.module';
     AuthModule.forRoot(auth),
     FeaturesModule,
     ProfileModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

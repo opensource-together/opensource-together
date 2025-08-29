@@ -14,6 +14,8 @@ interface TechStackApiGroupResponse {
 
 /**
  * Fetch tech stacks from the API
+ *
+ * @returns A promise that resolves to an array of tech stack items
  */
 export const fetchTechStacks = async (): Promise<TechStackItem[]> => {
   const response = await fetch(`${API_BASE_URL}/techstacks`);

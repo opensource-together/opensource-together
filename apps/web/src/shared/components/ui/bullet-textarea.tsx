@@ -14,7 +14,6 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const internalRef = ref || textareaRef;
 
-    // Transform plain text to bullet points
     const transformToBulletPoints = (text: string) => {
       if (!text) return "";
 
@@ -26,7 +25,6 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
         .join("\n");
     };
 
-    // Extract plain text from bullet points
     const extractPlainText = (text: string) => {
       return text
         .split("\n")
@@ -35,7 +33,6 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
         .join("\n");
     };
 
-    // Update display value when value prop changes
     useEffect(() => {
       if (value) {
         setDisplayValue(transformToBulletPoints(value));
@@ -48,10 +45,8 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
       const newValue = event.target.value;
       const plainText = extractPlainText(newValue);
 
-      // Update the display immediately for better UX
       setDisplayValue(transformToBulletPoints(plainText));
 
-      // Call the original onChange with plain text
       if (onChange) {
         const syntheticEvent = {
           ...event,
@@ -72,21 +67,17 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
         const end = textarea.selectionEnd;
         const currentValue = textarea.value;
 
-        // Insert new line with bullet point
         const newValue =
           currentValue.substring(0, start) +
           "\n• " +
           currentValue.substring(end);
 
-        // Update the textarea value
         textarea.value = newValue;
 
-        // Set cursor position after the bullet point
         setTimeout(() => {
           textarea.selectionStart = textarea.selectionEnd = start + 3;
         }, 0);
 
-        // Trigger change event
         const plainText = extractPlainText(newValue);
         setDisplayValue(newValue);
 
@@ -101,7 +92,6 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
         }
       }
 
-      // Call original onKeyDown if provided
       if (props.onKeyDown) {
         props.onKeyDown(event);
       }

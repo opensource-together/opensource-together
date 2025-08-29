@@ -303,7 +303,7 @@ const ProjectCardViewLink = React.forwardRef<
     Voir le projet{" "}
     <Image
       className=""
-      src="/icons/right-arrow-icon.svg"
+      src="/icons/right-arrow.svg"
       alt="arrowupright"
       width={13}
       height={13}
@@ -331,7 +331,7 @@ const ProjectCardViewText = React.forwardRef<
     Voir le projet{" "}
     <Image
       className=""
-      src="/icons/right-arrow-icon.svg"
+      src="/icons/right-arrow.svg"
       alt="arrowupright"
       width={13}
       height={13}

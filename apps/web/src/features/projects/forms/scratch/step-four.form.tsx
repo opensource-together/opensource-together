@@ -63,7 +63,6 @@ export function StepFourForm() {
     setValue("logo", file || undefined);
   };
 
-  // Convert form inputs to ExternalLink array format
   const convertToExternalLinksArray = (
     formLinks: StepFourFormData["externalLinks"]
   ) => {
@@ -92,20 +91,17 @@ export function StepFourForm() {
 
     const finalFormData = {
       ...formData,
-      // Include coverImages from store data
       coverImages: formData.coverImages || [],
       externalLinks: convertToExternalLinksArray(pendingFormData.externalLinks),
     };
 
-    // Update the store with final data (without image for now)
     updateProjectInfo({
       externalLinks: finalFormData.externalLinks,
     });
 
-    // Create project with consolidated data and pass the file separately
     createProject({
       projectData: finalFormData,
-      imageFile: pendingFormData.logo, // Pass the File object directly
+      imageFile: pendingFormData.logo,
       method: "scratch",
     });
   };

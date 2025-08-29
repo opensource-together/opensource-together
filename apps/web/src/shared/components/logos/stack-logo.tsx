@@ -16,7 +16,6 @@ export default function StackLogo({
   width = 14.5,
   height = 10.22,
 }: StackLogoProps) {
-  // TODO: remove this once we have the icons from the backend
   let iconSrcToUse = icon;
   if (
     typeof icon === "string" &&

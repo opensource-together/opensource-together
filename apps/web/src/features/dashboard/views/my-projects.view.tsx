@@ -9,7 +9,7 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
-import MyProjectsSkeletonComponent from "../components/my-projects/skeletons/my-projects-skeleton.component";
+import MyProjectsSkeletonComponent from "../components/skeletons/my-projects-skeleton.component";
 import { useMyProjects } from "../hooks/use-my-projects.hook";
 import {
   useAcceptProjectRoleApplication,
@@ -30,7 +30,6 @@ export default function MyProjectsView() {
   const acceptApplicationMutation = useAcceptProjectRoleApplication();
   const rejectApplicationMutation = useRejectProjectRoleApplication();
 
-  // Sélectionner automatiquement le premier projet par défaut
   useEffect(() => {
     if (projects.length > 0 && !selectedProjectId) {
       const firstProject = projects[0];
@@ -42,7 +41,6 @@ export default function MyProjectsView() {
 
   const handleProjectSelect = (projectId: string) => {
     setSelectedProjectId(projectId);
-    // Sur mobile, basculer vers l'onglet détails
     if (window.innerWidth < 1024) {
       setActiveTab("details");
     }
@@ -59,7 +57,6 @@ export default function MyProjectsView() {
     }
   };
 
-  // Récupérer les applications du projet sélectionné
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
   const selectedProjectApplications =
     selectedProject?.applications.filter((app) => app.status !== "CANCELLED") ||
@@ -75,9 +72,7 @@ export default function MyProjectsView() {
         description="Gérez vos projets Open Source et vos candidatures reçues."
       />
 
-      {/* Layout responsive */}
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
-        {/* Section Mes Projets - Desktop */}
         <div className="order-1 hidden w-full min-w-0 lg:block lg:w-[35%]">
           <MyProjectsList
             onProjectSelect={setSelectedProjectId}
@@ -85,7 +80,6 @@ export default function MyProjectsView() {
           />
         </div>
 
-        {/* Section Candidatures & Équipe - Desktop */}
         <div className="order-2 hidden w-full min-w-0 lg:block lg:w-[65%]">
           {selectedProjectId ? (
             <MyProjectTabs
@@ -104,9 +98,7 @@ export default function MyProjectsView() {
           )}
         </div>
 
-        {/* Mobile: Navigation par onglets */}
         <div className="order-1 block w-full lg:hidden">
-          {/* Onglets de navigation mobile */}
           <div className="mb-6 flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab("projects")}
@@ -133,7 +125,6 @@ export default function MyProjectsView() {
             </button>
           </div>
 
-          {/* Contenu des onglets */}
           {activeTab === "projects" && (
             <MyProjectsList
               onProjectSelect={handleProjectSelect}
