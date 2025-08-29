@@ -105,7 +105,7 @@ model Account {
 
 model Profile {
   id        String   @id @default(uuid())
-  userId    String
+  userId    String   @unique
   bio       String?
   location  String?
   company   String?
@@ -187,17 +187,17 @@ model ProjectRole {
 }
 
 model ProjectRoleApplication {
-  id                   String                       @id @default(uuid())
-  userId               String
-  projectId            String
-  projectRoleId        String
-  status               ProjectRoleApplicationStatus
-  motivationLetter     String?
-  rejectionReason      String?
-  decidedAt            DateTime?                    @updatedAt
-  decidedBy            String?
-  createdAt            DateTime                     @default(now())
-  updatedAt            DateTime                     @updatedAt
+  id               String                       @id @default(uuid())
+  userId           String
+  projectId        String
+  projectRoleId    String
+  status           ProjectRoleApplicationStatus
+  motivationLetter String?
+  rejectionReason  String?
+  decidedAt        DateTime?                    @updatedAt
+  decidedBy        String?
+  createdAt        DateTime                     @default(now())
+  updatedAt        DateTime                     @updatedAt
 
   projectRole ProjectRole @relation(fields: [projectRoleId], references: [id], onDelete: Cascade)
   user        User        @relation("applier", fields: [userId], references: [id], onDelete: Cascade)

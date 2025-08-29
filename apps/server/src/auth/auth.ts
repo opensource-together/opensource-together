@@ -2,6 +2,8 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import * as process from 'node:process';
 import { PrismaService } from 'prisma/prisma.service';
+import { getProfileService } from '@/features/profile/services/profile.holder';
+import { Account } from 'better-auth/types';
 
 const prisma = new PrismaService();
 
@@ -47,6 +49,18 @@ export const auth: {
   },
   trustedOrigins: ['http://localhost:3000', 'http://localhost:4000'],
   baseURL: 'http://localhost:4000',
+  databaseHooks: {
+    account: {
+      create: {
+        after: async (account: Account): Promise<void> => {
+          if (account.providerId === 'github') {
+            await getProfileService().createFromGithub(account);
+          }
+          return;
+        },
+      },
+    },
+  },
   advanced: {
     crossSubDomainCookies: {
       enabled: false,
