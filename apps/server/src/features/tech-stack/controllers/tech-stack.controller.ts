@@ -1,9 +1,7 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  TechStackResponse,
-  TechStackService,
-} from '../services/tech-stack.service';
+import { TechStackResponse } from '../domain/tech-stack';
+import { TechStackService } from '../services/tech-stack.service';
 
 @ApiTags('Tech Stacks')
 @Controller('techstacks')

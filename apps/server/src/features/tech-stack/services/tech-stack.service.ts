@@ -1,15 +1,10 @@
 import { Result } from '@/libs/result';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { TechStack } from '../domain/tech-stack';
+import { TechStackResponse } from '../domain/tech-stack';
 import {
   ITechStackRepository,
   TECH_STACK_REPOSITORY,
 } from '../repositories/tech-stack.repository.interface';
-
-export interface TechStackResponse {
-  languages: TechStack[];
-  technologies: TechStack[];
-}
 
 @Injectable()
 export class TechStackService {

@@ -5,7 +5,11 @@ export interface TechStack {
   type: 'LANGUAGE' | 'TECH';
 }
 
-// Erreurs de validation simples
+export interface TechStackResponse {
+  languages: TechStack[];
+  technologies: TechStack[];
+}
+
 export interface ValidationErrors {
   [key: string]: string;
 }
