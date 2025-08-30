@@ -159,9 +159,10 @@ export class ProjectService {
   }
 
   async getProjectStats(octokit: Octokit, project: Project) {
+    console.log('project', project);
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
-      project.ownerId!,
+      project.title,
       project.title.toLowerCase().replace(/\s+/g, '-'),
     );
     if (!result.success) {
