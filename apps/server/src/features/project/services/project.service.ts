@@ -1,21 +1,27 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Result } from '@/libs/result';
 import {
+  CATEGORY_REPOSITORY,
+  ICategoryRepository,
+} from '@/features/category/repositories/category.repository.interface';
+import { GithubRepository } from '@/features/github/repositories/github.repository';
+import { GITHUB_REPOSITORY } from '@/features/github/repositories/github.repository.interface';
+import {
+  ITechStackRepository,
+  TECH_STACK_REPOSITORY,
+} from '@/features/tech-stack/repositories/tech-stack.repository.interface';
+import { Result } from '@/libs/result';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Octokit } from '@octokit/rest';
+import { CreateProjectDto } from '../controllers/dto/create-project.dto';
+import {
+  Project,
   validateProject,
   validateProjectRole,
   ValidationErrors,
-  Project,
 } from '../domain/project';
-import { ProjectRepository } from '../repositories/project.repository.interface';
-import { PROJECT_REPOSITORY } from '../repositories/project.repository.interface';
-import { CreateProjectDto } from '../controllers/dto/create-project.dto';
-import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
-import { TechStackRepository } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
-import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
-import { CategoryRepository } from '@/features/category/repositories/category.repository.interface';
-import { GithubRepository } from '@/features/github/repositories/github.repository';
-import { GITHUB_REPOSITORY } from '@/features/github/repositories/github.repository.interface';
-import { Octokit } from '@octokit/rest';
+import {
+  PROJECT_REPOSITORY,
+  ProjectRepository,
+} from '../repositories/project.repository.interface';
 
 export type CreateProjectRequest = CreateProjectDto;
 
@@ -35,9 +41,9 @@ export class ProjectService {
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: ProjectRepository,
     @Inject(TECH_STACK_REPOSITORY)
-    private readonly techStackRepository: TechStackRepository,
+    private readonly techStackRepository: ITechStackRepository,
     @Inject(CATEGORY_REPOSITORY)
-    private readonly categoryRepository: CategoryRepository,
+    private readonly categoryRepository: ICategoryRepository,
     @Inject(GITHUB_REPOSITORY)
     private readonly githubRepository: GithubRepository,
   ) {}
@@ -81,7 +87,10 @@ export class ProjectService {
       const validCategories = await this.categoryRepository.findByIds(
         request.categories,
       );
-      if (validCategories.length !== request.categories.length) {
+      if (
+        !validCategories.success ||
+        validCategories.value.length !== request.categories.length
+      ) {
         return Result.fail('CATEGORY_NOT_FOUND' as ProjectServiceError);
       }
 
