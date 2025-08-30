@@ -9,6 +9,7 @@
 ## Démarage :
 
 Après avoir clone le projet, faite la commande `pnpm i` dans le dossier `apps/server/`, une fois les dépendance installé, démarrer le container de la base de données avec Docker.
+Veillez bien à avoir mis toutes les variables d'envrironnement nécéssaire comme présenté dans le `.env.example`.
 
 ### Base de données:
 
