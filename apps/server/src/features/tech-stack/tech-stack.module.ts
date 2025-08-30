@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from 'prisma/prisma.module';
 import { TechStackController } from './controllers/tech-stack.controller';
-import { TechStackRepository } from './repositories/tech-stack.repository';
+import { PrismaTechStackRepository } from './repositories/prisma.tech-stack.repository';
 import { TECH_STACK_REPOSITORY } from './repositories/tech-stack.repository.interface';
 import { TechStackService } from './services/tech-stack.service';
 
@@ -11,7 +11,7 @@ import { TechStackService } from './services/tech-stack.service';
   providers: [
     {
       provide: TECH_STACK_REPOSITORY,
-      useClass: TechStackRepository,
+      useClass: PrismaTechStackRepository,
     },
     TechStackService,
   ],

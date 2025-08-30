@@ -5,7 +5,7 @@ import { Category } from '../domain/category';
 import { ICategoryRepository } from './category.repository.interface';
 
 @Injectable()
-export class CategoryRepository implements ICategoryRepository {
+export class PrismaCategoryRepository implements ICategoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAll(): Promise<Result<Category[], string>> {

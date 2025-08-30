@@ -11,7 +11,7 @@ export class CategoryController {
   @Get()
   @ApiOperation({
     summary: 'Get all categories',
-    description: 'Get all categories of projects',
+    description: 'Return the list of all categories available for projects',
   })
   @ApiResponse({
     status: 200,

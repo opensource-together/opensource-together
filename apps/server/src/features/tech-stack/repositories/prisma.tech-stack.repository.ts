@@ -5,7 +5,7 @@ import { TechStack } from '../domain/tech-stack';
 import { ITechStackRepository } from './tech-stack.repository.interface';
 
 @Injectable()
-export class TechStackRepository implements ITechStackRepository {
+export class PrismaTechStackRepository implements ITechStackRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAll(): Promise<Result<TechStack[], string>> {
@@ -14,7 +14,7 @@ export class TechStackRepository implements ITechStackRepository {
       return Result.ok(techStacks);
     } catch (error) {
       console.error('Error fetching all tech stacks', error);
-      return Result.fail('DATABASE_ERROR' as string);
+      return Result.fail('DATABASE_ERROR');
     }
   }
   async findByIds(ids: string[]): Promise<Result<TechStack[], string>> {
@@ -25,7 +25,7 @@ export class TechStackRepository implements ITechStackRepository {
       return Result.ok(result);
     } catch (error) {
       console.error('Error finding tech stacks by ids', error);
-      return Result.fail('DATABASE_ERROR' as string);
+      return Result.fail('DATABASE_ERROR');
     }
   }
 }
