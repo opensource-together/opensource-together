@@ -10,9 +10,7 @@ export class TechStackRepository implements ITechStackRepository {
 
   async getAll(): Promise<Result<TechStack[], string>> {
     try {
-      const techStacks = await this.prisma.techStack.findMany({
-        orderBy: { name: 'asc' },
-      });
+      const techStacks = await this.prisma.techStack.findMany();
       return Result.ok(techStacks);
     } catch (error) {
       console.error('Error fetching all tech stacks', error);
