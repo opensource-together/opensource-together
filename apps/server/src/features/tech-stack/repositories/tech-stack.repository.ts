@@ -1,13 +1,24 @@
+import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { TechStack } from '../domain/tech-stack';
-import { TechStackRepository } from './tech-stack.repository.interface';
-import { Result } from '@/libs/result';
+import { ITechStackRepository } from './tech-stack.repository.interface';
 
 @Injectable()
-export class PrismaTechStackRepository implements TechStackRepository {
+export class TechStackRepository implements ITechStackRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getAll(): Promise<Result<TechStack[], string>> {
+    try {
+      const techStacks = await this.prisma.techStack.findMany({
+        orderBy: { name: 'asc' },
+      });
+      return Result.ok(techStacks);
+    } catch (error) {
+      console.error('Error fetching all tech stacks', error);
+      return Result.fail('DATABASE_ERROR' as string);
+    }
+  }
   async findByIds(ids: string[]): Promise<Result<TechStack[], string>> {
     try {
       const result = await this.prisma.techStack.findMany({
