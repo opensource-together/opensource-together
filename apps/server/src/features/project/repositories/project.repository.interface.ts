@@ -30,4 +30,10 @@ export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
 export interface ProjectRepository {
   create(data: CreateProjectData): Promise<Result<Project, string>>;
   findByTitle(title: string): Promise<Result<Project, string>>;
+  findAll(): Promise<
+    Result<
+      (Project & { owner: { id: string; name: string; image: string } })[],
+      string
+    >
+  >;
 }
