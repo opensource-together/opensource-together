@@ -158,11 +158,14 @@ export class ProjectService {
     return Result.ok(projects);
   }
 
-  async getProjectStats(octokit: Octokit, project: Project) {
+  async getProjectStats(
+    octokit: Octokit,
+    project: Project & { owner: { githubLogin: string } },
+  ) {
     console.log('project', project);
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
-      project.title,
+      project.owner.githubLogin,
       project.title.toLowerCase().replace(/\s+/g, '-'),
     );
     if (!result.success) {

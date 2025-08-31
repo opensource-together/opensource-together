@@ -4,6 +4,7 @@ import { TechStackModule } from './tech-stack/tech-stack.module';
 import { CategoryModule } from './category/category.module';
 import { ProjectRoleModule } from './project-role/project-role.module';
 import { GithubModule } from './github/github.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -12,9 +13,16 @@ import { GithubModule } from './github/github.module';
     CategoryModule,
     ProjectRoleModule,
     GithubModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
-  exports: [ProjectModule, TechStackModule, CategoryModule, ProjectRoleModule],
+  exports: [
+    ProjectModule,
+    TechStackModule,
+    CategoryModule,
+    ProjectRoleModule,
+    UserModule,
+  ],
 })
 export class FeaturesModule {}

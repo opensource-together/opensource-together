@@ -4,6 +4,7 @@ import * as process from 'node:process';
 import { PrismaService } from 'prisma/prisma.service';
 import { getProfileService } from '@/features/profile/services/profile.holder';
 import { Account } from 'better-auth/types';
+import { getUserService } from '@/features/user/services/user.holder';
 
 const prisma = new PrismaService();
 
@@ -19,7 +20,7 @@ export const auth: {
   user: {
     additionalFields: {
       bio: { type: 'string', required: false, input: false },
-      login: { type: 'string', required: false, input: false },
+      login: { type: 'string', required: true, input: true },
       location: { type: 'string', required: false, input: false },
       company: { type: 'string', required: false, input: false },
     },
@@ -55,6 +56,7 @@ export const auth: {
       create: {
         after: async (account: Account): Promise<void> => {
           if (account.providerId === 'github') {
+            await getUserService().updateGithubLogin(account);
             await getProfileService().createFromGithub(account);
           }
           return;

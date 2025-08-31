@@ -31,6 +31,7 @@ enum TechStackType {
 model User {
   id            String   @id @default(uuid())
   name          String?
+  githubLogin   String?
   email         String   @unique
   emailVerified Boolean
   image         String?

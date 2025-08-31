@@ -195,7 +195,7 @@ export class PrismaProjectRepository implements ProjectRepository {
   async findAll(): Promise<
     Result<
       (DomainProject & {
-        owner: { id: string; name: string; image: string };
+        owner: { id: string; name: string; githubLogin: string; image: string };
       })[],
       string
     >
@@ -214,6 +214,7 @@ export class PrismaProjectRepository implements ProjectRepository {
             select: {
               id: true,
               name: true,
+              githubLogin: true,
               image: true,
             },
           },
@@ -226,6 +227,7 @@ export class PrismaProjectRepository implements ProjectRepository {
           owner: {
             id: project.owner.id,
             name: project.owner.name || '',
+            githubLogin: project.owner.githubLogin || '',
             image: project.owner.image || '',
           },
           title: project.title,
@@ -266,7 +268,12 @@ export class PrismaProjectRepository implements ProjectRepository {
     } catch {
       return Result.fail<
         (DomainProject & {
-          owner: { id: string; name: string; image: string };
+          owner: {
+            id: string;
+            name: string;
+            githubLogin: string;
+            image: string;
+          };
         })[],
         string
       >('DATABASE_ERROR');

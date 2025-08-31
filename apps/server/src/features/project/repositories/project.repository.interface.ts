@@ -32,7 +32,9 @@ export interface ProjectRepository {
   findByTitle(title: string): Promise<Result<Project, string>>;
   findAll(): Promise<
     Result<
-      (Project & { owner: { id: string; name: string; image: string } })[],
+      (Project & {
+        owner: { id: string; name: string; githubLogin: string; image: string };
+      })[],
       string
     >
   >;
