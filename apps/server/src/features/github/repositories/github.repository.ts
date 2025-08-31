@@ -716,6 +716,31 @@ export class GithubRepository implements IGithubRepository {
     }
   }
 
+  async updateProjectRespository(
+    input: {
+      owner: string;
+      repo: string;
+      title: string;
+      description: string;
+    },
+    octokit: Octokit,
+  ): Promise<Result<void, string>> {
+    try {
+      await octokit.rest.repos.update({
+        owner: input.owner,
+        repo: input.repo,
+        name: input.title,
+        description: input.description,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      });
+      return Result.ok(undefined);
+    } catch (error) {
+      this.Logger.error('Error updating project repository', error);
+      return Result.fail('Failed to update project repository');
+    }
+  }
   /*async getUserContributionGraph(
     octokit: Octokit,
   ): Promise<Result<ContributionGraph, string>> {

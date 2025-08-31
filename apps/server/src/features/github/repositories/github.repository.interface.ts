@@ -93,4 +93,13 @@ export interface IGithubRepository {
     owner: string,
     repo: string,
   ): Promise<Result<RepositoryStats, string>>;
+  updateProjectRespository(
+    input: {
+      owner: string;
+      repo: string;
+      title: string;
+      description: string;
+    },
+    octokit: Octokit,
+  ): Promise<Result<void, string>>;
 }

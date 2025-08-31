@@ -196,6 +196,7 @@ export class ProjectService {
     userId: string,
     projectId: string,
     updateProjectDto: UpdateProjectDto,
+    octokit: Octokit,
   ) {
     const project = await this.projectRepository.findById(projectId);
     if (!project.success) {
@@ -227,6 +228,18 @@ export class ProjectService {
     );
     if (!updatedProjectResult.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    }
+    const githubResult = await this.githubRepository.updateProjectRespository(
+      {
+        owner: project.value.owner?.githubLogin || '',
+        repo: project.value.title.toLowerCase().replace(/\s+/g, '-'),
+        title: updateProjectDto.title,
+        description: updateProjectDto.description,
+      },
+      octokit,
+    );
+    if (!githubResult.success) {
+      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
     }
     return Result.ok(updatedProjectResult.value);
   }

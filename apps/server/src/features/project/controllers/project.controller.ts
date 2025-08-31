@@ -466,17 +466,20 @@ export class ProjectController {
       updatedAt: '2025-08-31T17:09:13.569Z',
     },
   })
+  @UseGuards(GithubAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') projectId: string,
     @Body() updateProjectDto: UpdateProjectDto,
     @Session() session: UserSession,
+    @GitHubOctokit() octokit: Octokit,
   ) {
     const userId = session.user.id;
     const result = await this.projectService.update(
       userId,
       projectId,
       updateProjectDto,
+      octokit,
     );
     if (!result.success) {
       throw new BadRequestException(result.error);
