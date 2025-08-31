@@ -9,6 +9,7 @@ import {
   Param,
   HttpStatus,
   HttpException,
+  Delete,
 } from '@nestjs/common';
 import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -488,5 +489,21 @@ export class ProjectController {
       throw new BadRequestException(result.error);
     }
     return result.value;
+  }
+
+  @ApiOperation({ summary: 'Supprimer un projet' })
+  @ApiResponse({
+    status: 200,
+    description: 'Projet supprimé avec succès',
+    example: { message: 'Project deleted successfully' },
+  })
+  @Delete(':id')
+  async delete(@Param('id') id: string, @Session() session: UserSession) {
+    const userId = session.user.id;
+    const result = await this.projectService.delete(id, userId);
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return { message: 'Project deleted successfully' };
   }
 }

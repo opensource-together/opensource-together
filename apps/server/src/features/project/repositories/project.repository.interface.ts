@@ -41,4 +41,5 @@ export interface ProjectRepository {
     projectId: string,
     data: UpdateProjectData,
   ): Promise<Result<Project, string>>;
+  delete(userId: string, projectId: string): Promise<Result<boolean, string>>;
 }

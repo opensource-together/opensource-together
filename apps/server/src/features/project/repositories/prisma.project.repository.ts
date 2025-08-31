@@ -594,6 +594,27 @@ export class PrismaProjectRepository implements ProjectRepository {
     }
   }
 
+  async delete(
+    userId: string,
+    projectId: string,
+  ): Promise<Result<boolean, string>> {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: { id: projectId },
+      });
+      if (!project) return Result.fail('Project not found');
+      if (project.ownerId !== userId) return Result.fail('Unauthorized');
+      const deletedProject = await this.prisma.project.delete({
+        where: { id: projectId },
+      });
+      if (!deletedProject) return Result.fail('Project not found');
+      return Result.ok(true);
+    } catch (error) {
+      console.log('error', error);
+      return Result.fail(`Unknown error during project deletion`);
+    }
+  }
+
   mapTechStackToPrisma(techStack: DomainTechStack): PrismaTechStack {
     return {
       id: techStack.id,

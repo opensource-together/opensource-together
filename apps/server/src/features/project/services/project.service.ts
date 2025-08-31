@@ -244,6 +244,22 @@ export class ProjectService {
     return Result.ok(updatedProjectResult.value);
   }
 
+  async delete(projectId: string, userId: string) {
+    const project = await this.projectRepository.findById(projectId);
+    if (!project.success) {
+      return Result.fail('PROJECT_NOT_FOUND' as ProjectServiceError);
+    }
+    if (!canUserModifyProject(project.value, userId))
+      return Result.fail('UNAUTHORIZED' as ProjectServiceError);
+    const deletedProject = await this.projectRepository.delete(
+      userId,
+      projectId,
+    );
+    if (!deletedProject.success) {
+      return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    }
+    return Result.ok(deletedProject.value);
+  }
   async getProjectStats(octokit: Octokit, project: Project) {
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
