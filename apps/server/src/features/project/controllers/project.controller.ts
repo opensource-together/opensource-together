@@ -5,6 +5,9 @@ import {
   Get,
   UseGuards,
   BadRequestException,
+  Param,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -235,8 +238,8 @@ export class ProjectController {
   @UseGuards(GithubAuthGuard)
   @Get()
   @Public()
-  async getProjects(@GitHubOctokit() octokit: Octokit) {
-    const result = await this.projectService.getAll(octokit);
+  async findAll(@GitHubOctokit() octokit: Octokit) {
+    const result = await this.projectService.findAll(octokit);
     if (!result.success) {
       throw new BadRequestException(result.error);
     }
@@ -266,6 +269,17 @@ export class ProjectController {
     );
     if (!result.success) {
       throw new BadRequestException(result.error);
+    }
+    return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
+  @Public()
+  @Get(':id')
+  async findById(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
+    const result = await this.projectService.findById(id, octokit);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.NOT_FOUND);
     }
     return result.value;
   }

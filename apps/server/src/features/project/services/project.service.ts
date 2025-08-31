@@ -148,7 +148,7 @@ export class ProjectService {
     }
   }
 
-  async getAll(octokit: Octokit) {
+  async findAll(octokit: Octokit) {
     const result = await this.projectRepository.findAll();
     if (!result.success)
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
@@ -166,6 +166,25 @@ export class ProjectService {
     }
     console.log('projectsResult', projectsResult);
     return Result.ok(projectsResult);
+  }
+
+  async findById(projectId: string, octokit: Octokit) {
+    const project = await this.projectRepository.findById(projectId);
+    if (!project.success) {
+      return Result.fail('PROJECT_NOT_FOUND' as ProjectServiceError);
+    }
+    console.log('project', project.value);
+    const stats = await this.getProjectStats(
+      octokit,
+      project.value as Project & { owner: { githubLogin: string } },
+    );
+    if (!stats.success) {
+      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+    }
+    return Result.ok({
+      ...project.value,
+      stats: stats.value,
+    });
   }
 
   async getProjectStats(

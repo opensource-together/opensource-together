@@ -30,6 +30,14 @@ export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
 export interface ProjectRepository {
   create(data: CreateProjectData): Promise<Result<Project, string>>;
   findByTitle(title: string): Promise<Result<Project, string>>;
+  findById(id: string): Promise<
+    Result<
+      Project & {
+        owner: { id: string; name: string; githubLogin: string; image: string };
+      },
+      string
+    >
+  >;
   findAll(): Promise<
     Result<
       (Project & {

@@ -192,6 +192,111 @@ export class PrismaProjectRepository implements ProjectRepository {
     }
   }
 
+  async findById(id: string): Promise<
+    Result<
+      DomainProject & {
+        owner: { id: string; name: string; githubLogin: string; image: string };
+      },
+      string
+    >
+  > {
+    try {
+      const project = await this.prisma.project.findUnique({
+        where: { id },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { techStacks: true },
+          },
+          categories: true,
+          externalLinks: true,
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              githubLogin: true,
+              image: true,
+            },
+          },
+          projectMembers: true,
+          projectRoleApplication: {
+            include: {
+              user: true,
+              projectRole: {
+                include: { techStacks: true },
+              },
+            },
+          },
+        },
+      });
+      if (!project)
+        return Result.fail<
+          DomainProject & {
+            owner: {
+              id: string;
+              name: string;
+              githubLogin: string;
+              image: string;
+            };
+          },
+          string
+        >('PROJECT_NOT_FOUND');
+      return Result.ok({
+        id: project.id,
+        owner: {
+          id: project.owner.id,
+          name: project.owner.name || '',
+          githubLogin: project.owner.githubLogin || '',
+          image: project.owner.image || '',
+        },
+        title: project.title,
+        description: project.description,
+        image: project.image || '',
+        coverImages: project.coverImages || [],
+        readme: project.readme || '',
+        categories: project.categories.map((cat) => ({
+          id: cat.id,
+          name: cat.name,
+        })),
+        techStacks: project.techStacks.map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+          iconUrl: tech.iconUrl,
+          type: tech.type,
+        })),
+        projectRoles: project.projectRoles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          description: role.description,
+          techStacks: role.techStacks.map((tech) => ({
+            id: tech.id,
+            name: tech.name,
+            iconUrl: tech.iconUrl,
+            type: tech.type,
+          })),
+        })),
+        externalLinks: project.externalLinks.map((link) => ({
+          id: link.id,
+          type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+          url: link.url,
+        })),
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+      });
+    } catch {
+      return Result.fail<
+        DomainProject & {
+          owner: {
+            id: string;
+            name: string;
+            githubLogin: string;
+            image: string;
+          };
+        },
+        string
+      >('DATABASE_ERROR');
+    }
+  }
   async findAll(): Promise<
     Result<
       (DomainProject & {
@@ -219,6 +324,7 @@ export class PrismaProjectRepository implements ProjectRepository {
             },
           },
         },
+        take: 25,
       });
       if (!results) return Result.ok([]);
 
