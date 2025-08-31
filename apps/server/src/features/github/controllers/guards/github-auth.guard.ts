@@ -33,11 +33,12 @@ export class GithubAuthGuard implements CanActivate {
       const octokit = new Octokit({
         auth: process.env.GH_TOKEN_OST_PUBLIC,
       });
+      console.log('mode public');
       request.octokit = octokit;
       return true;
     }
     const token = t.substring(0, t.indexOf('.'));
-
+    console.log('mode private');
     const userGhTokenResult =
       await this.accountRepository.getUserGithubToken(token);
     if (!userGhTokenResult.success) {

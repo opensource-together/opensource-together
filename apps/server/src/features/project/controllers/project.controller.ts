@@ -251,9 +251,6 @@ export class ProjectController {
     @Body() createProjectDto: CreateProjectDto,
     @GitHubOctokit() octokit: Octokit,
   ) {
-    console.log('session', session);
-    console.log('session.user.id', session.user.id);
-    // console.log('octokit', octokit);
     const userId = session.user.id;
     const { title, description, categories, techStacks } = createProjectDto;
     const result = await this.projectService.createProject(

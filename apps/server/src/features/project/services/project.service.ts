@@ -155,14 +155,23 @@ export class ProjectService {
     const projects = await Promise.all(
       result.value.map((project) => this.getProjectStats(octokit, project)),
     );
-    return Result.ok(projects);
+    const projectsResult: Project[] = [];
+    if (projects.some((project) => project.success)) {
+      projectsResult.push(
+        projects.find((project) => project.success)?.value as Project,
+      );
+    }
+    if (projects.some((project) => !project.success)) {
+      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+    }
+    console.log('projectsResult', projectsResult);
+    return Result.ok(projectsResult);
   }
 
   async getProjectStats(
     octokit: Octokit,
     project: Project & { owner: { githubLogin: string } },
   ) {
-    console.log('project', project);
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
       project.owner.githubLogin,
@@ -171,6 +180,7 @@ export class ProjectService {
     if (!result.success) {
       return Result.fail('GITHUB_ERROR' as ProjectServiceError);
     }
+    console.log('result', result.value);
     return Result.ok({
       ...project,
       stats: result.value,

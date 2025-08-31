@@ -111,9 +111,6 @@ export class GithubRepository implements IGithubRepository {
     octokit: Octokit,
   ): Promise<Result<RepositoryInfo, string>> {
     try {
-      console.log('je passe ici dans repository.ts');
-      console.log('owner', owner);
-      console.log('name', name);
       const response = await octokit.rest.repos.get({
         owner,
         repo: name,
