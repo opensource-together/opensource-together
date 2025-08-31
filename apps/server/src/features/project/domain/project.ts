@@ -16,7 +16,7 @@
  */
 export interface Project {
   id?: string;
-  ownerId?: string;
+  owner?: { id: string; name: string; githubLogin: string; image: string };
   title: string;
   description: string;
   image: string;
@@ -143,5 +143,6 @@ export function canUserModifyProject(
   project: Project,
   userId: string,
 ): boolean {
-  return project.ownerId === userId;
+  console.log(project.owner?.id, userId);
+  return project.owner?.id === userId;
 }

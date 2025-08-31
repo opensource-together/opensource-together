@@ -6,9 +6,13 @@ import {
   ValidationErrors,
   Project,
 } from '../domain/project';
-import { ProjectRepository } from '../repositories/project.repository.interface';
+import {
+  ProjectRepository,
+  UpdateProjectData,
+} from '../repositories/project.repository.interface';
 import { PROJECT_REPOSITORY } from '../repositories/project.repository.interface';
 import { CreateProjectDto } from '../controllers/dto/create-project.dto';
+import { UpdateProjectDto } from '../controllers/dto/update-project.dto';
 import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import { TechStackRepository } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
@@ -18,6 +22,7 @@ import {
   IGithubRepository,
 } from '@/features/github/repositories/github.repository.interface';
 import { Octokit } from '@octokit/rest';
+import { canUserModifyProject } from '../domain/project';
 
 export type CreateProjectRequest = CreateProjectDto;
 
@@ -83,7 +88,7 @@ export class ProjectService {
       const validCategories = await this.categoryRepository.findByIds(
         request.categories,
       );
-      if (validCategories.length !== request.categories.length) {
+      if (!validCategories.success) {
         return Result.fail('CATEGORY_NOT_FOUND' as ProjectServiceError);
       }
 
@@ -187,13 +192,49 @@ export class ProjectService {
     });
   }
 
-  async getProjectStats(
-    octokit: Octokit,
-    project: Project & { owner: { githubLogin: string } },
+  async update(
+    userId: string,
+    projectId: string,
+    updateProjectDto: UpdateProjectDto,
   ) {
+    const project = await this.projectRepository.findById(projectId);
+    if (!project.success) {
+      return Result.fail('PROJECT_NOT_FOUND' as ProjectServiceError);
+    }
+    if (!canUserModifyProject(project.value, userId))
+      return Result.fail('UNAUTHORIZED' as ProjectServiceError);
+    const validTechStacks = await this.techStackRepository.findByIds(
+      updateProjectDto.techStacks,
+    );
+    if (!validTechStacks.success) {
+      return Result.fail('TECH_STACK_NOT_FOUND' as ProjectServiceError);
+    }
+    const validCategories = await this.categoryRepository.findByIds(
+      updateProjectDto.categories,
+    );
+    if (!validCategories.success) {
+      return Result.fail('CATEGORY_NOT_FOUND' as ProjectServiceError);
+    }
+    const updatedProject = {
+      ...updateProjectDto,
+      techStacks: validTechStacks.value.map((ts) => ts.id),
+      categories: updateProjectDto.categories,
+      externalLinks: updateProjectDto.externalLinks,
+    };
+    const updatedProjectResult = await this.projectRepository.update(
+      projectId,
+      updatedProject as unknown as UpdateProjectData,
+    );
+    if (!updatedProjectResult.success) {
+      return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    }
+    return Result.ok(updatedProjectResult.value);
+  }
+
+  async getProjectStats(octokit: Octokit, project: Project) {
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
-      project.owner.githubLogin,
+      project.owner?.githubLogin || '',
       project.title.toLowerCase().replace(/\s+/g, '-'),
     );
     if (!result.success) {

@@ -5,12 +5,14 @@ import {
   Get,
   UseGuards,
   BadRequestException,
+  Patch,
   Param,
   HttpStatus,
   HttpException,
 } from '@nestjs/common';
 import { ProjectService } from '../services/project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 import {
   AuthGuard,
   Public,
@@ -20,7 +22,7 @@ import {
 import { GithubAuthGuard } from '@/features/github/controllers/guards/github-auth.guard';
 import { Octokit } from '@octokit/rest';
 import { GitHubOctokit } from '@/features/github/controllers/github-octokit.decorator';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 @Controller('projects')
 @UseGuards(AuthGuard)
 export class ProjectController {
@@ -247,6 +249,7 @@ export class ProjectController {
   }
 
   @ApiOperation({ summary: 'Créer un projet' })
+  @ApiBody({ type: CreateProjectDto, description: 'Données du projet à créer' })
   @UseGuards(GithubAuthGuard)
   @Post()
   async createProject(
@@ -264,6 +267,9 @@ export class ProjectController {
         categories,
         techStacks,
         projectRoles: createProjectDto.projectRoles || [],
+        coverImages: createProjectDto.coverImages || [],
+        readme: createProjectDto.readme || '',
+        externalLinks: createProjectDto.externalLinks || [],
       },
       octokit,
     );
@@ -354,6 +360,24 @@ export class ProjectController {
     const result = await this.projectService.findById(id, octokit);
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+    }
+    return result.value;
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') projectId: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+    @Session() session: UserSession,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.update(
+      userId,
+      projectId,
+      updateProjectDto,
+    );
+    if (!result.success) {
+      throw new BadRequestException(result.error);
     }
     return result.value;
   }

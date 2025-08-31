@@ -18,6 +18,11 @@ export interface CreateProjectData {
   readme?: string;
 }
 
+export interface UpdateProjectData extends CreateProjectData {
+  id: string;
+  externalLinks?: { id: string; type: string; url: string }[];
+}
+
 export type ProjectRepositoryError =
   | 'PROJECT_NOT_FOUND'
   | 'DUPLICATE_PROJECT'
@@ -30,20 +35,10 @@ export const PROJECT_REPOSITORY = Symbol('PROJECT_REPOSITORY');
 export interface ProjectRepository {
   create(data: CreateProjectData): Promise<Result<Project, string>>;
   findByTitle(title: string): Promise<Result<Project, string>>;
-  findById(id: string): Promise<
-    Result<
-      Project & {
-        owner: { id: string; name: string; githubLogin: string; image: string };
-      },
-      string
-    >
-  >;
-  findAll(): Promise<
-    Result<
-      (Project & {
-        owner: { id: string; name: string; githubLogin: string; image: string };
-      })[],
-      string
-    >
-  >;
+  findById(id: string): Promise<Result<Project, string>>;
+  findAll(): Promise<Result<Project[], string>>;
+  update(
+    projectId: string,
+    data: UpdateProjectData,
+  ): Promise<Result<Project, string>>;
 }
