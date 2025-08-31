@@ -1,6 +1,6 @@
 import { Result } from '@/libs/result';
 
-export const MAILING_SERVICE_PORT = Symbol('MAILING_SERVICE_PORT');
+export const MAILING_SERVICE = Symbol('MAILING_SERVICE');
 
 export interface SendEmailPayload {
   to: string;
