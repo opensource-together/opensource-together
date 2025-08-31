@@ -364,7 +364,10 @@ export class ProjectController {
     return result.value;
   }
 
-  @ApiOperation({ summary: 'Mettre à jour un projet' })
+  @ApiOperation({
+    summary:
+      'Mettre à jour un projet, si le titre et la description changent, le repo github sera mis à jour',
+  })
   @ApiBody({
     type: UpdateProjectDto,
     description: 'Données du projet à mettre à jour',
