@@ -2,7 +2,7 @@ import { Result } from '@/libs/result';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
-import { MailingServicePort, SendEmailPayload } from '../mailing.port';
+import { MailingServicePort, SendEmailPayload } from '../mailing.interface';
 
 @Injectable()
 export class ResendMailingService implements MailingServicePort {
