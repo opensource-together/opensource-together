@@ -7,7 +7,6 @@ import { auth } from '@/auth/auth';
 import { FeaturesModule } from './features/features.module';
 import { ProfileModule } from '@/features/profile/profile.module';
 import { HealthModule } from './health/health.module';
-import { MailingModule } from '@/mailing/mailing.module';
 
 @Module({
   imports: [
@@ -16,7 +15,6 @@ import { MailingModule } from '@/mailing/mailing.module';
     FeaturesModule,
     ProfileModule,
     HealthModule,
-    MailingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

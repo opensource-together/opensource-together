@@ -8,7 +8,7 @@ import { TechStackModule } from '../tech-stack/tech-stack.module';
 import { CategoryModule } from '../category/category.module';
 import { ProjectRoleModule } from '../project-role/project-role.module';
 import { GithubModule } from '../github/github.module';
-
+import { MailingModule } from '@/mailing/mailing.module';
 @Module({
   imports: [
     PrismaModule,
@@ -16,6 +16,7 @@ import { GithubModule } from '../github/github.module';
     CategoryModule,
     ProjectRoleModule,
     GithubModule,
+    MailingModule,
   ],
   controllers: [ProjectController],
   providers: [

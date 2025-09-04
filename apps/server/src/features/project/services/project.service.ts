@@ -23,7 +23,8 @@ import {
 } from '@/features/github/repositories/github.repository.interface';
 import { Octokit } from '@octokit/rest';
 import { canUserModifyProject } from '../domain/project';
-
+import { MAILING_SERVICE } from '@/mailing/mailing.interface';
+import { MailingServicePort } from '@/mailing/mailing.interface';
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -47,6 +48,8 @@ export class ProjectService {
     private readonly categoryRepository: CategoryRepository,
     @Inject(GITHUB_REPOSITORY)
     private readonly githubRepository: IGithubRepository,
+    @Inject(MAILING_SERVICE)
+    private readonly mailingService: MailingServicePort,
   ) {}
 
   async createProject(
