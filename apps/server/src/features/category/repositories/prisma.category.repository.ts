@@ -1,22 +1,33 @@
+import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
-import { CategoryRepository } from './category.repository.interface';
 import { Category } from '../domain/category';
-import { Result } from '@/libs/result';
+
+import { ICategoryRepository } from './category.repository.interface';
 
 @Injectable()
-export class PrismaCategoryRepository implements CategoryRepository {
+export class PrismaCategoryRepository implements ICategoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findByIds(ids: string[]): Promise<Result<Category[], string>> {
+  async getAll(): Promise<Result<Category[], string>> {
     try {
-      const categories = await this.prisma.category.findMany({
-        where: { id: { in: ids } },
-      });
+      const categories = await this.prisma.category.findMany();
       return Result.ok(categories);
     } catch (error) {
+      console.error('Error fetching all categories', error);
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
+  async findByIds(ids: string[]): Promise<Result<Category[], string>> {
+    try {
+      const result = await this.prisma.category.findMany({
+        where: { id: { in: ids } },
+        orderBy: { name: 'asc' },
+      });
+      return Result.ok(result);
+    } catch (error) {
       console.error('Error finding categories by ids', error);
-      return Result.fail('Error finding categories by ids');
+      return Result.fail('DATABASE_ERROR');
     }
   }
 }

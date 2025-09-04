@@ -1,10 +1,22 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Result } from '@/libs/result';
 import {
+  CATEGORY_REPOSITORY,
+  ICategoryRepository,
+} from '@/features/category/repositories/category.repository.interface';
+import { GithubRepository } from '@/features/github/repositories/github.repository';
+import { GITHUB_REPOSITORY } from '@/features/github/repositories/github.repository.interface';
+import {
+  ITechStackRepository,
+  TECH_STACK_REPOSITORY,
+} from '@/features/tech-stack/repositories/tech-stack.repository.interface';
+import { Result } from '@/libs/result';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Octokit } from '@octokit/rest';
+import { CreateProjectDto } from '../controllers/dto/create-project.dto';
+import {
+  Project,
   validateProject,
   validateProjectRole,
   ValidationErrors,
-  Project,
 } from '../domain/project';
 import {
   ProjectRepository,
@@ -29,6 +41,7 @@ import {
   IUserRepository,
   USER_REPOSITORY,
 } from '@/features/user/repositories/user.repository.interface';
+
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -47,9 +60,9 @@ export class ProjectService {
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: ProjectRepository,
     @Inject(TECH_STACK_REPOSITORY)
-    private readonly techStackRepository: TechStackRepository,
+    private readonly techStackRepository: ITechStackRepository,
     @Inject(CATEGORY_REPOSITORY)
-    private readonly categoryRepository: CategoryRepository,
+    private readonly categoryRepository: ICategoryRepository,
     @Inject(GITHUB_REPOSITORY)
     private readonly githubRepository: IGithubRepository,
     @Inject(MAILING_SERVICE)
@@ -180,6 +193,7 @@ export class ProjectService {
     if (projects.some((project) => project.success)) {
       projectsResult.push(
         projects.find((project) => project.success)?.value as Project,
+
       );
     }
     if (projects.some((project) => !project.success)) {
