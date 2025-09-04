@@ -1,22 +1,10 @@
-import {
-  CATEGORY_REPOSITORY,
-  ICategoryRepository,
-} from '@/features/category/repositories/category.repository.interface';
-import { GithubRepository } from '@/features/github/repositories/github.repository';
-import { GITHUB_REPOSITORY } from '@/features/github/repositories/github.repository.interface';
-import {
-  ITechStackRepository,
-  TECH_STACK_REPOSITORY,
-} from '@/features/tech-stack/repositories/tech-stack.repository.interface';
-import { Result } from '@/libs/result';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Octokit } from '@octokit/rest';
-import { CreateProjectDto } from '../controllers/dto/create-project.dto';
+import { Result } from '@/libs/result';
 import {
-  Project,
   validateProject,
   validateProjectRole,
   ValidationErrors,
+  Project,
 } from '../domain/project';
 import {
   ProjectRepository,
@@ -25,10 +13,14 @@ import {
 import { PROJECT_REPOSITORY } from '../repositories/project.repository.interface';
 import { CreateProjectDto } from '../controllers/dto/create-project.dto';
 import { UpdateProjectDto } from '../controllers/dto/update-project.dto';
-import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
-import { TechStackRepository } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
-import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
-import { CategoryRepository } from '@/features/category/repositories/category.repository.interface';
+import {
+  ITechStackRepository,
+  TECH_STACK_REPOSITORY,
+} from '@/features/tech-stack/repositories/tech-stack.repository.interface';
+import {
+  CATEGORY_REPOSITORY,
+  ICategoryRepository,
+} from '@/features/category/repositories/category.repository.interface';
 import {
   GITHUB_REPOSITORY,
   IGithubRepository,
@@ -41,7 +33,6 @@ import {
   IUserRepository,
   USER_REPOSITORY,
 } from '@/features/user/repositories/user.repository.interface';
-
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -193,7 +184,6 @@ export class ProjectService {
     if (projects.some((project) => project.success)) {
       projectsResult.push(
         projects.find((project) => project.success)?.value as Project,
-
       );
     }
     if (projects.some((project) => !project.success)) {
