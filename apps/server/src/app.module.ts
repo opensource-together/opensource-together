@@ -5,6 +5,7 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from '@/auth/auth';
 import { FeaturesModule } from './features/features.module';
+import { ProfileModule } from '@/features/profile/profile.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -12,6 +13,7 @@ import { HealthModule } from './health/health.module';
     PrismaModule,
     AuthModule.forRoot(auth),
     FeaturesModule,
+    ProfileModule,
     HealthModule,
   ],
   controllers: [AppController],
