@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { createApiDocs } from '@/docs/openapi';
 import cookieParser from 'cookie-parser';
 
@@ -10,7 +10,13 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   createApiDocs(app);
 
   await app.listen(process.env.PORT ?? 4000);
