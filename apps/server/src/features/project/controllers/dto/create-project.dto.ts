@@ -86,11 +86,6 @@ export class ExternalLinkDto {
 }
 
 export class CreateProjectDto {
-  @ApiProperty({ description: 'Project owner ID' })
-  @IsString()
-  @IsNotEmpty()
-  ownerId: string;
-
   @ApiProperty({ description: 'Project title', maxLength: 100 })
   @IsString()
   @IsNotEmpty()

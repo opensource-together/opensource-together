@@ -25,6 +25,10 @@ import { Octokit } from '@octokit/rest';
 import { canUserModifyProject } from '../domain/project';
 import { MAILING_SERVICE } from '@/mailing/mailing.interface';
 import { MailingServicePort } from '@/mailing/mailing.interface';
+import {
+  IUserRepository,
+  USER_REPOSITORY,
+} from '@/features/user/repositories/user.repository.interface';
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -50,110 +54,119 @@ export class ProjectService {
     private readonly githubRepository: IGithubRepository,
     @Inject(MAILING_SERVICE)
     private readonly mailingService: MailingServicePort,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
   ) {}
 
-  async createProject(
-    request: CreateProjectRequest,
-    octokit: Octokit,
-  ): Promise<Result<Project, any>> {
-    try {
-      const existingProject = await this.projectRepository.findByTitle(
-        request.title,
-      );
-      if (existingProject.success) {
-        return Result.fail('DUPLICATE_PROJECT' as ProjectServiceError);
-      }
-      const validTechStacksProject = await this.techStackRepository.findByIds(
-        request.techStacks,
-      );
-      const projectRolesTechStacks = Array.from(
-        new Set(
-          request.projectRoles?.flatMap((role) =>
-            role.techStacks.map((id) => id),
-          ),
+  async createProject(props: {
+    createProjectDto: CreateProjectRequest;
+    userId: string;
+    octokit: Octokit;
+  }): Promise<Result<Project, any>> {
+    const { createProjectDto, userId, octokit } = props;
+    const existingProject = await this.projectRepository.findByTitle(
+      createProjectDto.title,
+    );
+    if (existingProject.success) {
+      return Result.fail('DUPLICATE_PROJECT' as ProjectServiceError);
+    }
+    const validTechStacksProject = await this.techStackRepository.findByIds(
+      createProjectDto.techStacks,
+    );
+    const projectRolesTechStacks = Array.from(
+      new Set(
+        createProjectDto.projectRoles?.flatMap((role) =>
+          role.techStacks.map((id) => id),
         ),
-      );
+      ),
+    );
 
-      const validTechStacksProjectRoles =
-        await this.techStackRepository.findByIds(projectRolesTechStacks);
-      if (
-        (!validTechStacksProject.success &&
-          !validTechStacksProjectRoles.success) ||
-        (validTechStacksProject.success &&
-          validTechStacksProject.value.length !== request.techStacks.length) ||
-        (validTechStacksProjectRoles.success &&
-          validTechStacksProjectRoles.value.length !==
-            projectRolesTechStacks.length)
-      ) {
-        return Result.fail('TECH_STACK_NOT_FOUND' as ProjectServiceError);
-      }
+    const validTechStacksProjectRoles =
+      await this.techStackRepository.findByIds(projectRolesTechStacks);
+    if (
+      (!validTechStacksProject.success &&
+        !validTechStacksProjectRoles.success) ||
+      (validTechStacksProject.success &&
+        validTechStacksProject.value.length !==
+          createProjectDto.techStacks.length) ||
+      (validTechStacksProjectRoles.success &&
+        validTechStacksProjectRoles.value.length !==
+          projectRolesTechStacks.length)
+    ) {
+      return Result.fail('TECH_STACK_NOT_FOUND' as ProjectServiceError);
+    }
 
-      const validCategories = await this.categoryRepository.findByIds(
-        request.categories,
-      );
-      if (!validCategories.success) {
-        return Result.fail('CATEGORY_NOT_FOUND' as ProjectServiceError);
-      }
+    const validCategories = await this.categoryRepository.findByIds(
+      createProjectDto.categories,
+    );
+    if (!validCategories.success) {
+      return Result.fail('CATEGORY_NOT_FOUND' as ProjectServiceError);
+    }
 
-      // Validation du projet
-      const projectValidation = validateProject({
-        ownerId: request.ownerId,
-        title: request.title,
-        description: request.description,
-        techStacks: request.techStacks,
-        categories: request.categories,
-      });
-      if (projectValidation) {
-        return Result.fail(projectValidation);
-      }
-      const projectRolesValidation = request.projectRoles?.map((role) =>
-        validateProjectRole({
-          title: role.title,
-          description: role.description,
-          techStacks: role.techStacks,
-        }),
-      );
-      if (projectRolesValidation?.some((validation) => validation)) {
-        return Result.fail(
-          projectRolesValidation as unknown as ValidationErrors,
-        );
-      }
+    // Validation du projet
+    const projectValidation = validateProject({
+      ownerId: userId,
+      title: createProjectDto.title,
+      description: createProjectDto.description,
+      techStacks: createProjectDto.techStacks,
+      categories: createProjectDto.categories,
+    });
+    if (projectValidation) {
+      return Result.fail(projectValidation);
+    }
+    const projectRolesValidation = createProjectDto.projectRoles?.map((role) =>
+      validateProjectRole({
+        title: role.title,
+        description: role.description,
+        techStacks: role.techStacks,
+      }),
+    );
+    if (projectRolesValidation?.some((validation) => validation)) {
+      return Result.fail(projectRolesValidation as unknown as ValidationErrors);
+    }
 
-      const result = await this.projectRepository.create({
-        ownerId: request.ownerId,
-        title: request.title,
-        image: request.image || '',
-        description: request.description,
-        categories: request.categories,
-        techStacks: request.techStacks,
-        projectRoles: request.projectRoles?.map((role) => ({
-          title: role.title,
-          description: role.description,
-          techStacks: role.techStacks.map((id) => id),
-        })),
-      });
+    const result = await this.projectRepository.create({
+      ownerId: userId,
+      title: createProjectDto.title,
+      image: createProjectDto.image || '',
+      description: createProjectDto.description,
+      categories: createProjectDto.categories,
+      techStacks: createProjectDto.techStacks,
+      projectRoles: createProjectDto.projectRoles?.map((role) => ({
+        title: role.title,
+        description: role.description,
+        techStacks: role.techStacks.map((id) => id),
+      })),
+    });
 
-      if (!result.success) {
-        return Result.fail('DATABASE_ERROR' as ProjectServiceError);
-      }
-
-      const githubResult = await this.githubRepository.createGithubRepository(
-        {
-          title: request.title,
-          description: request.description,
-        },
-        octokit,
-      );
-
-      if (!githubResult.success) {
-        return Result.fail('GITHUB_ERROR' as ProjectServiceError);
-      }
-
-      return Result.ok(result.value);
-    } catch (error) {
-      this.logger.error('Error creating project', error);
+    if (!result.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
+
+    const githubResult = await this.githubRepository.createGithubRepository(
+      {
+        title: createProjectDto.title,
+        description: createProjectDto.description,
+      },
+      octokit,
+    );
+
+    if (!githubResult.success) {
+      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+    }
+
+    console.log('result', result.value);
+    const ownerEmail = await this.userRepository.findEmailById(userId);
+    if (!ownerEmail.success) {
+      return Result.fail('USER_NOT_FOUND' as ProjectServiceError);
+    }
+    await this.mailingService.sendEmail({
+      to: ownerEmail.value,
+      subject: 'Nouveau projet créé',
+      text: `Le projet ${createProjectDto.title} a été créé avec succès`,
+      html: `<p>Le projet ${createProjectDto.title} a été créé avec succès</p>`,
+    });
+    return Result.ok(result.value);
   }
 
   async findAll(octokit: Octokit) {

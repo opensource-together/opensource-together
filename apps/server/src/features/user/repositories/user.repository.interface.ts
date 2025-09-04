@@ -6,4 +6,5 @@ export interface IUserRepository {
     userId: string,
     githubLogin: string,
   ): Promise<Result<void, string>>;
+  findEmailById(id: string): Promise<Result<string, string>>;
 }

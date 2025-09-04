@@ -11,7 +11,7 @@ import { setUserService } from './services/user.holder';
     { provide: USER_REPOSITORY, useClass: PrismaUserRepository },
     UserService,
   ],
-  exports: [UserService],
+  exports: [USER_REPOSITORY, UserService],
 })
 export class UserModule implements OnModuleInit {
   constructor(private readonly userService: UserService) {}

@@ -259,21 +259,11 @@ export class ProjectController {
     @GitHubOctokit() octokit: Octokit,
   ) {
     const userId = session.user.id;
-    const { title, description, categories, techStacks } = createProjectDto;
-    const result = await this.projectService.createProject(
-      {
-        ownerId: userId,
-        title,
-        description,
-        categories,
-        techStacks,
-        projectRoles: createProjectDto.projectRoles || [],
-        coverImages: createProjectDto.coverImages || [],
-        readme: createProjectDto.readme || '',
-        externalLinks: createProjectDto.externalLinks || [],
-      },
+    const result = await this.projectService.createProject({
+      createProjectDto,
+      userId,
       octokit,
-    );
+    });
     if (!result.success) {
       throw new BadRequestException(result.error);
     }
