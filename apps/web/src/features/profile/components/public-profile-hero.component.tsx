@@ -24,9 +24,7 @@ export default function PublicProfileHero({ profile }: PublicProfileHeroProps) {
             <Avatar src={avatarUrl} name={username} alt={username} size="2xl" />
           </div>
           <div>
-            <h2 className="text-2xl font-medium tracking-tighter">
-              {username}
-            </h2>
+            <h2 className="text-2xl">{username}</h2>
             <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
           </div>
         </div>

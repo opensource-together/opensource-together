@@ -70,9 +70,7 @@ export default function GithubCalendar({
     return (
       <div className="w-full max-w-full overflow-hidden">
         <div>
-          <h3 className="mb-4 text-lg font-medium tracking-tight text-black">
-            Activité de contribution Github
-          </h3>
+          <h3 className="mb-4 text-lg">Activité de contribution Github</h3>
           <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
               Aucune donnée de contribution Github disponible
@@ -102,9 +100,7 @@ export default function GithubCalendar({
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div>
-        <h3 className="mb-4 text-lg font-medium tracking-tight text-black">
-          Activité de contribution Github
-        </h3>
+        <h3 className="mb-4 text-lg">Activité de contribution Github</h3>
 
         <div className="relative">
           <div className="mb-2 flex px-2">

@@ -31,7 +31,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="flex items-center gap-3 sm:gap-4">
           <Avatar src={image} name={title} alt={title} size="xl" />
-          <h1 className="text-start text-2xl font-medium tracking-tighter text-black sm:text-3xl">
+          <h1 className="text-start text-2xl font-medium sm:text-3xl">
             {title}
           </h1>
         </div>
@@ -108,9 +108,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
         <div className="mt-10 w-full max-w-[629px]">
           {keyFeatures.length > 0 && (
             <>
-              <h3 className="mb-3 font-medium text-black">
-                Fonctionnalités clés
-              </h3>
+              <h3 className="mb-3">Fonctionnalités clés</h3>
               <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
                 {keyFeatures.map((feature, index) => (
                   <li key={index}>{feature.feature}</li>
@@ -121,9 +119,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
 
           {projectGoals.length > 0 && (
             <>
-              <h3 className="mb-3 font-medium text-black">
-                Objectifs du projet
-              </h3>
+              <h3 className="mb-3">Objectifs du projet</h3>
               <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
                 {projectGoals.map((goal, index) => (
                   <li key={index}>{goal.goal}</li>

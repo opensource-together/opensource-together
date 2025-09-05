@@ -21,7 +21,7 @@ export default function LoginView() {
 
       <div className="absolute bottom-20 left-20 z-10 max-w-[500px]">
         <h1
-          className="text-3xl leading-tight font-medium tracking-tighter text-black md:text-4xl"
+          className="text-3xl leading-tight font-medium md:text-4xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
           Construisons ensemble <br /> l'avenir du développement

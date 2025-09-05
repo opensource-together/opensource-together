@@ -75,9 +75,7 @@ export default function ApplicationDetailsSheet({
               size="lg"
             />
             <div className="flex-1 text-start">
-              <h2 className="text-xl font-medium">
-                {application.applicant.name}
-              </h2>
+              <h2 className="text-xl">{application.applicant.name}</h2>
               <p className="text-muted-foreground text-sm font-normal">
                 Candidat
               </p>

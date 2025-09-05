@@ -79,9 +79,7 @@ export default function MyTeamMembers({
                     />
                     <div className="flex flex-col">
                       <div className="flex items-center gap-1">
-                        <h4 className="font-medium tracking-tighter">
-                          {member.name}
-                        </h4>
+                        <h4>{member.name}</h4>
                         {isOwner && (
                           <Badge variant="danger">Propriétaire</Badge>
                         )}
