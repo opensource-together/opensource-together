@@ -1,8 +1,8 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { HiPlus } from "react-icons/hi";
 
 import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
@@ -29,7 +29,7 @@ export default function DashboardSidebar() {
         <Button asChild className="hidden w-full lg:flex">
           <Link href="/projects/create">
             Créer un Project
-            <Plus className="ml-2 h-4 w-4" />
+            <HiPlus className="ml-2 h-4 w-4" />
           </Link>
         </Button>
 
