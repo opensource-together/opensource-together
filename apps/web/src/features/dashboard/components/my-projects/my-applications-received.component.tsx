@@ -87,9 +87,7 @@ export default function MyApplicationsReceived({
                       size="md"
                     />
                     <div className="flex flex-col">
-                      <h4 className="font-medium tracking-tighter">
-                        {application.applicant.name}
-                      </h4>
+                      <h4>{application.applicant.name}</h4>
                       {application.applicant.techStacks &&
                         application.applicant.techStacks.length > 0 && (
                           <div className="mt-1 flex items-center">

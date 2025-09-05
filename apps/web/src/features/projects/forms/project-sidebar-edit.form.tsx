@@ -29,7 +29,7 @@ export default function ProjectSidebarEditForm({
   const { control } = form;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-1 flex-col gap-5">
       <div className="flex flex-col space-y-10 md:max-w-[263px]">
         <Form {...form}>
           <FormField

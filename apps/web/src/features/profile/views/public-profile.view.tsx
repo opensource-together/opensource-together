@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
@@ -42,35 +43,26 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
   const shouldShowGithubData = profile.provider !== "google";
 
   return (
-    <>
-      <div className="mx-4 mt-4 flex w-full max-w-7xl flex-col gap-2 md:mx-auto md:mt-8 lg:flex-row lg:justify-center">
-        <div className="w-full lg:mr-35 lg:w-auto">
-          <ProfileSidebar profile={profile} />
+    <TwoColumnLayout
+      sidebar={<ProfileSidebar profile={profile} />}
+      hero={<PublicProfileHero profile={profile} />}
+    >
+      {shouldShowGithubData && (
+        <div className="mb-8 w-full">
+          <GithubCalendar
+            contributionGraph={profile.githubStats?.contributionGraph}
+            contributionsCount={profile.githubStats?.commitsThisYear || 0}
+          />
         </div>
+      )}
 
-        <div className="flex w-full flex-col items-center justify-center gap-5 lg:w-[639px]">
-          <div className="w-full">
-            <PublicProfileHero profile={profile} />
-          </div>
-
-          {shouldShowGithubData && (
-            <div className="mb-8 w-full">
-              <GithubCalendar
-                contributionGraph={profile.githubStats?.contributionGraph}
-                contributionsCount={profile.githubStats?.commitsThisYear || 0}
-              />
-            </div>
-          )}
-
-          <div className="w-full">
-            <ProfileExperience />
-          </div>
-
-          <div className="mt-12 mb-8 flex w-full">
-            <PinnedProjects profile={profile} />
-          </div>
-        </div>
+      <div className="w-full">
+        <ProfileExperience />
       </div>
-    </>
+
+      <div className="mt-12 mb-8 flex w-full">
+        <PinnedProjects profile={profile} />
+      </div>
+    </TwoColumnLayout>
   );
 }

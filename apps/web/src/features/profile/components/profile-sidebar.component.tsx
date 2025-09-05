@@ -52,14 +52,12 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   };
 
   return (
-    <div className="flex w-[252px] flex-col gap-5">
+    <div className="flex flex-1 flex-col gap-5">
       <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
       {shouldShowStats && (
-        <div className="mb-2 flex flex-col md:max-w-[263px]">
-          <h2 className="text-md mb-1 font-medium tracking-tight text-black">
-            Statistiques GitHub
-          </h2>
+        <div className="mb-2 flex flex-col">
+          <h2 className="text-md mb-1">Statistiques GitHub</h2>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
@@ -109,9 +107,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       )}
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Technologies
-        </h2>
+        <h2 className="text-md mb-2">Technologies</h2>
         {techStacks.length > 0 ? (
           <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
             {techStacks.map((tech, index) => (
@@ -129,9 +125,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-4 font-medium tracking-tight text-black">
-          Liens externes
-        </h2>
+        <h2 className="text-md mb-4">Liens externes</h2>
         <div className="flex flex-col gap-6">
           {socialLinksConfig.map((config) => {
             const url = socialLinks[config.key as keyof typeof socialLinks];

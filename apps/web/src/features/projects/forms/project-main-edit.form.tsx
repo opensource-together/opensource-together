@@ -138,7 +138,7 @@ export default function ProjectMainEditForm({
                     onFileSelect={onImageSelect}
                     accept="image/*"
                     maxSize={1}
-                    size="xl"
+                    size="2xl"
                     name={project.title}
                     fallback={project.title}
                     className="mt-4"

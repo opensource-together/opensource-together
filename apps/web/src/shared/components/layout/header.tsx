@@ -24,19 +24,6 @@ import { NotificationPanel } from "@/features/notifications/components/notificat
 import { Avatar } from "../ui/avatar";
 import Icon, { IconName } from "../ui/icon";
 
-const HeaderBackdrop = () => {
-  const pathname = usePathname();
-  const headerDashboard = pathname.startsWith("/dashboard");
-
-  return (
-    <div
-      className={`pointer-events-none fixed inset-x-0 top-[65px] z-40 h-8 bg-gradient-to-b from-white to-transparent lg:top-[81px] ${
-        headerDashboard ? "hidden" : ""
-      }`}
-    />
-  );
-};
-
 interface NavLinkProps {
   href: string;
   children: React.ReactNode;
@@ -101,9 +88,7 @@ function DashboardNavItems({ onClose }: { onClose?: () => void }) {
   return (
     <div className="space-y-2">
       <div className="mb-4">
-        <h3 className="mb-3 text-sm font-medium text-black/70">
-          Navigation Dashboard
-        </h3>
+        <h3 className="mb-3 text-sm text-black/70">Navigation Dashboard</h3>
         {dashboardItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -172,7 +157,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-6 py-4 text-sm font-normal lg:px-20 lg:py-6 ${
+        className={`sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white/80 px-6 py-4 text-sm font-normal backdrop-blur-xl lg:px-20 lg:py-4 ${
           headerDashboard ? "border-b border-black/5" : ""
         }`}
       >
@@ -183,7 +168,7 @@ export default function Header() {
               alt="ost-logo"
               width={209}
               height={12}
-              className="max-h-[20px] lg:max-h-[25px]"
+              className="max-h-3 lg:max-h-4"
             />
           </Link>
 
@@ -250,9 +235,7 @@ export default function Header() {
               <div className="flex-1 overflow-y-auto px-6 py-6">
                 {/* Navigation principale */}
                 <div className="mb-8 space-y-2">
-                  <h3 className="mb-4 text-sm font-medium text-black/70">
-                    Navigation
-                  </h3>
+                  <h3 className="mb-4 text-sm text-black/70">Navigation</h3>
 
                   <button
                     onClick={() => {
@@ -516,8 +499,6 @@ export default function Header() {
           )}
         </section>
       </header>
-
-      <HeaderBackdrop />
     </>
   );
 }

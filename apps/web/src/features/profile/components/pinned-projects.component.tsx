@@ -24,9 +24,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <h2 className="mb-5 gap-1 text-left text-lg font-medium tracking-tighter">
-        Projets Rejoints
-      </h2>
+      <h2 className="mb-5 gap-1 text-left text-lg">Projets Rejoints</h2>
 
       {isLoading ? (
         <div className="space-y-3">

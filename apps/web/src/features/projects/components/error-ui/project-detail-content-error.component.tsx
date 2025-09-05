@@ -14,7 +14,7 @@ export default function ProjectDetailContentError() {
       </div>
       <div className="mx-auto mt-4 flex max-w-[1300px] flex-col gap-8 px-4 sm:px-6 md:mt-8 md:px-8 lg:px-24 xl:px-40">
         <div className="rounded-md bg-red-50 p-4 text-red-500">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl">
             Erreur lors du chargement des données du projet
           </h2>
           <p>

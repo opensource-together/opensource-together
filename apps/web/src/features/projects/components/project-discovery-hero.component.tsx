@@ -39,7 +39,7 @@ export default function ProjectDiscoveryHero() {
 
       <div className="relative z-10 mx-auto mb-5 flex min-h-[266px] w-full max-w-[1094px] flex-col items-center justify-center">
         <h1
-          className="mt-3 text-center text-3xl leading-none tracking-tighter md:text-5xl"
+          className="mt-3 text-center text-3xl leading-none md:text-5xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
           Construisez votre futur <br />
