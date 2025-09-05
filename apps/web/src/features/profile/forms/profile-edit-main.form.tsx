@@ -97,7 +97,7 @@ export default function ProfileEditMainForm({
                     onFileSelect={onImageSelect}
                     accept="image/*"
                     maxSize={1}
-                    size="xl"
+                    size="2xl"
                     name={profile.username}
                     fallback={profile.username}
                     currentImageUrl={profile.avatarUrl}

@@ -52,11 +52,11 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   };
 
   return (
-    <div className="flex w-[252px] flex-col gap-5">
+    <div className="flex flex-1 flex-col gap-5">
       <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
       {shouldShowStats && (
-        <div className="mb-2 flex flex-col md:max-w-[263px]">
+        <div className="mb-2 flex flex-col">
           <h2 className="text-md mb-1">Statistiques GitHub</h2>
 
           <div className="flex items-center justify-between py-1">

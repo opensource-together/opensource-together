@@ -30,7 +30,7 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
     <section className="flex flex-col bg-white">
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="flex items-center gap-3 sm:gap-4">
-          <Avatar src={image} name={title} alt={title} size="xl" />
+          <Avatar src={image} name={title} alt={title} size="2xl" />
           <h1 className="text-start text-2xl font-medium sm:text-3xl">
             {title}
           </h1>

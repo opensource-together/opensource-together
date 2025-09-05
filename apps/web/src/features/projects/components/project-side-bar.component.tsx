@@ -105,7 +105,7 @@ export default function ProjectSideBar({
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-1 flex-col gap-5">
       <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
       <div className="mb-3 flex gap-2">
@@ -118,13 +118,13 @@ export default function ProjectSideBar({
           <Button size="lg">Rejoindre le projet</Button>
         )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" size="lg">
+          <Button variant="secondary" size="lg">
             Voir Repository
           </Button>
         </Link>
       </div>
 
-      <div className="mb-2 flex flex-col md:max-w-[263px]">
+      <div className="mb-2 flex flex-1 flex-col">
         <h2 className="text-md mb-1">Détails</h2>
 
         <div className="flex items-center justify-between py-1">
