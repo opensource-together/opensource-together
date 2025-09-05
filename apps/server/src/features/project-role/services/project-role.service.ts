@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   PROJECT_ROLE_REPOSITORY,
-  CreateProjectRoleDto,
   ProjectRoleRepository,
 } from '../repositories/project-role.repository.interface';
 import { validateProjectRole } from '../domain/project-role';
@@ -14,7 +13,14 @@ export class ProjectRoleService {
     private readonly projectRoleRepository: ProjectRoleRepository,
   ) {}
 
-  async createProjectRole(projectRole: CreateProjectRoleDto[]) {
+  async createProjectRole(
+    projectId: string,
+    projectRole: {
+      title: string;
+      description: string;
+      techStacks: string[];
+    }[],
+  ) {
     const projectRoleValidation = projectRole.map((role) =>
       validateProjectRole(role),
     );
@@ -22,8 +28,10 @@ export class ProjectRoleService {
       return Result.fail(projectRoleValidation);
     }
 
-    const projectRoleResult =
-      await this.projectRoleRepository.create(projectRole);
+    const projectRoleResult = await this.projectRoleRepository.create(
+      projectId,
+      projectRole,
+    );
     if (!projectRoleResult) {
       return Result.fail('DATABASE_ERROR');
     }
