@@ -1,6 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
-import { MoreHorizontal } from "lucide-react";
 import * as React from "react";
+import { HiDotsHorizontal } from "react-icons/hi";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -101,7 +101,7 @@ const BreadcrumbEllipsis = ({
     className={cn("flex h-4 w-4 items-center justify-center", className)}
     {...props}
   >
-    <MoreHorizontal className="h-4 w-4" />
+    <HiDotsHorizontal className="h-4 w-4" />
     <span className="sr-only">More</span>
   </span>
 );

@@ -1,9 +1,9 @@
 "use client";
 
 import { type VariantProps, cva } from "class-variance-authority";
-import { InfoIcon } from "lucide-react";
 import { Tooltip as TooltipPrimitive } from "radix-ui";
 import * as React from "react";
+import { HiInformationCircle } from "react-icons/hi";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -97,7 +97,7 @@ function Tooltip({
     <TooltipProvider delayDuration={delayDuration}>
       <TooltipPrimitive.Root>
         <TooltipTrigger asChild>
-          <InfoIcon className="size-6 rounded-full p-1 text-black/70 transition-colors duration-200 hover:bg-gray-50" />
+          <HiInformationCircle className="size-6 rounded-full p-1 text-black/70 transition-colors duration-200 hover:bg-gray-50" />
         </TooltipTrigger>
         <TooltipContent variant={variant} side={side}>
           <p>{content}</p>

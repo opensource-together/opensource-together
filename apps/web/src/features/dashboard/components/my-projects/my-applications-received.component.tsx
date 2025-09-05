@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
+import { HiArrowRight } from "react-icons/hi";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -146,7 +146,7 @@ export default function MyApplicationsReceived({
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center justify-end">
-                    <ArrowUpRight className="text-muted-foreground h-4 w-4" />
+                    <HiArrowRight className="text-muted-foreground h-4 w-4" />
                   </div>
                 </TableCell>
               </TableRow>

@@ -1,7 +1,7 @@
 "use client";
 
-import { EllipsisVertical } from "lucide-react";
 import Link from "next/link";
+import { HiDotsVertical } from "react-icons/hi";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -128,7 +128,7 @@ export default function MyTeamMembers({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <EllipsisVertical className="h-4 w-4" />
+                        <HiDotsVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-64 p-2">
