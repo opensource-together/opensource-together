@@ -8,15 +8,15 @@ import {
 } from '../repositories/github.repository.interface';
 import { GithubRepoSuggestionInput } from '../services/inputs/github-repo-suggestion.input';
 
-export interface GitHubStatsResult {
+export interface GithubStatsResult {
   totalStars: number;
   contributedRepos: number;
   commitsThisYear: number;
 }
 
 @Injectable()
-export class GitHubStatsService {
-  private readonly logger = new Logger(GitHubStatsService.name);
+export class GithubStatsService {
+  private readonly logger = new Logger(GithubStatsService.name);
 
   constructor(
     @Inject(GITHUB_REPOSITORY)
@@ -25,7 +25,7 @@ export class GitHubStatsService {
 
   async calculateUserStats(
     octokit: Octokit,
-  ): Promise<Result<GitHubStatsResult, string>> {
+  ): Promise<Result<GithubStatsResult, string>> {
     try {
       this.logger.log('Starting GitHub stats calculation');
 
@@ -57,7 +57,7 @@ export class GitHubStatsService {
         octokit,
       );
 
-      const stats: GitHubStatsResult = {
+      const stats: GithubStatsResult = {
         totalStars,
         contributedRepos,
         commitsThisYear,
