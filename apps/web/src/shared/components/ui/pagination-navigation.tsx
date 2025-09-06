@@ -5,32 +5,40 @@ import {
   PaginationItem,
   PaginationLink,
   PaginationNext,
-  PaginationPrevious,
 } from "./pagination";
 
 export default function PaginationComponent() {
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="w-full justify-between">
+        <div className="flex gap-1">
+          <PaginationItem>
+            <PaginationLink href="#" className="text-primary text-xs">
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className="text-muted-foreground border-none text-xs"
+            >
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink
+              href="#"
+              className="text-muted-foreground border-none text-xs"
+            >
+              3
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis className="text-muted-foreground text-xs" />
+          </PaginationItem>
+        </div>
         <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#" isActive>
-            1
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">2</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">3</PaginationLink>
-        </PaginationItem>
-        <PaginationItem className="hidden">
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
+          <PaginationNext href="#" className="text-muted-foreground text-xs" />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

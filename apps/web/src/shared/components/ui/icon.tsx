@@ -110,7 +110,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     outline: "/icons/fork.svg",
   },
   people: {
-    default: "/icons/people.svg",
+    default: "/icons/people-contributor-icon.svg",
     gray: "/icons/people-gray.svg",
     white: "/icons/people.svg",
     black: "/icons/people.svg",
