@@ -34,11 +34,13 @@ export default function ProfileExperience() {
 
   return (
     <div className="w-full max-w-full overflow-hidden">
-      <div className="mb-2 flex flex-col">
-        <h2 className="mb-1 text-lg font-medium">Experiences</h2>
+      <div className="mb-0 flex flex-col">
+        <h2 className="text-primary mb-1 text-lg text-sm font-normal">
+          Experiences
+        </h2>
       </div>
 
-      <div className="mb-2 flex flex-col">
+      <div className="mb-0 flex flex-col">
         {experiences.map((experience) => (
           <div
             key={experience.id}
@@ -52,10 +54,10 @@ export default function ProfileExperience() {
                 {experience.endDate.slice(0, 4)}
               </span>
             </div>
-            <div className="mx-4 flex hidden flex-1 items-center md:block">
+            <div className="mx-4 flex-1 items-center md:block">
               <Separator />
             </div>
-            <span className="text-sm font-medium break-words text-black">
+            <span className="text-primary text-sm font-medium break-words">
               {experience.position} {experience.company}
             </span>
           </div>

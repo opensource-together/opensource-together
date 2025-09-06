@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LuClock3 } from "react-icons/lu";
 
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { Button } from "@/shared/components/ui/button";
@@ -23,8 +24,33 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
   );
 
   return (
-    <div className="flex w-full flex-col gap-4">
-      <h2 className="mb-5 gap-1 text-left text-lg">Projets Rejoints</h2>
+    <div className="flex w-full flex-col gap-[25px]">
+      <div className="mb-4.5 flex items-center justify-between">
+        <h2 className="gap-1 text-left text-sm font-normal text-neutral-500">
+          <span className="text-primary">{joinedProjects.length}</span>{" "}
+          {joinedProjects.length === 1
+            ? "Projet Rejoint"
+            : "Projets Rejoints"}{" "}
+        </h2>
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="text-primary h-5.5 w-17.5 gap-0.75 text-xs font-medium"
+          >
+            <LuClock3 className="size-3" />
+            Récents
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-primary h-5.5 w-14.5 gap-0.75 text-xs font-medium"
+          >
+            <LuClock3 className="size-3" />
+            Plus
+          </Button>
+        </div>
+      </div>
 
       {isLoading ? (
         <div className="space-y-3">
@@ -78,7 +104,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             title={project.title}
             shortDescription={project.shortDescription}
             image={project.image || ""}
-            showViewProject={true}
+            showViewProject={false}
             techStacks={project.techStacks}
             owner={{
               id: project.owner.id,
@@ -105,7 +131,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
                 author: { login: "", avatar_url: "", html_url: "" },
               },
             }}
-            className="w-full max-w-[731px] bg-white"
+            className="w-full"
           />
         ))
       )}

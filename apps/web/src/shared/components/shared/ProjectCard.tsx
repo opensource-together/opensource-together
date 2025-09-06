@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { FaStar } from "react-icons/fa6";
+import { HiUserGroup } from "react-icons/hi2";
 
 import {
   ProjectCard,
@@ -106,16 +108,16 @@ export default function ProjectCardComponent({
                 )}
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
-                <div className="flex items-center justify-center gap-1 text-xs">
-                  <Icon name="fork" size="xs" />
+                <div className="text-primary flex items-center justify-center text-[10px]">
+                  <Icon name="fork" size="xxs" className="mr-0.5" />
                   {projectStats.forks || 0}
                 </div>
-                <div className="flex items-center justify-center gap-1 text-xs">
-                  <Icon name="people" size="xs" variant="black" />
+                <div className="flex items-center justify-center text-[10px]">
+                  <HiUserGroup className="text-primary mr-0.5 size-3" />
                   {projectStats.contributors?.length || 0}
                 </div>
-                <div className="flex items-center justify-center gap-1 text-xs">
-                  <Icon name="star" size="xs" variant="black" />
+                <div className="flex items-center justify-center text-[10px]">
+                  <FaStar className="text-primary mr-0.5 size-2.5" />
                   {projectStats.stars || 0}
                 </div>
               </div>

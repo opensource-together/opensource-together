@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
 
 import { Profile } from "../types/profile.type";
 
@@ -27,13 +26,11 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
         </div>
 
         <Link href="/profile/me/edit">
-          <Button className="font-normal">
-            Modifier le profil <Icon name="pencil" size="xs" variant="white" />
-          </Button>
+          <Button className="font-normal">Modifier le profil</Button>
         </Link>
       </div>
 
-      <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>
+      <p className="mt-4 mb-6 text-sm leading-6 tracking-tighter">{bio}</p>
     </div>
   );
 }
