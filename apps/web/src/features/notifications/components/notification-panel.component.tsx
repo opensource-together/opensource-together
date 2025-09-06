@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { HiBell } from "react-icons/hi2";
 
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import Icon from "@/shared/components/ui/icon";
 
 import { useNotifications } from "../hooks/use-notifications.hook";
 import NotificationList from "./notification-list.component";
@@ -21,19 +20,17 @@ export const NotificationPanel = () => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <div className="relative">
-            <Icon name="bell" size="md" />
-            {unreadCount > 0 && (
-              <Badge
-                variant="destructive"
-                className="absolute -top-3 -right-4 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs font-medium"
-              >
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </Badge>
-            )}
-          </div>
-        </Button>
+        <div className="relative cursor-pointer">
+          <HiBell size={18} />
+          {unreadCount > 0 && (
+            <Badge
+              variant="info"
+              className="absolute -top-2 -right-2 flex size-4 items-center justify-center rounded-full p-0 text-[10px] font-medium"
+            >
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </Badge>
+          )}
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-96 p-0" align="end">
         <div className="p-4">

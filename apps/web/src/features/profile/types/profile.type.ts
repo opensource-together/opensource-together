@@ -56,11 +56,12 @@ export type Profile = {
   provider: string;
   company?: string;
   contributionsCount?: number;
+  joinedAt?: string;
+  profileUpdatedAt?: string;
+  email?: string;
+  githubStats?: GithubStats;
   socialLinks?: ProfileSocialLinks;
   techStacks?: ProfileTechStack[];
   experiences?: ProfileExperience[];
   projects?: Project[];
-  joinedAt?: string;
-  profileUpdatedAt?: string;
-  githubStats?: GithubStats;
 };
