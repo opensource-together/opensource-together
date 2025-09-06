@@ -57,6 +57,44 @@ export function MyApplicationDetails({
 
       <Separator className="my-8" />
 
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-sm font-medium">Nom du rôle</span>
+          <p className="text-muted-foreground mt-2.5">
+            {application.projectRoleTitle}
+          </p>
+        </div>
+      </div>
+
+      {application.projectRole.description && (
+        <>
+          <span className="text-sm font-medium">Description du rôle</span>
+          <p className="text-muted-foreground mt-2.5">
+            {application.projectRole.description}
+          </p>
+        </>
+      )}
+
+      {/* Required Technologies */}
+      {application.projectRole.techStacks &&
+        application.projectRole.techStacks.length > 0 && (
+          <>
+            <span className="text-sm font-medium">Technologies demandées</span>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {application.projectRole.techStacks.map((skill) => (
+                <StackLogo
+                  key={skill.id}
+                  name={skill.name}
+                  icon={skill.iconUrl || ""}
+                  alt={skill.name}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+      <Separator className="my-8" />
+
       {application.motivationLetter && (
         <div>
           <span className="font-medium">Lettre de motivation</span>
@@ -100,44 +138,6 @@ export function MyApplicationDetails({
               ))}
             </ul>
           </div>
-        )}
-
-      <Separator className="my-8" />
-
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="text-sm font-medium">Nom du rôle</span>
-          <p className="text-muted-foreground mt-2.5">
-            {application.projectRoleTitle}
-          </p>
-        </div>
-      </div>
-
-      {application.projectRole.description && (
-        <>
-          <span className="text-sm font-medium">Description du rôle</span>
-          <p className="text-muted-foreground mt-2.5">
-            {application.projectRole.description}
-          </p>
-        </>
-      )}
-
-      {/* Required Technologies */}
-      {application.projectRole.techStacks &&
-        application.projectRole.techStacks.length > 0 && (
-          <>
-            <span className="text-sm font-medium">Technologies demandées</span>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {application.projectRole.techStacks.map((skill) => (
-                <StackLogo
-                  key={skill.id}
-                  name={skill.name}
-                  icon={skill.iconUrl || ""}
-                  alt={skill.name}
-                />
-              ))}
-            </div>
-          </>
         )}
 
       {/* Rejection Reason */}
