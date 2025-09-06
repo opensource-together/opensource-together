@@ -80,7 +80,7 @@ export default function ProjectCardComponent({
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
-              <p className="text-muted-foreground -mt-1 text-xs tracking-tighter">
+              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
                 by {owner.username}
               </p>
             </ProjectCardInfo>
@@ -93,7 +93,7 @@ export default function ProjectCardComponent({
           {showTechStack && (
             <ProjectCardFooter>
               <>
-                <div className="flex gap-5">
+                <div className="flex gap-2.5">
                   {techStacks.slice(0, 3).map((tech, index) => (
                     <StackLogo
                       key={tech.id || index}
@@ -104,7 +104,7 @@ export default function ProjectCardComponent({
                   ))}
                 </div>
                 {techStacks.length > 3 && (
-                  <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                  <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
                     +{techStacks.length - 3}
                   </span>
                 )}
