@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
 
-import { EmptyState } from "@/shared/components/ui/empty-state";
+import { Separator } from "@/shared/components/ui/separator";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import DashboardCtaComponent from "../components/layout/dashboard-cta.component";
 import DashboardHeading from "../components/layout/dashboard-heading.component";
-import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
 import MyProjectsSkeletonComponent from "../components/skeletons/my-projects-skeleton.component";
 import { useMyProjects } from "../hooks/use-my-projects.hook";
@@ -17,7 +16,6 @@ import {
   useAcceptProjectRoleApplication,
   useRejectProjectRoleApplication,
 } from "../hooks/use-project-role-application.hook";
-import { ApplicationType } from "../types/my-projects.type";
 
 export default function MyProjectsView() {
   const { data: projects = [], isLoading } = useMyProjects();
@@ -76,15 +74,12 @@ export default function MyProjectsView() {
       />
       <DashboardCtaComponent />
 
-      <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
-        <div className="order-1 hidden w-full min-w-0 lg:block lg:w-[35%]">
-          <MyProjectsList
-            onProjectSelect={setSelectedProjectId}
-            selectedProjectId={selectedProjectId}
-          />
-        </div>
+      <Separator className="my-10" />
 
-        <div className="order-2 hidden w-full min-w-0 lg:block lg:w-[65%]">
+      <div className="w-full">
+        <MyProjectsList />
+
+        {/* <div className="order-2 hidden w-full min-w-0 lg:block lg:w-[65%]">
           {selectedProjectId ? (
             <MyProjectTabs
               applications={selectedProjectApplications as ApplicationType[]}
@@ -153,7 +148,7 @@ export default function MyProjectsView() {
               description="Cliquez sur un projet pour voir ses candidatures et membres d'équipe."
             />
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

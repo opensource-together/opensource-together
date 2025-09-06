@@ -644,6 +644,8 @@ export class UserController {
           description: { type: 'string' },
           image: { type: 'string', nullable: true },
           status: { type: 'string' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
           owner: {
             type: 'object',
             properties: {
@@ -838,6 +840,8 @@ export class UserController {
         techStacks: projectPrimitive.techStacks || [],
         teamMembers,
         applications,
+        createdAt: projectPrimitive.createdAt,
+        updatedAt: projectPrimitive.updatedAt,
       };
     });
 
