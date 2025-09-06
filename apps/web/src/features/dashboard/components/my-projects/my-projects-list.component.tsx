@@ -35,7 +35,9 @@ export default function MyProjectsList() {
             return (
               <TableRow
                 key={project.id}
-                onClick={() => router.push(`/dashboard/projects/${project.id}`)}
+                onClick={() =>
+                  router.push(`/dashboard/my-projects/${project.id}`)
+                }
               >
                 <TableCell>
                   <div className="flex items-center gap-3">
