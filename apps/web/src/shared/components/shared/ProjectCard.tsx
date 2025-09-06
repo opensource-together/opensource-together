@@ -75,8 +75,10 @@ export default function ProjectCardComponent({
           <ProjectCardLeftGroup>
             <Avatar src={image} name={title} alt={title} size="lg" />
             <ProjectCardInfo>
-              <ProjectCardTitle>{title}</ProjectCardTitle>
-              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+              <ProjectCardTitle className="text-primary">
+                {title}
+              </ProjectCardTitle>
+              <p className="text-muted-foreground -mt-1 text-xs tracking-tighter">
                 by {owner.username}
               </p>
             </ProjectCardInfo>
@@ -106,16 +108,26 @@ export default function ProjectCardComponent({
                 )}
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
-                <div className="flex items-center justify-center gap-1 text-xs">
-                  <Icon name="fork" size="xs" />
+                <div className="flex items-center justify-center text-[10px]">
+                  <Icon name="fork" size="xxs" className="mr-0.5" />
                   {projectStats.forks || 0}
                 </div>
-                <div className="flex items-center justify-center gap-1 text-xs">
-                  <Icon name="people" size="xs" variant="black" />
+                <div className="flex items-center justify-center gap-0 text-[10px]">
+                  <Icon
+                    name="people"
+                    size="xs"
+                    variant="default"
+                    className="mr-0.5"
+                  />
                   {projectStats.contributors?.length || 0}
                 </div>
-                <div className="flex items-center justify-center gap-1 text-xs">
-                  <Icon name="star" size="xs" variant="black" />
+                <div className="flex items-center justify-center gap-0 text-[10px]">
+                  <Icon
+                    name="star"
+                    size="xs"
+                    variant="black"
+                    className="mr-0.5"
+                  />
                   {projectStats.stars || 0}
                 </div>
               </div>
