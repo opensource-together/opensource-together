@@ -30,6 +30,7 @@ export interface ApplicationType {
     id: string;
     name: string;
     avatarUrl?: string;
+    jobTitle?: string;
     techStacks?: TechStack[];
   };
   projectRole: ProjectRole;

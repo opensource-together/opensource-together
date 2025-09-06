@@ -796,6 +796,7 @@ export class UserController {
             id: application.user.id,
             name: application.user.username,
             avatarUrl: application.user.avatarUrl,
+            jobTitle: application.user.jobTitle,
             techStacks: application.user.techStacks || [],
           },
           projectRole: {
@@ -818,6 +819,7 @@ export class UserController {
       const teamMembers = projectWithDetails.projectMembers.map((member) => ({
         id: member.userId,
         name: member.user?.username || 'Unknown',
+        jobTitle: member.user?.jobTitle || '',
         avatarUrl: member.user?.avatarUrl,
         role: member.projectRole?.[0]?.title || 'Member',
         joinedAt: member.joinedAt,
@@ -898,6 +900,7 @@ export class UserController {
           id: application.user.id,
           name: application.user.username,
           avatarUrl: application.user.avatarUrl,
+          jobTitle: application.user.jobTitle,
           techStacks: application.user.techStacks || [],
         },
         projectRole: {
