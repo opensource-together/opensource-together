@@ -9,6 +9,7 @@ import MyApplicationsReceived from "./my-applications-received.component";
 import MyTeamMembers from "./my-team-members.component";
 
 interface MyProjectTabsProps {
+  projectId: string;
   applications: ApplicationType[];
   teamMembers?: TeamMemberType[];
   isLoading?: boolean;
@@ -30,6 +31,7 @@ interface MyProjectTabsProps {
 type TabType = "applications" | "members";
 
 export default function MyProjectTabs({
+  projectId,
   applications,
   teamMembers = [],
   isLoading = false,
@@ -114,8 +116,9 @@ export default function MyProjectTabs({
       </div>
 
       <div className="mt-6">
-        {activeTab === "applications" && canViewApplications && (
+        {activeTab === "applications" && (
           <MyApplicationsReceived
+            projectId={projectId}
             applications={applications}
             isLoading={isLoading}
             onApplicationDecision={onApplicationDecision}

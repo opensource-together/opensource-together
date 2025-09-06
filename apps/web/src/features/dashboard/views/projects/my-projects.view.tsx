@@ -7,26 +7,8 @@ import { Separator } from "@/shared/components/ui/separator";
 import DashboardCtaComponent from "../../components/layout/dashboard-cta.component";
 import DashboardHeading from "../../components/layout/dashboard-heading.component";
 import MyProjectsList from "../../components/my-projects/my-projects-list.component";
-import {
-  useAcceptProjectRoleApplication,
-  useRejectProjectRoleApplication,
-} from "../../hooks/use-project-role-application.hook";
 
 export default function MyProjectsView() {
-  const acceptApplicationMutation = useAcceptProjectRoleApplication();
-  const rejectApplicationMutation = useRejectProjectRoleApplication();
-
-  const handleApplicationDecision = (
-    applicationId: string,
-    decision: "ACCEPTED" | "REJECTED"
-  ) => {
-    if (decision === "ACCEPTED") {
-      acceptApplicationMutation.acceptApplication(applicationId);
-    } else {
-      rejectApplicationMutation.rejectApplication(applicationId);
-    }
-  };
-
   return (
     <div>
       <DashboardHeading

@@ -54,7 +54,7 @@ export function useAcceptProjectRoleApplication() {
     errorMessage: "Erreur lors de l'acceptation de la candidature.",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+        queryClient.invalidateQueries({ queryKey: ["my-project"] });
       },
     },
   });
@@ -84,7 +84,7 @@ export function useRejectProjectRoleApplication() {
     errorMessage: "Erreur lors du rejet de la candidature.",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["my-projects"] });
+        queryClient.invalidateQueries({ queryKey: ["my-project"] });
       },
     },
   });
