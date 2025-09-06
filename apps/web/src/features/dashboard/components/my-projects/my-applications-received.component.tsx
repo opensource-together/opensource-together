@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { HiArrowRight } from "react-icons/hi";
 
 import { Avatar } from "@/shared/components/ui/avatar";
-import { Badge } from "@/shared/components/ui/badge";
+import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import {
   Table,
@@ -69,7 +68,7 @@ export default function MyApplicationsReceived({
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border border-black/10">
+      <div>
         <Table>
           <TableBody>
             {applications.map((application) => (
@@ -88,65 +87,42 @@ export default function MyApplicationsReceived({
                     />
                     <div className="flex flex-col">
                       <h4>{application.applicant.name}</h4>
-                      {application.applicant.techStacks &&
-                        application.applicant.techStacks.length > 0 && (
-                          <div className="mt-1 flex items-center">
-                            <div className="flex gap-1">
-                              {application.applicant.techStacks
-                                .slice(0, 3)
-                                .map((tech) => {
-                                  return (
-                                    <Badge
-                                      variant="outline"
-                                      key={tech.id}
-                                      className="text-xs"
-                                    >
-                                      {tech.name}
-                                    </Badge>
-                                  );
-                                })}
-                            </div>
-                            {application.applicant.techStacks.length > 3 && (
-                              <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                                +{application.applicant.techStacks.length - 3}
-                              </span>
-                            )}
-                          </div>
-                        )}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-col">
-                    <span className="text-xs text-black/50">Postulé pour</span>
-                    <span className="text-sm font-medium tracking-tighter">
+                  <div className="flex items-center text-sm">
+                    <span className="text-muted-foreground mr-1">
+                      Postulé pour
+                    </span>
+                    <span className="font-medium">
                       {application.projectRole.title}
                     </span>
                   </div>
                 </TableCell>
+
                 <TableCell>
-                  <div className="flex flex-col">
-                    <span className="text-xs text-black/50">Postulé le</span>
+                  <div className="flex items-center">
+                    <span
+                      className={`text-sm font-medium tracking-tighter ${getStatusStyle(application.status)}`}
+                    >
+                      <BadgeWithIcon
+                        variant="info"
+                        key={application.applicant.id}
+                        className="text-xs"
+                      >
+                        {getStatusText(application.status)}
+                      </BadgeWithIcon>
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
                     <span className="text-sm font-medium tracking-tighter">
                       {new Date(application.appliedAt).toLocaleDateString(
                         "fr-FR"
                       )}
                     </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="text-xs text-black/50">Statut</span>
-                    <span
-                      className={`text-sm font-medium tracking-tighter ${getStatusStyle(application.status)}`}
-                    >
-                      {getStatusText(application.status)}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center justify-end">
-                    <HiArrowRight className="text-muted-foreground h-4 w-4" />
                   </div>
                 </TableCell>
               </TableRow>
