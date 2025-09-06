@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FaStar } from "react-icons/fa6";
 
 import {
   ProjectCard,
@@ -122,12 +123,7 @@ export default function ProjectCardComponent({
                   {projectStats.contributors?.length || 0}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-[10px]">
-                  <Icon
-                    name="star"
-                    size="xs"
-                    variant="black"
-                    className="mr-0.5"
-                  />
+                  <FaStar className="text-primary mr-0.5 size-2.5" />
                   {projectStats.stars || 0}
                 </div>
               </div>
