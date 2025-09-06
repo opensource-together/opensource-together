@@ -21,7 +21,7 @@ function FilterItem({ label, value }: FilterItemProps) {
 
 export default function FilterSearchBar() {
   return (
-    <div className="mb-[19px] flex h-12.5 w-[729px] items-center justify-center">
+    <div className="mb-[19px] flex h-12.5 w-[715px] items-center justify-center">
       <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
         <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
           <div className="flex items-center">
@@ -38,7 +38,7 @@ export default function FilterSearchBar() {
               <div className="absolute top-1/2 right-0 h-8 -translate-y-1/2" />
             </div>
             <div className="relative">
-              <div className="group flex h-12 w-[134px] cursor-pointer flex-col rounded-full px-4 py-2 transition-all duration-200 hover:rounded-full hover:bg-white">
+              <div className="group flex h-12 w-[120px] cursor-pointer flex-col rounded-full px-4 py-2 transition-all duration-200 hover:rounded-full hover:bg-white">
                 <span className="text-xs font-normal text-black/40 transition-colors duration-200 hover:rounded-full">
                   Trier par
                 </span>

@@ -32,9 +32,11 @@ export default function HomepageView() {
         ) : (
           <>
             <ProjectGrid projects={projects} />
-            <div className="mt-8.5 mb-50">
-              <PaginationNavigation />
-            </div>
+            {projects.length > 8 && (
+              <div className="mt-8.5 mb-50">
+                <PaginationNavigation />
+              </div>
+            )}
           </>
         )}
       </div>
