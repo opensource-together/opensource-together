@@ -41,6 +41,16 @@ export class PrismaUserGitHubCredentialsRepository
     props: UserGitHubCredentialsData,
   ): Promise<Result<UserGitHubCredentialsData, string>> {
     try {
+      const userExists = await this.prisma.user.findUnique({
+        where: { id: props.userId },
+        select: { id: true },
+      });
+
+      if (!userExists) {
+        this.Logger.error(`User with id ${props.userId} not found`);
+        return Result.fail('User not found');
+      }
+
       const updatedCredentials = await this.prisma.userGitHubCredentials.upsert(
         {
           where: { userId: props.userId },
