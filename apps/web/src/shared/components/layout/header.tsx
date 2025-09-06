@@ -137,7 +137,7 @@ export default function Header() {
   const { isAuthenticated, currentUser, logout, requireAuth, isLoading } =
     useAuth();
 
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith("/auth") || pathname.startsWith("/dashboard")) {
     return null;
   }
 
