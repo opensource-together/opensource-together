@@ -1,12 +1,22 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
-import { CreateProjectRoleDto } from '../../domain/project-role';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsNotEmpty } from 'class-validator';
 
 export class CreateProjectRoleRequestDto {
-  @IsString()
-  @IsNotEmpty()
-  projectId: string;
-
+  @ApiProperty({
+    description: 'Project roles',
+    example: [
+      {
+        title: 'Project role 1',
+        description: 'Project role 1 description',
+        techStacks: ['1', '2'],
+      },
+    ],
+  })
   @IsArray()
   @IsNotEmpty()
-  roles: CreateProjectRoleDto[];
+  projectRoles: {
+    title: string;
+    description: string;
+    techStacks: string[];
+  }[];
 }
