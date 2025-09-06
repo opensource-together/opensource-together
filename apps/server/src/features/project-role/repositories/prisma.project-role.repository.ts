@@ -5,19 +5,45 @@ import {
   ProjectRoleRepository,
 } from './project-role.repository.interface';
 import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
+import { Result } from '@/libs/result';
+import { ProjectRole } from '../domain/project-role';
 
 @Injectable()
 export class PrismaProjectRoleRepository implements ProjectRoleRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getAll(projectId: string): Promise<Result<ProjectRole[], string>> {
+    try {
+      const projectRoles = await this.prisma.projectRole.findMany({
+        where: { projectId },
+        include: { techStacks: true },
+      });
+      if (!projectRoles) {
+        return Result.fail('PROJECT_ROLE_NOT_FOUND');
+      }
+      return Result.ok(
+        projectRoles.map((role) => ({
+          id: role.id,
+          projectId: role.projectId,
+          title: role.title,
+          description: role.description,
+          isFilled: role.isFilled,
+          techStacks: role.techStacks,
+        })),
+      );
+    } catch (error) {
+      console.error('Error getting all project roles', error);
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
+
   async create(
     projectId: string,
     projectRoles: CreateProjectRoleDto[],
-  ): Promise<any> {
+  ): Promise<Result<ProjectRole[], string>> {
     try {
       console.log('data', projectRoles);
 
-      // Utiliser create() au lieu de createMany() pour supporter les relations
       const results = await Promise.all(
         projectRoles.map((role) =>
           this.prisma.projectRole.create({
@@ -30,25 +56,29 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
                 connect: role.techStacks.map((tech) => ({ id: tech })),
               },
             },
+            include: {
+              techStacks: true,
+            },
           }),
         ),
       );
-
-      console.log('result', results);
-      return results;
+      if (!results) {
+        return Result.fail('PROJECT_ROLE_NOT_FOUND');
+      }
+      return Result.ok(results);
     } catch (error) {
       console.error('Error creating project role', error);
-      throw error;
+      return Result.fail('DATABASE_ERROR');
     }
   }
 
   async update(
     roleId: string,
     projectRole: UpdateProjectRoleDto,
-  ): Promise<any> {
+  ): Promise<Result<ProjectRole, string>> {
     try {
       console.log('data', projectRole);
-      return await this.prisma.projectRole.update({
+      const updatedProjectRole = await this.prisma.projectRole.update({
         where: { id: roleId },
         data: {
           title: projectRole.title,
@@ -63,9 +93,29 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
           techStacks: true,
         },
       });
+      if (!updatedProjectRole) {
+        return Result.fail('PROJECT_ROLE_NOT_FOUND');
+      }
+      return Result.ok(updatedProjectRole);
     } catch (error) {
       console.error('Error updating project role', error);
-      throw error;
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
+
+  async findById(roleId: string): Promise<Result<ProjectRole, string>> {
+    try {
+      const projectRole = await this.prisma.projectRole.findUnique({
+        where: { id: roleId },
+        include: { techStacks: true },
+      });
+      if (!projectRole) {
+        return Result.fail('PROJECT_ROLE_NOT_FOUND');
+      }
+      return Result.ok(projectRole);
+    } catch (error) {
+      console.error('Error finding project role by id', error);
+      return Result.fail('DATABASE_ERROR');
     }
   }
 }

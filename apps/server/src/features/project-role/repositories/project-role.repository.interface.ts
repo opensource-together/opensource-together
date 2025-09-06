@@ -1,5 +1,6 @@
 import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
 import { ProjectRole } from '../domain/project-role';
+import { Result } from '@/libs/result';
 
 export const PROJECT_ROLE_REPOSITORY = Symbol('PROJECT_ROLE_REPOSITORY');
 
@@ -9,12 +10,14 @@ export interface CreateProjectRoleDto {
   techStacks: string[];
 }
 export interface ProjectRoleRepository {
+  getAll(projectId: string): Promise<Result<ProjectRole[], string>>;
   create(
     projectId: string,
     projectRoles: CreateProjectRoleDto[],
-  ): Promise<ProjectRole[]>;
+  ): Promise<Result<ProjectRole[], string>>;
+  findById(roleId: string): Promise<Result<ProjectRole, string>>;
   update(
     roleId: string,
     projectRole: UpdateProjectRoleDto,
-  ): Promise<ProjectRole>;
+  ): Promise<Result<ProjectRole, string>>;
 }

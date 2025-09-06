@@ -14,6 +14,15 @@ export class ProjectRoleService {
     private readonly projectRoleRepository: ProjectRoleRepository,
   ) {}
 
+  async getAllProjectRoles(projectId: string) {
+    const projectRoleResult =
+      await this.projectRoleRepository.getAll(projectId);
+    if (!projectRoleResult.success) {
+      return Result.fail('DATABASE_ERROR');
+    }
+    return Result.ok(projectRoleResult.value);
+  }
+
   async createProjectRole(
     projectId: string,
     projectRole: {
@@ -33,10 +42,10 @@ export class ProjectRoleService {
       projectId,
       projectRole,
     );
-    if (!projectRoleResult) {
+    if (!projectRoleResult.success) {
       return Result.fail('DATABASE_ERROR');
     }
-    return Result.ok(projectRoleResult);
+    return Result.ok(projectRoleResult.value);
   }
 
   async updateProjectRole(roleId: string, projectRole: UpdateProjectRoleDto) {
@@ -44,9 +53,17 @@ export class ProjectRoleService {
       roleId,
       projectRole,
     );
-    if (!projectRoleResult) {
+    if (!projectRoleResult.success) {
       return Result.fail('DATABASE_ERROR');
     }
-    return Result.ok(projectRoleResult);
+    return Result.ok(projectRoleResult.value);
+  }
+
+  async getProjectRole(roleId: string) {
+    const projectRoleResult = await this.projectRoleRepository.findById(roleId);
+    if (!projectRoleResult.success) {
+      return Result.fail('DATABASE_ERROR');
+    }
+    return Result.ok(projectRoleResult.value);
   }
 }
