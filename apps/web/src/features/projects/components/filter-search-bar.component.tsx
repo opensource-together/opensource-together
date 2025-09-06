@@ -12,7 +12,7 @@ function FilterItem({ label, value }: FilterItemProps) {
       <span className="text-xs font-normal text-black/40 transition-colors duration-200">
         {label}
       </span>
-      <span className="text-xs font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
+      <span className="group-hover:text-primary text-xs font-medium tracking-tight transition-colors duration-200">
         {value}
       </span>
     </div>
