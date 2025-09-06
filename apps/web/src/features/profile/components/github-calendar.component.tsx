@@ -25,13 +25,13 @@ export default function GithubCalendar({
       case 0:
         return "bg-[#E8EAEE]";
       case 1:
-        return "bg-[#8EC5FF]";
+        return "bg-[var(--ost-blue-one)]";
       case 2:
-        return "bg-[#51A2FF]";
+        return "bg-[var(--ost-blue-two)]";
       case 3:
-        return "bg-[#2B7FFF]";
+        return "bg-[var(--ost-blue-three)]";
       case 4:
-        return "bg-[#193CB8]";
+        return "bg-[var(--ost-blue-four)]";
       default:
         return "bg-[#E8EAEE]";
     }
@@ -103,10 +103,10 @@ export default function GithubCalendar({
         <h3 className="mb-4 text-lg">Activité de contribution Github</h3>
 
         <div className="relative">
-          <div className="mb-2 flex px-2">
+          <div className="mb-2 flex pr-2.5">
             {months.map((month, index) => (
-              <div key={index} className="flex-1 text-center">
-                <span className="text-[6px] text-black/20 md:text-[8px]">
+              <div key={index} className="flex-1 text-left">
+                <span className="text-[6px] text-neutral-400 md:text-[8px]">
                   {month}
                 </span>
               </div>
@@ -114,17 +114,6 @@ export default function GithubCalendar({
           </div>
 
           <div className="flex">
-            <div className="mr-1 flex flex-col justify-between py-1 md:mr-2">
-              {days.map((day, index) => (
-                <span
-                  key={index}
-                  className="text-[6px] text-black/20 md:text-[8px]"
-                >
-                  {day}
-                </span>
-              ))}
-            </div>
-
             <div
               className="h-[60px] w-full max-w-[598.07px] rounded-lg border border-black/5 p-1 md:h-[97px] md:p-2"
               onMouseMove={handleMouseMove}
@@ -138,7 +127,7 @@ export default function GithubCalendar({
                     {week.days.map((day, dayIndex) => (
                       <div
                         key={dayIndex}
-                        className={`size-[6px] rounded-full md:size-[9px] ${getSquareColor(day.level)} cursor-pointer transition-colors hover:opacity-80`}
+                        className={`size-[6px] rounded-xs md:size-[9px] ${getSquareColor(day.level)} cursor-pointer transition-colors hover:opacity-80`}
                         onMouseEnter={(e) => handleMouseEnter(day, e)}
                         onMouseLeave={handleMouseLeave}
                       />
@@ -146,6 +135,16 @@ export default function GithubCalendar({
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="ml-1 flex flex-col justify-between py-1 md:ml-2">
+              {days.map((day, index) => (
+                <span
+                  key={index}
+                  className="text-[6px] text-[var(--neutral-400)] md:text-[8px]"
+                >
+                  {day}
+                </span>
+              ))}
             </div>
           </div>
         </div>
