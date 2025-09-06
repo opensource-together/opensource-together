@@ -25,7 +25,8 @@ export default function NotificationItem({
     }
 
     if (notification.type === "project.role.application.created") {
-      router.push("/dashboard/my-projects");
+      const payload = notification.payload as { project: { id: string } };
+      router.push(`/dashboard/my-projects/${payload.project.id}`);
     }
 
     onNotificationClick();

@@ -4,15 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
+import HeaderBreadcrumb from "@/shared/components/ui/header-breadcrumb.component";
+import {
+  SkeletonBreadcrumb,
+  SkeletonNotificationPanel,
+  SkeletonUserDropdown,
+} from "@/shared/components/ui/skeleton-header";
+import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { NotificationPanel } from "@/features/notifications/components/notification-panel.component";
-
-import HeaderBreadcrumb from "../../../../shared/components/ui/header-breadcrumb.component";
-import UserDropdown from "../../../../shared/components/ui/user-dropdown.component";
 
 export default function DashboardHeader() {
   const pathname = usePathname();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (pathname.startsWith("/auth")) {
+    return null;
+  }
 
   return (
     <div>
@@ -27,7 +38,7 @@ export default function DashboardHeader() {
               className="py-8"
             />
           </Link>
-          <HeaderBreadcrumb />
+          {isLoading ? <SkeletonBreadcrumb /> : <HeaderBreadcrumb />}
         </div>
         <div className="flex items-center gap-2">
           <div className="mr-2 flex items-center gap-2">
@@ -47,9 +58,21 @@ export default function DashboardHeader() {
             </Button>
           </div>
 
-          <NotificationPanel />
-
-          <UserDropdown />
+          {isLoading ? (
+            <>
+              <SkeletonNotificationPanel />
+              <SkeletonUserDropdown />
+            </>
+          ) : isAuthenticated ? (
+            <>
+              <NotificationPanel />
+              <UserDropdown />
+            </>
+          ) : (
+            <Link href="/auth/login">
+              <Button variant="default">Se connecter</Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

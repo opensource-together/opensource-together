@@ -158,9 +158,14 @@ export function MyApplicationsList() {
                   </TableCell>
 
                   <TableCell>
-                    <span className="text-sm font-medium">
-                      {application.projectRoleTitle}
-                    </span>
+                    <div className="text-sm text-nowrap">
+                      <span className="text-muted-foreground mr-1">
+                        Postulé à
+                      </span>
+                      <span className="font-medium">
+                        {application.projectRoleTitle}
+                      </span>
+                    </div>
                   </TableCell>
 
                   <TableCell>
@@ -191,8 +196,8 @@ export function MyApplicationsList() {
                   <TableCell>
                     {application.status === "PENDING" && (
                       <Button
-                        variant="outline"
-                        size="icon"
+                        variant="ghost"
+                        size="ghostIcon"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleCancelApplication(application);
