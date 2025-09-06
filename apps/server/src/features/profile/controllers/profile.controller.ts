@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   UseGuards,
@@ -10,7 +12,6 @@ import {
 import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { UpsertProfileDto } from '@/features/profile/controllers/dto/upsert-profile.dto';
 import { ProfileService } from '@/features/profile/services/profile.service';
-import { Result } from '@/libs/result';
 import { Profile as DomainProfile } from '@/features/profile/domain/profile';
 import { CompleteProfile } from '@/features/profile/repositories/profile.repository.interface';
 
@@ -20,31 +21,47 @@ export class ProfileController {
 
   @UseGuards(AuthGuard)
   @Post()
-  upsertProfile(
+  async upsertProfile(
     @Session() session: UserSession,
     @Body() data: UpsertProfileDto,
-  ): Promise<Result<DomainProfile, string>> {
-    return this.profileService.upsertProfile(session.session.userId, data);
+  ): Promise<DomainProfile> {
+    const result = await this.profileService.upsertProfile(session.session.userId, data);
+    if(!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return result.value;
   }
 
   @UseGuards(AuthGuard)
   @Get('me')
-  getMyProfile(
+  async getMyProfile(
     @Session() session: UserSession,
-  ): Promise<Result<CompleteProfile, string>> {
-    return this.profileService.getProfileByUserId(session.session.userId);
+  ): Promise<CompleteProfile> {
+    const result = await this.profileService.getProfileByUserId(session.session.userId);
+    if(!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return result.value;
   }
 
   @Get(':id')
   async getProfileById(
     @Param('id') id: string,
-  ): Promise<Result<CompleteProfile, string>> {
-    return this.profileService.getProfileByUserId(id);
+  ): Promise<CompleteProfile> {
+    const result = await this.profileService.getProfileByUserId(id);
+    if(!result.success) {
+      throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+    }
+    return result.value;
   }
 
   @UseGuards(AuthGuard)
   @Delete()
-  deleteProfile(@Session() session: UserSession): Promise<void> {
-    return this.profileService.deleteProfile(session.session.userId);
+  async deleteProfile(@Session() session: UserSession): Promise<void> {
+    const result = await this.profileService.deleteProfile(session.session.userId);
+    if(!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return;
   }
 }

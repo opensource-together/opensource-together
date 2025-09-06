@@ -20,3 +20,23 @@ export interface Profile {
   createdAt: Date;
   updatedAt: Date;
 }
+
+interface ValidateProfileDto {
+  id: string;
+  userId: string;
+}
+
+export interface ValidationErrors {
+  [key: string]: string;
+}
+
+export function validateProject(
+  profile: Partial<ValidateProfileDto>,
+): ValidationErrors | null {
+  const errors: ValidationErrors = {};
+
+  if (!profile.id) errors.id = 'domain: Profile id is required';
+  if (!profile.userId) errors.userId = 'domain: Profile userId is required';
+
+  return Object.keys(errors).length > 0 ? errors : null;
+}
