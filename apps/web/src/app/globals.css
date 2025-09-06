@@ -28,6 +28,7 @@
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
+  --color-muted-black-stroke: var(--muted-black-stroke);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
@@ -64,6 +65,7 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(97% 0 0); /* Neutral 200 */
   --muted-foreground: oklch(55.6% 0 0); /* Neutral 500 */
+  --muted-black-stroke: #0000000d; /* Muted Black Stroke */
   --accent: oklch(98.5% 0 0); /* Neutral 50 */
   --accent-foreground: oklch(0.205 0 0);
   --ost-blue-one: #8ec5ff; /* Third main color (Blue) */

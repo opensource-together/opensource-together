@@ -7,6 +7,7 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
+import DashboardCtaComponent from "../components/layout/dashboard-cta.component";
 import DashboardHeading from "../components/layout/dashboard-heading.component";
 import MyProjectTabs from "../components/my-projects/my-project-tabs.component";
 import MyProjectsList from "../components/my-projects/my-projects-list.component";
@@ -73,6 +74,7 @@ export default function MyProjectsView() {
         icon={<HiMiniSquare2Stack size={16} />}
         description="Organisez, modifiez, gérez les membres et administrez vos projets — tout en un seul endroit."
       />
+      <DashboardCtaComponent />
 
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
         <div className="order-1 hidden w-full min-w-0 lg:block lg:w-[35%]">
