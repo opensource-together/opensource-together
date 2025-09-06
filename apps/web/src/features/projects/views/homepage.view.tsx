@@ -17,29 +17,30 @@ export default function HomepageView() {
   if (isError || !projects) return <HomepageError />;
 
   return (
-    <div className="mx-6 max-w-6xl lg:mx-auto">
+    <>
       <div className="mt-8 flex flex-col items-center">
         <ProjectDiscoveryHero />
       </div>
-
-      <div className="pb-4 md:pb-8">
-        {projects.length === 0 ? (
-          <EmptyState
-            title="Aucun Projet Disponible"
-            description="Aucun projet n'a été trouvé pour le moment. Veuillez réessayer plus tard."
-            className="mb-28"
-          />
-        ) : (
-          <>
-            <ProjectGrid projects={projects} />
-            {projects.length > 8 && (
-              <div className="mt-8.5 mb-50">
-                <PaginationNavigation />
-              </div>
-            )}
-          </>
-        )}
+      <div className="mx-6 max-w-6xl lg:mx-auto">
+        <div className="pb-4 md:pb-8">
+          {projects.length === 0 ? (
+            <EmptyState
+              title="Aucun Projet Disponible"
+              description="Aucun projet n'a été trouvé pour le moment. Veuillez réessayer plus tard."
+              className="mb-28"
+            />
+          ) : (
+            <div className="mt-6">
+              <ProjectGrid projects={projects} />
+              {projects.length > 8 && (
+                <div className="mt-8.5 mb-50">
+                  <PaginationNavigation />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

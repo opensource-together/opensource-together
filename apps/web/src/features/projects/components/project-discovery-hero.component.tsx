@@ -10,7 +10,7 @@ export default function ProjectDiscoveryHero() {
         alt="Bible gauche"
         width={1200}
         height={1000}
-        className="absolute bottom-52 z-0 object-contain sm:bottom-5 sm:h-full sm:w-full"
+        className="absolute bottom-52 z-0 object-contain sm:bottom-6 sm:h-full sm:w-[105%]"
       />
 
       <div className="relative z-10 mx-auto mb-5 flex min-h-[266px] w-full max-w-[1094px] flex-col items-center justify-center">
