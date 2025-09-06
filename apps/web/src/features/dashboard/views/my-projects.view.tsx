@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { HiMiniSquare2Stack } from "react-icons/hi2";
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
@@ -68,8 +69,9 @@ export default function MyProjectsView() {
   return (
     <div>
       <DashboardHeading
-        title="Mes projets"
-        description="Gérez vos projets Open Source et vos candidatures reçues."
+        title="Projets"
+        icon={<HiMiniSquare2Stack size={16} />}
+        description="Organisez, modifiez, gérez les membres et administrez vos projets — tout en un seul endroit."
       />
 
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">

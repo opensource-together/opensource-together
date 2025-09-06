@@ -20,12 +20,12 @@ const sidebarSections = [
   {
     items: [
       {
-        label: "Mes projets",
+        label: "Projets",
         href: "/dashboard/my-projects",
         icon: HiMiniSquare2Stack,
       },
       {
-        label: "Mes candidatures",
+        label: "Candidatures",
         href: "/dashboard/my-applications",
         icon: HiInbox,
       },
@@ -48,7 +48,19 @@ const bottomSidebarItems = [
   { label: "Besoin d'aide", href: "/help", icon: HiQuestionMarkCircle },
 ];
 
-function SidebarLink({ item, isActive }: { item: any; isActive: boolean }) {
+interface SidebarItem {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+}
+
+function SidebarLink({
+  item,
+  isActive,
+}: {
+  item: SidebarItem;
+  isActive: boolean;
+}) {
   return (
     <Link
       href={item.href}
