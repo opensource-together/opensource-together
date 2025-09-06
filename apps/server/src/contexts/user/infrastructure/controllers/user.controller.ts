@@ -847,4 +847,103 @@ export class UserController {
 
     return projectsWithDetails;
   }
+
+  @Get('me/projects/:id')
+  @ApiOperation({
+    summary: "Récupérer un projet spécifique de l'utilisateur courant",
+  })
+  @ApiCookieAuth('sAccessToken')
+  @ApiParam({
+    name: 'id',
+    description: 'ID du projet',
+    example: '0247bb88-93cc-408d-8635-d149fa5b7604',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Projet retourné avec succès',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Projet non trouvé',
+  })
+  async getMyProjectById(
+    @Session('userId') userId: string,
+    @Param('id') projectId: string,
+  ) {
+    const result: Result<ProjectWithDetails[], string> =
+      await this.queryBus.execute(new FindUserProjectsWithDetailsQuery(userId));
+
+    if (!result.success) {
+      throw new NotFoundException(result.error);
+    }
+
+    // Trouver le projet spécifique
+    const projectWithDetails = result.value.find(
+      (p) => p.project.toPrimitive().id === projectId,
+    );
+
+    if (!projectWithDetails) {
+      throw new NotFoundException('Project not found');
+    }
+
+    const project = projectWithDetails.project;
+    const projectPrimitive = project.toPrimitive();
+
+    // Transformer les applications pour correspondre au format attendu
+    const applications = projectWithDetails.projectRoleApplication.map(
+      (application) => ({
+        id: application.id,
+        status: application.status,
+        applicant: {
+          id: application.user.id,
+          name: application.user.username,
+          avatarUrl: application.user.avatarUrl,
+          techStacks: application.user.techStacks || [],
+        },
+        projectRole: {
+          id: application.projectRole.id,
+          title: application.projectRole.title,
+          description: application.projectRole.description,
+          techStacks: application.projectRole.techStacks || [],
+        },
+        appliedAt: application.appliedAt,
+        decidedAt: application.decidedAt,
+        decidedBy: application.decidedBy,
+        motivationLetter: application.motivationLetter || '',
+        selectedKeyFeatures: application.selectedKeyFeatures || [],
+        selectedProjectGoals: application.selectedProjectGoals || [],
+        rejectionReason: application.rejectionReason,
+      }),
+    );
+
+    // Transformer les membres d'équipe
+    const teamMembers = projectWithDetails.projectMembers.map((member) => ({
+      id: member.userId,
+      name: member.user?.username || 'Unknown',
+      avatarUrl: member.user?.avatarUrl,
+      role: member.projectRole?.[0]?.title || 'Member',
+      joinedAt: member.joinedAt,
+      techStacks: member.user?.techStacks || [],
+    }));
+
+    return {
+      id: projectPrimitive.id,
+      title: projectPrimitive.title,
+      shortDescription: projectPrimitive.shortDescription,
+      description: projectPrimitive.description,
+      image: projectPrimitive.image,
+      status: 'PUBLISHED',
+      createdAt: projectPrimitive.createdAt,
+      updatedAt: projectPrimitive.updatedAt,
+      owner: {
+        id: projectPrimitive.owner?.id || '',
+        username: projectPrimitive.owner?.username || '',
+        avatarUrl: projectPrimitive.owner?.avatarUrl || '',
+        techStacks: projectPrimitive.owner?.techStacks || [],
+      },
+      techStacks: projectPrimitive.techStacks || [],
+      teamMembers,
+      applications,
+    };
+  }
 }
