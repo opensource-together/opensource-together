@@ -114,7 +114,7 @@ export default function DashboardSidebar() {
               className="hidden w-full justify-between lg:flex"
             >
               <Link href="/projects/create">
-                Créer un Project
+                Créer un Projet
                 <HiChevronRight size={12} />
               </Link>
             </Button>
