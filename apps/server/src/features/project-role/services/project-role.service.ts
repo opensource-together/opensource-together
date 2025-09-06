@@ -5,6 +5,7 @@ import {
 } from '../repositories/project-role.repository.interface';
 import { validateProjectRole } from '../domain/project-role';
 import { Result } from '@/libs/result';
+import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
 
 @Injectable()
 export class ProjectRoleService {
@@ -30,6 +31,17 @@ export class ProjectRoleService {
 
     const projectRoleResult = await this.projectRoleRepository.create(
       projectId,
+      projectRole,
+    );
+    if (!projectRoleResult) {
+      return Result.fail('DATABASE_ERROR');
+    }
+    return Result.ok(projectRoleResult);
+  }
+
+  async updateProjectRole(roleId: string, projectRole: UpdateProjectRoleDto) {
+    const projectRoleResult = await this.projectRoleRepository.update(
+      roleId,
       projectRole,
     );
     if (!projectRoleResult) {
