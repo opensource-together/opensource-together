@@ -21,7 +21,7 @@ function FilterItem({ label, value }: FilterItemProps) {
 
 export default function FilterSearchBar() {
   return (
-    <div className="flex h-12.5 w-[729px] items-center justify-center">
+    <div className="mb-[19px] flex h-12.5 w-[729px] items-center justify-center">
       <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
         <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
           <div className="flex items-center">
