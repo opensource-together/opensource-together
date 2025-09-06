@@ -41,7 +41,6 @@ export default function MyProjectTabs({
   const canViewApplications =
     projectOwnerId && currentUserId && projectOwnerId === currentUserId;
 
-  // Ne pas désactiver l'onglet pendant le chargement de l'auth
   const isAuthDataReady = !isAuthLoading && projectOwnerId && currentUserId;
   const shouldDisableApplications = isAuthDataReady && !canViewApplications;
 
