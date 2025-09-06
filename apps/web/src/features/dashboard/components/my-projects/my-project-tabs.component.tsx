@@ -21,11 +21,6 @@ interface MyProjectTabsProps {
     avatarUrl?: string;
     techStacks?: TechStack[];
   };
-  onApplicationDecision?: (
-    applicationId: string,
-    decision: "ACCEPTED" | "REJECTED",
-    reason?: string
-  ) => void;
 }
 
 type TabType = "applications" | "members";
@@ -38,7 +33,6 @@ export default function MyProjectTabs({
   projectOwnerId,
   currentUserId,
   projectOwner,
-  onApplicationDecision,
 }: MyProjectTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("applications");
 
@@ -121,7 +115,6 @@ export default function MyProjectTabs({
             projectId={projectId}
             applications={applications}
             isLoading={isLoading}
-            onApplicationDecision={onApplicationDecision}
           />
         )}
         {activeTab === "members" && (

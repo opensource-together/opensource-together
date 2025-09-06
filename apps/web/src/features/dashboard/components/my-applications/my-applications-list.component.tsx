@@ -1,78 +1,115 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { HiXMark } from "react-icons/hi2";
 
+import { Avatar } from "@/shared/components/ui/avatar";
+import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
 import { Button } from "@/shared/components/ui/button";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { EmptyState } from "@/shared/components/ui/empty-state";
-import { Sheet, SheetContent } from "@/shared/components/ui/sheet";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/shared/components/ui/table";
 
-import { useMyProjectRolesApplications } from "../../hooks/use-project-role-application.hook";
+import {
+  useCancelApplication,
+  useMyProjectRolesApplications,
+} from "../../hooks/use-project-role-application.hook";
 import { ProjectRoleApplicationType } from "../../types/project-role-application.type";
-import { MyApplicationsCard } from "./my-application-card";
-import { MyApplicationDetails } from "./my-application-details";
-
-const STATUS_TABS = [
-  { label: "Toutes", value: "ALL" },
-  { label: "En attente", value: "PENDING" },
-  { label: "Acceptée", value: "ACCEPTED" },
-  { label: "Refusée", value: "REJECTED" },
-  { label: "Annulée", value: "CANCELLED" },
-] as const;
 
 function ApplicationSkeleton() {
   return (
-    <div className="w-full rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7">
-      <div className="flex items-center gap-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <div className="space-y-2">
+    <TableRow>
+      <TableCell>
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-10 w-10 rounded-full" />
           <Skeleton className="h-4 w-[200px]" />
-          <Skeleton className="h-4 w-[150px]" />
         </div>
-      </div>
-    </div>
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-[100px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-[80px]" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-[100px]" />
+      </TableCell>
+    </TableRow>
   );
 }
 
 export function MyApplicationsList() {
   const { data: applications, isLoading } = useMyProjectRolesApplications();
-  const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
-  const [selectedApplication, setSelectedApplication] =
-    useState<ProjectRoleApplicationType | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const { cancelApplication, isCanceling } = useCancelApplication();
+  const router = useRouter();
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    application: ProjectRoleApplicationType | null;
+  }>({
+    open: false,
+    application: null,
+  });
 
-  const filteredApplications = useMemo(() => {
-    if (!applications) return [];
-
-    return selectedStatus === "ALL"
-      ? applications
-      : applications.filter(
-          (application: ProjectRoleApplicationType) =>
-            application.status === selectedStatus
-        );
-  }, [applications, selectedStatus]);
-
-  useEffect(() => {
-    if (filteredApplications.length > 0) {
-      setSelectedApplication(filteredApplications[0]);
-    } else {
-      setSelectedApplication(null);
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "PENDING":
+        return "En attente";
+      case "ACCEPTED":
+        return "Acceptée";
+      case "REJECTED":
+        return "Refusée";
+      case "CANCELLED":
+        return "Annulée";
+      default:
+        return status;
     }
-  }, [selectedStatus, filteredApplications]);
+  };
+
+  const handleCancelApplication = (application: ProjectRoleApplicationType) => {
+    setConfirmDialog({
+      open: true,
+      application,
+    });
+  };
+
+  const handleConfirmCancel = () => {
+    if (confirmDialog.application) {
+      cancelApplication(confirmDialog.application.applicationId);
+      setConfirmDialog({
+        open: false,
+        application: null,
+      });
+    }
+  };
+
+  const handleCancelDialog = () => {
+    setConfirmDialog({
+      open: false,
+      application: null,
+    });
+  };
 
   const handleApplicationClick = (application: ProjectRoleApplicationType) => {
-    setSelectedApplication(application);
-    if (window.innerWidth < 640) {
-      setIsDetailsOpen(true);
-    }
+    router.push(`/dashboard/my-applications/${application.applicationId}`);
   };
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <ApplicationSkeleton />
-        <ApplicationSkeleton />
-        <ApplicationSkeleton />
+      <div>
+        <Table>
+          <TableBody>
+            <ApplicationSkeleton />
+            <ApplicationSkeleton />
+            <ApplicationSkeleton />
+          </TableBody>
+        </Table>
       </div>
     );
   }
@@ -88,59 +125,107 @@ export function MyApplicationsList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
-        {STATUS_TABS.map((tab) => (
-          <Button
-            key={tab.value}
-            onClick={() => setSelectedStatus(tab.value)}
-            variant={selectedStatus === tab.value ? "default" : "outline"}
-            size="sm"
-          >
-            {tab.label}
-          </Button>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-8 md:flex-row">
-        <div className="w-full space-y-4 md:w-[40%]">
-          {filteredApplications.length === 0 ? (
-            <EmptyState
-              title="Aucune candidature pour ce statut"
-              description="Vous n'avez pas de candidatures correspondant à ce filtre."
-            />
-          ) : (
-            filteredApplications.map(
-              (application: ProjectRoleApplicationType) => (
-                <MyApplicationsCard
+      {applications.length === 0 ? (
+        <EmptyState
+          title="Aucune candidature pour ce statut"
+          description="Vous n'avez pas de candidatures correspondant à ce filtre."
+        />
+      ) : (
+        <div>
+          <Table>
+            <TableBody>
+              {applications.map((application: ProjectRoleApplicationType) => (
+                <TableRow
                   key={application.applicationId}
-                  application={application}
                   onClick={() => handleApplicationClick(application)}
-                  isSelected={
-                    selectedApplication?.applicationId ===
-                    application.applicationId
-                  }
-                />
-              )
-            )
-          )}
+                >
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar
+                        src={application.project.image}
+                        name={application.project.title}
+                        alt={application.project.title}
+                        size="md"
+                      />
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium">
+                            {application.project.title}
+                          </h4>
+                        </div>
+                      </div>
+                    </div>
+                  </TableCell>
+
+                  <TableCell>
+                    <span className="text-sm font-medium">
+                      {application.projectRoleTitle}
+                    </span>
+                  </TableCell>
+
+                  <TableCell>
+                    <BadgeWithIcon
+                      variant={
+                        application.status === "ACCEPTED"
+                          ? "success"
+                          : application.status === "REJECTED"
+                            ? "danger"
+                            : application.status === "CANCELLED"
+                              ? "default"
+                              : "info"
+                      }
+                      className="text-xs"
+                    >
+                      {getStatusText(application.status)}
+                    </BadgeWithIcon>
+                  </TableCell>
+
+                  <TableCell>
+                    <span className="text-sm font-medium">
+                      {new Date(application.appliedAt).toLocaleDateString(
+                        "fr-FR"
+                      )}
+                    </span>
+                  </TableCell>
+
+                  <TableCell>
+                    {application.status === "PENDING" && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCancelApplication(application);
+                        }}
+                        disabled={isCanceling}
+                      >
+                        <HiXMark size={16} />
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
+      )}
 
-        {selectedApplication && (
-          <div className="hidden w-[60%] md:block">
-            <MyApplicationDetails application={selectedApplication} />
-          </div>
-        )}
-
-        <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <SheetContent side="bottom" className="h-[85vh] p-0">
-            <div className="h-full overflow-y-auto px-6 pt-12 pb-6">
-              {selectedApplication && (
-                <MyApplicationDetails application={selectedApplication} />
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onOpenChange={(open) => setConfirmDialog((prev) => ({ ...prev, open }))}
+        title="Annuler la candidature"
+        description={
+          confirmDialog.application
+            ? `Êtes-vous sûr de vouloir annuler votre candidature pour le poste "${confirmDialog.application.projectRoleTitle}" du projet "${confirmDialog.application.project.title}" ? Cette action est irréversible.`
+            : ""
+        }
+        isLoading={isCanceling}
+        onConfirm={handleConfirmCancel}
+        onCancel={handleCancelDialog}
+        confirmText="Annuler candidature"
+        confirmVariant="destructive"
+        confirmIcon="trash"
+      />
     </div>
   );
 }

@@ -62,16 +62,17 @@ export default function MyProjectsList() {
                         Aucun candidat
                       </span>
                     ) : (
-                      <>
+                      <div className="flex items-center">
                         <span className="bg-ost-blue-three mr-1.5 inline-block size-2 rounded-full" />
                         <span className="mr-1 text-sm font-medium">
                           {project.applications.length}
                         </span>
-                        <span className="text-muted-foreground text-sm">
-                          Nouveau candidat
-                          {project.applications.length > 1 ? "s" : ""}
+                        <span className="text-muted-foreground text-sm text-nowrap">
+                          {project.applications.length > 1
+                            ? "Nouveaux candidats"
+                            : "Nouveau candidat"}
                         </span>
-                      </>
+                      </div>
                     )}
                   </div>
                 </TableCell>
@@ -79,7 +80,7 @@ export default function MyProjectsList() {
                 <TableCell>
                   <div className="flex items-center">
                     {project.teamMembers.length === 0 ? (
-                      <span className="text-muted-foreground text-sm">
+                      <span className="text-muted-foreground text-sm text-nowrap">
                         Aucun membre
                       </span>
                     ) : (

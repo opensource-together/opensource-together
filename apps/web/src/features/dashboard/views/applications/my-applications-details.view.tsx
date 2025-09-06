@@ -7,29 +7,75 @@ import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Separator } from "@/shared/components/ui/separator";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { getStatusText } from "@/shared/lib/utils/status";
 
-import { ApplicationType } from "../../types/my-projects.type";
+import { useMyProjectRolesApplications } from "../../hooks/use-project-role-application.hook";
 
-interface UserApplicationDetailsProps {
-  application: ApplicationType;
+interface MyApplicationsDetailsViewProps {
+  applicationId: string;
 }
 
-export default function UserApplicationDetails({
-  application,
-}: UserApplicationDetailsProps) {
+export default function MyApplicationsDetailsView({
+  applicationId,
+}: MyApplicationsDetailsViewProps) {
+  const { data: applications, isLoading } = useMyProjectRolesApplications();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-16 w-16 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <Skeleton className="h-10 w-24" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!applications) {
+    return (
+      <EmptyState
+        title="Erreur de chargement"
+        description="Impossible de charger vos candidatures."
+      />
+    );
+  }
+
+  const application = applications.find(
+    (app) => app.applicationId === applicationId
+  );
+
+  if (!application) {
+    return (
+      <EmptyState
+        title="Candidature introuvable"
+        description="Cette candidature n'existe pas ou vous n'y avez pas accès."
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Avatar
-          src={application.applicant.avatarUrl}
-          name={application.applicant.name}
-          alt={application.applicant.name}
-          size="2xl"
+          src={application.project.image}
+          name={application.project.title}
+          alt={application.project.title}
+          size="xl"
         />
         <div className="flex-1">
-          <h1 className="text-2xl font-medium">{application.applicant.name}</h1>
+          <h1 className="text-2xl font-medium">{application.project.title}</h1>
           <div className="mt-1">
             <BadgeWithIcon
               variant={
@@ -47,9 +93,9 @@ export default function UserApplicationDetails({
             </BadgeWithIcon>
           </div>
         </div>
-        <Link href={`/profile/${application.applicant.id}`}>
+        <Link href={`/projects/${application.project.id}`}>
           <Button>
-            Voir le profil
+            Voir projet
             <HiArrowUpRight className="size-3" />
           </Button>
         </Link>
@@ -104,10 +150,14 @@ export default function UserApplicationDetails({
 
       <Separator className="my-8" />
 
-      <span className="text-sm font-medium">Nom du rôle</span>
-      <p className="text-muted-foreground mt-2.5">
-        {application.projectRole.title}
-      </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-sm font-medium">Nom du rôle</span>
+          <p className="text-muted-foreground mt-2.5">
+            {application.projectRoleTitle}
+          </p>
+        </div>
+      </div>
 
       {application.projectRole.description && (
         <>
@@ -147,6 +197,20 @@ export default function UserApplicationDetails({
           </div>
         </div>
       )}
+
+      <Separator className="my-8" />
+
+      <div className="text-muted-foreground text-xs">
+        Candidature envoyée le{" "}
+        {new Date(application.appliedAt).toLocaleDateString("fr-FR")}
+        {application.decidedAt && (
+          <span>
+            {" "}
+            • Décision prise le{" "}
+            {new Date(application.decidedAt).toLocaleDateString("fr-FR")}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

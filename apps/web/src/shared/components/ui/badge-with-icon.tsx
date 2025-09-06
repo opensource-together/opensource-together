@@ -15,6 +15,8 @@ const badgeWithIconVariants = cva(
         info: "border-transparent text-ost-blue-three bg-ost-blue-three/10 [a&]:hover:bg-ost-blue-three/20",
         danger:
           "border-transparent text-destructive bg-destructive/10 [a&]:hover:bg-destructive/20",
+        default:
+          "border-transparent text-muted-foreground bg-muted-foreground/10 [a&]:hover:bg-muted-foreground/20",
       },
     },
     defaultVariants: {

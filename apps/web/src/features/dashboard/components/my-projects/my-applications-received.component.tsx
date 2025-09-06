@@ -20,11 +20,6 @@ interface MyApplicationsReceivedProps {
   applications: ApplicationType[];
   isLoading?: boolean;
   projectId: string;
-  onApplicationDecision?: (
-    applicationId: string,
-    decision: "ACCEPTED" | "REJECTED",
-    reason?: string
-  ) => void;
 }
 
 export default function MyApplicationsReceived({
@@ -89,9 +84,10 @@ export default function MyApplicationsReceived({
                       ? "success"
                       : application.status === "REJECTED"
                         ? "danger"
-                        : "info"
+                        : application.status === "CANCELLED"
+                          ? "default"
+                          : "info"
                   }
-                  key={application.applicant.id}
                   className="text-xs"
                 >
                   {getStatusText(application.status)}
