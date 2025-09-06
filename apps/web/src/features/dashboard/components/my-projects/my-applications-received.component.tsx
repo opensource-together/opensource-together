@@ -33,7 +33,6 @@ export default function MyApplicationsReceived({
   projectId,
 }: MyApplicationsReceivedProps) {
   const router = useRouter();
-
   if (isLoading) {
     return <MyApplicationsReceivedSkeleton />;
   }
@@ -47,17 +46,18 @@ export default function MyApplicationsReceived({
     );
   }
 
-  const handleApplicationSelect = (application: ApplicationType) => {
-    router.push(`/dashboard/my-projects/${projectId}/${application.id}`);
-  };
-
   return (
     <Table>
       <TableBody>
         {applications.map((application) => (
           <TableRow
             key={application.id}
-            onClick={() => handleApplicationSelect(application)}
+            onClick={() =>
+              router.push(
+                `/dashboard/my-projects/${projectId}/${application.id}`
+              )
+            }
+            className="hover:bg-muted/50 active:bg-muted/70 cursor-pointer transition-colors duration-200"
           >
             <TableCell>
               <div className="flex items-center gap-3">

@@ -16,7 +16,12 @@ export default function MyProjectsView() {
         icon={<HiMiniSquare2Stack size={16} />}
         description="Organisez, modifiez, gérez les membres et administrez vos projets — tout en un seul endroit."
       />
-      <DashboardCtaComponent />
+      <DashboardCtaComponent
+        title="Construisez OpenSource Together"
+        description="Lancez un nouveau projet, importez un repository Github ou commencez de zéro."
+        buttonText="Créer un projet"
+        buttonLink="/projects/create"
+      />
 
       <Separator className="my-10" />
 

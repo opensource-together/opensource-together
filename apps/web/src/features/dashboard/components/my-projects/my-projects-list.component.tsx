@@ -63,7 +63,7 @@ export default function MyProjectsList() {
                       </span>
                     ) : (
                       <>
-                        <span className="bg-ost-blue-three mr-1 inline-block size-2 rounded-full" />
+                        <span className="bg-ost-blue-three mr-1.5 inline-block size-2 rounded-full" />
                         <span className="mr-1 text-sm font-medium">
                           {project.applications.length}
                         </span>
