@@ -4,37 +4,13 @@ import FilterSearchBar from "./filter-search-bar.component";
 
 export default function ProjectDiscoveryHero() {
   return (
-    <div className="relative mx-5 min-h-[266px] w-full max-w-[3000px] overflow-hidden">
+    <div className="relative mx-auto w-full">
       <Image
-        src="/illustrations/bible-left-2.png"
+        src="/illustrations/bible.png"
         alt="Bible gauche"
-        width={758}
-        height={533}
-        className="pointer-events-none absolute top-[-150px] left-[-165px] z-0 hidden md:block"
-      />
-      <Image
-        src="/illustrations/bible-right-2.png"
-        alt="Bible droite"
-        width={705}
-        height={840}
-        className="pointer-events-none absolute top-[-150px] right-[-165px] z-0 hidden md:block"
-        style={{ transform: "rotate(8deg)" }}
-      />
-
-      <Image
-        src="/illustrations/bible-left-2.png"
-        alt="Bible gauche"
-        width={400}
-        height={200}
-        className="pointer-events-none absolute top-[-50px] left-[-100px] z-0 md:hidden"
-      />
-      <Image
-        src="/illustrations/bible-right-2.png"
-        alt="Bible droite"
-        width={400}
-        height={200}
-        className="pointer-events-none absolute top-[-50px] right-[-100px] z-0 md:hidden"
-        style={{ transform: "rotate(8deg)" }}
+        width={1200}
+        height={1000}
+        className="absolute bottom-52 z-0 object-contain sm:bottom-6 sm:h-full sm:w-[105%]"
       />
 
       <div className="relative z-10 mx-auto mb-5 flex min-h-[266px] w-full max-w-[1094px] flex-col items-center justify-center">

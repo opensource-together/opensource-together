@@ -8,12 +8,14 @@ import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Contributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
   isMaintainer?: boolean;
+  isAuthLoading?: boolean;
 }
 
 const externalLinksConfig = [
@@ -27,6 +29,7 @@ const externalLinksConfig = [
 export default function ProjectSideBar({
   project,
   isMaintainer = false,
+  isAuthLoading = false,
 }: ProjectSideBarProps) {
   const router = useRouter();
   const {
@@ -114,6 +117,8 @@ export default function ProjectSideBar({
             Modifier
             <Icon name="pencil" size="xs" variant="white" />
           </Button>
+        ) : isAuthLoading ? (
+          <Skeleton className="h-10 w-48 rounded-full" />
         ) : (
           <Button size="lg">Rejoindre le projet</Button>
         )}
