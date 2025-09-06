@@ -17,12 +17,12 @@ export default function HomepageView() {
   if (isError || !projects) return <HomepageError />;
 
   return (
-    <div className="mx-6 max-w-6xl space-y-4 md:space-y-5 lg:mx-auto">
+    <div className="mx-6 max-w-6xl lg:mx-auto">
       <div className="mt-8 flex flex-col items-center">
         <ProjectDiscoveryHero />
       </div>
 
-      <div className="py-4 md:py-8">
+      <div className="pb-4 md:pb-8">
         {projects.length === 0 ? (
           <EmptyState
             title="Aucun Projet Disponible"
@@ -32,9 +32,11 @@ export default function HomepageView() {
         ) : (
           <>
             <ProjectGrid projects={projects} />
-            <div className="mt-25 mb-50">
-              <PaginationNavigation />
-            </div>
+            {projects.length > 8 && (
+              <div className="mt-8.5 mb-50">
+                <PaginationNavigation />
+              </div>
+            )}
           </>
         )}
       </div>
