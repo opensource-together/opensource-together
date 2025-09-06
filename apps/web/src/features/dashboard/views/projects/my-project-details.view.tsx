@@ -14,7 +14,7 @@ export default function MyProjectDetailsView({
   projectId,
 }: MyProjectDetailsViewProps) {
   const { data: project, isLoading } = useMyProjectDetails(projectId);
-  const { currentUser } = useAuth();
+  const { currentUser, isLoading: isAuthLoading } = useAuth();
 
   if (isLoading) return <div>Loading...</div>;
   if (!project) return <div>Project not found</div>;
@@ -29,6 +29,7 @@ export default function MyProjectDetailsView({
         teamMembers={project.teamMembers}
         projectOwnerId={project.owner.id}
         currentUserId={currentUser?.id}
+        isAuthLoading={isAuthLoading}
       />
     </div>
   );

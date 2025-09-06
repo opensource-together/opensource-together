@@ -15,6 +15,7 @@ interface MyProjectTabsProps {
   isLoading?: boolean;
   projectOwnerId?: string;
   currentUserId?: string;
+  isAuthLoading?: boolean;
   projectOwner?: {
     id: string;
     username: string;
@@ -32,12 +33,17 @@ export default function MyProjectTabs({
   isLoading = false,
   projectOwnerId,
   currentUserId,
+  isAuthLoading = false,
   projectOwner,
 }: MyProjectTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("applications");
 
   const canViewApplications =
     projectOwnerId && currentUserId && projectOwnerId === currentUserId;
+
+  // Ne pas désactiver l'onglet pendant le chargement de l'auth
+  const isAuthDataReady = !isAuthLoading && projectOwnerId && currentUserId;
+  const shouldDisableApplications = isAuthDataReady && !canViewApplications;
 
   const allTeamMembers = useMemo(() => {
     if (!projectOwner || !projectOwnerId) return teamMembers;
@@ -64,7 +70,7 @@ export default function MyProjectTabs({
       id: "applications" as TabType,
       label: "Candidatures",
       count: applications.length,
-      disabled: !canViewApplications,
+      disabled: shouldDisableApplications,
     },
     {
       id: "members" as TabType,
@@ -75,10 +81,10 @@ export default function MyProjectTabs({
   ];
 
   useEffect(() => {
-    if (!canViewApplications && activeTab === "applications") {
+    if (shouldDisableApplications && activeTab === "applications") {
       setActiveTab("members");
     }
-  }, [canViewApplications, activeTab]);
+  }, [shouldDisableApplications, activeTab]);
 
   return (
     <div className="sticky top-0 z-10">
@@ -87,7 +93,7 @@ export default function MyProjectTabs({
           <button
             key={tab.id}
             onClick={() => !tab.disabled && setActiveTab(tab.id)}
-            disabled={tab.disabled}
+            disabled={!!tab.disabled}
             className={`relative px-4 py-3 text-sm font-medium transition-colors ${
               tab.disabled
                 ? "cursor-not-allowed text-black/30"
