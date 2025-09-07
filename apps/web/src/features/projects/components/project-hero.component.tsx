@@ -198,7 +198,11 @@ export default function ProjectHero({
       )}
 
       {project.readme && (
-        <ProjectReadme readme={project.readme} projectTitle={title} />
+        <ProjectReadme
+          readme={project.readme}
+          projectTitle={title}
+          project={project}
+        />
       )}
 
       <div className="mt-10 w-full max-w-[629px]">

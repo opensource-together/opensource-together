@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { GoArrowUpRight } from "react-icons/go";
+import { RxCross2 } from "react-icons/rx";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
+import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 import {
   Sheet,
@@ -18,11 +20,15 @@ import {
 interface ProjectReadmeProps {
   readme: string;
   projectTitle: string;
+  project: {
+    externalLinks?: { type: string; url: string }[];
+  };
 }
 
 export default function ProjectReadme({
   readme,
   projectTitle,
+  project,
 }: ProjectReadmeProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -144,94 +150,144 @@ export default function ProjectReadme({
       <SheetContent
         responsive
         responsiveWidth={{ desktop: "w-[600px]" }}
-        className="overflow-y-auto"
+        className="mt-4 mr-4 h-[97vh] overflow-y-auto rounded-[22px]"
       >
-        <SheetHeader>
-          <SheetTitle className="sticky top-0 border-b border-black/10 pb-4 text-left font-medium">
-            README - {projectTitle}
-          </SheetTitle>
-        </SheetHeader>
-        <div className="mt-6 max-w-none text-sm leading-relaxed">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
-            components={{
-              h1: ({ children }) => (
-                <h1 className="mb-4 text-2xl font-bold">{children}</h1>
-              ),
-              h2: ({ children }) => (
-                <h2 className="mt-6 mb-3 text-xl font-semibold">{children}</h2>
-              ),
-              h3: ({ children }) => (
-                <h3 className="mt-4 mb-2 text-lg font-medium">{children}</h3>
-              ),
-              p: ({ children }) => (
-                <p className="mb-3 leading-relaxed">{children}</p>
-              ),
-              ul: ({ children }) => (
-                <ul className="mb-3 list-disc space-y-1 pl-6">{children}</ul>
-              ),
-              ol: ({ children }) => (
-                <ol className="mb-3 list-decimal space-y-1 pl-6">{children}</ol>
-              ),
-              li: ({ children }) => (
-                <li className="leading-relaxed">{children}</li>
-              ),
-              code: ({ children }) => (
-                <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-sm">
-                  {children}
-                </code>
-              ),
-              pre: ({ children }) => (
-                <pre className="mb-3 overflow-x-auto rounded-lg bg-gray-100 p-4">
-                  {children}
-                </pre>
-              ),
-              blockquote: ({ children }) => (
-                <blockquote className="mb-3 border-l-4 border-gray-300 pl-4 italic">
-                  {children}
-                </blockquote>
-              ),
-              a: ({ children, href }) => (
-                <a
-                  href={href}
-                  className="text-blue-600 underline hover:text-blue-800"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {children}
-                </a>
-              ),
-              img: ({ src, alt, width, height }) => (
-                <img
-                  src={src}
-                  alt={alt}
-                  width={width}
-                  height={height}
-                  className="my-3 h-auto max-w-full rounded"
-                />
-              ),
-              table: ({ children }) => (
-                <div className="mb-3 overflow-x-auto">
-                  <table className="min-w-full border-collapse border border-gray-300">
-                    {children}
-                  </table>
+        <div className="flex h-full flex-col">
+          <SheetHeader className="sticky top-0 z-50 bg-white">
+            <div className="-mx-6">
+              <div className="px-6 pb-4">
+                <div className="flex items-center justify-between">
+                  <SheetTitle className="text-left font-medium">
+                    README - {projectTitle}
+                  </SheetTitle>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-[10px] w-[10px]"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <RxCross2 className="size-[10px]" />
+                  </Button>
                 </div>
-              ),
-              th: ({ children }) => (
-                <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-medium">
-                  {children}
-                </th>
-              ),
-              td: ({ children }) => (
-                <td className="border border-gray-300 px-3 py-2 text-sm">
-                  {children}
-                </td>
-              ),
-            }}
-          >
-            {readme}
-          </ReactMarkdown>
+              </div>
+              <div className="border-b border-black/10" />
+            </div>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto">
+            <div className="mt-6 max-w-none text-sm leading-relaxed">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="mb-4 text-2xl font-bold">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="mt-6 mb-3 text-xl font-semibold">
+                      {children}
+                    </h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="mt-4 mb-2 text-lg font-medium">
+                      {children}
+                    </h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="mb-3 leading-relaxed">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="mb-3 list-disc space-y-1 pl-6">
+                      {children}
+                    </ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="mb-3 list-decimal space-y-1 pl-6">
+                      {children}
+                    </ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="leading-relaxed">{children}</li>
+                  ),
+                  code: ({ children }) => (
+                    <code className="rounded bg-gray-100 px-1 py-0.5 font-mono text-sm">
+                      {children}
+                    </code>
+                  ),
+                  pre: ({ children }) => (
+                    <pre className="mb-3 overflow-x-auto rounded-lg bg-gray-100 p-4">
+                      {children}
+                    </pre>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="mb-3 border-l-4 border-gray-300 pl-4 italic">
+                      {children}
+                    </blockquote>
+                  ),
+                  a: ({ children, href }) => (
+                    <a
+                      href={href}
+                      className="text-blue-600 underline hover:text-blue-800"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  img: ({ src, alt, width, height }) => (
+                    <img
+                      src={src}
+                      alt={alt}
+                      width={width}
+                      height={height}
+                      className="my-3 h-auto max-w-full rounded"
+                    />
+                  ),
+                  table: ({ children }) => (
+                    <div className="mb-3 overflow-x-auto">
+                      <table className="min-w-full border-collapse border border-gray-300">
+                        {children}
+                      </table>
+                    </div>
+                  ),
+                  th: ({ children }) => (
+                    <th className="border border-gray-300 bg-gray-100 px-3 py-2 text-left text-sm font-medium">
+                      {children}
+                    </th>
+                  ),
+                  td: ({ children }) => (
+                    <td className="border border-gray-300 px-3 py-2 text-sm">
+                      {children}
+                    </td>
+                  ),
+                }}
+              >
+                {readme}
+              </ReactMarkdown>
+            </div>
+          </div>
+          <div className="sticky bottom-0 z-50 bg-white">
+            <div className="-mx-6">
+              <div className="border-t border-black/10" />
+              <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                <Button variant="secondary" onClick={() => setIsOpen(false)}>
+                  Retour
+                </Button>
+                <Button variant="default" asChild>
+                  <a
+                    href={
+                      project?.externalLinks?.find(
+                        (link) => link.type === "github"
+                      )?.url || "#"
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Voir sur GitHub
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
