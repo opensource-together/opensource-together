@@ -88,7 +88,7 @@ export function Combobox({
             <Badge
               key={option.id}
               variant="secondary"
-              className="flex items-center gap-1 bg-gray-100 pr-1 text-sm font-normal"
+              className="flex items-center gap-1 border border-black/5 bg-white pr-1 text-sm font-normal"
             >
               {option.name}
               <button
