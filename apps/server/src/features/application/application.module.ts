@@ -6,8 +6,9 @@ import { APPLICATION_REPOSITORY } from './repositories/application.repository.in
 import { PrismaApplicationRepository } from './repositories/prisma.application.repository';
 import { PrismaModule } from 'prisma/prisma.module';
 import { ProjectModule } from '../project/project.module';
+import { ProjectRoleModule } from '../project-role/project-role.module';
 @Module({
-  imports: [PrismaModule, UserModule, ProjectModule],
+  imports: [PrismaModule, UserModule, ProjectModule, ProjectRoleModule],
   controllers: [ApplicationController],
   providers: [
     ApplicationService,

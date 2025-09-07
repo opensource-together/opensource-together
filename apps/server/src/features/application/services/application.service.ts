@@ -7,6 +7,8 @@ import {
   ProjectRepository,
 } from '@/features/project/repositories/project.repository.interface';
 import { ApplicationProjectRole } from '../domain/application';
+import { ProjectRoleService } from '@/features/project-role/services/project-role.service';
+import { ProjectRole } from '@/features/project-role/domain/project-role';
 
 @Injectable()
 export class ApplicationService {
@@ -15,6 +17,7 @@ export class ApplicationService {
     private readonly applicationRepository: ApplicationRepository,
     @Inject(PROJECT_REPOSITORY)
     private readonly projectRepository: ProjectRepository,
+    private readonly projectRoleService: ProjectRoleService,
   ) {}
   async applyToProjectRole(props: {
     userId: string;
@@ -23,6 +26,17 @@ export class ApplicationService {
     motivationLetter: string;
   }): Promise<Result<ApplicationProjectRole, string>> {
     const { userId, projectRoleId, projectId, motivationLetter } = props;
+
+    const projectRole =
+      await this.projectRoleService.getProjectRole(projectRoleId);
+    if (!projectRole.success) {
+      return Result.fail('PROJECT_ROLE_NOT_FOUND');
+    }
+
+    if ((projectRole.value as ProjectRole).projectId !== projectId) {
+      return Result.fail('PROJECT_ROLE_DOES_NOT_BELONG_TO_PROJECT');
+    }
+
     const existingApplication =
       await this.applicationRepository.existsStatusApplication(
         userId,
