@@ -43,9 +43,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     <div className="flex flex-1 flex-col gap-5">
       {shouldShowStats && (
         <div className="mb-2 flex flex-col">
-          <h2 className="text-primary mb-1 text-sm font-normal">
-            Statistiques GitHub
-          </h2>
+          <h2 className="mb-4 text-sm">Statistiques GitHub</h2>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
@@ -110,7 +108,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       )}
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-primary mb-2 text-sm font-normal">Technologies</h2>
+        <h2 className="mb-4 text-sm">Technologies</h2>
         {techStacks.length > 0 ? (
           <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
             {techStacks.map((tech, index) => (
@@ -128,9 +126,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-primary mb-4 text-sm font-normal">
-          Liens externes
-        </h2>
+        <h2 className="mb-4 text-sm">Liens externes</h2>
         <div className="flex flex-col gap-6">
           {socialLinksConfig.map((config) => {
             const url = socialLinks[config.key as keyof typeof socialLinks];

@@ -37,12 +37,7 @@ export default function ProfileSidebarEditForm({
             name="techStacks"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  className="text-primary mb-0 text-sm font-medium"
-                  required
-                >
-                  Technologies (max 10)
-                </FormLabel>
+                <FormLabel required>Technologies (max 10)</FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}
@@ -65,9 +60,7 @@ export default function ProfileSidebarEditForm({
           />
 
           <div className="flex flex-col gap-2.5">
-            <FormLabel className="text-primary mt-[-10px] mb-0 text-sm font-medium">
-              Liens sociaux
-            </FormLabel>
+            <FormLabel>Liens sociaux</FormLabel>
 
             <FormField
               control={control}

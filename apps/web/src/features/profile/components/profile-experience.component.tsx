@@ -35,9 +35,7 @@ export default function ProfileExperience() {
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div className="mb-0 flex flex-col">
-        <h2 className="text-primary mb-1 text-lg text-sm font-normal">
-          Experiences
-        </h2>
+        <h2 className="mb-4 text-sm">Experiences</h2>
       </div>
 
       <div className="mb-0 flex flex-col">

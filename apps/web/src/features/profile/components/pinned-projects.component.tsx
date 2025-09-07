@@ -24,8 +24,10 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
 
   return (
     <div className="flex w-full flex-col gap-[25px]">
-      <h2 className="mb-4.5 gap-1 text-left text-sm font-normal text-neutral-500">
-        <span className="text-primary">{joinedProjects.length}</span>{" "}
+      <h2 className="text-muted-foreground text-sm">
+        <span className="text-primary font-medium">
+          {joinedProjects.length}
+        </span>{" "}
         {joinedProjects.length === 1
           ? "Projet Rejoint"
           : "Projets Rejoints"}{" "}

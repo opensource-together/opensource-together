@@ -88,10 +88,15 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="text-primary h-10 w-full justify-between rounded-md border-gray-300 bg-white text-sm font-normal"
+            className="text-primary border-input h-10 w-full justify-between rounded-md bg-white text-sm font-normal"
             disabled={disabled}
           >
-            <span className="text-muted-foreground truncate">
+            <span
+              className={cn(
+                "truncate",
+                selectedOptions.length === 0 && "text-muted-foreground"
+              )}
+            >
               {selectedOptions.length > 0
                 ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
                 : placeholder}
@@ -222,7 +227,7 @@ export function Combobox({
               <button
                 type="button"
                 onClick={() => handleRemove(option.id)}
-                className="flex size-4 cursor-pointer items-center justify-center rounded-full hover:bg-gray-50"
+                className="flex size-4 cursor-pointer items-center justify-center rounded-full"
                 disabled={disabled}
               >
                 <Icon name="cross" size="xxs" />

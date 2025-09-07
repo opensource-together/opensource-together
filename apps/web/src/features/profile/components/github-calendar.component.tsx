@@ -100,9 +100,7 @@ export default function GithubCalendar({
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div>
-        <h3 className="text-primary mb-2.5 text-sm font-normal">
-          Activité de contribution Github
-        </h3>
+        <h2 className="mb-4 text-sm">Activité de contribution Github</h2>
 
         <div className="relative">
           <div className="mb-0.5 flex pr-2.5">

@@ -91,9 +91,7 @@ export default function ProfileEditMainForm({
             name="avatarUrl"
             render={() => (
               <FormItem>
-                <FormLabel className="text-primary text-sm font-medium">
-                  Choisir un avatar
-                </FormLabel>
+                <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
                     onFileSelect={onImageSelect}
@@ -116,9 +114,7 @@ export default function ProfileEditMainForm({
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-medium">
-                  Nom
-                </FormLabel>
+                <FormLabel>Nom</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -136,9 +132,7 @@ export default function ProfileEditMainForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-medium">
-                  Titre
-                </FormLabel>
+                <FormLabel>Titre</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -156,9 +150,7 @@ export default function ProfileEditMainForm({
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-medium">
-                  Description
-                </FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
@@ -180,9 +172,7 @@ export default function ProfileEditMainForm({
             name="experiences"
             render={() => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-medium">
-                  Expériences
-                </FormLabel>
+                <FormLabel>Expériences</FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">

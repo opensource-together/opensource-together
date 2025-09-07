@@ -104,7 +104,7 @@ function FormLabel({
       required={required}
       tooltip={tooltip}
       data-error={!!error}
-      className={cn("mb-2", className)}
+      className={cn("text-sm", className)}
       htmlFor={formItemId}
       {...props}
     />
