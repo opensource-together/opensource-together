@@ -1,9 +1,9 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function FindAllProjectsDocs() {
   return applyDecorators(
-    ApiOperation({ summary: 'Récupérer tous les projets' }),
+    ApiOperation({ summary: 'Get all projects' }),
     ApiResponse({
       status: 200,
       description: 'Liste des projets',
@@ -86,7 +86,7 @@ export function FindAllProjectsDocs() {
               author: {
                 login: 'Lhourquin',
                 avatar_url:
-                'https://avatars.githubusercontent.com/u/45101981?v=4',
+                  'https://avatars.githubusercontent.com/u/45101981?v=4',
                 html_url: 'https://github.com/Lhourquin',
               },
             },
@@ -94,14 +94,14 @@ export function FindAllProjectsDocs() {
               {
                 login: 'Lhourquin',
                 avatar_url:
-                'https://avatars.githubusercontent.com/u/45101981?v=4',
+                  'https://avatars.githubusercontent.com/u/45101981?v=4',
                 html_url: 'https://github.com/Lhourquin',
                 contributions: 3,
               },
               {
                 login: 'Jyzdcs',
                 avatar_url:
-                'https://avatars.githubusercontent.com/u/123254210?v=4',
+                  'https://avatars.githubusercontent.com/u/123254210?v=4',
                 html_url: 'https://github.com/Jyzdcs',
                 contributions: 1,
               },
@@ -186,7 +186,7 @@ export function FindAllProjectsDocs() {
               author: {
                 login: 'Mac-Gyver',
                 avatar_url:
-                'https://avatars.githubusercontent.com/u/45101981?v=4',
+                  'https://avatars.githubusercontent.com/u/45101981?v=4',
                 html_url: 'https://github.com/Lhourquin',
               },
             },
@@ -194,14 +194,14 @@ export function FindAllProjectsDocs() {
               {
                 login: 'Mac-Gyver',
                 avatar_url:
-                'https://avatars.githubusercontent.com/u/123254210?v=4',
+                  'https://avatars.githubusercontent.com/u/123254210?v=4',
                 html_url: 'https://github.com/Mac-Gyver',
                 contributions: 3,
               },
               {
                 login: 'Jyzdcs',
                 avatar_url:
-                'https://avatars.githubusercontent.com/u/123254210?v=4',
+                  'https://avatars.githubusercontent.com/u/123254210?v=4',
                 html_url: 'https://github.com/Jyzdcs',
                 contributions: 1,
               },
@@ -210,6 +210,6 @@ export function FindAllProjectsDocs() {
         },
       ],
     }),
-    ApiResponse({ status: 500, description: 'Erreur serveur' }),
+    ApiResponse({ status: 500, description: 'Internal server error' }),
   );
 }

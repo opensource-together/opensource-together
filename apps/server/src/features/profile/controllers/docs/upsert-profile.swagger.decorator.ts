@@ -1,6 +1,6 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { UpsertProfileDto } from "../dto/upsert-profile.dto";
+import { applyDecorators } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { UpsertProfileDto } from '../dto/upsert-profile.dto';
 
 export function UpsertProfileDocs() {
   return applyDecorators(

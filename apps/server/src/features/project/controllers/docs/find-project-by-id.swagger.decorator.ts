@@ -1,12 +1,12 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function FindProjectByIdDocs() {
   return applyDecorators(
-    ApiOperation({ summary: 'Récupérer un projet par ID' }),
+    ApiOperation({ summary: 'Get a project by id' }),
     ApiResponse({
       status: 200,
-      description: 'Détails du projet',
+      description: "Project's detail",
       example: {
         id: 'e214183d-bf0a-4818-9050-17d4905de4e8',
         owner: {
@@ -26,7 +26,7 @@ export function FindProjectByIdDocs() {
             id: '2',
             name: 'Next.js',
             iconUrl:
-            'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+              'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
             type: 'TECH',
           },
         ],
@@ -34,13 +34,13 @@ export function FindProjectByIdDocs() {
           {
             id: 'e07b8ddb-7df8-451d-b8fb-141975e1f2ef',
             title: 'Frontend Developer',
-            description: 'Développeur React expérimenté',
+            description: 'Experienced react developer',
             techStacks: [
               {
                 id: '2',
                 name: 'Next.js',
                 iconUrl:
-                'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
                 type: 'TECH',
               },
             ],
@@ -62,14 +62,16 @@ export function FindProjectByIdDocs() {
             url: 'https://github.com/Lhourquin/test/commit/922ec728733c4a11b08bc99cfcc2d402f33f5484',
             author: {
               login: 'Lhourquin',
-              avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/45101981?v=4',
               html_url: 'https://github.com/Lhourquin',
             },
           },
           contributors: [
             {
               login: 'Lhourquin',
-              avatar_url: 'https://avatars.githubusercontent.com/u/45101981?v=4',
+              avatar_url:
+                'https://avatars.githubusercontent.com/u/45101981?v=4',
               html_url: 'https://github.com/Lhourquin',
               contributions: 2,
             },

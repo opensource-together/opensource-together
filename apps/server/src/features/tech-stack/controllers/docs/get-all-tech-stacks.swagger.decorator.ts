@@ -1,12 +1,12 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function GetAllTechstacksDocs() {
   return applyDecorators(
     ApiOperation({
       summary: 'Get all tech stacks',
       description:
-      'Returns the list of all tech stacks separated by type (languages and technologies)',
+        'Returns the list of all tech stacks separated by type (languages and technologies)',
     }),
     ApiResponse({
       status: 200,
@@ -24,7 +24,7 @@ export function GetAllTechstacksDocs() {
                 iconUrl: {
                   type: 'string',
                   example:
-                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+                    'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
                 },
                 type: { type: 'string', example: 'LANGUAGE' },
               },
@@ -40,7 +40,7 @@ export function GetAllTechstacksDocs() {
                 iconUrl: {
                   type: 'string',
                   example:
-                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+                    'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
                 },
                 type: { type: 'string', example: 'TECH' },
               },

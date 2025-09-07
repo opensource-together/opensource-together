@@ -1,6 +1,5 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-
+import { applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function GetAllCategoriesDocs() {
   return applyDecorators(
@@ -17,7 +16,7 @@ export function GetAllCategoriesDocs() {
           type: 'object',
           properties: {
             id: { type: 'string', example: '1' },
-            name: { type: 'string', example: 'Développement Web' },
+            name: { type: 'string', example: 'Web Development' },
           },
         },
       },
