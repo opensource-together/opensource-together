@@ -54,12 +54,12 @@ export default function RoleCard({
       onClick={handleCheckClick}
     >
       <div className="flex items-start justify-between">
-        <h3 className="text-lg font-medium tracking-tighter text-black">
+        <h3 className="font-medium tracking-tighter text-black md:text-lg">
           {role.title}
         </h3>
       </div>
 
-      <p className="mt-4 line-clamp-2 max-w-11/12 text-sm leading-snug">
+      <p className="mt-4 line-clamp-2 text-xs leading-snug md:max-w-11/12 md:text-sm">
         {description}
       </p>
 

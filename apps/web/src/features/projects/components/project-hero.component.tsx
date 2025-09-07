@@ -7,12 +7,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Project } from "../types/project.type";
 import ProjectReadme from "./project-readme.component";
 
-interface ProjectHeroProps {
-  project: Project;
-  hideHeader?: boolean;
-}
-
-export function ProjectHeroHeader({
+export function ProjectMobileHero({
   title,
   shortDescription,
   image,
@@ -22,8 +17,8 @@ export function ProjectHeroHeader({
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center gap-4">
-        <Avatar src={image} name={title} alt={title} size="xl" />
-        <h1 className="flex-1 text-start text-2xl font-medium">{title}</h1>
+        <Avatar src={image} name={title} alt={title} size="lg" />
+        <h1 className="flex-1 text-start text-xl font-medium">{title}</h1>
         <button className="flex h-[35px] min-w-[70px] items-center justify-center gap-1 rounded-full border border-black/5 text-sm font-medium">
           <span>{stars || 0}</span>
           <Icon name="star" size="sm" />
@@ -33,6 +28,10 @@ export function ProjectHeroHeader({
       <Separator className="mt-5" />
     </div>
   );
+}
+interface ProjectHeroProps {
+  project: Project;
+  hideHeader?: boolean;
 }
 
 export default function ProjectHero({
