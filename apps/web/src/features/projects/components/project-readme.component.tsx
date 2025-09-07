@@ -149,8 +149,8 @@ export default function ProjectReadme({
       </SheetTrigger>
       <SheetContent
         responsive
-        responsiveWidth={{ desktop: "w-[600px]" }}
-        className="mt-4 mr-4 h-[97vh] overflow-y-auto rounded-[22px]"
+        responsiveWidth={{ desktop: "w-[540px]" }}
+        className="mt-4 mr-4 overflow-y-auto rounded-t-[22px] md:h-[97vh] md:rounded-[22px]"
       >
         <div className="flex h-full flex-col">
           <SheetHeader className="sticky top-0 z-50 bg-white">
