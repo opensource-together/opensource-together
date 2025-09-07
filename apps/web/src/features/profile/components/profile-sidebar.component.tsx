@@ -110,7 +110,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       <div className="mb-2 flex flex-col">
         <h2 className="mb-4 text-sm">Technologies</h2>
         {techStacks.length > 0 ? (
-          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+          <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
             {techStacks.map((tech, index) => (
               <StackLogo
                 key={tech.id || index}
