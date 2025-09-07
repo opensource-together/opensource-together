@@ -43,10 +43,8 @@ export class PrismaProfileRepository implements ProfileRepository {
       });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        console.log('error', error);
         return Result.fail('Failed to upsert profile: ' + error.message);
       }
-      console.log('error', error);
       return Result.fail(
         'An unexpected error occurred while upserting profile',
       );
@@ -74,8 +72,6 @@ export class PrismaProfileRepository implements ProfileRepository {
         return Result.fail('Profile not found');
       }
 
-      console.log('profile', profile);
-
       return Result.ok({
         id: profile.id,
         name: profile.user.name,
@@ -92,10 +88,8 @@ export class PrismaProfileRepository implements ProfileRepository {
       });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        console.log('error', error);
         return Result.fail('Failed to retrieve profile: ' + error.message);
       }
-      console.log('error', error);
       return Result.fail(
         'An unexpected error occurred while retrieving profile',
       );
@@ -109,10 +103,8 @@ export class PrismaProfileRepository implements ProfileRepository {
       });
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        console.log('error', error);
         throw new Error('Failed to delete profile: ' + error.message);
       }
-      console.log('error', error);
       throw new Error('An unexpected error occurred while deleting profile');
     }
   }

@@ -8,8 +8,8 @@ import { Result } from '@/libs/result';
 //import { ContributionGraph } from '@/features/user/domain/github-stats.vo';
 
 @Injectable()
-export class GithubRepositoryService {
-  private readonly Logger = new Logger(GithubRepositoryService.name);
+export class GithubUserService {
+  private readonly Logger = new Logger(GithubUserService.name);
   constructor(
     @Inject(GITHUB_REPOSITORY)
     private readonly githubRepository: GithubRepository,
