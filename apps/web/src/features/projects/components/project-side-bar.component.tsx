@@ -110,7 +110,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-1 flex-col">
-        <h2 className="text-primary mb-1 text-sm font-normal">Détails</h2>
+        <h2 className="mb-4 text-sm">Détails</h2>
 
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
@@ -189,9 +189,9 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-primary mb-2 text-sm font-normal">Technologies</h2>
+        <h2 className="mb-4 text-sm">Technologies</h2>
         {techStacks.length > 0 && (
-          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+          <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
             {techStacks.map((tech, index) => (
               <StackLogo
                 key={index}
@@ -205,7 +205,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-primary mb-2 text-sm font-normal">Catégories</h2>
+        <h2 className="mb-4 text-sm">Catégories</h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
             <Badge
@@ -219,9 +219,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-primary mb-3 text-sm font-normal">
-          Contributeurs Principaux
-        </h2>
+        <h2 className="mb-4 text-sm">Contributeurs Principaux</h2>
 
         <div className="flex flex-col items-start">
           <div className="ml-3 flex gap-2">
@@ -256,9 +254,7 @@ export default function ProjectSideBar({
 
       {externalLinks.length > 0 && (
         <div className="mb-2 flex flex-col">
-          <h2 className="text-primary mb-4 text-sm font-normal">
-            Liens externes
-          </h2>
+          <h2 className="mb-4 text-sm">Liens externes</h2>
           <div className="flex flex-col gap-6">
             {externalLinksConfig.map((config) => {
               const link = externalLinks.find((l) =>

@@ -153,20 +153,25 @@ export default function CreateRoleForm({
         </form>
       </Form>
       <div className="sticky bottom-0 z-50 bg-white">
-        <div className="borde -mx-4.5 mt-16.5">
-          <div className="border-t border-black/10" />
-          <div className="flex items-center justify-end gap-4 px-6 pt-4">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setIsDialogOpen(false)}
-            >
-              Retour
-            </Button>
-            <Button type="submit" form="create-role-form" disabled={isCreating}>
-              {isCreating ? "Création..." : "Créer le rôle"}
-              <Icon name="plus" size="xs" variant="white" />
-            </Button>
+        <div className="-mx-4.5 mt-16.5">
+          <div className="border-t border-black/10">
+            <div className="flex items-center justify-end gap-4 px-6 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Retour
+              </Button>
+              <Button
+                type="submit"
+                form="create-role-form"
+                disabled={isCreating}
+              >
+                {isCreating ? "Création..." : "Créer le rôle"}
+                <Icon name="plus" size="xs" variant="white" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

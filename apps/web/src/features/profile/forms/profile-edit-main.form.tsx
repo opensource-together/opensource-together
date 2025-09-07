@@ -262,15 +262,21 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <div className="mt-10 flex w-full justify-end gap-2">
-            <Link href="/profile/me">
-              <Button variant="outline" disabled={isUpdating}>
-                Annuler
-              </Button>
-            </Link>
-            <Button type="submit" disabled={isUpdating}>
-              {isUpdating ? "Enregistrement..." : "Confirmer"}
-            </Button>
+          <div className="sticky bottom-0 z-50 bg-white">
+            <div className="-mx-4.5 mt-16.5">
+              <div className="border-t border-black/10">
+                <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                  <Link href="/profile/me">
+                    <Button variant="secondary" disabled={isUpdating}>
+                      Retour
+                    </Button>
+                  </Link>
+                  <Button type="submit" disabled={isUpdating}>
+                    {isUpdating ? "Enregistrement..." : "Confirmer"}
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </Form>

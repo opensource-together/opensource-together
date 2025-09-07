@@ -1,10 +1,6 @@
-import Image from "next/image";
-import { useState } from "react";
-import { IoChevronBack, IoChevronForward, IoEllipse } from "react-icons/io5";
-
 import { Avatar } from "@/shared/components/ui/avatar";
-import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
+import ImageSlider from "@/shared/components/ui/image-slider.component";
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
@@ -55,53 +51,6 @@ export default function ProjectHero({
   } = project;
 
   const stars = projectStats?.stars || 0;
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = coverImages;
-
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [translateX, setTranslateX] = useState(0);
-
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-    setStartX(clientX);
-    setIsDragging(true);
-  };
-
-  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    if (!isDragging) return;
-
-    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-    const diff = clientX - startX;
-
-    if (Math.abs(diff) > 50) {
-      setIsDragging(false);
-      setTranslateX(0);
-      if (diff > 0) {
-        handlePrevImage();
-      } else {
-        handleNextImage();
-      }
-      return;
-    }
-
-    setTranslateX(diff);
-  };
-
-  const handleDragEnd = () => {
-    setIsDragging(false);
-    setTranslateX(0);
-  };
 
   return (
     <div className="flex flex-col bg-white">
@@ -128,74 +77,7 @@ export default function ProjectHero({
         </div>
       )}
 
-      {images.length > 0 && (
-        <div className="mt-2 flex flex-row gap-1">
-          <div className="flex-1">
-            <div
-              className="relative h-[207px] w-full overflow-hidden rounded-md select-none sm:h-[393px]"
-              onTouchStart={handleDragStart}
-              onTouchMove={handleDragMove}
-              onTouchEnd={handleDragEnd}
-              onMouseDown={handleDragStart}
-              onMouseMove={handleDragMove}
-              onMouseUp={handleDragEnd}
-              onMouseLeave={handleDragEnd}
-            >
-              <div
-                className={`flex h-full transition-transform duration-300 ${isDragging ? "transition-none" : ""}`}
-                style={{
-                  transform: `translateX(calc(${translateX}px - ${currentImageIndex * 100}%))`,
-                }}
-              >
-                {images.map((img, idx) => (
-                  <Image
-                    key={idx}
-                    src={img}
-                    alt={`Image ${idx + 1}`}
-                    width={688}
-                    height={393}
-                    className="h-[207px] w-full shrink-0 object-cover sm:h-[393px]"
-                    priority={idx === currentImageIndex}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex gap-2">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="h-7 w-7"
-                  onClick={handlePrevImage}
-                >
-                  <IoChevronBack className="size-[11px]" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="h-7 w-7"
-                  onClick={handleNextImage}
-                >
-                  <IoChevronForward className="size-[11px]" />
-                </Button>
-              </div>
-              <div className="mt-[-10px] flex gap-1">
-                {images.map((_, idx) => (
-                  <IoEllipse
-                    key={idx}
-                    className={`size-1.5 hover:cursor-pointer hover:text-neutral-500 ${
-                      idx === currentImageIndex
-                        ? "text-neutral-500"
-                        : "text-neutral-200"
-                    }`}
-                    onClick={() => setCurrentImageIndex(idx)}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {coverImages.length > 0 && <ImageSlider images={coverImages} />}
 
       {project.readme && (
         <ProjectReadme
@@ -208,9 +90,7 @@ export default function ProjectHero({
       <div className="mt-10 w-full max-w-[629px]">
         {keyFeatures.length > 0 && (
           <>
-            <h3 className="text-primary mb-3 text-sm font-normal">
-              Fonctionnalités clés
-            </h3>
+            <h2 className="mb-4 text-sm">Fonctionnalités clés</h2>
             <ul className="text-primary mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal">
               {keyFeatures.map((feature, index) => (
                 <li key={index}>{feature.feature}</li>
@@ -221,9 +101,7 @@ export default function ProjectHero({
 
         {projectGoals.length > 0 && (
           <>
-            <h3 className="text-primary mb-3 text-sm font-normal">
-              Objectifs du projet
-            </h3>
+            <h2 className="mb-4 text-sm">Objectifs du projet</h2>
             <ul className="text-primary mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal">
               {projectGoals.map((goal, index) => (
                 <li key={index}>{goal.goal}</li>
