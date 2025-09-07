@@ -23,8 +23,15 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
   );
 
   return (
-    <div className="flex w-full flex-col gap-4">
-      <h2 className="mb-5 gap-1 text-left text-lg">Projets Rejoints</h2>
+    <div className="flex w-full flex-col gap-[25px]">
+      <h2 className="text-muted-foreground text-sm">
+        <span className="text-primary font-medium">
+          {joinedProjects.length}
+        </span>{" "}
+        {joinedProjects.length === 1
+          ? "Projet Rejoint"
+          : "Projets Rejoints"}{" "}
+      </h2>
 
       {isLoading ? (
         <div className="space-y-3">
@@ -78,7 +85,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             title={project.title}
             shortDescription={project.shortDescription}
             image={project.image || ""}
-            showViewProject={true}
+            showViewProject={false}
             techStacks={project.techStacks}
             owner={{
               id: project.owner.id,
@@ -105,7 +112,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
                 author: { login: "", avatar_url: "", html_url: "" },
               },
             }}
-            className="w-full max-w-[731px] bg-white"
+            className="w-full"
           />
         ))
       )}

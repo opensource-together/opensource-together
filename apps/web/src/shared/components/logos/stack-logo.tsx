@@ -13,8 +13,8 @@ export default function StackLogo({
   icon,
   alt,
   name,
-  width = 14.5,
-  height = 10.22,
+  width = 20,
+  height = 20,
 }: StackLogoProps) {
   let iconSrcToUse = icon;
   if (

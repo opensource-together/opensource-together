@@ -148,7 +148,7 @@ export function AvatarUpload({
               {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
             </div>
           ) : (
-            <p className="text-sm tracking-tighter text-black/50">{subtitle}</p>
+            <p className="text-xs tracking-tighter text-black/50">{subtitle}</p>
           )}
         </div>
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}

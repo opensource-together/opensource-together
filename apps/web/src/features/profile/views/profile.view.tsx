@@ -26,7 +26,7 @@ export default function ProfileView() {
       hero={<ProfileHero profile={currentUser} />}
     >
       {shouldShowGithubCalendar && (
-        <div className="mb-8 w-full">
+        <div className="mb-2 w-full">
           <GithubCalendar
             contributionGraph={currentUser.githubStats?.contributionGraph}
             contributionsCount={currentUser.githubStats?.commitsThisYear || 0}
@@ -38,7 +38,7 @@ export default function ProfileView() {
         <ProfileExperience />
       </div>
 
-      <div className="mt-12 mb-8 flex w-full">
+      <div className="mt-12 flex w-full">
         <PinnedProjects profile={currentUser} />
       </div>
     </TwoColumnLayout>
