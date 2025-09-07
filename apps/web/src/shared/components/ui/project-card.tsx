@@ -43,7 +43,7 @@ const ProjectCardLeftGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center gap-3", className)}
+    className={cn("flex items-center gap-2.5", className)}
     {...props}
   />
 ));
@@ -80,8 +80,8 @@ const ProjectCardImage = React.forwardRef<
       <Image
         src={processedSrc}
         alt={alt}
-        width={50}
-        height={50}
+        width={45}
+        height={45}
         className="rounded-full"
       />
     </div>
@@ -179,7 +179,7 @@ const ProjectCardDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-primary tracking-tighte my-3 line-clamp-1 text-sm leading-5 font-normal",
+      "text-primary my-3 line-clamp-1 text-sm leading-5 font-normal",
       className
     )}
     {...props}
@@ -327,16 +327,7 @@ const ProjectCardViewText = React.forwardRef<
       className
     )}
     {...props}
-  >
-    Voir le projet{" "}
-    <Image
-      className=""
-      src="/icons/right-arrow.svg"
-      alt="arrowupright"
-      width={13}
-      height={13}
-    />
-  </div>
+  ></div>
 ));
 ProjectCardViewText.displayName = "ProjectCardViewText";
 

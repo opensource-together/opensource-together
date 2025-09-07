@@ -77,7 +77,9 @@ export default function ProjectCardComponent({
           <ProjectCardLeftGroup>
             <Avatar src={image} name={title} alt={title} size="lg" />
             <ProjectCardInfo>
-              <ProjectCardTitle>{title}</ProjectCardTitle>
+              <ProjectCardTitle className="text-primary">
+                {title}
+              </ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
                 by {owner.username}
               </p>
@@ -91,7 +93,7 @@ export default function ProjectCardComponent({
           {showTechStack && (
             <ProjectCardFooter>
               <>
-                <div className="flex gap-5">
+                <div className="flex gap-2.5">
                   {techStacks.slice(0, 3).map((tech, index) => (
                     <StackLogo
                       key={tech.id || index}
@@ -102,21 +104,21 @@ export default function ProjectCardComponent({
                   ))}
                 </div>
                 {techStacks.length > 3 && (
-                  <span className="flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                  <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
                     +{techStacks.length - 3}
                   </span>
                 )}
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
-                <div className="text-primary flex items-center justify-center text-[10px]">
+                <div className="flex items-center justify-center text-[10px]">
                   <Icon name="fork" size="xxs" className="mr-0.5" />
                   {projectStats.forks || 0}
                 </div>
-                <div className="flex items-center justify-center text-[10px]">
-                  <HiUserGroup className="text-primary mr-0.5 size-3" />
+                <div className="flex items-center justify-center gap-0 text-[10px]">
+                  <HiUserGroup className="mr-0.5 size-3 text-black" />
                   {projectStats.contributors?.length || 0}
                 </div>
-                <div className="flex items-center justify-center text-[10px]">
+                <div className="flex items-center justify-center gap-0 text-[10px]">
                   <FaStar className="text-primary mr-0.5 size-2.5" />
                   {projectStats.stars || 0}
                 </div>
