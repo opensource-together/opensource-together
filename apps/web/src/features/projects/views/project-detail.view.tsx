@@ -11,7 +11,9 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import ProjectDetailContentError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
-import ProjectHero from "../components/project-hero.component";
+import ProjectHero, {
+  ProjectHeroHeader,
+} from "../components/project-hero.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
@@ -42,6 +44,7 @@ export default function ProjectDetailView({
     <TwoColumnLayout
       sidebar={<ProjectSideBar project={project} isMaintainer={isMaintainer} />}
       hero={<ProjectHero project={project} />}
+      mobileHeader={<ProjectHeroHeader {...project} />}
     >
       <div>
         <div className="mb-3 flex items-center justify-between">

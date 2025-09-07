@@ -97,7 +97,7 @@ export default function RoleCard({
         )}
       </div>
 
-      <p className="mt-4 text-sm leading-snug font-medium tracking-tighter text-black/70">
+      <p className="text-primary mt-4 text-sm leading-snug font-normal">
         {truncateText(description, 90)}
       </p>
 
