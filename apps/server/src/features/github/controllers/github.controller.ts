@@ -15,7 +15,7 @@ import {
   GITHUB_REPOSITORY,
   IGithubRepository,
 } from '../repositories/github.repository.interface';
-import { GetGithubRepositorySwagger } from './swagger/swagger.decorator';
+import { GetGithubRepositoryDocs } from './docs/get-user-repositories.swagger.decorator';
 
 @ApiTags('Github')
 @Controller('github')
@@ -27,7 +27,7 @@ export class GithubController {
 
   @Get('repos')
   @UseGuards(GithubAuthGuard)
-  @GetGithubRepositorySwagger()
+  @GetGithubRepositoryDocs()
   async getMyRepositories(
     @GitHubOctokit() octokit: Octokit,
   ): Promise<GithubRepoSuggestionInput[]> {

@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-export function GetGithubRepositorySwagger() {
+export function GetGithubRepositoryDocs() {
   return applyDecorators(
     ApiOperation({
       summary:
