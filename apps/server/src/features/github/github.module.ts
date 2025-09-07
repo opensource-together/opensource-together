@@ -21,6 +21,8 @@ import { setGithubStatsService } from './services/github-stats.holder';
   controllers: [GithubController],
   providers: [
     OctokitProvider,
+    GithubRepositoryService,
+    GithubUserService,
     GithubStatsService,
     {
       provide: ACCOUNT_REPOSITORY,
