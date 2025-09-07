@@ -32,7 +32,6 @@ export default function ProjectSideBar({
 }: ProjectSideBarProps) {
   const router = useRouter();
   const {
-    title = "",
     techStacks = [],
     externalLinks = [],
     categories = [],
@@ -125,12 +124,12 @@ export default function ProjectSideBar({
               variant="black"
               className="opacity-50"
             />
-            <span className="text-xs font-normal text-neutral-500">Stars</span>
+            <span className="text-sm font-normal text-neutral-500">Stars</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-primary text-xs font-normal">
+          <span className="text-primary text-sm font-medium">
             {projectStats.stars}
           </span>
         </div>
@@ -143,12 +142,12 @@ export default function ProjectSideBar({
               variant="black"
               className="opacity-50"
             />
-            <span className="text-xs font-normal text-neutral-500">Forks</span>
+            <span className="text-sm font-normal text-neutral-500">Forks</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-primary text-xs font-normal">
+          <span className="text-primary text-sm font-medium">
             {projectStats.forks}
           </span>
         </div>
@@ -156,14 +155,14 @@ export default function ProjectSideBar({
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
             <Icon name="last-commit" size="sm" variant="default" />
-            <span className="text-xs font-normal text-neutral-500">
+            <span className="text-sm font-normal text-neutral-500">
               Dernier Commit
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-primary text-xs font-normal">
+          <span className="text-primary text-sm font-medium">
             {projectStats.lastCommit?.date
               ? new Date(projectStats.lastCommit.date).toLocaleDateString(
                   "fr-FR"
@@ -180,14 +179,14 @@ export default function ProjectSideBar({
               variant="black"
               className="opacity-50"
             />
-            <span className="text-xs font-normal text-neutral-500">
+            <span className="text-sm font-normal text-neutral-500">
               Contributeurs
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-primary text-xs font-normal">
+          <span className="text-primary text-sm font-medium">
             {allContributors.length}
           </span>
         </div>
@@ -227,7 +226,7 @@ export default function ProjectSideBar({
         <h2 className="mb-4 text-sm">Contributeurs Principaux</h2>
 
         <div className="flex flex-col items-start">
-          <div className="ml-3 flex gap-2">
+          <div className="ml-5 flex gap-2">
             {allContributors.slice(0, 5).map((contributor) => (
               <div
                 key={contributor.id}
@@ -239,7 +238,7 @@ export default function ProjectSideBar({
                   name={contributor.username}
                   alt={contributor.username}
                   size="md"
-                  className="-ml-4 cursor-pointer border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  className="-ml-6 cursor-pointer border-2 border-white shadow-xs transition-transform duration-150 hover:-translate-y-0.5"
                   onClick={() => handleContributorClick(contributor)}
                 />
               </div>
@@ -275,7 +274,7 @@ export default function ProjectSideBar({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 text-xs text-neutral-500 transition-colors hover:text-black"
+                  className="group flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
                 >
                   <Icon
                     name={config.icon as IconName}

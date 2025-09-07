@@ -25,11 +25,6 @@ interface RoleCardProps {
   projectId?: string;
 }
 
-const truncateText = (text: string, maxLength: number = 120) => {
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength).trim() + "...";
-};
-
 export default function RoleCard({
   role,
   projectGoals = [],
@@ -62,52 +57,19 @@ export default function RoleCard({
         <h3 className="text-lg font-medium tracking-tighter text-black">
           {role.title}
         </h3>
-        {isMaintainer && (
-          <div className="flex items-center gap-1">
-            <EditRoleForm role={role} projectId={projectId}>
-              <Button variant="ghost" size="icon">
-                <Icon name="pencil" size="sm" />
-              </Button>
-            </EditRoleForm>
-
-            <ConfirmDialog
-              open={isConfirmOpen}
-              onOpenChange={setIsConfirmOpen}
-              title="Supprimer le rôle"
-              description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
-              isLoading={isDeleting}
-              onConfirm={() => {
-                deleteRole();
-                setIsConfirmOpen(false);
-              }}
-              onCancel={() => setIsConfirmOpen(false)}
-              confirmText="Supprimer le rôle"
-              confirmIcon="trash"
-              confirmIconVariant="white"
-              confirmVariant="destructive"
-            />
-            <Button
-              onClick={() => setIsConfirmOpen(true)}
-              variant="ghost"
-              size="icon"
-            >
-              <Icon name="trash" size="sm" />
-            </Button>
-          </div>
-        )}
       </div>
 
-      <p className="text-primary mt-4 text-sm leading-snug font-normal">
-        {truncateText(description, 90)}
+      <p className="mt-4 line-clamp-2 max-w-11/12 text-sm leading-snug">
+        {description}
       </p>
 
       <div className="my-4 border-t border-black/3"></div>
 
       <div className="flex w-full items-center justify-between">
         <div className="flex gap-3 overflow-hidden text-xs">
-          <div className="flex gap-3">
+          <div className="flex gap-2.5">
             {roleTechStacks.length > 0 &&
-              roleTechStacks.map((techStack: TechStack) => (
+              roleTechStacks.slice(0, 3).map((techStack: TechStack) => (
                 <div key={`${techStack.id}`} className="relative flex-shrink-0">
                   <StackLogo
                     name={techStack.name}
@@ -116,14 +78,54 @@ export default function RoleCard({
                   />
                 </div>
               ))}
+            {roleTechStacks.length > 3 && (
+              <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                +{roleTechStacks.length - 3}
+              </span>
+            )}
           </div>
         </div>
-        {!isMaintainer && (
-          <div className="flex cursor-pointer items-center gap-0">
-            <span className="text-primary text-sm">Candidater à ce rôle</span>
-            <GoArrowUpRight className="text-primary mt-1 size-4" />
-          </div>
-        )}
+        <div className="flex items-center justify-between">
+          {isMaintainer && (
+            <div className="flex items-center gap-2.5">
+              <EditRoleForm role={role} projectId={projectId}>
+                <Button variant="ghost" size="icon">
+                  <Icon name="pencil" size="sm" />
+                </Button>
+              </EditRoleForm>
+
+              <ConfirmDialog
+                open={isConfirmOpen}
+                onOpenChange={setIsConfirmOpen}
+                title="Supprimer le rôle"
+                description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
+                isLoading={isDeleting}
+                onConfirm={() => {
+                  deleteRole();
+                  setIsConfirmOpen(false);
+                }}
+                onCancel={() => setIsConfirmOpen(false)}
+                confirmText="Supprimer le rôle"
+                confirmIcon="trash"
+                confirmIconVariant="white"
+                confirmVariant="destructive"
+              />
+              <Button
+                onClick={() => setIsConfirmOpen(true)}
+                variant="ghost"
+                size="icon"
+              >
+                <Icon name="trash" size="sm" />
+              </Button>
+            </div>
+          )}
+          {!isMaintainer && (
+            <div className="flex cursor-pointer items-center gap-0">
+              <span className="text-sm font-medium">Candidater à ce rôle</span>
+              <GoArrowUpRight className="text-primary mt-1 size-4" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -54,10 +54,10 @@ export default function ProjectDetailView({
     >
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="flex items-center gap-1 text-sm font-normal">
-            <IoEllipse className="text-ost-blue-three size-1.5" />
+          <p className="flex items-center gap-1 text-sm font-medium">
+            <IoEllipse className="text-ost-blue-three size-2" />
             {projectRoles?.length || 0}{" "}
-            <span className="text-neutral-500">
+            <span className="text-muted-foreground font-medium">
               {(projectRoles?.length || 0) > 1
                 ? "Rôles Disponibles"
                 : "Rôle Disponible"}

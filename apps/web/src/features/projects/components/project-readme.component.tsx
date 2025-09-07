@@ -35,7 +35,7 @@ export default function ProjectReadme({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <div className="font-geist relative mt-4 cursor-pointer overflow-hidden rounded-[22px] border border-black/5 bg-white p-5 tracking-tighter transition-colors duration-300 hover:bg-black/5">
+        <div className="font-geist relative mt-8 cursor-pointer overflow-hidden rounded-[22px] border border-black/5 bg-white p-5 tracking-tighter transition-colors duration-300 hover:bg-black/5">
           <div className="mb-2 flex items-center gap-2 text-base text-black">
             <Icon name="github" size="sm" variant="black" />
             <span className="text-lg font-medium">README.md</span>

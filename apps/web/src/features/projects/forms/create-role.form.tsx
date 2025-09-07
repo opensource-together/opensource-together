@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -14,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -64,8 +62,14 @@ export default function CreateRoleForm({
       open={isDialogOpen}
       onOpenChange={setIsDialogOpen}
       title="Créer un rôle"
+      description="Ajoutez un nouveau rôle pour attirer les bons contributeurs."
       trigger={children}
       size="lg"
+      confirmText="Créer le rôle"
+      cancelText="Retour"
+      onConfirm={form.handleSubmit(onSubmit)}
+      onCancel={() => setIsDialogOpen(false)}
+      isLoading={isCreating}
     >
       <Form {...form}>
         <form id="create-role-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -78,16 +82,11 @@ export default function CreateRoleForm({
                   <FormLabel
                     required
                     tooltip="Donnez un nom clair au poste recherché. Cela aide les contributeurs à comprendre rapidement s'ils correspondent au profil."
-                    className="text-primary mb-0 text-xs"
                   >
                     Titre du rôle
                   </FormLabel>
                   <FormControl className="mt-[-6px]">
-                    <Input
-                      {...field}
-                      placeholder="Ex: Développeur Backend"
-                      className="border border-black/15 bg-white text-neutral-500"
-                    />
+                    <Input {...field} placeholder="Ex: Back-End Developer" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -102,7 +101,6 @@ export default function CreateRoleForm({
                   <FormLabel
                     required
                     tooltip="Sélectionnez les technologies spécifiques que le contributeur devra maîtriser pour ce rôle. Cela permet un matching précis entre compétences et besoins."
-                    className="text-primary mb-0 text-xs"
                   >
                     Technologies
                   </FormLabel>
@@ -114,6 +112,7 @@ export default function CreateRoleForm({
                       placeholder="Ajouter des technologies"
                       searchPlaceholder="Rechercher une technologie..."
                       emptyText="Aucune technologie trouvée."
+                      maxSelections={6}
                     />
                   </FormControl>
                   <FormMessage />
@@ -129,7 +128,6 @@ export default function CreateRoleForm({
                   <FormLabel
                     required
                     tooltip="Décrivez en détail les missions, responsabilités et attentes pour ce rôle. Plus c'est précis, plus vous attirerez les bons profils."
-                    className="text-primary mb-0 text-xs"
                   >
                     Description
                   </FormLabel>
@@ -152,29 +150,6 @@ export default function CreateRoleForm({
           </div>
         </form>
       </Form>
-      <div className="sticky bottom-0 z-50 bg-white">
-        <div className="-mx-4.5 mt-16.5">
-          <div className="border-t border-black/10">
-            <div className="flex items-center justify-end gap-4 px-6 pt-4">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Retour
-              </Button>
-              <Button
-                type="submit"
-                form="create-role-form"
-                disabled={isCreating}
-              >
-                {isCreating ? "Création..." : "Créer le rôle"}
-                <Icon name="plus" size="xs" variant="white" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
     </Modal>
   );
 }

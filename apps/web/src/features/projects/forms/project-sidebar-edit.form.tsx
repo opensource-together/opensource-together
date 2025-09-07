@@ -37,12 +37,7 @@ export default function ProjectSidebarEditForm({
             name="techStack"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  required
-                  className="text-primary mb-2 text-sm font-medium"
-                >
-                  Technologies (max 10)
-                </FormLabel>
+                <FormLabel required>Technologies (max 10)</FormLabel>
                 <FormControl className="mt-[-6px]">
                   <Combobox
                     options={techStackOptions}
@@ -69,12 +64,7 @@ export default function ProjectSidebarEditForm({
             name="categories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel
-                  required
-                  className="text-primary mb-2 text-sm font-medium"
-                >
-                  Catégories (max 6)
-                </FormLabel>
+                <FormLabel required>Catégories (max 6)</FormLabel>
                 <FormControl className="mt-[-6px]">
                   <Combobox
                     options={categoryOptions}
@@ -97,9 +87,7 @@ export default function ProjectSidebarEditForm({
           />
 
           <div className="mt-0 flex flex-col gap-4">
-            <FormLabel className="text-primary mb-0 text-sm font-medium">
-              Liens sociaux
-            </FormLabel>
+            <FormLabel>Liens sociaux</FormLabel>
 
             <FormField
               control={control}
@@ -110,7 +98,6 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="github"
                       placeholder="https://github.com/..."
-                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -127,7 +114,6 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="discord"
                       placeholder="https://discord.gg/..."
-                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -144,7 +130,6 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="twitter"
                       placeholder="https://x.com/..."
-                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -161,7 +146,6 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="linkedin"
                       placeholder="https://linkedin.com/..."
-                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -178,7 +162,6 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="link"
                       placeholder="https://..."
-                      className="bg-white"
                       {...field}
                     />
                   </FormControl>

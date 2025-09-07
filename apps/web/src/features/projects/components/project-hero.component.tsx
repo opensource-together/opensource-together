@@ -70,7 +70,7 @@ export default function ProjectHero({
             </button>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-4">
             <p className="mb-0 text-sm font-normal">{shortDescription}</p>
             <Separator className="my-5" />
           </div>
@@ -90,8 +90,8 @@ export default function ProjectHero({
       <div className="mt-10 w-full max-w-[629px]">
         {keyFeatures.length > 0 && (
           <>
-            <h2 className="mb-4 text-sm">Fonctionnalités clés</h2>
-            <ul className="text-primary mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal">
+            <h2 className="mb-4 text-sm font-medium">Fonctionnalités clés</h2>
+            <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose">
               {keyFeatures.map((feature, index) => (
                 <li key={index}>{feature.feature}</li>
               ))}
@@ -101,8 +101,8 @@ export default function ProjectHero({
 
         {projectGoals.length > 0 && (
           <>
-            <h2 className="mb-4 text-sm">Objectifs du projet</h2>
-            <ul className="text-primary mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal">
+            <h2 className="mb-4 text-sm font-medium">Objectifs du projet</h2>
+            <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose">
               {projectGoals.map((goal, index) => (
                 <li key={index}>{goal.goal}</li>
               ))}
@@ -111,7 +111,7 @@ export default function ProjectHero({
         )}
 
         {!keyFeatures.length && !projectGoals.length && longDescription && (
-          <p className="text-sm font-normal text-black/70">{longDescription}</p>
+          <p className="text-sm text-black/70">{longDescription}</p>
         )}
       </div>
     </div>

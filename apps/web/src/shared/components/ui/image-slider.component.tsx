@@ -90,7 +90,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
           </div>
         </div>
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             <Button
               size="icon"
               variant="outline"

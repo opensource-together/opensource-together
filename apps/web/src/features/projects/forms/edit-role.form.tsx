@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -14,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -67,8 +65,14 @@ export default function EditRoleForm({
       open={isDialogOpen}
       onOpenChange={setIsDialogOpen}
       title="Modifier le rôle"
+      description="Modifier le rôle pour attirer les bons contributeurs."
       trigger={children}
       size="lg"
+      confirmText="Modifier le rôle"
+      cancelText="Retour"
+      onConfirm={form.handleSubmit(onSubmit)}
+      onCancel={() => setIsDialogOpen(false)}
+      isLoading={isUpdating}
     >
       <div className="flex h-full flex-col">
         <div className="flex-1 space-y-6 overflow-y-auto">
@@ -86,16 +90,11 @@ export default function EditRoleForm({
                     <FormLabel
                       required
                       tooltip="Donnez un nom clair au poste recherché. Cela aide les contributeurs à comprendre rapidement s'ils correspondent au profil."
-                      className="text-primary mb-0 text-xs"
                     >
                       Titre du rôle
                     </FormLabel>
                     <FormControl className="mt-[-6px]">
-                      <Input
-                        {...field}
-                        placeholder="Ex: Back-End Developer"
-                        className="border border-black/15 bg-white text-neutral-500"
-                      />
+                      <Input {...field} placeholder="Ex: Back-End Developer" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,7 +109,6 @@ export default function EditRoleForm({
                     <FormLabel
                       required
                       tooltip="Sélectionnez les technologies spécifiques que le contributeur devra maîtriser pour ce rôle. Cela permet un matching précis entre compétences et besoins."
-                      className="text-primary mb-0 text-xs"
                     >
                       Technologies
                     </FormLabel>
@@ -138,7 +136,6 @@ export default function EditRoleForm({
                     <FormLabel
                       required
                       tooltip="Décrivez en détail les missions, responsabilités et attentes pour ce rôle. Plus c'est précis, plus vous attirerez les bons profils."
-                      className="text-primary mb-0 text-xs"
                     >
                       Description
                     </FormLabel>
@@ -160,24 +157,6 @@ export default function EditRoleForm({
               />
             </form>
           </Form>
-        </div>
-        <div className="sticky bottom-0 z-50 bg-white">
-          <div className="-mx-4.5 mt-16.5">
-            <div className="border-t border-black/10" />
-            <div className="flex items-center justify-end gap-4 px-6 pt-4">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Retour
-              </Button>
-              <Button type="submit" form="edit-role-form" disabled={isUpdating}>
-                {isUpdating ? "Modification..." : "Modifier le rôle"}
-                <Icon name="pencil" size="xs" variant="white" />
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </Modal>
