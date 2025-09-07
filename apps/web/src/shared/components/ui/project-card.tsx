@@ -15,7 +15,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist rounded-[20px] border border-[black]/6 px-6.5 py-4 pt-7 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)]",
+      "font-geist rounded-[20px] border border-[black]/6 px-6.5 pt-6.5 pb-5 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)]",
       className
     )}
     {...props}
@@ -43,7 +43,7 @@ const ProjectCardLeftGroup = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center gap-3", className)}
+    className={cn("flex items-center gap-2.5", className)}
     {...props}
   />
 ));
@@ -80,8 +80,8 @@ const ProjectCardImage = React.forwardRef<
       <Image
         src={processedSrc}
         alt={alt}
-        width={50}
-        height={50}
+        width={45}
+        height={45}
         className="rounded-full"
       />
     </div>
@@ -105,7 +105,7 @@ const ProjectCardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-lg font-medium tracking-tighter", className)}
+    className={cn("text-lg font-normal tracking-tighter", className)}
     {...props}
   />
 ));
@@ -179,7 +179,7 @@ const ProjectCardDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "mt-4 line-clamp-1 text-sm leading-5 font-medium tracking-tighter",
+      "text-primary my-3 line-clamp-1 text-sm leading-5 font-normal",
       className
     )}
     {...props}
@@ -194,7 +194,7 @@ const ProjectCardDivider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("my-4 border-t border-black/3", className)}
+    className={cn("mb-4 border-t border-black/3", className)}
     {...props}
   />
 ));
@@ -210,7 +210,7 @@ const ProjectCardFooter = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex w-full items-center gap-3 overflow-hidden text-xs",
+      "flex w-full items-center overflow-hidden text-xs",
       className
     )}
     {...props}
@@ -327,16 +327,7 @@ const ProjectCardViewText = React.forwardRef<
       className
     )}
     {...props}
-  >
-    Voir le projet{" "}
-    <Image
-      className=""
-      src="/icons/right-arrow.svg"
-      alt="arrowupright"
-      width={13}
-      height={13}
-    />
-  </div>
+  ></div>
 ));
 ProjectCardViewText.displayName = "ProjectCardViewText";
 

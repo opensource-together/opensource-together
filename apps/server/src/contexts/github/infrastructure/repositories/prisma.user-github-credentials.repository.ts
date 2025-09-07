@@ -1,10 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
 import {
   UserGitHubCredentialsData,
   UserGitHubCredentialsRepositoryPort,
 } from '@/contexts/github/use-cases/ports/user-github-credentials.repository.port';
 import { Result } from '@/libs/result';
+import { PrismaService } from '@/persistence/orm/prisma/services/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class PrismaUserGitHubCredentialsRepository
@@ -41,10 +41,25 @@ export class PrismaUserGitHubCredentialsRepository
     props: UserGitHubCredentialsData,
   ): Promise<Result<UserGitHubCredentialsData, string>> {
     try {
-      const updatedCredentials = await this.prisma.userGitHubCredentials.update(
+      const userExists = await this.prisma.user.findUnique({
+        where: { id: props.userId },
+        select: { id: true },
+      });
+
+      if (!userExists) {
+        this.Logger.error(`User with id ${props.userId} not found`);
+        return Result.fail('User not found');
+      }
+
+      const updatedCredentials = await this.prisma.userGitHubCredentials.upsert(
         {
           where: { userId: props.userId },
-          data: {
+          update: {
+            githubAccessToken: props.githubAccessToken,
+            githubUserId: props.githubUserId,
+          },
+          create: {
+            userId: props.userId,
             githubAccessToken: props.githubAccessToken,
             githubUserId: props.githubUserId,
           },
@@ -56,8 +71,7 @@ export class PrismaUserGitHubCredentialsRepository
         githubAccessToken: updatedCredentials.githubAccessToken ?? '',
       });
     } catch (e) {
-      this.Logger.error(e);
-      // Idéalement, logger l'erreur 'e' ici
+      this.Logger.error('Error updating GitHub credentials:', e);
       return Result.fail(
         'A technical error occurred while updating GitHub credentials.',
       );

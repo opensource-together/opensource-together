@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect } from "react";
-import { HiOutlineRefresh } from "react-icons/hi";
+import { LuLoaderCircle } from "react-icons/lu";
 
 import AuthIllustration from "../components/auth-illustration.component";
 import useAuth from "../hooks/use-auth.hook";
@@ -44,7 +44,7 @@ export default function GoogleCallbackView() {
       <div className="relative flex flex-1 flex-col justify-center">
         <div className="mx-8 flex flex-col items-center md:mx-28">
           <div className="flex flex-col items-center space-y-6 text-center">
-            <HiOutlineRefresh className="h-12 w-12 animate-spin" />
+            <LuLoaderCircle className="size-12 animate-spin" />
             <h1 className="text-2xl font-medium">Connexion en cours...</h1>
             <p className="text-muted-foreground w-[500px] text-sm leading-relaxed">
               Nous vérifions vos informations Google. Vous serez redirigé vers{" "}

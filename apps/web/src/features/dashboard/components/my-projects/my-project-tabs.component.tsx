@@ -9,39 +9,40 @@ import MyApplicationsReceived from "./my-applications-received.component";
 import MyTeamMembers from "./my-team-members.component";
 
 interface MyProjectTabsProps {
+  projectId: string;
   applications: ApplicationType[];
   teamMembers?: TeamMemberType[];
   isLoading?: boolean;
   projectOwnerId?: string;
   currentUserId?: string;
+  isAuthLoading?: boolean;
   projectOwner?: {
     id: string;
     username: string;
     avatarUrl?: string;
     techStacks?: TechStack[];
   };
-  onApplicationDecision?: (
-    applicationId: string,
-    decision: "ACCEPTED" | "REJECTED",
-    reason?: string
-  ) => void;
 }
 
 type TabType = "applications" | "members";
 
 export default function MyProjectTabs({
+  projectId,
   applications,
   teamMembers = [],
   isLoading = false,
   projectOwnerId,
   currentUserId,
+  isAuthLoading = false,
   projectOwner,
-  onApplicationDecision,
 }: MyProjectTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>("applications");
 
   const canViewApplications =
     projectOwnerId && currentUserId && projectOwnerId === currentUserId;
+
+  const isAuthDataReady = !isAuthLoading && projectOwnerId && currentUserId;
+  const shouldDisableApplications = isAuthDataReady && !canViewApplications;
 
   const allTeamMembers = useMemo(() => {
     if (!projectOwner || !projectOwnerId) return teamMembers;
@@ -68,7 +69,7 @@ export default function MyProjectTabs({
       id: "applications" as TabType,
       label: "Candidatures",
       count: applications.length,
-      disabled: !canViewApplications,
+      disabled: shouldDisableApplications,
     },
     {
       id: "members" as TabType,
@@ -79,10 +80,10 @@ export default function MyProjectTabs({
   ];
 
   useEffect(() => {
-    if (!canViewApplications && activeTab === "applications") {
+    if (shouldDisableApplications && activeTab === "applications") {
       setActiveTab("members");
     }
-  }, [canViewApplications, activeTab]);
+  }, [shouldDisableApplications, activeTab]);
 
   return (
     <div className="sticky top-0 z-10">
@@ -91,7 +92,7 @@ export default function MyProjectTabs({
           <button
             key={tab.id}
             onClick={() => !tab.disabled && setActiveTab(tab.id)}
-            disabled={tab.disabled}
+            disabled={!!tab.disabled}
             className={`relative px-4 py-3 text-sm font-medium transition-colors ${
               tab.disabled
                 ? "cursor-not-allowed text-black/30"
@@ -114,11 +115,11 @@ export default function MyProjectTabs({
       </div>
 
       <div className="mt-6">
-        {activeTab === "applications" && canViewApplications && (
+        {activeTab === "applications" && (
           <MyApplicationsReceived
+            projectId={projectId}
             applications={applications}
             isLoading={isLoading}
-            onApplicationDecision={onApplicationDecision}
           />
         )}
         {activeTab === "members" && (
