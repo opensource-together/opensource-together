@@ -28,7 +28,7 @@ export default function MyProjectDetailsHeadingComponent({
       </div>
       <Link href={`/projects/${project.id}`}>
         <Button>
-          Voir le projet <HiArrowUpRight />
+          Voir le projet <HiArrowUpRight className="size-3" />
         </Button>
       </Link>
     </div>
