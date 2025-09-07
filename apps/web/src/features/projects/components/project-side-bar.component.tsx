@@ -8,6 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
 import { Contributor, Project } from "../types/project.type";
 
@@ -31,6 +32,7 @@ export default function ProjectSideBar({
   isAuthLoading = false,
 }: ProjectSideBarProps) {
   const router = useRouter();
+  const { navigateToProfile } = useProfileNavigation();
   const {
     techStacks = [],
     externalLinks = [],
@@ -79,8 +81,7 @@ export default function ProjectSideBar({
   };
 
   const handleContributorClick = (contributor: Contributor) => {
-    const userId = contributor.id;
-    router.push(`/profile/${userId}`);
+    navigateToProfile(contributor.id);
   };
 
   const formatUrl = (url: string) => {

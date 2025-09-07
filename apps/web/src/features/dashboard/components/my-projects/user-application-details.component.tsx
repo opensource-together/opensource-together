@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { HiArrowUpRight } from "react-icons/hi2";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
@@ -8,6 +7,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
 import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@/shared/components/ui/separator";
+import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 import { getStatusText } from "@/shared/lib/utils/status";
 
 import { ApplicationType } from "../../types/my-projects.type";
@@ -19,6 +19,8 @@ interface UserApplicationDetailsProps {
 export default function UserApplicationDetails({
   application,
 }: UserApplicationDetailsProps) {
+  const { navigateToProfile } = useProfileNavigation();
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -47,12 +49,10 @@ export default function UserApplicationDetails({
             </BadgeWithIcon>
           </div>
         </div>
-        <Link href={`/profile/${application.applicant.id}`}>
-          <Button>
-            Voir le profil
-            <HiArrowUpRight className="size-3" />
-          </Button>
-        </Link>
+        <Button onClick={() => navigateToProfile(application.applicant.id)}>
+          Voir le profil
+          <HiArrowUpRight className="size-3" />
+        </Button>
       </div>
 
       <Separator className="my-8" />
