@@ -1,7 +1,7 @@
 "use client";
 
-import { EllipsisVertical } from "lucide-react";
 import Link from "next/link";
+import { HiDotsVertical } from "react-icons/hi";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -56,139 +56,129 @@ export default function MyTeamMembers({
   }
 
   return (
-    <div className="rounded-lg border border-black/10">
-      <Table>
-        <TableBody>
-          {members.map((member) => {
-            const isOwner = projectOwnerId && member.id === projectOwnerId;
-            const isCurrentUser = currentUserId && member.id === currentUserId;
-            const isCurrentUserOwner =
-              currentUserId &&
-              projectOwnerId &&
-              currentUserId === projectOwnerId;
+    <Table>
+      <TableBody>
+        {members.map((member) => {
+          const isOwner = projectOwnerId && member.id === projectOwnerId;
+          const isCurrentUser = currentUserId && member.id === currentUserId;
+          const isCurrentUserOwner =
+            currentUserId && projectOwnerId && currentUserId === projectOwnerId;
 
-            return (
-              <TableRow key={member.id}>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Avatar
-                      src={member.avatarUrl}
-                      name={member.name}
-                      alt={member.name}
-                      size="md"
-                    />
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-1">
-                        <h4 className="font-medium tracking-tighter">
-                          {member.name}
-                        </h4>
-                        {isOwner && (
-                          <Badge variant="danger">Propriétaire</Badge>
+          return (
+            <TableRow key={member.id}>
+              <TableCell>
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    src={member.avatarUrl}
+                    name={member.name}
+                    alt={member.name}
+                    size="md"
+                  />
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
+                      <h4>{member.name}</h4>
+                      {isOwner && <Badge variant="danger">Propriétaire</Badge>}
+                    </div>
+                    {member.techStacks && member.techStacks.length > 0 && (
+                      <div className="mt-1 flex items-center">
+                        <div className="flex gap-1">
+                          {member.techStacks.slice(0, 3).map((tech) => (
+                            <Badge
+                              variant="outline"
+                              key={tech.id}
+                              className="text-xs"
+                            >
+                              {tech.name}
+                            </Badge>
+                          ))}
+                        </div>
+                        {member.techStacks.length > 3 && (
+                          <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                            +{member.techStacks.length - 3}
+                          </span>
                         )}
                       </div>
-                      {member.techStacks && member.techStacks.length > 0 && (
-                        <div className="mt-1 flex items-center">
-                          <div className="flex gap-1">
-                            {member.techStacks.slice(0, 3).map((tech) => (
-                              <Badge
-                                variant="outline"
-                                key={tech.id}
-                                className="text-xs"
-                              >
-                                {tech.name}
-                              </Badge>
-                            ))}
+                    )}
+                  </div>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-medium">{member.role}</span>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-medium">
+                    {formatDate(member.joinedAt)}
+                  </span>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <HiDotsVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64 p-2">
+                    <DropdownMenuItem>
+                      <Link href={`/profile/${member.id}`} className="w-full">
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-medium">Voir profil</span>
+                            <p className="text-xs text-gray-500">
+                              Voir le profil du membre
+                            </p>
                           </div>
-                          {member.techStacks.length > 3 && (
-                            <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                              +{member.techStacks.length - 3}
-                            </span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            <Icon name="user" size="sm" variant="gray" />
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </TableCell>
+                      </Link>
+                    </DropdownMenuItem>
 
-                <TableCell>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs text-black/50">Rôle</span>
-                    <span className="text-sm font-medium">{member.role}</span>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs text-black/50">Rejoint le</span>
-                    <span className="text-sm font-medium">
-                      {formatDate(member.joinedAt)}
-                    </span>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <EllipsisVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-64 p-2">
+                    {isCurrentUserOwner && !isCurrentUser && (
                       <DropdownMenuItem>
-                        <Link href={`/profile/${member.id}`} className="w-full">
-                          <div className="flex w-full items-center justify-between">
-                            <div className="flex flex-col gap-1">
-                              <span className="font-medium">Voir profil</span>
-                              <p className="text-xs text-gray-500">
-                                Voir le profil du membre
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Icon name="user" size="sm" variant="gray" />
-                            </div>
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-medium">
+                              Retirer du projet
+                            </span>
+                            <p className="text-xs text-gray-500">
+                              Retirer le membre du projet
+                            </p>
                           </div>
-                        </Link>
+                          <Icon name="bagpack" size="sm" />
+                        </div>
                       </DropdownMenuItem>
+                    )}
 
-                      {isCurrentUserOwner && !isCurrentUser && (
-                        <DropdownMenuItem>
-                          <div className="flex w-full items-center justify-between">
-                            <div className="flex flex-col gap-1">
-                              <span className="font-medium">
-                                Retirer du projet
-                              </span>
-                              <p className="text-xs text-gray-500">
-                                Retirer le membre du projet
-                              </p>
-                            </div>
-                            <Icon name="bagpack" size="sm" />
+                    {!isCurrentUserOwner && isCurrentUser && (
+                      <DropdownMenuItem>
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-medium">
+                              Quitter le projet
+                            </span>
+                            <p className="text-xs text-gray-500">
+                              Quitter le projet
+                            </p>
                           </div>
-                        </DropdownMenuItem>
-                      )}
-
-                      {!isCurrentUserOwner && isCurrentUser && (
-                        <DropdownMenuItem>
-                          <div className="flex w-full items-center justify-between">
-                            <div className="flex flex-col gap-1">
-                              <span className="font-medium">
-                                Quitter le projet
-                              </span>
-                              <p className="text-xs text-gray-500">
-                                Quitter le projet
-                              </p>
-                            </div>
-                            <Icon name="bagpack" size="sm" />
-                          </div>
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+                          <Icon name="bagpack" size="sm" />
+                        </div>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 }

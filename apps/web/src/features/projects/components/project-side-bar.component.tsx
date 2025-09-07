@@ -8,12 +8,14 @@ import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Contributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
   isMaintainer?: boolean;
+  isAuthLoading?: boolean;
 }
 
 const externalLinksConfig = [
@@ -27,6 +29,7 @@ const externalLinksConfig = [
 export default function ProjectSideBar({
   project,
   isMaintainer = false,
+  isAuthLoading = false,
 }: ProjectSideBarProps) {
   const router = useRouter();
   const {
@@ -105,7 +108,7 @@ export default function ProjectSideBar({
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-1 flex-col gap-5">
       <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
       <div className="mb-3 flex gap-2">
@@ -114,20 +117,20 @@ export default function ProjectSideBar({
             Modifier
             <Icon name="pencil" size="xs" variant="white" />
           </Button>
+        ) : isAuthLoading ? (
+          <Skeleton className="h-10 w-48 rounded-full" />
         ) : (
           <Button size="lg">Rejoindre le projet</Button>
         )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" size="lg">
+          <Button variant="secondary" size="lg">
             Voir Repository
           </Button>
         </Link>
       </div>
 
-      <div className="mb-2 flex flex-col md:max-w-[263px]">
-        <h2 className="text-md mb-1 font-medium tracking-tight text-black">
-          Détails
-        </h2>
+      <div className="mb-2 flex flex-1 flex-col">
+        <h2 className="text-md mb-1">Détails</h2>
 
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
@@ -206,9 +209,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Technologies
-        </h2>
+        <h2 className="text-md mb-2">Technologies</h2>
         {techStacks.length > 0 && (
           <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
             {techStacks.map((tech, index) => (
@@ -224,9 +225,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Catégories
-        </h2>
+        <h2 className="text-md mb-2">Catégories</h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
             <Badge
@@ -240,9 +239,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-3 font-medium tracking-tight text-black">
-          Contributeurs Principaux
-        </h2>
+        <h2 className="text-md mb-3">Contributeurs Principaux</h2>
 
         <div className="flex flex-col items-start">
           <div className="ml-3 flex gap-2">
@@ -277,9 +274,7 @@ export default function ProjectSideBar({
 
       {externalLinks.length > 0 && (
         <div className="mb-2 flex flex-col">
-          <h2 className="text-md mb-4 font-medium tracking-tight text-black">
-            Liens externes
-          </h2>
+          <h2 className="text-md mb-4">Liens externes</h2>
           <div className="flex flex-col gap-6">
             {externalLinksConfig.map((config) => {
               const link = externalLinks.find((l) =>

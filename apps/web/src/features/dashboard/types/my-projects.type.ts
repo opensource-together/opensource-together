@@ -13,6 +13,8 @@ export interface MyProjectType {
   status: string;
   applications: ApplicationType[];
   teamMembers: TeamMemberType[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type ApplicationStatus =
@@ -28,6 +30,7 @@ export interface ApplicationType {
     id: string;
     name: string;
     avatarUrl?: string;
+    jobTitle?: string;
     techStacks?: TechStack[];
   };
   projectRole: ProjectRole;
