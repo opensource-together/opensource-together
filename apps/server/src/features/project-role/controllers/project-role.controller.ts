@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Delete,
   HttpException,
   HttpStatus,
   Param,
@@ -181,11 +182,13 @@ export class ProjectRoleController {
     @Param('projectId') projectId: string,
     @Body() projectRoles: CreateProjectRoleRequestDto,
   ) {
+    const userId = session.user.id;
     const roles = projectRoles.projectRoles;
-    const result = await this.projectRoleService.createProjectRole(
+    const result = await this.projectRoleService.createProjectRole({
+      userId,
       projectId,
-      roles,
-    );
+      projectRole: roles,
+    });
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
     }
@@ -244,13 +247,18 @@ export class ProjectRoleController {
     },
   })
   async updateProjectRole(
+    @Session() session: UserSession,
     @Param('roleId') roleId: string,
+    @Param('projectId') projectId: string,
     @Body() projectRole: UpdateProjectRoleDto,
   ) {
-    const result = await this.projectRoleService.updateProjectRole(
+    const userId = session.user.id;
+    const result = await this.projectRoleService.updateProjectRole({
       roleId,
+      userId,
+      projectId,
       projectRole,
-    );
+    });
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
     }
@@ -292,6 +300,37 @@ export class ProjectRoleController {
   @Get(':roleId')
   async getProjectRole(@Param('roleId') roleId: string) {
     const result = await this.projectRoleService.getProjectRole(roleId);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
+    }
+    return result.value;
+  }
+
+  @ApiOperation({ summary: 'Delete a project role' })
+  @ApiResponse({
+    status: 200,
+    description: 'Project role deleted successfully',
+    example: { message: 'Project role deleted successfully' },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+    example: {
+      error: 'Bad request',
+    },
+  })
+  @Delete(':roleId')
+  async deleteProjectRole(
+    @Session() session: UserSession,
+    @Param('roleId') roleId: string,
+    @Param('projectId') projectId: string,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectRoleService.deleteProjectRole({
+      roleId,
+      userId,
+      projectId,
+    });
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
     }

@@ -118,4 +118,16 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
       return Result.fail('DATABASE_ERROR');
     }
   }
+
+  async delete(roleId: string): Promise<Result<boolean, string>> {
+    try {
+      await this.prisma.projectRole.delete({
+        where: { id: roleId },
+      });
+      return Result.ok(true);
+    } catch (error) {
+      console.error('Error deleting project role', error);
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
 }

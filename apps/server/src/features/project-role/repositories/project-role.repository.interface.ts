@@ -20,4 +20,5 @@ export interface ProjectRoleRepository {
     roleId: string,
     projectRole: UpdateProjectRoleDto,
   ): Promise<Result<ProjectRole, string>>;
+  delete(roleId: string): Promise<Result<boolean, string>>;
 }

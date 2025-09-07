@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from 'prisma/prisma.module';
 import { ProjectService } from './services/project.service';
 import { PrismaProjectRepository } from './repositories/prisma.project.repository';
@@ -15,7 +15,7 @@ import { UserModule } from '../user/user.module';
     PrismaModule,
     TechStackModule,
     CategoryModule,
-    ProjectRoleModule,
+    forwardRef(() => ProjectRoleModule),
     GithubModule,
     MailingModule,
     UserModule,
