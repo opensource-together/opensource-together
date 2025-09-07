@@ -14,6 +14,12 @@ import { UpsertProfileDto } from '@/features/profile/controllers/dto/upsert-prof
 import { ProfileService } from '@/features/profile/services/profile.service';
 import { Profile as DomainProfile } from '@/features/profile/domain/profile';
 import { CompleteProfile } from '@/features/profile/repositories/profile.repository.interface';
+import {
+  DeleteProfileDocs,
+  GetMyProfileDocs,
+  GetProfileByIdDocs,
+  UpsertProfileDocs,
+} from './docs/swagger.decorator';
 
 @Controller('profile')
 export class ProfileController {
@@ -21,12 +27,16 @@ export class ProfileController {
 
   @UseGuards(AuthGuard)
   @Post()
+  @UpsertProfileDocs()
   async upsertProfile(
     @Session() session: UserSession,
     @Body() data: UpsertProfileDto,
   ): Promise<DomainProfile> {
-    const result = await this.profileService.upsertProfile(session.session.userId, data);
-    if(!result.success) {
+    const result = await this.profileService.upsertProfile(
+      session.session.userId,
+      data,
+    );
+    if (!result.success) {
       throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return result.value;
@@ -34,22 +44,24 @@ export class ProfileController {
 
   @UseGuards(AuthGuard)
   @Get('me')
+  @GetMyProfileDocs()
   async getMyProfile(
     @Session() session: UserSession,
   ): Promise<CompleteProfile> {
-    const result = await this.profileService.getProfileByUserId(session.session.userId);
-    if(!result.success) {
+    const result = await this.profileService.getProfileByUserId(
+      session.session.userId,
+    );
+    if (!result.success) {
       throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return result.value;
   }
 
   @Get(':id')
-  async getProfileById(
-    @Param('id') id: string,
-  ): Promise<CompleteProfile> {
+  @GetProfileByIdDocs()
+  async getProfileById(@Param('id') id: string): Promise<CompleteProfile> {
     const result = await this.profileService.getProfileByUserId(id);
-    if(!result.success) {
+    if (!result.success) {
       throw new HttpException(result.error, HttpStatus.NOT_FOUND);
     }
     return result.value;
@@ -57,9 +69,12 @@ export class ProfileController {
 
   @UseGuards(AuthGuard)
   @Delete()
+  @DeleteProfileDocs()
   async deleteProfile(@Session() session: UserSession): Promise<void> {
-    const result = await this.profileService.deleteProfile(session.session.userId);
-    if(!result.success) {
+    const result = await this.profileService.deleteProfile(
+      session.session.userId,
+    );
+    if (!result.success) {
       throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return;

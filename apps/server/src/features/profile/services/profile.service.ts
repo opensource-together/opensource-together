@@ -81,7 +81,7 @@ export class ProfileService {
     } catch (error) {
       return Result.fail(`Failed to delete profile: ${error}`);
     }
-    
+
     return Result.ok(true);
   }
 }
