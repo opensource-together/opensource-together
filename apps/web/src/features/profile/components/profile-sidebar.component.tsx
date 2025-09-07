@@ -53,14 +53,14 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 variant="black"
                 className="opacity-50"
               />
-              <span className="text-xs font-normal text-neutral-500">
+              <span className="text-sm font-normal text-neutral-500">
                 Stars gagnées
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-primary text-xs font-medium">
+            <span className="text-primary text-sm font-medium">
               {stats.starsEarned}
             </span>
           </div>
@@ -73,14 +73,14 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 variant="black"
                 className="opacity-50"
               />
-              <span className="text-xs font-normal text-neutral-500">
+              <span className="text-sm font-normal text-neutral-500">
                 Repos contribués
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-primary text-xs font-medium">
+            <span className="text-primary text-sm font-medium">
               {stats.joinedProjects}
             </span>
           </div>
@@ -93,14 +93,14 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 variant="black"
                 className="opacity-50"
               />
-              <span className="text-xs font-normal text-neutral-500">
-                Commits cette année
+              <span className="text-sm font-normal text-neutral-500">
+                Contributions cette année
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-primary text-xs font-medium">
+            <span className="text-primary text-sm font-medium">
               {stats.contributions}
             </span>
           </div>
@@ -138,7 +138,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs text-neutral-500 transition-colors hover:text-black"
+                className="flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
               >
                 <Icon
                   name={config.icon as IconName}

@@ -88,21 +88,23 @@ export default function DashboardSidebar() {
 
   return (
     <aside className="hidden w-16 flex-col border-[black]/5 px-2 pt-5 lg:ml-5 lg:flex lg:w-72">
-      <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
-        {sidebarSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className="space-y-3">
-            {sectionIndex > 0 && <Separator className="mx-4" />}
-            {section.items.map((item) => (
-              <SidebarLink
-                key={item.label}
-                item={item}
-                isActive={isActive(item.href)}
-              />
-            ))}
-          </div>
-        ))}
+      <div className="flex h-full flex-col justify-between">
+        <div className="flex flex-col gap-6">
+          {sidebarSections.map((section, sectionIndex) => (
+            <div key={sectionIndex} className="space-y-3">
+              {sectionIndex > 0 && <Separator className="mx-4" />}
+              {section.items.map((item) => (
+                <SidebarLink
+                  key={item.label}
+                  item={item}
+                  isActive={isActive(item.href)}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
 
-        <div className="mt-52">
+        <div>
           <div className="bg-secondary rounded-xl p-4">
             <div className="text-muted-foreground mb-3 text-center text-xs">
               Créer un projet pour OpenSource Together. Importer un repo Github
@@ -119,8 +121,7 @@ export default function DashboardSidebar() {
               </Link>
             </Button>
           </div>
-
-          <div className="mt-5 space-y-3">
+          <div className="my-5 space-y-3">
             {bottomSidebarItems.map((item) => (
               <SidebarLink
                 key={item.label}

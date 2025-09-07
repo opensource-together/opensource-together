@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -14,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -64,11 +62,17 @@ export default function CreateRoleForm({
       open={isDialogOpen}
       onOpenChange={setIsDialogOpen}
       title="Créer un rôle"
+      description="Ajoutez un nouveau rôle pour attirer les bons contributeurs."
       trigger={children}
       size="lg"
+      confirmText="Créer le rôle"
+      cancelText="Retour"
+      onConfirm={form.handleSubmit(onSubmit)}
+      onCancel={() => setIsDialogOpen(false)}
+      isLoading={isCreating}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="create-role-form" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-6">
             <FormField
               control={control}
@@ -81,8 +85,8 @@ export default function CreateRoleForm({
                   >
                     Titre du rôle
                   </FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Ex: Développeur Backend" />
+                  <FormControl className="mt-[-6px]">
+                    <Input {...field} placeholder="Ex: Back-End Developer" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,7 +104,7 @@ export default function CreateRoleForm({
                   >
                     Technologies
                   </FormLabel>
-                  <FormControl>
+                  <FormControl className="mt-[-6px]">
                     <Combobox
                       options={techStackOptions}
                       value={field.value}
@@ -108,6 +112,7 @@ export default function CreateRoleForm({
                       placeholder="Ajouter des technologies"
                       searchPlaceholder="Rechercher une technologie..."
                       emptyText="Aucune technologie trouvée."
+                      maxSelections={6}
                     />
                   </FormControl>
                   <FormMessage />
@@ -126,11 +131,12 @@ export default function CreateRoleForm({
                   >
                     Description
                   </FormLabel>
-                  <FormControl>
+                  <FormControl className="mt-[-6px]">
                     <div className="relative">
                       <Textarea
                         {...field}
                         placeholder="Décrivez les responsabilités et attentes pour ce rôle"
+                        className="h-[94px] border border-black/15 bg-white text-neutral-500"
                       />
                       <div className="absolute right-3 bottom-3 text-xs text-gray-500">
                         {characterCount}/200
@@ -141,22 +147,6 @@ export default function CreateRoleForm({
                 </FormItem>
               )}
             />
-          </div>
-
-          <div className="mt-10 flex-shrink-0">
-            <div className="flex flex-col justify-end gap-2 sm:flex-row sm:gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Retour
-              </Button>
-              <Button type="submit" disabled={isCreating}>
-                {isCreating ? "Création..." : "Créer le rôle"}
-                <Icon name="plus" size="xs" variant="white" />
-              </Button>
-            </div>
           </div>
         </form>
       </Form>

@@ -11,6 +11,7 @@ import {
 } from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
 import Icon, { IconName, IconVariant } from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -57,11 +58,19 @@ export function ConfirmDialog({
             {title}
           </AlertDialogTitle>
           <AlertDialogDescription asChild>
-            <div className="space-y-3">
+            <div>
               <p>{description}</p>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
+        <Separator
+          className="mt-3 mb-1"
+          style={{
+            marginLeft: "-24px",
+            marginRight: "-24px",
+            width: "calc(100% + 48px)",
+          }}
+        />
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Annuler</AlertDialogCancel>
           <Button

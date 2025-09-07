@@ -1,5 +1,7 @@
 "use client";
 
+import { IoEllipse } from "react-icons/io5";
+
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -9,7 +11,9 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import ProjectDetailContentError from "../components/error-ui/project-detail-content-error.component";
 import ProjectFilters from "../components/project-filters.component";
-import ProjectHero from "../components/project-hero.component";
+import ProjectHero, {
+  ProjectMobileHero,
+} from "../components/project-hero.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RoleCard from "../components/role-card.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
@@ -46,13 +50,17 @@ export default function ProjectDetailView({
         />
       }
       hero={<ProjectHero project={project} />}
+      mobileHeader={<ProjectMobileHero {...project} />}
     >
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
-            Rôles Disponibles{" "}
-            <span className="text-sm font-normal text-black/25">
-              {projectRoles?.length || 0}
+          <p className="flex items-center gap-1 text-sm font-medium">
+            <IoEllipse className="text-ost-blue-three size-2" />
+            {projectRoles?.length || 0}{" "}
+            <span className="text-muted-foreground font-medium">
+              {(projectRoles?.length || 0) > 1
+                ? "Rôles Disponibles"
+                : "Rôle Disponible"}
             </span>
           </p>
           {isMaintainer && hasRoles ? (

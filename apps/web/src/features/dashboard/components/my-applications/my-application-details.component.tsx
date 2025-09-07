@@ -49,7 +49,7 @@ export function MyApplicationDetails({
         </div>
         <Link href={`/projects/${application.project.id}`}>
           <Button>
-            Voir projet
+            Voir le projet
             <HiArrowUpRight className="size-3" />
           </Button>
         </Link>

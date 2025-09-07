@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -14,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -67,103 +65,100 @@ export default function EditRoleForm({
       open={isDialogOpen}
       onOpenChange={setIsDialogOpen}
       title="Modifier le rôle"
+      description="Modifier le rôle pour attirer les bons contributeurs."
       trigger={children}
       size="lg"
+      confirmText="Modifier le rôle"
+      cancelText="Retour"
+      onConfirm={form.handleSubmit(onSubmit)}
+      onCancel={() => setIsDialogOpen(false)}
+      isLoading={isUpdating}
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="space-y-6">
-            <FormField
-              control={control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    required
-                    tooltip="Donnez un nom clair au poste recherché. Cela aide les contributeurs à comprendre rapidement s'ils correspondent au profil."
-                  >
-                    Titre du rôle
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Ex: Back-End Developer" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <div className="flex h-full flex-col">
+        <div className="flex-1 space-y-6 overflow-y-auto">
+          <Form {...form}>
+            <form
+              id="edit-role-form"
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
+              <FormField
+                control={control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      required
+                      tooltip="Donnez un nom clair au poste recherché. Cela aide les contributeurs à comprendre rapidement s'ils correspondent au profil."
+                    >
+                      Titre du rôle
+                    </FormLabel>
+                    <FormControl className="mt-[-6px]">
+                      <Input {...field} placeholder="Ex: Back-End Developer" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={control}
-              name="techStacks"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    required
-                    tooltip="Sélectionnez les technologies spécifiques que le contributeur devra maîtriser pour ce rôle. Cela permet un matching précis entre compétences et besoins."
-                  >
-                    Technologies
-                  </FormLabel>
-                  <FormControl>
-                    <Combobox
-                      options={techStackOptions}
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="Ajouter des technologies"
-                      searchPlaceholder="Rechercher une technologie..."
-                      emptyText="Aucune technologie trouvée."
-                      maxSelections={6}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    required
-                    tooltip="Décrivez en détail les missions, responsabilités et attentes pour ce rôle. Plus c'est précis, plus vous attirerez les bons profils."
-                  >
-                    Description
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Textarea
-                        {...field}
-                        placeholder="Décrivez les responsabilités et attentes pour ce rôle"
+              <FormField
+                control={control}
+                name="techStacks"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      required
+                      tooltip="Sélectionnez les technologies spécifiques que le contributeur devra maîtriser pour ce rôle. Cela permet un matching précis entre compétences et besoins."
+                    >
+                      Technologies
+                    </FormLabel>
+                    <FormControl className="mt-[-6px]">
+                      <Combobox
+                        options={techStackOptions}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Ajouter des technologies"
+                        searchPlaceholder="Rechercher une technologie..."
+                        emptyText="Aucune technologie trouvée."
+                        maxSelections={6}
                       />
-                      <div className="absolute right-3 bottom-3 text-xs text-gray-500">
-                        {characterCount}/200
-                      </div>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="mt-10 flex-shrink-0">
-            <div className="flex flex-col justify-end gap-2 sm:flex-row sm:gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsDialogOpen(false)}
-              >
-                Retour
-              </Button>
-              <Button type="submit" disabled={isUpdating}>
-                {isUpdating ? "Modification..." : "Modifier le rôle"}
-                <Icon name="pencil" size="xs" variant="white" />
-              </Button>
-            </div>
-          </div>
-        </form>
-      </Form>
+              <FormField
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      required
+                      tooltip="Décrivez en détail les missions, responsabilités et attentes pour ce rôle. Plus c'est précis, plus vous attirerez les bons profils."
+                    >
+                      Description
+                    </FormLabel>
+                    <FormControl className="mt-[-6px]">
+                      <div className="relative">
+                        <Textarea
+                          {...field}
+                          placeholder="Décrivez les responsabilités et attentes pour ce rôle"
+                          className="h-[94px] border border-black/15 bg-white text-neutral-500"
+                        />
+                        <div className="absolute right-3 bottom-3 text-xs text-gray-500">
+                          {characterCount}/200
+                        </div>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </div>
+      </div>
     </Modal>
   );
 }
