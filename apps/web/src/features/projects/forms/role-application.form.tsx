@@ -107,116 +107,138 @@ export default function RoleApplicationForm({
         trigger={children}
         size="xl"
       >
-        <div className="space-y-6 overflow-hidden">
-          <div className="mt-4">
-            <Label>Description du rôle</Label>
-            <p className="mt-2 tracking-tighter text-black/70">
-              {roleDescription}
-            </p>
+        <div className="flex h-full flex-col">
+          <div className="flex-1 space-y-6 overflow-y-auto">
+            <div className="mt-4">
+              <Label className="text-primary text-xs">
+                Description du rôle
+              </Label>
+              <p className="mt-1 text-sm tracking-tighter text-neutral-500">
+                {roleDescription}
+              </p>
+            </div>
+
+            <Label className="text-primary mb-1.5 text-xs">
+              Exigences techniques
+            </Label>
+            <div className="mt-1 flex flex-wrap gap-2">
+              {techStacks.map((techStack, index) => (
+                <StackLogo
+                  key={`${techStack.name}-${index}`}
+                  name={techStack.name}
+                  icon={techStack.iconUrl || ""}
+                  alt={techStack.name}
+                />
+              ))}
+            </div>
+
+            <Separator />
+
+            <Form {...form}>
+              <form
+                id="role-application-form"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <FormField
+                  control={form.control}
+                  name="keyFeatures"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        tooltip="Sélectionnez les fonctionnalités clés du projet qui vous intéressent le plus et sur lesquelles vous aimeriez contribuer."
+                        className="text-primary mb-0 text-xs"
+                      >
+                        Fonctionnalités qui vous intéressent
+                      </FormLabel>
+                      <FormControl className="mt-[-6px]">
+                        <Combobox
+                          options={keyFeatureOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Sélectionner des fonctionnalités..."
+                          searchPlaceholder="Rechercher une fonctionnalité..."
+                          emptyText="Aucune fonctionnalité trouvée."
+                          showTags={false}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="projectGoals"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        required
+                        tooltip="Choisissez les objectifs du projet qui vous motivent le plus. Cela aide l'équipe à comprendre vos motivations et votre alignement avec la vision du projet."
+                        className="text-primary mb-0 text-xs"
+                      >
+                        Objectifs qui vous motivent
+                      </FormLabel>
+                      <FormControl className="mt-[-6px]">
+                        <Combobox
+                          options={projectGoalOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Sélectionner des objectifs..."
+                          searchPlaceholder="Rechercher un objectif..."
+                          emptyText="Aucun objectif trouvé."
+                          showTags={false}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="motivationLetter"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel
+                        tooltip="Expliquez comment vous pouvez contribuer concrètement au projet et quelles valeurs ajoutées vous apportez avec vos compétences."
+                        className="text-primary mb-0 text-xs"
+                      >
+                        Lettre de motivation (optionnel)
+                      </FormLabel>
+                      <FormControl className="mt-[-6px]">
+                        <Textarea
+                          {...field}
+                          placeholder="Je peux aider à structurer l'API REST et gérer la scalabilité..."
+                          className="h-[94px] border border-black/15 bg-white text-neutral-500"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
           </div>
-
-          <Label>Exigences techniques</Label>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {techStacks.map((techStack, index) => (
-              <StackLogo
-                key={`${techStack.name}-${index}`}
-                name={techStack.name}
-                icon={techStack.iconUrl || ""}
-                alt={techStack.name}
-              />
-            ))}
-          </div>
-
-          <Separator />
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="keyFeatures"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      tooltip="Sélectionnez les fonctionnalités clés du projet qui vous intéressent le plus et sur lesquelles vous aimeriez contribuer."
-                    >
-                      Fonctionnalités qui vous intéressent
-                    </FormLabel>
-                    <FormControl>
-                      <Combobox
-                        options={keyFeatureOptions}
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Sélectionner des fonctionnalités..."
-                        searchPlaceholder="Rechercher une fonctionnalité..."
-                        emptyText="Aucune fonctionnalité trouvée."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="projectGoals"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      required
-                      tooltip="Choisissez les objectifs du projet qui vous motivent le plus. Cela aide l'équipe à comprendre vos motivations et votre alignement avec la vision du projet."
-                    >
-                      Objectifs qui vous motivent
-                    </FormLabel>
-                    <FormControl>
-                      <Combobox
-                        options={projectGoalOptions}
-                        value={field.value}
-                        onChange={field.onChange}
-                        placeholder="Sélectionner des objectifs..."
-                        searchPlaceholder="Rechercher un objectif..."
-                        emptyText="Aucun objectif trouvé."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="motivationLetter"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel tooltip="Expliquez comment vous pouvez contribuer concrètement au projet et quelles valeurs ajoutées vous apportez avec vos compétences.">
-                      Lettre de motivation (optionnel)
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Je peux aider à structurer l'API REST et gérer la scalabilité..."
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="mt-4 flex justify-end gap-3">
+          <div className="sticky bottom-0 z-50 bg-white">
+            <div className="-mx-4.5 mt-21.5">
+              <div className="border-t border-black/10" />
+              <div className="flex items-center justify-end gap-4 px-6 pt-4">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setOpen(false)}
                 >
                   Retour
                 </Button>
-                <Button type="submit">
+                <Button type="submit" form="role-application-form">
                   Envoyer ma candidature
                   <Icon name="check" size="xs" variant="white" />
                 </Button>
               </div>
-            </form>
-          </Form>
+            </div>
+          </div>
         </div>
       </Modal>
 
