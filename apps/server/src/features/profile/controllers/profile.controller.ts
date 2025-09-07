@@ -14,12 +14,10 @@ import { UpsertProfileDto } from '@/features/profile/controllers/dto/upsert-prof
 import { ProfileService } from '@/features/profile/services/profile.service';
 import { Profile as DomainProfile } from '@/features/profile/domain/profile';
 import { CompleteProfile } from '@/features/profile/repositories/profile.repository.interface';
-import {
-  DeleteProfileDocs,
-  GetMyProfileDocs,
-  GetProfileByIdDocs,
-  UpsertProfileDocs,
-} from './docs/swagger.decorator';
+import { UpsertProfileDocs } from './docs/upsert-profile.swagger.decorator';
+import { GetMyProfileDocs } from './docs/get-my-profile.swagger.decorator';
+import { GetProfileByIdDocs } from './docs/get-profile-by-id.swagger.decorator';
+import { DeleteProfileDocs } from './docs/delete-my-profile.swagger.decorator';
 
 @Controller('profile')
 export class ProfileController {
