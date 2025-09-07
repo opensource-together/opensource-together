@@ -17,7 +17,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="mr-4">
-            <Avatar src={avatarUrl} name={username} alt={username} size="2xl" />
+            <Avatar src={avatarUrl} name={username} alt={username} size="xl" />
           </div>
           <div>
             <h2 className="text-2xl">{username}</h2>

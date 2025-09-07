@@ -85,19 +85,21 @@ export default function ProfileEditMainForm({
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-8 lg:w-[668px]">
+        <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
           <FormField
             control={control}
             name="avatarUrl"
             render={() => (
               <FormItem>
-                <FormLabel>Choisir un avatar</FormLabel>
+                <FormLabel className="text-primary text-sm font-normal">
+                  Choisir un avatar
+                </FormLabel>
                 <FormControl>
                   <AvatarUpload
                     onFileSelect={onImageSelect}
                     accept="image/*"
                     maxSize={1}
-                    size="2xl"
+                    size="xl"
                     name={profile.username}
                     fallback={profile.username}
                     currentImageUrl={profile.avatarUrl}
@@ -114,9 +116,15 @@ export default function ProfileEditMainForm({
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom</FormLabel>
+                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                  Nom
+                </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Votre nom" />
+                  <Input
+                    {...field}
+                    placeholder="Votre nom"
+                    className="text-muted-foreground bg-white text-sm"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -128,9 +136,15 @@ export default function ProfileEditMainForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Titre</FormLabel>
+                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                  Titre
+                </FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Ex: Développeur Full Stack" />
+                  <Input
+                    {...field}
+                    placeholder="Ex: Développeur Full Stack"
+                    className="text-muted-foreground bg-white text-sm"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -142,12 +156,14 @@ export default function ProfileEditMainForm({
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                  Description
+                </FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
                     placeholder="Parlez-nous de vous, vos passions, votre expérience..."
-                    className="min-h-[120px] w-full resize-none sm:w-[500px] md:w-[650px]"
+                    className="text-muted-foreground min-h-[120px] w-full resize-none bg-white text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -155,14 +171,18 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <Separator />
+          <div className="my-12.5">
+            <Separator />
+          </div>
 
           <FormField
             control={control}
             name="experiences"
             render={() => (
               <FormItem>
-                <FormLabel>Expériences</FormLabel>
+                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                  Expériences
+                </FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
@@ -170,7 +190,7 @@ export default function ProfileEditMainForm({
                         value={newExperience}
                         onChange={(e) => setNewExperience(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="flex-1"
+                        className="placeholder:text-muted-foreground flex-1 bg-white text-sm"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
@@ -186,10 +206,10 @@ export default function ProfileEditMainForm({
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex w-full flex-col gap-2">
+                    <div className="mt-4.5 flex w-full flex-col gap-2">
                       {experiences.map((experience, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                          <div className="text-primary flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white px-4 py-2 text-xs leading-relaxed shadow-xs">
                             {editingExperienceIndex === index ? (
                               <div className="flex flex-1 items-center gap-2">
                                 <Input
@@ -197,7 +217,7 @@ export default function ProfileEditMainForm({
                                   onChange={(e) =>
                                     setEditingExperienceText(e.target.value)
                                   }
-                                  className="flex-1"
+                                  className="text-primary flex-1 bg-white text-xs"
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter")
                                       saveEditingExperience();
@@ -234,7 +254,11 @@ export default function ProfileEditMainForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="pencil" size="sm" />
+                                    <Icon
+                                      name="pencil"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                   <Button
                                     type="button"
@@ -246,7 +270,11 @@ export default function ProfileEditMainForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="trash" size="sm" />
+                                    <Icon
+                                      name="trash"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                 </div>
                               </>
