@@ -31,9 +31,9 @@ export default function ProjectDetailView({
   const { data: project, isLoading, isError } = useProject(projectId);
   const { data: projectRoles, isLoading: isProjectRolesLoading } =
     useGetProjectRoles(projectId);
-  const { currentUser } = useAuth();
+  const { currentUser, isLoading: isAuthLoading } = useAuth();
 
-  const isMaintainer = currentUser?.id === project?.owner?.id;
+  const isMaintainer = !isAuthLoading && currentUser?.id === project?.owner?.id;
 
   if (isLoading || isProjectRolesLoading) return <SkeletonProjectDetail />;
   if (isError || !project) return <ProjectDetailContentError />;
@@ -42,7 +42,13 @@ export default function ProjectDetailView({
 
   return (
     <TwoColumnLayout
-      sidebar={<ProjectSideBar project={project} isMaintainer={isMaintainer} />}
+      sidebar={
+        <ProjectSideBar
+          project={project}
+          isMaintainer={isMaintainer}
+          isAuthLoading={isAuthLoading}
+        />
+      }
       hero={<ProjectHero project={project} />}
       mobileHeader={<ProjectHeroHeader {...project} />}
     >

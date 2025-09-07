@@ -1,6 +1,7 @@
+import { IoChatbox } from "react-icons/io5";
+
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
 
 import { Profile } from "../types/profile.type";
 
@@ -21,7 +22,7 @@ export default function PublicProfileHero({ profile }: PublicProfileHeroProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="mr-4">
-            <Avatar src={avatarUrl} name={username} alt={username} size="2xl" />
+            <Avatar src={avatarUrl} name={username} alt={username} size="xl" />
           </div>
           <div>
             <h2 className="text-2xl">{username}</h2>
@@ -29,12 +30,14 @@ export default function PublicProfileHero({ profile }: PublicProfileHeroProps) {
           </div>
         </div>
 
-        <Button className="font-normal">
-          <Icon name="chat" size="xs" variant="white" /> Contact
+        <Button className="gap-1 font-normal">
+          Contact <IoChatbox className="size-3.5" />
         </Button>
       </div>
 
-      {bio && <p className="mt-4 mb-6 leading-7 tracking-tighter">{bio}</p>}
+      {bio && (
+        <p className="mt-4 mb-6 text-sm leading-6 tracking-tighter">{bio}</p>
+      )}
     </div>
   );
 }

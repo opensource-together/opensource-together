@@ -9,7 +9,6 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { Form, FormLabel } from "@/shared/components/ui/form";
 import Icon from "@/shared/components/ui/icon";
 
-import ApplicationDetailsSheet from "../components/my-projects/application-details-sheet.component";
 import { ApplicationType } from "../types/my-projects.type";
 import {
   ApplicationDecisionForm,
@@ -18,16 +17,12 @@ import {
 
 interface AcceptOrRejectApplicationFormProps {
   application: ApplicationType;
-  isOpen: boolean;
-  onClose: () => void;
   onAccept: (applicationId: string) => void;
   onReject: (applicationId: string, reason: string) => void;
 }
 
 export default function AcceptOrRejectApplicationForm({
   application,
-  isOpen,
-  onClose,
   onAccept,
   onReject,
 }: AcceptOrRejectApplicationFormProps) {
@@ -141,13 +136,7 @@ export default function AcceptOrRejectApplicationForm({
 
   return (
     <>
-      <ApplicationDetailsSheet
-        application={application}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        {renderApplicationActions()}
-      </ApplicationDetailsSheet>
+      {renderApplicationActions()}
 
       <ConfirmDialog
         open={confirmDialog.open}

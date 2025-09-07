@@ -48,7 +48,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
       hero={<PublicProfileHero profile={profile} />}
     >
       {shouldShowGithubData && (
-        <div className="mb-8 w-full">
+        <div className="mb-2 w-full">
           <GithubCalendar
             contributionGraph={profile.githubStats?.contributionGraph}
             contributionsCount={profile.githubStats?.commitsThisYear || 0}
