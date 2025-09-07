@@ -1,5 +1,7 @@
 "use client";
 
+import { IoEllipse } from "react-icons/io5";
+
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -43,10 +45,13 @@ export default function ProjectDetailView({
     >
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="items-centers flex gap-1 text-lg font-medium tracking-tighter">
-            Rôles Disponibles{" "}
-            <span className="text-sm font-normal text-black/25">
-              {projectRoles?.length || 0}
+          <p className="flex items-center gap-1 text-sm font-normal">
+            <IoEllipse className="text-ost-blue-three size-1.5" />
+            {projectRoles?.length || 0}{" "}
+            <span className="text-neutral-500">
+              {(projectRoles?.length || 0) > 1
+                ? "Rôles Disponibles"
+                : "Rôle Disponible"}
             </span>
           </p>
           {isMaintainer && hasRoles ? (

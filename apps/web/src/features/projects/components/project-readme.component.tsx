@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { GoArrowUpRight } from "react-icons/go";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
@@ -28,11 +29,12 @@ export default function ProjectReadme({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <div className="font-geist relative mt-4 cursor-pointer overflow-hidden rounded-lg border border-black/5 bg-[#FDFDFD] p-5 tracking-tighter transition-colors duration-300 hover:bg-black/5">
+        <div className="font-geist relative mt-4 cursor-pointer overflow-hidden rounded-[22px] border border-black/5 bg-white p-5 tracking-tighter transition-colors duration-300 hover:bg-black/5">
           <div className="mb-2 flex items-center gap-2 text-base text-black">
             <Icon name="github" size="sm" variant="black" />
             <span className="text-lg font-medium">README.md</span>
           </div>
+
           <div className="mb-2 leading-7 text-black">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -126,13 +128,15 @@ export default function ProjectReadme({
                 (readme && readme.length > 300 ? "..." : "")}
             </ReactMarkdown>
           </div>
+          <div className="my-6 border-b border-black/5" />
           <div className="absolute right-4 bottom-3">
             <button
-              className="text-muted-foreground text-sm font-medium hover:underline"
+              className="text-primary flex items-center justify-center text-sm font-medium hover:underline"
               onClick={() => setIsOpen(true)}
               type="button"
             >
-              Voir plus
+              Ouvrir
+              <GoArrowUpRight className="text-primary mt-0.5 size-4" />
             </button>
           </div>
         </div>
