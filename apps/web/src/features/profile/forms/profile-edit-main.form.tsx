@@ -91,7 +91,7 @@ export default function ProfileEditMainForm({
             name="avatarUrl"
             render={() => (
               <FormItem>
-                <FormLabel className="text-primary text-sm font-normal">
+                <FormLabel className="text-primary text-sm font-medium">
                   Choisir un avatar
                 </FormLabel>
                 <FormControl>
@@ -116,14 +116,14 @@ export default function ProfileEditMainForm({
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                <FormLabel className="text-primary mb-0 text-xs font-medium">
                   Nom
                 </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="Votre nom"
-                    className="text-muted-foreground bg-white text-sm"
+                    className="bg-white text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -136,14 +136,14 @@ export default function ProfileEditMainForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                <FormLabel className="text-primary mb-0 text-xs font-medium">
                   Titre
                 </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     placeholder="Ex: Développeur Full Stack"
-                    className="text-muted-foreground bg-white text-sm"
+                    className="bg-white text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -156,14 +156,14 @@ export default function ProfileEditMainForm({
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                <FormLabel className="text-primary mb-0 text-xs font-medium">
                   Description
                 </FormLabel>
                 <FormControl>
                   <Textarea
                     {...field}
                     placeholder="Parlez-nous de vous, vos passions, votre expérience..."
-                    className="text-muted-foreground min-h-[120px] w-full resize-none bg-white text-sm"
+                    className="min-h-[120px] w-full resize-none bg-white text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -180,7 +180,7 @@ export default function ProfileEditMainForm({
             name="experiences"
             render={() => (
               <FormItem>
-                <FormLabel className="text-primary mb-0 text-xs font-normal">
+                <FormLabel className="text-primary mb-0 text-xs font-medium">
                   Expériences
                 </FormLabel>
                 <FormControl>
@@ -190,7 +190,7 @@ export default function ProfileEditMainForm({
                         value={newExperience}
                         onChange={(e) => setNewExperience(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="placeholder:text-muted-foreground flex-1 bg-white text-sm"
+                        className="flex-1 bg-white text-sm"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
@@ -292,7 +292,7 @@ export default function ProfileEditMainForm({
 
           <div className="mt-10 flex w-full justify-end gap-2">
             <Link href="/profile/me">
-              <Button variant="outline" disabled={isUpdating}>
+              <Button variant="secondary" disabled={isUpdating}>
                 Annuler
               </Button>
             </Link>

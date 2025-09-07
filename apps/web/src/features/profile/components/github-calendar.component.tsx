@@ -25,13 +25,13 @@ export default function GithubCalendar({
       case 0:
         return "bg-[#E8EAEE]";
       case 1:
-        return "bg-[var(--ost-blue-one)]";
+        return "bg-ost-blue-one";
       case 2:
-        return "bg-[var(--ost-blue-two)]";
+        return "bg-ost-blue-two";
       case 3:
-        return "bg-[var(--ost-blue-three)]";
+        return "bg-ost-blue-three";
       case 4:
-        return "bg-[var(--ost-blue-four)]";
+        return "bg-ost-blue-four";
       default:
         return "bg-[#E8EAEE]";
     }
