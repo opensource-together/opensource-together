@@ -30,15 +30,20 @@ export default function ProjectSidebarEditForm({
 
   return (
     <div className="flex flex-1 flex-col gap-5">
-      <div className="flex flex-col space-y-10 md:max-w-[263px]">
+      <div className="flex flex-col space-y-6 md:max-w-[263px]">
         <Form {...form}>
           <FormField
             control={control}
             name="techStack"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (max 10)</FormLabel>
-                <FormControl>
+                <FormLabel
+                  required
+                  className="text-primary mb-2 text-sm font-medium"
+                >
+                  Technologies (max 10)
+                </FormLabel>
+                <FormControl className="mt-[-6px]">
                   <Combobox
                     options={techStackOptions}
                     value={field.value}
@@ -64,8 +69,13 @@ export default function ProjectSidebarEditForm({
             name="categories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Catégories (max 6)</FormLabel>
-                <FormControl>
+                <FormLabel
+                  required
+                  className="text-primary mb-2 text-sm font-medium"
+                >
+                  Catégories (max 6)
+                </FormLabel>
+                <FormControl className="mt-[-6px]">
                   <Combobox
                     options={categoryOptions}
                     value={field.value}
@@ -86,8 +96,10 @@ export default function ProjectSidebarEditForm({
             )}
           />
 
-          <div className="flex flex-col gap-4">
-            <FormLabel>Liens sociaux</FormLabel>
+          <div className="mt-0 flex flex-col gap-4">
+            <FormLabel className="text-primary mb-0 text-sm font-medium">
+              Liens sociaux
+            </FormLabel>
 
             <FormField
               control={control}
@@ -98,6 +110,7 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="github"
                       placeholder="https://github.com/..."
+                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -114,6 +127,7 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="discord"
                       placeholder="https://discord.gg/..."
+                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -130,6 +144,7 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="twitter"
                       placeholder="https://x.com/..."
+                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -146,6 +161,7 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="linkedin"
                       placeholder="https://linkedin.com/..."
+                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
@@ -162,6 +178,7 @@ export default function ProjectSidebarEditForm({
                     <InputWithIcon
                       icon="link"
                       placeholder="https://..."
+                      className="bg-white"
                       {...field}
                     />
                   </FormControl>
