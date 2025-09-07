@@ -4,19 +4,18 @@ import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export function GetGithubRepositoryDocs() {
   return applyDecorators(
     ApiOperation({
-      summary:
-        "Récupérer la liste des repository github de l'utilisateur courant",
+      summary: "Fetch the current user's github repository list",
     }),
     ApiCookieAuth('sAccessToken'),
     ApiResponse({
       status: 200,
-      description: 'List repository utilisateur retournée avec succès',
+      description: "List of current user's repositories",
       example: {
         repositories: [
           {
             owner: 'JohnDoe',
             title: 'SampleProject',
-            description: "Un projet d'example",
+            description: 'A Sample project',
             url: 'https://github.com/JohnDoe/SampleProject',
           },
         ],
@@ -24,9 +23,9 @@ export function GetGithubRepositoryDocs() {
     }),
     ApiResponse({
       status: 404,
-      description: 'Utilisateur non trouvé',
+      description: 'User not found',
       example: {
-        message: 'Utilisateur non trouvé.',
+        message: 'User not found',
         error: 'Not Found',
         statusCode: 404,
       },

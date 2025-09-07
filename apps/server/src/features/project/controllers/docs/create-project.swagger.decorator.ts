@@ -1,10 +1,13 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiBody, ApiOperation } from "@nestjs/swagger";
-import { CreateProjectDto } from "../dto/create-project.dto";
+import { applyDecorators } from '@nestjs/common';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { CreateProjectDto } from '../dto/create-project.dto';
 
 export function CreateProjectDocs() {
   return applyDecorators(
-    ApiOperation({ summary: 'Créer un projet' }),
-    ApiBody({ type: CreateProjectDto, description: 'Données du projet à créer' }),
+    ApiOperation({ summary: 'Create a project' }),
+    ApiBody({
+      type: CreateProjectDto,
+      description: 'Data of the project to create',
+    }),
   );
 }

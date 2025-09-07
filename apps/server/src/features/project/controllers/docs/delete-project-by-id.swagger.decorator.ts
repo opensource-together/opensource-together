@@ -1,12 +1,12 @@
-import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function DeleteProjectByIdDocs() {
   return applyDecorators(
-    ApiOperation({ summary: 'Supprimer un projet' }),
+    ApiOperation({ summary: 'Delete a project' }),
     ApiResponse({
       status: 200,
-      description: 'Projet supprimé avec succès',
+      description: 'Project deleted successfully',
       example: { message: 'Project deleted successfully' },
     }),
   );
