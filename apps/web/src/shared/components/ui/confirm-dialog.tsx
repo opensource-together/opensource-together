@@ -5,7 +5,6 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
@@ -51,39 +50,52 @@ export function ConfirmDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-3">
-            {title}
-          </AlertDialogTitle>
-          <AlertDialogDescription asChild>
-            <div className="space-y-3">
-              <p>{description}</p>
+      <AlertDialogContent className="rounded-[22px]">
+        <div className="flex h-full flex-col">
+          <div className="flex-1 space-y-6 overflow-y-auto">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-3">
+                {title}
+              </AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="space-y-3">
+                  <p>{description}</p>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+          </div>
+          <div className="sticky bottom-0 z-50 bg-white">
+            <div className="-mx-6 mt-5">
+              <div className="border-t border-black/10" />
+              <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                <AlertDialogCancel asChild>
+                  <Button variant="secondary" onClick={onCancel}>
+                    Retour
+                  </Button>
+                </AlertDialogCancel>
+                <Button
+                  variant={confirmVariant}
+                  onClick={onConfirm}
+                  disabled={isLoading}
+                  className={`flex items-center gap-2 ${
+                    confirmVariant === "destructive"
+                      ? "bg-red-500 hover:bg-red-600"
+                      : ""
+                  }`}
+                >
+                  {isLoading ? (
+                    "En cours..."
+                  ) : (
+                    <>
+                      {confirmText}
+                      {renderIcon()}
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Annuler</AlertDialogCancel>
-          <Button
-            variant={confirmVariant}
-            onClick={onConfirm}
-            disabled={isLoading}
-            className={`flex items-center gap-2 ${
-              confirmVariant === "destructive"
-                ? "bg-red-500 hover:bg-red-600"
-                : ""
-            }`}
-          >
-            {isLoading ? (
-              "En cours..."
-            ) : (
-              <>
-                {confirmText}
-                {renderIcon()}
-              </>
-            )}
-          </Button>
-        </AlertDialogFooter>
+          </div>
+        </div>
       </AlertDialogContent>
     </AlertDialog>
   );
