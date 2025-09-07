@@ -1,18 +1,13 @@
 export type ApplicationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
-export type User = {
+export type ApplicationProjectRole = {
   id: string;
-  name: string;
-  avatarUrl: string;
-};
-export type Application = {
-  id: string;
-  user: User;
+  userId: string;
   projectId: string;
   projectRoleId: string;
   status: ApplicationStatus;
-  motivationLetter: string;
-  rejectionReason: string;
-  appliedAt: string;
-  decidedAt: string;
-  decidedBy: User;
+  motivationLetter: string | null;
+  rejectionReason?: string | null;
+  appliedAt?: string;
+  decidedAt?: string;
+  decidedBy?: string;
 };

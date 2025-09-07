@@ -4,9 +4,10 @@ import { ApplicationService } from './services/application.service';
 import { ApplicationController } from './controllers/application.controller';
 import { APPLICATION_REPOSITORY } from './repositories/application.repository.interface';
 import { PrismaApplicationRepository } from './repositories/prisma.application.repository';
-
+import { PrismaModule } from 'prisma/prisma.module';
+import { ProjectModule } from '../project/project.module';
 @Module({
-  imports: [UserModule],
+  imports: [PrismaModule, UserModule, ProjectModule],
   controllers: [ApplicationController],
   providers: [
     ApplicationService,

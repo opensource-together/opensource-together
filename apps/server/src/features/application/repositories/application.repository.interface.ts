@@ -1,8 +1,21 @@
 import { Result } from '@/libs/result';
-import { Application } from '../domain/application';
+import {
+  ApplicationProjectRole,
+  ApplicationStatus,
+} from '../domain/application';
 
 export const APPLICATION_REPOSITORY = Symbol('APPLICATION_REPOSITORY');
 
 export interface ApplicationRepository {
-  create(application: Application): Promise<Result<Application, string>>;
+  applyToProjectRole(application: {
+    projectRoleId: string;
+    userId: string;
+    status: ApplicationStatus;
+    motivationLetter: string;
+    projectId: string;
+  }): Promise<Result<ApplicationProjectRole, string>>;
+  existsStatusApplication(
+    userId: string,
+    projectRoleId: string,
+  ): Promise<Result<ApplicationStatus, string>>;
 }
