@@ -31,6 +31,18 @@ export interface Project {
   updatedAt?: Date;
 }
 
+export interface ProjectSummary {
+  id?: string;
+  owner?: { id: string; name: string; githubLogin: string; image: string };
+  title: string;
+  description: string;
+  image: string;
+  techStacks: TechStack[];
+  teamMembers?: TeamMember[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface ValidateProjectDto {
   ownerId: string;
   title: string;
@@ -82,7 +94,6 @@ export interface TeamMember {
   id?: string;
   projectId?: string;
   userId: string;
-  role: string; //TO DO : ajouter un enum pour les roles
   joinedAt?: Date;
 }
 
