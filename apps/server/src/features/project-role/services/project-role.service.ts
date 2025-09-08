@@ -1,11 +1,11 @@
+import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
+import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
+import { validateProjectRole } from '../domain/project-role';
 import {
   PROJECT_ROLE_REPOSITORY,
   ProjectRoleRepository,
 } from '../repositories/project-role.repository.interface';
-import { validateProjectRole } from '../domain/project-role';
-import { Result } from '@/libs/result';
-import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
 
 @Injectable()
 export class ProjectRoleService {
@@ -63,6 +63,14 @@ export class ProjectRoleService {
     const projectRoleResult = await this.projectRoleRepository.findById(roleId);
     if (!projectRoleResult.success) {
       return Result.fail('DATABASE_ERROR');
+    }
+    return Result.ok(projectRoleResult.value);
+  }
+
+  async deleteProjectRole(roleId: string) {
+    const projectRoleResult = await this.projectRoleRepository.delete(roleId);
+    if (!projectRoleResult.success) {
+      return Result.fail(projectRoleResult.error);
     }
     return Result.ok(projectRoleResult.value);
   }

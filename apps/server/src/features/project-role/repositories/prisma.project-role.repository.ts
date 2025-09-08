@@ -1,12 +1,12 @@
+import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
+import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
+import { ProjectRole } from '../domain/project-role';
 import {
   CreateProjectRoleDto,
   ProjectRoleRepository,
 } from './project-role.repository.interface';
-import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
-import { Result } from '@/libs/result';
-import { ProjectRole } from '../domain/project-role';
 
 @Injectable()
 export class PrismaProjectRoleRepository implements ProjectRoleRepository {
@@ -115,6 +115,18 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
       return Result.ok(projectRole);
     } catch (error) {
       console.error('Error finding project role by id', error);
+      return Result.fail('DATABASE_ERROR');
+    }
+  }
+
+  async delete(roleId: string): Promise<Result<void, string>> {
+    try {
+      await this.prisma.projectRole.delete({
+        where: { id: roleId },
+      });
+      return Result.ok(undefined);
+    } catch (error) {
+      console.error('Error deleting project role', error);
       return Result.fail('DATABASE_ERROR');
     }
   }
