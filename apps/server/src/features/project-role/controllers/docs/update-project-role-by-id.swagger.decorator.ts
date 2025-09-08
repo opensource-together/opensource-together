@@ -1,10 +1,16 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UpdateProjectRoleDto } from '../dto/update-project-role.dto';
 
 export function UpdateProjectRoleByIdDocs() {
   return applyDecorators(
     ApiOperation({ summary: 'Update a project role' }),
+    ApiCookieAuth('sAccessToken'),
     ApiBody({
       type: UpdateProjectRoleDto,
       description:
@@ -54,5 +60,8 @@ export function UpdateProjectRoleByIdDocs() {
         ],
       },
     }),
+    ApiResponse({ status: 400, description: 'Bad request' }),
+    ApiResponse({ status: 404, description: 'Project role not found' }),
+    ApiResponse({ status: 500, description: 'Internal server error' }),
   );
 }

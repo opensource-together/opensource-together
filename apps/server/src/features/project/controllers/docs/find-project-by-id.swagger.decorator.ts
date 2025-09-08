@@ -79,5 +79,7 @@ export function FindProjectByIdDocs() {
         },
       },
     }),
+    ApiResponse({ status: 404, description: 'Project not found' }),
+    ApiResponse({ status: 500, description: 'Internal server error' }),
   );
 }

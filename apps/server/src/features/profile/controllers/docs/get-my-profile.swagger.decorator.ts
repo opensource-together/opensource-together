@@ -1,8 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function GetMyProfileDocs() {
   return applyDecorators(
+    ApiCookieAuth('sAccessToken'),
     ApiOperation({
       summary: 'Get the profile of the currently authenticated user',
     }),
@@ -25,5 +26,10 @@ export function GetMyProfileDocs() {
       },
     }),
     ApiResponse({ status: 500, description: 'Internal server error' }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing authentication',
+      example: { statusCode: 401, message: 'Unauthorized' },
+    }),
   );
 }

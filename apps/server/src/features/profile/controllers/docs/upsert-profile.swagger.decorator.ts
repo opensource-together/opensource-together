@@ -1,9 +1,15 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UpsertProfileDto } from '../dto/upsert-profile.dto';
 
 export function UpsertProfileDocs() {
   return applyDecorators(
+    ApiCookieAuth('sAccessToken'),
     ApiOperation({ summary: 'Create or update a user profile' }),
     ApiBody({
       type: UpsertProfileDto,
@@ -33,6 +39,11 @@ export function UpsertProfileDocs() {
         createdAt: '2025-09-06T10:00:00.000Z',
         updatedAt: '2025-09-06T10:00:00.000Z',
       },
+    }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing authentication',
+      example: { statusCode: 401, message: 'Unauthorized' },
     }),
     ApiResponse({ status: 500, description: 'Internal server error' }),
   );

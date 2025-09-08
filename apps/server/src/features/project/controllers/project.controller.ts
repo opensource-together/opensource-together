@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   HttpException,
   HttpStatus,
   Param,
@@ -147,6 +148,7 @@ export class ProjectController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @DeleteProjectByIdDocs()
   async delete(@Param('id') id: string, @Session() session: UserSession) {
     const userId = session.user.id;
@@ -154,6 +156,6 @@ export class ProjectController {
     if (!result.success) {
       throw new BadRequestException(result.error);
     }
-    return { message: 'Project deleted successfully' };
+    return;
   }
 }

@@ -1,10 +1,16 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CreateProjectRoleRequestDto } from '../dto/create-project-role.request.dto';
 
 export function CreateProjectRoleDocs() {
   return applyDecorators(
     ApiOperation({ summary: 'Create a project role' }),
+    ApiCookieAuth('sAccessToken'),
     ApiBody({
       type: CreateProjectRoleRequestDto,
     }),
@@ -30,6 +36,8 @@ export function CreateProjectRoleDocs() {
         error: 'Bad request',
       },
     }),
+    ApiResponse({ status: 401, description: 'Unauthorized' }),
+    ApiResponse({ status: 403, description: 'Forbidden' }),
     ApiResponse({ status: 500, description: 'Internal server error' }),
   );
 }

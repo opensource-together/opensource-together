@@ -6,7 +6,7 @@ export function FindAllProjectsDocs() {
     ApiOperation({ summary: 'Get all projects' }),
     ApiResponse({
       status: 200,
-      description: 'Liste des projets',
+      description: 'List of all projects',
       example: [
         {
           id: '123e4567-e89b-12d3-a456-426614174000',

@@ -1,8 +1,9 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function DeleteProjectRoleByIdDocs() {
   return applyDecorators(
+    ApiCookieAuth('sAccessToken'),
     ApiOperation({ summary: 'Delete a project role' }),
     ApiResponse({
       status: 204,
