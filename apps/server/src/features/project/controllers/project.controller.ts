@@ -1,33 +1,36 @@
+import { GitHubOctokit } from '@/features/github/controllers/github-octokit.decorator';
+import { GithubAuthGuard } from '@/features/github/controllers/guards/github-auth.guard';
 import {
-  Controller,
-  Body,
-  Post,
-  Get,
-  UseGuards,
   BadRequestException,
-  Patch,
-  Param,
-  HttpStatus,
-  HttpException,
+  Body,
+  Controller,
   Delete,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ProjectService } from '../services/project.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { Octokit } from '@octokit/rest';
 import {
   AuthGuard,
   Public,
   Session,
   UserSession,
 } from '@thallesp/nestjs-better-auth';
-import { GithubAuthGuard } from '@/features/github/controllers/guards/github-auth.guard';
-import { Octokit } from '@octokit/rest';
-import { GitHubOctokit } from '@/features/github/controllers/github-octokit.decorator';
-import { FindAllProjectsDocs } from './docs/find-all-projects.swagger.decorator';
+import { ProjectService } from '../services/project.service';
 import { CreateProjectDocs } from './docs/create-project.swagger.decorator';
+import { DeleteProjectByIdDocs } from './docs/delete-project-by-id.swagger.decorator';
+import { FindAllProjectsDocs } from './docs/find-all-projects.swagger.decorator';
+import { FindMyProjectByIdDocs } from './docs/find-my-project-by-id.swagger.decorator';
+import { FindMyProjectsDocs } from './docs/find-my-projects.swagger.decorator';
 import { FindProjectByIdDocs } from './docs/find-project-by-id.swagger.decorator';
 import { UpdateProjectByIdDocs } from './docs/update-project-by-id.swagger.decorator';
-import { DeleteProjectByIdDocs } from './docs/delete-project-by-id.swagger.decorator';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Controller('projects')
 @UseGuards(AuthGuard)
@@ -41,6 +44,50 @@ export class ProjectController {
   async findAll(@GitHubOctokit() octokit: Octokit) {
     const result = await this.projectService.findAll(octokit);
     if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
+  @Get('me')
+  @FindMyProjectsDocs()
+  async findMyProjects(
+    @Session() session: UserSession,
+    @GitHubOctokit() octokit: Octokit,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.findByUserId(userId, octokit);
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
+  @Get('me/:id')
+  @FindMyProjectByIdDocs()
+  async findMyProjectById(
+    @Param('id') projectId: string,
+    @Session() session: UserSession,
+    @GitHubOctokit() octokit: Octokit,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.findMyProjectById(
+      userId,
+      projectId,
+      octokit,
+    );
+    if (!result.success) {
+      if (result.error === 'PROJECT_NOT_FOUND') {
+        throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+      }
+      if (result.error === 'UNAUTHORIZED') {
+        throw new HttpException(
+          'Project does not belong to user',
+          HttpStatus.FORBIDDEN,
+        );
+      }
       throw new BadRequestException(result.error);
     }
     return result.value;
@@ -101,6 +148,7 @@ export class ProjectController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @DeleteProjectByIdDocs()
   async delete(@Param('id') id: string, @Session() session: UserSession) {
     const userId = session.user.id;
@@ -108,6 +156,6 @@ export class ProjectController {
     if (!result.success) {
       throw new BadRequestException(result.error);
     }
-    return { message: 'Project deleted successfully' };
+    return;
   }
 }

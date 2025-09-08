@@ -1,9 +1,15 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UpdateProjectDto } from '../dto/update-project.dto';
 
 export function UpdateProjectByIdDocs() {
   return applyDecorators(
+    ApiCookieAuth('sAccessToken'),
     ApiOperation({
       summary:
         'Update a project, if the title and description change, the github repo will be updated',
@@ -11,6 +17,36 @@ export function UpdateProjectByIdDocs() {
     ApiBody({
       type: UpdateProjectDto,
       description: 'Data of the project to update',
+      examples: {
+        default: {
+          summary: 'Minimal payload',
+          value: {
+            title: 'Updated project title with meaningful context',
+            ownerId: 'GCJO6PXIysuDms1Od6W8TefrigEamAeP',
+            description: 'New description',
+            categories: ['1', '4'],
+            techStacks: ['3', '7'],
+            projectRoles: [
+              {
+                title: 'Backend Developer',
+                description: 'Build APIs',
+                techStacks: ['nestjs'],
+              },
+            ],
+            image: 'https://example.com/image.png',
+            teamMembers: [{ userId: 'user-1', role: 'Contributor' }],
+            coverImages: ['https://example.com/cover.png'],
+            readme: '# Updated README',
+            externalLinks: [
+              {
+                id: 'link-1',
+                type: 'github',
+                url: 'https://github.com/org/repo',
+              },
+            ],
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 200,
@@ -109,5 +145,8 @@ export function UpdateProjectByIdDocs() {
         updatedAt: '2025-08-31T17:09:13.569Z',
       },
     }),
+    ApiResponse({ status: 400, description: 'Bad request' }),
+    ApiResponse({ status: 404, description: 'Project not found' }),
+    ApiResponse({ status: 500, description: 'Internal server error' }),
   );
 }

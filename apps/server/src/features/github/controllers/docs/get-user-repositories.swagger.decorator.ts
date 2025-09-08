@@ -22,12 +22,28 @@ export function GetGithubRepositoryDocs() {
       },
     }),
     ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Invalid or missing authentication',
+      example: {
+        statusCode: 401,
+        message: 'Unauthorized',
+      },
+    }),
+    ApiResponse({
       status: 404,
       description: 'User not found',
       example: {
         message: 'User not found',
         error: 'Not Found',
         statusCode: 404,
+      },
+    }),
+    ApiResponse({
+      status: 500,
+      description: 'Internal server error',
+      example: {
+        statusCode: 500,
+        message: 'Internal server error',
       },
     }),
   );

@@ -1,21 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Result } from '@/libs/result';
-import { PrismaService } from 'prisma/prisma.service';
-import {
-  Project as DomainProject,
-  TechStack as DomainTechStack,
-  ProjectRole as DomainProjectRole,
-  Category as DomainCategory,
-  ExternalLink as DomainExternalLink,
-} from '../domain/project';
+import { Injectable } from '@nestjs/common';
 import {
   Category as PrismaCategory,
+  ProjectExternalLink as PrismaProjectExternalLink,
   ProjectRole as PrismaProjectRole,
   TechStack as PrismaTechStack,
-  ProjectExternalLink as PrismaProjectExternalLink,
   ProjectExternalLink,
 } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaService } from 'prisma/prisma.service';
+import {
+  Category as DomainCategory,
+  ExternalLink as DomainExternalLink,
+  Project as DomainProject,
+  ProjectRole as DomainProjectRole,
+  TechStack as DomainTechStack,
+  ProjectSummary,
+} from '../domain/project';
 import {
   CreateProjectData,
   ProjectRepository,
@@ -78,6 +79,7 @@ export class PrismaProjectRepository implements ProjectRepository {
       });
 
       return Result.ok({
+        id: savedProject.id,
         ownerId: savedProject.ownerId,
         title: savedProject.title,
         description: savedProject.description,
@@ -271,9 +273,64 @@ export class PrismaProjectRepository implements ProjectRepository {
       return Result.fail<DomainProject, string>('DATABASE_ERROR');
     }
   }
-  async findAll(): Promise<Result<DomainProject[], string>> {
+  async findAll(): Promise<Result<ProjectSummary[], string>> {
     try {
       const results = await this.prisma.project.findMany({
+        include: {
+          techStacks: true,
+          projectMembers: true,
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              githubLogin: true,
+              image: true,
+            },
+          },
+        },
+        take: 25,
+      });
+      if (!results) return Result.ok([]);
+
+      return Result.ok(
+        results.map((project) => ({
+          id: project.id,
+          owner: {
+            id: project.owner.id,
+            name: project.owner.name || '',
+            githubLogin: project.owner.githubLogin || '',
+            image: project.owner.image || '',
+          },
+          title: project.title,
+          description: project.description,
+          image: project.image || '',
+          techStacks: project.techStacks.map((tech) => ({
+            id: tech.id,
+            name: tech.name,
+            iconUrl: tech.iconUrl,
+            type: tech.type,
+          })),
+          teamMembers: project.projectMembers?.map((member) => ({
+            id: member.id,
+            projectId: member.projectId,
+            userId: member.userId,
+            joinedAt: member.joinedAt,
+          })),
+          createdAt: project.createdAt,
+          updatedAt: project.updatedAt,
+        })),
+      );
+    } catch {
+      return Result.fail<ProjectSummary[], string>('DATABASE_ERROR');
+    }
+  }
+
+  async findByUserId(userId: string): Promise<Result<DomainProject[], string>> {
+    try {
+      const results = await this.prisma.project.findMany({
+        where: {
+          ownerId: userId,
+        },
         include: {
           techStacks: true,
           projectRoles: {
@@ -297,6 +354,7 @@ export class PrismaProjectRepository implements ProjectRepository {
 
       return Result.ok(
         results.map((project) => ({
+          id: project.id,
           owner: {
             id: project.owner.id,
             name: project.owner.name || '',

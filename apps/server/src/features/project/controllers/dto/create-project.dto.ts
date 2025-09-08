@@ -1,16 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsOptional,
-  IsUrl,
-  IsEnum,
-  ValidateNested,
-  ArrayMinSize,
-  MaxLength,
-} from 'class-validator';
 import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 
 export class TechStackDto {
   @ApiProperty({ description: 'Tech stack ID' })
@@ -98,14 +99,16 @@ export class CreateProjectDto {
   @MaxLength(1000)
   description: string;
 
-  @ApiProperty({ description: 'Project categories' })
+  @ApiProperty({ description: 'Project categories (max 6)' })
   @IsArray()
   @ArrayMinSize(1)
+  @ArrayMaxSize(6)
   categories: string[];
 
-  @ApiProperty({ description: 'Project tech stacks' })
+  @ApiProperty({ description: 'Project tech stacks (max 10)' })
   @IsArray()
   @ArrayMinSize(1)
+  @ArrayMaxSize(10)
   techStacks: string[];
 
   // Éléments optionnels

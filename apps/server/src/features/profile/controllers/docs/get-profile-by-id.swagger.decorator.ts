@@ -25,5 +25,6 @@ export function GetProfileByIdDocs() {
       },
     }),
     ApiResponse({ status: 404, description: 'Profile not found' }),
+    ApiResponse({ status: 500, description: 'Internal server error' }),
   );
 }
