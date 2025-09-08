@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -26,7 +27,24 @@ export class ProfileController {
   @UseGuards(AuthGuard)
   @Post()
   @UpsertProfileDocs()
-  async upsertProfile(
+  async createProfile(
+    @Session() session: UserSession,
+    @Body() data: UpsertProfileDto,
+  ): Promise<DomainProfile> {
+    const result = await this.profileService.upsertProfile(
+      session.session.userId,
+      data,
+    );
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return result.value;
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch()
+  @UpsertProfileDocs()
+  async updateProfile(
     @Session() session: UserSession,
     @Body() data: UpsertProfileDto,
   ): Promise<DomainProfile> {
