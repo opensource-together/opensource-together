@@ -1,14 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function FindMyProjectsDocs() {
   return applyDecorators(
-    ApiTags('Projects'),
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Get current user projects',

@@ -4,12 +4,10 @@ import {
   ApiOperation,
   ApiParam,
   ApiResponse,
-  ApiTags,
 } from '@nestjs/swagger';
 
 export function FindMyProjectByIdDocs() {
   return applyDecorators(
-    ApiTags('Projects'),
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Get my project by ID',
