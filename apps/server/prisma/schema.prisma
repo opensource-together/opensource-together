@@ -14,6 +14,7 @@ enum ProjectRoleApplicationStatus {
   PENDING
   ACCEPTED
   REJECTED
+  CANCELLED
 }
 
 enum SocialLinkType {

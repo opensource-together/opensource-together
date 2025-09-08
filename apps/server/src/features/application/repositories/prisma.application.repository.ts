@@ -48,7 +48,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         where: {
           userId,
           projectRoleId,
-          status: { in: ['PENDING', 'REJECTED', 'ACCEPTED'] },
+          status: { in: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED'] },
         },
       });
       if (!application) {

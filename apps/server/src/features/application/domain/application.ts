@@ -1,4 +1,8 @@
-export type ApplicationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED';
+export type ApplicationStatus =
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CANCELLED';
 export type ApplicationProjectRole = {
   id: string;
   userId: string;
