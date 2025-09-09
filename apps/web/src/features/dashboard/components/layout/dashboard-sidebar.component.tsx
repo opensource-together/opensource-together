@@ -1,71 +1,135 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import "react-icons/hi";
+import {
+  HiChatBubbleLeft,
+  HiChevronRight,
+  HiCog6Tooth,
+  HiInbox,
+  HiMiniSquare2Stack,
+  HiQuestionMarkCircle,
+  HiUserGroup,
+} from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
-import { Icon, IconName } from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 
-const sidebarItems = [
+const sidebarSections = [
   {
-    label: "Mes projets",
-    href: "/dashboard/my-projects",
-    icon: "mix",
+    items: [
+      {
+        label: "Projets",
+        href: "/dashboard/my-projects",
+        icon: HiMiniSquare2Stack,
+      },
+      {
+        label: "Candidatures",
+        href: "/dashboard/my-applications",
+        icon: HiInbox,
+      },
+    ],
   },
   {
-    label: "Mes candidatures",
-    href: "/dashboard/my-applications",
-    icon: "file-text",
+    items: [
+      { label: "Chat", href: "/dashboard/chat", icon: HiChatBubbleLeft },
+      {
+        label: "Invitations",
+        href: "/dashboard/invitations",
+        icon: HiUserGroup,
+      },
+    ],
   },
 ];
+
+const bottomSidebarItems = [
+  { label: "Paramètres", href: "/settings", icon: HiCog6Tooth },
+  { label: "Besoin d'aide", href: "/help", icon: HiQuestionMarkCircle },
+];
+
+interface SidebarItem {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+}
+
+function SidebarLink({
+  item,
+  isActive,
+}: {
+  item: SidebarItem;
+  isActive: boolean;
+}) {
+  return (
+    <Link
+      href={item.href}
+      className={`hidden items-center justify-between gap-3 rounded-full px-4 py-2 transition-colors lg:flex ${
+        isActive
+          ? "bg-secondary font-medium"
+          : "hover:bg-secondary text-muted-foreground"
+      }`}
+    >
+      <span className="text-sm">{item.label}</span>
+      <item.icon
+        className={`size-4 ${
+          isActive ? "text-foreground" : "text-muted-foreground"
+        }`}
+      />
+    </Link>
+  );
+}
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
 
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+
   return (
-    <aside className="hidden w-16 flex-col border border-[black]/5 bg-stone-50/50 px-2 pt-5 lg:flex lg:w-72 lg:px-6">
-      <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
-        <Button asChild className="hidden w-full lg:flex">
-          <Link href="/projects/create">
-            Créer un Project
-            <Plus className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
-
-        <div className="mt-4 space-y-1">
-          {sidebarItems.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/dashboard" && pathname.startsWith(item.href));
-
-            const linkContent = (
-              <>
-                <Icon
-                  name={item.icon as IconName}
-                  size="sm"
-                  variant={isActive ? "default" : "gray"}
-                  className="size-4"
+    <aside className="hidden w-16 flex-col border-[black]/5 px-2 pt-5 lg:ml-5 lg:flex lg:w-72">
+      <div className="flex h-full flex-col justify-between">
+        <div className="flex flex-col gap-6">
+          {sidebarSections.map((section, sectionIndex) => (
+            <div key={sectionIndex} className="space-y-3">
+              {sectionIndex > 0 && <Separator className="mx-4" />}
+              {section.items.map((item) => (
+                <SidebarLink
+                  key={item.label}
+                  item={item}
+                  isActive={isActive(item.href)}
                 />
-                <span className="hidden text-sm lg:inline">{item.label}</span>
-              </>
-            );
+              ))}
+            </div>
+          ))}
+        </div>
 
-            return (
-              <div key={item.label}>
-                <Link
-                  href={item.href}
-                  className={`hidden items-center gap-3 rounded-md px-3 py-2 transition-colors lg:flex ${
-                    isActive
-                      ? "bg-stone-100 font-medium text-black"
-                      : "text-black/50 hover:bg-stone-100"
-                  }`}
-                >
-                  {linkContent}
-                </Link>
-              </div>
-            );
-          })}
+        <div>
+          <div className="bg-secondary rounded-xl p-4">
+            <div className="text-muted-foreground mb-3 text-center text-xs">
+              Créer un projet pour OpenSource Together. Importer un repo Github
+              ou depuis zéro.
+            </div>
+            <Button
+              asChild
+              size="lg"
+              className="hidden w-full justify-between lg:flex"
+            >
+              <Link href="/projects/create">
+                Créer un Projet
+                <HiChevronRight size={12} />
+              </Link>
+            </Button>
+          </div>
+          <div className="my-5 space-y-3">
+            {bottomSidebarItems.map((item) => (
+              <SidebarLink
+                key={item.label}
+                item={item}
+                isActive={isActive(item.href)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </aside>

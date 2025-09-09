@@ -13,8 +13,8 @@ export default function StackLogo({
   icon,
   alt,
   name,
-  width = 14.5,
-  height = 10.22,
+  width = 20,
+  height = 20,
 }: StackLogoProps) {
   let iconSrcToUse = icon;
   if (
@@ -27,13 +27,15 @@ export default function StackLogo({
   }
 
   return (
-    <div className="flex flex-wrap gap-6">
+    <div className="flex flex-wrap gap-2">
       <div className="flex items-center gap-1">
-        <div className="flex size-6 items-center justify-center rounded-full bg-black/5 p-1">
+        <div className="flex size-5 items-center justify-center rounded-full bg-[#FAFAF9] p-1">
           <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
         </div>
         {name && (
-          <span className="text-sm tracking-tighter text-black/70">{name}</span>
+          <span className="text-xs font-medium text-black/70 md:text-sm">
+            {name}
+          </span>
         )}
       </div>
     </div>

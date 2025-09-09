@@ -29,8 +29,8 @@ export default function ProjectSidebarEditForm({
   const { control } = form;
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-col space-y-10 md:max-w-[263px]">
+    <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-col space-y-6 md:max-w-[263px]">
         <Form {...form}>
           <FormField
             control={control}
@@ -38,7 +38,7 @@ export default function ProjectSidebarEditForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Technologies (max 10)</FormLabel>
-                <FormControl>
+                <FormControl className="mt-[-6px]">
                   <Combobox
                     options={techStackOptions}
                     value={field.value}
@@ -65,7 +65,7 @@ export default function ProjectSidebarEditForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Catégories (max 6)</FormLabel>
-                <FormControl>
+                <FormControl className="mt-[-6px]">
                   <Combobox
                     options={categoryOptions}
                     value={field.value}
@@ -86,7 +86,7 @@ export default function ProjectSidebarEditForm({
             )}
           />
 
-          <div className="flex flex-col gap-4">
+          <div className="mt-0 flex flex-col gap-4">
             <FormLabel>Liens sociaux</FormLabel>
 
             <FormField

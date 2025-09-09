@@ -1,9 +1,9 @@
 "use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { CheckIcon, ChevronUpIcon } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
+import { HiCheck, HiChevronUp } from "react-icons/hi";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -130,7 +130,7 @@ function SelectItem({
     >
       <span className="absolute right-2 flex size-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <CheckIcon className="size-4" />
+          <HiCheck className="size-4" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
@@ -167,7 +167,7 @@ function SelectScrollUpButton({
       )}
       {...props}
     >
-      <ChevronUpIcon className="size-4" />
+      <HiChevronUp className="size-4" />
     </SelectPrimitive.ScrollUpButton>
   );
 }

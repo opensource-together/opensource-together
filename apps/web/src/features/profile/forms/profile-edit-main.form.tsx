@@ -85,7 +85,7 @@ export default function ProfileEditMainForm({
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-8 lg:w-[668px]">
+        <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
           <FormField
             control={control}
             name="avatarUrl"
@@ -116,7 +116,11 @@ export default function ProfileEditMainForm({
               <FormItem>
                 <FormLabel>Nom</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Votre nom" />
+                  <Input
+                    {...field}
+                    placeholder="Votre nom"
+                    className="bg-white text-sm"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,7 +134,11 @@ export default function ProfileEditMainForm({
               <FormItem>
                 <FormLabel>Titre</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Ex: Développeur Full Stack" />
+                  <Input
+                    {...field}
+                    placeholder="Ex: Développeur Full Stack"
+                    className="bg-white text-sm"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -147,7 +155,7 @@ export default function ProfileEditMainForm({
                   <Textarea
                     {...field}
                     placeholder="Parlez-nous de vous, vos passions, votre expérience..."
-                    className="min-h-[120px] w-full resize-none sm:w-[500px] md:w-[650px]"
+                    className="min-h-[120px] w-full resize-none bg-white text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -155,7 +163,9 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <Separator />
+          <div className="my-12.5">
+            <Separator />
+          </div>
 
           <FormField
             control={control}
@@ -170,7 +180,7 @@ export default function ProfileEditMainForm({
                         value={newExperience}
                         onChange={(e) => setNewExperience(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="flex-1"
+                        className="flex-1 bg-white text-sm"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
@@ -186,10 +196,10 @@ export default function ProfileEditMainForm({
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex w-full flex-col gap-2">
+                    <div className="mt-4.5 flex w-full flex-col gap-2">
                       {experiences.map((experience, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                          <div className="text-primary flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white px-4 py-2 text-xs leading-relaxed shadow-xs">
                             {editingExperienceIndex === index ? (
                               <div className="flex flex-1 items-center gap-2">
                                 <Input
@@ -197,7 +207,7 @@ export default function ProfileEditMainForm({
                                   onChange={(e) =>
                                     setEditingExperienceText(e.target.value)
                                   }
-                                  className="flex-1"
+                                  className="text-primary flex-1 bg-white text-xs"
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter")
                                       saveEditingExperience();
@@ -234,7 +244,11 @@ export default function ProfileEditMainForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="pencil" size="sm" />
+                                    <Icon
+                                      name="pencil"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                   <Button
                                     type="button"
@@ -246,7 +260,11 @@ export default function ProfileEditMainForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="trash" size="sm" />
+                                    <Icon
+                                      name="trash"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                 </div>
                               </>
@@ -262,15 +280,21 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <div className="mt-10 flex w-full justify-end gap-2">
-            <Link href="/profile/me">
-              <Button variant="outline" disabled={isUpdating}>
-                Annuler
-              </Button>
-            </Link>
-            <Button type="submit" disabled={isUpdating}>
-              {isUpdating ? "Enregistrement..." : "Confirmer"}
-            </Button>
+          <div className="sticky bottom-0 z-50 bg-white">
+            <div className="-mx-4.5 mt-16.5">
+              <div className="border-t border-black/10">
+                <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                  <Link href="/profile/me">
+                    <Button variant="secondary" disabled={isUpdating}>
+                      Retour
+                    </Button>
+                  </Link>
+                  <Button type="submit" disabled={isUpdating}>
+                    {isUpdating ? "Enregistrement..." : "Confirmer"}
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </Form>

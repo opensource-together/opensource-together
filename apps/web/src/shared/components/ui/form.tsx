@@ -104,7 +104,7 @@ function FormLabel({
       required={required}
       tooltip={tooltip}
       data-error={!!error}
-      className={cn("mb-2", className)}
+      className={cn("text-sm", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -155,7 +155,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
+      className={cn("text-destructive ml-1 text-xs", className)}
       {...props}
     >
       {body}

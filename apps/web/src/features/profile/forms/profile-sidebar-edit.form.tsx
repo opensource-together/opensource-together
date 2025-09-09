@@ -29,8 +29,8 @@ export default function ProfileSidebarEditForm({
   const { control } = form;
 
   return (
-    <div className="flex flex-col gap-5">
-      <div className="flex flex-col space-y-10 md:max-w-[263px]">
+    <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-col space-y-10 md:max-w-[260px]">
         <Form {...form}>
           <FormField
             control={control}
@@ -59,7 +59,7 @@ export default function ProfileSidebarEditForm({
             )}
           />
 
-          <div className="mt-10 flex flex-col gap-4">
+          <div className="flex flex-col gap-2.5">
             <FormLabel>Liens sociaux</FormLabel>
 
             <FormField

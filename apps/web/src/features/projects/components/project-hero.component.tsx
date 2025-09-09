@@ -1,18 +1,43 @@
-import Image from "next/image";
-
 import { Avatar } from "@/shared/components/ui/avatar";
 import Icon from "@/shared/components/ui/icon";
+import ImageSlider from "@/shared/components/ui/image-slider.component";
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { Project } from "../types/project.type";
 import ProjectReadme from "./project-readme.component";
 
+export function ProjectMobileHero({
+  title,
+  shortDescription,
+  image,
+  projectStats,
+}: Project) {
+  const stars = projectStats?.stars || 0;
+  return (
+    <div className="flex flex-col bg-white">
+      <div className="flex items-center gap-4">
+        <Avatar src={image} name={title} alt={title} size="lg" />
+        <h1 className="flex-1 text-start text-xl font-medium">{title}</h1>
+        <button className="flex h-[35px] min-w-[70px] items-center justify-center gap-1 rounded-full border border-black/5 text-sm font-medium">
+          <span>{stars || 0}</span>
+          <Icon name="star" size="sm" />
+        </button>
+      </div>
+      <p className="mt-4 text-sm font-normal">{shortDescription}</p>
+      <Separator className="mt-5" />
+    </div>
+  );
+}
 interface ProjectHeroProps {
   project: Project;
+  hideHeader?: boolean;
 }
 
-export default function ProjectHero({ project }: ProjectHeroProps) {
+export default function ProjectHero({
+  project,
+  hideHeader = false,
+}: ProjectHeroProps) {
   const {
     title = "",
     shortDescription = "",
@@ -27,119 +52,68 @@ export default function ProjectHero({ project }: ProjectHeroProps) {
   const stars = projectStats?.stars || 0;
 
   return (
-    <section className="flex flex-col bg-white">
-      <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <Avatar src={image} name={title} alt={title} size="xl" />
-          <h1 className="text-start text-2xl font-medium tracking-tighter text-black sm:text-3xl">
-            {title}
-          </h1>
-        </div>
-
-        <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
-          <span>{stars}</span>
-          <Icon name="star" size="sm" />
-        </button>
-      </div>
-
-      <div className="mt-2">
-        <p className="text-md mb-0 font-medium">{shortDescription}</p>
-
-        <Separator className="my-5" />
-
-        {coverImages.length > 0 && (
-          <div className="mt-2 flex flex-row gap-1">
-            <div className="flex-1">
-              <Image
-                src={coverImages[0]}
-                alt={title}
-                width={700}
-                height={400}
-                className="h-[272px] w-full rounded-md object-cover"
-                priority
-                onError={(e) => {
-                  console.warn(`Failed to load image: ${coverImages[0]}`);
-                  const target = e.target as HTMLImageElement;
-                  const container = target.closest("div");
-                  if (container) {
-                    container.innerHTML = `
-                      <div class="h-[272px] w-full rounded-md bg-gray-100 flex items-center justify-center">
-                        <span class="text-gray-400 text-sm">Image non disponible</span>
-                      </div>
-                    `;
-                  }
-                }}
-              />
+    <div className="flex flex-col bg-white">
+      {!hideHeader && (
+        <div>
+          <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Avatar src={image} name={title} alt={title} size="xl" />
+              <h1 className="text-start text-2xl font-medium sm:text-2xl">
+                {title}
+              </h1>
             </div>
-            {coverImages.length > 1 && (
-              <div className="flex min-w-[180px] flex-col gap-1">
-                {coverImages.slice(1, 4).map((img, idx) => (
-                  <div key={img} className="h-[88px] w-[140px]">
-                    <Image
-                      src={img}
-                      alt={`${title} cover ${idx + 2}`}
-                      width={140}
-                      height={88}
-                      className="h-full w-full rounded-md object-cover"
-                      onError={(e) => {
-                        console.warn(`Failed to load image: ${img}`);
-                        const target = e.target as HTMLImageElement;
-                        const container = target.closest("div");
-                        if (container) {
-                          container.innerHTML = `
-                            <div class="h-[88px] w-[140px] rounded-md bg-gray-100 flex items-center justify-center">
-                              <span class="text-gray-400 text-xs">Image non disponible</span>
-                            </div>
-                          `;
-                        }
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+
+            <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
+              <span>{stars}</span>
+              <Icon name="star" size="sm" />
+            </button>
           </div>
-        )}
 
-        {project.readme && (
-          <ProjectReadme readme={project.readme} projectTitle={title} />
-        )}
-
-        <div className="mt-10 w-full max-w-[629px]">
-          {keyFeatures.length > 0 && (
-            <>
-              <h3 className="mb-3 font-medium text-black">
-                Fonctionnalités clés
-              </h3>
-              <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
-                {keyFeatures.map((feature, index) => (
-                  <li key={index}>{feature.feature}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {projectGoals.length > 0 && (
-            <>
-              <h3 className="mb-3 font-medium text-black">
-                Objectifs du projet
-              </h3>
-              <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose font-normal text-black">
-                {projectGoals.map((goal, index) => (
-                  <li key={index}>{goal.goal}</li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          {!keyFeatures.length && !projectGoals.length && longDescription && (
-            <p className="text-sm font-normal text-black/70">
-              {longDescription}
-            </p>
-          )}
+          <div className="mt-4">
+            <p className="mb-0 text-sm font-normal">{shortDescription}</p>
+            <Separator className="my-5" />
+          </div>
         </div>
+      )}
+
+      {coverImages.length > 0 && <ImageSlider images={coverImages} />}
+
+      {project.readme && (
+        <ProjectReadme
+          readme={project.readme}
+          projectTitle={title}
+          project={project}
+        />
+      )}
+
+      <div className="mt-10 w-full max-w-[629px]">
+        {keyFeatures.length > 0 && (
+          <>
+            <h2 className="mb-4 text-sm font-medium">Fonctionnalités clés</h2>
+            <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose">
+              {keyFeatures.map((feature, index) => (
+                <li key={index}>{feature.feature}</li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {projectGoals.length > 0 && (
+          <>
+            <h2 className="mb-4 text-sm font-medium">Objectifs du projet</h2>
+            <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose">
+              {projectGoals.map((goal, index) => (
+                <li key={index}>{goal.goal}</li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {!keyFeatures.length && !projectGoals.length && longDescription && (
+          <p className="text-sm text-black/70">{longDescription}</p>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
 

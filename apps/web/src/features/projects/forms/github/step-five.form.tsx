@@ -258,7 +258,6 @@ export function StepFiveForm() {
           title={
             isEditMode ? "Modifier le rôle" : "Ajouter des exigences de rôle"
           }
-          footer={modalFooter}
           size="xl"
         >
           <Form {...roleForm}>
@@ -345,6 +344,7 @@ export function StepFiveForm() {
               />
             </form>
           </Form>
+          {modalFooter}
         </Modal>
 
         <FormNavigationButtons

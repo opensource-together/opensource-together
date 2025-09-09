@@ -126,13 +126,15 @@ export default function ProjectMainEditForm({
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-8 lg:w-[668px]">
+        <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
           <FormField
             control={control}
             name="image"
             render={() => (
               <FormItem>
-                <FormLabel>Choisir un avatar</FormLabel>
+                <FormLabel className="text-primary mb-2 text-sm font-medium">
+                  Choisir un avatar
+                </FormLabel>
                 <FormControl>
                   <AvatarUpload
                     onFileSelect={onImageSelect}
@@ -155,9 +157,18 @@ export default function ProjectMainEditForm({
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Titre</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Nom du projet" />
+                <FormLabel
+                  required
+                  className="text-primary mb-2 text-sm font-medium"
+                >
+                  Titre
+                </FormLabel>
+                <FormControl className="mt-[-6px]">
+                  <Input
+                    {...field}
+                    placeholder="Nom du projet"
+                    className="text-primary bg-white text-sm"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -169,12 +180,17 @@ export default function ProjectMainEditForm({
             name="shortDescription"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Description</FormLabel>
-                <FormControl>
+                <FormLabel
+                  required
+                  className="text-primary mb-2 text-sm font-medium"
+                >
+                  Description
+                </FormLabel>
+                <FormControl className="mt-[-6px]">
                   <Textarea
                     {...field}
                     placeholder="Description du projet"
-                    className="h-[80px]"
+                    className="text-primary min-h-[120px] w-full resize-none bg-white text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -189,10 +205,13 @@ export default function ProjectMainEditForm({
             name="coverImages"
             render={() => (
               <FormItem>
-                <FormLabel tooltip="Ajoutez jusqu'à 4 images de couverture.">
+                <FormLabel
+                  tooltip="Ajoutez jusqu'à 4 images de couverture."
+                  className="text-primary mb-2 text-sm font-medium"
+                >
                   Images de couverture
                 </FormLabel>
-                <FormControl>
+                <FormControl className="mt-[-6px]">
                   <MultipleImageUpload
                     accept="image/*"
                     maxFiles={4}
@@ -219,17 +238,18 @@ export default function ProjectMainEditForm({
                 <FormLabel
                   required
                   tooltip="Listez les principales fonctionnalités que votre projet propose ou proposera. Cela aide les développeurs à identifier les projets correspondant à leurs compétences."
+                  className="text-primary mb-2 text-sm font-medium"
                 >
                   Fonctionnalités Clés
                 </FormLabel>
-                <FormControl>
+                <FormControl className="mt-[-6px]">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <Input
                         value={newFeature}
                         onChange={(e) => setNewFeature(e.target.value)}
                         placeholder="Ajouter une fonctionnalité"
-                        className="flex-1 lg:w-[566px]"
+                        className="placeholder:text-muted-foreground flex-1 bg-white text-sm lg:w-[547px]"
                       />
                       <Button
                         type="button"
@@ -239,10 +259,10 @@ export default function ProjectMainEditForm({
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex w-full flex-col gap-2 lg:w-[668px]">
+                    <div className="flex w-full flex-col gap-2 lg:w-full">
                       {keyFeatures.map((feature, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                          <div className="text-primary flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white px-4 py-2 text-xs leading-relaxed shadow-xs">
                             {editingFeatureIndex === index ? (
                               <div className="flex flex-1 items-center gap-2">
                                 <Input
@@ -250,7 +270,7 @@ export default function ProjectMainEditForm({
                                   onChange={(e) =>
                                     setEditingFeatureText(e.target.value)
                                   }
-                                  className="flex-1"
+                                  className="text-primary flex-1 bg-white text-xs"
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") saveEditingFeature();
                                     if (e.key === "Escape")
@@ -286,7 +306,11 @@ export default function ProjectMainEditForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="pencil" size="sm" />
+                                    <Icon
+                                      name="pencil"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                   <Button
                                     type="button"
@@ -298,7 +322,11 @@ export default function ProjectMainEditForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="trash" size="sm" />
+                                    <Icon
+                                      name="trash"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                 </div>
                               </>
@@ -322,26 +350,27 @@ export default function ProjectMainEditForm({
                 <FormLabel
                   required
                   tooltip="Décrivez les buts et résultats attendus de votre projet. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
+                  className="text-primary mb-2 text-sm font-medium"
                 >
                   Objectifs du projet
                 </FormLabel>
-                <FormControl>
+                <FormControl className="mt-[-6px]">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <Input
                         value={newGoal}
                         onChange={(e) => setNewGoal(e.target.value)}
                         placeholder="Ajouter un objectif"
-                        className="flex-1 lg:w-[566px]"
+                        className="placeholder:text-muted-foreground flex-1 bg-white text-sm lg:w-[547px]"
                       />
                       <Button type="button" onClick={addGoal} variant="outline">
                         Ajouter
                       </Button>
                     </div>
-                    <div className="flex w-full flex-col gap-2 lg:w-[668px]">
+                    <div className="flex w-full flex-col gap-2 lg:w-full">
                       {projectGoals.map((goal, index) => (
                         <div key={index} className="flex items-center gap-2">
-                          <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
+                          <div className="text-primary flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white px-4 py-2 text-xs leading-relaxed shadow-xs">
                             {editingGoalIndex === index ? (
                               <div className="flex flex-1 items-center gap-2">
                                 <Input
@@ -349,7 +378,7 @@ export default function ProjectMainEditForm({
                                   onChange={(e) =>
                                     setEditingGoalText(e.target.value)
                                   }
-                                  className="flex-1"
+                                  className="text-primary flex-1 bg-white text-xs"
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") saveEditingGoal();
                                     if (e.key === "Escape") cancelEditingGoal();
@@ -381,7 +410,11 @@ export default function ProjectMainEditForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="pencil" size="sm" />
+                                    <Icon
+                                      name="pencil"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                   <Button
                                     type="button"
@@ -393,7 +426,11 @@ export default function ProjectMainEditForm({
                                     variant="ghost"
                                     size="icon"
                                   >
-                                    <Icon name="trash" size="sm" />
+                                    <Icon
+                                      name="trash"
+                                      size="xs"
+                                      className="size-2.5"
+                                    />
                                   </Button>
                                 </div>
                               </>
@@ -409,10 +446,10 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <div className="mt-10 flex w-full justify-end gap-2">
+          <div className="flex w-full justify-end gap-4">
             <Link href={`/projects/${project.id}`}>
-              <Button variant="outline" disabled={isUpdating}>
-                Annuler
+              <Button variant="secondary" disabled={isUpdating}>
+                Retour
               </Button>
             </Link>
             <Button onClick={onSubmit} disabled={isUpdating}>

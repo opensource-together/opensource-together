@@ -1,3 +1,5 @@
+import { HiMiniSquare2Stack } from "react-icons/hi2";
+
 import DashboardHeading from "@/features/dashboard/components/layout/dashboard-heading.component";
 
 export default function MyProjectsSkeletonComponent() {
@@ -5,6 +7,7 @@ export default function MyProjectsSkeletonComponent() {
     <div>
       <DashboardHeading
         title="Mes projets"
+        icon={<HiMiniSquare2Stack size={16} />}
         description="Gérez vos projets Open Source et vos candidatures reçues."
       />
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
