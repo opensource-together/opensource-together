@@ -17,13 +17,13 @@ export default function GitHubButton({
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {
-  const { signInWithGitHub } = useAuth();
+  const { signInWithProvider } = useAuth();
 
   const isOutlineVariant = variant === "outline";
 
   return (
     <Button
-      onClick={() => signInWithGitHub()}
+      onClick={() => signInWithProvider("github")}
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
