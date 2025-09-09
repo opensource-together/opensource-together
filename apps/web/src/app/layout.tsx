@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import Footer from "@/shared/components/layout/footer";
-import Header from "@/shared/components/layout/header";
 import { Toaster } from "@/shared/components/ui/sonner";
+
+import DashboardHeader from "@/features/dashboard/components/layout/dashboard-header.component";
 
 import "../../public/fonts/font-face.css";
 import "./globals.css";
@@ -41,7 +42,7 @@ export default function RootLayout({
     >
       <body>
         <Providers>
-          <Header />
+          <DashboardHeader />
           {children}
           <Footer />
           <Toaster />
