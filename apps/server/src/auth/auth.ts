@@ -1,10 +1,10 @@
+import { getProfileService } from '@/features/profile/services/profile.holder';
+import { getUserService } from '@/features/user/services/user.holder';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { Account } from 'better-auth/types';
 import * as process from 'node:process';
 import { PrismaService } from 'prisma/prisma.service';
-import { getProfileService } from '@/features/profile/services/profile.holder';
-import { Account } from 'better-auth/types';
-import { getUserService } from '@/features/user/services/user.holder';
 
 const prisma = new PrismaService();
 
@@ -51,6 +51,10 @@ export const auth: {
   },
   trustedOrigins: ['http://localhost:3000', 'http://localhost:4000'],
   baseURL: 'http://localhost:4000',
+  urls: {
+    signInRedirect: 'http://localhost:3000/',
+    signOutRedirect: 'http://localhost:3000/',
+  },
   databaseHooks: {
     account: {
       create: {

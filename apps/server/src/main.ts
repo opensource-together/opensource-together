@@ -1,12 +1,17 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { createApiDocs } from '@/docs/openapi';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule, {
     bodyParser: false,
+  });
+
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
   });
 
   app.use(cookieParser());

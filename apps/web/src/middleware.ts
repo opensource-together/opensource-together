@@ -7,11 +7,11 @@ const authRoutes = ["/auth/login", "/auth/register"];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const hasSessionCookies =
-    request.cookies.has("sFrontToken") ||
-    request.cookies.has("sAccessToken") ||
-    request.cookies.has("st-access-token") ||
-    request.cookies.has("st-refresh-token");
+  const hasBetterAuthCookie = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith("better-auth"));
+
+  const hasSessionCookies = hasBetterAuthCookie;
 
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
