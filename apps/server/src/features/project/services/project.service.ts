@@ -13,6 +13,10 @@ import { TECH_STACK_REPOSITORY } from '@/features/tech-stack/repositories/tech-s
 import { TechStackRepository } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import { CATEGORY_REPOSITORY } from '@/features/category/repositories/category.repository.interface';
 import { CategoryRepository } from '@/features/category/repositories/category.repository.interface';
+import {
+  NotificationService,
+  NOTIFICATION_SERVICE,
+} from '@/notification/services';
 
 export type CreateProjectRequest = CreateProjectDto;
 
@@ -35,6 +39,8 @@ export class ProjectService {
     private readonly techStackRepository: TechStackRepository,
     @Inject(CATEGORY_REPOSITORY)
     private readonly categoryRepository: CategoryRepository,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationService: NotificationService,
   ) {}
 
   async createProject(
