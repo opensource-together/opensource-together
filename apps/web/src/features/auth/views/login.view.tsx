@@ -9,7 +9,6 @@ import LoginForm from "../components/login-form.component";
 export default function LoginView() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      {/* Logo en position absolue, à gauche de l'écran */}
       <Link href="/" className="absolute top-15 left-20 z-10">
         <Image
           src="/ostogether-logo.svg"
@@ -20,7 +19,6 @@ export default function LoginView() {
         />
       </Link>
 
-      {/* Textes en bas à gauche */}
       <div className="absolute bottom-20 left-20 z-10 max-w-[500px]">
         <h1
           className="text-3xl leading-tight font-medium tracking-tighter text-black md:text-4xl"

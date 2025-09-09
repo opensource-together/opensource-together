@@ -19,6 +19,7 @@ import {
 import Icon from "@/shared/components/ui/icon";
 import { Label } from "@/shared/components/ui/label";
 import { Modal } from "@/shared/components/ui/modal";
+import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useApplyToProject } from "../hooks/use-project-apply.hook";
@@ -53,23 +54,21 @@ export default function RoleApplicationForm({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { applyToProject, isApplying } = useApplyToProject(projectId, roleId);
 
-  // Function to truncate text for display
   const truncateText = (text: string, maxLength: number = 40) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
 
-  // Transform data for Combobox options with truncated names
   const keyFeatureOptions = keyFeatures.map((feature) => ({
     id: feature.id || feature.feature,
     name: truncateText(feature.feature),
-    fullName: feature.feature, // Keep full name for tooltip if needed
+    fullName: feature.feature,
   }));
 
   const projectGoalOptions = projectGoals.map((goal) => ({
     id: goal.id || goal.goal,
     name: truncateText(goal.goal),
-    fullName: goal.goal, // Keep full name for tooltip if needed
+    fullName: goal.goal,
   }));
 
   const form = useForm<RoleApplicationSchema>({
@@ -128,7 +127,7 @@ export default function RoleApplicationForm({
             ))}
           </div>
 
-          <div className="h-[1px] w-full bg-black/5" />
+          <Separator />
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

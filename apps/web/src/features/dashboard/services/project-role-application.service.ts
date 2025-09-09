@@ -3,9 +3,9 @@ import { API_BASE_URL } from "@/config/config";
 import { ProjectRoleApplicationType } from "./../types/project-role-application.type";
 
 /**
- * Récupère les candidatures de l'utilisateur courant
+ * Fetches the list of project role applications for the current user.
  *
- * @returns Promise<ProjectRoleApplicationType[]> - Liste des candidatures
+ * @returns A promise that resolves to an array of project role applications.
  */
 export const getMyApplications = async (): Promise<
   ProjectRoleApplicationType[]
@@ -27,46 +27,6 @@ export const getMyApplications = async (): Promise<
     return await response.json();
   } catch (error) {
     console.error("Error fetching applications:", error);
-    throw error;
-  }
-};
-
-/**
- * Récupère les détails d'une application spécifique
- *
- * @param applicationId - L'ID de l'application à récupérer
- * @returns Promise<ProjectRoleApplicationType> - Détails de l'application
- */
-export const getApplicationById = async (
-  applicationId: string
-): Promise<ProjectRoleApplicationType> => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/applications/${applicationId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch application");
-    }
-
-    const data = await response.json();
-
-    // Convertir les dates string en objets Date
-    return {
-      ...data,
-      appliedAt: new Date(data.appliedAt),
-      decidedAt: data.decidedAt ? new Date(data.decidedAt) : undefined,
-    };
-  } catch (error) {
-    console.error("Error fetching application:", error);
     throw error;
   }
 };
@@ -170,12 +130,12 @@ export async function rejectProjectRoleApplication(
 }
 
 /**
- * Postule à un rôle de projet
+ * Applies to a project role.
  *
- * @param projectId - L'ID du projet
- * @param roleId - L'ID du rôle
- * @param applicationData - Les données de candidature
- * @returns Promise<ProjectRoleApplicationType> - La candidature créée
+ * @param projectId - The ID of the project.
+ * @param roleId - The ID of the role.
+ * @param applicationData - The application data.
+ * @returns A promise that resolves to the application details.
  */
 export async function applyToProjectRole(
   projectId: string,
@@ -204,14 +164,7 @@ export async function applyToProjectRole(
       );
     }
 
-    const data = await response.json();
-
-    // Convertir les dates string en objets Date
-    return {
-      ...data,
-      appliedAt: new Date(data.appliedAt),
-      decidedAt: data.decidedAt ? new Date(data.decidedAt) : undefined,
-    };
+    return response.json();
   } catch (error) {
     console.error("[applyToProjectRole]", error);
     throw error;

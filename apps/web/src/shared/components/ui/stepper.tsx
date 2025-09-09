@@ -6,7 +6,6 @@ import { createContext, useContext } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-// Types
 type StepperContextValue = {
   activeStep: number;
   setActiveStep: (step: number) => void;
@@ -22,7 +21,6 @@ type StepItemContextValue = {
 
 type StepState = "active" | "completed" | "inactive" | "loading";
 
-// Contexts
 const StepperContext = createContext<StepperContextValue | undefined>(
   undefined
 );
@@ -46,7 +44,6 @@ const useStepItem = () => {
   return context;
 };
 
-// Components
 interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultValue?: number;
   value?: number;
@@ -103,7 +100,6 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
 );
 Stepper.displayName = "Stepper";
 
-// StepperItem
 interface StepperItemProps extends React.HTMLAttributes<HTMLDivElement> {
   step: number;
   completed?: boolean;
@@ -157,7 +153,6 @@ const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
 );
 StepperItem.displayName = "StepperItem";
 
-// StepperTrigger
 interface StepperTriggerProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
@@ -190,7 +185,6 @@ const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
 );
 StepperTrigger.displayName = "StepperTrigger";
 
-// StepperIndicator
 interface StepperIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   asChild?: boolean;
 }

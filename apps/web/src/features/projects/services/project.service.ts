@@ -42,8 +42,6 @@ export const getProjects = async (): Promise<Project[]> => {
     }
 
     return response.json();
-    // Mock data - commented out for now
-    // return Promise.resolve(mockProjects);
   } catch (error) {
     console.error("Error while sending the request to the API:", error);
     throw error;
@@ -73,11 +71,6 @@ export const getProjectDetails = async (
     }
 
     return response.json();
-
-    // Mock data - commented out for now
-    // return Promise.resolve(
-    //   mockProjects.find((p) => p.id === projectId) || mockProjects[0]
-    // );
   } catch (error) {
     console.error("Error fetching project details:", error);
     throw error;
@@ -130,7 +123,6 @@ export const createProject = async (
   const coverImageUrls: string[] = [];
 
   try {
-    // Upload image if provided
     if (imageFile) {
       imageUrl = await safeUploadMedia(imageFile);
       if (!imageUrl) {
@@ -138,7 +130,6 @@ export const createProject = async (
       }
     }
 
-    // Upload cover images in parallel
     if (storeData.coverImages && storeData.coverImages.length > 0) {
       const uploadPromises = storeData.coverImages.map((file) =>
         safeUploadMedia(file)
@@ -150,7 +141,6 @@ export const createProject = async (
       });
     }
 
-    // Transform store data to API format
     const apiData = {
       ...transformProjectForApi(storeData),
       image: imageUrl || storeData.image,
@@ -180,7 +170,6 @@ export const createProject = async (
 
     return response.json();
   } catch (error) {
-    // Cleanup uploaded images on failure
     if (imageUrl) {
       await safeDeleteMedia(imageUrl);
     }
@@ -207,45 +196,36 @@ export const updateProject = async (
   removedCoverImages: string[] = []
 ): Promise<Project> => {
   try {
-    // Validate input parameters
     const validatedParams = UpdateProjectSchema.parse(params);
     const { data, projectId } = validatedParams;
 
-    // Get current project to access current image
     const currentProject = await getProjectDetails(projectId);
 
     let imageUrl: string | undefined = currentProject.image;
     let coverImages: string[] = currentProject.coverImages || [];
 
-    // Handle image operations
     if (shouldDeleteImage && currentProject.image) {
       await safeDeleteMedia(currentProject.image);
       imageUrl = undefined;
     } else if (newImageFile) {
       if (currentProject.image) {
-        // Replace existing image
         const newImageUrl = await safeReplaceMedia(
           currentProject.image,
           newImageFile
         );
         imageUrl = newImageUrl || undefined;
       } else {
-        // Upload new image
         const newImageUrl = await safeUploadMedia(newImageFile);
         imageUrl = newImageUrl || undefined;
       }
     }
 
-    // Handle cover images deletions
     if (removedCoverImages.length > 0) {
       const toDeleteSet = new Set(removedCoverImages);
-      // Delete removed images (safe)
       await Promise.all(removedCoverImages.map((url) => safeDeleteMedia(url)));
-      // Keep only not-removed images
       coverImages = coverImages.filter((url) => !toDeleteSet.has(url));
     }
 
-    // Handle new cover images uploads in parallel
     if (newCoverFiles.length > 0) {
       const uploaded = await Promise.all(
         newCoverFiles.map((f) => safeUploadMedia(f))
@@ -254,14 +234,12 @@ export const updateProject = async (
       coverImages = [...coverImages, ...uploadedUrls].slice(0, 4);
     }
 
-    // Transform data to API format
     const apiPayload = transformProjectForApiUpdate({
       ...data,
       image: imageUrl,
       coverImages,
     });
 
-    // Validate the API payload
     const validatedData = updateProjectApiSchema.parse(apiPayload);
 
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
@@ -293,7 +271,6 @@ export const updateProject = async (
  */
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
-    // Get project details to access image before deletion
     const project = await getProjectDetails(projectId);
 
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
@@ -311,12 +288,9 @@ export const deleteProject = async (projectId: string): Promise<void> => {
       );
     }
 
-    // Clean up associated image after successful project deletion
     if (project.image) {
       await safeDeleteMedia(project.image);
     }
-
-    // No need to return anything for DELETE
   } catch (error) {
     console.error("Error deleting project:", error);
     throw error;

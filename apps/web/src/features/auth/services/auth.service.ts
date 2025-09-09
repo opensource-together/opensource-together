@@ -22,6 +22,34 @@ export const checkSession = async (): Promise<boolean> => {
 };
 
 /**
+ * Get WebSocket token for notifications
+ */
+export const getWebSocketToken = async (): Promise<string | null> => {
+  try {
+    const sessionExists = await checkSession();
+
+    if (!sessionExists) return null;
+
+    const response = await fetch(`${API_BASE_URL}/notifications/ws-token`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.wsToken || null; // use 'wsToken' instead of 'token'
+    }
+
+    throw new Error("Failed to fetch WebSocket token");
+  } catch (error) {
+    console.error("Error fetching WebSocket token:", error);
+    return null;
+  }
+};
+
+/**
  * Check if session exists and get user profile
  */
 export const getCurrentUser = async (): Promise<Profile | null> => {

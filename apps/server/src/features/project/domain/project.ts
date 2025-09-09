@@ -16,7 +16,7 @@
  */
 export interface Project {
   id?: string;
-  ownerId: string;
+  owner?: { id: string; name: string; githubLogin: string; image: string };
   title: string;
   description: string;
   image: string;
@@ -27,6 +27,18 @@ export interface Project {
   coverImages?: string[];
   readme?: string;
   externalLinks?: ExternalLink[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ProjectSummary {
+  id?: string;
+  owner?: { id: string; name: string; githubLogin: string; image: string };
+  title: string;
+  description: string;
+  image: string;
+  techStacks: TechStack[];
+  teamMembers?: TeamMember[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -82,7 +94,6 @@ export interface TeamMember {
   id?: string;
   projectId?: string;
   userId: string;
-  role: string; //TO DO : ajouter un enum pour les roles
   joinedAt?: Date;
 }
 
@@ -143,5 +154,6 @@ export function canUserModifyProject(
   project: Project,
   userId: string,
 ): boolean {
-  return project.ownerId === userId;
+  console.log(project.owner?.id, userId);
+  return project.owner?.id === userId;
 }

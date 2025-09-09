@@ -53,7 +53,6 @@ export default function DashboardSidebar() {
 
             return (
               <div key={item.label}>
-                {/* Desktop view */}
                 <Link
                   href={item.href}
                   className={`hidden items-center gap-3 rounded-md px-3 py-2 transition-colors lg:flex ${

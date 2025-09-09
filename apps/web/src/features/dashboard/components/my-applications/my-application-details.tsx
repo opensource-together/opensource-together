@@ -59,7 +59,6 @@ export function MyApplicationDetails({
       />
 
       <div className="top-6 space-y-8 rounded-[20px] border border-[black]/6 p-6">
-        {/* Description */}
         <div className="flex justify-between">
           <div>
             <Label className="flex flex-col text-xl md:flex-row">
@@ -81,7 +80,6 @@ export function MyApplicationDetails({
           </div>
         </div>
 
-        {/* Tech Stack */}
         <div>
           <Label>Stack technique</Label>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -96,7 +94,6 @@ export function MyApplicationDetails({
           </div>
         </div>
 
-        {/* Motivation */}
         {application.motivationLetter && (
           <div>
             <Label>Lettre de motivation</Label>
@@ -106,7 +103,6 @@ export function MyApplicationDetails({
           </div>
         )}
 
-        {/* Features */}
         {application.selectedKeyFeatures?.length > 0 && (
           <div>
             <Label>Fonctionnalités sélectionnées</Label>
@@ -118,7 +114,6 @@ export function MyApplicationDetails({
           </div>
         )}
 
-        {/* Goals */}
         {application.selectedProjectGoals?.length > 0 && (
           <div>
             <Label>Objectifs sélectionnés</Label>
@@ -130,10 +125,8 @@ export function MyApplicationDetails({
           </div>
         )}
 
-        {/* Divider */}
         <div className="border-t border-black/3" />
 
-        {/* Date */}
         <div className="text-muted-foreground text-xs">
           Envoyée le {new Date(application.appliedAt).toLocaleDateString()}
         </div>

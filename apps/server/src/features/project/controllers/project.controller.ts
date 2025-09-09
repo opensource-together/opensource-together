@@ -1,19 +1,39 @@
+import { GitHubOctokit } from '@/features/github/controllers/github-octokit.decorator';
+import { GithubAuthGuard } from '@/features/github/controllers/guards/github-auth.guard';
 import {
-  Controller,
-  Body,
-  Post,
-  Get,
-  UseGuards,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Inject,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ProjectService } from '../services/project.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
+import { Octokit } from '@octokit/rest';
 import {
-  MAILING_SERVICE,
-  MailingServicePort,
-} from '@/mailing/mailing.interface';
+  AuthGuard,
+  Public,
+  Session,
+  UserSession,
+} from '@thallesp/nestjs-better-auth';
+import { ProjectService } from '../services/project.service';
+import { CreateProjectDocs } from './docs/create-project.swagger.decorator';
+import { DeleteProjectByIdDocs } from './docs/delete-project-by-id.swagger.decorator';
+import { FindAllProjectsDocs } from './docs/find-all-projects.swagger.decorator';
+import { FindMyProjectByIdDocs } from './docs/find-my-project-by-id.swagger.decorator';
+import { FindMyProjectsDocs } from './docs/find-my-projects.swagger.decorator';
+import { FindProjectByIdDocs } from './docs/find-project-by-id.swagger.decorator';
+import { UpdateProjectByIdDocs } from './docs/update-project-by-id.swagger.decorator';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
+import { MailingServicePort } from '@/mailing/mailing.interface';
+import { MAILING_SERVICE } from '@/mailing/mailing.interface';
 
 @Controller('projects')
 @UseGuards(AuthGuard)
@@ -24,25 +44,75 @@ export class ProjectController {
     private readonly mailingService: MailingServicePort,
   ) {}
 
+  @UseGuards(GithubAuthGuard)
   @Get()
-  getProjects() {
-    return [];
+  @Public()
+  @FindAllProjectsDocs()
+  async findAll(@GitHubOctokit() octokit: Octokit) {
+    const result = await this.projectService.findAll(octokit);
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return result.value;
   }
 
+  @UseGuards(GithubAuthGuard)
+  @Get('me')
+  @FindMyProjectsDocs()
+  async findMyProjects(
+    @Session() session: UserSession,
+    @GitHubOctokit() octokit: Octokit,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.findByUserId(userId, octokit);
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
+  @Get('me/:id')
+  @FindMyProjectByIdDocs()
+  async findMyProjectById(
+    @Param('id') projectId: string,
+    @Session() session: UserSession,
+    @GitHubOctokit() octokit: Octokit,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.findMyProjectById(
+      userId,
+      projectId,
+      octokit,
+    );
+    if (!result.success) {
+      if (result.error === 'PROJECT_NOT_FOUND') {
+        throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
+      }
+      if (result.error === 'UNAUTHORIZED') {
+        throw new HttpException(
+          'Project does not belong to user',
+          HttpStatus.FORBIDDEN,
+        );
+      }
+      throw new BadRequestException(result.error);
+    }
+    return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
   @Post()
+  @CreateProjectDocs()
   async createProject(
     @Session() session: UserSession,
     @Body() createProjectDto: CreateProjectDto,
+    @GitHubOctokit() octokit: Octokit,
   ) {
     const userId = session.user.id;
-    const { title, description, categories, techStacks } = createProjectDto;
     const result = await this.projectService.createProject({
-      ownerId: userId,
-      title,
-      description,
-      categories,
-      techStacks,
-      projectRoles: createProjectDto.projectRoles || [],
+      createProjectDto,
+      userId,
+      octokit,
     });
     if (!result.success) {
       throw new BadRequestException(result.error);
@@ -51,7 +121,7 @@ export class ProjectController {
     const emailResult = await this.mailingService.sendEmail({
       to: 'claudantkylian@gmail.com',
       subject: 'Nouveau projet créé',
-      html: `<p>Un nouveau projet a été créé : <strong>${title}</strong></p><p>Description : ${description}</p>`,
+      html: `<p>Un nouveau projet a été créé : <strong>${result.value.title}</strong></p><p>Description : ${result.value.description}</p>`,
     });
 
     if (!emailResult.success) {
@@ -59,5 +129,51 @@ export class ProjectController {
     }
 
     return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
+  @Public()
+  @Get(':id')
+  @FindProjectByIdDocs()
+  async findById(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
+    const result = await this.projectService.findById(id, octokit);
+    if (!result.success) {
+      throw new HttpException(result.error, HttpStatus.NOT_FOUND);
+    }
+    return result.value;
+  }
+
+  @UseGuards(GithubAuthGuard)
+  @Patch(':id')
+  @UpdateProjectByIdDocs()
+  async update(
+    @Param('id') projectId: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+    @Session() session: UserSession,
+    @GitHubOctokit() octokit: Octokit,
+  ) {
+    const userId = session.user.id;
+    const result = await this.projectService.update(
+      userId,
+      projectId,
+      updateProjectDto,
+      octokit,
+    );
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return result.value;
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @DeleteProjectByIdDocs()
+  async delete(@Param('id') id: string, @Session() session: UserSession) {
+    const userId = session.user.id;
+    const result = await this.projectService.delete(id, userId);
+    if (!result.success) {
+      throw new BadRequestException(result.error);
+    }
+    return;
   }
 }

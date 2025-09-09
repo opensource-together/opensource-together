@@ -1,7 +1,7 @@
 "use client";
 
-import Pagination from "@/shared/components/shared/Pagination";
 import { EmptyState } from "@/shared/components/ui/empty-state";
+import PaginationNavigation from "@/shared/components/ui/pagination-navigation";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
@@ -33,7 +33,7 @@ export default function HomepageView() {
           <>
             <ProjectGrid projects={projects} />
             <div className="mt-25 mb-50">
-              <Pagination />
+              <PaginationNavigation />
             </div>
           </>
         )}

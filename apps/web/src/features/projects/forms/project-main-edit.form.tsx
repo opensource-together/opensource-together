@@ -15,6 +15,7 @@ import {
 import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-upload";
+import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Project } from "../types/project.type";
@@ -149,7 +150,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* Title */}
           <FormField
             control={control}
             name="title"
@@ -164,7 +164,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* Description */}
           <FormField
             control={control}
             name="shortDescription"
@@ -183,10 +182,8 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* separator */}
-          <div className="mt-10 h-[2px] w-full bg-black/3" />
+          <Separator />
 
-          {/* Cover Images */}
           <FormField
             control={control}
             name="coverImages"
@@ -214,7 +211,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          {/* Key Features */}
           <FormField
             control={control}
             name="keyFeatures"
@@ -317,7 +313,7 @@ export default function ProjectMainEditForm({
               </FormItem>
             )}
           />
-          {/* Project Goals */}
+
           <FormField
             control={control}
             name="projectGoals"

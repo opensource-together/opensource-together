@@ -60,7 +60,6 @@ const avatarFallbackVariants = cva(
   }
 );
 
-// Define color type explicitly
 type AvatarColor =
   | "blue"
   | "green"
@@ -73,17 +72,14 @@ type AvatarColor =
   | "orange"
   | "teal";
 
-// Helper functions for auto-generation
 const generateInitials = (name: string): string => {
   if (!name) return "?";
 
   const words = name.trim().split(/\s+/);
   if (words.length === 1) {
-    // Single word: take first 2 characters
     return words[0].substring(0, 2).toUpperCase();
   }
 
-  // Multiple words: take first letter of first 2 words
   return words
     .slice(0, 2)
     .map((word) => word[0])
@@ -107,7 +103,6 @@ const generateColorFromText = (text: string): AvatarColor => {
     "teal",
   ];
 
-  // Generate consistent hash from text
   const hash = text
     .split("")
     .reduce((acc, char) => char.charCodeAt(0) + acc, 0);
@@ -118,15 +113,10 @@ const generateColorFromText = (text: string): AvatarColor => {
 interface AvatarProps
   extends React.ComponentProps<typeof AvatarPrimitive.Root>,
     VariantProps<typeof avatarVariants> {
-  /** Image source URL - if provided, will show image with fallback */
   src?: string | null;
-  /** Alt text for image */
   alt?: string;
-  /** Name for generating initials and color automatically */
   name?: string;
-  /** Manual fallback text (overridden by name if provided) */
   fallback?: string;
-  /** Manual color override (ignored if name is provided) */
   color?: AvatarColor;
 }
 
@@ -197,11 +187,8 @@ function AvatarImage({
 }
 
 interface CustomAvatarFallbackProps {
-  /** Text to generate initials and color from (overrides manual color) */
   name?: string;
-  /** Manual color override (ignored if name is provided) */
   color?: AvatarColor;
-  /** Size variant */
   size?: VariantProps<typeof avatarFallbackVariants>["size"];
 }
 
@@ -214,7 +201,6 @@ function AvatarFallback({
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback> &
   CustomAvatarFallbackProps) {
-  // Auto-generate initials and color if name is provided
   const displayText = name ? generateInitials(name) : children;
   const finalColor = name ? generateColorFromText(name) : color;
 

@@ -1,13 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
-import BreadcrumbComponent from "@/shared/components/shared/Breadcrumb";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
+import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
+import { Icon, IconName } from "@/shared/components/ui/icon";
+import { Separator } from "@/shared/components/ui/separator";
 
 import { Contributor, Project } from "../types/project.type";
 
@@ -15,6 +15,14 @@ interface ProjectSideBarProps {
   project: Project;
   isMaintainer?: boolean;
 }
+
+const externalLinksConfig = [
+  { key: "github", icon: "github", alt: "GitHub" },
+  { key: "twitter", icon: "twitter", alt: "Twitter/X" },
+  { key: "linkedin", icon: "linkedin", alt: "LinkedIn" },
+  { key: "discord", icon: "discord", alt: "Discord" },
+  { key: "website", icon: "link", alt: "Website" },
+];
 
 export default function ProjectSideBar({
   project,
@@ -45,22 +53,19 @@ export default function ProjectSideBar({
 
   const contributors = project.projectStats?.contributors || [];
 
-  // Create a list that includes the owner first, then the contributors
   const allContributors = (() => {
     const ownerContributor = {
       id: project.owner?.id,
       username: project.owner?.username || "Owner",
       avatarUrl: project.owner?.avatarUrl || "",
       htmlUrl: `https://github.com/${project.owner?.username}`,
-      contributions: 999, // To ensure it's first
+      contributions: 999,
     };
 
-    // Check if the owner is already in the contributors
     const isOwnerInContributors = contributors.some(
       (contributor) => contributor.username === ownerContributor.username
     );
 
-    // If the owner is not already in the list, add it first
     if (!isOwnerInContributors && project.owner) {
       return [ownerContributor, ...contributors];
     }
@@ -99,20 +104,10 @@ export default function ProjectSideBar({
     }
   };
 
-  const externalLinksConfig = [
-    { key: "github", icon: "/icons/github-gray-icon.svg", alt: "GitHub" },
-    { key: "twitter", icon: "/icons/x-gray-icon.svg", alt: "Twitter/X" },
-    { key: "linkedin", icon: "/icons/linkedin-gray-icon.svg", alt: "LinkedIn" },
-    { key: "discord", icon: "/icons/discord-gray.svg", alt: "Discord" },
-    { key: "website", icon: "/icons/link-gray-icon.svg", alt: "Website" },
-  ];
-
   return (
     <div className="flex flex-col gap-5">
-      {/* Breadcrumb */}
-      <BreadcrumbComponent items={breadcrumbItems} className="mb-3" />
+      <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
 
-      {/* Action Buttons */}
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (
           <Button size="lg" className="gap-2" onClick={handleEditClick}>
@@ -129,13 +124,11 @@ export default function ProjectSideBar({
         </Link>
       </div>
 
-      {/* Details Section */}
       <div className="mb-2 flex flex-col md:max-w-[263px]">
         <h2 className="text-md mb-1 font-medium tracking-tight text-black">
           Détails
         </h2>
 
-        {/* Stars */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
             <Icon
@@ -147,14 +140,13 @@ export default function ProjectSideBar({
             <span className="text-sm font-normal text-black/50">Stars</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {projectStats.stars}
           </span>
         </div>
 
-        {/* Forks */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
             <Icon
@@ -166,14 +158,13 @@ export default function ProjectSideBar({
             <span className="text-sm font-normal text-black/50">Forks</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {projectStats.forks}
           </span>
         </div>
 
-        {/* Last Commit */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
             <Icon name="last-commit" size="sm" variant="default" />
@@ -182,7 +173,7 @@ export default function ProjectSideBar({
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {projectStats.lastCommit?.date
@@ -193,7 +184,6 @@ export default function ProjectSideBar({
           </span>
         </div>
 
-        {/* Contributors */}
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
             <Icon
@@ -207,7 +197,7 @@ export default function ProjectSideBar({
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
-            <div className="h-[1px] w-full bg-black/5" />
+            <Separator />
           </div>
           <span className="text-sm font-medium text-black">
             {allContributors.length}
@@ -215,7 +205,6 @@ export default function ProjectSideBar({
         </div>
       </div>
 
-      {/* Tech Stack Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium tracking-tight text-black">
           Technologies
@@ -234,7 +223,6 @@ export default function ProjectSideBar({
         )}
       </div>
 
-      {/* Categories Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-2 font-medium tracking-tight text-black">
           Catégories
@@ -251,7 +239,6 @@ export default function ProjectSideBar({
         </div>
       </div>
 
-      {/* Contributors Section */}
       <div className="mb-2 flex flex-col">
         <h2 className="text-md mb-3 font-medium tracking-tight text-black">
           Contributeurs Principaux
@@ -288,7 +275,6 @@ export default function ProjectSideBar({
         </div>
       </div>
 
-      {/* Links Section */}
       {externalLinks.length > 0 && (
         <div className="mb-2 flex flex-col">
           <h2 className="text-md mb-4 font-medium tracking-tight text-black">
@@ -311,12 +297,12 @@ export default function ProjectSideBar({
                   rel="noopener noreferrer"
                   className="group text-muted-foreground flex items-center gap-2 text-sm transition-colors hover:text-black"
                 >
-                  <Image
-                    src={config.icon}
+                  <Icon
+                    name={config.icon as IconName}
+                    size="md"
+                    variant="gray"
+                    className="opacity-50 transition-opacity group-hover:opacity-100"
                     alt={config.alt}
-                    width={24}
-                    height={24}
-                    className="size-5 opacity-50 transition-opacity group-hover:opacity-100"
                   />
                   <span className="truncate">{formatUrl(link.url)}</span>
                 </Link>

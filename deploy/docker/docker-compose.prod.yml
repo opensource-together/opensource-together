@@ -41,13 +41,11 @@ services:
     image: ghcr.io/opensource-together/server:${VERSION_TAG}
     restart: unless-stopped
     environment:
-      - CONNECTION_URI=http://supertokens:3567
       - DATABASE_URL=postgresql://${BUSINESS_DB_USER}:${BUSINESS_DB_PASSWORD}@postgres:5432/${BUSINESS_DB_NAME}
       - APP_NAME=${APP_NAME}
       - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
       - API_DOMAIN=${API_DOMAIN}
       - COOKIE_DOMAIN=${COOKIE_DOMAIN}
-      - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
@@ -66,30 +64,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      supertokens:
-        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/v1/health || exit 1"]
       interval: 5s
-      timeout: 5s
-      retries: 5
-
-  supertokens:
-    image: registry.supertokens.io/supertokens/supertokens-postgresql:10.1.0
-    restart: unless-stopped
-    environment:
-      - POSTGRESQL_CONNECTION_URI=postgresql://${SUPERTOKENS_DB_USER}:${SUPERTOKENS_DB_PASSWORD}@postgres:5432/${SUPERTOKENS_DB_NAME}
-    ports:
-      - "${SUPERTOKENS_EXT_PORT:-3567}:3567"
-    networks:
-      - app_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: >
-        bash -c 'exec 3<>/dev/tcp/127.0.0.1/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 127.0.0.1:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
-      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -103,9 +80,6 @@ services:
       - BUSINESS_DB_NAME=${BUSINESS_DB_NAME}
       - BUSINESS_DB_USER=${BUSINESS_DB_USER}
       - BUSINESS_DB_PASSWORD=${BUSINESS_DB_PASSWORD}
-      - SUPERTOKENS_DB_NAME=${SUPERTOKENS_DB_NAME}
-      - SUPERTOKENS_DB_USER=${SUPERTOKENS_DB_USER}
-      - SUPERTOKENS_DB_PASSWORD=${SUPERTOKENS_DB_PASSWORD}
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
@@ -117,7 +91,6 @@ services:
       test: [
           "CMD-SHELL",
           "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_NAME} && \
-          psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${SUPERTOKENS_DB_NAME}'\" | grep -q 1 && \
           psql -U ${POSTGRES_USER} -d ${POSTGRES_NAME} -tAc \"SELECT 1 FROM pg_database WHERE datname = '${BUSINESS_DB_NAME}'\" | grep -q 1",
         ]
       interval: 5s

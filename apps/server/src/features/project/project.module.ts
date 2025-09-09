@@ -7,15 +7,18 @@ import { PROJECT_REPOSITORY } from './repositories/project.repository.interface'
 import { TechStackModule } from '../tech-stack/tech-stack.module';
 import { CategoryModule } from '../category/category.module';
 import { ProjectRoleModule } from '../project-role/project-role.module';
+import { GithubModule } from '../github/github.module';
 import { MailingModule } from '@/mailing/mailing.module';
-
+import { UserModule } from '../user/user.module';
 @Module({
   imports: [
     PrismaModule,
     TechStackModule,
     CategoryModule,
     ProjectRoleModule,
+    GithubModule,
     MailingModule,
+    UserModule,
   ],
   controllers: [ProjectController],
   providers: [
@@ -25,6 +28,6 @@ import { MailingModule } from '@/mailing/mailing.module';
     },
     ProjectService,
   ],
-  exports: [ProjectService],
+  exports: [PROJECT_REPOSITORY, ProjectService],
 })
 export class ProjectModule {}

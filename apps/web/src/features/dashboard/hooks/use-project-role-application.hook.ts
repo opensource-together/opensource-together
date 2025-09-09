@@ -5,7 +5,6 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import {
   acceptProjectRoleApplication,
   cancelApplication,
-  getApplicationById,
   getMyApplications,
   getProjectRolesApplications,
   rejectProjectRoleApplication,
@@ -34,20 +33,6 @@ export function useMyProjectRolesApplications() {
   return useQuery({
     queryKey: ["my-project-roles-applications"],
     queryFn: () => getMyApplications(),
-  });
-}
-
-/**
- * Fetches a specific application by ID.
- *
- * @param applicationId - The ID of the application to fetch.
- * @returns A React Query result containing the application details.
- */
-export function useApplicationById(applicationId: string) {
-  return useQuery({
-    queryKey: ["application", applicationId],
-    queryFn: () => getApplicationById(applicationId),
-    enabled: !!applicationId,
   });
 }
 

@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { Separator } from "@/shared/components/ui/separator";
+
 export default function Footer() {
   const pathname = usePathname();
   const hideFooter =
@@ -23,7 +25,7 @@ export default function Footer() {
       {!hideFooter && (
         <>
           <footer className="mx-4 max-w-7xl py-10 md:mx-auto md:px-7">
-            <div className="mx-auto my-10 h-[1px] w-11/12 bg-black/5 md:w-full" />
+            <Separator className="mx-auto my-10 w-11/12 md:w-full" />
             <div className="flex flex-col items-center gap-8 lg:flex-row lg:justify-between lg:gap-0">
               <Link href="/" className="mb-4 flex items-center md:mb-0">
                 <Image

@@ -1,7 +1,9 @@
+import { Result } from '@/libs/result';
 import { Category } from '../domain/category';
 
-export const CATEGORY_REPOSITORY = 'CATEGORY_REPOSITORY';
+export const CATEGORY_REPOSITORY = Symbol('CATEGORY_REPOSITORY');
 
-export interface CategoryRepository {
-  findByIds(ids: string[]): Promise<Category[]>;
+export interface ICategoryRepository {
+  getAll(): Promise<Result<Category[], string>>;
+  findByIds(ids: string[]): Promise<Result<Category[], string>>;
 }

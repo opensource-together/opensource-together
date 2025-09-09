@@ -52,7 +52,6 @@ export function MyApplicationsList() {
         );
   }, [applications, selectedStatus]);
 
-  // Update the selected application when the filter changes
   useEffect(() => {
     if (filteredApplications.length > 0) {
       setSelectedApplication(filteredApplications[0]);
@@ -126,14 +125,12 @@ export function MyApplicationsList() {
           )}
         </div>
 
-        {/* Desktop view */}
         {selectedApplication && (
           <div className="hidden w-[60%] md:block">
             <MyApplicationDetails application={selectedApplication} />
           </div>
         )}
 
-        {/* Mobile view */}
         <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <SheetContent side="bottom" className="h-[85vh] p-0">
             <div className="h-full overflow-y-auto px-6 pt-12 pb-6">

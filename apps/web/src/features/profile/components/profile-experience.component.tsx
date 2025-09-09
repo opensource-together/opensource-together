@@ -1,3 +1,5 @@
+import { Separator } from "@/shared/components/ui/separator";
+
 export default function ProfileExperience() {
   const experiences = [
     {
@@ -53,7 +55,7 @@ export default function ProfileExperience() {
               </span>
             </div>
             <div className="mx-4 flex hidden flex-1 items-center md:block">
-              <div className="h-[1px] w-full bg-black/5" />
+              <Separator />
             </div>
             <span className="text-sm font-medium break-words text-black">
               {experience.position} {experience.company}

@@ -1,16 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsOptional,
-  IsUrl,
-  IsEnum,
-  ValidateNested,
-  ArrayMinSize,
-  MaxLength,
-} from 'class-validator';
 import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 
 export class TechStackDto {
   @ApiProperty({ description: 'Tech stack ID' })
@@ -73,12 +74,19 @@ export class TeamMemberDto {
   role: string;
 }
 
-export class CreateProjectDto {
-  @ApiProperty({ description: 'Project owner ID' })
+export class ExternalLinkDto {
+  @ApiProperty({ description: 'External link type' })
   @IsString()
   @IsNotEmpty()
-  ownerId: string;
+  type: string;
 
+  @ApiProperty({ description: 'External link URL' })
+  @IsString()
+  @IsNotEmpty()
+  url: string;
+}
+
+export class CreateProjectDto {
   @ApiProperty({ description: 'Project title', maxLength: 100 })
   @IsString()
   @IsNotEmpty()
@@ -91,14 +99,16 @@ export class CreateProjectDto {
   @MaxLength(1000)
   description: string;
 
-  @ApiProperty({ description: 'Project categories' })
+  @ApiProperty({ description: 'Project categories (max 6)' })
   @IsArray()
   @ArrayMinSize(1)
+  @ArrayMaxSize(6)
   categories: string[];
 
-  @ApiProperty({ description: 'Project tech stacks' })
+  @ApiProperty({ description: 'Project tech stacks (max 10)' })
   @IsArray()
   @ArrayMinSize(1)
+  @ArrayMaxSize(10)
   techStacks: string[];
 
   // Éléments optionnels
@@ -120,4 +130,22 @@ export class CreateProjectDto {
   @ValidateNested({ each: true })
   @Type(() => TeamMemberDto)
   teamMembers?: TeamMemberDto[];
+
+  @ApiProperty({ description: 'Project cover images' })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  coverImages?: string[];
+
+  @ApiProperty({ description: 'Project readme' })
+  @IsOptional()
+  @IsString()
+  readme?: string;
+
+  @ApiProperty({ description: 'Project external links' })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ExternalLinkDto)
+  externalLinks: { type: string; url: string }[];
 }

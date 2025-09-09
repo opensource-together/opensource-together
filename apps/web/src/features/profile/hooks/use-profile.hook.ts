@@ -6,6 +6,12 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import { getUserById, updateProfile } from "../services/profile.service";
 import { ProfileSchema } from "../validations/profile.schema";
 
+/**
+ * Hook to fetch the profile of a user by their ID.
+ *
+ * @param id - The ID of the user to fetch.
+ * @returns A React Query result containing the user's profile.
+ */
 export const useProfile = (id: string) => {
   return useQuery({
     queryKey: ["user", id],

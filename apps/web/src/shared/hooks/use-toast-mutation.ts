@@ -62,7 +62,6 @@ export function useToastMutation<TData, TError = Error, TVariables = void>({
         toast.dismiss(context.toastId);
       }
 
-      // Extract error message from backend if available, otherwise use default
       let displayMessage = errorMessage;
       if (error instanceof Error && error.message) {
         displayMessage = error.message;

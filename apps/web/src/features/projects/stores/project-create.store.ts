@@ -15,12 +15,10 @@ export type ProjectCreateMethod = "scratch" | "github";
 
 export interface ProjectFormData {
   method: ProjectCreateMethod;
-  // Data for scratch method
   title: string;
   shortDescription: string;
   image: string;
-  coverImages: File[]; // Array of cover image files (1 to 4)
-  // status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  coverImages: File[];
   readme?: string;
   externalLinks: ExternalLink[];
   keyFeatures: KeyFeature[];
@@ -32,12 +30,10 @@ export interface ProjectFormData {
 }
 
 interface ProjectCreateStore {
-  // State
   formData: ProjectFormData;
   currentStep: number;
   hasHydrated: boolean;
 
-  // Actions
   setMethod: (method: ProjectCreateMethod) => void;
   updateProjectInfo: (
     info: Partial<
@@ -47,7 +43,6 @@ interface ProjectCreateStore {
         | "shortDescription"
         | "image"
         | "coverImages"
-        // | "status"
         | "readme"
         | "keyFeatures"
         | "projectGoals"
@@ -72,7 +67,6 @@ const initialFormData: ProjectFormData = {
   shortDescription: "",
   image: "",
   coverImages: [],
-  // status: "DRAFT",
   readme: "",
   externalLinks: [],
   keyFeatures: [],

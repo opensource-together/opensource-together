@@ -39,7 +39,6 @@ export default function GoogleButton({
         />
       ) : (
         <Image
-          //TODO: change icon
           src={
             isOutlineVariant
               ? "/icons/new-google-icon-black.svg"
