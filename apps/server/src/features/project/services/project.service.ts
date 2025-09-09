@@ -39,8 +39,8 @@ export class ProjectService {
     private readonly techStackRepository: TechStackRepository,
     @Inject(CATEGORY_REPOSITORY)
     private readonly categoryRepository: CategoryRepository,
-    @Inject(NOTIFICATION_SERVICE)
-    private readonly notificationService: NotificationService,
+    // @Inject(NOTIFICATION_SERVICE)
+    // private readonly notificationService: NotificationService,
   ) {}
 
   async createProject(
