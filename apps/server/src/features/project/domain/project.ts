@@ -143,6 +143,5 @@ export function canUserModifyProject(
   project: Project,
   userId: string,
 ): boolean {
-  console.log(project.owner?.id, userId);
   return project.owner?.id === userId;
 }
