@@ -137,13 +137,21 @@ export class ProjectService {
       image: createProjectDto.image || '',
       description: createProjectDto.description,
       categories: createProjectDto.categories,
-      keyFeatures: createProjectDto.keyFeature || [],
+      keyFeatures: createProjectDto.keyFeatures.map((feature) => ({
+        projectId: '',
+        feature: feature,
+      })),
       techStacks: createProjectDto.techStacks,
-      projectRoles: createProjectDto.projectRoles?.map((role) => ({
+      projectRoles: createProjectDto.projectRoles.map((role) => ({
         title: role.title,
         description: role.description,
         techStacks: role.techStacks.map((id) => id),
       })),
+      externalLinks:
+        createProjectDto.externalLinks?.map((link) => ({
+          type: link.type.toUpperCase(),
+          url: link.url,
+        })) || [],
     });
 
     if (!result.success) {
@@ -287,7 +295,12 @@ export class ProjectService {
     const updatedProject = {
       ...updateProjectDto,
       techStacks: validTechStacks.value.map((ts) => ts.id),
-      categories: updateProjectDto.categories,
+      categories: validCategories.value.map((cat) => cat.id),
+      keyFeatures:
+        updateProjectDto.keyFeatures?.map((feature) => ({
+          projectId: projectId,
+          feature: feature,
+        })) || [],
       externalLinks: updateProjectDto.externalLinks,
     };
     const updatedProjectResult = await this.projectRepository.update(
@@ -297,19 +310,23 @@ export class ProjectService {
     if (!updatedProjectResult.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
-    const githubResult = await this.githubRepository.updateProjectRespository(
-      {
-        owner: project.value.owner?.githubLogin || '',
-        repo: project.value.title.toLowerCase().replace(/\s+/g, '-'),
-        title: updateProjectDto.title,
-        description: updateProjectDto.description,
-      },
-      octokit,
-    );
-    if (!githubResult.success) {
-      this.logger.warn(
-        `GitHub update failed for project ${projectId}: ${githubResult.error}`,
+
+    if (updateProjectDto.title || updateProjectDto.description) {
+      const githubResult = await this.githubRepository.updateProjectRespository(
+        {
+          owner: project.value.owner?.username || '',
+          repo: project.value.title.toLowerCase().replace(/\s+/g, '-'),
+          title: updateProjectDto.title || project.value.title,
+          description:
+            updateProjectDto.description || project.value.description,
+        },
+        octokit,
       );
+      if (!githubResult.success) {
+        this.logger.warn(
+          `GitHub update failed for project ${projectId}: ${githubResult.error}`,
+        );
+      }
     }
     return Result.ok(updatedProjectResult.value);
   }
@@ -333,7 +350,7 @@ export class ProjectService {
   async getProjectStats(octokit: Octokit, project: Project) {
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
-      project.owner?.githubLogin || '',
+      project.owner?.username || '',
       project.title.toLowerCase().replace(/\s+/g, '-'),
     );
     if (!result.success) {
