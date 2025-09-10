@@ -3,6 +3,7 @@ import {
   ApiBody,
   ApiCookieAuth,
   ApiOperation,
+  ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
 import { UpdateProjectDto } from '../dto/update-project.dto';
@@ -11,37 +12,128 @@ export function UpdateProjectByIdDocs() {
   return applyDecorators(
     ApiCookieAuth('sAccessToken'),
     ApiOperation({
-      summary:
-        'Update a project, if the title and description change, the github repo will be updated',
+      summary: 'Update project by ID',
+      description:
+        'Updates an existing project with new information. If the title or description changes, the associated GitHub repository will also be updated automatically.',
+    }),
+    ApiParam({
+      name: 'id',
+      description: 'Unique identifier of the project to update',
+      type: 'string',
+      format: 'uuid',
+      example: '123e4567-e89b-12d3-a456-426614174000',
     }),
     ApiBody({
       type: UpdateProjectDto,
-      description: 'Data of the project to update',
+      description:
+        'Updated project data. All fields are optional except those marked as required.',
       examples: {
-        default: {
-          summary: 'Minimal payload',
+        fullUpdate: {
+          summary: 'Complete project update',
+          description:
+            'Update all project fields including roles and external links',
           value: {
-            title: 'Updated project title with meaningful context',
-            ownerId: 'GCJO6PXIysuDms1Od6W8TefrigEamAeP',
-            description: 'New description',
-            categories: ['1', '4'],
-            techStacks: ['3', '7'],
+            title: 'Updated E-commerce Platform',
+            description:
+              'Enhanced e-commerce application with new features including AI-powered recommendations, advanced analytics, and improved user experience.',
+            categories: ['1', '4', '6'],
+            techStacks: ['3', '7', '9', '12'],
             projectRoles: [
               {
+                title: 'Senior Frontend Developer',
+                description:
+                  'Lead frontend development with React, TypeScript, and modern state management',
+                techStacks: ['3', '9'],
+              },
+              {
                 title: 'Backend Developer',
-                description: 'Build APIs',
-                techStacks: ['nestjs'],
+                description:
+                  'Develop scalable APIs and microservices with Node.js and NestJS',
+                techStacks: ['7', '8'],
+              },
+              {
+                title: 'DevOps Engineer',
+                description:
+                  'Manage infrastructure, CI/CD pipelines, and cloud deployment',
+                techStacks: ['13', '14'],
               },
             ],
-            image: 'https://example.com/image.png',
-            teamMembers: [{ userId: 'user-1', role: 'Contributor' }],
-            coverImages: ['https://example.com/cover.png'],
-            readme: '# Updated README',
+            keyFeatures: [
+              'AI-powered recommendations',
+              'Advanced analytics dashboard',
+              'Real-time notifications',
+              'Mobile-responsive design',
+              'Payment gateway integration',
+            ],
+            image: 'https://example.com/updated-project-logo.png',
+            coverImages: [
+              'https://example.com/cover-1.png',
+              'https://example.com/cover-2.png',
+              'https://example.com/cover-3.png',
+            ],
+            readme:
+              '# Updated E-commerce Platform\n\nEnhanced features and improved architecture...',
             externalLinks: [
               {
-                id: 'link-1',
-                type: 'github',
-                url: 'https://github.com/org/repo',
+                id: '6c361ece-8e85-46b0-8888-d620c9b1f878',
+                type: 'GITHUB',
+                url: 'https://github.com/y2_znt/ecommerce-platform',
+              },
+              {
+                id: 'd89809b3-fa85-4c0b-984f-1b1cf672a3a9',
+                type: 'WEBSITE',
+                url: 'https://ecommerce-platform.com',
+              },
+              {
+                id: 'e89809b3-fa85-4c0b-984f-1b1cf672a3a9',
+                type: 'DISCORD',
+                url: 'https://discord.gg/ecommerce-platform',
+              },
+              {
+                id: 'f89809b3-fa85-4c0b-984f-1b1cf672a3a9',
+                type: 'TWITTER',
+                url: 'https://twitter.com/ecommerce_platform',
+              },
+            ],
+          },
+        },
+        partialUpdate: {
+          summary: 'Partial project update',
+          description: 'Update only specific fields, keeping others unchanged',
+          value: {
+            title: 'E-commerce Platform v2.0',
+            description:
+              'Updated description with new features and improvements',
+            keyFeatures: [
+              'Enhanced user interface',
+              'Better performance',
+              'New payment methods',
+            ],
+            externalLinks: [
+              {
+                id: '6c361ece-8e85-46b0-8888-d620c9b1f878',
+                type: 'GITHUB',
+                url: 'https://github.com/y2_znt/ecommerce-platform-v2',
+              },
+            ],
+          },
+        },
+        rolesUpdate: {
+          summary: 'Update project roles only',
+          description:
+            'Update only the project roles without changing other fields',
+          value: {
+            projectRoles: [
+              {
+                title: 'Full Stack Developer',
+                description: 'Work on both frontend and backend components',
+                techStacks: ['3', '7', '9'],
+              },
+              {
+                title: 'UI/UX Designer',
+                description:
+                  'Design user interfaces and improve user experience',
+                techStacks: ['15', '16'],
               },
             ],
           },
@@ -52,101 +144,160 @@ export function UpdateProjectByIdDocs() {
       status: 200,
       description: 'Project updated successfully',
       example: {
-        id: 'e214183d-bf0a-4818-9050-17d4905de4e8',
-        ownerId: 'GCJO6PXIysuDms1Od6W8TefrigEamAeP',
-        title: 'test3',
-        description: 'new description',
-        image: '',
-        coverImages: [],
-        readme: '',
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        owner: {
+          id: 'NLxTW4lMvMJSbEvpIShgtckD15cnbFVH',
+          username: 'y2_znt',
+          avatarUrl: 'https://avatars.githubusercontent.com/u/152095147?v=4',
+        },
+        title: 'Updated E-commerce Platform',
+        description:
+          'Enhanced e-commerce application with new features including AI-powered recommendations, advanced analytics, and improved user experience.',
+        image: 'https://example.com/updated-project-logo.png',
+        coverImages: [
+          'https://example.com/cover-1.png',
+          'https://example.com/cover-2.png',
+          'https://example.com/cover-3.png',
+        ],
+        readme:
+          '# Updated E-commerce Platform\n\nEnhanced features and improved architecture...',
         categories: [
-          {
-            id: '3',
-            name: 'Mobile Applications',
-          },
-          {
-            id: '5',
-            name: 'Video Games',
-          },
+          { id: '1', name: 'IA & Machine Learning' },
+          { id: '4', name: 'Web Development' },
+          { id: '6', name: 'E-commerce' },
         ],
         techStacks: [
           {
-            id: '2',
-            name: 'Next.js',
+            id: '3',
+            name: 'React',
             iconUrl:
-              'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+              'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
             type: 'TECH',
           },
           {
-            id: '4',
-            name: 'Vue.js',
+            id: '7',
+            name: 'Node.js',
             iconUrl:
-              'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',
+              'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
             type: 'TECH',
+          },
+          {
+            id: '9',
+            name: 'TypeScript',
+            iconUrl:
+              'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+            type: 'LANGUAGE',
+          },
+        ],
+        keyFeatures: [
+          {
+            id: '107877b3-262b-44d0-8d84-5828d444872b',
+            projectId: '123e4567-e89b-12d3-a456-426614174000',
+            feature: 'AI-powered recommendations',
+          },
+          {
+            id: '207877b3-262b-44d0-8d84-5828d444872b',
+            projectId: '123e4567-e89b-12d3-a456-426614174000',
+            feature: 'Advanced analytics dashboard',
           },
         ],
         projectRoles: [
           {
-            id: 'e07b8ddb-7df8-451d-b8fb-141975e1f2ef',
-            title: 'Frontend Developer',
-            description: 'Experienced React Developer',
+            id: 'b7130a7c-09b4-46dd-8f5d-043938cf40b9',
+            title: 'Senior Frontend Developer',
+            description:
+              'Lead frontend development with React, TypeScript, and modern state management',
             techStacks: [
               {
-                id: '2',
-                name: 'Next.js',
+                id: '3',
+                name: 'React',
                 iconUrl:
-                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
                 type: 'TECH',
               },
-            ],
-          },
-          {
-            id: '679f7647-c7d2-4991-b663-fe000d060327',
-            title: 'Frontend Developer',
-            description: 'Junior React Developer',
-            techStacks: [
               {
-                id: '2',
-                name: 'Next.js',
+                id: '9',
+                name: 'TypeScript',
                 iconUrl:
-                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
-                type: 'TECH',
-              },
-            ],
-          },
-          {
-            id: '13353136-d190-4ee0-a79e-7f41c9122f7d',
-            title: 'Backend Developer',
-            description: 'Junior PHP Developer',
-            techStacks: [
-              {
-                id: '2',
-                name: 'Next.js',
-                iconUrl:
-                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg',
-                type: 'TECH',
+                  'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+                type: 'LANGUAGE',
               },
             ],
           },
         ],
         externalLinks: [
           {
-            id: 'bdaf22c9-ec51-4449-b5ca-8a79f33949c2',
-            type: 'github',
-            url: 'https://github.com/lhourquin/test2',
+            id: '6c361ece-8e85-46b0-8888-d620c9b1f878',
+            type: 'GITHUB',
+            url: 'https://github.com/y2_znt/ecommerce-platform',
           },
           {
-            id: 'b3e01acd-c7e4-4815-bb04-0764ce9a64de',
-            type: 'twitter',
-            url: 'https://x.com/kalu',
+            id: 'd89809b3-fa85-4c0b-984f-1b1cf672a3a9',
+            type: 'WEBSITE',
+            url: 'https://ecommerce-platform.com',
           },
         ],
-        createdAt: '2025-08-31T10:36:15.264Z',
-        updatedAt: '2025-08-31T17:09:13.569Z',
+        createdAt: '2025-01-15T10:30:00.000Z',
+        updatedAt: '2025-01-20T14:45:00.000Z',
       },
     }),
-    ApiResponse({ status: 400, description: 'Bad request' }),
-    ApiResponse({ status: 404, description: 'Project not found' }),
-    ApiResponse({ status: 500, description: 'Internal server error' }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad request - Validation failed',
+      examples: {
+        validation: {
+          summary: 'Validation errors',
+          value: {
+            message: [
+              'property title should not be empty',
+              'property description should not be empty',
+              'categories must contain at least 1 element',
+            ],
+            error: 'Bad Request',
+            statusCode: 400,
+          },
+        },
+        invalidId: {
+          summary: 'Invalid project ID',
+          value: {
+            message: 'Invalid UUID format',
+            error: 'Bad Request',
+            statusCode: 400,
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized - Authentication required',
+      example: {
+        message: 'Unauthorized',
+        statusCode: 401,
+      },
+    }),
+    ApiResponse({
+      status: 403,
+      description: 'Forbidden - Project does not belong to user',
+      example: {
+        message: 'You do not have permission to update this project',
+        statusCode: 403,
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Project not found',
+      example: {
+        message: 'Project not found',
+        statusCode: 404,
+      },
+    }),
+    ApiResponse({
+      status: 500,
+      description: 'Internal server error',
+      example: {
+        message: 'Internal server error',
+        statusCode: 500,
+      },
+    }),
   );
 }

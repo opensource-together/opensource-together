@@ -3,41 +3,54 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 export function FindAllProjectsDocs() {
   return applyDecorators(
-    ApiOperation({ summary: 'Get all projects' }),
+    ApiOperation({
+      summary: 'Get all projects',
+      description:
+        'Retrieves a paginated list of all public projects with their basic information, statistics, and team members. Projects are ordered by creation date (newest first).',
+    }),
     ApiResponse({
       status: 200,
-      description: 'List of all projects',
+      description: 'Successfully retrieved list of projects',
       example: [
         {
           id: '123e4567-e89b-12d3-a456-426614174000',
           owner: {
-            id: 'github_user123',
-            name: 'Lhourquin',
-            githubLogin: 'lhourquin',
-            image: 'https://avatars.githubusercontent.com/u/123456789?v=4',
+            id: 'NLxTW4lMvMJSbEvpIShgtckD15cnbFVH',
+            username: 'y2_znt',
+            avatarUrl: 'https://avatars.githubusercontent.com/u/152095147?v=4',
           },
           title: 'E-commerce Platform',
-          description: 'Modern e-commerce app with React',
+          description:
+            'Modern e-commerce application built with React, Node.js, and TypeScript. Features include real-time inventory management, payment processing, and responsive design.',
           image: 'https://example.com/project-image.jpg',
           techStacks: [
             {
-              id: '1',
+              id: '3',
               name: 'React',
-              iconUrl: 'https://reactjs.org/logo.svg',
+              iconUrl:
+                'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
               type: 'TECH',
             },
             {
-              id: '2',
+              id: '7',
               name: 'Node.js',
-              iconUrl: 'https://nodejs.org/logo.svg',
+              iconUrl:
+                'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
               type: 'TECH',
+            },
+            {
+              id: '9',
+              name: 'TypeScript',
+              iconUrl:
+                'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
+              type: 'LANGUAGE',
             },
           ],
           teamMembers: [
             {
               id: 'member1',
               projectId: '123e4567-e89b-12d3-a456-426614174000',
-              userId: 'github_user123',
+              userId: 'NLxTW4lMvMJSbEvpIShgtckD15cnbFVH',
               joinedAt: '2025-01-15T10:30:00.000Z',
             },
             {
@@ -49,41 +62,41 @@ export function FindAllProjectsDocs() {
           ],
           stats: {
             stats: {
-              forks: 2,
-              stars: 1,
-              watchers: 1,
-              openIssues: 1,
+              forks: 15,
+              stars: 42,
+              watchers: 8,
+              openIssues: 3,
             },
             contributors: [
               {
-                login: 'Lhourquin',
+                login: 'y2_znt',
                 avatar_url:
-                  'https://avatars.githubusercontent.com/u/45101981?v=4',
-                html_url: 'https://github.com/Lhourquin',
-                contributions: 3,
+                  'https://avatars.githubusercontent.com/u/152095147?v=4',
+                html_url: 'https://github.com/y2_znt',
+                contributions: 25,
               },
               {
-                login: 'Jyzdcs',
+                login: 'contributor2',
                 avatar_url:
                   'https://avatars.githubusercontent.com/u/123254210?v=4',
-                html_url: 'https://github.com/Jyzdcs',
-                contributions: 1,
+                html_url: 'https://github.com/contributor2',
+                contributions: 12,
               },
             ],
             commits: {
               lastCommit: {
                 sha: '4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
-                message: 'Merge pull request #2 from Jyzdcs/main\n\ntest',
-                date: '2025-07-15T23:17:16Z',
-                url: 'https://github.com/Lhourquin/projet-os/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
+                message: 'feat: Add payment integration with Stripe',
+                date: '2025-01-20T14:30:00Z',
+                url: 'https://github.com/y2_znt/ecommerce-platform/commit/4f017368bdc6fe9ca8f4bac1b497e01d25562b6e',
                 author: {
-                  login: 'Lhourquin',
+                  login: 'y2_znt',
                   avatar_url:
-                    'https://avatars.githubusercontent.com/u/45101981?v=4',
-                  html_url: 'https://github.com/Lhourquin',
+                    'https://avatars.githubusercontent.com/u/152095147?v=4',
+                  html_url: 'https://github.com/y2_znt',
                 },
               },
-              commitsNumber: 4,
+              commitsNumber: 47,
             },
           },
           createdAt: '2025-01-15T10:30:00.000Z',
@@ -93,24 +106,26 @@ export function FindAllProjectsDocs() {
           id: '123e4567-e89b-12d3-a456-426614174001',
           owner: {
             id: 'github_user456',
-            name: 'Mac-Gyver',
-            githubLogin: 'mac-gyver',
-            image: 'https://avatars.githubusercontent.com/u/123254210?v=4',
+            username: 'mac-gyver',
+            avatarUrl: 'https://avatars.githubusercontent.com/u/123254210?v=4',
           },
           title: 'Mobile App with Flutter',
-          description: 'Cross-platform mobile app built with Flutter',
+          description:
+            'Cross-platform mobile application built with Flutter and Dart. Features include offline support, real-time synchronization, and native performance.',
           image: 'https://example.com/mobile-app-image.jpg',
           techStacks: [
             {
-              id: '3',
+              id: '10',
               name: 'Flutter',
-              iconUrl: 'https://flutter.dev/logo.svg',
+              iconUrl:
+                'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg',
               type: 'TECH',
             },
             {
-              id: '4',
+              id: '11',
               name: 'Dart',
-              iconUrl: 'https://dart.dev/logo.svg',
+              iconUrl:
+                'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg',
               type: 'LANGUAGE',
             },
           ],
@@ -124,34 +139,34 @@ export function FindAllProjectsDocs() {
           ],
           stats: {
             stats: {
-              forks: 5,
-              stars: 12,
-              watchers: 8,
-              openIssues: 3,
+              forks: 8,
+              stars: 23,
+              watchers: 12,
+              openIssues: 2,
             },
             contributors: [
               {
-                login: 'Mac-Gyver',
+                login: 'mac-gyver',
                 avatar_url:
                   'https://avatars.githubusercontent.com/u/123254210?v=4',
-                html_url: 'https://github.com/Mac-Gyver',
-                contributions: 8,
+                html_url: 'https://github.com/mac-gyver',
+                contributions: 18,
               },
             ],
             commits: {
               lastCommit: {
                 sha: '8a9b2c3d4e5f6789012345678901234567890abcd',
-                message: 'Add new feature: user authentication',
+                message: 'fix: Resolve memory leak in image caching',
                 date: '2025-01-20T16:30:00Z',
-                url: 'https://github.com/Mac-Gyver/mobile-app/commit/8a9b2c3d4e5f6789012345678901234567890abcd',
+                url: 'https://github.com/mac-gyver/mobile-app/commit/8a9b2c3d4e5f6789012345678901234567890abcd',
                 author: {
-                  login: 'Mac-Gyver',
+                  login: 'mac-gyver',
                   avatar_url:
                     'https://avatars.githubusercontent.com/u/123254210?v=4',
-                  html_url: 'https://github.com/Mac-Gyver',
+                  html_url: 'https://github.com/mac-gyver',
                 },
               },
-              commitsNumber: 25,
+              commitsNumber: 31,
             },
           },
           createdAt: '2025-01-10T09:15:00.000Z',
@@ -159,6 +174,13 @@ export function FindAllProjectsDocs() {
         },
       ],
     }),
-    ApiResponse({ status: 500, description: 'Internal server error' }),
+    ApiResponse({
+      status: 500,
+      description: 'Internal server error',
+      example: {
+        message: 'Internal server error',
+        statusCode: 500,
+      },
+    }),
   );
 }
