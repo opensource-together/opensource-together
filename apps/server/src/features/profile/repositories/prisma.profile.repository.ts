@@ -72,7 +72,7 @@ export class PrismaProfileRepository implements ProfileRepository {
 
       return Result.ok({
         id: profile.id,
-        name: profile.user.name,
+        username: profile.user.name,
         avatarUrl: profile.user.image,
         provider: profile.user.accounts[0]?.providerId ?? null,
         bio: profile.bio,

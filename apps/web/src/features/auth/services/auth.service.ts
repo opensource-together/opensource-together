@@ -19,6 +19,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
 export async function logout(): Promise<void> {
   try {
     await authClient.signOut();
+    if (typeof window !== "undefined") window.location.replace("/");
   } catch (err) {
     console.error("logout error:", err);
     throw new Error("Error during the logout.");

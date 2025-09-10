@@ -1,8 +1,11 @@
 import { Project } from "@/features/projects/types/project.type";
 
 export type ProfileSocialLinks = {
-  name: string;
-  url: string;
+  github?: string;
+  twitter?: string;
+  linkedin?: string;
+  discord?: string;
+  website?: string;
 };
 
 export type ProfileTechStack = {
