@@ -1,11 +1,8 @@
 import { Project } from "@/features/projects/types/project.type";
 
 export type ProfileSocialLinks = {
-  github?: string;
-  website?: string;
-  twitter?: string;
-  discord?: string;
-  linkedin?: string;
+  name: string;
+  url: string;
 };
 
 export type ProfileTechStack = {
