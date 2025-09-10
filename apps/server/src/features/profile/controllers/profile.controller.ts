@@ -1,6 +1,5 @@
 import { UpsertProfileDto } from '@/features/profile/controllers/dto/upsert-profile.dto';
-import { Profile as DomainProfile } from '@/features/profile/domain/profile';
-import { CompleteProfile } from '@/features/profile/repositories/profile.repository.interface';
+import { Profile } from '@/features/profile/domain/profile';
 import { ProfileService } from '@/features/profile/services/profile.service';
 import {
   Body,
@@ -32,7 +31,7 @@ export class ProfileController {
   async createProfile(
     @Session() session: UserSession,
     @Body() data: UpsertProfileDto,
-  ): Promise<DomainProfile> {
+  ): Promise<Profile> {
     const result = await this.profileService.upsertProfile(
       session.session.userId,
       data,
@@ -49,7 +48,7 @@ export class ProfileController {
   async updateProfile(
     @Session() session: UserSession,
     @Body() data: UpsertProfileDto,
-  ): Promise<DomainProfile> {
+  ): Promise<Profile> {
     const result = await this.profileService.upsertProfile(
       session.session.userId,
       data,
@@ -63,9 +62,7 @@ export class ProfileController {
   @UseGuards(AuthGuard)
   @Get('me')
   @GetMyProfileDocs()
-  async getMyProfile(
-    @Session() session: UserSession,
-  ): Promise<CompleteProfile> {
+  async getMyProfile(@Session() session: UserSession): Promise<Profile> {
     const result = await this.profileService.getProfileByUserId(
       session.session.userId,
     );
@@ -77,7 +74,7 @@ export class ProfileController {
 
   @Get(':id')
   @GetProfileByIdDocs()
-  async getProfileById(@Param('id') id: string): Promise<CompleteProfile> {
+  async getProfileById(@Param('id') id: string): Promise<Profile> {
     const result = await this.profileService.getProfileByUserId(id);
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.NOT_FOUND);

@@ -1,15 +1,32 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpsertProfileDto {
+  @IsOptional()
   @IsString()
-  bio: string;
+  avatarUrl?: string;
 
   @IsString()
-  location: string;
+  username: string;
 
+  @IsOptional()
   @IsString()
-  company: string;
+  jobTitle?: string;
 
+  @IsOptional()
   @IsString()
-  jobTitle: string;
+  bio?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  techStacks?: string[];
+
+  @IsOptional()
+  socialLinks?: {
+    github?: string;
+    twitter?: string;
+    linkedin?: string;
+    discord?: string;
+    website?: string;
+  };
 }
