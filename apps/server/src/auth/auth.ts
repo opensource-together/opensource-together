@@ -65,6 +65,13 @@ export const auth: {
           if (account.providerId === 'github') {
             await getUserService().updateGithubLogin(account);
             await getProfileService().createFromGithub(account);
+          } else {
+            await getProfileService().upsertProfile(account.userId, {
+              bio: '',
+              location: '',
+              company: '',
+              jobTitle: '',
+            });
           }
           return;
         },
