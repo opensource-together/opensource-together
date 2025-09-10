@@ -129,6 +129,7 @@ model Project {
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
   techStacks             TechStack[]
+  keyFeature             KeyFeature[]
   projectMembers         TeamMember[]
   projectRoles           ProjectRole[]
   categories             Category[]
@@ -193,6 +194,7 @@ model ProjectRoleApplication {
   userId           String
   projectId        String
   projectRoleId    String
+  keyFeatureId     String
   status           ProjectRoleApplicationStatus
   motivationLetter String?
   rejectionReason  String?
@@ -205,6 +207,17 @@ model ProjectRoleApplication {
   user        User        @relation("applier", fields: [userId], references: [id], onDelete: Cascade)
   userDecider User?       @relation("decider", fields: [decidedBy], references: [id], onDelete: SetNull)
   project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  keyFeature  KeyFeature  @relation(fields: [keyFeatureId], references: [id], onDelete: Cascade)
+}
+
+model KeyFeature {
+  id                     String                   @id @default(uuid())
+  projectId              String
+  feature                String
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ProjectRoleApplication ProjectRoleApplication[]
+
+  @@unique([projectId, feature])
 }
 
 model UserSocialLink {

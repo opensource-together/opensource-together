@@ -43,6 +43,11 @@ export class PrismaProjectRepository implements ProjectRepository {
           techStacks: {
             connect: projectData.techStacks.map((tech) => ({ id: tech })),
           },
+          keyFeature: {
+            create: projectData.keyFeatures.map((feat) => ({
+              feature: feat.feature,
+            })),
+          },
           categories: {
             connect: projectData.categories.map((cat) => ({ id: cat })),
           },
@@ -67,6 +72,7 @@ export class PrismaProjectRepository implements ProjectRepository {
         include: {
           techStacks: true,
           categories: true,
+          keyFeature: true,
           projectRoles: {
             include: {
               techStacks: true,
@@ -95,6 +101,11 @@ export class PrismaProjectRepository implements ProjectRepository {
           name: tech.name,
           iconUrl: tech.iconUrl,
           type: tech.type,
+        })),
+        keyFeatures: savedProject.keyFeature.map((feature) => ({
+          id: feature.id,
+          projectId: feature.projectId,
+          feature: feature.feature,
         })),
         projectRoles: savedProject.projectRoles.map((role) => ({
           id: role.id,
@@ -145,6 +156,7 @@ export class PrismaProjectRepository implements ProjectRepository {
           },
           projectMembers: true,
           categories: true,
+          keyFeature: true,
           externalLinks: true,
           owner: true,
         },
@@ -170,6 +182,11 @@ export class PrismaProjectRepository implements ProjectRepository {
           name: tech.name,
           iconUrl: tech.iconUrl,
           type: tech.type,
+        })),
+        keyFeatures: project.keyFeature.map((feature) => ({
+          id: feature.id,
+          projectId: feature.projectId,
+          feature: feature.feature,
         })),
         projectRoles: project.projectRoles.map((role) => ({
           id: role.id,
@@ -206,6 +223,7 @@ export class PrismaProjectRepository implements ProjectRepository {
           },
           categories: true,
           externalLinks: true,
+          keyFeature: true,
           owner: {
             select: {
               id: true,
@@ -249,6 +267,11 @@ export class PrismaProjectRepository implements ProjectRepository {
           name: tech.name,
           iconUrl: tech.iconUrl,
           type: tech.type,
+        })),
+        keyFeatures: project.keyFeature.map((feature) => ({
+          id: feature.id,
+          projectId: feature.projectId,
+          feature: feature.feature,
         })),
         projectRoles: project.projectRoles.map((role) => ({
           id: role.id,
@@ -338,6 +361,7 @@ export class PrismaProjectRepository implements ProjectRepository {
           },
           projectMembers: true,
           categories: true,
+          keyFeature: true,
           externalLinks: true,
           owner: {
             select: {
@@ -369,6 +393,11 @@ export class PrismaProjectRepository implements ProjectRepository {
           categories: project.categories.map((cat) => ({
             id: cat.id,
             name: cat.name,
+          })),
+          keyFeatures: project.keyFeature.map((feature) => ({
+            id: feature.id,
+            projectId: feature.projectId,
+            feature: feature.feature,
           })),
           techStacks: project.techStacks.map((tech) => ({
             id: tech.id,
@@ -599,6 +628,7 @@ export class PrismaProjectRepository implements ProjectRepository {
             },
             projectMembers: true,
             categories: true,
+            keyFeature: true,
             externalLinks: true,
             owner: true,
           },
@@ -617,6 +647,11 @@ export class PrismaProjectRepository implements ProjectRepository {
           categories: finalProject.categories.map((cat) => ({
             id: cat.id,
             name: cat.name,
+          })),
+          keyFeatures: finalProject.keyFeature.map((feature) => ({
+            id: feature.id,
+            projectId: feature.projectId,
+            feature: feature.feature,
           })),
           techStacks: finalProject.techStacks.map((tech) => ({
             id: tech.id,

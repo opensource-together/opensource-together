@@ -45,6 +45,18 @@ export class CategoryDto {
   name: string;
 }
 
+export class KeyFeatureDto {
+  @ApiProperty({ description: "feature's project id" })
+  @IsString()
+  @IsNotEmpty()
+  projectId: string;
+
+  @ApiProperty({ description: 'feature description' })
+  @IsString()
+  @IsNotEmpty()
+  feature: string;
+}
+
 export class ProjectRoleDto {
   @ApiProperty({ description: 'Role title' })
   @IsString()
@@ -118,6 +130,13 @@ export class CreateProjectDto {
   @ValidateNested({ each: true })
   @Type(() => ProjectRoleDto)
   projectRoles?: ProjectRoleDto[];
+
+  @ApiProperty({ description: 'Project key feature (optional)' })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => KeyFeatureDto)
+  keyFeature?: KeyFeatureDto[];
 
   @ApiProperty({ description: 'Project image' })
   @IsOptional()

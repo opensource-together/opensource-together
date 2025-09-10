@@ -1,3 +1,5 @@
+import { KeyFeature, TeamMember } from '@prisma/client';
+
 /**
  * Project
  * @description Project is the main entity of the project.
@@ -22,6 +24,7 @@ export interface Project {
   image: string;
   categories: Category[];
   techStacks: TechStack[];
+  keyFeatures: KeyFeature[];
   projectRoles?: ProjectRole[];
   teamMembers?: TeamMember[];
   coverImages?: string[];
@@ -88,13 +91,6 @@ export interface ProjectRole {
   techStacks: TechStack[];
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export interface TeamMember {
-  id?: string;
-  projectId?: string;
-  userId: string;
-  joinedAt?: Date;
 }
 
 export interface ValidationErrors {
