@@ -7,6 +7,10 @@ export interface CreateProjectData {
   description: string;
   categories: string[];
   techStacks: string[];
+  keyFeatures: {
+    projectId: string;
+    feature: string;
+  }[];
   projectRoles?: {
     title: string;
     description: string;

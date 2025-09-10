@@ -137,6 +137,7 @@ export class ProjectService {
       image: createProjectDto.image || '',
       description: createProjectDto.description,
       categories: createProjectDto.categories,
+      keyFeatures: createProjectDto.keyFeature || [],
       techStacks: createProjectDto.techStacks,
       projectRoles: createProjectDto.projectRoles?.map((role) => ({
         title: role.title,
