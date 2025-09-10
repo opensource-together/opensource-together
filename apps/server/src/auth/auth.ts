@@ -67,10 +67,12 @@ export const auth: {
             await getProfileService().createFromGithub(account);
           } else {
             await getProfileService().upsertProfile(account.userId, {
-              bio: '',
-              location: '',
-              company: '',
+              username: '',
+              avatarUrl: '',
               jobTitle: '',
+              bio: '',
+              techStacks: [],
+              socialLinks: {},
             });
           }
           return;
