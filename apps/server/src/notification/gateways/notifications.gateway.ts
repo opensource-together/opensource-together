@@ -68,6 +68,7 @@ export class NotificationsGateway
       const userId = await this.webSocketAuthService.authenticateSocket(client);
 
       if (!userId) {
+        console.log('disconnecting client');
         client.disconnect();
         return;
       }
@@ -129,6 +130,7 @@ export class NotificationsGateway
       notification.receiverId,
     );
 
+    console.log('IN WEBSOCKET GATEWAY');
     if (userSocket) {
       userSocket.emit('new-notification', {
         object: notification.object,
@@ -140,17 +142,27 @@ export class NotificationsGateway
         createdAt: notification.createdAt,
         readAt: notification.readAt,
       });
+      console.log('notification emit');
 
       this.logger.log(
         `✅ Notification envoyée à l'utilisateur ${notification.receiverId}: ${notification.type} (ID: ${notification.id})`,
       );
       return null; // Succès
     } else {
-      const warningMessage = `L'utilisateur ${notification.receiverId} existe mais n'est pas connecté via WebSocket`;
-      this.logger.warn(
-        `⚠️ ${warningMessage}. Notification non envoyée en temps réel.`,
-      );
-      return warningMessage;
+      // Vérifier si l'utilisateur existe dans le système
+      const userExists = await this.checkUserExists(notification.receiverId);
+
+      if (!userExists) {
+        const errorMessage = `L'utilisateur ${notification.receiverId} n'existe pas dans le système`;
+        this.logger.error(`❌ ${errorMessage}`);
+        return errorMessage;
+      } else {
+        const warningMessage = `L'utilisateur ${notification.receiverId} existe mais n'est pas connecté via WebSocket`;
+        this.logger.warn(
+          `⚠️ ${warningMessage}. Notification non envoyée en temps réel.`,
+        );
+        return null; // Succès (utilisateur existe mais offline)
+      }
     }
   }
 
@@ -183,11 +195,20 @@ export class NotificationsGateway
       );
       return null; // Succès
     } else {
-      const warningMessage = `L'utilisateur ${notification.receiverId} existe mais n'est pas connecté via WebSocket`;
-      this.logger.warn(
-        `⚠️ ${warningMessage}. Mise à jour non envoyée en temps réel.`,
-      );
-      return warningMessage;
+      // Vérifier si l'utilisateur existe dans le système
+      const userExists = await this.checkUserExists(notification.receiverId);
+
+      if (!userExists) {
+        const errorMessage = `L'utilisateur ${notification.receiverId} n'existe pas dans le système`;
+        this.logger.error(`❌ ${errorMessage}`);
+        return errorMessage;
+      } else {
+        const warningMessage = `L'utilisateur ${notification.receiverId} existe mais n'est pas connecté via WebSocket`;
+        this.logger.warn(
+          `⚠️ ${warningMessage}. Mise à jour non envoyée en temps réel.`,
+        );
+        return null; // Succès (utilisateur existe mais offline)
+      }
     }
   }
 
@@ -200,6 +221,24 @@ export class NotificationsGateway
 
   isUserConnected(userId: string): boolean {
     return this.connectionManager.isUserConnected(userId);
+  }
+
+  /**
+   * Vérifie si un utilisateur existe dans le système
+   */
+  private async checkUserExists(userId: string): Promise<boolean> {
+    try {
+      // Utiliser le service de notification pour vérifier l'existence
+      // via une requête simple à la base de données
+      const result =
+        await this.notificationService.getUnreadNotifications(userId);
+      return result.success; // Si on peut récupérer ses notifications, l'utilisateur existe
+    } catch (error) {
+      this.logger.error(
+        `Erreur lors de la vérification de l'existence de l'utilisateur ${userId}: ${error}`,
+      );
+      return false;
+    }
   }
 
   /**

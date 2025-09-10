@@ -32,12 +32,12 @@ export class NotificationService implements NotificationServiceInterface {
     notification: SendNotificationPayload,
   ): Promise<Result<void, string>> {
     try {
+      console.log('sendNotification', notification);
       // Valider les données
-      const validationErrors = validateNotification(notification);
-      if (validationErrors) {
-        return Result.fail(
-          `Validation failed: ${JSON.stringify(validationErrors)}`,
-        );
+      const validationResult = validateNotification(notification);
+      if (!validationResult.success) {
+        console.log('validationErrors', validationResult.error);
+        return Result.fail(`Validation failed: ${validationResult.error}`);
       }
 
       // Persister en base de données
@@ -276,4 +276,3 @@ export class NotificationService implements NotificationServiceInterface {
     }
   }
 }
-

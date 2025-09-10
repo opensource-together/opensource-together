@@ -16,8 +16,8 @@ import {
 } from '@/features/user/repositories/user.repository.interface';
 import { Result } from '@/libs/result';
 import {
+  MailingServiceInterface,
   MAILING_SERVICE,
-  MailingServicePort,
 } from '@/mailing/mailing.interface';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
@@ -35,6 +35,11 @@ import {
   ProjectRepository,
   UpdateProjectData,
 } from '../repositories/project.repository.interface';
+import {
+  NOTIFICATION_SERVICE,
+  NotificationServiceInterface,
+} from '@/notification/services';
+
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -59,9 +64,11 @@ export class ProjectService {
     @Inject(GITHUB_REPOSITORY)
     private readonly githubRepository: IGithubRepository,
     @Inject(MAILING_SERVICE)
-    private readonly mailingService: MailingServicePort,
+    private readonly mailingService: MailingServiceInterface,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationService: NotificationServiceInterface,
   ) {}
 
   async createProject(props: {
@@ -131,24 +138,37 @@ export class ProjectService {
       return Result.fail(projectRolesValidation as unknown as ValidationErrors);
     }
 
-    const result = await this.projectRepository.create({
-      ownerId: userId,
-      title: createProjectDto.title,
-      image: createProjectDto.image || '',
-      description: createProjectDto.description,
-      categories: createProjectDto.categories,
-      techStacks: createProjectDto.techStacks,
-      projectRoles: createProjectDto.projectRoles?.map((role) => ({
-        title: role.title,
-        description: role.description,
-        techStacks: role.techStacks.map((id) => id),
-      })),
+    // const result = await this.projectRepository.create({
+    //   ownerId: userId,
+    //   title: createProjectDto.title,
+    //   image: createProjectDto.image || '',
+    //   description: createProjectDto.description,
+    //   categories: createProjectDto.categories,
+    //   techStacks: createProjectDto.techStacks,
+    //   projectRoles: createProjectDto.projectRoles?.map((role) => ({
+    //     title: role.title,
+    //     description: role.description,
+    //     techStacks: role.techStacks.map((id) => id),
+    //   })),
+    // });
+
+    // if (!result.success) {
+    //   return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    // }
+
+    const notificationResult = await this.notificationService.sendNotification({
+      object: 'Nouveau projet créé',
+      receiverId: userId,
+      senderId: userId,
+      type: 'project_created',
+      payload: {
+        projectId: 'test',
+        projectTitle: createProjectDto.title,
+      },
     });
-
-    if (!result.success) {
-      return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    if (!notificationResult.success) {
+      return Result.fail(notificationResult.error);
     }
-
     const githubResult = await this.githubRepository.createGithubRepository(
       {
         title: createProjectDto.title,
@@ -161,18 +181,12 @@ export class ProjectService {
       return Result.fail('GITHUB_ERROR' as ProjectServiceError);
     }
 
-    console.log('result', result.value);
     const ownerEmail = await this.userRepository.findEmailById(userId);
     if (!ownerEmail.success) {
       return Result.fail('USER_NOT_FOUND' as ProjectServiceError);
     }
-    await this.mailingService.sendEmail({
-      to: ownerEmail.value,
-      subject: 'Nouveau projet créé',
-      text: `Le projet ${createProjectDto.title} a été créé avec succès`,
-      html: `<p>Le projet ${createProjectDto.title} a été créé avec succès</p>`,
-    });
-    return Result.ok(result.value);
+
+    return Result.ok({} as Project);
   }
 
   async findAll(octokit: Octokit) {
@@ -210,6 +224,7 @@ export class ProjectService {
         `GitHub stats failed for project ${projectId}: ${stats.error}`,
       );
     }
+
     return Result.ok({
       ...project.value,
       stats: stats.success ? stats.value : undefined,

@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Session, UserSession, AuthGuard } from '@thallesp/nestjs-better-auth';
@@ -215,11 +216,13 @@ export class NotificationController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('ws-token')
   async getWsToken(
     @Session() session: UserSession,
   ): Promise<WsTokenResponseDto> {
     if (!session?.user?.id) {
+      console.log('session', session);
       throw new UnauthorizedException('Utilisateur non authentifié');
     }
 

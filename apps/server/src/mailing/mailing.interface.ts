@@ -10,6 +10,6 @@ export interface SendEmailPayload {
   from?: string;
 }
 
-export interface MailingServicePort {
+export interface MailingServiceInterface {
   sendEmail(payload: SendEmailPayload): Promise<Result<void, string>>;
 }
