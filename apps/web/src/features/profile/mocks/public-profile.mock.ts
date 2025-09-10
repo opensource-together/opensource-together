@@ -5,8 +5,6 @@ export const mockPublicProfile: Profile = {
   username: "John Doe",
   avatarUrl: "https://avatars.githubusercontent.com/u/45101981?v=4",
   bio: "Fullstack Developer | Express & React | Building @awesome-project | Passionné par l'open source et les nouvelles technologies. J'aime créer des applications qui ont un impact positif sur la vie des gens.",
-  location: "Paris, France",
-  company: "Tech Corp",
   jobTitle: "Senior Fullstack Developer",
   contributionsCount: 1250,
   provider: "github",
@@ -59,29 +57,6 @@ export const mockPublicProfile: Profile = {
       iconUrl:
         "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
       type: "LANGUAGE",
-    },
-  ],
-  experiences: [
-    {
-      id: "1",
-      company: "Tech Corp",
-      position: "Senior Fullstack Developer",
-      startDate: "2023-01-01",
-      endDate: "",
-    },
-    {
-      id: "2",
-      company: "StartupXYZ",
-      position: "Fullstack Developer",
-      startDate: "2021-06-01",
-      endDate: "2022-12-31",
-    },
-    {
-      id: "3",
-      company: "Freelance",
-      position: "Web Developer",
-      startDate: "2020-01-01",
-      endDate: "2021-05-31",
     },
   ],
   projects: [

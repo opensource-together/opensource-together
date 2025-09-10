@@ -29,11 +29,13 @@ export default function ProfileEditView() {
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
       techStacks: currentUser?.techStacks?.map((tech) => tech.id) || [],
-      experiences:
-        currentUser?.experiences?.map((experience) => ({
-          experience: experience.position,
-        })) || [],
-      socialLinks: currentUser?.socialLinks || {},
+      socialLinks: currentUser?.socialLinks || {
+        github: "",
+        discord: "",
+        twitter: "",
+        linkedin: "",
+        website: "",
+      },
     },
   });
 
