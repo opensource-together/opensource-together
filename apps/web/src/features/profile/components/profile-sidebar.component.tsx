@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
-import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import Icon, { IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
 
@@ -21,17 +20,6 @@ const socialLinksConfig = [
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   const { techStacks = [], socialLinks = {} } = profile;
-  const breadcrumbItems = [
-    {
-      label: "Découvrir",
-      href: "/",
-      isActive: false,
-    },
-    {
-      label: profile.username || "Profile",
-      isActive: true,
-    },
-  ];
 
   const stats = {
     starsEarned: profile.githubStats?.totalStars || 0,
@@ -52,56 +40,67 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   };
 
   return (
-    <div className="flex w-[252px] flex-col gap-5">
-      <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
-
+    <div className="flex flex-1 flex-col gap-5">
       {shouldShowStats && (
-        <div className="mb-2 flex flex-col md:max-w-[263px]">
-          <h2 className="text-md mb-1 font-medium tracking-tight text-black">
-            Statistiques GitHub
-          </h2>
+        <div className="mb-2 flex flex-col">
+          <h2 className="mb-4 text-sm">Statistiques GitHub</h2>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
-              <Icon name="star" size="sm" variant="black" />
-              <span className="text-sm font-normal text-black">
+              <Icon
+                name="star"
+                size="xs"
+                variant="black"
+                className="opacity-50"
+              />
+              <span className="text-sm font-normal text-neutral-500">
                 Stars gagnées
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-sm font-medium text-black">
+            <span className="text-primary text-sm font-medium">
               {stats.starsEarned}
             </span>
           </div>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
-              <Icon name="fork" size="sm" variant="black" />
-              <span className="text-sm font-normal text-black">
+              <Icon
+                name="fork"
+                size="xs"
+                variant="black"
+                className="opacity-50"
+              />
+              <span className="text-sm font-normal text-neutral-500">
                 Repos contribués
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-sm font-medium text-black">
+            <span className="text-primary text-sm font-medium">
               {stats.joinedProjects}
             </span>
           </div>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
-              <Icon name="people" size="sm" variant="black" />
-              <span className="text-sm font-normal text-black">
-                Commits cette année
+              <Icon
+                name="people"
+                size="xs"
+                variant="black"
+                className="opacity-50"
+              />
+              <span className="text-sm font-normal text-neutral-500">
+                Contributions cette année
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-sm font-medium text-black">
+            <span className="text-primary text-sm font-medium">
               {stats.contributions}
             </span>
           </div>
@@ -109,11 +108,9 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       )}
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Technologies
-        </h2>
+        <h2 className="mb-4 text-sm">Technologies</h2>
         {techStacks.length > 0 ? (
-          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+          <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
             {techStacks.map((tech, index) => (
               <StackLogo
                 key={tech.id || index}
@@ -129,9 +126,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-4 font-medium tracking-tight text-black">
-          Liens externes
-        </h2>
+        <h2 className="mb-4 text-sm">Liens externes</h2>
         <div className="flex flex-col gap-6">
           {socialLinksConfig.map((config) => {
             const url = socialLinks[config.key as keyof typeof socialLinks];
@@ -143,11 +138,11 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group text-muted-foreground flex items-center gap-2 text-sm transition-colors hover:text-black"
+                className="flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
               >
                 <Icon
                   name={config.icon as IconName}
-                  size="md"
+                  size="sm"
                   variant="gray"
                   alt={config.alt}
                   className="opacity-50 transition-opacity group-hover:opacity-100"

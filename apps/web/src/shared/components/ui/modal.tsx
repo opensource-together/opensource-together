@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { Button } from "./button";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import { Separator } from "./separator";
 
 interface ModalProps {
   open?: boolean;
@@ -18,11 +20,23 @@ interface ModalProps {
   title?: string;
   description?: string;
   children?: React.ReactNode;
-  footer?: React.ReactNode;
   trigger?: React.ReactNode;
   className?: string;
   size?: "sm" | "md" | "lg" | "xl";
   showCloseButton?: boolean;
+  // Action props
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  isLoading?: boolean;
+  confirmVariant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
 }
 
 const sizeClasses = {
@@ -38,12 +52,25 @@ function Modal({
   title,
   description,
   children,
-  footer,
   trigger,
   className,
   size = "lg",
   showCloseButton = true,
+  confirmText = "Confirmer",
+  cancelText = "Annuler",
+  onConfirm,
+  onCancel,
+  isLoading = false,
+  confirmVariant = "default",
 }: ModalProps) {
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    } else if (onOpenChange) {
+      onOpenChange(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
@@ -59,8 +86,46 @@ function Modal({
             )}
           </DialogHeader>
         )}
+
         {children}
-        {footer && <DialogFooter>{footer}</DialogFooter>}
+
+        {(onConfirm || onCancel) && (
+          <>
+            <Separator
+              className="mt-3 mb-1"
+              style={{
+                marginLeft: "-16px",
+                marginRight: "-16px",
+                width: "calc(100% + 32px)",
+              }}
+            />
+            <DialogFooter>
+              {onCancel && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleCancel}
+                >
+                  {cancelText}
+                </Button>
+              )}
+              {onConfirm && (
+                <Button
+                  variant={confirmVariant}
+                  onClick={onConfirm}
+                  disabled={isLoading}
+                  className={`flex items-center gap-2 ${
+                    confirmVariant === "destructive"
+                      ? "bg-red-500 hover:bg-red-600"
+                      : ""
+                  }`}
+                >
+                  {isLoading ? "En cours..." : <>{confirmText}</>}
+                </Button>
+              )}
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

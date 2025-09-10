@@ -11,8 +11,9 @@ export interface UpsertProfileData {
 
 export interface CompleteProfile {
   id: string;
-  name: string | null;
+  username: string | null;
   avatarUrl: string | null;
+  provider: string | null;
   bio: string | null;
   location: string | null;
   company: string | null;

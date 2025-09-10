@@ -258,7 +258,6 @@ export function StepThreeForm() {
           title={
             isEditMode ? "Modifier le rôle" : "Ajouter des exigences de rôle"
           }
-          footer={modalFooter}
           size="xl"
         >
           <Form {...roleForm}>
@@ -345,6 +344,7 @@ export function StepThreeForm() {
               />
             </form>
           </Form>
+          {modalFooter}
         </Modal>
 
         <FormNavigationButtons

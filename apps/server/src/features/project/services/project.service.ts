@@ -191,7 +191,6 @@ export class ProjectService {
       (project) => (project as { success: true; value: Project }).value,
     );
 
-    console.log('projectsResult', projectsResult);
     return Result.ok(projectsResult);
   }
 

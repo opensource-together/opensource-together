@@ -1,16 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../../prisma/prisma.service';
+import { Profile as DomainProfile } from '@/features/profile/domain/profile';
 import {
   CompleteProfile,
   ProfileRepository,
   UpsertProfileData,
 } from '@/features/profile/repositories/profile.repository.interface';
-import {
-  Profile,
-  Profile as DomainProfile,
-} from '@/features/profile/domain/profile';
 import { Result } from '@/libs/result';
+import { Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaService } from '../../../../prisma/prisma.service';
 
 @Injectable()
 export class PrismaProfileRepository implements ProfileRepository {
@@ -20,7 +17,7 @@ export class PrismaProfileRepository implements ProfileRepository {
     data: UpsertProfileData,
   ): Promise<Result<DomainProfile, string>> {
     try {
-      const profile: Profile = await this.prismaService.profile.upsert({
+      const profile = await this.prismaService.profile.upsert({
         where: { userId: data.userId },
         update: {
           bio: data.bio,
@@ -63,6 +60,7 @@ export class PrismaProfileRepository implements ProfileRepository {
               TechStack: true,
               UserSocialLink: true,
               Project: true,
+              accounts: true,
             },
           },
         },
@@ -74,8 +72,9 @@ export class PrismaProfileRepository implements ProfileRepository {
 
       return Result.ok({
         id: profile.id,
-        name: profile.user.name,
+        username: profile.user.name,
         avatarUrl: profile.user.image,
+        provider: profile.user.accounts[0]?.providerId ?? null,
         bio: profile.bio,
         location: profile.location,
         company: profile.company,

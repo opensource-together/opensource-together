@@ -1,10 +1,10 @@
+import { getProfileService } from '@/features/profile/services/profile.holder';
+import { getUserService } from '@/features/user/services/user.holder';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { Account } from 'better-auth/types';
 import * as process from 'node:process';
 import { PrismaService } from 'prisma/prisma.service';
-import { getProfileService } from '@/features/profile/services/profile.holder';
-import { Account } from 'better-auth/types';
-import { getUserService } from '@/features/user/services/user.holder';
 
 const prisma = new PrismaService();
 
@@ -39,18 +39,25 @@ export const auth: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      redirectURL: 'http://localhost:4000/api/auth/callback/github',
+      redirectURL: `${process.env.BACKEND_URL}/api/auth/callback/github`,
       overrideUserInfoOnSignIn: true,
       scope: ['read:user', 'user:email', 'repo', 'read:org'],
     },
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      redirectURL: 'http://localhost:4000/api/auth/callback/google',
+      redirectURL: `${process.env.BACKEND_URL}/api/auth/callback/google`,
     },
   },
-  trustedOrigins: ['http://localhost:3000', 'http://localhost:4000'],
-  baseURL: 'http://localhost:4000',
+  trustedOrigins: [
+    process.env.FRONTEND_URL as string,
+    process.env.BACKEND_URL as string,
+  ],
+  baseURL: process.env.BACKEND_URL,
+  urls: {
+    signInRedirect: `${process.env.FRONTEND_URL}/`,
+    signOutRedirect: `${process.env.FRONTEND_URL}/`,
+  },
   databaseHooks: {
     account: {
       create: {
@@ -58,6 +65,13 @@ export const auth: {
           if (account.providerId === 'github') {
             await getUserService().updateGithubLogin(account);
             await getProfileService().createFromGithub(account);
+          } else {
+            await getProfileService().upsertProfile(account.userId, {
+              bio: '',
+              location: '',
+              company: '',
+              jobTitle: '',
+            });
           }
           return;
         },
@@ -68,7 +82,10 @@ export const auth: {
     crossSubDomainCookies: {
       enabled: false,
       cookieName: 'better-auth',
-      cookieDomain: 'localhost',
+      cookieDomain:
+        process.env.NODE_ENV === 'production'
+          ? process.env.COOKIE_DOMAIN
+          : 'localhost',
     },
   },
 });

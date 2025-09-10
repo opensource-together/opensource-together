@@ -4,16 +4,18 @@ import { useRouter } from "next/navigation";
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import BreadcrumbNavigation from "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
 import { Contributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
   isMaintainer?: boolean;
+  isAuthLoading?: boolean;
 }
 
 const externalLinksConfig = [
@@ -27,10 +29,11 @@ const externalLinksConfig = [
 export default function ProjectSideBar({
   project,
   isMaintainer = false,
+  isAuthLoading = false,
 }: ProjectSideBarProps) {
   const router = useRouter();
+  const { navigateToProfile } = useProfileNavigation();
   const {
-    title = "",
     techStacks = [],
     externalLinks = [],
     categories = [],
@@ -78,21 +81,8 @@ export default function ProjectSideBar({
   };
 
   const handleContributorClick = (contributor: Contributor) => {
-    const userId = contributor.id;
-    router.push(`/profile/${userId}`);
+    navigateToProfile(contributor.id);
   };
-
-  const breadcrumbItems = [
-    {
-      label: "Accueil",
-      href: "/",
-      isActive: false,
-    },
-    {
-      label: title,
-      isActive: true,
-    },
-  ];
 
   const formatUrl = (url: string) => {
     if (!url) return "";
@@ -105,29 +95,27 @@ export default function ProjectSideBar({
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <BreadcrumbNavigation items={breadcrumbItems} className="mb-3" />
-
+    <div className="flex flex-1 flex-col gap-5">
       <div className="mb-3 flex gap-2">
         {isMaintainer ? (
-          <Button size="lg" className="gap-2" onClick={handleEditClick}>
+          <Button className="h-8.5 gap-2" onClick={handleEditClick}>
             Modifier
             <Icon name="pencil" size="xs" variant="white" />
           </Button>
+        ) : isAuthLoading ? (
+          <Skeleton className="h-10 w-48 rounded-full" />
         ) : (
-          <Button size="lg">Rejoindre le projet</Button>
+          <Button className="h-8.5">Rôles Diponibles</Button>
         )}
         <Link href={githubLink} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" size="lg">
+          <Button variant="secondary" className="h-[35px]">
             Voir Repository
           </Button>
         </Link>
       </div>
 
-      <div className="mb-2 flex flex-col md:max-w-[263px]">
-        <h2 className="text-md mb-1 font-medium tracking-tight text-black">
-          Détails
-        </h2>
+      <div className="mb-2 flex flex-1 flex-col">
+        <h2 className="mb-4 text-sm">Détails</h2>
 
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
@@ -137,12 +125,12 @@ export default function ProjectSideBar({
               variant="black"
               className="opacity-50"
             />
-            <span className="text-sm font-normal text-black/50">Stars</span>
+            <span className="text-sm font-normal text-neutral-500">Stars</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-sm font-medium text-black">
+          <span className="text-primary text-sm font-medium">
             {projectStats.stars}
           </span>
         </div>
@@ -155,12 +143,12 @@ export default function ProjectSideBar({
               variant="black"
               className="opacity-50"
             />
-            <span className="text-sm font-normal text-black/50">Forks</span>
+            <span className="text-sm font-normal text-neutral-500">Forks</span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-sm font-medium text-black">
+          <span className="text-primary text-sm font-medium">
             {projectStats.forks}
           </span>
         </div>
@@ -168,14 +156,14 @@ export default function ProjectSideBar({
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
             <Icon name="last-commit" size="sm" variant="default" />
-            <span className="text-sm font-normal text-black/50">
+            <span className="text-sm font-normal text-neutral-500">
               Dernier Commit
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-sm font-medium text-black">
+          <span className="text-primary text-sm font-medium">
             {projectStats.lastCommit?.date
               ? new Date(projectStats.lastCommit.date).toLocaleDateString(
                   "fr-FR"
@@ -192,25 +180,23 @@ export default function ProjectSideBar({
               variant="black"
               className="opacity-50"
             />
-            <span className="text-sm font-normal text-black/50">
+            <span className="text-sm font-normal text-neutral-500">
               Contributeurs
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
             <Separator />
           </div>
-          <span className="text-sm font-medium text-black">
+          <span className="text-primary text-sm font-medium">
             {allContributors.length}
           </span>
         </div>
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Technologies
-        </h2>
+        <h2 className="mb-4 text-sm">Technologies</h2>
         {techStacks.length > 0 && (
-          <div className="flex w-full flex-wrap gap-x-5 gap-y-2">
+          <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
             {techStacks.map((tech, index) => (
               <StackLogo
                 key={index}
@@ -224,9 +210,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-2 font-medium tracking-tight text-black">
-          Catégories
-        </h2>
+        <h2 className="mb-4 text-sm">Catégories</h2>
         <div className="flex flex-wrap gap-2">
           {categories.map((category, index) => (
             <Badge
@@ -240,12 +224,10 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="text-md mb-3 font-medium tracking-tight text-black">
-          Contributeurs Principaux
-        </h2>
+        <h2 className="mb-4 text-sm">Contributeurs Principaux</h2>
 
         <div className="flex flex-col items-start">
-          <div className="ml-3 flex gap-2">
+          <div className="ml-5 flex gap-2">
             {allContributors.slice(0, 5).map((contributor) => (
               <div
                 key={contributor.id}
@@ -256,8 +238,8 @@ export default function ProjectSideBar({
                   src={contributor.avatarUrl}
                   name={contributor.username}
                   alt={contributor.username}
-                  size="sm"
-                  className="-ml-4 cursor-pointer border-2 border-white transition-transform duration-150 hover:-translate-y-0.5"
+                  size="md"
+                  className="-ml-6 cursor-pointer border-2 border-white shadow-xs transition-transform duration-150 hover:-translate-y-0.5"
                   onClick={() => handleContributorClick(contributor)}
                 />
               </div>
@@ -277,9 +259,7 @@ export default function ProjectSideBar({
 
       {externalLinks.length > 0 && (
         <div className="mb-2 flex flex-col">
-          <h2 className="text-md mb-4 font-medium tracking-tight text-black">
-            Liens externes
-          </h2>
+          <h2 className="mb-4 text-sm">Liens externes</h2>
           <div className="flex flex-col gap-6">
             {externalLinksConfig.map((config) => {
               const link = externalLinks.find((l) =>
@@ -295,7 +275,7 @@ export default function ProjectSideBar({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group text-muted-foreground flex items-center gap-2 text-sm transition-colors hover:text-black"
+                  className="group flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
                 >
                   <Icon
                     name={config.icon as IconName}

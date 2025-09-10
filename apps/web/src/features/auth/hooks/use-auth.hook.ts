@@ -7,12 +7,9 @@ import { socket } from "@/shared/realtime/socket";
 
 import {
   getCurrentUser,
-  getGitHubAuthUrl,
-  getGoogleAuthUrl,
   getWebSocketToken,
-  handleGitHubCallback,
-  handleGoogleCallback,
   logout,
+  signInWithProvider,
 } from "../services/auth.service";
 
 export default function useAuth() {
@@ -63,64 +60,11 @@ export default function useAuth() {
     }
   }, [wsToken, currentUser]);
 
-  const githubSignInMutation = useToastMutation({
-    mutationFn: async () => {
-      const authUrl = await getGitHubAuthUrl();
-      window.location.assign(authUrl);
-      return authUrl;
-    },
-    loadingMessage: "Redirection vers Github...",
-    successMessage: "Redirection en cours...",
-    errorMessage: "Erreur lors de la redirection vers Github",
-  });
-
-  const googleSignInMutation = useToastMutation({
-    mutationFn: async () => {
-      const authUrl = await getGoogleAuthUrl();
-      window.location.assign(authUrl);
-      return authUrl;
-    },
-    loadingMessage: "Redirection vers Google...",
-    successMessage: "Redirection en cours...",
-    errorMessage: "Erreur lors de la redirection vers Google",
-  });
-
-  const githubCallbackMutation = useToastMutation({
-    mutationFn: handleGitHubCallback,
-    loadingMessage: "Vérification de vos informations Github...",
+  const signInMutation = useToastMutation<unknown, Error, string>({
+    mutationFn: async (provider) => await signInWithProvider(provider),
+    loadingMessage: "Connexion en cours...",
     successMessage: "Connexion réussie !",
     errorMessage: "Une erreur est survenue lors de la connexion",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        queryClient.invalidateQueries({ queryKey: ["ws-token"] });
-
-        const redirectUrl = sessionStorage.getItem("auth_redirect_url");
-        sessionStorage.removeItem("auth_redirect_url");
-
-        router.push(redirectUrl || "/");
-      },
-      onError: () => router.push("/auth/login"),
-    },
-  });
-
-  const googleCallbackMutation = useToastMutation({
-    mutationFn: handleGoogleCallback,
-    loadingMessage: "Vérification de vos informations Google...",
-    successMessage: "Connexion réussie !",
-    errorMessage: "Une erreur est survenue lors de la connexion",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        queryClient.invalidateQueries({ queryKey: ["ws-token"] });
-
-        const redirectUrl = sessionStorage.getItem("auth_redirect_url");
-        sessionStorage.removeItem("auth_redirect_url");
-
-        router.push(redirectUrl || "/");
-      },
-      onError: () => router.push("/auth/login"),
-    },
   });
 
   const logoutMutation = useToastMutation({
@@ -160,16 +104,12 @@ export default function useAuth() {
     isError,
     wsToken,
 
-    signInWithGitHub: githubSignInMutation.mutate,
-    signInWithGoogle: googleSignInMutation.mutate,
-    redirectAfterGitHub: githubCallbackMutation.mutate,
-    redirectAfterGoogle: googleCallbackMutation.mutate,
+    signInWithProvider: signInMutation.mutate,
     logout: logoutMutation.mutate,
     redirectToLogin,
     requireAuth,
 
-    isSigningIn: githubSignInMutation.isPending,
-    isProcessingCallback: githubCallbackMutation.isPending,
+    isSigningIn: signInMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
   };
 }

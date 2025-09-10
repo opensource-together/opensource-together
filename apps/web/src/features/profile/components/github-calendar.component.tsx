@@ -25,13 +25,13 @@ export default function GithubCalendar({
       case 0:
         return "bg-[#E8EAEE]";
       case 1:
-        return "bg-[#8EC5FF]";
+        return "bg-ost-blue-one";
       case 2:
-        return "bg-[#51A2FF]";
+        return "bg-ost-blue-two";
       case 3:
-        return "bg-[#2B7FFF]";
+        return "bg-ost-blue-three";
       case 4:
-        return "bg-[#193CB8]";
+        return "bg-ost-blue-four";
       default:
         return "bg-[#E8EAEE]";
     }
@@ -70,9 +70,7 @@ export default function GithubCalendar({
     return (
       <div className="w-full max-w-full overflow-hidden">
         <div>
-          <h3 className="mb-4 text-lg font-medium tracking-tight text-black">
-            Activité de contribution Github
-          </h3>
+          <h3 className="mb-3.5 text-lg">Activité de contribution Github</h3>
           <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
               Aucune donnée de contribution Github disponible
@@ -102,15 +100,13 @@ export default function GithubCalendar({
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div>
-        <h3 className="mb-4 text-lg font-medium tracking-tight text-black">
-          Activité de contribution Github
-        </h3>
+        <h2 className="mb-4 text-sm">Activité de contribution Github</h2>
 
         <div className="relative">
-          <div className="mb-2 flex px-2">
+          <div className="mb-0.5 flex pr-2.5">
             {months.map((month, index) => (
-              <div key={index} className="flex-1 text-center">
-                <span className="text-[6px] text-black/20 md:text-[8px]">
+              <div key={index} className="flex-1 text-left">
+                <span className="text-[6px] text-neutral-400 md:text-[8px]">
                   {month}
                 </span>
               </div>
@@ -118,19 +114,8 @@ export default function GithubCalendar({
           </div>
 
           <div className="flex">
-            <div className="mr-1 flex flex-col justify-between py-1 md:mr-2">
-              {days.map((day, index) => (
-                <span
-                  key={index}
-                  className="text-[6px] text-black/20 md:text-[8px]"
-                >
-                  {day}
-                </span>
-              ))}
-            </div>
-
             <div
-              className="h-[60px] w-full max-w-[598.07px] rounded-lg border border-black/5 p-1 md:h-[97px] md:p-2"
+              className="h-[60px] w-full max-w-[598.07px] rounded-md border border-black/5 p-1 md:h-[93px] md:p-2"
               onMouseMove={handleMouseMove}
             >
               <div className="flex h-full gap-[1px] md:gap-0.5">
@@ -142,7 +127,7 @@ export default function GithubCalendar({
                     {week.days.map((day, dayIndex) => (
                       <div
                         key={dayIndex}
-                        className={`size-[6px] rounded-full md:size-[9px] ${getSquareColor(day.level)} cursor-pointer transition-colors hover:opacity-80`}
+                        className={`size-[6px] rounded-xs md:size-[9px] ${getSquareColor(day.level)} cursor-pointer transition-colors hover:opacity-80`}
                         onMouseEnter={(e) => handleMouseEnter(day, e)}
                         onMouseLeave={handleMouseLeave}
                       />
@@ -151,6 +136,29 @@ export default function GithubCalendar({
                 ))}
               </div>
             </div>
+            <div className="ml-1 flex flex-col justify-between py-1 md:ml-2">
+              {days.map((day, index) => (
+                <span
+                  key={index}
+                  className="text-[6px] text-[var(--neutral-400)] md:text-[8px]"
+                >
+                  {day}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="mt-2.5 flex items-center gap-2">
+            <span className="text-[10px] text-[var(--neutral-400)]">Peu</span>
+            <div className="flex gap-0.5">
+              <div className="size-[9px] rounded-xs bg-[#E8EAEE]" />
+              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-one)]" />
+              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-two)]" />
+              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-three)]" />
+              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-four)]" />
+            </div>
+            <span className="text-[10px] text-[var(--neutral-400)]">
+              Beaucoup
+            </span>
           </div>
         </div>
       </div>

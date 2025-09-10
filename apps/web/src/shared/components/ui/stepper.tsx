@@ -1,8 +1,8 @@
 "use client";
 
-import { CheckIcon, LoaderCircle } from "lucide-react";
 import * as React from "react";
 import { createContext, useContext } from "react";
+import { HiCheck, HiOutlineRefresh } from "react-icons/hi";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -212,7 +212,7 @@ const StepperIndicator = React.forwardRef<
           <span className="transition-all group-data-[loading=true]/step:scale-0 group-data-[loading=true]/step:opacity-0 group-data-[loading=true]/step:transition-none group-data-[state=completed]/step:scale-0 group-data-[state=completed]/step:opacity-0">
             {step}
           </span>
-          <CheckIcon
+          <HiCheck
             className="absolute scale-0 opacity-0 transition-all group-data-[state=completed]/step:scale-100 group-data-[state=completed]/step:opacity-100"
             size={16}
             strokeWidth={2}
@@ -220,7 +220,7 @@ const StepperIndicator = React.forwardRef<
           />
           {isLoading && (
             <span className="absolute transition-all">
-              <LoaderCircle
+              <HiOutlineRefresh
                 className="animate-spin"
                 size={14}
                 strokeWidth={2}
