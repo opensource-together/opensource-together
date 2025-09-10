@@ -11,7 +11,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard, Session, UserSession } from '@thallesp/nestjs-better-auth';
+import {
+  AuthGuard,
+  Public,
+  Session,
+  UserSession,
+} from '@thallesp/nestjs-better-auth';
 import { ProjectRoleService } from '../services/project-role.service';
 import { CreateProjectRoleDocs } from './docs/create-project-role.swagger.decorator';
 import { DeleteProjectRoleByIdDocs } from './docs/delete-project-role-by-id.swagger.decorator';
@@ -27,6 +32,7 @@ export class ProjectRoleController {
   constructor(private readonly projectRoleService: ProjectRoleService) {}
 
   @Get()
+  @Public()
   @FindAllProjectRolesDocs()
   async getAllProjectRoles(@Param('projectId') projectId: string) {
     const result = await this.projectRoleService.getAllProjectRoles(projectId);
@@ -41,12 +47,11 @@ export class ProjectRoleController {
   async createProjectRole(
     @Session() session: UserSession,
     @Param('projectId') projectId: string,
-    @Body() projectRoles: CreateProjectRoleRequestDto,
+    @Body() projectRole: CreateProjectRoleRequestDto,
   ) {
-    const roles = projectRoles.projectRoles;
     const result = await this.projectRoleService.createProjectRole(
       projectId,
-      roles,
+      projectRole,
     );
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
