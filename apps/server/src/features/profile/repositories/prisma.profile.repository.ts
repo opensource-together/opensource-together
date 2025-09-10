@@ -30,7 +30,7 @@ export class PrismaProfileRepository implements ProfileRepository {
           data: { name: data.username },
         });
 
-        await tx.profile.upsert({
+        const completeProfile = await tx.profile.upsert({
           where: { userId: data.userId },
           create: {
             userId: data.userId,
@@ -47,31 +47,6 @@ export class PrismaProfileRepository implements ProfileRepository {
               techStacks: { set: data.techStacks.map((id) => ({ id })) },
             }),
           },
-        });
-
-        if (data.socialLinks) {
-          await tx.userSocialLink.deleteMany({
-            where: { userId: data.userId },
-          });
-
-          const toCreate = Object.entries(data.socialLinks)
-            .map(([k, url]) => ({
-              type: mapSocialType(k),
-              url: typeof url === 'string' ? url.trim() : '',
-            }))
-            .filter(
-              (x): x is { type: SocialLinkType; url: string } =>
-                !!x.type && !!x.url,
-            )
-            .map(({ type, url }) => ({ userId: data.userId, type, url }));
-
-          if (toCreate.length) {
-            await tx.userSocialLink.createMany({ data: toCreate });
-          }
-        }
-
-        const completeProfile = await tx.profile.findUnique({
-          where: { userId: data.userId },
           select: {
             id: true,
             bio: true,
@@ -97,8 +72,25 @@ export class PrismaProfileRepository implements ProfileRepository {
           },
         });
 
-        if (!completeProfile) {
-          throw new Error('Profile not found after upsert');
+        if (data.socialLinks) {
+          await tx.userSocialLink.deleteMany({
+            where: { userId: data.userId },
+          });
+
+          const toCreate = Object.entries(data.socialLinks)
+            .map(([k, url]) => ({
+              type: mapSocialType(k),
+              url: typeof url === 'string' ? url.trim() : '',
+            }))
+            .filter(
+              (x): x is { type: SocialLinkType; url: string } =>
+                !!x.type && !!x.url,
+            )
+            .map(({ type, url }) => ({ userId: data.userId, type, url }));
+
+          if (toCreate.length) {
+            await tx.userSocialLink.createMany({ data: toCreate });
+          }
         }
 
         return {
