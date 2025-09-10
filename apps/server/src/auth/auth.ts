@@ -39,21 +39,24 @@ export const auth: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      redirectURL: 'http://localhost:4000/api/auth/callback/github',
+      redirectURL: `${process.env.BACKEND_URL}/api/auth/callback/github`,
       overrideUserInfoOnSignIn: true,
       scope: ['read:user', 'user:email', 'repo', 'read:org'],
     },
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      redirectURL: 'http://localhost:4000/api/auth/callback/google',
+      redirectURL: `${process.env.BACKEND_URL}/api/auth/callback/google`,
     },
   },
-  trustedOrigins: ['http://localhost:3000', 'http://localhost:4000'],
-  baseURL: 'http://localhost:4000',
+  trustedOrigins: [
+    process.env.FRONTEND_URL as string,
+    process.env.BACKEND_URL as string,
+  ],
+  baseURL: process.env.BACKEND_URL,
   urls: {
-    signInRedirect: 'http://localhost:3000/',
-    signOutRedirect: 'http://localhost:3000/',
+    signInRedirect: `${process.env.FRONTEND_URL}/`,
+    signOutRedirect: `${process.env.FRONTEND_URL}/`,
   },
   databaseHooks: {
     account: {
@@ -72,7 +75,10 @@ export const auth: {
     crossSubDomainCookies: {
       enabled: false,
       cookieName: 'better-auth',
-      cookieDomain: 'localhost',
+      cookieDomain:
+        process.env.NODE_ENV === 'production'
+          ? process.env.COOKIE_DOMAIN
+          : 'localhost',
     },
   },
 });

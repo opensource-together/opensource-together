@@ -1,3 +1,5 @@
+import { FRONTEND_URL } from "@/config/config";
+
 import { authClient } from "@/shared/lib/auth-client";
 
 import { Profile } from "@/features/profile/types/profile.type";
@@ -6,7 +8,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   try {
     await authClient.signIn.social({
       provider,
-      callbackURL: "http://localhost:3000/",
+      callbackURL: `${FRONTEND_URL}/`,
     });
   } catch (error) {
     console.error("signInWithProvider error:", error);
