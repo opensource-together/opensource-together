@@ -44,16 +44,12 @@ export default function ProjectMainEditForm({
 }: ProjectMainEditFormProps) {
   const { control, watch, setValue } = form;
   const [newFeature, setNewFeature] = useState("");
-  const [newGoal, setNewGoal] = useState("");
   const [editingFeatureIndex, setEditingFeatureIndex] = useState<number | null>(
     null
   );
-  const [editingGoalIndex, setEditingGoalIndex] = useState<number | null>(null);
   const [editingFeatureText, setEditingFeatureText] = useState("");
-  const [editingGoalText, setEditingGoalText] = useState("");
 
   const keyFeatures = watch("keyFeatures") || [];
-  const projectGoals = watch("projectGoals") || [];
 
   const addFeature = () => {
     if (newFeature.trim()) {
@@ -66,20 +62,6 @@ export default function ProjectMainEditForm({
     setValue(
       "keyFeatures",
       keyFeatures.filter((_, i) => i !== index)
-    );
-  };
-
-  const addGoal = () => {
-    if (newGoal.trim()) {
-      setValue("projectGoals", [...projectGoals, { goal: newGoal.trim() }]);
-      setNewGoal("");
-    }
-  };
-
-  const removeGoal = (index: number) => {
-    setValue(
-      "projectGoals",
-      projectGoals.filter((_, i) => i !== index)
     );
   };
 
@@ -101,26 +83,6 @@ export default function ProjectMainEditForm({
   const cancelEditingFeature = () => {
     setEditingFeatureIndex(null);
     setEditingFeatureText("");
-  };
-
-  const startEditingGoal = (index: number, text: string) => {
-    setEditingGoalIndex(index);
-    setEditingGoalText(text);
-  };
-
-  const saveEditingGoal = () => {
-    if (editingGoalIndex !== null) {
-      const updatedGoals = [...projectGoals];
-      updatedGoals[editingGoalIndex] = { goal: editingGoalText };
-      setValue("projectGoals", updatedGoals);
-      setEditingGoalIndex(null);
-      setEditingGoalText("");
-    }
-  };
-
-  const cancelEditingGoal = () => {
-    setEditingGoalIndex(null);
-    setEditingGoalText("");
   };
 
   return (
@@ -177,7 +139,7 @@ export default function ProjectMainEditForm({
 
           <FormField
             control={control}
-            name="shortDescription"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel
@@ -318,110 +280,6 @@ export default function ProjectMainEditForm({
                                       e.preventDefault();
                                       e.stopPropagation();
                                       removeFeature(index);
-                                    }}
-                                    variant="ghost"
-                                    size="icon"
-                                  >
-                                    <Icon
-                                      name="trash"
-                                      size="xs"
-                                      className="size-2.5"
-                                    />
-                                  </Button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name="projectGoals"
-            render={() => (
-              <FormItem>
-                <FormLabel
-                  required
-                  tooltip="Décrivez les buts et résultats attendus de votre projet. Cela permet aux utilisateurs de découvrir votre projet selon leurs centres d'intérêt."
-                  className="text-primary mb-2 text-sm font-medium"
-                >
-                  Objectifs du projet
-                </FormLabel>
-                <FormControl className="mt-[-6px]">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={newGoal}
-                        onChange={(e) => setNewGoal(e.target.value)}
-                        placeholder="Ajouter un objectif"
-                        className="placeholder:text-muted-foreground flex-1 bg-white text-sm lg:w-[547px]"
-                      />
-                      <Button type="button" onClick={addGoal} variant="outline">
-                        Ajouter
-                      </Button>
-                    </div>
-                    <div className="flex w-full flex-col gap-2 lg:w-full">
-                      {projectGoals.map((goal, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div className="text-primary flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white px-4 py-2 text-xs leading-relaxed shadow-xs">
-                            {editingGoalIndex === index ? (
-                              <div className="flex flex-1 items-center gap-2">
-                                <Input
-                                  value={editingGoalText}
-                                  onChange={(e) =>
-                                    setEditingGoalText(e.target.value)
-                                  }
-                                  className="text-primary flex-1 bg-white text-xs"
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") saveEditingGoal();
-                                    if (e.key === "Escape") cancelEditingGoal();
-                                  }}
-                                />
-                                <Button
-                                  onClick={saveEditingGoal}
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <Icon name="check" size="xs" />
-                                </Button>
-                                <Button
-                                  onClick={cancelEditingGoal}
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <Icon name="cross" size="xs" />
-                                </Button>
-                              </div>
-                            ) : (
-                              <>
-                                <span>{goal.goal}</span>
-                                <div className="flex items-center gap-1">
-                                  <Button
-                                    onClick={() =>
-                                      startEditingGoal(index, goal.goal)
-                                    }
-                                    variant="ghost"
-                                    size="icon"
-                                  >
-                                    <Icon
-                                      name="pencil"
-                                      size="xs"
-                                      className="size-2.5"
-                                    />
-                                  </Button>
-                                  <Button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      removeGoal(index);
                                     }}
                                     variant="ghost"
                                     size="icon"

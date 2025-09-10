@@ -88,7 +88,6 @@ export default function ProjectDetailView({
               <RoleCard
                 key={role.title}
                 role={role}
-                projectGoals={project.projectGoals}
                 keyFeatures={project.keyFeatures}
                 className="mb-3 lg:max-w-[721.96px]"
                 isMaintainer={isMaintainer}

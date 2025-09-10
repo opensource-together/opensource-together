@@ -1,3 +1,5 @@
+import { ProjectRole } from "./project-role.type";
+
 export interface Owner {
   id: string;
   username: string;
@@ -19,7 +21,8 @@ export interface TechStack {
 }
 
 export interface ExternalLink {
-  type: "github" | "website" | "discord" | "twitter" | "linkedin" | "other";
+  id?: string;
+  type: "GITHUB" | "WEBSITE" | "DISCORD" | "TWITTER" | "LINKEDIN" | "OTHER";
   url: string;
 }
 
@@ -65,12 +68,6 @@ export interface KeyFeature {
   feature: string;
 }
 
-export interface ProjectGoal {
-  id?: string;
-  projectId?: string;
-  goal: string;
-}
-
 export interface Project {
   id?: string;
   slug?: string;
@@ -79,15 +76,14 @@ export interface Project {
   coverImages?: string[];
   readme?: string;
   owner: Owner;
-  shortDescription: string;
-  longDescription?: string;
+  description: string;
   status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   techStacks: TechStack[];
   externalLinks?: ExternalLink[];
   projectStats?: ProjectStats;
   keyFeatures: KeyFeature[];
-  projectGoals: ProjectGoal[];
   categories: Category[];
+  projectRoles?: ProjectRole[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -96,12 +92,10 @@ export interface ProjectEditForm {
   image?: File;
   title: string;
   description: string;
-  longDescription?: string;
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   techStacks: TechStack[];
   externalLinks?: ExternalLink[];
   keyFeatures: KeyFeature[];
-  projectGoals: ProjectGoal[];
   categories?: Category[];
 }
 

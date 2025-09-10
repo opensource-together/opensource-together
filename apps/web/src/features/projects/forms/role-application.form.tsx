@@ -29,7 +29,7 @@ import {
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useApplyToProject } from "../hooks/use-project-apply.hook";
-import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
+import { KeyFeature, TechStack } from "../types/project.type";
 import {
   RoleApplicationSchema,
   roleApplicationSchema,
@@ -40,7 +40,6 @@ interface RoleApplicationFormProps {
   roleTitle: string;
   roleDescription: string;
   techStacks: TechStack[];
-  projectGoals: ProjectGoal[];
   keyFeatures: KeyFeature[];
   projectId: string;
   roleId: string;
@@ -51,7 +50,6 @@ export default function RoleApplicationForm({
   roleTitle,
   roleDescription,
   techStacks,
-  projectGoals,
   keyFeatures,
   projectId,
   roleId,
@@ -71,17 +69,10 @@ export default function RoleApplicationForm({
     fullName: feature.feature,
   }));
 
-  const projectGoalOptions = projectGoals.map((goal) => ({
-    id: goal.id || goal.goal,
-    name: truncateText(goal.goal),
-    fullName: goal.goal,
-  }));
-
   const form = useForm<RoleApplicationSchema>({
     resolver: zodResolver(roleApplicationSchema),
     defaultValues: {
       keyFeatures: [],
-      projectGoals: [],
       motivationLetter: "",
     },
   });
@@ -185,33 +176,6 @@ export default function RoleApplicationForm({
                               placeholder="Sélectionner des fonctionnalités..."
                               searchPlaceholder="Rechercher une fonctionnalité..."
                               emptyText="Aucune fonctionnalité trouvée."
-                              showTags={false}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="projectGoals"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel
-                            required
-                            tooltip="Choisissez les objectifs du projet qui vous motivent le plus. Cela aide l'équipe à comprendre vos motivations et votre alignement avec la vision du projet."
-                          >
-                            Objectifs qui vous motivent
-                          </FormLabel>
-                          <FormControl className="mt-[-6px]">
-                            <Combobox
-                              options={projectGoalOptions}
-                              value={field.value}
-                              onChange={field.onChange}
-                              placeholder="Sélectionner des objectifs..."
-                              searchPlaceholder="Rechercher un objectif..."
-                              emptyText="Aucun objectif trouvé."
                               showTags={false}
                             />
                           </FormControl>

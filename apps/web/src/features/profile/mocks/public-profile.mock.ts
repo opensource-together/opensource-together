@@ -63,10 +63,7 @@ export const mockPublicProfile: Profile = {
     {
       id: "1",
       title: "Awesome Project",
-      shortDescription:
-        "Une application révolutionnaire pour la gestion de projets",
-      longDescription:
-        "Un outil complet pour la gestion de projets avec des fonctionnalités avancées",
+      description: "Une application révolutionnaire pour la gestion de projets",
       image:
         "https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=Awesome+Project",
       owner: {
@@ -102,19 +99,13 @@ export const mockPublicProfile: Profile = {
         { id: "1", feature: "Gestion de projets avancée" },
         { id: "2", feature: "Interface intuitive" },
       ],
-      projectGoals: [
-        { id: "1", goal: "Simplifier la gestion de projets" },
-        { id: "2", goal: "Améliorer la productivité" },
-      ],
       createdAt: new Date("2024-01-15T10:30:00.000Z"),
       updatedAt: new Date("2024-03-20T14:45:00.000Z"),
     },
     {
       id: "2",
       title: "Open Source Library",
-      shortDescription: "Bibliothèque JavaScript pour les animations",
-      longDescription:
-        "Une bibliothèque légère et performante pour créer des animations fluides",
+      description: "Bibliothèque JavaScript pour les animations",
       image:
         "https://via.placeholder.com/300x200/10B981/FFFFFF?text=Open+Source+Lib",
       owner: {
@@ -149,10 +140,6 @@ export const mockPublicProfile: Profile = {
       keyFeatures: [
         { id: "3", feature: "Animations fluides" },
         { id: "4", feature: "Performance optimisée" },
-      ],
-      projectGoals: [
-        { id: "3", goal: "Créer des animations performantes" },
-        { id: "4", goal: "Faciliter l'intégration" },
       ],
       createdAt: new Date("2023-08-10T09:15:00.000Z"),
       updatedAt: new Date("2024-02-28T16:20:00.000Z"),
