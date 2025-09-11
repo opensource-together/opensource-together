@@ -55,6 +55,7 @@ export class ProjectService {
   async createProject(props: {
     createProjectDto: CreateProjectRequest;
     userId: string;
+    method: 'scratch' | 'github';
     octokit: Octokit;
   }): Promise<Result<Project, any>> {
     const { createProjectDto, userId, octokit } = props;
@@ -147,16 +148,18 @@ export class ProjectService {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
 
-    const githubResult = await this.githubRepository.createGithubRepository(
-      {
-        title: createProjectDto.title,
-        description: createProjectDto.description,
-      },
-      octokit,
-    );
+    if (props.method == "scratch") {
+      const githubResult = await this.githubRepository.createGithubRepository(
+        {
+          title: createProjectDto.title,
+          description: createProjectDto.description,
+        },
+        octokit,
+      );
 
-    if (!githubResult.success) {
-      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+      if (!githubResult.success) {
+        return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+      }
     }
 
     return Result.ok(result.value);
