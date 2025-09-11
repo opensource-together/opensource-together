@@ -10,15 +10,7 @@ import {
   ITechStackRepository,
   TECH_STACK_REPOSITORY,
 } from '@/features/tech-stack/repositories/tech-stack.repository.interface';
-import {
-  IUserRepository,
-  USER_REPOSITORY,
-} from '@/features/user/repositories/user.repository.interface';
 import { Result } from '@/libs/result';
-import {
-  MAILING_SERVICE,
-  MailingServicePort,
-} from '@/mailing/mailing.interface';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
 import { CreateProjectDto } from '../controllers/dto/create-project.dto';
@@ -58,10 +50,6 @@ export class ProjectService {
     private readonly categoryRepository: ICategoryRepository,
     @Inject(GITHUB_REPOSITORY)
     private readonly githubRepository: IGithubRepository,
-    @Inject(MAILING_SERVICE)
-    private readonly mailingService: MailingServicePort,
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: IUserRepository,
   ) {}
 
   async createProject(props: {
@@ -135,6 +123,7 @@ export class ProjectService {
       ownerId: userId,
       title: createProjectDto.title,
       image: createProjectDto.image || '',
+      coverImages: createProjectDto.coverImages || [],
       description: createProjectDto.description,
       categories: createProjectDto.categories,
       keyFeatures: createProjectDto.keyFeatures.map((feature) => ({
@@ -170,17 +159,6 @@ export class ProjectService {
       return Result.fail('GITHUB_ERROR' as ProjectServiceError);
     }
 
-    console.log('result', result.value);
-    const ownerEmail = await this.userRepository.findEmailById(userId);
-    if (!ownerEmail.success) {
-      return Result.fail('USER_NOT_FOUND' as ProjectServiceError);
-    }
-    await this.mailingService.sendEmail({
-      to: ownerEmail.value,
-      subject: 'Nouveau projet créé',
-      text: `Le projet ${createProjectDto.title} a été créé avec succès`,
-      html: `<p>Le projet ${createProjectDto.title} a été créé avec succès</p>`,
-    });
     return Result.ok(result.value);
   }
 

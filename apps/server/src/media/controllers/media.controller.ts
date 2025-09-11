@@ -78,7 +78,7 @@ export class MediaController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }),
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
           new FileTypeValidator({
             fileType: /^(image\/)(jpeg|png|webp|avif|gif)$/,
           }),
