@@ -27,7 +27,10 @@ export class PrismaProfileRepository implements ProfileRepository {
       const result = await this.prismaService.$transaction(async (tx) => {
         await tx.user.update({
           where: { id: data.userId },
-          data: { name: data.username },
+          data: {
+            name: data.username,
+            ...(data.avatarUrl && { image: data.avatarUrl }),
+          },
         });
 
         const completeProfile = await tx.profile.upsert({

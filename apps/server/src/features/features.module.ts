@@ -1,11 +1,12 @@
+import { MailingModule } from '@/mailing/mailing.module';
+import { MediaModule } from '@/media/media.module';
 import { Module } from '@nestjs/common';
 import { CategoryModule } from './category/category.module';
-import { ProjectRoleModule } from './project-role/project-role.module';
 import { GithubModule } from './github/github.module';
-import { UserModule } from './user/user.module';
+import { ProjectRoleModule } from './project-role/project-role.module';
 import { ProjectModule } from './project/project.module';
 import { TechStackModule } from './tech-stack/tech-stack.module';
-import { MailingModule } from '@/mailing/mailing.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ProjectModule,
@@ -15,6 +16,7 @@ import { MailingModule } from '@/mailing/mailing.module';
     GithubModule,
     UserModule,
     MailingModule,
+    MediaModule,
   ],
   controllers: [],
   providers: [],
@@ -25,6 +27,7 @@ import { MailingModule } from '@/mailing/mailing.module';
     ProjectRoleModule,
     UserModule,
     MailingModule,
+    MediaModule,
   ],
 })
 export class FeaturesModule {}
