@@ -30,12 +30,30 @@ export class PrismaApplicationRepository implements ApplicationRepository {
             motivationLetter: application.motivationLetter,
           },
         });
+
+      const foundApplication =
+        await this.prisma.projectRoleApplication.findUnique({
+          where: { id: createdApplication.id },
+          include: {
+            user: true,
+            projectRole: true,
+            project: true,
+            keyFeature: {
+              select: {
+                feature: true,
+              },
+            },
+          },
+        });
+      if (!foundApplication) {
+        return Result.fail('APPLICATION_NOT_FOUND');
+      }
       return Result.ok({
-        ...createdApplication,
+        ...foundApplication,
         decidedBy: undefined,
         decidedAt: undefined,
         appliedAt: createdApplication.createdAt.toISOString(),
-        keyFeatures: [application.keyFeatureId],
+        keyFeatures: [foundApplication.keyFeature.feature],
       });
     } catch (error) {
       console.log('error', error);
@@ -72,17 +90,23 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           user: true,
           projectRole: true,
           project: true,
+          keyFeature: {
+            select: {
+              feature: true,
+            },
+          },
         },
       });
       if (!application) {
         return Result.fail('APPLICATION_NOT_FOUND');
       }
+      const { keyFeature, ...applicationWithoutKeyFeature } = application;
       return Result.ok({
-        ...application,
+        ...applicationWithoutKeyFeature,
         decidedBy: application.decidedBy || undefined,
         decidedAt: application.decidedAt?.toISOString(),
         appliedAt: application.createdAt.toISOString(),
-        keyFeatures: [application.keyFeatureId],
+        keyFeatures: [keyFeature.feature],
       });
     } catch (error) {
       console.error(error);
@@ -163,17 +187,25 @@ export class PrismaApplicationRepository implements ApplicationRepository {
               owner: true,
             },
           },
+          keyFeature: {
+            select: {
+              feature: true,
+            },
+          },
         },
       });
       console.log('applications', applications);
       return Result.ok(
-        applications.map((application) => ({
-          ...application,
-          decidedAt: application.decidedAt?.toISOString(),
-          decidedBy: application.decidedBy || undefined,
-          appliedAt: application.createdAt.toISOString(),
-          keyFeatures: [application.keyFeatureId],
-        })),
+        applications.map((application) => {
+          const { keyFeature, ...applicationWithoutKeyFeature } = application;
+          return {
+            ...applicationWithoutKeyFeature,
+            decidedAt: application.decidedAt?.toISOString(),
+            decidedBy: application.decidedBy || undefined,
+            appliedAt: application.createdAt.toISOString(),
+            keyFeatures: [keyFeature.feature],
+          };
+        }),
       );
     } catch (error) {
       console.error(error);
@@ -196,17 +228,23 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           },
           projectRole: true,
           project: true,
+          keyFeature: {
+            select: {
+              feature: true,
+            },
+          },
         },
       });
       if (!application) {
         return Result.fail('APPLICATION_NOT_FOUND');
       }
+      const { keyFeature, ...applicationWithoutKeyFeature } = application;
       return Result.ok({
-        ...application,
+        ...applicationWithoutKeyFeature,
         decidedAt: application.decidedAt?.toISOString(),
         decidedBy: application.decidedBy || undefined,
         appliedAt: application.createdAt.toISOString(),
-        keyFeatures: [application.keyFeatureId],
+        keyFeatures: [keyFeature.feature],
       });
     } catch (error) {
       console.error(error);
@@ -229,17 +267,25 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           },
           projectRole: true,
           project: true,
+          keyFeature: {
+            select: {
+              feature: true,
+            },
+          },
         },
       });
       console.log('applications findAllByUserId', applications);
       return Result.ok(
-        applications.map((application) => ({
-          ...application,
-          decidedAt: application.decidedAt?.toISOString(),
-          decidedBy: application.decidedBy || undefined,
-          appliedAt: application.createdAt.toISOString(),
-          keyFeatures: [application.keyFeatureId],
-        })),
+        applications.map((application) => {
+          const { keyFeature, ...applicationWithoutKeyFeature } = application;
+          return {
+            ...applicationWithoutKeyFeature,
+            decidedAt: application.decidedAt?.toISOString(),
+            decidedBy: application.decidedBy || undefined,
+            appliedAt: application.createdAt.toISOString(),
+            keyFeatures: [keyFeature.feature],
+          };
+        }),
       );
     } catch (error) {
       console.error(error);

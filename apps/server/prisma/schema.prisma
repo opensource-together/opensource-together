@@ -214,7 +214,7 @@ model KeyFeature {
   projectId              String
   feature                String
   project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  ProjectRoleApplication ProjectRoleApplication[]
+  projectRoleApplications ProjectRoleApplication[]
 
   @@unique([projectId, feature])
 }

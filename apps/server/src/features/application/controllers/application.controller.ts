@@ -6,6 +6,7 @@ import {
   AcceptOrRejectApplicationRequestDto,
   ApplicationStatus,
 } from './dto/accept-reject-application.dto';
+import { ApplyToProjectRoleDto } from './dto/apply-to-project-role.dto';
 @UseGuards(AuthGuard)
 @Controller('applications')
 export class ApplicationController {
@@ -14,11 +15,7 @@ export class ApplicationController {
   @Post('roles/:roleId')
   async applyToProjectRole(
     @Body()
-    body: {
-      projectId: string;
-      motivationLetter?: string;
-      keyFeatures: string[];
-    },
+    body: ApplyToProjectRoleDto,
     @Param('roleId') roleId: string,
     @Session() session: UserSession,
   ) {
