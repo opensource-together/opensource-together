@@ -23,15 +23,16 @@ import { TechStack } from "@/features/projects/types/project.type";
 
 import Icon from "./icon";
 
-export interface ComboboxOption {
+export interface CustomComboboxOption {
   id: string;
   name: string;
+  iconUrl?: string;
   techStack?: TechStack[];
   type?: "LANGUAGE" | "TECH";
 }
 
 interface ComboboxProps {
-  options: ComboboxOption[];
+  options: CustomComboboxOption[];
   value: string[];
   onChange: (value: string[]) => void;
   placeholder?: string;
@@ -39,11 +40,12 @@ interface ComboboxProps {
   emptyText?: string;
   maxSelections?: number;
   className?: string;
+  trigger?: React.ReactNode;
   disabled?: boolean;
   showTags?: boolean;
 }
 
-export function Combobox({
+export function CustomCombobox({
   options,
   value,
   onChange,
@@ -52,6 +54,7 @@ export function Combobox({
   emptyText = "Aucun résultat trouvé.",
   maxSelections,
   className,
+  trigger,
   disabled = false,
   showTags = true,
 }: ComboboxProps) {
@@ -84,29 +87,55 @@ export function Combobox({
     <div className={cn("flex w-full flex-col gap-3", className)}>
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="text-primary border-input h-10 w-full justify-between rounded-md bg-white text-sm font-normal"
-            disabled={disabled}
-          >
-            <span
+          {trigger ? (
+            <div
               className={cn(
-                "truncate",
-                selectedOptions.length === 0 && "text-muted-foreground"
+                "inline-flex w-full",
+                disabled && "pointer-events-none opacity-50"
               )}
             >
-              {selectedOptions.length > 0
-                ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
-                : placeholder}
-            </span>
-            <Icon name="chevron-down" />
-          </Button>
+              {trigger}
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className={cn(
+                "text-primary border-input h-10 w-full justify-between rounded-md bg-white text-sm font-normal"
+              )}
+              disabled={disabled}
+            >
+              <span
+                className={cn(
+                  "truncate",
+                  selectedOptions.length === 0 && "text-muted-foreground"
+                )}
+              >
+                {selectedOptions.length > 0
+                  ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
+                  : placeholder}
+              </span>
+              <Icon name="chevron-down" />
+            </Button>
+          )}
         </PopoverTrigger>
-        <PopoverContent className="w-full rounded-lg p-0" align="start">
+        <PopoverContent
+          className="border-muted-black-stroke rounded-2xl px-1 py-0 pt-2 shadow-xs"
+          align="start"
+        >
           <Command>
-            <CommandInput placeholder={searchPlaceholder} className="h-9" />
+            <CommandInput
+              placeholder={searchPlaceholder}
+              className="h-9"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
+            />
             <CommandList>
               <CommandEmpty>{emptyText}</CommandEmpty>
               {options.some((opt) => opt.type === "LANGUAGE") && (

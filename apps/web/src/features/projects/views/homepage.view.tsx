@@ -7,13 +7,11 @@ import ProjectDiscoveryHero from "@/features/projects/components/project-discove
 
 import HomepageError from "../components/error-ui/homepage-error.component";
 import ProjectGrid from "../components/project-grid.component";
-import SkeletonHomepageViews from "../components/skeletons/skeleton-homage-view.component";
+import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useProjects } from "../hooks/use-projects.hook";
 
 export default function HomepageView() {
-  const { data: projects, isLoading, isError } = useProjects();
-
-  if (isLoading) return <SkeletonHomepageViews />;
+  const { data: projects, isError, isFetching } = useProjects();
   if (isError || !projects) return <HomepageError />;
 
   return (
@@ -23,7 +21,11 @@ export default function HomepageView() {
       </div>
       <div className="mx-6 max-w-6xl lg:mx-auto">
         <div className="pb-4 md:pb-8">
-          {projects.length === 0 ? (
+          {isFetching ? (
+            <div className="mt-6">
+              <SkeletonProjectGrid />
+            </div>
+          ) : projects.length === 0 ? (
             <EmptyState
               title="Aucun Projet Disponible"
               description="Aucun projet n'a été trouvé pour le moment. Veuillez réessayer plus tard."
