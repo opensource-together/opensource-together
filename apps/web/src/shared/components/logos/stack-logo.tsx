@@ -13,8 +13,8 @@ export default function StackLogo({
   icon,
   alt,
   name,
-  width = 14.5,
-  height = 10.22,
+  width = 20,
+  height = 20,
 }: StackLogoProps) {
   let iconSrcToUse = icon;
   if (
@@ -33,7 +33,9 @@ export default function StackLogo({
           <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
         </div>
         {name && (
-          <span className="text-sm font-medium text-black/70">{name}</span>
+          <span className="text-xs font-medium text-black/70 md:text-sm">
+            {name}
+          </span>
         )}
       </div>
     </div>

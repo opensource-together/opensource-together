@@ -68,6 +68,7 @@
   --muted-black-stroke: #0000000d; /* Muted Black Stroke */
   --accent: oklch(98.5% 0 0); /* Neutral 50 */
   --accent-foreground: oklch(0.205 0 0);
+  --neutral-400: oklch(0.75 0 0); /* Neutral 400 */
   --ost-blue-one: #8ec5ff; /* Third main color (Blue) */
   --ost-blue-two: #51a2ff;
   --ost-blue-three: #2b7fff;

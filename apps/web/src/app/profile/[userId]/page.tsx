@@ -1,9 +1,11 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
 
+import { getCurrentUser } from "@/features/auth/services/auth.service";
 import { getUserById } from "@/features/profile/services/profile.service";
 import { PublicProfileView } from "@/features/profile/views/public-profile.view";
 
@@ -39,6 +41,12 @@ export default async function PublicProfilePage({
   params,
 }: PublicProfilePageProps) {
   const { userId } = await params;
+
+  const currentUser = await getCurrentUser();
+  if (currentUser && currentUser.id === userId) {
+    console.log("Redirecting to /profile/me");
+    redirect("/profile/me");
+  }
 
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery({

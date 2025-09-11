@@ -82,38 +82,21 @@ export function Combobox({
 
   return (
     <div className={cn("flex w-full flex-col gap-3", className)}>
-      {showTags && selectedOptions.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {selectedOptions.map((option) => (
-            <Badge
-              key={option.id}
-              variant="secondary"
-              className="flex items-center gap-1 bg-gray-100 pr-1 text-sm font-normal"
-            >
-              {option.name}
-              <button
-                type="button"
-                onClick={() => handleRemove(option.id)}
-                className="flex size-4 cursor-pointer items-center justify-center rounded-full hover:bg-gray-200"
-                disabled={disabled}
-              >
-                <Icon name="cross" size="xxs" />
-              </button>
-            </Badge>
-          ))}
-        </div>
-      )}
-
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="h-10 w-full justify-between rounded-md border-gray-300 bg-white font-normal"
+            className="text-primary border-input h-10 w-full justify-between rounded-md bg-white text-sm font-normal"
             disabled={disabled}
           >
-            <span className="truncate">
+            <span
+              className={cn(
+                "truncate",
+                selectedOptions.length === 0 && "text-muted-foreground"
+              )}
+            >
               {selectedOptions.length > 0
                 ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
                 : placeholder}
@@ -231,6 +214,28 @@ export function Combobox({
           </Command>
         </PopoverContent>
       </Popover>
+
+      {showTags && selectedOptions.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {selectedOptions.map((option) => (
+            <Badge
+              key={option.id}
+              variant="outline"
+              className="text-primary flex items-center gap-1 border border-black/5 bg-white pr-1 text-xs font-normal"
+            >
+              {option.name}
+              <button
+                type="button"
+                onClick={() => handleRemove(option.id)}
+                className="flex size-4 cursor-pointer items-center justify-center rounded-full"
+                disabled={disabled}
+              >
+                <Icon name="cross" size="xxs" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

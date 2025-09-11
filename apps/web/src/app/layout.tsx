@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Footer from "@/shared/components/layout/footer";
 import { Toaster } from "@/shared/components/ui/sonner";
 
-import { SuperTokensInitializer } from "@/features/auth/utils/supertokens-initializer";
 import DashboardHeader from "@/features/dashboard/components/layout/dashboard-header.component";
 
 import "../../public/fonts/font-face.css";
@@ -42,7 +41,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
-        <SuperTokensInitializer />
         <Providers>
           <DashboardHeader />
           {children}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { GoArrowUpRight } from "react-icons/go";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Button } from "@/shared/components/ui/button";
@@ -13,25 +14,18 @@ import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
 import { ProjectRole } from "../types/project-role.type";
-import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
+import { KeyFeature, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
-  projectGoals?: ProjectGoal[];
   keyFeatures?: KeyFeature[];
   className?: string;
   isMaintainer?: boolean;
   projectId?: string;
 }
 
-const truncateText = (text: string, maxLength: number = 120) => {
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength).trim() + "...";
-};
-
 export default function RoleCard({
   role,
-  projectGoals = [],
   keyFeatures = [],
   className,
   isMaintainer = false,
@@ -58,69 +52,77 @@ export default function RoleCard({
       onClick={handleCheckClick}
     >
       <div className="flex items-start justify-between">
-        <h3 className="text-lg font-medium tracking-tighter text-black">
+        <h3 className="font-medium tracking-tighter text-black md:text-lg">
           {role.title}
         </h3>
-        {isMaintainer ? (
-          <div className="flex items-center gap-1">
-            <EditRoleForm role={role} projectId={projectId}>
-              <Button variant="ghost" size="icon">
-                <Icon name="pencil" size="sm" />
-              </Button>
-            </EditRoleForm>
-
-            <ConfirmDialog
-              open={isConfirmOpen}
-              onOpenChange={setIsConfirmOpen}
-              title="Supprimer le rôle"
-              description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
-              isLoading={isDeleting}
-              onConfirm={() => {
-                deleteRole();
-                setIsConfirmOpen(false);
-              }}
-              onCancel={() => setIsConfirmOpen(false)}
-              confirmText="Supprimer le rôle"
-              confirmIcon="trash"
-              confirmIconVariant="white"
-              confirmVariant="destructive"
-            />
-            <Button
-              onClick={() => setIsConfirmOpen(true)}
-              variant="ghost"
-              size="icon"
-            >
-              <Icon name="trash" size="sm" />
-            </Button>
-          </div>
-        ) : (
-          <div className="flex cursor-pointer items-center gap-1 opacity-35 transition-opacity hover:opacity-40">
-            <span className="text-xs text-black sm:text-sm">
-              Candidater à ce rôle
-            </span>
-            <Icon name="arrow-up-right" size="xs" />
-          </div>
-        )}
       </div>
 
-      <p className="mt-4 text-sm leading-snug font-medium tracking-tighter text-black/70">
-        {truncateText(description, 90)}
+      <p className="mt-4 line-clamp-2 text-xs leading-snug md:max-w-11/12 md:text-sm">
+        {description}
       </p>
 
       <div className="my-4 border-t border-black/3"></div>
 
-      <div className="flex w-full items-center gap-3 overflow-hidden text-xs">
-        <div className="flex gap-3">
-          {roleTechStacks.length > 0 &&
-            roleTechStacks.map((techStack: TechStack) => (
-              <div key={`${techStack.id}`} className="relative flex-shrink-0">
-                <StackLogo
-                  name={techStack.name}
-                  icon={techStack.iconUrl || ""}
-                  alt={techStack.name}
-                />
-              </div>
-            ))}
+      <div className="flex w-full items-center justify-between">
+        <div className="flex gap-3 overflow-hidden text-xs">
+          <div className="flex gap-2.5">
+            {roleTechStacks.length > 0 &&
+              roleTechStacks.slice(0, 3).map((techStack: TechStack) => (
+                <div key={`${techStack.id}`} className="relative flex-shrink-0">
+                  <StackLogo
+                    name={techStack.name}
+                    icon={techStack.iconUrl || ""}
+                    alt={techStack.name}
+                  />
+                </div>
+              ))}
+            {roleTechStacks.length > 3 && (
+              <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                +{roleTechStacks.length - 3}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center justify-between">
+          {isMaintainer && (
+            <div className="flex items-center gap-2.5">
+              <EditRoleForm role={role} projectId={projectId}>
+                <Button variant="ghost" size="icon">
+                  <Icon name="pencil" size="sm" />
+                </Button>
+              </EditRoleForm>
+
+              <ConfirmDialog
+                open={isConfirmOpen}
+                onOpenChange={setIsConfirmOpen}
+                title="Supprimer le rôle"
+                description="Êtes-vous sûr de vouloir supprimer ce rôle ? Cette action est irréversible."
+                isLoading={isDeleting}
+                onConfirm={() => {
+                  deleteRole();
+                  setIsConfirmOpen(false);
+                }}
+                onCancel={() => setIsConfirmOpen(false)}
+                confirmText="Supprimer le rôle"
+                confirmIcon="trash"
+                confirmIconVariant="white"
+                confirmVariant="destructive"
+              />
+              <Button
+                onClick={() => setIsConfirmOpen(true)}
+                variant="ghost"
+                size="icon"
+              >
+                <Icon name="trash" size="sm" />
+              </Button>
+            </div>
+          )}
+          {!isMaintainer && (
+            <div className="flex cursor-pointer items-center gap-0">
+              <span className="text-sm font-medium">Candidater à ce rôle</span>
+              <GoArrowUpRight className="text-primary mt-1 size-4" />
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -131,7 +133,6 @@ export default function RoleCard({
       <RoleApplicationForm
         roleTitle={title}
         roleDescription={description}
-        projectGoals={projectGoals}
         keyFeatures={keyFeatures}
         techStacks={roleTechStacks}
         projectId={projectId}

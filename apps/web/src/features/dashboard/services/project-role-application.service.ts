@@ -143,7 +143,6 @@ export async function applyToProjectRole(
   applicationData: {
     motivationLetter: string;
     selectedKeyFeatures: { feature: string }[];
-    selectedProjectGoals: { goal: string }[];
   }
 ): Promise<ProjectRoleApplicationType> {
   try {

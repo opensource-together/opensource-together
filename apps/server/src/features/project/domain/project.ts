@@ -1,32 +1,31 @@
-/**
- * Project
- * @description Project is the main entity of the project.
- * @property {string} id - The id of the project.
- * @property {string} ownerId - The id of the owner of the project.
- * @property {string} title - The title of the project.
- * @property {string} description - The description of the project.
- * @property {Category[]} categories - The categories of the project.
- * @property {TechStack[]} techStacks - The tech stacks of the project.
- * @property {ProjectRole[]} projectRoles - The project roles of the project (optional).
- * @property {TeamMember[]} teamMembers - The team members of the project (optional).
- * @property {string[]} coverImages - (optional 0 to 4) The cover images of the project.
- * @property {string} readme - (optional) The readme of the project.
- * @property {Date} createdAt - The date the project was created.
- * @property {Date} updatedAt - The date the project was updated.
- */
+import { KeyFeature, TeamMember } from '@prisma/client';
+
 export interface Project {
   id?: string;
-  owner?: { id: string; name: string; githubLogin: string; image: string };
+  owner?: { id: string; username: string; avatarUrl: string };
   title: string;
   description: string;
   image: string;
   categories: Category[];
   techStacks: TechStack[];
+  keyFeatures: KeyFeature[];
   projectRoles?: ProjectRole[];
   teamMembers?: TeamMember[];
   coverImages?: string[];
   readme?: string;
   externalLinks?: ExternalLink[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ProjectSummary {
+  id?: string;
+  owner?: { id: string; username: string; avatarUrl: string };
+  title: string;
+  description: string;
+  image: string;
+  techStacks: TechStack[];
+  teamMembers?: TeamMember[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -51,7 +50,7 @@ export interface ValidateProjectRoleDto {
 
 export interface ExternalLink {
   id?: string;
-  type: 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE';
+  type: 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'DISCORD' | 'WEBSITE' | 'OTHER';
   url: string;
 }
 
@@ -76,14 +75,6 @@ export interface ProjectRole {
   techStacks: TechStack[];
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export interface TeamMember {
-  id?: string;
-  projectId?: string;
-  userId: string;
-  role: string; //TO DO : ajouter un enum pour les roles
-  joinedAt?: Date;
 }
 
 export interface ValidationErrors {

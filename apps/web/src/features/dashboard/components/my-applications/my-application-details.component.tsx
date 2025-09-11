@@ -49,7 +49,7 @@ export function MyApplicationDetails({
         </div>
         <Link href={`/projects/${application.project.id}`}>
           <Button>
-            Voir projet
+            Voir le projet
             <HiArrowUpRight className="size-3" />
           </Button>
         </Link>
@@ -116,24 +116,6 @@ export function MyApplicationDetails({
                 >
                   <div className="bg-primary h-1.5 w-1.5 rounded-full" />
                   {feature.feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-      {application.selectedProjectGoals &&
-        application.selectedProjectGoals.length > 0 && (
-          <div>
-            <span className="font-medium">Objectifs sélectionnés</span>
-            <ul className="mt-2 space-y-1">
-              {application.selectedProjectGoals.map((goal, index) => (
-                <li
-                  key={index}
-                  className="text-muted-foreground flex items-center gap-2 text-sm"
-                >
-                  <div className="bg-primary h-1.5 w-1.5 rounded-full" />
-                  {goal.goal}
                 </li>
               ))}
             </ul>

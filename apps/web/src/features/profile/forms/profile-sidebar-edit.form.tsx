@@ -59,7 +59,7 @@ export default function ProfileSidebarEditForm({
             )}
           />
 
-          <div className="mt-10 flex flex-col gap-4">
+          <div className="flex flex-col gap-2.5">
             <FormLabel>Liens sociaux</FormLabel>
 
             <FormField

@@ -21,6 +21,7 @@ enum SocialLinkType {
   GITHUB
   TWITTER
   LINKEDIN
+  DISCORD
   WEBSITE
 }
 
@@ -41,10 +42,8 @@ model User {
 
   sessions       Session[]
   accounts       Account[]
-  Profile        Profile[]
+  Profile        Profile?
   Project        Project[]
-  TechStack      TechStack?       @relation(fields: [techStackId], references: [id])
-  techStackId    String?
   teamMember     TeamMember[]
   UserSocialLink UserSocialLink[]
   GitHubStats    GitHubStats?
@@ -107,14 +106,13 @@ model Account {
 }
 
 model Profile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  bio       String?
-  location  String?
-  company   String?
-  jobTitle  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String      @id @default(uuid())
+  userId     String      @unique
+  bio        String?
+  jobTitle   String?
+  techStacks TechStack[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -130,6 +128,7 @@ model Project {
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
   techStacks             TechStack[]
+  keyFeature             KeyFeature[]
   projectMembers         TeamMember[]
   projectRoles           ProjectRole[]
   categories             Category[]
@@ -158,7 +157,7 @@ model TechStack {
   type         TechStackType
   projects     Project[]
   projectRoles ProjectRole[]
-  users        User[]
+  profiles     Profile[]
 }
 
 model TeamMember {
@@ -194,6 +193,7 @@ model ProjectRoleApplication {
   userId           String
   projectId        String
   projectRoleId    String
+  keyFeatureId     String
   status           ProjectRoleApplicationStatus
   motivationLetter String?
   keyFeatures      String[]
@@ -207,6 +207,17 @@ model ProjectRoleApplication {
   user        User        @relation("applier", fields: [userId], references: [id], onDelete: Cascade)
   userDecider User?       @relation("decider", fields: [decidedBy], references: [id], onDelete: SetNull)
   project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  keyFeature  KeyFeature  @relation(fields: [keyFeatureId], references: [id], onDelete: Cascade)
+}
+
+model KeyFeature {
+  id                     String                   @id @default(uuid())
+  projectId              String
+  feature                String
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ProjectRoleApplication ProjectRoleApplication[]
+
+  @@unique([projectId, feature])
 }
 
 model UserSocialLink {

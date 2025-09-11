@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { HiDotsVertical } from "react-icons/hi";
 
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -20,6 +19,7 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
+import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
 import { TeamMemberType } from "../../types/my-projects.type";
 import MyTeamMembersSkeleton from "../skeletons/my-team-members-skeleton.component";
@@ -42,6 +42,7 @@ export default function MyTeamMembers({
   projectOwnerId,
   currentUserId,
 }: MyTeamMembersProps) {
+  const { navigateToProfile } = useProfileNavigation();
   if (isLoading) {
     return <MyTeamMembersSkeleton />;
   }
@@ -125,20 +126,20 @@ export default function MyTeamMembers({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64 p-2">
-                    <DropdownMenuItem>
-                      <Link href={`/profile/${member.id}`} className="w-full">
-                        <div className="flex w-full items-center justify-between">
-                          <div className="flex flex-col gap-1">
-                            <span className="font-medium">Voir profil</span>
-                            <p className="text-xs text-gray-500">
-                              Voir le profil du membre
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Icon name="user" size="sm" variant="gray" />
-                          </div>
+                    <DropdownMenuItem
+                      onClick={() => navigateToProfile(member.id)}
+                    >
+                      <div className="flex w-full items-center justify-between">
+                        <div className="flex flex-col gap-1">
+                          <span className="font-medium">Voir profil</span>
+                          <p className="text-xs text-gray-500">
+                            Voir le profil du membre
+                          </p>
                         </div>
-                      </Link>
+                        <div className="flex items-center gap-2">
+                          <Icon name="user" size="sm" variant="gray" />
+                        </div>
+                      </div>
                     </DropdownMenuItem>
 
                     {isCurrentUserOwner && !isCurrentUser && (

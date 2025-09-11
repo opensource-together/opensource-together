@@ -18,10 +18,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${project.title} | OpenSource Together`,
-    description: project.shortDescription,
+    description: project.description,
     openGraph: {
       title: `${project.title} | OpenSource Together`,
-      description: project.shortDescription,
+      description: project.description,
       images: [project.image || ""],
       url: `https://opensourcetogether.com/projects/${projectId}`,
       type: "website",

@@ -8,7 +8,9 @@ import ProfileError from "../components/error-ui/profile-error.component";
 import GithubCalendar from "../components/github-calendar.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileExperience from "../components/profile-experience.component";
-import ProfileHero from "../components/profile-hero.component";
+import ProfileHero, {
+  ProfileMobileHero,
+} from "../components/profile-hero.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
@@ -23,10 +25,11 @@ export default function ProfileView() {
   return (
     <TwoColumnLayout
       sidebar={<ProfileSidebar profile={currentUser} />}
-      hero={<ProfileHero profile={currentUser} />}
+      hero={<ProfileHero profile={currentUser} hideHeader={false} />}
+      mobileHeader={<ProfileMobileHero profile={currentUser} />}
     >
       {shouldShowGithubCalendar && (
-        <div className="mb-8 w-full">
+        <div className="mb-2 w-full">
           <GithubCalendar
             contributionGraph={currentUser.githubStats?.contributionGraph}
             contributionsCount={currentUser.githubStats?.commitsThisYear || 0}
@@ -38,7 +41,7 @@ export default function ProfileView() {
         <ProfileExperience />
       </div>
 
-      <div className="mt-12 mb-8 flex w-full">
+      <div className="mt-12 flex w-full">
         <PinnedProjects profile={currentUser} />
       </div>
     </TwoColumnLayout>

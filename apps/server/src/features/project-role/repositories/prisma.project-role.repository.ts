@@ -1,12 +1,12 @@
+import { Result } from '@/libs/result';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
+import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
+import { ProjectRole } from '../domain/project-role';
 import {
   CreateProjectRoleDto,
   ProjectRoleRepository,
 } from './project-role.repository.interface';
-import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
-import { Result } from '@/libs/result';
-import { ProjectRole } from '../domain/project-role';
 
 @Injectable()
 export class PrismaProjectRoleRepository implements ProjectRoleRepository {
@@ -42,8 +42,6 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
     projectRoles: CreateProjectRoleDto[],
   ): Promise<Result<ProjectRole[], string>> {
     try {
-      console.log('data', projectRoles);
-
       const results = await Promise.all(
         projectRoles.map((role) =>
           this.prisma.projectRole.create({
@@ -77,7 +75,6 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
     projectRole: UpdateProjectRoleDto,
   ): Promise<Result<ProjectRole, string>> {
     try {
-      console.log('data', projectRole);
       const updatedProjectRole = await this.prisma.projectRole.update({
         where: { id: roleId },
         data: {

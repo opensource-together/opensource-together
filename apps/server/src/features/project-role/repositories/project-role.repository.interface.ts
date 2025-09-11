@@ -1,6 +1,6 @@
+import { Result } from '@/libs/result';
 import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
 import { ProjectRole } from '../domain/project-role';
-import { Result } from '@/libs/result';
 
 export const PROJECT_ROLE_REPOSITORY = Symbol('PROJECT_ROLE_REPOSITORY');
 

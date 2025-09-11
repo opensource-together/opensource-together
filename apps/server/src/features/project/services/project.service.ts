@@ -1,22 +1,3 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Result } from '@/libs/result';
-import {
-  validateProject,
-  validateProjectRole,
-  ValidationErrors,
-  Project,
-} from '../domain/project';
-import {
-  ProjectRepository,
-  UpdateProjectData,
-} from '../repositories/project.repository.interface';
-import { PROJECT_REPOSITORY } from '../repositories/project.repository.interface';
-import { CreateProjectDto } from '../controllers/dto/create-project.dto';
-import { UpdateProjectDto } from '../controllers/dto/update-project.dto';
-import {
-  ITechStackRepository,
-  TECH_STACK_REPOSITORY,
-} from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import {
   CATEGORY_REPOSITORY,
   ICategoryRepository,
@@ -25,14 +6,35 @@ import {
   GITHUB_REPOSITORY,
   IGithubRepository,
 } from '@/features/github/repositories/github.repository.interface';
-import { Octokit } from '@octokit/rest';
-import { canUserModifyProject } from '../domain/project';
-import { MAILING_SERVICE } from '@/mailing/mailing.interface';
-import { MailingServicePort } from '@/mailing/mailing.interface';
+import {
+  ITechStackRepository,
+  TECH_STACK_REPOSITORY,
+} from '@/features/tech-stack/repositories/tech-stack.repository.interface';
 import {
   IUserRepository,
   USER_REPOSITORY,
 } from '@/features/user/repositories/user.repository.interface';
+import { Result } from '@/libs/result';
+import {
+  MAILING_SERVICE,
+  MailingServicePort,
+} from '@/mailing/mailing.interface';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Octokit } from '@octokit/rest';
+import { CreateProjectDto } from '../controllers/dto/create-project.dto';
+import { UpdateProjectDto } from '../controllers/dto/update-project.dto';
+import {
+  canUserModifyProject,
+  Project,
+  validateProject,
+  validateProjectRole,
+  ValidationErrors,
+} from '../domain/project';
+import {
+  PROJECT_REPOSITORY,
+  ProjectRepository,
+  UpdateProjectData,
+} from '../repositories/project.repository.interface';
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -65,6 +67,7 @@ export class ProjectService {
   async createProject(props: {
     createProjectDto: CreateProjectRequest;
     userId: string;
+    method: 'scratch' | 'github';
     octokit: Octokit;
   }): Promise<Result<Project, any>> {
     const { createProjectDto, userId, octokit } = props;
@@ -135,28 +138,39 @@ export class ProjectService {
       image: createProjectDto.image || '',
       description: createProjectDto.description,
       categories: createProjectDto.categories,
+      keyFeatures: createProjectDto.keyFeatures.map((feature) => ({
+        projectId: '',
+        feature: feature,
+      })),
       techStacks: createProjectDto.techStacks,
-      projectRoles: createProjectDto.projectRoles?.map((role) => ({
+      projectRoles: createProjectDto.projectRoles.map((role) => ({
         title: role.title,
         description: role.description,
         techStacks: role.techStacks.map((id) => id),
       })),
+      externalLinks:
+        createProjectDto.externalLinks?.map((link) => ({
+          type: link.type.toUpperCase(),
+          url: link.url,
+        })) || [],
     });
 
     if (!result.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
 
-    const githubResult = await this.githubRepository.createGithubRepository(
-      {
-        title: createProjectDto.title,
-        description: createProjectDto.description,
-      },
-      octokit,
-    );
+    if (props.method == "scratch") {
+      const githubResult = await this.githubRepository.createGithubRepository(
+        {
+          title: createProjectDto.title,
+          description: createProjectDto.description,
+        },
+        octokit,
+      );
 
-    if (!githubResult.success) {
-      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+      if (!githubResult.success) {
+        return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+      }
     }
 
     console.log('result', result.value);
@@ -175,21 +189,20 @@ export class ProjectService {
 
   async findAll(octokit: Octokit) {
     const result = await this.projectRepository.findAll();
-    if (!result.success)
+    if (!result.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    }
+
     const projects = await Promise.all(
-      result.value.map((project) => this.getProjectStats(octokit, project)),
+      result.value.map((project) =>
+        this.getProjectStats(octokit, project as Project),
+      ),
     );
-    const projectsResult: Project[] = [];
-    if (projects.some((project) => project.success)) {
-      projectsResult.push(
-        projects.find((project) => project.success)?.value as Project,
-      );
-    }
-    if (projects.some((project) => !project.success)) {
-      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
-    }
-    console.log('projectsResult', projectsResult);
+
+    const projectsResult = projects.map(
+      (project) => (project as { success: true; value: Project }).value,
+    );
+
     return Result.ok(projectsResult);
   }
 
@@ -204,11 +217,57 @@ export class ProjectService {
       project.value as Project & { owner: { githubLogin: string } },
     );
     if (!stats.success) {
-      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+      this.logger.warn(
+        `GitHub stats failed for project ${projectId}: ${stats.error}`,
+      );
     }
     return Result.ok({
       ...project.value,
-      stats: stats.value,
+      stats: stats.success ? stats.value : undefined,
+    });
+  }
+
+  async findByUserId(userId: string, octokit: Octokit) {
+    const result = await this.projectRepository.findByUserId(userId);
+    if (!result.success) {
+      return Result.fail('DATABASE_ERROR' as ProjectServiceError);
+    }
+
+    const projects = await Promise.all(
+      result.value.map((project) => this.getProjectStats(octokit, project)),
+    );
+
+    const projectsResult = projects.map(
+      (project) => (project as { success: true; value: Project }).value,
+    );
+
+    return Result.ok(projectsResult);
+  }
+
+  async findMyProjectById(userId: string, projectId: string, octokit: Octokit) {
+    const project = await this.projectRepository.findById(projectId);
+    if (!project.success) {
+      return Result.fail('PROJECT_NOT_FOUND' as ProjectServiceError);
+    }
+
+    if (project.value.owner?.id !== userId) {
+      return Result.fail('UNAUTHORIZED' as ProjectServiceError);
+    }
+
+    const stats = await this.getProjectStats(
+      octokit,
+      project.value as Project & { owner: { githubLogin: string } },
+    );
+
+    if (!stats.success) {
+      this.logger.warn(
+        `GitHub stats failed for project ${projectId}: ${stats.error}`,
+      );
+    }
+
+    return Result.ok({
+      ...project.value,
+      stats: stats.success ? stats.value : undefined,
     });
   }
 
@@ -239,7 +298,12 @@ export class ProjectService {
     const updatedProject = {
       ...updateProjectDto,
       techStacks: validTechStacks.value.map((ts) => ts.id),
-      categories: updateProjectDto.categories,
+      categories: validCategories.value.map((cat) => cat.id),
+      keyFeatures:
+        updateProjectDto.keyFeatures?.map((feature) => ({
+          projectId: projectId,
+          feature: feature,
+        })) || [],
       externalLinks: updateProjectDto.externalLinks,
     };
     const updatedProjectResult = await this.projectRepository.update(
@@ -249,17 +313,23 @@ export class ProjectService {
     if (!updatedProjectResult.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
-    const githubResult = await this.githubRepository.updateProjectRespository(
-      {
-        owner: project.value.owner?.githubLogin || '',
-        repo: project.value.title.toLowerCase().replace(/\s+/g, '-'),
-        title: updateProjectDto.title,
-        description: updateProjectDto.description,
-      },
-      octokit,
-    );
-    if (!githubResult.success) {
-      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+
+    if (updateProjectDto.title || updateProjectDto.description) {
+      const githubResult = await this.githubRepository.updateProjectRespository(
+        {
+          owner: project.value.owner?.username || '',
+          repo: project.value.title.toLowerCase().replace(/\s+/g, '-'),
+          title: updateProjectDto.title || project.value.title,
+          description:
+            updateProjectDto.description || project.value.description,
+        },
+        octokit,
+      );
+      if (!githubResult.success) {
+        this.logger.warn(
+          `GitHub update failed for project ${projectId}: ${githubResult.error}`,
+        );
+      }
     }
     return Result.ok(updatedProjectResult.value);
   }
@@ -283,11 +353,30 @@ export class ProjectService {
   async getProjectStats(octokit: Octokit, project: Project) {
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
-      project.owner?.githubLogin || '',
+      project.owner?.username || '',
       project.title.toLowerCase().replace(/\s+/g, '-'),
     );
     if (!result.success) {
-      return Result.fail('GITHUB_ERROR' as ProjectServiceError);
+      this.logger.warn(
+        `GitHub stats failed for project ${project.title}: ${result.error}`,
+      );
+      return Result.ok({
+        ...project,
+        stats: {
+          stats: { forks: 0, stars: 0, watchers: 0, openIssues: 0 },
+          contributors: [],
+          commits: {
+            lastCommit: {
+              sha: '',
+              message: '',
+              date: '',
+              url: '',
+              author: { login: '', avatar_url: '', html_url: '' },
+            },
+            commitsNumber: 0,
+          },
+        },
+      });
     }
     console.log('result', result.value);
     return Result.ok({

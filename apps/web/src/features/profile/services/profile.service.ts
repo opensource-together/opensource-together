@@ -20,7 +20,7 @@ import {
  */
 export const getUserById = async (id: string): Promise<Profile> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/profiles/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export const updateProfile = async (
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/user/me`, {
+    const response = await fetch(`${API_BASE_URL}/profiles`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

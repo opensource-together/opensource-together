@@ -1,12 +1,12 @@
+import { Result } from '@/libs/result';
 import { Inject, Injectable } from '@nestjs/common';
+import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
+import { validateProjectRole } from '../domain/project-role';
 import {
   PROJECT_ROLE_REPOSITORY,
   ProjectRoleRepository,
 } from '../repositories/project-role.repository.interface';
-import { validateProjectRole } from '../domain/project-role';
 import { canUserModifyProject } from '@/features/project/domain/project';
-import { Result } from '@/libs/result';
-import { UpdateProjectRoleDto } from '../controllers/dto/update-project-role.dto';
 import { PROJECT_REPOSITORY } from '@/features/project/repositories/project.repository.interface';
 import { ProjectRepository } from '@/features/project/repositories/project.repository.interface';
 
