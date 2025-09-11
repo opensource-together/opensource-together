@@ -27,8 +27,9 @@ export default function HomepageView() {
             </div>
           ) : projects.length === 0 ? (
             <EmptyState
-              title="Aucun Projet Disponible"
-              description="Aucun projet n'a été trouvé pour le moment. Veuillez réessayer plus tard."
+              text="Aucun Projet Disponible"
+              buttonText="Réessayer"
+              href="/"
               className="mb-28"
             />
           ) : (
