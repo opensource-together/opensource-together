@@ -47,13 +47,13 @@ export default function ProfileEditMainForm({
                 <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
+                    currentImageUrl={profile.avatarUrl}
                     onFileSelect={onImageSelect}
-                    accept="image/*"
-                    maxSize={1}
-                    size="xl"
                     name={profile.username}
                     fallback={profile.username}
-                    currentImageUrl={profile.avatarUrl}
+                    accept="image/*"
+                    maxSize={5}
+                    size="xl"
                     className="mt-4"
                   />
                 </FormControl>

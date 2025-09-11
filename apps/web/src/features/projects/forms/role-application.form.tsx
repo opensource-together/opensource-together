@@ -203,26 +203,6 @@ export default function RoleApplicationForm({
                         </FormItem>
                       )}
                     />
-
-                    <FormField
-                      control={form.control}
-                      name="motivationLetter"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel tooltip="Expliquez comment vous pouvez contribuer concrètement au projet et quelles valeurs ajoutées vous apportez avec vos compétences.">
-                            Lettre de motivation (optionnel)
-                          </FormLabel>
-                          <FormControl className="mt-[-6px]">
-                            <Textarea
-                              {...field}
-                              placeholder="Je peux aider à structurer l'API REST et gérer la scalabilité..."
-                              className="h-[94px] border border-black/15 bg-white text-neutral-500"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </form>
                 </Form>
               </div>
