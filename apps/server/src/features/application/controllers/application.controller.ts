@@ -17,6 +17,7 @@ export class ApplicationController {
     body: {
       projectId: string;
       motivationLetter?: string;
+      keyFeatures: string[];
     },
     @Param('roleId') roleId: string,
     @Session() session: UserSession,
@@ -26,6 +27,7 @@ export class ApplicationController {
       userId,
       projectId: body.projectId,
       projectRoleId: roleId,
+      keyFeatures: body.keyFeatures,
       motivationLetter: body.motivationLetter || '',
     });
     if (!result.success) {

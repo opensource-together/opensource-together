@@ -69,9 +69,11 @@ export class ApplicationService {
     userId: string;
     projectRoleId: string;
     projectId: string;
+    keyFeatures: string[];
     motivationLetter: string;
   }): Promise<Result<ApplicationProjectRole, string>> {
-    const { userId, projectRoleId, projectId, motivationLetter } = props;
+    const { userId, projectRoleId, projectId, motivationLetter, keyFeatures } =
+      props;
 
     const projectRole =
       await this.projectRoleService.getProjectRole(projectRoleId);
@@ -105,6 +107,7 @@ export class ApplicationService {
       status: 'PENDING',
       motivationLetter,
       projectId,
+      keyFeatures,
     });
     if (!result.success) {
       return Result.fail(result.error);

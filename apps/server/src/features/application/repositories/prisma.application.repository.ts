@@ -16,6 +16,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     status: ApplicationStatus;
     motivationLetter: string;
     projectId: string;
+    keyFeatures: string[];
   }): Promise<Result<ApplicationProjectRole, string>> {
     try {
       const createdApplication =
@@ -26,6 +27,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
             projectRoleId: application.projectRoleId,
             status: 'PENDING',
             motivationLetter: application.motivationLetter,
+            keyFeatures: application.keyFeatures,
           },
         });
       return Result.ok({
@@ -65,6 +67,11 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     try {
       const application = await this.prisma.projectRoleApplication.findUnique({
         where: { id },
+        include: {
+          user: true,
+          projectRole: true,
+          project: true,
+        },
       });
       if (!application) {
         return Result.fail('APPLICATION_NOT_FOUND');

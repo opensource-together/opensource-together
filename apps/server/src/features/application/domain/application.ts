@@ -9,6 +9,7 @@ export type ApplicationProjectRole = {
   projectId: string;
   projectRoleId: string;
   status: ApplicationStatus;
+  keyFeatures: string[];
   motivationLetter: string | null;
   rejectionReason?: string | null;
   appliedAt?: string;
