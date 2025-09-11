@@ -1,9 +1,9 @@
-import { Module, OnModuleInit } from '@nestjs/common';
-import { ProfileService } from '@/features/profile/services/profile.service';
+import { ProfileController } from '@/features/profile/controllers/profile.controller';
 import { PrismaProfileRepository } from '@/features/profile/repositories/prisma.profile.repository';
 import { setProfileService } from '@/features/profile/services/profile.holder';
+import { ProfileService } from '@/features/profile/services/profile.service';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { PrismaModule } from '../../../prisma/prisma.module';
-import { ProfileController } from '@/features/profile/controllers/profile.controller';
 
 @Module({
   imports: [PrismaModule],
