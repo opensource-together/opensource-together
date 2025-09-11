@@ -107,6 +107,7 @@ export class ProjectController {
     const result = await this.projectService.createProject({
       createProjectDto,
       userId,
+      method,
       octokit,
     });
     if (!result.success) {
