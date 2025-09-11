@@ -148,7 +148,7 @@ export class ProjectService {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
 
-    if (props.method == "scratch") {
+    if (props.method == 'scratch') {
       const githubResult = await this.githubRepository.createGithubRepository(
         {
           title: createProjectDto.title,

@@ -40,7 +40,7 @@ export const auth: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
       redirectURL: `${process.env.BACKEND_URL}/api/auth/callback/github`,
-      overrideUserInfoOnSignIn: true,
+      overrideUserInfoOnSignIn: false,
       scope: ['read:user', 'user:email', 'repo', 'read:org'],
     },
     google: {
