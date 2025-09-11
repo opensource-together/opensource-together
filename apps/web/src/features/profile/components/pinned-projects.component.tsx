@@ -83,7 +83,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             key={project.id}
             projectId={project.id}
             title={project.title}
-            shortDescription={project.shortDescription}
+            description={project.description}
             image={project.image || ""}
             showViewProject={false}
             techStacks={project.techStacks}

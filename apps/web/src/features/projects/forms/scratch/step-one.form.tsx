@@ -30,13 +30,10 @@ export function StepOneForm() {
   const router = useRouter();
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const [newFeature, setNewFeature] = useState("");
-  const [newGoal, setNewGoal] = useState("");
   const [editingFeatureIndex, setEditingFeatureIndex] = useState<number | null>(
     null
   );
-  const [editingGoalIndex, setEditingGoalIndex] = useState<number | null>(null);
   const [editingFeatureText, setEditingFeatureText] = useState("");
-  const [editingGoalText, setEditingGoalText] = useState("");
   const [coverImages, setCoverImages] = useState<File[]>(
     formData.coverImages || []
   );
@@ -45,9 +42,8 @@ export function StepOneForm() {
     resolver: zodResolver(stepOneSchema),
     defaultValues: {
       title: formData.title || "",
-      shortDescription: formData.shortDescription || "",
+      description: formData.description || "",
       keyFeatures: formData.keyFeatures || [],
-      projectGoals: formData.projectGoals || [],
     },
   });
 
@@ -67,27 +63,10 @@ export function StepOneForm() {
     name: "keyFeatures",
   });
 
-  const {
-    fields: projectGoalFields,
-    append: appendGoal,
-    remove: removeGoal,
-    update: updateGoal,
-  } = useFieldArray({
-    control,
-    name: "projectGoals",
-  });
-
   const addFeature = () => {
     if (newFeature.trim()) {
       appendFeature({ feature: newFeature.trim() });
       setNewFeature("");
-    }
-  };
-
-  const addGoal = () => {
-    if (newGoal.trim()) {
-      appendGoal({ goal: newGoal.trim() });
-      setNewGoal("");
     }
   };
 
@@ -109,30 +88,11 @@ export function StepOneForm() {
     setEditingFeatureText("");
   };
 
-  const startEditingGoal = (index: number, text: string) => {
-    setEditingGoalIndex(index);
-    setEditingGoalText(text);
-  };
-
-  const saveEditingGoal = () => {
-    if (editingGoalIndex !== null) {
-      updateGoal(editingGoalIndex, { goal: editingGoalText });
-      setEditingGoalIndex(null);
-      setEditingGoalText("");
-    }
-  };
-
-  const cancelEditingGoal = () => {
-    setEditingGoalIndex(null);
-    setEditingGoalText("");
-  };
-
   const onSubmit = handleSubmit((data) => {
     updateProjectInfo({
       title: data.title,
-      shortDescription: data.shortDescription,
+      description: data.description,
       keyFeatures: data.keyFeatures,
-      projectGoals: data.projectGoals,
       coverImages,
     });
 
@@ -162,7 +122,7 @@ export function StepOneForm() {
 
         <FormField
           control={control}
-          name="shortDescription"
+          name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel required>Description</FormLabel>
@@ -272,101 +232,6 @@ export function StepOneForm() {
                                     e.preventDefault();
                                     e.stopPropagation();
                                     removeFeature(index);
-                                  }}
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <Icon name="trash" size="sm" />
-                                </Button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="projectGoals"
-          render={() => (
-            <FormItem>
-              <FormLabel
-                required
-                tooltip="Décrivez les buts et résultats attendus de votre projet. Ex: Faciliter la collaboration entre développeurs, Automatiser les tâches répétitives, Créer une solution open source accessible..."
-              >
-                Objectifs du projet
-              </FormLabel>
-              <FormControl>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Input
-                      value={newGoal}
-                      onChange={(e) => setNewGoal(e.target.value)}
-                      placeholder="Ajouter un objectif"
-                      className="flex-1"
-                    />
-                    <Button type="button" onClick={addGoal} variant="outline">
-                      Ajouter
-                    </Button>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    {projectGoalFields.map((goal, index) => (
-                      <div key={goal.id} className="flex items-center gap-2">
-                        <div className="flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white p-2 text-sm leading-relaxed shadow-xs">
-                          {editingGoalIndex === index ? (
-                            <div className="flex flex-1 items-center gap-2">
-                              <Input
-                                value={editingGoalText}
-                                onChange={(e) =>
-                                  setEditingGoalText(e.target.value)
-                                }
-                                className="flex-1"
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter") saveEditingGoal();
-                                  if (e.key === "Escape") cancelEditingGoal();
-                                }}
-                              />
-                              <Button
-                                onClick={saveEditingGoal}
-                                variant="ghost"
-                                size="icon"
-                              >
-                                <Icon name="check" size="xs" />
-                              </Button>
-                              <Button
-                                onClick={cancelEditingGoal}
-                                variant="ghost"
-                                size="icon"
-                              >
-                                <Icon name="cross" size="xs" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <>
-                              <span>{goal.goal}</span>
-                              <div className="flex items-center gap-1">
-                                <Button
-                                  onClick={() =>
-                                    startEditingGoal(index, goal.goal)
-                                  }
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <Icon name="pencil" size="sm" />
-                                </Button>
-                                <Button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    removeGoal(index);
                                   }}
                                   variant="ghost"
                                   size="icon"

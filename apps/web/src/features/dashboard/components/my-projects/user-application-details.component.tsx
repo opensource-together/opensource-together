@@ -84,24 +84,6 @@ export default function UserApplicationDetails({
           </div>
         )}
 
-      {application.selectedProjectGoals &&
-        application.selectedProjectGoals.length > 0 && (
-          <div>
-            <span className="font-medium">Objectifs sélectionnés</span>
-            <ul className="mt-2 space-y-1">
-              {application.selectedProjectGoals.map((goal, index) => (
-                <li
-                  key={index}
-                  className="text-muted-foreground flex items-center gap-2 text-sm"
-                >
-                  <div className="bg-primary h-1.5 w-1.5 rounded-full" />
-                  {goal.goal}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
       <Separator className="my-8" />
 
       <span className="text-sm font-medium">Nom du rôle</span>

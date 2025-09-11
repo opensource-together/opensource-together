@@ -12,6 +12,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
@@ -99,6 +100,7 @@ export class ProjectController {
   async createProject(
     @Session() session: UserSession,
     @Body() createProjectDto: CreateProjectDto,
+    @Query('method') method: 'scratch' | 'github',
     @GitHubOctokit() octokit: Octokit,
   ) {
     const userId = session.user.id;

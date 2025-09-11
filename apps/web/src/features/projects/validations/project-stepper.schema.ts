@@ -22,7 +22,7 @@ export const stepOneSchema = z.object({
   title: z
     .string()
     .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
-  shortDescription: z
+  description: z
     .string()
     .min(10, "La description doit contenir au moins 10 caractères")
     .max(100, "La description ne peut pas dépasser 100 caractères"),
@@ -34,13 +34,6 @@ export const stepOneSchema = z.object({
       })
     )
     .min(1, "Au moins une fonctionnalité clé est requise"),
-  projectGoals: z
-    .array(
-      z.object({
-        goal: z.string(),
-      })
-    )
-    .min(1, "Au moins un objectif de projet est requis"),
 });
 
 // Step 2: Tech Stack and Categories

@@ -26,16 +26,16 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     defaultValues: {
       image: project?.image || undefined,
       title: project?.title || "",
-      shortDescription: project?.shortDescription || "",
+      description: project?.description || "",
       keyFeatures: project?.keyFeatures || [],
-      projectGoals: project?.projectGoals || [],
       techStack: project?.techStacks?.map((tech) => tech.id) || [],
       categories: project?.categories?.map((category) => category.id) || [],
       coverImages: project?.coverImages || [],
       externalLinks:
         project?.externalLinks?.reduce(
           (acc, link) => {
-            const linkType = link.type === "other" ? "website" : link.type;
+            const linkType =
+              link.type === "OTHER" ? "website" : link.type.toLowerCase();
             acc[linkType as keyof typeof acc] = link.url;
             return acc;
           },

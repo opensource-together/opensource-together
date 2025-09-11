@@ -49,6 +49,7 @@ export class PrismaProfileRepository implements ProfileRepository {
           },
           select: {
             id: true,
+            userId: true,
             bio: true,
             jobTitle: true,
             createdAt: true,
@@ -94,7 +95,7 @@ export class PrismaProfileRepository implements ProfileRepository {
         }
 
         return {
-          id: completeProfile.id,
+          id: completeProfile.userId,
           username: completeProfile.user.name || '',
           avatarUrl: completeProfile.user.image,
           provider: completeProfile.user.accounts[0]?.providerId || '',
@@ -151,6 +152,7 @@ export class PrismaProfileRepository implements ProfileRepository {
         where: { userId },
         select: {
           id: true,
+          userId: true,
           bio: true,
           jobTitle: true,
           createdAt: true,
@@ -179,7 +181,7 @@ export class PrismaProfileRepository implements ProfileRepository {
       }
 
       return Result.ok({
-        id: profile.id,
+        id: profile.userId,
         username: profile.user.name || '',
         avatarUrl: profile.user.image,
         provider: profile.user.accounts[0]?.providerId || '',

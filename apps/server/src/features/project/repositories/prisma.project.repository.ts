@@ -120,7 +120,13 @@ export class PrismaProjectRepository implements ProjectRepository {
         })),
         externalLinks: savedProject.externalLinks.map((link) => ({
           id: link.id,
-          type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+          type: link.type as
+            | 'GITHUB'
+            | 'TWITTER'
+            | 'LINKEDIN'
+            | 'DISCORD'
+            | 'WEBSITE'
+            | 'OTHER',
           url: link.url,
         })),
         createdAt: savedProject.createdAt,
@@ -201,7 +207,13 @@ export class PrismaProjectRepository implements ProjectRepository {
         })),
         externalLinks: project.externalLinks.map((link) => ({
           id: link.id,
-          type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+          type: link.type as
+            | 'GITHUB'
+            | 'TWITTER'
+            | 'LINKEDIN'
+            | 'DISCORD'
+            | 'WEBSITE'
+            | 'OTHER',
           url: link.url,
         })),
         createdAt: project.createdAt,
@@ -228,7 +240,6 @@ export class PrismaProjectRepository implements ProjectRepository {
             select: {
               id: true,
               name: true,
-              githubLogin: true,
               image: true,
             },
           },
@@ -249,9 +260,8 @@ export class PrismaProjectRepository implements ProjectRepository {
         id: project.id,
         owner: {
           id: project.owner.id,
-          name: project.owner.name || '',
-          githubLogin: project.owner.githubLogin || '',
-          image: project.owner.image || '',
+          username: project.owner.name || '',
+          avatarUrl: project.owner.image || '',
         },
         title: project.title,
         description: project.description,
@@ -286,7 +296,13 @@ export class PrismaProjectRepository implements ProjectRepository {
         })),
         externalLinks: project.externalLinks.map((link) => ({
           id: link.id,
-          type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+          type: link.type as
+            | 'GITHUB'
+            | 'TWITTER'
+            | 'LINKEDIN'
+            | 'DISCORD'
+            | 'WEBSITE'
+            | 'OTHER',
           url: link.url,
         })),
         createdAt: project.createdAt,
@@ -306,7 +322,6 @@ export class PrismaProjectRepository implements ProjectRepository {
             select: {
               id: true,
               name: true,
-              githubLogin: true,
               image: true,
             },
           },
@@ -320,9 +335,8 @@ export class PrismaProjectRepository implements ProjectRepository {
           id: project.id,
           owner: {
             id: project.owner.id,
-            name: project.owner.name || '',
-            githubLogin: project.owner.githubLogin || '',
-            image: project.owner.image || '',
+            username: project.owner.name || '',
+            avatarUrl: project.owner.image || '',
           },
           title: project.title,
           description: project.description,
@@ -367,7 +381,6 @@ export class PrismaProjectRepository implements ProjectRepository {
             select: {
               id: true,
               name: true,
-              githubLogin: true,
               image: true,
             },
           },
@@ -381,9 +394,8 @@ export class PrismaProjectRepository implements ProjectRepository {
           id: project.id,
           owner: {
             id: project.owner.id,
-            name: project.owner.name || '',
-            githubLogin: project.owner.githubLogin || '',
-            image: project.owner.image || '',
+            username: project.owner.name || '',
+            avatarUrl: project.owner.image || '',
           },
           title: project.title,
           description: project.description,
@@ -418,7 +430,13 @@ export class PrismaProjectRepository implements ProjectRepository {
           })),
           externalLinks: project.externalLinks.map((link) => ({
             id: link.id,
-            type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+            type: link.type as
+              | 'GITHUB'
+              | 'TWITTER'
+              | 'LINKEDIN'
+              | 'DISCORD'
+              | 'WEBSITE'
+              | 'OTHER',
             url: link.url,
           })),
           createdAt: project.createdAt,
@@ -430,86 +448,6 @@ export class PrismaProjectRepository implements ProjectRepository {
     }
   }
 
-  // async update(
-  //   projectId: string,
-  //   data: UpdateProjectData,
-  // ): Promise<Result<DomainProject, string>> {
-  //   try {
-  //     const updatedProject = await this.prisma.project.update({
-  //       where: {
-  //         id: projectId,
-  //       },
-  //       data: {
-  //         title: data.title,
-  //         description: data.description,
-  //         image: data.image,
-  //         coverImages: data.coverImages,
-  //         readme: data.readme,
-  //         externalLinks: {
-  //           create:
-  //             data.externalLinks?.map((link) => ({
-  //               type: link.type,
-  //               url: link.url,
-  //             })) || [],
-  //         },
-  //         techStacks: {
-  //           connect: data.techStacks?.map((tech) => ({ id: tech })) || [],
-  //         },
-  //         categories: {
-  //           connect: data.categories?.map((cat) => ({ id: cat })) || [],
-  //         },
-  //       },
-  //       include: {
-  //         techStacks: true,
-  //         categories: true,
-  //         externalLinks: true,
-  //         projectRoles: true,
-  //         projectMembers: true,
-  //         owner: true,
-  //         projectRoleApplication: true,
-  //       },
-  //     });
-  //     return Result.ok({
-  //       ...updatedProject,
-  //       image: updatedProject.image || '',
-  //       coverImages: updatedProject.coverImages || [],
-  //       readme: updatedProject.readme || '',
-  //       categories: updatedProject.categories.map((cat) => ({
-  //         id: cat.id,
-  //         name: cat.name,
-  //       })),
-  //       techStacks: updatedProject.techStacks.map((tech) => ({
-  //         id: tech.id,
-  //         name: tech.name,
-  //         iconUrl: tech.iconUrl,
-  //         type: tech.type,
-  //       })),
-  //       projectRoles: updatedProject.projectRoles.map((role) => ({
-  //         id: role.id,
-  //         title: role.title,
-  //         description: role.description,
-  //         techStacks: role.techStacks.map((tech) => ({
-  //           id: tech.id,
-  //           name: tech.name,
-  //           iconUrl: tech.iconUrl,
-  //           type: tech.type,
-  //         })),
-  //       })),
-  //       externalLinks: updatedProject.externalLinks.map((link) => ({
-  //         id: link.id,
-  //         type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
-  //         url: link.url,
-  //       })),
-  //       createdAt: updatedProject.createdAt,
-  //       updatedAt: updatedProject.updatedAt,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     return Result.fail<DomainProject, ProjectRepositoryError>(
-  //       'DATABASE_ERROR',
-  //     );
-  //   }
-  // }
   async update(
     id: string,
     project: UpdateProjectData,
@@ -517,9 +455,7 @@ export class PrismaProjectRepository implements ProjectRepository {
     try {
       const projectData = project;
 
-      // Utilisation d'une transaction pour garantir l'atomicité
       return await this.prisma.$transaction(async (tx) => {
-        // 1. Mise à jour des informations de base du projet
         await tx.project.update({
           where: { id },
           include: {
@@ -531,20 +467,9 @@ export class PrismaProjectRepository implements ProjectRepository {
             image: projectData.image,
             coverImages: projectData.coverImages,
             readme: projectData.readme,
-            // externalLinks: {
-            //   deleteMany: {},
-            //   create:
-            //     projectData.externalLinks
-            //       ?.filter((link) => link && link.url && link.type)
-            //       ?.map((link) => ({
-            //         type: link.type,
-            //         url: link.url,
-            //       })) || [],
-            // },
           },
         });
 
-        // 2. Mise à jour des techStacks (remplacement total si fourni)
         if (projectData.techStacks !== undefined) {
           const techIds = Array.from(new Set(projectData.techStacks || []));
           await tx.project.update({
@@ -557,7 +482,6 @@ export class PrismaProjectRepository implements ProjectRepository {
           });
         }
 
-        // 3. Mise à jour des categories (remplacement total si fourni)
         if (projectData.categories !== undefined) {
           const catIds = Array.from(new Set(projectData.categories || []));
           await tx.project.update({
@@ -569,7 +493,22 @@ export class PrismaProjectRepository implements ProjectRepository {
             },
           });
         }
-        // 4. Mise à jour des externalLinks (upsert par id, création des nouveaux, suppression des retirés)
+
+        if (projectData.keyFeatures !== undefined) {
+          await tx.keyFeature.deleteMany({
+            where: { projectId: id },
+          });
+
+          if (projectData.keyFeatures.length > 0) {
+            await tx.keyFeature.createMany({
+              data: projectData.keyFeatures.map((keyFeature) => ({
+                projectId: keyFeature.projectId,
+                feature: keyFeature.feature,
+              })),
+            });
+          }
+        }
+
         if (projectData.externalLinks !== undefined) {
           const withId = projectData.externalLinks.filter(
             (l) => !!l.id,
@@ -596,7 +535,6 @@ export class PrismaProjectRepository implements ProjectRepository {
                   ? { id: { notIn: withId.map((l) => l.id) } }
                   : {},
 
-                // Met à jour ceux qui existent (ou les crée si l'id n'existe plus)
                 upsert: withId.map((l) => ({
                   where: { id: l.id },
                   update: {
@@ -609,7 +547,6 @@ export class PrismaProjectRepository implements ProjectRepository {
                   },
                 })),
 
-                // Crée les nouveaux (sans id)
                 create: withoutId.map((l) => ({
                   type: l.type,
                   url: l.url,
@@ -672,7 +609,13 @@ export class PrismaProjectRepository implements ProjectRepository {
           })),
           externalLinks: finalProject.externalLinks.map((link) => ({
             id: link.id,
-            type: link.type as 'GITHUB' | 'TWITTER' | 'LINKEDIN' | 'WEBSITE',
+            type: link.type as
+              | 'GITHUB'
+              | 'TWITTER'
+              | 'LINKEDIN'
+              | 'DISCORD'
+              | 'WEBSITE'
+              | 'OTHER',
             url: link.url,
           })),
           createdAt: finalProject.createdAt,

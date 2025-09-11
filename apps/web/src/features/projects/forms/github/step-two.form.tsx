@@ -21,7 +21,7 @@ export default function StepTwoForm() {
     if (formData.selectedRepository) {
       updateProjectInfo({
         title: formData.selectedRepository.title,
-        shortDescription:
+        description:
           formData.selectedRepository.readme ||
           "README à compléter pour ce projet.",
       });

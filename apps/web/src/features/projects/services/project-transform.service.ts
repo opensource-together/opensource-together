@@ -18,15 +18,17 @@ export const transformProjectForApi = (
 ): CreateProjectApiData => {
   return {
     title: storeData.title,
-    description: storeData.shortDescription,
-    shortDescription: storeData.shortDescription,
+    description: storeData.description,
     image: storeData.image || undefined,
     readme: storeData.readme || undefined,
-    externalLinks: storeData.externalLinks || [],
+    externalLinks:
+      storeData.externalLinks?.map((link) => ({
+        ...link,
+        type: link.type.toUpperCase(),
+      })) || [],
     techStacks: storeData.techStack.map((tech) => tech.id),
     categories: storeData.categories.map((cat) => cat.id),
     keyFeatures: storeData.keyFeatures.map((feature) => feature.feature),
-    projectGoals: storeData.projectGoals.map((goal) => goal.goal),
     projectRoles: storeData.roles.map((role) => ({
       title: role.title,
       description: role.description,
@@ -46,21 +48,19 @@ export const transformProjectForApiUpdate = (
 ): UpdateProjectApiData => {
   return {
     title: formData.title,
-    description: formData.shortDescription,
-    shortDescription: formData.shortDescription,
+    description: formData.description,
     image: formData.image || undefined,
     coverImages: formData.coverImages || [],
     externalLinks: formData.externalLinks
       ? Object.entries(formData.externalLinks)
           .filter(([_, url]) => typeof url === "string" && url.trim())
           .map(([type, url]) => ({
-            type: type === "website" ? "other" : type,
+            type: (type === "website" ? "other" : type).toUpperCase(),
             url: url as string,
           }))
       : [],
     techStacks: formData.techStack || [],
     categories: formData.categories || [],
     keyFeatures: formData.keyFeatures?.map((feature) => feature.feature) || [],
-    projectGoals: formData.projectGoals?.map((goal) => goal.goal) || [],
   };
 };

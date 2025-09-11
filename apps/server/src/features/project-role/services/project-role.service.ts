@@ -29,18 +29,16 @@ export class ProjectRoleService {
       title: string;
       description: string;
       techStacks: string[];
-    }[],
+    },
   ) {
-    const projectRoleValidation = projectRole.map((role) =>
-      validateProjectRole(role),
-    );
-    if (projectRoleValidation.some((validation) => validation)) {
+    const projectRoleValidation = validateProjectRole(projectRole);
+    if (projectRoleValidation) {
       return Result.fail(projectRoleValidation);
     }
 
     const projectRoleResult = await this.projectRoleRepository.create(
       projectId,
-      projectRole,
+      [projectRole],
     );
     if (!projectRoleResult.success) {
       return Result.fail('DATABASE_ERROR');

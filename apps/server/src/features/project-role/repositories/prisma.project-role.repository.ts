@@ -42,8 +42,6 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
     projectRoles: CreateProjectRoleDto[],
   ): Promise<Result<ProjectRole[], string>> {
     try {
-      console.log('data', projectRoles);
-
       const results = await Promise.all(
         projectRoles.map((role) =>
           this.prisma.projectRole.create({
@@ -77,13 +75,11 @@ export class PrismaProjectRoleRepository implements ProjectRoleRepository {
     projectRole: UpdateProjectRoleDto,
   ): Promise<Result<ProjectRole, string>> {
     try {
-      console.log('data', projectRole);
       const updatedProjectRole = await this.prisma.projectRole.update({
         where: { id: roleId },
         data: {
           title: projectRole.title,
           description: projectRole.description,
-          isFilled: projectRole.isFilled,
           techStacks: {
             set: [],
             connect: projectRole.techStacks.map((tech) => ({ id: tech })),

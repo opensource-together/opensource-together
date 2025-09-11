@@ -276,7 +276,7 @@ export default function ProjectReadme({
                   <a
                     href={
                       project?.externalLinks?.find(
-                        (link) => link.type === "github"
+                        (link) => link.type === "GITHUB"
                       )?.url || "#"
                     }
                     target="_blank"

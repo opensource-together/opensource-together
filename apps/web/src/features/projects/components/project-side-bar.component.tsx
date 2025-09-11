@@ -52,7 +52,7 @@ export default function ProjectSideBar({
   } = project;
 
   const githubLink =
-    externalLinks.find((link) => link.type === "github")?.url || "";
+    externalLinks.find((link) => link.type === "GITHUB")?.url || "";
 
   const contributors = project.projectStats?.contributors || [];
 
@@ -264,8 +264,8 @@ export default function ProjectSideBar({
             {externalLinksConfig.map((config) => {
               const link = externalLinks.find((l) =>
                 config.key === "website"
-                  ? l.type === "website" || l.type === "other"
-                  : l.type === config.key
+                  ? l.type === "WEBSITE" || l.type === "OTHER"
+                  : l.type === config.key.toUpperCase()
               );
               if (!link) return null;
 
