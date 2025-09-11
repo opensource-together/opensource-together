@@ -19,8 +19,8 @@ export interface ApplicationRepository {
     projectRoleId: string;
     userId: string;
     status: ApplicationStatus;
-    keyFeatures: string[];
     motivationLetter: string;
+    keyFeatureId: string;
     projectId: string;
   }): Promise<Result<ApplicationProjectRole, string>>;
   existsStatusApplication(

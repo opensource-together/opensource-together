@@ -196,7 +196,6 @@ model ProjectRoleApplication {
   keyFeatureId     String
   status           ProjectRoleApplicationStatus
   motivationLetter String?
-  keyFeatures      String[]
   rejectionReason  String?
   decidedAt        DateTime?                    @updatedAt
   decidedBy        String?

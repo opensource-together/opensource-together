@@ -107,7 +107,7 @@ export class ApplicationService {
       status: 'PENDING',
       motivationLetter,
       projectId,
-      keyFeatures,
+      keyFeatureId: keyFeatures[0],
     });
     if (!result.success) {
       return Result.fail(result.error);

@@ -16,7 +16,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     status: ApplicationStatus;
     motivationLetter: string;
     projectId: string;
-    keyFeatures: string[];
+    keyFeatureId: string;
   }): Promise<Result<ApplicationProjectRole, string>> {
     try {
       const createdApplication =
@@ -26,8 +26,8 @@ export class PrismaApplicationRepository implements ApplicationRepository {
             projectId: application.projectId,
             projectRoleId: application.projectRoleId,
             status: 'PENDING',
+            keyFeatureId: application.keyFeatureId,
             motivationLetter: application.motivationLetter,
-            keyFeatures: application.keyFeatures,
           },
         });
       return Result.ok({
@@ -35,6 +35,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         decidedBy: undefined,
         decidedAt: undefined,
         appliedAt: createdApplication.createdAt.toISOString(),
+        keyFeatures: [application.keyFeatureId],
       });
     } catch (error) {
       console.log('error', error);
@@ -81,6 +82,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         decidedBy: application.decidedBy || undefined,
         decidedAt: application.decidedAt?.toISOString(),
         appliedAt: application.createdAt.toISOString(),
+        keyFeatures: [application.keyFeatureId],
       });
     } catch (error) {
       console.error(error);
@@ -170,6 +172,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           decidedAt: application.decidedAt?.toISOString(),
           decidedBy: application.decidedBy || undefined,
           appliedAt: application.createdAt.toISOString(),
+          keyFeatures: [application.keyFeatureId],
         })),
       );
     } catch (error) {
@@ -203,6 +206,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         decidedAt: application.decidedAt?.toISOString(),
         decidedBy: application.decidedBy || undefined,
         appliedAt: application.createdAt.toISOString(),
+        keyFeatures: [application.keyFeatureId],
       });
     } catch (error) {
       console.error(error);
@@ -234,6 +238,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           decidedAt: application.decidedAt?.toISOString(),
           decidedBy: application.decidedBy || undefined,
           appliedAt: application.createdAt.toISOString(),
+          keyFeatures: [application.keyFeatureId],
         })),
       );
     } catch (error) {
