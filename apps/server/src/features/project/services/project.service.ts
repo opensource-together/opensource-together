@@ -14,6 +14,7 @@ import {
 import { Result } from '@/libs/result';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
+import { User } from '@prisma/client';
 import { CreateProjectDto } from '../controllers/dto/create-project.dto';
 import { UpdateProjectDto } from '../controllers/dto/update-project.dto';
 import {
@@ -28,7 +29,6 @@ import {
   ProjectRepository,
   UpdateProjectData,
 } from '../repositories/project.repository.interface';
-import { User } from '@prisma/client';
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -128,6 +128,7 @@ export class ProjectService {
       image: createProjectDto.image || '',
       coverImages: createProjectDto.coverImages || [],
       description: createProjectDto.description,
+      readme: createProjectDto.readme || '',
       categories: createProjectDto.categories,
       keyFeatures: createProjectDto.keyFeatures.map((feature) => ({
         projectId: '',
