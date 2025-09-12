@@ -689,4 +689,93 @@ export class PrismaProjectRepository implements ProjectRepository {
       url: externalLink.url,
     };
   }
+
+  async findByRoleId(roleId: string): Promise<Result<DomainProject, string>> {
+    try {
+      const project = await this.prisma.project.findFirst({
+        where: { projectRoles: { some: { id: roleId } } },
+        include: {
+          techStacks: true,
+          projectRoles: {
+            include: { techStacks: true },
+          },
+          categories: true,
+          externalLinks: true,
+          keyFeature: true,
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+          projectMembers: true,
+          projectRoleApplication: {
+            include: {
+              user: true,
+              projectRole: {
+                include: { techStacks: true },
+              },
+            },
+          },
+        },
+      });
+      if (!project)
+        return Result.fail<DomainProject, string>('PROJECT_NOT_FOUND');
+      return Result.ok({
+        id: project.id,
+        owner: {
+          id: project.owner.id,
+          username: project.owner.name || '',
+          avatarUrl: project.owner.image || '',
+        },
+        title: project.title,
+        description: project.description,
+        image: project.image || '',
+        coverImages: project.coverImages || [],
+        readme: project.readme || '',
+        categories: project.categories.map((cat) => ({
+          id: cat.id,
+          name: cat.name,
+        })),
+        techStacks: project.techStacks.map((tech) => ({
+          id: tech.id,
+          name: tech.name,
+          iconUrl: tech.iconUrl,
+          type: tech.type,
+        })),
+        keyFeatures: project.keyFeature.map((feature) => ({
+          id: feature.id,
+          projectId: feature.projectId,
+          feature: feature.feature,
+        })),
+        projectRoles: project.projectRoles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          description: role.description,
+          techStacks: role.techStacks.map((tech) => ({
+            id: tech.id,
+            name: tech.name,
+            iconUrl: tech.iconUrl,
+            type: tech.type,
+          })),
+        })),
+        externalLinks: project.externalLinks.map((link) => ({
+          id: link.id,
+          type: link.type as
+            | 'GITHUB'
+            | 'TWITTER'
+            | 'LINKEDIN'
+            | 'DISCORD'
+            | 'WEBSITE'
+            | 'OTHER',
+          url: link.url,
+        })),
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+      });
+    } catch {
+      return Result.fail<DomainProject, string>('DATABASE_ERROR');
+    }
+  }
 }

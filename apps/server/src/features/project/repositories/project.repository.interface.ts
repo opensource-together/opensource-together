@@ -40,6 +40,7 @@ export interface ProjectRepository {
   create(data: CreateProjectData): Promise<Result<Project, string>>;
   findByTitle(title: string): Promise<Result<Project, string>>;
   findById(id: string): Promise<Result<Project, string>>;
+  findByRoleId(roleId: string): Promise<Result<Project, string>>;
   findAll(): Promise<Result<ProjectSummary[], string>>;
   findByUserId(userId: string): Promise<Result<Project[], string>>;
   update(

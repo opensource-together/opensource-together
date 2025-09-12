@@ -7,11 +7,34 @@ import {
   ApplicationStatus,
 } from './dto/accept-reject-application.dto';
 import { ApplyToProjectRoleDto } from './dto/apply-to-project-role.dto';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 @UseGuards(AuthGuard)
 @Controller('applications')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
   /*******  APPLY TO PROJECT ROLE ********/
+  @ApiOperation({ summary: 'Apply to project role' })
+  @ApiParam({ name: 'roleId', description: 'Project role ID' })
+  @ApiBody({ type: ApplyToProjectRoleDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Application submitted successfully',
+    example: {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      projectId: '123e4567-e89b-12d3-a456-426614174000',
+      projectRoleId: '123e4567-e89b-12d3-a456-426614174000',
+      keyFeatures: ['123e4567-e89b-12d3-a456-426614174000'],
+      motivationLetter: 'I am very motivated to join this project',
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Application already exists',
+    example: {
+      statusCode: 400,
+      message: 'PENDING',
+    },
+  })
   @Post('roles/:roleId')
   async applyToProjectRole(
     @Body()
@@ -72,8 +95,16 @@ export class ApplicationController {
   /*******  APPLICATION BY ROLE ID ********/
 
   @Get('roles/:roleId')
-  async getApplicationByRoleId(@Param('roleId') roleId: string) {
-    const result = await this.applicationService.getApplicationByRoleId(roleId);
+  async getApplicationByRoleId(
+    @Session() session: UserSession,
+    @Param('roleId') roleId: string,
+  ) {
+    console.log('getApplicationByRoleId');
+    const userId = session.user.id;
+    const result = await this.applicationService.getApplicationByRoleId(
+      roleId,
+      userId,
+    );
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
     }

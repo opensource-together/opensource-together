@@ -33,7 +33,17 @@ export class ApplicationService {
 
   async getApplicationByRoleId(
     roleId: string,
+    userId: string,
   ): Promise<Result<ApplicationProjectRole, string>> {
+    const project = await this.projectRepository.findByRoleId(roleId);
+    if (!project.success) {
+      return Result.fail(project.error);
+    }
+    if (project.value.owner?.id !== userId) {
+      return Result.fail(
+        'Vous ne pouvez pas voir les candidatures de ce projet',
+      );
+    }
     const application = await this.applicationRepository.findByRoleId(roleId);
     if (!application.success) {
       return Result.fail(application.error);
@@ -45,10 +55,7 @@ export class ApplicationService {
     projectId: string,
     userId: string,
   ): Promise<Result<ApplicationProjectRole[], string>> {
-    console.log('projectId getApplicationsByProjectId', projectId);
-
     const project = await this.projectRepository.findById(projectId);
-    console.log('project getApplicationsByProjectId', project);
     if (!project.success) {
       return Result.fail(project.error);
     }

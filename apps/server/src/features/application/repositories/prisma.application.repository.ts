@@ -194,7 +194,6 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           },
         },
       });
-      console.log('applications', applications);
       return Result.ok(
         applications.map((application) => {
           const { keyFeature, ...applicationWithoutKeyFeature } = application;
@@ -217,8 +216,8 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     roleId: string,
   ): Promise<Result<ApplicationProjectRole, string>> {
     try {
-      const application = await this.prisma.projectRoleApplication.findUnique({
-        where: { id: roleId },
+      const application = await this.prisma.projectRoleApplication.findFirst({
+        where: { projectRoleId: roleId },
         include: {
           user: {
             select: {
@@ -235,6 +234,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
           },
         },
       });
+      console.log('application findByRoleId', application);
       if (!application) {
         return Result.fail('APPLICATION_NOT_FOUND');
       }
