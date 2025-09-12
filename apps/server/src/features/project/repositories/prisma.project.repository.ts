@@ -6,6 +6,7 @@ import {
   ProjectRole as PrismaProjectRole,
   TechStack as PrismaTechStack,
   ProjectExternalLink,
+  User,
 } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaService } from 'prisma/prisma.service';
@@ -648,6 +649,40 @@ export class PrismaProjectRepository implements ProjectRepository {
     } catch (error) {
       console.log('error', error);
       return Result.fail(`Unknown error during project deletion`);
+    }
+  }
+  async resolveTeamMembers(projectId: string): Promise<Result<User[], string>> {
+    try {
+      const members = await this.prisma.project.findUnique({
+        where: {
+          id: projectId,
+        },
+        select: {
+          projectMembers: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                  email: true,
+                  githubLogin: true,
+                  emailVerified: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!members) {
+        return Result.ok([]);
+      }
+      return Result.ok(members.projectMembers.map((pm) => pm.user)) ?? [];
+    } catch (error) {
+      console.log('error', error);
+      return Result.fail('Unknown error while resolving team members');
     }
   }
 

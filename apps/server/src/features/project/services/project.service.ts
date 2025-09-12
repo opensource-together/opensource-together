@@ -5,6 +5,7 @@ import {
 import {
   GITHUB_REPOSITORY,
   IGithubRepository,
+  RepositoryStats,
 } from '@/features/github/repositories/github.repository.interface';
 import {
   ITechStackRepository,
@@ -27,6 +28,7 @@ import {
   ProjectRepository,
   UpdateProjectData,
 } from '../repositories/project.repository.interface';
+import { User } from '@prisma/client';
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -184,12 +186,14 @@ export class ProjectService {
     return Result.ok(projectsResult);
   }
 
-  async findById(projectId: string, octokit: Octokit) {
+  async findById(
+    projectId: string,
+    octokit: Octokit,
+  ): Promise<Result<Project & { stats: RepositoryStats | undefined }>> {
     const project = await this.projectRepository.findById(projectId);
     if (!project.success) {
       return Result.fail('PROJECT_NOT_FOUND' as ProjectServiceError);
     }
-    console.log('project', project.value);
     const stats = await this.getProjectStats(
       octokit,
       project.value as Project & { owner: { githubLogin: string } },
@@ -201,7 +205,7 @@ export class ProjectService {
     }
     return Result.ok({
       ...project.value,
-      stats: stats.success ? stats.value : undefined,
+      stats: stats.success ? stats.value.stats : undefined,
     });
   }
 
@@ -328,6 +332,15 @@ export class ProjectService {
     }
     return Result.ok(deletedProject.value);
   }
+
+  async resolveTeamMembers(project: Project): Promise<Result<User[], string>> {
+    if (!project.id) {
+      return Result.fail('Failed to resolve teamMember : project id is null');
+    }
+    const members = await this.projectRepository.resolveTeamMembers(project.id);
+    return members;
+  }
+
   async getProjectStats(octokit: Octokit, project: Project) {
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
