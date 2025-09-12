@@ -328,6 +328,122 @@ sequenceDiagram
     GW->>C: emit('unread-notifications')
 ```
 
+## Événements WebSocket
+
+Le système de notifications utilise plusieurs événements WebSocket pour la communication en temps réel entre le serveur et les clients. Tous les événements sont émis sur le namespace `/notifications`.
+
+### Événements émis par le serveur
+
+#### 1. `unread-notifications`
+
+- **Émis lors de :** Connexion WebSocket et demande de rafraîchissement
+- **Utilité :** Synchronise les notifications non lues avec le client
+- **Payload :** Array de `NotificationData`
+
+```typescript
+// Côté client
+socket.on('unread-notifications', (notifications: NotificationData[]) => {
+  console.log('Notifications non lues:', notifications);
+  // Mettre à jour l'interface utilisateur avec les notifications
+});
+```
+
+#### 2. `new-notification`
+
+- **Émis lors de :** Création d'une nouvelle notification
+- **Utilité :** Notifie en temps réel l'arrivée d'une nouvelle notification
+- **Payload :** `NotificationData`
+
+```typescript
+// Côté client
+socket.on('new-notification', (notification: NotificationData) => {
+  console.log('Nouvelle notification:', notification);
+  // Afficher une alerte ou mettre à jour le compteur
+});
+```
+
+#### 3. `notification-read`
+
+- **Émis lors de :** Marquage d'une notification comme lue
+- **Utilité :** Synchronise le statut de lecture des notifications
+- **Payload :** `NotificationData` (avec `readAt` mis à jour)
+
+```typescript
+// Côté client
+socket.on('notification-read', (notification: NotificationData) => {
+  console.log('Notification marquée comme lue:', notification);
+  // Mettre à jour l'interface pour refléter le changement de statut
+});
+```
+
+### Événements reçus par le serveur
+
+#### 1. `refresh-unread`
+
+- **Émis par :** Le client
+- **Utilité :** Demande de rafraîchissement des notifications non lues
+- **Handler :** `handleRefreshUnread()`
+
+```typescript
+// Côté client
+socket.emit('refresh-unread');
+// Le serveur répondra avec l'événement 'unread-notifications'
+```
+
+### Événements de connexion/déconnexion
+
+#### 1. `connection`
+
+- **Émis lors de :** Connexion d'un client WebSocket
+- **Utilité :** Authentification et synchronisation initiale
+- **Handler :** `handleConnection()`
+
+#### 2. `disconnect`
+
+- **Émis lors de :** Déconnexion d'un client WebSocket
+- **Utilité :** Nettoyage des connexions et ressources
+- **Handler :** `handleDisconnect()`
+
+### Exemple d'utilisation complète côté client
+
+```typescript
+// Connexion WebSocket
+const socket = io('/notifications', {
+  auth: { token: wsToken },
+});
+
+// Gestion des événements
+socket.on('connect', () => {
+  console.log('Connecté au système de notifications');
+});
+
+socket.on('unread-notifications', (notifications) => {
+  console.log('Notifications non lues:', notifications);
+  // Mettre à jour l'interface utilisateur
+});
+
+socket.on('new-notification', (notification) => {
+  console.log('Nouvelle notification:', notification);
+  // Afficher une notification toast ou alerte
+  showNotificationToast(notification);
+});
+
+socket.on('notification-read', (notification) => {
+  console.log('Notification marquée comme lue:', notification);
+  // Mettre à jour l'interface pour refléter le changement
+});
+
+// Demander un rafraîchissement des notifications
+const refreshNotifications = () => {
+  socket.emit('refresh-unread');
+};
+
+// Déconnexion
+socket.on('disconnect', () => {
+  console.log('Déconnecté du système de notifications');
+});
+```
+
 ## Utilisation du Service
 
 ### Envoyer une notification
