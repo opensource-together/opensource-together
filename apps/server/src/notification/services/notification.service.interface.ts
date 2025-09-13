@@ -1,4 +1,5 @@
 import { Result } from '@/libs/result';
+import { NotificationData } from '../repositories/notification.repository.interface';
 
 export const NOTIFICATION_SERVICE = Symbol('NOTIFICATION_SERVICE');
 
@@ -13,16 +14,8 @@ export interface SendNotificationPayload {
   channels?: NotificationChannel[];
 }
 
-export interface NotificationData {
-  id: string;
-  object: string;
-  receiverId: string;
-  senderId: string;
-  type: string;
-  payload: Record<string, unknown>;
-  createdAt: Date;
-  readAt: Date | null;
-}
+// Re-export NotificationData from repository
+export type { NotificationData };
 
 export interface NotificationServiceInterface {
   sendNotification(
@@ -41,4 +34,3 @@ export interface NotificationServiceInterface {
     notificationId: string,
   ): Promise<Result<NotificationData, string>>;
 }
-
