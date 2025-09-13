@@ -42,7 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         error: {
           message: message,
           code: code,
-          extra:
+          details:
             process.env.NODE_ENV === 'production'
               ? undefined
               : { ...exceptionResponse },
