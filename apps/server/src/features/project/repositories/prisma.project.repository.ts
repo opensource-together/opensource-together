@@ -16,6 +16,7 @@ import {
   Project as DomainProject,
   ProjectRole as DomainProjectRole,
   TechStack as DomainTechStack,
+  ExternalLink,
   ProjectSummary,
 } from '../domain/project';
 import {
@@ -43,6 +44,12 @@ export class PrismaProjectRepository implements ProjectRepository {
           readme: projectData.readme,
           techStacks: {
             connect: projectData.techStacks.map((tech) => ({ id: tech })),
+          },
+          projectMembers: {
+            create: {
+              userId: projectData.ownerId,
+              projectRole: undefined,
+            },
           },
           keyFeature: {
             create: projectData.keyFeatures.map((feat) => ({
@@ -319,6 +326,7 @@ export class PrismaProjectRepository implements ProjectRepository {
         include: {
           techStacks: true,
           projectMembers: true,
+          externalLinks: true,
           owner: {
             select: {
               id: true,
@@ -348,6 +356,11 @@ export class PrismaProjectRepository implements ProjectRepository {
             iconUrl: tech.iconUrl,
             type: tech.type,
           })),
+          externalLinks: project.externalLinks?.map((link) => ({
+            id: link.id,
+            type: link.type,
+            url: link.url,
+          })) as ExternalLink[],
           teamMembers: project.projectMembers?.map((member) => ({
             id: member.id,
             projectId: member.projectId,
