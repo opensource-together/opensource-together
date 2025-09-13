@@ -183,7 +183,7 @@ const markAllAsRead = async (): Promise<void> => {
 };
 ```
 
-### 4. Créer une notification (pour les tests)
+### 4. Créer une notification
 
 ```typescript
 const createNotification = async (data: {
@@ -191,6 +191,7 @@ const createNotification = async (data: {
   receiverId: string;
   type: string;
   payload: Record<string, unknown>;
+  channels?: ('realtime' | 'email')[];
 }): Promise<void> => {
   const response = await fetch('/api/notifications', {
     method: 'POST',
@@ -206,6 +207,13 @@ const createNotification = async (data: {
   }
 };
 ```
+
+**Cas d'usage :**
+
+- **Notifications manuelles** : Envoyer une notification à un utilisateur spécifique
+- **Notifications système** : Créer des notifications programmatiquement
+- **Tests et développement** : Tester le système de notifications
+- **Intégrations externes** : Permettre à des services tiers d'envoyer des notifications
 
 ## Types TypeScript
 
