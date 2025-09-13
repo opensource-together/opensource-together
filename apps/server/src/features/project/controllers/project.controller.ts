@@ -32,10 +32,7 @@ import { FindProjectByIdDocs } from './docs/find-project-by-id.swagger.decorator
 import { UpdateProjectByIdDocs } from './docs/update-project-by-id.swagger.decorator';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import {
-  adaptRepositoryStatsToDto,
-  ProjectStatsResponseDto,
-} from './dto/project-stats.response.dto';
+import { ProjectStatsResponseDto } from '../dto/project-stats.response.dto';
 import { Project } from '../domain/project';
 
 @Controller('projects')
@@ -133,24 +130,7 @@ export class ProjectController {
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.NOT_FOUND);
     }
-    if (!result.value.stats) {
-      throw new HttpException(
-        'Repository stats not found',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    const members = await this.projectService.resolveTeamMembers(result.value);
-    if (!members.success) {
-      throw new HttpException(members.error, HttpStatus.NOT_FOUND);
-    }
-    const stats = adaptRepositoryStatsToDto(result.value.stats, members.value);
-    if (!stats.success) {
-      throw new HttpException(stats.error, HttpStatus.NOT_FOUND);
-    }
-    return {
-      ...result.value,
-      projectStats: stats.value,
-    };
+    return result.value;
   }
 
   @UseGuards(GithubAuthGuard)
