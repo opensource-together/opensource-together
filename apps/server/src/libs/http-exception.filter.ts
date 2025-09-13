@@ -4,9 +4,9 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { Logger } from '@nestjs/common';
 
 interface ExceptionResponseObject {
   message?: string;
@@ -33,19 +33,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exception.getResponse() as ExceptionResponseObject;
 
       message = exceptionResponse.message || message;
-      const code = exceptionResponse.code;
       delete exceptionResponse.message;
       delete exceptionResponse.statusCode;
 
+      console.log(process.env.NODE_ENV);
       response.json({
         httpStatus: status,
         error: {
           message: message,
-          code: code,
-          details:
-            process.env.NODE_ENV === 'production'
-              ? undefined
-              : { ...exceptionResponse },
+          ...(process.env.NODE_ENV === 'development' && {
+            stack: exception.stack,
+          }),
         },
       });
     } else {
