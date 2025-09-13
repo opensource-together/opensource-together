@@ -36,7 +36,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       delete exceptionResponse.message;
       delete exceptionResponse.statusCode;
 
-      console.log(process.env.NODE_ENV);
       response.json({
         httpStatus: status,
         error: {
