@@ -3,6 +3,7 @@ import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './libs/http-exception.filter';
 
 async function bootstrap() {
   const app: INestApplication = await NestFactory.create(AppModule, {
@@ -22,6 +23,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
   createApiDocs(app);
 
   await app.listen(process.env.PORT ?? 4000);
