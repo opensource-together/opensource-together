@@ -1,5 +1,6 @@
 import { Result } from '@/libs/result';
 import { Project, ProjectSummary } from '../domain/project';
+import { User } from '@prisma/client';
 
 export interface CreateProjectData {
   ownerId: string;
@@ -47,4 +48,5 @@ export interface ProjectRepository {
     data: UpdateProjectData,
   ): Promise<Result<Project, string>>;
   delete(userId: string, projectId: string): Promise<Result<boolean, string>>;
+  resolveTeamMembers(projectId: string): Promise<Result<User[], string>>;
 }

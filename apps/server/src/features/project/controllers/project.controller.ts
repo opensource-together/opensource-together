@@ -32,6 +32,8 @@ import { FindProjectByIdDocs } from './docs/find-project-by-id.swagger.decorator
 import { UpdateProjectByIdDocs } from './docs/update-project-by-id.swagger.decorator';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { ProjectStatsResponseDto } from '../dto/project-stats.response.dto';
+import { Project } from '../domain/project';
 
 @Controller('projects')
 @UseGuards(AuthGuard)
@@ -120,7 +122,10 @@ export class ProjectController {
   @Public()
   @Get(':id')
   @FindProjectByIdDocs()
-  async findById(@Param('id') id: string, @GitHubOctokit() octokit: Octokit) {
+  async findById(
+    @Param('id') id: string,
+    @GitHubOctokit() octokit: Octokit,
+  ): Promise<Project & { projectStats: ProjectStatsResponseDto }> {
     const result = await this.projectService.findById(id, octokit);
     if (!result.success) {
       throw new HttpException(result.error, HttpStatus.NOT_FOUND);

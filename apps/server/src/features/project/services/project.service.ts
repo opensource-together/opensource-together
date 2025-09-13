@@ -13,11 +13,13 @@ import {
 import { Result } from '@/libs/result';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Octokit } from '@octokit/rest';
+import { User } from '@prisma/client';
 import { CreateProjectDto } from '../controllers/dto/create-project.dto';
 import { UpdateProjectDto } from '../controllers/dto/update-project.dto';
 import {
   canUserModifyProject,
   Project,
+  ProjectSummary,
   validateProject,
   validateProjectRole,
   ValidationErrors,
@@ -27,6 +29,10 @@ import {
   ProjectRepository,
   UpdateProjectData,
 } from '../repositories/project.repository.interface';
+import {
+  adaptRepositoryStatsToDto,
+  ProjectStatsResponseDto,
+} from '../dto/project-stats.response.dto';
 export type CreateProjectRequest = CreateProjectDto;
 
 export type ProjectServiceError =
@@ -126,6 +132,7 @@ export class ProjectService {
       image: createProjectDto.image || '',
       coverImages: createProjectDto.coverImages || [],
       description: createProjectDto.description,
+      readme: createProjectDto.readme || '',
       categories: createProjectDto.categories,
       keyFeatures: createProjectDto.keyFeatures.map((feature) => ({
         projectId: '',
@@ -165,43 +172,78 @@ export class ProjectService {
     return Result.ok(result.value);
   }
 
-  async findAll(octokit: Octokit) {
+  async findAll(
+    octokit: Octokit,
+  ): Promise<
+    Result<(ProjectSummary & { projectStats: ProjectStatsResponseDto })[]>
+  > {
     const result = await this.projectRepository.findAll();
     if (!result.success) {
       return Result.fail('DATABASE_ERROR' as ProjectServiceError);
     }
 
     const projects = await Promise.all(
-      result.value.map((project) =>
-        this.getProjectStats(octokit, project as Project),
-      ),
+      result.value.map(async (project) => {
+        const projectWithStats = await this.getProjectStats(
+          octokit,
+          project as Project,
+        );
+        if (!projectWithStats.success) {
+          return [];
+        }
+        const members = await this.resolveTeamMembers(project as Project);
+        if (!members.success) {
+          return [];
+        }
+        const stats = adaptRepositoryStatsToDto(
+          projectWithStats.value.stats,
+          members.value,
+        );
+        if (!stats.success) {
+          return [];
+        }
+        return {
+          ...project,
+          projectStats: stats.value,
+        };
+      }),
     );
-
-    const projectsResult = projects.map(
-      (project) => (project as { success: true; value: Project }).value,
-    );
-
-    return Result.ok(projectsResult);
+    return Result.ok(projects.flat());
   }
 
-  async findById(projectId: string, octokit: Octokit) {
+  async findById(
+    projectId: string,
+    octokit: Octokit,
+  ): Promise<Result<Project & { projectStats: ProjectStatsResponseDto }>> {
     const project = await this.projectRepository.findById(projectId);
     if (!project.success) {
       return Result.fail('PROJECT_NOT_FOUND' as ProjectServiceError);
     }
-    console.log('project', project.value);
-    const stats = await this.getProjectStats(
+    const projectWithStats = await this.getProjectStats(
       octokit,
       project.value as Project & { owner: { githubLogin: string } },
     );
-    if (!stats.success) {
+    if (!projectWithStats.success) {
       this.logger.warn(
-        `GitHub stats failed for project ${projectId}: ${stats.error}`,
+        `GitHub stats failed for project ${projectId}: ${projectWithStats.error}`,
       );
+      return Result.fail('PROJECT_STATS_NOT_FOUND');
+    }
+
+    const members = await this.resolveTeamMembers(project.value);
+    if (!members.success) {
+      return Result.fail('PROJECT_NOT_FOUND');
+    }
+    const stats = adaptRepositoryStatsToDto(
+      projectWithStats.value.stats,
+      members.value,
+    );
+    if (!stats.success) {
+      return Result.fail('STATS_FAILED');
     }
     return Result.ok({
-      ...project.value,
-      stats: stats.success ? stats.value : undefined,
+      ...projectWithStats.value,
+      projectStats: stats.value,
     });
   }
 
@@ -328,11 +370,21 @@ export class ProjectService {
     }
     return Result.ok(deletedProject.value);
   }
+
+  async resolveTeamMembers(project: Project): Promise<Result<User[], string>> {
+    if (!project.id) {
+      return Result.fail('Failed to resolve teamMember : project id is null');
+    }
+    const members = await this.projectRepository.resolveTeamMembers(project.id);
+    return members;
+  }
+
   async getProjectStats(octokit: Octokit, project: Project) {
+    const { owner, repoName } = this.getOwnerAndRepoNameFromProjet(project);
     const result = await this.githubRepository.getRepositoryStats(
       octokit,
-      project.owner?.username || '',
-      project.title.toLowerCase().replace(/\s+/g, '-'),
+      owner,
+      repoName,
     );
     if (!result.success) {
       this.logger.warn(
@@ -361,5 +413,23 @@ export class ProjectService {
       ...project,
       stats: result.value,
     });
+  }
+
+  getOwnerAndRepoNameFromProjet(project: Project): {
+    owner: string;
+    repoName: string;
+  } {
+    const url =
+      project.externalLinks?.find((link) => {
+        if (link.type == 'GITHUB') {
+          return link;
+        }
+      })?.url || '';
+    const u = new URL(url);
+    const parts = u.pathname.split('/');
+    if (parts.length < 3) {
+      return { owner: '', repoName: '' };
+    }
+    return { owner: parts[1], repoName: parts[2] };
   }
 }
