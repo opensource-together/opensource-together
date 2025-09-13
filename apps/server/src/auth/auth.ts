@@ -5,6 +5,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { Account } from 'better-auth/types';
 import * as process from 'node:process';
 import { PrismaService } from 'prisma/prisma.service';
+import { openAPI } from 'better-auth/plugins';
 
 const prisma = new PrismaService();
 
@@ -17,6 +18,7 @@ export const auth: {
   emailAndPassword: {
     enabled: true,
   },
+  plugins: [openAPI()],
   user: {
     additionalFields: {
       bio: { type: 'string', required: false, input: false },
