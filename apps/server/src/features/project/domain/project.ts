@@ -26,6 +26,7 @@ export interface ProjectSummary {
   image: string;
   techStacks: TechStack[];
   teamMembers?: TeamMember[];
+  externalLinks?: ExternalLink[];
   createdAt?: Date;
   updatedAt?: Date;
 }

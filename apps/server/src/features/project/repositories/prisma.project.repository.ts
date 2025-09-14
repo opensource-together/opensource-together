@@ -6,6 +6,7 @@ import {
   ProjectRole as PrismaProjectRole,
   TechStack as PrismaTechStack,
   ProjectExternalLink,
+  User,
 } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaService } from 'prisma/prisma.service';
@@ -15,6 +16,7 @@ import {
   Project as DomainProject,
   ProjectRole as DomainProjectRole,
   TechStack as DomainTechStack,
+  ExternalLink,
   ProjectSummary,
 } from '../domain/project';
 import {
@@ -42,6 +44,12 @@ export class PrismaProjectRepository implements ProjectRepository {
           readme: projectData.readme,
           techStacks: {
             connect: projectData.techStacks.map((tech) => ({ id: tech })),
+          },
+          projectMembers: {
+            create: {
+              userId: projectData.ownerId,
+              projectRole: undefined,
+            },
           },
           keyFeature: {
             create: projectData.keyFeatures.map((feat) => ({
@@ -318,6 +326,7 @@ export class PrismaProjectRepository implements ProjectRepository {
         include: {
           techStacks: true,
           projectMembers: true,
+          externalLinks: true,
           owner: {
             select: {
               id: true,
@@ -347,6 +356,11 @@ export class PrismaProjectRepository implements ProjectRepository {
             iconUrl: tech.iconUrl,
             type: tech.type,
           })),
+          externalLinks: project.externalLinks?.map((link) => ({
+            id: link.id,
+            type: link.type,
+            url: link.url,
+          })) as ExternalLink[],
           teamMembers: project.projectMembers?.map((member) => ({
             id: member.id,
             projectId: member.projectId,
@@ -648,6 +662,40 @@ export class PrismaProjectRepository implements ProjectRepository {
     } catch (error) {
       console.log('error', error);
       return Result.fail(`Unknown error during project deletion`);
+    }
+  }
+  async resolveTeamMembers(projectId: string): Promise<Result<User[], string>> {
+    try {
+      const members = await this.prisma.project.findUnique({
+        where: {
+          id: projectId,
+        },
+        select: {
+          projectMembers: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                  email: true,
+                  githubLogin: true,
+                  emailVerified: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!members) {
+        return Result.ok([]);
+      }
+      return Result.ok(members.projectMembers.map((pm) => pm.user)) ?? [];
+    } catch (error) {
+      console.log('error', error);
+      return Result.fail('Unknown error while resolving team members');
     }
   }
 
