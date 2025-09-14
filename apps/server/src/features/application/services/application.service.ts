@@ -92,14 +92,19 @@ export class ApplicationService {
       return Result.fail('PROJECT_ROLE_DOES_NOT_BELONG_TO_PROJECT');
     }
 
-    const existingApplication =
+    const existingApplicationStatus =
       await this.applicationRepository.existsStatusApplication(
         userId,
         projectRoleId,
       );
 
-    if (existingApplication.success && existingApplication.value) {
-      return Result.fail(existingApplication.value);
+    if (existingApplicationStatus.success && existingApplicationStatus.value) {
+      if (existingApplicationStatus.value === 'PENDING') {
+        return Result.fail('APPLICATION_PENDING');
+      }
+      if (existingApplicationStatus.value === 'REJECTED') {
+        return Result.fail('APPLICATION_REJECTED');
+      }
     }
     const project = await this.projectRepository.findById(projectId);
     if (!project.success) {
