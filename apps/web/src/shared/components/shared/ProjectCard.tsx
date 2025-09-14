@@ -29,7 +29,7 @@ import { Icon } from "../ui/icon";
 interface ProjectCardProps {
   projectId?: string;
   title?: string;
-  shortDescription?: string;
+  description?: string;
   techStacks?: TechStack[];
   showTechStack?: boolean;
   roles?: ProjectRole[];
@@ -43,7 +43,7 @@ interface ProjectCardProps {
 export default function ProjectCardComponent({
   projectId = "1",
   title = "",
-  shortDescription = "",
+  description = "",
   techStacks = [],
   showTechStack = true,
   showViewProject = true,
@@ -88,7 +88,7 @@ export default function ProjectCardComponent({
           {showViewProject && <ProjectCardViewText />}
         </ProjectCardHeader>
         <ProjectCardContent>
-          <ProjectCardDescription>{shortDescription}</ProjectCardDescription>
+          <ProjectCardDescription>{description}</ProjectCardDescription>
           <ProjectCardDivider />
           {showTechStack && (
             <ProjectCardFooter>

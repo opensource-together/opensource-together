@@ -20,13 +20,6 @@ export const profileSchema = z.object({
     .array(z.string())
     .max(10, "Maximum 10 technologies autorisées")
     .optional(),
-  experiences: z
-    .array(
-      z.object({
-        experience: z.string().min(1, "L'expérience ne peut pas être vide"),
-      })
-    )
-    .optional(),
   socialLinks: z
     .object({
       github: urlWithDomainCheck(

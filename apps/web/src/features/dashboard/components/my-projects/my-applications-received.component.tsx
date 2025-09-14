@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { HiInbox } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
@@ -35,8 +36,10 @@ export default function MyApplicationsReceived({
   if (applications.length === 0) {
     return (
       <EmptyState
-        title="Aucune candidature reçue"
-        description="Vous n'avez pas de candidatures reçues pour le moment."
+        icon={HiInbox}
+        text="Aucune candidature reçue"
+        buttonText="Voir les candidatures"
+        href="/"
       />
     );
   }

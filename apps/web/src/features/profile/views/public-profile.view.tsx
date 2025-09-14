@@ -1,9 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
-import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import GithubCalendar from "../components/github-calendar.component";
@@ -26,15 +23,9 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     return (
       <>
         <EmptyState
-          title="Profil non trouvé"
-          description="L'utilisateur que vous recherchez n'existe pas ou n'est pas accessible. Il se peut que le profil ait été supprimé ou que l'URL soit incorrecte."
-          action={
-            <>
-              <Link href="/">
-                <Button>Retour à l'accueil</Button>
-              </Link>
-            </>
-          }
+          text="Profil non trouvé"
+          buttonText="Retour à l'accueil"
+          href="/"
         />
       </>
     );

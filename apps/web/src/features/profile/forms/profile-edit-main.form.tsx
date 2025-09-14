@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
@@ -12,7 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import Icon from "@/shared/components/ui/icon";
 import { Input } from "@/shared/components/ui/input";
 import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -35,53 +33,8 @@ export default function ProfileEditMainForm({
   onImageSelect,
   isUpdating,
 }: ProfileEditMainFormProps) {
-  const { control, watch, setValue } = form;
-  const [newExperience, setNewExperience] = useState("");
-  const [editingExperienceIndex, setEditingExperienceIndex] = useState<
-    number | null
-  >(null);
-  const [editingExperienceText, setEditingExperienceText] = useState("");
+  const { control } = form;
 
-  const experiences = watch("experiences") || [];
-
-  const addExperience = () => {
-    if (newExperience.trim()) {
-      setValue("experiences", [
-        ...experiences,
-        { experience: newExperience.trim() },
-      ]);
-      setNewExperience("");
-    }
-  };
-
-  const removeExperience = (index: number) => {
-    setValue(
-      "experiences",
-      experiences.filter((_, i) => i !== index)
-    );
-  };
-
-  const startEditingExperience = (index: number, text: string) => {
-    setEditingExperienceIndex(index);
-    setEditingExperienceText(text);
-  };
-
-  const saveEditingExperience = () => {
-    if (editingExperienceText.trim()) {
-      const updatedExperiences = [...experiences];
-      updatedExperiences[editingExperienceIndex!] = {
-        experience: editingExperienceText.trim(),
-      };
-      setValue("experiences", updatedExperiences);
-      setEditingExperienceIndex(null);
-      setEditingExperienceText("");
-    }
-  };
-
-  const cancelEditingExperience = () => {
-    setEditingExperienceIndex(null);
-    setEditingExperienceText("");
-  };
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
@@ -94,13 +47,13 @@ export default function ProfileEditMainForm({
                 <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
+                    currentImageUrl={profile.avatarUrl}
                     onFileSelect={onImageSelect}
-                    accept="image/*"
-                    maxSize={1}
-                    size="xl"
                     name={profile.username}
                     fallback={profile.username}
-                    currentImageUrl={profile.avatarUrl}
+                    accept="image/*"
+                    maxSize={5}
+                    size="xl"
                     className="mt-4"
                   />
                 </FormControl>
@@ -166,119 +119,6 @@ export default function ProfileEditMainForm({
           <div className="my-12.5">
             <Separator />
           </div>
-
-          <FormField
-            control={control}
-            name="experiences"
-            render={() => (
-              <FormItem>
-                <FormLabel>Expériences</FormLabel>
-                <FormControl>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={newExperience}
-                        onChange={(e) => setNewExperience(e.target.value)}
-                        placeholder="Ajouter un objectif"
-                        className="flex-1 bg-white text-sm"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            addExperience();
-                          }
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        onClick={addExperience}
-                        variant="outline"
-                      >
-                        Ajouter
-                      </Button>
-                    </div>
-                    <div className="mt-4.5 flex w-full flex-col gap-2">
-                      {experiences.map((experience, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div className="text-primary flex flex-1 items-center justify-between rounded-md border border-black/5 bg-white px-4 py-2 text-xs leading-relaxed shadow-xs">
-                            {editingExperienceIndex === index ? (
-                              <div className="flex flex-1 items-center gap-2">
-                                <Input
-                                  value={editingExperienceText}
-                                  onChange={(e) =>
-                                    setEditingExperienceText(e.target.value)
-                                  }
-                                  className="text-primary flex-1 bg-white text-xs"
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter")
-                                      saveEditingExperience();
-                                    if (e.key === "Escape")
-                                      cancelEditingExperience();
-                                  }}
-                                />
-                                <Button
-                                  onClick={saveEditingExperience}
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <Icon name="check" size="xs" />
-                                </Button>
-                                <Button
-                                  onClick={cancelEditingExperience}
-                                  variant="ghost"
-                                  size="icon"
-                                >
-                                  <Icon name="cross" size="xs" />
-                                </Button>
-                              </div>
-                            ) : (
-                              <>
-                                <span>{experience.experience}</span>
-                                <div className="flex items-center gap-1">
-                                  <Button
-                                    onClick={() =>
-                                      startEditingExperience(
-                                        index,
-                                        experience.experience
-                                      )
-                                    }
-                                    variant="ghost"
-                                    size="icon"
-                                  >
-                                    <Icon
-                                      name="pencil"
-                                      size="xs"
-                                      className="size-2.5"
-                                    />
-                                  </Button>
-                                  <Button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      removeExperience(index);
-                                    }}
-                                    variant="ghost"
-                                    size="icon"
-                                  >
-                                    <Icon
-                                      name="trash"
-                                      size="xs"
-                                      className="size-2.5"
-                                    />
-                                  </Button>
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           <div className="sticky bottom-0 z-50 bg-white">
             <div className="-mx-4.5 mt-16.5">

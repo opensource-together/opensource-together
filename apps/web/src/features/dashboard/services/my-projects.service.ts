@@ -9,7 +9,7 @@ import { MyProjectType } from "../types/my-projects.type";
  */
 export const getMyProjects = async (): Promise<MyProjectType[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/me/projects`, {
+    const response = await fetch(`${API_BASE_URL}/projects/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export const getMyProjectDetails = async (
   id: string
 ): Promise<MyProjectType> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/me/projects/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/projects/me/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

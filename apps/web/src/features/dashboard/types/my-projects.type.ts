@@ -6,7 +6,7 @@ import { Owner } from "./../../projects/types/project.type";
 export interface MyProjectType {
   id: string;
   title: string;
-  shortDescription: string;
+  description: string;
   techStacks: TechStack[];
   owner: Owner;
   image?: string;
@@ -42,10 +42,7 @@ export interface ApplicationType {
     id: string;
     feature: string;
   }>;
-  selectedProjectGoals: Array<{
-    id: string;
-    goal: string;
-  }>;
+
   rejectionReason?: string;
 }
 

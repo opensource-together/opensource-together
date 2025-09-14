@@ -19,7 +19,6 @@ export default function ProfileEditView() {
   const { currentUser, isLoading, isError } = useAuth();
   const { updateProfile, isUpdating } = useProfileUpdate();
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-  const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
 
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
@@ -29,32 +28,24 @@ export default function ProfileEditView() {
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
       techStacks: currentUser?.techStacks?.map((tech) => tech.id) || [],
-      experiences:
-        currentUser?.experiences?.map((experience) => ({
-          experience: experience.position,
-        })) || [],
-      socialLinks: currentUser?.socialLinks || {},
+      socialLinks: currentUser?.socialLinks || {
+        github: "",
+        discord: "",
+        twitter: "",
+        linkedin: "",
+        website: "",
+      },
     },
   });
 
   const handleImageSelect = (file: File | null) => {
-    if (file) {
-      setSelectedImageFile(file);
-      setShouldDeleteImage(false);
-    } else {
-      setSelectedImageFile(null);
-      setShouldDeleteImage(true);
-    }
+    setSelectedImageFile(file);
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
     updateProfile({
-      updateData: {
-        ...data,
-        avatarUrl: currentUser?.avatarUrl || "",
-      },
+      updateData: data,
       avatarFile: selectedImageFile || undefined,
-      shouldDeleteAvatar: shouldDeleteImage,
     });
   });
 

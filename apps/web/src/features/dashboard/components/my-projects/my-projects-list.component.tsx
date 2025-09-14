@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { HiMiniSquare2Stack } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -21,8 +22,10 @@ export default function MyProjectsList() {
   if (projects.length === 0) {
     return (
       <EmptyState
-        title="Aucun projet"
-        description="Vous n'avez pas de projets. Créez un projet pour commencer."
+        icon={HiMiniSquare2Stack}
+        text="Aucun projet n'a été créé"
+        buttonText="Créer un projet"
+        href="/projects/create"
       />
     );
   }
@@ -57,7 +60,7 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <div className="flex items-center">
-                    {project.applications.length === 0 ? (
+                    {project.applications?.length === 0 ? (
                       <span className="text-muted-foreground text-sm">
                         Aucun candidat
                       </span>
@@ -65,10 +68,10 @@ export default function MyProjectsList() {
                       <div className="flex items-center">
                         <span className="bg-ost-blue-three mr-1.5 inline-block size-2 rounded-full" />
                         <span className="mr-1 text-sm font-medium">
-                          {project.applications.length}
+                          {project.applications?.length}
                         </span>
                         <span className="text-muted-foreground text-sm text-nowrap">
-                          {project.applications.length > 1
+                          {project.applications?.length > 1
                             ? "Nouveaux candidats"
                             : "Nouveau candidat"}
                         </span>
@@ -79,17 +82,17 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <div className="flex items-center">
-                    {project.teamMembers.length === 0 ? (
+                    {project.teamMembers?.length === 0 ? (
                       <span className="text-muted-foreground text-sm text-nowrap">
                         Aucun membre
                       </span>
                     ) : (
                       <>
                         <span className="mr-1 text-sm font-medium">
-                          {project.teamMembers.length}
+                          {project.teamMembers?.length}
                         </span>
                         <span className="text-muted-foreground text-sm">
-                          Membre{project.teamMembers.length > 1 ? "s" : ""}
+                          Membre{project.teamMembers?.length > 1 ? "s" : ""}
                         </span>
                       </>
                     )}

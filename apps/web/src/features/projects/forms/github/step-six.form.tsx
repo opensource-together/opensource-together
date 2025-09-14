@@ -67,13 +67,13 @@ export function StepSixForm() {
     formLinks: StepFourFormData["externalLinks"]
   ) => {
     const links: Array<{
-      type: "github" | "discord" | "twitter" | "linkedin" | "other";
+      type: "GITHUB" | "DISCORD" | "TWITTER" | "LINKEDIN" | "OTHER";
       url: string;
     }> = [];
 
     if (formData.selectedRepository?.url) {
       links.push({
-        type: "github",
+        type: "GITHUB",
         url: formData.selectedRepository.url,
       });
     }
@@ -89,8 +89,8 @@ export function StepSixForm() {
           links.push({
             type:
               type === "website"
-                ? "other"
-                : (type as "discord" | "twitter" | "linkedin"),
+                ? "OTHER"
+                : (type.toUpperCase() as "DISCORD" | "TWITTER" | "LINKEDIN"),
             url: url as string,
           });
         });
