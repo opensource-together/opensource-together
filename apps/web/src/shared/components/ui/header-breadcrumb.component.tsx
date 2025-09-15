@@ -60,7 +60,7 @@ export default function HeaderBreadcrumb() {
     }
 
     if (pathname.startsWith("/profile/") && userId && userId !== "me") {
-      return [{ label: publicProfile?.username || "Profil", href: pathname }];
+      return [{ label: publicProfile?.name || "Profil", href: pathname }];
     }
 
     if (pathname.startsWith("/projects/") && publicProjectId) {

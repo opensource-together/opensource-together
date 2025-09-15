@@ -71,10 +71,10 @@ export function StepFourForm() {
     return Object.entries(formLinks)
       .filter(([_, url]) => typeof url === "string" && url.trim())
       .map(([type, url]) => ({
-        type: type === "website" ? "other" : type,
+        type: type === "website" ? "OTHER" : type.toUpperCase(),
         url: url as string,
       })) as Array<{
-      type: "github" | "discord" | "twitter" | "linkedin" | "other";
+      type: "GITHUB" | "DISCORD" | "TWITTER" | "LINKEDIN" | "OTHER";
       url: string;
     }>;
   };

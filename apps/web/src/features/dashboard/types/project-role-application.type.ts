@@ -7,7 +7,7 @@ export interface ProjectRoleApplicationType {
   project: {
     id: string;
     title: string;
-    shortDescription: string;
+    description: string;
     image?: string;
     owner: Owner;
   };
@@ -22,19 +22,12 @@ export interface ProjectRoleApplicationType {
       iconUrl: string;
     }[];
     roleCount: number;
-    projectGoal: {
-      id: string;
-      projectId: string;
-      goal: string;
-    }[];
   };
   status: "PENDING" | "ACCEPTED" | "REJECTED" | "CANCELLED";
   selectedKeyFeatures: {
     feature: string;
   }[];
-  selectedProjectGoals: {
-    goal: string;
-  }[];
+
   appliedAt: Date;
   decidedAt?: Date;
   decidedBy?: string;

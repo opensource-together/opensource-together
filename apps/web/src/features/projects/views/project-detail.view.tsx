@@ -1,5 +1,6 @@
 "use client";
 
+import { HiInbox } from "react-icons/hi2";
 import { IoEllipse } from "react-icons/io5";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
@@ -88,7 +89,6 @@ export default function ProjectDetailView({
               <RoleCard
                 key={role.title}
                 role={role}
-                projectGoals={project.projectGoals}
                 keyFeatures={project.keyFeatures}
                 className="mb-3 lg:max-w-[721.96px]"
                 isMaintainer={isMaintainer}
@@ -96,32 +96,24 @@ export default function ProjectDetailView({
               />
             ))
           ) : (
-            <EmptyState
-              title="Aucun Rôle Disponible"
-              description={
-                isMaintainer
-                  ? "Aucun rôle n'a été soumis pour ce projet pour le moment. Les rôles apparaîtront ici une fois créés."
-                  : "Ce projet n'a actuellement aucun rôle disponible. Explorez d'autres projets pour trouver des opportunités qui correspondent à vos compétences."
-              }
-              action={
-                isMaintainer ? (
-                  <CreateRoleForm projectId={projectId}>
-                    <Button className="flex items-center gap-2">
-                      Créer un rôle
-                      <Icon name="plus" size="xs" variant="white" />
-                    </Button>
-                  </CreateRoleForm>
-                ) : (
-                  <Button
-                    className="flex items-center gap-2 px-4"
-                    onClick={() => (window.location.href = "/")}
-                  >
-                    Chercher un Projet
-                    <Icon name="search" size="xs" variant="white" />
+            <>
+              <EmptyState
+                icon={HiInbox}
+                text={
+                  isMaintainer
+                    ? "Aucun rôle n'a été crée"
+                    : "Aucun rôle disponible"
+                }
+              />
+              {isMaintainer && (
+                <CreateRoleForm projectId={projectId}>
+                  <Button className="mx-auto -mt-14 flex items-center gap-2">
+                    Créer un rôle
+                    <Icon name="plus" size="xs" variant="white" />
                   </Button>
-                )
-              }
-            />
+                </CreateRoleForm>
+              )}
+            </>
           )}
         </div>
       </div>

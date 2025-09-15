@@ -9,7 +9,7 @@ import ProjectReadme from "./project-readme.component";
 
 export function ProjectMobileHero({
   title,
-  shortDescription,
+  description,
   image,
   projectStats,
 }: Project) {
@@ -24,7 +24,7 @@ export function ProjectMobileHero({
           <Icon name="star" size="sm" />
         </button>
       </div>
-      <p className="mt-4 text-sm font-normal">{shortDescription}</p>
+      <p className="mt-4 text-sm font-normal">{description}</p>
       <Separator className="mt-5" />
     </div>
   );
@@ -40,11 +40,9 @@ export default function ProjectHero({
 }: ProjectHeroProps) {
   const {
     title = "",
-    shortDescription = "",
-    longDescription,
+    description = "",
     coverImages = [],
     keyFeatures = [],
-    projectGoals = [],
     image,
     projectStats,
   } = project;
@@ -70,7 +68,7 @@ export default function ProjectHero({
           </div>
 
           <div className="mt-4">
-            <p className="mb-0 text-sm font-normal">{shortDescription}</p>
+            <p className="mb-0 text-sm font-normal">{description}</p>
             <Separator className="my-5" />
           </div>
         </div>
@@ -96,21 +94,6 @@ export default function ProjectHero({
               ))}
             </ul>
           </>
-        )}
-
-        {projectGoals.length > 0 && (
-          <>
-            <h2 className="mb-4 text-sm font-medium">Objectifs du projet</h2>
-            <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose">
-              {projectGoals.map((goal, index) => (
-                <li key={index}>{goal.goal}</li>
-              ))}
-            </ul>
-          </>
-        )}
-
-        {!keyFeatures.length && !projectGoals.length && longDescription && (
-          <p className="text-sm text-black/70">{longDescription}</p>
         )}
       </div>
     </div>

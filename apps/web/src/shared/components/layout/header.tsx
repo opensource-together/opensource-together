@@ -446,13 +446,13 @@ export default function Header() {
                     className="flex items-center gap-1 px-2"
                   >
                     <Avatar
-                      src={currentUser?.avatarUrl}
-                      name={currentUser?.username}
-                      alt={currentUser?.username}
+                      src={currentUser?.image}
+                      name={currentUser?.name}
+                      alt={currentUser?.name}
                       size="xs"
                     />
                     <span className="font-medium tracking-tighter">
-                      {currentUser?.username}
+                      {currentUser?.name}
                     </span>
                     <Icon name="chevron-down" size="md" />
                   </Button>

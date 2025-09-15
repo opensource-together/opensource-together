@@ -7,7 +7,6 @@ import {
   ExternalLink,
   GithubRepoType,
   KeyFeature,
-  ProjectGoal,
   TechStack,
 } from "../types/project.type";
 
@@ -16,13 +15,12 @@ export type ProjectCreateMethod = "scratch" | "github";
 export interface ProjectFormData {
   method: ProjectCreateMethod;
   title: string;
-  shortDescription: string;
+  description: string;
   image: string;
   coverImages: File[];
   readme?: string;
   externalLinks: ExternalLink[];
   keyFeatures: KeyFeature[];
-  projectGoals: ProjectGoal[];
   techStack: TechStack[];
   categories: Category[];
   selectedRepository: GithubRepoType | null;
@@ -40,12 +38,11 @@ interface ProjectCreateStore {
       Pick<
         ProjectFormData,
         | "title"
-        | "shortDescription"
+        | "description"
         | "image"
         | "coverImages"
         | "readme"
         | "keyFeatures"
-        | "projectGoals"
         | "techStack"
         | "categories"
         | "roles"
@@ -64,13 +61,12 @@ interface ProjectCreateStore {
 const initialFormData: ProjectFormData = {
   method: "scratch",
   title: "",
-  shortDescription: "",
+  description: "",
   image: "",
   coverImages: [],
   readme: "",
   externalLinks: [],
   keyFeatures: [],
-  projectGoals: [],
   selectedRepository: null,
   techStack: [],
   categories: [],

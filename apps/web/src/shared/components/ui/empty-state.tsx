@@ -1,19 +1,25 @@
 "use client";
 
-import { ReactNode } from "react";
+import Link from "next/link";
+import { HiChevronRight } from "react-icons/hi";
+import { IconType } from "react-icons/lib";
+
+import { Button } from "./button";
 
 interface EmptyStateProps {
-  title: string;
-  description: string;
-  action?: ReactNode;
+  text: string;
+  icon?: IconType | React.ComponentType;
+  href?: string;
+  buttonText?: string;
   className?: string;
   width?: string;
 }
 
 export function EmptyState({
-  title,
-  description,
-  action,
+  text,
+  icon,
+  href,
+  buttonText,
   className = "",
   width = "w-[400px]",
 }: EmptyStateProps) {
@@ -21,10 +27,21 @@ export function EmptyState({
     <div
       className={`mx-auto flex flex-col items-center justify-center py-12 text-center ${width} ${className}`}
     >
-      <h3 className="mb-3 text-lg">{title}</h3>
-      <p className="mb-6 tracking-tighter text-black/70">{description}</p>
-      {action && (
-        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">{action}</div>
+      {icon && (
+        <div className="text-neutral-200">
+          {(() => {
+            const IconComp = icon as IconType;
+            return <IconComp size={36} aria-hidden />;
+          })()}
+        </div>
+      )}
+      <p className="mt-1 mb-4 max-w-40 text-[#B1B1B1]">{text}</p>
+      {href && (
+        <Link href={href}>
+          <Button>
+            {buttonText} <HiChevronRight />
+          </Button>
+        </Link>
       )}
     </div>
   );

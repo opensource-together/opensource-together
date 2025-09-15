@@ -2,6 +2,7 @@ import { API_BASE_URL } from "@/config/config";
 
 export interface MediaUploadResponse {
   url: string;
+  key: string;
 }
 
 // ===== PUBLIC CALLS API =====
@@ -16,7 +17,7 @@ export const uploadMedia = async (file: File): Promise<MediaUploadResponse> => {
     const formData = new FormData();
     formData.append("image", file);
 
-    const response = await fetch(`${API_BASE_URL}/media/upload/image/public`, {
+    const response = await fetch(`${API_BASE_URL}/media/image/public`, {
       method: "POST",
       body: formData,
       credentials: "include",
@@ -48,9 +49,9 @@ export const replaceMedia = async (
     formData.append("image", newFile);
 
     const response = await fetch(
-      `${API_BASE_URL}/media/change/image/public/${oldKey}`,
+      `${API_BASE_URL}/media/image/public/${encodeURIComponent(oldKey)}`,
       {
-        method: "PATCH",
+        method: "PUT",
         body: formData,
         credentials: "include",
       }
@@ -75,7 +76,7 @@ export const replaceMedia = async (
 export const deleteMedia = async (key: string): Promise<void> => {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/media/delete/image/public/${key}`,
+      `${API_BASE_URL}/media/image/public/${encodeURIComponent(key)}`,
       {
         method: "DELETE",
         credentials: "include",
@@ -97,7 +98,9 @@ export const deleteMedia = async (key: string): Promise<void> => {
  * @returns The key (filename) extracted from the URL
  */
 export const extractMediaKey = (mediaUrl: string): string => {
-  return mediaUrl.split("/").pop() || "";
+  if (!mediaUrl) return "";
+  const url = new URL(mediaUrl);
+  return url.pathname.substring(1);
 };
 
 // ===== SAFE WRAPPERS =====

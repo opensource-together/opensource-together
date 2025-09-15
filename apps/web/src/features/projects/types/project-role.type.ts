@@ -1,4 +1,4 @@
-import { ProjectGoal, TechStack } from "./project.type";
+import { TechStack } from "./project.type";
 
 export interface ProjectRole {
   id: string;
@@ -7,5 +7,4 @@ export interface ProjectRole {
   description: string;
   techStacks: TechStack[];
   roleCount?: number;
-  projectGoal?: ProjectGoal[];
 }

@@ -1,29 +1,29 @@
 "use client";
 
-import Image from "next/image";
+import { FiGitlab } from "react-icons/fi";
 
 import { Button } from "@/shared/components/ui/button";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
-interface GitHubButtonProps {
+interface GitlabButtonProps {
   text?: string;
   isLoading?: boolean;
   variant?: "default" | "outline";
 }
 
-export default function GitHubButton({
-  text = "Continuer avec Github",
+export default function GitlabButton({
+  text = "Continuer avec Gitlab",
   isLoading = false,
   variant = "default",
-}: GitHubButtonProps) {
+}: GitlabButtonProps) {
   const { signInWithProvider } = useAuth();
 
   const isOutlineVariant = variant === "outline";
 
   return (
     <Button
-      onClick={() => signInWithProvider("github")}
+      onClick={() => signInWithProvider("gitlab")}
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
@@ -38,16 +38,7 @@ export default function GitHubButton({
           } border-t-transparent`}
         />
       ) : (
-        <Image
-          src={
-            isOutlineVariant
-              ? "/icons/new-github-icon-black.svg"
-              : "/icons/new-github-icon.svg"
-          }
-          alt="GitHub"
-          width={16}
-          height={16}
-        />
+        <FiGitlab size={16} />
       )}
       <span className="ml-0">{text}</span>
     </Button>

@@ -36,12 +36,7 @@ export default function MyApplicationsDetailsView({
   }
 
   if (!applications) {
-    return (
-      <EmptyState
-        title="Erreur de chargement"
-        description="Impossible de charger vos candidatures."
-      />
-    );
+    return <EmptyState text="Erreur de chargement" />;
   }
 
   const application = applications.find(
@@ -51,8 +46,9 @@ export default function MyApplicationsDetailsView({
   if (!application) {
     return (
       <EmptyState
-        title="Candidature introuvable"
-        description="Cette candidature n'existe pas ou vous n'y avez pas accès."
+        text="Candidature introuvable"
+        buttonText="Voir les candidatures"
+        href="/"
       />
     );
   }

@@ -20,7 +20,7 @@ import {
  */
 export const getUserById = async (id: string): Promise<Profile> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/profiles/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -55,25 +55,22 @@ export const updateProfile = async (
   try {
     const validatedData = UpdateProfileSchema.parse(params);
 
-    let avatarUrl: string | undefined = validatedData.avatarUrl;
+    let image: string | undefined = validatedData.image;
 
-    if (shouldDeleteAvatar && params.avatarUrl) {
-      await safeDeleteMedia(params.avatarUrl);
-      avatarUrl = undefined;
+    if (shouldDeleteAvatar && params.image) {
+      await safeDeleteMedia(params.image);
+      image = undefined;
     } else if (avatarFile) {
-      if (params.avatarUrl) {
-        const newAvatarUrl = await safeReplaceMedia(
-          params.avatarUrl,
-          avatarFile
-        );
-        avatarUrl = newAvatarUrl || undefined;
+      if (params.image) {
+        const newAvatarUrl = await safeReplaceMedia(params.image, avatarFile);
+        image = newAvatarUrl || undefined;
       } else {
         const newAvatarUrl = await safeUploadMedia(avatarFile);
-        avatarUrl = newAvatarUrl || undefined;
+        image = newAvatarUrl || undefined;
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/user/me`, {
+    const response = await fetch(`${API_BASE_URL}/profiles`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +78,7 @@ export const updateProfile = async (
       credentials: "include",
       body: JSON.stringify({
         ...validatedData,
-        avatarUrl,
+        image,
       }),
     });
 

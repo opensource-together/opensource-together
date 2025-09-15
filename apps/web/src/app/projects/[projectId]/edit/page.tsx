@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `Modifier ${project.title} | OpenSource Together`,
-    description: project.shortDescription,
+    description: project.description,
   };
 }
 

@@ -17,13 +17,13 @@ export default function GoogleButton({
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithProvider } = useAuth();
 
   const isOutlineVariant = variant === "outline";
 
   return (
     <Button
-      onClick={() => signInWithGoogle()}
+      onClick={() => signInWithProvider("google")}
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"

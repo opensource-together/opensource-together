@@ -1,9 +1,7 @@
-import Link from "next/link";
+import { HiMiniSquare2Stack } from "react-icons/hi2";
 
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
-import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
-import { Icon } from "@/shared/components/ui/icon";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
@@ -60,22 +58,10 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
         </div>
       ) : joinedProjects.length === 0 ? (
         <EmptyState
-          title="Aucun projet rejoint"
-          description={
-            profile.id === currentUser?.id
-              ? "Découvrez des projets open source de la communauté et rejoignez-les."
-              : "Cet utilisateur n'a pas encore rejoint de projet."
-          }
-          action={
-            profile.id === currentUser?.id && (
-              <Link href="/">
-                <Button className="font-medium">
-                  Explorer les projets
-                  <Icon name="arrow-up-right" size="xs" variant="white" />
-                </Button>
-              </Link>
-            )
-          }
+          text="Aucun projet rejoint"
+          icon={HiMiniSquare2Stack}
+          buttonText="Explorer les projets"
+          href={profile.id === currentUser?.id ? "/" : undefined}
         />
       ) : (
         joinedProjects.slice(0, 3).map((project) => (
@@ -83,7 +69,7 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             key={project.id}
             projectId={project.id}
             title={project.title}
-            shortDescription={project.shortDescription}
+            description={project.description}
             image={project.image || ""}
             showViewProject={false}
             techStacks={project.techStacks}

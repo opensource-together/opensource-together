@@ -29,16 +29,16 @@ export default function UserDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar
-          src={currentUser?.avatarUrl}
-          name={currentUser?.username}
-          alt={currentUser?.username}
+          src={currentUser?.image}
+          name={currentUser?.name}
+          alt={currentUser?.name}
           size="md"
           className="ml-3 cursor-pointer"
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="p-2">
+      <DropdownMenuContent align="end" className="w-48 p-2">
         <div className="flex flex-col p-2">
-          <p className="text-sm font-medium">{currentUser?.username}</p>
+          <p className="text-sm font-medium">{currentUser?.name}</p>
           <p className="text-muted-foreground text-sm">{currentUser?.email}</p>
         </div>
         <DropdownMenuSeparator />

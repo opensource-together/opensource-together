@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { HiXMark } from "react-icons/hi2";
+import { HiInbox, HiXMark } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
@@ -117,8 +117,10 @@ export function MyApplicationsList() {
   if (!applications || applications.length === 0) {
     return (
       <EmptyState
-        title="Aucune candidature"
-        description="Vous n'avez pas encore postulé à des projets."
+        icon={HiInbox}
+        text="Aucune candidature envoyée"
+        buttonText="Trouver un projet"
+        href="/"
       />
     );
   }
@@ -127,8 +129,10 @@ export function MyApplicationsList() {
     <div className="space-y-6">
       {applications.length === 0 ? (
         <EmptyState
-          title="Aucune candidature pour ce statut"
-          description="Vous n'avez pas de candidatures correspondant à ce filtre."
+          icon={HiInbox}
+          text="Aucune candidature envoyée"
+          buttonText="Trouver un projet"
+          href="/"
         />
       ) : (
         <div>

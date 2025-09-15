@@ -14,11 +14,10 @@ import EditRoleForm from "../forms/edit-role.form";
 import RoleApplicationForm from "../forms/role-application.form";
 import { useDeleteRole } from "../hooks/use-project-role.hook";
 import { ProjectRole } from "../types/project-role.type";
-import { KeyFeature, ProjectGoal, TechStack } from "../types/project.type";
+import { KeyFeature, TechStack } from "../types/project.type";
 
 interface RoleCardProps {
   role: ProjectRole;
-  projectGoals?: ProjectGoal[];
   keyFeatures?: KeyFeature[];
   className?: string;
   isMaintainer?: boolean;
@@ -27,7 +26,6 @@ interface RoleCardProps {
 
 export default function RoleCard({
   role,
-  projectGoals = [],
   keyFeatures = [],
   className,
   isMaintainer = false,
@@ -135,7 +133,6 @@ export default function RoleCard({
       <RoleApplicationForm
         roleTitle={title}
         roleDescription={description}
-        projectGoals={projectGoals}
         keyFeatures={keyFeatures}
         techStacks={roleTechStacks}
         projectId={projectId}
