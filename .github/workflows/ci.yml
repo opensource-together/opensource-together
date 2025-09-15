@@ -10,53 +10,13 @@ permissions:
   contents: read
 
 jobs:
-  ci-back:
+  ci:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./apps/server
-
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-          run_install: false
-
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node_version: 20
-          cache: "pnpm"
-          cache-dependency-path: ./apps/server/pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm i --frozen-lockfile
-
-      - name: Generate prisma dependencies
-        run: pnpm prisma generate --schema=src/persistence/orm/prisma/schema.prisma
-
-      - name: Run unit tests
-        run: pnpm run test
-
-      - name: Build
-        run: pnpm run build
-
-      - name: Lint
-        run: pnpm run lint
-
-  ci-front:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./apps/web
+        working-directory: ./
     environment:
       name: CI
-    env:
-      NEXT_PUBLIC_API_URL: http://localhost:4000
 
     steps:
       - name: Checkout branch
@@ -68,18 +28,21 @@ jobs:
           version: 10
           run_install: false
 
-      - name: Setup node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node_version: 20
           cache: "pnpm"
-          cache-dependency-path: ./apps/web/pnpm-lock.yaml
+          cache-dependency-path: ./pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      - name: Build
-        run: pnpm run build
-
       - name: Lint
-        run: pnpm run lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Build
+        run: pnpm build

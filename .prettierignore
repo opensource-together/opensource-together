@@ -13,6 +13,10 @@ coverage
 *.log
 npm-debug.log*
 pnpm-lock.yaml
-
-docker-compose.local.yml
-docker-compose.dev.yml
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE.md
+README.md
+SECURITY.md
+SUPPORT.md
+SUPPORT.md
