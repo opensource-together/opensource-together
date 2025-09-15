@@ -1,4 +1,5 @@
 import GitHubButton from "./github-button.component";
+import GitlabButton from "./gitlab-button.component";
 import GoogleButton from "./google-button.component";
 
 export default function LoginForm() {
@@ -15,6 +16,7 @@ export default function LoginForm() {
           </div>
           <div className="space-y-4">
             <GitHubButton text="Se connecter avec Github" />
+            <GitlabButton text="Se connecter avec Gitlab" />
             <GoogleButton variant="outline" text="Se connecter avec Google" />
           </div>
         </div>
