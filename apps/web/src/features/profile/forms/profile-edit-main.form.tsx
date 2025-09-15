@@ -41,16 +41,16 @@ export default function ProfileEditMainForm({
         <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
           <FormField
             control={control}
-            name="avatarUrl"
+            name="image"
             render={() => (
               <FormItem>
                 <FormLabel>Choisir un avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
-                    currentImageUrl={profile.avatarUrl}
+                    currentImageUrl={profile.image}
                     onFileSelect={onImageSelect}
-                    name={profile.username}
-                    fallback={profile.username}
+                    name={profile.name}
+                    fallback={profile.name}
                     accept="image/*"
                     maxSize={5}
                     size="xl"
@@ -64,7 +64,7 @@ export default function ProfileEditMainForm({
 
           <FormField
             control={control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nom</FormLabel>

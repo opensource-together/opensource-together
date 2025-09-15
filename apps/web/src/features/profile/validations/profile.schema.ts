@@ -3,8 +3,8 @@ import { z } from "zod";
 import { urlWithDomainCheck } from "@/shared/validations/url-with-domain-check.schema";
 
 export const profileSchema = z.object({
-  avatarUrl: z.string().optional(),
-  username: z
+  image: z.string().optional(),
+  name: z
     .string()
     .min(1, "Le nom d'utilisateur est requis")
     .max(50, "Le nom d'utilisateur ne peut pas dépasser 50 caractères"),

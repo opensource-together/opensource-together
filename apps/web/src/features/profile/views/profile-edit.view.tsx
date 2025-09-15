@@ -23,8 +23,8 @@ export default function ProfileEditView() {
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      avatarUrl: currentUser?.avatarUrl || "",
-      username: currentUser?.username || "",
+      image: currentUser?.image || "",
+      name: currentUser?.name || "",
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
       techStacks: currentUser?.techStacks?.map((tech) => tech.id) || [],

@@ -22,12 +22,12 @@ export async function generateMetadata({
   const user = await getUserById(userId);
 
   return {
-    title: `${user.username} | OpenSource Together`,
+    title: `${user.name} | OpenSource Together`,
     description: user.bio,
     openGraph: {
-      title: `${user.username} | OpenSource Together`,
+      title: `${user.name} | OpenSource Together`,
       description: user.bio,
-      images: [user.avatarUrl || ""],
+      images: [user.image || ""],
       url: `https://opensourcetogether.com/profile/${userId}`,
       type: "website",
       siteName: "OpenSource Together",

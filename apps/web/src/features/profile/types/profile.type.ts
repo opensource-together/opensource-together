@@ -40,14 +40,14 @@ export type GithubStats = {
 
 export type Profile = {
   id: string;
-  username: string;
-  avatarUrl: string;
+  name: string;
+  image: string;
   jobTitle?: string;
   bio?: string;
-  provider: string;
+  provider?: string;
   contributionsCount?: number;
-  joinedAt?: string;
-  profileUpdatedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
   email?: string;
   githubStats?: GithubStats;
   socialLinks?: ProfileSocialLink;

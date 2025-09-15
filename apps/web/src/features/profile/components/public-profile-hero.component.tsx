@@ -10,22 +10,17 @@ interface PublicProfileHeroProps {
 }
 
 export default function PublicProfileHero({ profile }: PublicProfileHeroProps) {
-  const {
-    avatarUrl = "",
-    username = "User",
-    jobTitle = "",
-    bio = "",
-  } = profile;
+  const { image = "", name = "User", jobTitle = "", bio = "" } = profile;
 
   return (
     <div>
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="mr-4">
-            <Avatar src={avatarUrl} name={username} alt={username} size="xl" />
+            <Avatar src={image} name={name} alt={name} size="xl" />
           </div>
           <div>
-            <h2 className="text-2xl">{username}</h2>
+            <h2 className="text-2xl">{name}</h2>
             <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
           </div>
         </div>

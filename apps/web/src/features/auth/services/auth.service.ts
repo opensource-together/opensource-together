@@ -12,7 +12,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
     });
   } catch (error) {
     console.error("signInWithProvider error:", error);
-    throw new Error("Error during the sign in with provider.");
+    throw error;
   }
 };
 
@@ -20,9 +20,9 @@ export async function logout(): Promise<void> {
   try {
     await authClient.signOut();
     if (typeof window !== "undefined") window.location.replace("/");
-  } catch (err) {
-    console.error("logout error:", err);
-    throw new Error("Error during the logout.");
+  } catch (error) {
+    console.error("logout error:", error);
+    throw error;
   }
 }
 
@@ -33,12 +33,10 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
   try {
     const session = await authClient.getSession();
 
-    if (!session.data) {
-      return null;
-    }
+    if (!session?.data) return null;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/profiles/me`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/get-session`,
       {
         method: "GET",
         credentials: "include",
@@ -53,10 +51,11 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
       throw new Error(error.message || "Failed to fetch user profile");
     }
 
-    return response.json();
+    const raw = await response.json();
+    return raw?.user || null;
   } catch (error) {
     console.error("Error fetching current user:", error);
-    return null;
+    throw error;
   }
 };
 
