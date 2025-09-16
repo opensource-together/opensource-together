@@ -72,7 +72,16 @@ export const updateProfile = async (
       }
     }
 
-    const { name, bio, jobTitle } = validatedData;
+    const {
+      name,
+      bio,
+      jobTitle,
+      githubUrl,
+      discordUrl,
+      twitterUrl,
+      linkedinUrl,
+      websiteUrl,
+    } = validatedData;
 
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: "PATCH",
@@ -87,6 +96,11 @@ export const updateProfile = async (
         name,
         bio,
         jobTitle,
+        githubUrl,
+        discordUrl,
+        twitterUrl,
+        linkedinUrl,
+        websiteUrl,
       }),
     });
 

@@ -31,12 +31,8 @@ export async function logout(): Promise<void> {
  */
 export const getCurrentUser = async (): Promise<Profile | null> => {
   try {
-    const session = await authClient.getSession();
-
-    if (!session?.data) return null;
-
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/get-session`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
       {
         method: "GET",
         credentials: "include",
@@ -51,8 +47,8 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
       throw new Error(error.message || "Failed to fetch user profile");
     }
 
-    const raw = await response.json();
-    return raw?.user || null;
+    const apiResponse = await response.json();
+    return apiResponse.data || null;
   } catch (error) {
     console.error("Error fetching current user:", error);
     throw error;

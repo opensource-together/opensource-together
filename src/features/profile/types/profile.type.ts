@@ -1,13 +1,5 @@
 import { Project } from "@/features/projects/types/project.type";
 
-export type ProfileSocialLink = {
-  github?: string;
-  discord?: string;
-  twitter?: string;
-  linkedin?: string;
-  website?: string;
-};
-
 export type ProfileTechStack = {
   id: string;
   name: string;
@@ -52,7 +44,11 @@ export type Profile = {
   createdAt?: string;
   updatedAt?: string;
   githubStats?: GithubStats;
-  socialLinks?: ProfileSocialLink;
+  githubUrl?: string;
+  discordUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
   techStacks?: ProfileTechStack[];
   projects?: Project[];
 };

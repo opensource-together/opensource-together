@@ -64,7 +64,7 @@ export default function ProfileSidebarEditForm({
 
             <FormField
               control={control}
-              name="socialLinks.github"
+              name="githubUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -80,7 +80,7 @@ export default function ProfileSidebarEditForm({
             />
             <FormField
               control={control}
-              name="socialLinks.discord"
+              name="discordUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -96,7 +96,7 @@ export default function ProfileSidebarEditForm({
             />
             <FormField
               control={control}
-              name="socialLinks.twitter"
+              name="twitterUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -112,7 +112,7 @@ export default function ProfileSidebarEditForm({
             />
             <FormField
               control={control}
-              name="socialLinks.linkedin"
+              name="linkedinUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -128,7 +128,7 @@ export default function ProfileSidebarEditForm({
             />
             <FormField
               control={control}
-              name="socialLinks.website"
+              name="websiteUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

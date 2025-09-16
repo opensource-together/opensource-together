@@ -11,15 +11,15 @@ interface ProfileSidebarProps {
 }
 
 const socialLinksConfig = [
-  { key: "github", icon: "github", alt: "GitHub" },
-  { key: "twitter", icon: "twitter", alt: "Twitter/X" },
-  { key: "linkedin", icon: "linkedin", alt: "LinkedIn" },
-  { key: "discord", icon: "discord", alt: "Discord" },
-  { key: "website", icon: "link", alt: "Website" },
-];
+  { key: "githubUrl", icon: "github", alt: "GitHub" },
+  { key: "twitterUrl", icon: "twitter", alt: "Twitter/X" },
+  { key: "linkedinUrl", icon: "linkedin", alt: "LinkedIn" },
+  { key: "discordUrl", icon: "discord", alt: "Discord" },
+  { key: "websiteUrl", icon: "link", alt: "Website" },
+] as const;
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
-  const { techStacks = [], socialLinks = {} } = profile;
+  const { techStacks = [] } = profile;
 
   const stats = {
     starsEarned: profile.githubStats?.totalStars || 0,
@@ -127,31 +127,48 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
       <div className="mb-2 flex flex-col">
         <h2 className="mb-4 text-sm">Liens externes</h2>
-        <div className="flex flex-col gap-6">
-          {socialLinksConfig.map((config) => {
-            const url = socialLinks[config.key as keyof typeof socialLinks];
-            if (!url) return null;
+        {(() => {
+          const hasAnyLink = socialLinksConfig.some(({ key }) => {
+            const v = profile[key] as string | undefined;
+            return Boolean(v && v.trim().length > 0);
+          });
 
+          if (!hasAnyLink) {
             return (
-              <Link
-                key={config.key}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
-              >
-                <Icon
-                  name={config.icon as IconName}
-                  size="sm"
-                  variant="gray"
-                  alt={config.alt}
-                  className="opacity-50 transition-opacity group-hover:opacity-100"
-                />
-                <span className="truncate">{formatUrl(url)}</span>
-              </Link>
+              <p className="text-muted-foreground text-sm">
+                Aucun lien renseigné
+              </p>
             );
-          })}
-        </div>
+          }
+
+          return (
+            <div className="flex flex-col gap-6">
+              {socialLinksConfig.map(({ key, icon, alt }) => {
+                const url = profile[key] as string | undefined;
+                if (!url) return null;
+
+                return (
+                  <Link
+                    key={key}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
+                  >
+                    <Icon
+                      name={icon as IconName}
+                      size="sm"
+                      variant="gray"
+                      alt={alt}
+                      className="opacity-50 transition-opacity group-hover:opacity-100"
+                    />
+                    <span className="truncate">{formatUrl(url)}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
