@@ -20,7 +20,7 @@ import {
  */
 export const getUserById = async (id: string): Promise<Profile> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/profiles/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,8 @@ export const getUserById = async (id: string): Promise<Profile> => {
       throw new Error(error.message || "Failed to fetch user");
     }
 
-    return response.json();
+    const apiResponse = await response.json();
+    return apiResponse.data;
   } catch (error) {
     console.error("Error fetching user:", error);
     throw error;
@@ -48,6 +49,7 @@ export const getUserById = async (id: string): Promise<Profile> => {
  * @returns A promise that resolves to the updated profile.
  */
 export const updateProfile = async (
+  id: string,
   params: ProfileSchema,
   avatarFile?: File,
   shouldDeleteAvatar?: boolean
@@ -70,15 +72,21 @@ export const updateProfile = async (
       }
     }
 
-    const response = await fetch(`${API_BASE_URL}/profiles`, {
+    const { name, bio, jobTitle } = validatedData;
+
+    const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify({
-        ...validatedData,
-        image,
+        // TODO: Let this be handled by the backend when we will have the image, techStacks, socialLinks
+        // ...validatedData,
+        // image,
+        name,
+        bio,
+        jobTitle,
       }),
     });
 

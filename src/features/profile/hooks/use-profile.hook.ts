@@ -34,14 +34,16 @@ export const useProfileUpdate = () => {
 
   const mutation = useToastMutation({
     mutationFn: ({
+      id,
       updateData,
       avatarFile,
       shouldDeleteAvatar,
     }: {
+      id: string;
       updateData: ProfileSchema;
       avatarFile?: File;
       shouldDeleteAvatar?: boolean;
-    }) => updateProfile(updateData, avatarFile, shouldDeleteAvatar),
+    }) => updateProfile(id, updateData, avatarFile, shouldDeleteAvatar),
     loadingMessage: "Mise à jour de votre profil en cours...",
     successMessage: "Profil mis à jour avec succès",
     errorMessage: "Erreur lors de la mise à jour du profil",

@@ -40,7 +40,10 @@ export type GithubStats = {
 
 export type Profile = {
   id: string;
+  publicId?: string;
   name: string;
+  email?: string;
+  emailVerified?: boolean;
   image: string;
   jobTitle?: string;
   bio?: string;
@@ -48,7 +51,6 @@ export type Profile = {
   contributionsCount?: number;
   createdAt?: string;
   updatedAt?: string;
-  email?: string;
   githubStats?: GithubStats;
   socialLinks?: ProfileSocialLink;
   techStacks?: ProfileTechStack[];

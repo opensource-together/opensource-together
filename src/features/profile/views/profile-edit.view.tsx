@@ -44,6 +44,7 @@ export default function ProfileEditView() {
 
   const onSubmit = form.handleSubmit(async (data) => {
     updateProfile({
+      id: currentUser?.publicId || currentUser?.id || "",
       updateData: data,
       avatarFile: selectedImageFile || undefined,
     });
