@@ -19,15 +19,15 @@ import {
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
 
-import { TechStack } from "@/features/projects/types/project.type";
-
 import Icon from "./icon";
 
 export interface ComboboxOption {
   id: string;
   name: string;
-  techStack?: TechStack[];
+  iconUrl?: string;
   type?: "LANGUAGE" | "TECH";
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ComboboxProps {

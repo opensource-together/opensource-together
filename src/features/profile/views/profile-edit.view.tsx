@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
@@ -27,16 +27,30 @@ export default function ProfileEditView() {
       name: currentUser?.name || "",
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
-      techStacks: currentUser?.techStacks?.map((tech) => tech.id) || [],
-      socialLinks: currentUser?.socialLinks || {
-        github: "",
-        discord: "",
-        twitter: "",
-        linkedin: "",
-        website: "",
-      },
+      userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      githubUrl: currentUser?.githubUrl || "",
+      discordUrl: currentUser?.discordUrl || "",
+      twitterUrl: currentUser?.twitterUrl || "",
+      linkedinUrl: currentUser?.linkedinUrl || "",
+      websiteUrl: currentUser?.websiteUrl || "",
     },
   });
+
+  useEffect(() => {
+    if (!currentUser) return;
+    form.reset({
+      image: currentUser.image || "",
+      name: currentUser.name || "",
+      jobTitle: currentUser.jobTitle || "",
+      bio: currentUser.bio || "",
+      userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      githubUrl: currentUser.githubUrl || "",
+      discordUrl: currentUser.discordUrl || "",
+      twitterUrl: currentUser.twitterUrl || "",
+      linkedinUrl: currentUser.linkedinUrl || "",
+      websiteUrl: currentUser.websiteUrl || "",
+    });
+  }, [currentUser, form]);
 
   const handleImageSelect = (file: File | null) => {
     setSelectedImageFile(file);
@@ -44,6 +58,7 @@ export default function ProfileEditView() {
 
   const onSubmit = form.handleSubmit(async (data) => {
     updateProfile({
+      id: currentUser?.publicId || currentUser?.id || "",
       updateData: data,
       avatarFile: selectedImageFile || undefined,
     });

@@ -1,18 +1,12 @@
 import { Project } from "@/features/projects/types/project.type";
 
-export type ProfileSocialLink = {
-  github?: string;
-  discord?: string;
-  twitter?: string;
-  linkedin?: string;
-  website?: string;
-};
-
 export type ProfileTechStack = {
   id: string;
   name: string;
   iconUrl: string;
   type: "LANGUAGE" | "TECH";
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ContributionDay = {
@@ -40,7 +34,10 @@ export type GithubStats = {
 
 export type Profile = {
   id: string;
+  publicId?: string;
   name: string;
+  email?: string;
+  emailVerified?: boolean;
   image: string;
   jobTitle?: string;
   bio?: string;
@@ -48,9 +45,13 @@ export type Profile = {
   contributionsCount?: number;
   createdAt?: string;
   updatedAt?: string;
-  email?: string;
   githubStats?: GithubStats;
-  socialLinks?: ProfileSocialLink;
-  techStacks?: ProfileTechStack[];
+  githubUrl?: string;
+  discordUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
+  userTechStacksIds?: string[];
+  userTechStacks?: ProfileTechStack[];
   projects?: Project[];
 };

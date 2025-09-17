@@ -42,7 +42,7 @@ export default async function PublicProfilePage({
 }: PublicProfilePageProps) {
   const { userId } = await params;
 
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser().catch(() => null);
   if (currentUser && currentUser.id === userId) {
     console.log("Redirecting to /profile/me");
     redirect("/profile/me");
