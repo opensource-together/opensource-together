@@ -19,7 +19,7 @@ const socialLinksConfig = [
 ] as const;
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
-  const { techStacks = [] } = profile;
+  const { userTechStacks = [] } = profile;
 
   const stats = {
     starsEarned: profile.githubStats?.totalStars || 0,
@@ -109,9 +109,9 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
       <div className="mb-2 flex flex-col">
         <h2 className="mb-4 text-sm">Technologies</h2>
-        {techStacks.length > 0 ? (
+        {userTechStacks.length > 0 ? (
           <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
-            {techStacks.map((tech, index) => (
+            {userTechStacks.map((tech, index) => (
               <StackLogo
                 key={tech.id || index}
                 name={tech.name}

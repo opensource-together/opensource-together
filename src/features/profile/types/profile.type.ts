@@ -5,6 +5,8 @@ export type ProfileTechStack = {
   name: string;
   iconUrl: string;
   type: "LANGUAGE" | "TECH";
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type ContributionDay = {
@@ -49,6 +51,7 @@ export type Profile = {
   twitterUrl?: string;
   linkedinUrl?: string;
   websiteUrl?: string;
-  techStacks?: ProfileTechStack[];
+  userTechStacksIds?: string[];
+  userTechStacks?: ProfileTechStack[];
   projects?: Project[];
 };

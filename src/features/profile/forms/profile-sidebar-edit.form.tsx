@@ -34,7 +34,7 @@ export default function ProfileSidebarEditForm({
         <Form {...form}>
           <FormField
             control={control}
-            name="techStacks"
+            name="userTechStacks"
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Technologies (max 10)</FormLabel>

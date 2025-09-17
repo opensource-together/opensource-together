@@ -76,6 +76,7 @@ export const updateProfile = async (
       name,
       bio,
       jobTitle,
+      userTechStacks,
       githubUrl,
       discordUrl,
       twitterUrl,
@@ -90,7 +91,7 @@ export const updateProfile = async (
       },
       credentials: "include",
       body: JSON.stringify({
-        // TODO: Let this be handled by the backend when we will have the image, techStacks, socialLinks
+        // TODO: Let this be handled by the backend when we will have the image
         // ...validatedData,
         // image,
         name,
@@ -101,6 +102,7 @@ export const updateProfile = async (
         twitterUrl,
         linkedinUrl,
         websiteUrl,
+        userTechStacks,
       }),
     });
 

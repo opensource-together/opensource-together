@@ -4,10 +4,7 @@ import { ComboboxOption } from "@/shared/components/ui/combobox";
 
 import { TechStackItem, fetchTechStacks } from "../services/tech-stack.service";
 
-export interface TechStackOption extends ComboboxOption {
-  iconUrl: string;
-  type: "LANGUAGE" | "TECH";
-}
+export type TechStackOption = ComboboxOption;
 
 /**
  * Hook to get the tech stack options from the API
@@ -30,6 +27,8 @@ export function useTechStack() {
       name: tech.name,
       iconUrl: tech.iconUrl,
       type: tech.type,
+      createdAt: tech.createdAt,
+      updatedAt: tech.updatedAt,
     }));
 
   const technologyOptions: TechStackOption[] = techStacks
@@ -39,6 +38,8 @@ export function useTechStack() {
       name: tech.name,
       iconUrl: tech.iconUrl,
       type: tech.type,
+      createdAt: tech.createdAt,
+      updatedAt: tech.updatedAt,
     }));
 
   const techStackOptions: TechStackOption[] = [

@@ -16,7 +16,7 @@ export const profileSchema = z.object({
     .string()
     .max(500, "La bio ne peut pas dépasser 500 caractères")
     .optional(),
-  techStacks: z
+  userTechStacks: z
     .array(z.string())
     .max(10, "Maximum 10 technologies autorisées")
     .optional(),

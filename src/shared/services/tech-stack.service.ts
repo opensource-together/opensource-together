@@ -5,11 +5,12 @@ export interface TechStackItem {
   name: string;
   iconUrl: string;
   type: "LANGUAGE" | "TECH";
+  createdAt: string;
+  updatedAt: string;
 }
 
-interface TechStackApiGroupResponse {
-  languages: TechStackItem[];
-  technologies: TechStackItem[];
+interface TechStackApiResponse {
+  data: TechStackItem[];
 }
 
 /**
@@ -18,22 +19,18 @@ interface TechStackApiGroupResponse {
  * @returns A promise that resolves to an array of tech stack items
  */
 export const fetchTechStacks = async (): Promise<TechStackItem[]> => {
-  const response = await fetch(`${API_BASE_URL}/techstacks`);
+  try {
+    const response = await fetch(`${API_BASE_URL}/techstacks`);
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch tech stacks");
+    if (!response.ok) {
+      throw new Error("Failed to fetch tech stacks");
+    }
+
+    const data: TechStackApiResponse = await response.json();
+
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching tech stacks:", error);
+    throw error;
   }
-
-  const data: TechStackApiGroupResponse = await response.json();
-
-  return [
-    ...data.languages.map((item) => ({
-      ...item,
-      type: "LANGUAGE" as const,
-    })),
-    ...data.technologies.map((item) => ({
-      ...item,
-      type: "TECH" as const,
-    })),
-  ];
 };
