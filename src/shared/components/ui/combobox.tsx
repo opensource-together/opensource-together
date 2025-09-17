@@ -24,10 +24,10 @@ import Icon from "./icon";
 export interface ComboboxOption {
   id: string;
   name: string;
-  iconUrl: string;
-  type: "LANGUAGE" | "TECH";
-  createdAt: string;
-  updatedAt: string;
+  iconUrl?: string;
+  type?: "LANGUAGE" | "TECH";
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface ComboboxProps {
