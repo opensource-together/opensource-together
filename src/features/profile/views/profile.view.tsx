@@ -1,13 +1,18 @@
 "use client";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import ProfileError from "../components/error-ui/profile-error.component";
 import GithubCalendar from "../components/github-calendar.component";
 import PinnedProjects from "../components/pinned-projects.component";
-import ProfileExperience from "../components/profile-experience.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
@@ -28,22 +33,49 @@ export default function ProfileView() {
       hero={<ProfileHero profile={currentUser} hideHeader={false} />}
       mobileHeader={<ProfileMobileHero profile={currentUser} />}
     >
-      {shouldShowGithubCalendar && (
-        <div className="mb-2 w-full">
-          <GithubCalendar
-            contributionGraph={currentUser.githubStats?.contributionGraph}
-            contributionsCount={currentUser.githubStats?.commitsThisYear || 0}
-          />
-        </div>
-      )}
+      <Tabs defaultValue="overview">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="stats">Stats</TabsTrigger>
+          <TabsTrigger value="projects">Projects</TabsTrigger>
+        </TabsList>
 
-      <div className="w-full">
-        <ProfileExperience />
-      </div>
+        <TabsContent value="overview" className="mt-6">
+          {shouldShowGithubCalendar && (
+            <div className="mb-2 w-full">
+              <GithubCalendar
+                contributionGraph={currentUser.githubStats?.contributionGraph}
+                contributionsCount={
+                  currentUser.githubStats?.commitsThisYear || 0
+                }
+              />
+            </div>
+          )}
 
-      <div className="mt-12 flex w-full">
-        <PinnedProjects profile={currentUser} />
-      </div>
+          <div className="mt-12 flex w-full">
+            <PinnedProjects profile={currentUser} />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="stats" className="mt-6">
+          {shouldShowGithubCalendar && (
+            <div className="mb-2 w-full">
+              <GithubCalendar
+                contributionGraph={currentUser.githubStats?.contributionGraph}
+                contributionsCount={
+                  currentUser.githubStats?.commitsThisYear || 0
+                }
+              />
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="projects" className="mt-6">
+          <div className="flex w-full">
+            <PinnedProjects profile={currentUser} />
+          </div>
+        </TabsContent>
+      </Tabs>
     </TwoColumnLayout>
   );
 }
