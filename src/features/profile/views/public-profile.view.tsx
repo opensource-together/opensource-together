@@ -11,8 +11,10 @@ import {
 
 import GithubCalendar from "../components/github-calendar.component";
 import PinnedProjects from "../components/pinned-projects.component";
+import ProfileHero, {
+  ProfileMobileHero,
+} from "../components/profile-hero.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
-import PublicProfileHero from "../components/public-profile-hero.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import { useProfile } from "../hooks/use-profile.hook";
 
@@ -41,7 +43,10 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
   return (
     <TwoColumnLayout
       sidebar={<ProfileSidebar profile={profile} />}
-      hero={<PublicProfileHero profile={profile} />}
+      hero={
+        <ProfileHero profile={profile} variant="public" hideHeader={false} />
+      }
+      mobileHeader={<ProfileMobileHero profile={profile} />}
     >
       <Tabs defaultValue="overview">
         <TabsList>
