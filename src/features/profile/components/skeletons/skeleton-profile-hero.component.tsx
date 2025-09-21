@@ -1,47 +1,34 @@
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-export default function SkeletonProfileHero() {
+interface SkeletonProfileHeroProps {
+  hideHeader?: boolean;
+}
+
+export default function SkeletonProfileHero({
+  hideHeader = false,
+}: SkeletonProfileHeroProps) {
+  if (hideHeader) {
+    return <></>;
+  }
+
   return (
-    <div className="my-10 h-auto w-full rounded-3xl border border-black/5 bg-white px-8 pb-10 shadow-xs sm:w-[488px] lg:w-[711.96px]">
-      <div className="relative top-[-15px] flex items-center justify-between">
+    <div>
+      <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <div className="relative top-[-20px] mr-4">
-            <Skeleton className="size-[120px] rounded-full" />
+          <div className="mr-4">
+            <Skeleton className="h-16 w-16 rounded-full" />
           </div>
           <div>
-            <Skeleton className="mb-2 h-7 w-40" />
+            <Skeleton className="mb-1 h-8 w-40" />
             <Skeleton className="h-4 w-32" />
           </div>
         </div>
-        <div className="flex items-center justify-end space-x-3">
-          <Skeleton className="h-10 w-32" />
-        </div>
+        <Skeleton className="h-10 w-32" />
       </div>
-
-      <div className="mb-5 flex items-center justify-between">
-        <Skeleton className="h-6 w-40" />
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-      <Skeleton className="mb-6 h-16 w-full" />
-
-      <div className="my-5 flex items-center justify-between">
-        <Skeleton className="h-6 w-40" />
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {[...Array(3)].map((_, index) => (
-          <Skeleton key={index} className="h-6 w-20" />
-        ))}
-      </div>
-
-      <div className="my-5 flex items-center justify-between">
-        <Skeleton className="h-6 w-40" />
-        <div className="ml-4 flex-grow border-t border-dashed border-[black]/10" />
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {[...Array(5)].map((_, index) => (
-          <Skeleton key={index} className="h-6 w-20" />
-        ))}
+      <div className="mt-4">
+        <Skeleton className="mb-1 h-4 w-full" />
+        <Skeleton className="mb-1 h-4 w-4/5" />
+        <Skeleton className="h-4 w-3/5" />
       </div>
     </div>
   );

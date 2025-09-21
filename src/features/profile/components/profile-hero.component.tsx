@@ -1,9 +1,16 @@
 import Link from "next/link";
+import { IoChatbox } from "react-icons/io5";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 
 import { Profile } from "../types/profile.type";
+
+interface ProfileHeroProps {
+  profile: Profile;
+  hideHeader?: boolean;
+  variant?: "private" | "public";
+}
 
 export function ProfileMobileHero({ profile }: ProfileHeroProps) {
   const { image = "", name = "", jobTitle = "", bio = "" } = profile;
@@ -20,7 +27,7 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
             <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
           </div>
         </div>
-        <p className="mt-4 mb-6 text-sm leading-6 tracking-tighter">{bio}</p>
+        <p className="mt-4 text-sm leading-6 tracking-tighter">{bio}</p>
 
         <Link href="/profile/me/edit" className="mt-6">
           <Button className="font-normal">Modifier le profil</Button>
@@ -30,20 +37,32 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
   );
 }
 
-interface ProfileHeroProps {
-  profile: Profile;
-  hideHeader?: boolean;
-}
-
 export default function ProfileHero({
   profile,
   hideHeader = true,
+  variant = "private",
 }: ProfileHeroProps) {
   const { image = "", name = "", jobTitle = "", bio = "" } = profile;
 
   if (hideHeader) {
     return <></>;
   }
+
+  const renderActionButton = () => {
+    if (variant === "public") {
+      return (
+        <Button className="gap-1 font-normal">
+          Contact <IoChatbox className="size-3.5" />
+        </Button>
+      );
+    }
+
+    return (
+      <Link href="/profile/me/edit">
+        <Button className="font-normal">Edit profile</Button>
+      </Link>
+    );
+  };
 
   return (
     <div>
@@ -58,12 +77,10 @@ export default function ProfileHero({
           </div>
         </div>
 
-        <Link href="/profile/me/edit">
-          <Button className="font-normal">Modifier le profil</Button>
-        </Link>
+        {renderActionButton()}
       </div>
 
-      <p className="mt-4 mb-6 text-sm leading-6 tracking-tighter">{bio}</p>
+      <p className="mt-4 text-sm leading-6 tracking-tighter">{bio}</p>
     </div>
   );
 }
