@@ -9,20 +9,28 @@ export type ProfileTechStack = {
   updatedAt: string;
 };
 
+export type ContributionLevel =
+  | "NONE"
+  | "FIRST_QUARTILE"
+  | "SECOND_QUARTILE"
+  | "THIRD_QUARTILE"
+  | "FOURTH_QUARTILE";
+
 export type ContributionDay = {
   date: string;
-  count: number;
-  level: 0 | 1 | 2 | 3 | 4;
+  contributionCount: number;
+  contributionLevel: ContributionLevel;
+  color: string;
 };
 
 export type ContributionWeek = {
-  days: ContributionDay[];
+  contributionDays: ContributionDay[];
 };
 
 export type ContributionGraph = {
   weeks: ContributionWeek[];
   totalContributions: number;
-  maxContributions: number;
+  maxContributions?: number;
 };
 
 export type GithubStats = {
@@ -46,6 +54,7 @@ export type Profile = {
   createdAt?: string;
   updatedAt?: string;
   githubStats?: GithubStats;
+  contributionGraph?: ContributionGraph;
   githubUrl?: string;
   discordUrl?: string;
   twitterUrl?: string;

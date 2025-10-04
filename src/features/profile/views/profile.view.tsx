@@ -11,7 +11,7 @@ import {
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import ProfileError from "../components/error-ui/profile-error.component";
-import GithubCalendar from "../components/github-calendar.component";
+import GithubGraph from "../components/github-graph.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
   ProfileMobileHero,
@@ -43,10 +43,10 @@ export default function ProfileView() {
         <TabsContent value="overview" className="mt-6">
           {shouldShowGithubCalendar && (
             <div className="mb-2 w-full">
-              <GithubCalendar
-                contributionGraph={currentUser.githubStats?.contributionGraph}
+              <GithubGraph
+                contributionGraph={currentUser.contributionGraph}
                 contributionsCount={
-                  currentUser.githubStats?.commitsThisYear || 0
+                  currentUser.contributionGraph?.totalContributions || 0
                 }
               />
             </div>
@@ -60,10 +60,10 @@ export default function ProfileView() {
         <TabsContent value="stats" className="mt-6">
           {shouldShowGithubCalendar && (
             <div className="mb-2 w-full">
-              <GithubCalendar
-                contributionGraph={currentUser.githubStats?.contributionGraph}
+              <GithubGraph
+                contributionGraph={currentUser.contributionGraph}
                 contributionsCount={
-                  currentUser.githubStats?.commitsThisYear || 0
+                  currentUser.contributionGraph?.totalContributions || 0
                 }
               />
             </div>

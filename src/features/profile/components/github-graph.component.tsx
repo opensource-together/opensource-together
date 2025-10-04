@@ -1,36 +1,34 @@
 import { useRef, useState } from "react";
 
-import { ContributionGraph } from "../types/profile.type";
+import { ContributionGraph, ContributionLevel } from "../types/profile.type";
 
-interface GithubCalendarProps {
+interface GithubGraphProps {
   contributionGraph?: ContributionGraph;
   contributionsCount?: number;
 }
 
 interface TooltipData {
   date: string;
-  count: number;
-  level: number;
+  contributionCount: number;
+  contributionLevel: ContributionLevel;
 }
 
-export default function GithubCalendar({
-  contributionGraph,
-}: GithubCalendarProps) {
+export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const getSquareColor = (level: number): string => {
+  const getSquareColor = (level: ContributionLevel): string => {
     switch (level) {
-      case 0:
+      case "NONE":
         return "bg-[#E8EAEE]";
-      case 1:
+      case "FIRST_QUARTILE":
         return "bg-ost-blue-one";
-      case 2:
+      case "SECOND_QUARTILE":
         return "bg-ost-blue-two";
-      case 3:
+      case "THIRD_QUARTILE":
         return "bg-ost-blue-three";
-      case 4:
+      case "FOURTH_QUARTILE":
         return "bg-ost-blue-four";
       default:
         return "bg-[#E8EAEE]";
@@ -70,10 +68,10 @@ export default function GithubCalendar({
     return (
       <div className="w-full max-w-full overflow-hidden">
         <div>
-          <h3 className="mb-3.5 text-lg">Activité de contribution Github</h3>
+          <h3 className="mb-3.5 text-lg">Contribution Activity</h3>
           <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
-              Aucune donnée de contribution Github disponible
+              No contribution data available
             </p>
           </div>
         </div>
@@ -100,7 +98,7 @@ export default function GithubCalendar({
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div>
-        <h2 className="mb-4 text-sm">Activité de contribution Github</h2>
+        <h2 className="mb-4 text-sm">Contribution Activity</h2>
 
         <div className="relative">
           <div className="mb-0.5 flex pr-2.5">
@@ -124,10 +122,10 @@ export default function GithubCalendar({
                     key={weekIndex}
                     className="flex flex-col gap-[1px] md:gap-0.5"
                   >
-                    {week.days.map((day, dayIndex) => (
+                    {week.contributionDays.map((day, dayIndex) => (
                       <div
                         key={dayIndex}
-                        className={`size-[6px] rounded-xs md:size-[9px] ${getSquareColor(day.level)} cursor-pointer transition-colors hover:opacity-80`}
+                        className={`size-[6px] rounded-xs md:size-[9px] ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
                         onMouseEnter={(e) => handleMouseEnter(day, e)}
                         onMouseLeave={handleMouseLeave}
                       />
@@ -148,7 +146,7 @@ export default function GithubCalendar({
             </div>
           </div>
           <div className="mt-2.5 flex items-center gap-2">
-            <span className="text-[10px] text-[var(--neutral-400)]">Peu</span>
+            <span className="text-[10px] text-[var(--neutral-400)]">Less</span>
             <div className="flex gap-0.5">
               <div className="size-[9px] rounded-xs bg-[#E8EAEE]" />
               <div className="size-[9px] rounded-xs bg-[var(--ost-blue-one)]" />
@@ -156,9 +154,7 @@ export default function GithubCalendar({
               <div className="size-[9px] rounded-xs bg-[var(--ost-blue-three)]" />
               <div className="size-[9px] rounded-xs bg-[var(--ost-blue-four)]" />
             </div>
-            <span className="text-[10px] text-[var(--neutral-400)]">
-              Beaucoup
-            </span>
+            <span className="text-[10px] text-[var(--neutral-400)]">More</span>
           </div>
         </div>
       </div>
@@ -175,9 +171,9 @@ export default function GithubCalendar({
         >
           <div className="font-medium">{formatDate(tooltip.date)}</div>
           <div className="text-gray-300">
-            {tooltip.count === 0
-              ? "Aucune contribution Github"
-              : `${tooltip.count} contribution${tooltip.count > 1 ? "s" : ""} Github`}
+            {tooltip.contributionCount === 0
+              ? "No contribution data available"
+              : `${tooltip.contributionCount} contribution${tooltip.contributionCount > 1 ? "s" : ""} Github`}
           </div>
         </div>
       )}
