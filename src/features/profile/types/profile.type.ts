@@ -56,6 +56,7 @@ export type Profile = {
   githubStats?: GithubStats;
   contributionGraph?: ContributionGraph;
   githubUrl?: string;
+  gitlabUrl?: string;
   discordUrl?: string;
   twitterUrl?: string;
   linkedinUrl?: string;

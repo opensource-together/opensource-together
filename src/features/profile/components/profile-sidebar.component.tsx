@@ -12,6 +12,7 @@ interface ProfileSidebarProps {
 
 const socialLinksConfig = [
   { key: "githubUrl", icon: "github", alt: "GitHub" },
+  { key: "gitlabUrl", icon: "gitlab", alt: "GitLab" },
   { key: "twitterUrl", icon: "twitter", alt: "Twitter/X" },
   { key: "linkedinUrl", icon: "linkedin", alt: "LinkedIn" },
   { key: "discordUrl", icon: "discord", alt: "Discord" },

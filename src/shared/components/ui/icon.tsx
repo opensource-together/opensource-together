@@ -24,6 +24,7 @@ const iconSizes: Record<IconSize, string> = {
 
 export type IconName =
   | "github"
+  | "gitlab"
   | "twitter"
   | "discord"
   | "last-commit"
@@ -76,6 +77,14 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/linkedin.svg",
     filled: "/icons/linkedin.svg",
     outline: "/icons/linkedin.svg",
+  },
+  gitlab: {
+    default: "/icons/gitlab.svg",
+    gray: "/icons/gitlab-gray.svg",
+    white: "/icons/gitlab-white.svg",
+    black: "/icons/gitlab.svg",
+    filled: "/icons/gitlab.svg",
+    outline: "/icons/gitlab.svg",
   },
   twitter: {
     default: "/icons/twitter.svg",
