@@ -82,6 +82,9 @@ export const useUserPullRequests = (
   } = {}
 ) => {
   const { enabled = true, staleTime = 30_000, ...queryParams } = params;
+  if (queryParams.per_page == null) {
+    queryParams.per_page = 10;
+  }
 
   return useQuery({
     queryKey: ["user", "pullrequests", queryParams],
