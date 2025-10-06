@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
 
@@ -14,7 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function ProfilePage() {
   return (
     <>
-      <ProfileView />
+      <Suspense fallback={null}>
+        <ProfileView />
+      </Suspense>
       <CTAFooter imageIllustration="/illustrations/hooded-man.png" />
     </>
   );
