@@ -68,11 +68,8 @@ export type UserPullRequest = {
 };
 
 export type PullRequestsResponse = {
-  data: {
-    github: UserPullRequest[] | null;
-    gitlab: UserPullRequest[] | null;
-  };
-  timestamp: string;
+  github: UserPullRequest[] | null;
+  gitlab: UserPullRequest[] | null;
 };
 
 export type Profile = {
