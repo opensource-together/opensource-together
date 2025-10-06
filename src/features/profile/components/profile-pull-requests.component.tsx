@@ -105,7 +105,7 @@ export default function ProfileContributions({
   const hasNextPage = page * perPage < totalCount;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="text-foreground text-xl font-semibold">Pull Requests</h2>
         <div className="flex items-center gap-2">
@@ -151,26 +151,29 @@ export default function ProfileContributions({
 
       {!enabled ? (
         <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
-          Open the Contributions tab to load pull requests.
+          Ouvrez l’onglet Contributions pour charger les données.
         </div>
       ) : isLoading || isFetching ? (
         <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
-          Loading pull requests...
+          Chargement des contributions...
         </div>
       ) : isError ? (
         <div className="text-destructive rounded-lg border bg-white p-6 text-sm">
-          Failed to load pull requests.
+          Échec du chargement des contributions.
         </div>
       ) : visibleList.length === 0 ? (
         <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
-          No pull requests found.
+          Aucune contribution trouvée.
         </div>
       ) : (
         <div className="flex flex-col gap-4">
           {visibleList.map((pr, idx) => {
-            const isMerged = Boolean(pr.merged_at);
-            const isClosed = !isMerged && pr.state?.toLowerCase() === "closed";
-            const isOpen = pr.state?.toLowerCase() === "open";
+            const isMerged =
+              typeof (pr as any).merged_at === "string" &&
+              (pr as any).merged_at.length > 0;
+            const stateLower = (pr.state || "").toLowerCase();
+            const isClosed = !isMerged && stateLower === "closed";
+            const isOpen = stateLower === "open";
             const createdAt = new Date(pr.created_at);
             const updatedAt = new Date(pr.updated_at);
             return (
@@ -201,7 +204,10 @@ export default function ProfileContributions({
                       </div>
                     </div>
                     <div className="text-muted-foreground truncate text-sm">
-                      {(pr.owner ? `${pr.owner}/` : "") + pr.repository}
+                      {(typeof (pr as any).owner === "string" &&
+                      (pr as any).owner
+                        ? `${(pr as any).owner}/`
+                        : "") + pr.repository}
                     </div>
                     <div className="text-muted-foreground mt-2 flex items-center gap-2 text-xs">
                       <span className="rounded-md bg-neutral-100 px-2 py-1 font-mono">

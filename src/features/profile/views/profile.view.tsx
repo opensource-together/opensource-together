@@ -15,10 +15,10 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 import ProfileError from "../components/error-ui/profile-error.component";
 import GithubGraph from "../components/github-graph.component";
 import PinnedProjects from "../components/pinned-projects.component";
-import ProfileContributions from "../components/profile-contributions.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
+import ProfilePullRequests from "../components/profile-pull-requests.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
@@ -70,6 +70,10 @@ export default function ProfileView() {
           <div className="mt-12 flex w-full">
             <PinnedProjects profile={currentUser} />
           </div>
+
+          {/* <div className="mt-12 w-full">
+            <ProfilePullRequests enabled={tab === "overview"} />
+          </div>*/}
         </TabsContent>
 
         <TabsContent value="stats" className="mt-6">
@@ -83,7 +87,9 @@ export default function ProfileView() {
               />
             </div>
           )}
-          <ProfileContributions enabled={tab === "stats"} />
+          <div className="mt-6 w-full">
+            <ProfilePullRequests enabled={tab === "stats"} />
+          </div>
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">
