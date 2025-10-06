@@ -60,7 +60,7 @@ export default function ProfileSidebarEditForm({
           />
 
           <div className="flex flex-col gap-2.5">
-            <FormLabel>Liens sociaux</FormLabel>
+            <FormLabel>Social Links</FormLabel>
 
             <FormField
               control={control}
@@ -71,6 +71,22 @@ export default function ProfileSidebarEditForm({
                     <InputWithIcon
                       icon="github"
                       placeholder="https://github.com/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="gitlabUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="gitlab"
+                      placeholder="https://gitlab.com/..."
                       {...field}
                     />
                   </FormControl>

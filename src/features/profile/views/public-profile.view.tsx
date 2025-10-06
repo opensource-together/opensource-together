@@ -9,7 +9,7 @@ import {
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
 
-import GithubCalendar from "../components/github-calendar.component";
+import GithubGraph from "../components/github-graph.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
   ProfileMobileHero,
@@ -58,9 +58,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
         <TabsContent value="overview" className="mt-6">
           {shouldShowGithubData && (
             <div className="mb-2 w-full">
-              <GithubCalendar
-                contributionGraph={profile.githubStats?.contributionGraph}
-                contributionsCount={profile.githubStats?.commitsThisYear || 0}
+              <GithubGraph
+                contributionGraph={profile.contributionGraph}
+                contributionsCount={
+                  profile.contributionGraph?.totalContributions || 0
+                }
               />
             </div>
           )}
@@ -73,9 +75,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
         <TabsContent value="stats" className="mt-6">
           {shouldShowGithubData && (
             <div className="mb-2 w-full">
-              <GithubCalendar
-                contributionGraph={profile.githubStats?.contributionGraph}
-                contributionsCount={profile.githubStats?.commitsThisYear || 0}
+              <GithubGraph
+                contributionGraph={profile.contributionGraph}
+                contributionsCount={
+                  profile.contributionGraph?.totalContributions || 0
+                }
               />
             </div>
           )}

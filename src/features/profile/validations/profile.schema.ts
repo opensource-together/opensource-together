@@ -24,6 +24,10 @@ export const profileSchema = z.object({
     ["github.com"],
     "URL GitHub invalide (doit contenir github.com)"
   ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "URL GitLab invalide (doit contenir gitlab.com)"
+  ).optional(),
   discordUrl: urlWithDomainCheck(
     ["discord.gg", "discord.com"],
     "URL Discord invalide (doit contenir discord.com ou discord.gg)"

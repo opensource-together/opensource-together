@@ -12,6 +12,7 @@ interface ProfileSidebarProps {
 
 const socialLinksConfig = [
   { key: "githubUrl", icon: "github", alt: "GitHub" },
+  { key: "gitlabUrl", icon: "gitlab", alt: "GitLab" },
   { key: "twitterUrl", icon: "twitter", alt: "Twitter/X" },
   { key: "linkedinUrl", icon: "linkedin", alt: "LinkedIn" },
   { key: "discordUrl", icon: "discord", alt: "Discord" },
@@ -24,7 +25,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   const stats = {
     starsEarned: profile.githubStats?.totalStars || 0,
     joinedProjects: profile.githubStats?.contributedRepos || 0,
-    contributions: profile.githubStats?.commitsThisYear || 0,
+    contributions: profile.contributionGraph?.totalContributions || 0,
   };
 
   const shouldShowStats = profile.provider !== "google";
@@ -43,7 +44,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     <div className="flex flex-1 flex-col gap-5">
       {shouldShowStats && (
         <div className="mb-2 flex flex-col">
-          <h2 className="mb-4 text-sm">Statistiques GitHub</h2>
+          <h2 className="mb-4 text-sm">Github Stats</h2>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
@@ -54,7 +55,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 className="opacity-50"
               />
               <span className="text-sm font-normal text-neutral-500">
-                Stars gagnées
+                Stars earned
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
@@ -74,7 +75,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 className="opacity-50"
               />
               <span className="text-sm font-normal text-neutral-500">
-                Repos contribués
+                Contributed repos
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
@@ -94,7 +95,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 className="opacity-50"
               />
               <span className="text-sm font-normal text-neutral-500">
-                Contributions cette année
+                Contributions this year
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
@@ -121,12 +122,12 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-black/50">Aucune compétence renseignée</p>
+          <p className="text-sm text-black/50">No skills added</p>
         )}
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="mb-4 text-sm">Liens externes</h2>
+        <h2 className="mb-4 text-sm">External links</h2>
         {(() => {
           const hasAnyLink = socialLinksConfig.some(({ key }) => {
             const v = profile[key] as string | undefined;
@@ -135,9 +136,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
           if (!hasAnyLink) {
             return (
-              <p className="text-muted-foreground text-sm">
-                Aucun lien renseigné
-              </p>
+              <p className="text-muted-foreground text-sm">No links added</p>
             );
           }
 
