@@ -40,7 +40,6 @@ export type GithubStats = {
   contributionGraph: ContributionGraph;
 };
 
-// Paramètres de requête pour les Pull Requests
 export type PullRequestQueryParams = {
   provider?: "github" | "gitlab";
   page?: number;
@@ -48,13 +47,11 @@ export type PullRequestQueryParams = {
   state?: "open" | "closed" | "merged" | "all";
 };
 
-// Structure d'une branche
 export type PullRequestBranch = {
   from: string;
   to: string;
 };
 
-// Structure d'une Pull Request
 export type UserPullRequest = {
   title: string;
   repository: string;
@@ -70,7 +67,6 @@ export type UserPullRequest = {
   branch: PullRequestBranch;
 };
 
-// Réponse complète des Pull Requests
 export type PullRequestsResponse = {
   data: {
     github: UserPullRequest[] | null;

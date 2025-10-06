@@ -43,7 +43,6 @@ export default function ProfileContributions({
     undefined;
   const state =
     (searchParams.get("state") as PullRequestQueryParams["state"]) || undefined;
-  const sort = (searchParams.get("sort") as "recent" | "oldest") || "recent";
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 10);
 
@@ -78,16 +77,13 @@ export default function ProfileContributions({
           ? withProviderGitlab
           : [...withProviderGithub, ...withProviderGitlab];
 
-    const sorted = [...combined].sort((a, b) => {
-      const aDate = new Date(a.created_at).getTime();
-      const bDate = new Date(b.created_at).getTime();
-      return sort === "recent" ? bDate - aDate : aDate - bDate;
-    });
-
     const start = (page - 1) * perPage;
     const end = page * perPage;
-    return { visibleList: sorted.slice(start, end), totalCount: sorted.length };
-  }, [data, provider, sort, page, perPage]);
+    return {
+      visibleList: combined.slice(start, end),
+      totalCount: combined.length,
+    };
+  }, [data, provider, page, perPage]);
 
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -109,14 +105,6 @@ export default function ProfileContributions({
       <div className="flex items-center justify-between">
         <h2 className="text-foreground text-xl font-semibold">Pull Requests</h2>
         <div className="flex items-center gap-2">
-          <select
-            className="h-9 rounded-md border bg-white px-3 text-sm"
-            value={sort}
-            onChange={(e) => updateParam("sort", e.target.value)}
-          >
-            <option value="recent">Most Recent</option>
-            <option value="oldest">Oldest</option>
-          </select>
           <select
             className="h-9 rounded-md border bg-white px-3 text-sm"
             value={provider ?? "all"}
@@ -143,27 +131,27 @@ export default function ProfileContributions({
           >
             <option value="all">All</option>
             <option value="open">Open</option>
-            <option value="closed">Closed</option>
             <option value="merged">Merged</option>
+            <option value="closed">Closed</option>
           </select>
         </div>
       </div>
 
       {!enabled ? (
         <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
-          Ouvrez l’onglet Contributions pour charger les données.
+          Open the Contributions tab to load data.
         </div>
       ) : isLoading || isFetching ? (
         <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
-          Chargement des contributions...
+          Loading contributions...
         </div>
       ) : isError ? (
         <div className="text-destructive rounded-lg border bg-white p-6 text-sm">
-          Échec du chargement des contributions.
+          Failed to load contributions.
         </div>
       ) : visibleList.length === 0 ? (
         <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
-          Aucune contribution trouvée.
+          No contributions found.
         </div>
       ) : (
         <div className="flex flex-col gap-4">
@@ -175,7 +163,23 @@ export default function ProfileContributions({
             const isClosed = !isMerged && stateLower === "closed";
             const isOpen = stateLower === "open";
             const createdAt = new Date(pr.created_at);
-            const updatedAt = new Date(pr.updated_at);
+            const ownerStr =
+              typeof (pr as any).owner === "string"
+                ? ((pr as any).owner as string)
+                : "";
+            const repoStr = pr.repository || "";
+            const repoPath = repoStr.includes("/")
+              ? repoStr
+              : ownerStr
+                ? `${ownerStr}/${repoStr}`
+                : repoStr;
+            const mergedAtStr = isMerged
+              ? new Date((pr as any).merged_at as string).toLocaleDateString()
+              : null;
+            const closedAtStr =
+              typeof (pr as any).closed_at === "string" && (pr as any).closed_at
+                ? new Date((pr as any).closed_at as string).toLocaleDateString()
+                : null;
             return (
               <div
                 key={`${pr.url}-${idx}`}
@@ -204,10 +208,7 @@ export default function ProfileContributions({
                       </div>
                     </div>
                     <div className="text-muted-foreground truncate text-sm">
-                      {(typeof (pr as any).owner === "string" &&
-                      (pr as any).owner
-                        ? `${(pr as any).owner}/`
-                        : "") + pr.repository}
+                      {repoPath}
                     </div>
                     <div className="text-muted-foreground mt-2 flex items-center gap-2 text-xs">
                       <span className="rounded-md bg-neutral-100 px-2 py-1 font-mono">
@@ -221,14 +222,9 @@ export default function ProfileContributions({
                   </div>
                   <div className="text-muted-foreground flex flex-col items-end gap-1 text-xs">
                     <div>Created {createdAt.toLocaleDateString()}</div>
-                    <div>Updated {updatedAt.toLocaleDateString()}</div>
-                    <Link
-                      href={pr.url}
-                      target="_blank"
-                      className="text-primary text-sm hover:underline"
-                    >
-                      Open
-                    </Link>
+                    {isMerged && mergedAtStr && <div>Merged {mergedAtStr}</div>}
+                    {isClosed && closedAtStr && <div>Closed {closedAtStr}</div>}
+                    {/* Link removed as requested */}
                   </div>
                 </div>
               </div>
