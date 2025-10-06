@@ -51,7 +51,7 @@ export default function ProfileView() {
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="stats">Contributions</TabsTrigger>
+          <TabsTrigger value="contributions">Contributions</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
         </TabsList>
 
@@ -70,13 +70,9 @@ export default function ProfileView() {
           <div className="mt-12 flex w-full">
             <PinnedProjects profile={currentUser} />
           </div>
-
-          {/* <div className="mt-12 w-full">
-            <ProfilePullRequests enabled={tab === "overview"} />
-          </div>*/}
         </TabsContent>
 
-        <TabsContent value="stats" className="mt-6">
+        <TabsContent value="contributions" className="mt-6">
           {shouldShowGithubCalendar && (
             <div className="mb-2 w-full">
               <GithubGraph
@@ -87,8 +83,8 @@ export default function ProfileView() {
               />
             </div>
           )}
-          <div className="mt-6 w-full">
-            <ProfilePullRequests enabled={tab === "stats"} />
+          <div className="mt-12 w-full">
+            <ProfilePullRequests enabled={tab === "contributions"} />
           </div>
         </TabsContent>
 

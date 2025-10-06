@@ -1,12 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import Icon from "@/shared/components/ui/icon";
 import {
   Pagination,
   PaginationContent,
@@ -14,7 +10,8 @@ import {
 } from "@/shared/components/ui/pagination";
 
 import { useUserPullRequests } from "../hooks/use-profile.hook";
-import { PullRequestQueryParams } from "../types/profile.type";
+import { PullRequestQueryParams, UserPullRequest } from "../types/profile.type";
+import PullRequestCard from "./pull-request-card";
 
 type ProfileContributionsProps = {
   enabled: boolean;
@@ -24,11 +21,6 @@ const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? n : fallback;
-};
-
-const getProviderIcon = (provider: string | undefined) => {
-  if (provider === "gitlab") return "gitlab" as const;
-  return "github" as const;
 };
 
 export default function ProfileContributions({
@@ -46,44 +38,12 @@ export default function ProfileContributions({
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 10);
 
-  const { data, isLoading, isError, refetch, isFetching } = useUserPullRequests(
-    {
-      provider,
-      state,
-      page,
-      per_page: perPage,
-      enabled,
-      staleTime: 30_000,
-    }
-  );
-
-  const { visibleList, totalCount } = useMemo(() => {
-    const github = data?.data.github ?? [];
-    const gitlab = data?.data.gitlab ?? [];
-
-    const withProviderGithub = github.map((pr) => ({
-      ...pr,
-      _provider: "github" as const,
-    }));
-    const withProviderGitlab = gitlab.map((pr) => ({
-      ...pr,
-      _provider: "gitlab" as const,
-    }));
-
-    const combined =
-      provider === "github"
-        ? withProviderGithub
-        : provider === "gitlab"
-          ? withProviderGitlab
-          : [...withProviderGithub, ...withProviderGitlab];
-
-    const start = (page - 1) * perPage;
-    const end = page * perPage;
-    return {
-      visibleList: combined.slice(start, end),
-      totalCount: combined.length,
-    };
-  }, [data, provider, page, perPage]);
+  const { data, isLoading, isError, isFetching } = useUserPullRequests({
+    provider,
+    state,
+    page,
+    per_page: perPage,
+  });
 
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -98,15 +58,21 @@ export default function ProfileContributions({
   const handleNext = () => updateParam("page", String(page + 1));
 
   const hasPrevPage = page > 1;
+  const totalCount =
+    (provider
+      ? provider === "github"
+        ? data?.github?.length
+        : data?.gitlab?.length
+      : (data?.github?.length ?? 0) + (data?.gitlab?.length ?? 0)) ?? 0;
   const hasNextPage = page * perPage < totalCount;
 
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-foreground text-xl font-semibold">Pull Requests</h2>
+        <h2 className="font-medium">Pull Requests</h2>
         <div className="flex items-center gap-2">
           <select
-            className="h-9 rounded-md border bg-white px-3 text-sm"
+            className="h-9 rounded-md border px-3 text-sm"
             value={provider ?? "all"}
             onChange={(e) =>
               updateParam(
@@ -115,12 +81,12 @@ export default function ProfileContributions({
               )
             }
           >
-            <option value="all">All</option>
+            <option value="all">All Providers</option>
             <option value="github">GitHub</option>
             <option value="gitlab">GitLab</option>
           </select>
           <select
-            className="h-9 rounded-md border bg-white px-3 text-sm"
+            className="h-9 rounded-md border px-3 text-sm"
             value={state ?? "all"}
             onChange={(e) =>
               updateParam(
@@ -138,98 +104,38 @@ export default function ProfileContributions({
       </div>
 
       {!enabled ? (
-        <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
+        <div className="text-muted-foreground rounded-lg border p-6 text-sm">
           Open the Contributions tab to load data.
         </div>
       ) : isLoading || isFetching ? (
-        <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
+        <div className="text-muted-foreground rounded-lg border p-6 text-sm">
           Loading contributions...
         </div>
       ) : isError ? (
-        <div className="text-destructive rounded-lg border bg-white p-6 text-sm">
+        <div className="text-destructive rounded-lg border p-6 text-sm">
           Failed to load contributions.
         </div>
-      ) : visibleList.length === 0 ? (
-        <div className="text-muted-foreground rounded-lg border bg-white p-6 text-sm">
+      ) : totalCount === 0 ? (
+        <div className="text-muted-foreground rounded-lg border p-6 text-sm">
           No contributions found.
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {visibleList.map((pr, idx) => {
-            const isMerged =
-              typeof (pr as any).merged_at === "string" &&
-              (pr as any).merged_at.length > 0;
-            const stateLower = (pr.state || "").toLowerCase();
-            const isClosed = !isMerged && stateLower === "closed";
-            const isOpen = stateLower === "open";
-            const createdAt = new Date(pr.created_at);
-            const ownerStr =
-              typeof (pr as any).owner === "string"
-                ? ((pr as any).owner as string)
-                : "";
-            const repoStr = pr.repository || "";
-            const repoPath = repoStr.includes("/")
-              ? repoStr
-              : ownerStr
-                ? `${ownerStr}/${repoStr}`
-                : repoStr;
-            const mergedAtStr = isMerged
-              ? new Date((pr as any).merged_at as string).toLocaleDateString()
-              : null;
-            const closedAtStr =
-              typeof (pr as any).closed_at === "string" && (pr as any).closed_at
-                ? new Date((pr as any).closed_at as string).toLocaleDateString()
-                : null;
-            return (
-              <div
-                key={`${pr.url}-${idx}`}
-                className="rounded-lg border bg-white p-4"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex min-w-0 flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <Icon
-                        name={getProviderIcon((pr as any)._provider)}
-                        size="sm"
-                      />
-                      <Link
-                        href={pr.url}
-                        target="_blank"
-                        className="truncate text-base font-semibold hover:underline"
-                      >
-                        {pr.title}
-                      </Link>
-                      <div className="flex items-center gap-1">
-                        {isMerged && <Badge variant="secondary">Merged</Badge>}
-                        {isClosed && (
-                          <Badge variant="destructive">Closed</Badge>
-                        )}
-                        {isOpen && <Badge variant="success">Open</Badge>}
-                      </div>
-                    </div>
-                    <div className="text-muted-foreground truncate text-sm">
-                      {repoPath}
-                    </div>
-                    <div className="text-muted-foreground mt-2 flex items-center gap-2 text-xs">
-                      <span className="rounded-md bg-neutral-100 px-2 py-1 font-mono">
-                        {pr.branch.from}
-                      </span>
-                      <span>→</span>
-                      <span className="rounded-md bg-neutral-100 px-2 py-1 font-mono">
-                        {pr.branch.to}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-muted-foreground flex flex-col items-end gap-1 text-xs">
-                    <div>Created {createdAt.toLocaleDateString()}</div>
-                    {isMerged && mergedAtStr && <div>Merged {mergedAtStr}</div>}
-                    {isClosed && closedAtStr && <div>Closed {closedAtStr}</div>}
-                    {/* Link removed as requested */}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {!provider ? (
+            <>
+              <PRSection provider="github" list={data?.github ?? []} />
+              <PRSection provider="gitlab" list={data?.gitlab ?? []} />
+            </>
+          ) : (
+            <PRSection
+              provider={provider}
+              list={
+                provider === "github"
+                  ? (data?.github ?? [])
+                  : (data?.gitlab ?? [])
+              }
+            />
+          )}
           <Pagination className="mt-2">
             <PaginationContent>
               <PaginationItem>
@@ -256,6 +162,29 @@ export default function ProfileContributions({
           </Pagination>
         </div>
       )}
+    </div>
+  );
+}
+
+function PRSection({
+  provider,
+  list,
+}: {
+  provider: "github" | "gitlab";
+  list: UserPullRequest[];
+}) {
+  if (!list || list.length === 0) return null;
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
+        {list.map((pr, idx) => (
+          <PullRequestCard
+            key={`${pr.url}-${idx}`}
+            pr={pr}
+            provider={provider}
+          />
+        ))}
+      </div>
     </div>
   );
 }
