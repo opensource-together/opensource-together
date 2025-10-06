@@ -67,9 +67,19 @@ export type UserPullRequest = {
   branch: PullRequestBranch;
 };
 
+export type PullRequestPagination = {
+  next: number | null;
+  last: number | null;
+};
+
+export type PullRequestProviderData = {
+  data: UserPullRequest[];
+  pagination: PullRequestPagination;
+};
+
 export type PullRequestsResponse = {
-  github: UserPullRequest[] | null;
-  gitlab: UserPullRequest[] | null;
+  github?: PullRequestProviderData | null;
+  gitlab?: PullRequestProviderData | null;
 };
 
 export type Profile = {

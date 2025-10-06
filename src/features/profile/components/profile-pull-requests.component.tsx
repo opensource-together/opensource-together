@@ -8,6 +8,13 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/shared/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
 
 import { useUserPullRequests } from "../hooks/use-profile.hook";
 import { PullRequestQueryParams, UserPullRequest } from "../types/profile.type";
@@ -61,45 +68,54 @@ export default function ProfileContributions({
   const totalCount =
     (provider
       ? provider === "github"
-        ? data?.github?.length
-        : data?.gitlab?.length
-      : (data?.github?.length ?? 0) + (data?.gitlab?.length ?? 0)) ?? 0;
-  const hasNextPage = page * perPage < totalCount;
+        ? data?.github?.data?.length
+        : data?.gitlab?.data?.length
+      : (data?.github?.data?.length ?? 0) +
+        (data?.gitlab?.data?.length ?? 0)) ?? 0;
+
+  const hasNextPage = provider
+    ? provider === "github"
+      ? data?.github?.pagination?.next !== null
+      : data?.gitlab?.pagination?.next !== null
+    : data?.github?.pagination?.next !== null ||
+      data?.gitlab?.pagination?.next !== null;
 
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="font-medium">Pull Requests</h2>
         <div className="flex items-center gap-2">
-          <select
-            className="h-9 rounded-md border px-3 text-sm"
+          <Select
             value={provider ?? "all"}
-            onChange={(e) =>
-              updateParam(
-                "provider",
-                e.target.value === "all" ? null : e.target.value
-              )
+            onValueChange={(value) =>
+              updateParam("provider", value === "all" ? null : value)
             }
           >
-            <option value="all">All Providers</option>
-            <option value="github">GitHub</option>
-            <option value="gitlab">GitLab</option>
-          </select>
-          <select
-            className="h-9 rounded-md border px-3 text-sm"
+            <SelectTrigger className="h-9 w-[140px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Providers</SelectItem>
+              <SelectItem value="github">GitHub</SelectItem>
+              <SelectItem value="gitlab">GitLab</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
             value={state ?? "all"}
-            onChange={(e) =>
-              updateParam(
-                "state",
-                e.target.value === "all" ? null : e.target.value
-              )
+            onValueChange={(value) =>
+              updateParam("state", value === "all" ? null : value)
             }
           >
-            <option value="all">All</option>
-            <option value="open">Open</option>
-            <option value="merged">Merged</option>
-            <option value="closed">Closed</option>
-          </select>
+            <SelectTrigger className="h-9 w-[100px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="open">Open</SelectItem>
+              <SelectItem value="merged">Merged</SelectItem>
+              <SelectItem value="closed">Closed</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -123,16 +139,16 @@ export default function ProfileContributions({
         <div className="flex flex-col gap-4">
           {!provider ? (
             <>
-              <PRSection provider="github" list={data?.github ?? []} />
-              <PRSection provider="gitlab" list={data?.gitlab ?? []} />
+              <PRSection provider="github" list={data?.github?.data ?? []} />
+              <PRSection provider="gitlab" list={data?.gitlab?.data ?? []} />
             </>
           ) : (
             <PRSection
               provider={provider}
               list={
                 provider === "github"
-                  ? (data?.github ?? [])
-                  : (data?.gitlab ?? [])
+                  ? (data?.github?.data ?? [])
+                  : (data?.gitlab?.data ?? [])
               }
             />
           )}
