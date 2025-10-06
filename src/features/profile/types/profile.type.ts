@@ -40,6 +40,45 @@ export type GithubStats = {
   contributionGraph: ContributionGraph;
 };
 
+// Paramètres de requête pour les Pull Requests
+export type PullRequestQueryParams = {
+  provider?: "github" | "gitlab";
+  page?: number;
+  per_page?: number;
+  state?: "open" | "closed" | "merged" | "all";
+};
+
+// Structure d'une branche
+export type PullRequestBranch = {
+  from: string;
+  to: string;
+};
+
+// Structure d'une Pull Request
+export type UserPullRequest = {
+  title: string;
+  repository: string;
+  owner: string | null;
+  state: string;
+  draft: boolean;
+  number: number;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  merged_at: string | null;
+  url: string;
+  branch: PullRequestBranch;
+};
+
+// Réponse complète des Pull Requests
+export type PullRequestsResponse = {
+  data: {
+    github: UserPullRequest[] | null;
+    gitlab: UserPullRequest[] | null;
+  };
+  timestamp: string;
+};
+
 export type Profile = {
   id: string;
   publicId?: string;
