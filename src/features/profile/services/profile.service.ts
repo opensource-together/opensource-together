@@ -134,29 +134,17 @@ export const getUserPullRequests = async (
   params?: PullRequestQueryParams
 ): Promise<PullRequestsResponse> => {
   try {
-    const queryParams = new URLSearchParams();
-
-    if (params?.provider) {
-      queryParams.append("provider", params.provider);
-    }
-    if (params?.page !== undefined) {
-      queryParams.append("page", params.page.toString());
-    }
-    if (params?.per_page !== undefined) {
-      queryParams.append("per_page", params.per_page.toString());
-    }
-    if (params?.state) {
-      queryParams.append("state", params.state);
-    }
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
 
     const queryString = queryParams.toString();
     const url = `${API_BASE_URL}/users/me/pullrequests${queryString ? `?${queryString}` : ""}`;
 
     const response = await fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
       credentials: "include",
     });
 
@@ -166,7 +154,7 @@ export const getUserPullRequests = async (
     }
 
     const apiResponse = await response.json();
-    return apiResponse;
+    return apiResponse.data;
   } catch (error) {
     console.error("Error fetching pull requests:", error);
     throw error;

@@ -1,4 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
@@ -8,7 +12,10 @@ import {
   getUserPullRequests,
   updateProfile,
 } from "../services/profile.service";
-import { PullRequestQueryParams } from "../types/profile.type";
+import {
+  PullRequestQueryParams,
+  PullRequestsResponse,
+} from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
 
 /**
@@ -75,53 +82,14 @@ export const useProfileUpdate = () => {
  * @param params - Filters and pagination parameters
  * @returns A React Query result with PRs and simple pagination metadata
  */
-export const useUserPullRequests = (
-  params: PullRequestQueryParams & {
-    enabled?: boolean;
-    staleTime?: number;
-  } = {}
-) => {
-  const { enabled = true, staleTime = 30_000, ...queryParams } = params;
-  if (queryParams.per_page == null) {
-    queryParams.per_page = 10;
-  }
+export const useUserPullRequests = (params: PullRequestQueryParams = {}) => {
+  const per_page = params.per_page ?? 10;
+  const page = params.page ?? 1;
+  const queryParams: PullRequestQueryParams = { ...params, per_page, page };
 
-  return useQuery({
-    queryKey: ["user", "pullrequests", queryParams],
+  return useQuery<PullRequestsResponse>({
+    queryKey: ["user", "me", "pullrequests", queryParams],
     queryFn: () => getUserPullRequests(queryParams),
-    enabled,
-    placeholderData: (previousData) => previousData,
-    staleTime,
-    select: (response) => {
-      const perPage = queryParams.per_page;
-      const page = queryParams.page ?? 1;
-      const provider = queryParams.provider ?? "all";
-
-      const github = response.data.github ?? [];
-      const gitlab = response.data.gitlab ?? [];
-
-      const hasNextGithub = perPage ? github.length === perPage : false;
-      const hasNextGitlab = perPage ? gitlab.length === perPage : false;
-
-      const hasNextPage =
-        provider === "github"
-          ? hasNextGithub
-          : provider === "gitlab"
-            ? hasNextGitlab
-            : perPage
-              ? github.length === perPage || gitlab.length === perPage
-              : false;
-
-      return {
-        ...response,
-        meta: {
-          provider,
-          page,
-          per_page: perPage,
-          hasPrevPage: page > 1,
-          hasNextPage,
-        },
-      };
-    },
+    placeholderData: keepPreviousData,
   });
 };
