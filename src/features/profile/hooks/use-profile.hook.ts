@@ -3,7 +3,12 @@ import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
-import { getUserById, updateProfile } from "../services/profile.service";
+import {
+  getUserById,
+  getUserPullRequests,
+  updateProfile,
+} from "../services/profile.service";
+import { PullRequestQueryParams } from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
 
 /**
@@ -60,4 +65,60 @@ export const useProfileUpdate = () => {
     isUpdating: mutation.isPending,
     isUpdateError: mutation.isError,
   };
+};
+
+/**
+ * Hook to fetch the authenticated user's pull requests with pagination and filters.
+ *
+ * This hook does not manage any local state. Provide filters via params.
+ *
+ * @param params - Filters and pagination parameters
+ * @returns A React Query result with PRs and simple pagination metadata
+ */
+export const useUserPullRequests = (
+  params: PullRequestQueryParams & {
+    enabled?: boolean;
+    staleTime?: number;
+  } = {}
+) => {
+  const { enabled = true, staleTime = 30_000, ...queryParams } = params;
+
+  return useQuery({
+    queryKey: ["user", "pullrequests", queryParams],
+    queryFn: () => getUserPullRequests(queryParams),
+    enabled,
+    placeholderData: (previousData) => previousData,
+    staleTime,
+    select: (response) => {
+      const perPage = queryParams.per_page;
+      const page = queryParams.page ?? 1;
+      const provider = queryParams.provider ?? "all";
+
+      const github = response.data.github ?? [];
+      const gitlab = response.data.gitlab ?? [];
+
+      const hasNextGithub = perPage ? github.length === perPage : false;
+      const hasNextGitlab = perPage ? gitlab.length === perPage : false;
+
+      const hasNextPage =
+        provider === "github"
+          ? hasNextGithub
+          : provider === "gitlab"
+            ? hasNextGitlab
+            : perPage
+              ? github.length === perPage || gitlab.length === perPage
+              : false;
+
+      return {
+        ...response,
+        meta: {
+          provider,
+          page,
+          per_page: perPage,
+          hasPrevPage: page > 1,
+          hasNextPage,
+        },
+      };
+    },
+  });
 };
