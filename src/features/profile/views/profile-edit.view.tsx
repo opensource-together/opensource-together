@@ -12,12 +12,18 @@ import ProfileError from "../components/error-ui/profile-error.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import ProfileEditMain from "../forms/profile-edit-main.form";
 import ProfileSidebarEditForm from "../forms/profile-sidebar-edit.form";
-import { useProfileUpdate } from "../hooks/use-profile.hook";
+import {
+  useProfileLogoUpdate,
+  useProfileUpdate,
+} from "../hooks/use-profile.hook";
 import { ProfileSchema, profileSchema } from "../validations/profile.schema";
 
 export default function ProfileEditView() {
   const { currentUser, isLoading, isError } = useAuth();
   const { updateProfile, isUpdating } = useProfileUpdate();
+  const { updateProfileLogo, isUpdatingLogo } = useProfileLogoUpdate(
+    currentUser?.publicId || currentUser?.id || ""
+  );
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   const form = useForm<ProfileSchema>({
@@ -59,11 +65,11 @@ export default function ProfileEditView() {
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
-    updateProfile({
-      id: currentUser?.publicId || currentUser?.id || "",
-      updateData: data,
-      avatarFile: selectedImageFile || undefined,
-    });
+    const id = currentUser?.publicId || currentUser?.id || "";
+    updateProfile({ id, updateData: data });
+    if (selectedImageFile) {
+      updateProfileLogo(selectedImageFile);
+    }
   });
 
   if (isLoading) return <SkeletonProfileView />;
@@ -78,7 +84,7 @@ export default function ProfileEditView() {
           form={form}
           onSubmit={onSubmit}
           onImageSelect={handleImageSelect}
-          isUpdating={isUpdating}
+          isUpdating={isUpdating || isUpdatingLogo}
         />
       }
     />

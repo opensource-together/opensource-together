@@ -3,7 +3,12 @@ import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
-import { getUserById, updateProfile } from "../services/profile.service";
+import {
+  getUserById,
+  updateProfile,
+  updateProfileLogo,
+} from "../services/profile.service";
+import { Profile } from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
 
 /**
@@ -36,17 +41,13 @@ export const useProfileUpdate = () => {
     mutationFn: ({
       id,
       updateData,
-      avatarFile,
-      shouldDeleteAvatar,
     }: {
       id: string;
       updateData: ProfileSchema;
-      avatarFile?: File;
-      shouldDeleteAvatar?: boolean;
-    }) => updateProfile(id, updateData, avatarFile, shouldDeleteAvatar),
-    loadingMessage: "Mise à jour de votre profil en cours...",
-    successMessage: "Profil mis à jour avec succès",
-    errorMessage: "Erreur lors de la mise à jour du profil",
+    }) => updateProfile(id, updateData),
+    loadingMessage: "Updating your profile...",
+    successMessage: "Profil updated with success",
+    errorMessage: "Error updating your profile",
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
@@ -59,5 +60,47 @@ export const useProfileUpdate = () => {
     updateProfile: mutation.mutate,
     isUpdating: mutation.isPending,
     isUpdateError: mutation.isError,
+  };
+};
+
+/**
+ * Hook to fetch the authenticated user's pull requests with pagination and filters.
+ *
+ * @param id - The ID of the user to update.
+ * @param file - The file to update the logo with.
+ * @returns An object containing:
+ * - updateProfileLogo: function to trigger the logo update
+ * - isUpdatingLogo: boolean indicating if the update is in progress
+ * - isUpdateErrorLogo: boolean indicating if an error occurred
+ */
+export const useProfileLogoUpdate = (id: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: (file: File) => updateProfileLogo(id, file),
+    loadingMessage: "Updating your avatar...",
+    successMessage: "Avatar updated successfully",
+    errorMessage: "Error updating your avatar",
+    options: {
+      onSuccess: (data) => {
+        const versionSuffix = `?t=${Date.now()}`;
+        const baseUrl = data.image.split("?")[0];
+        const versionedImage = `${baseUrl}${versionSuffix}`;
+
+        // Busting the cache for the image url
+        const updateImage = (old: Profile | undefined): Profile | undefined =>
+          old ? { ...old, image: versionedImage } : old;
+
+        queryClient.setQueryData(["user/me"], updateImage);
+
+        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+      },
+    },
+  });
+
+  return {
+    updateProfileLogo: mutation.mutate,
+    isUpdatingLogo: mutation.isPending,
+    isUpdateErrorLogo: mutation.isError,
   };
 };
