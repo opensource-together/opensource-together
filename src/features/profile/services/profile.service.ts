@@ -124,6 +124,28 @@ export const updateProfile = async (
   }
 };
 
+export const updateProfileLogo = async (
+  id: string,
+  avatarFile: File
+): Promise<Pick<Profile, "image">> => {
+  const formData = new FormData();
+  formData.append("file", avatarFile);
+
+  const response = await fetch(`${API_BASE_URL}/users/${id}/logo`, {
+    method: "PATCH",
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to upload avatar");
+  }
+
+  const apiResponse = await response.json();
+  return apiResponse?.data;
+};
+
 /**
  * Gets the pull requests of the current user.
  *
