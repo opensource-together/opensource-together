@@ -1,7 +1,6 @@
 "use client";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
-import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
   Tabs,

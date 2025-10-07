@@ -62,11 +62,11 @@ export function ErrorState({
         </div>
       )}
 
-      <h3 className={`text-muted-foreground mt-4 mb-2 text-lg font-medium`}>
+      <h3 className="text-muted-foreground mt-4 mb-2 text-lg font-medium">
         {title}
       </h3>
 
-      <p className={`text-muted-foreground mb-6 max-w-80`}>{message}</p>
+      <p className="text-muted-foreground mb-6 max-w-80">{message}</p>
 
       <div className="flex gap-3 sm:flex-row">
         {href && (
