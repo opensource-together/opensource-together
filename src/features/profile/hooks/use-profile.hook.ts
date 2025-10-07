@@ -41,17 +41,13 @@ export const useProfileUpdate = () => {
     mutationFn: ({
       id,
       updateData,
-      avatarFile,
-      shouldDeleteAvatar,
     }: {
       id: string;
       updateData: ProfileSchema;
-      avatarFile?: File;
-      shouldDeleteAvatar?: boolean;
-    }) => updateProfile(id, updateData, avatarFile, shouldDeleteAvatar),
-    loadingMessage: "Mise à jour de votre profil en cours...",
-    successMessage: "Profil mis à jour avec succès",
-    errorMessage: "Erreur lors de la mise à jour du profil",
+    }) => updateProfile(id, updateData),
+    loadingMessage: "Updating your profile...",
+    successMessage: "Profil updated with success",
+    errorMessage: "Error updating your profile",
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
@@ -68,7 +64,7 @@ export const useProfileUpdate = () => {
 };
 
 /**
- * Hook to update the logo of a user by their ID.
+ * Hook to fetch the authenticated user's pull requests with pagination and filters.
  *
  * @param id - The ID of the user to update.
  * @param file - The file to update the logo with.
