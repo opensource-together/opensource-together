@@ -84,7 +84,7 @@ export default function ProfileView() {
             </div>
           )}
           <div className="mt-12 w-full">
-            <ProfilePullRequests enabled={tab === "contributions"} />
+            {tab === "contributions" && <ProfilePullRequests />}
           </div>
         </TabsContent>
 

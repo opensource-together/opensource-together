@@ -47,29 +47,27 @@ export type PullRequestQueryParams = {
   state?: "open" | "closed" | "merged" | "all";
 };
 
-export type PullRequestBranch = {
-  from: string;
-  to: string;
-};
-
 export type UserPullRequest = {
   title: string;
   repository: string;
   owner: string | null;
-  state: string;
+  state: "OPEN" | "CLOSED" | "MERGED" | "merged" | "closed" | "open";
   draft: boolean;
   number: number;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
   closed_at: string | null;
   merged_at: string | null;
   url: string;
-  branch: PullRequestBranch;
+  branch: {
+    from: string;
+    to: string;
+  };
 };
 
 export type PullRequestPagination = {
-  next: number | null;
-  last: number | null;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 };
 
 export type PullRequestProviderData = {

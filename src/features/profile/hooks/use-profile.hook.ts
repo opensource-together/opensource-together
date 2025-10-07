@@ -1,8 +1,4 @@
-import {
-  keepPreviousData,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
@@ -90,6 +86,5 @@ export const useUserPullRequests = (params: PullRequestQueryParams = {}) => {
   return useQuery<PullRequestsResponse>({
     queryKey: ["user", "me", "pullrequests", queryParams],
     queryFn: () => getUserPullRequests(queryParams),
-    placeholderData: keepPreviousData,
   });
 };

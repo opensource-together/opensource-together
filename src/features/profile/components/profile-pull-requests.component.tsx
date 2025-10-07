@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -17,12 +18,8 @@ import {
 } from "@/shared/components/ui/select";
 
 import { useUserPullRequests } from "../hooks/use-profile.hook";
-import { PullRequestQueryParams, UserPullRequest } from "../types/profile.type";
-import PullRequestCard from "./pull-request-card";
-
-type ProfileContributionsProps = {
-  enabled: boolean;
-};
+import { PullRequestQueryParams } from "../types/profile.type";
+import PullRequestList from "./pull-request-list";
 
 const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;
@@ -30,9 +27,7 @@ const parseNumber = (value: string | null, fallback: number) => {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 };
 
-export default function ProfileContributions({
-  enabled,
-}: ProfileContributionsProps) {
+export default function ProfilePullRequests() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -56,7 +51,6 @@ export default function ProfileContributions({
     const params = new URLSearchParams(searchParams.toString());
     if (value === null) params.delete(key);
     else params.set(key, value);
-    // Reset pagination on filter changes
     if (key !== "page") params.set("page", "1");
     router.replace(`${pathname}?${params.toString()}`);
   };
@@ -65,20 +59,18 @@ export default function ProfileContributions({
   const handleNext = () => updateParam("page", String(page + 1));
 
   const hasPrevPage = page > 1;
-  const totalCount =
-    (provider
-      ? provider === "github"
-        ? data?.github?.data?.length
-        : data?.gitlab?.data?.length
-      : (data?.github?.data?.length ?? 0) +
-        (data?.gitlab?.data?.length ?? 0)) ?? 0;
+  const getHasNextPage = (p: "github" | "gitlab") =>
+    p === "github"
+      ? (data?.github?.pagination?.hasNextPage ?? false)
+      : (data?.gitlab?.pagination?.hasNextPage ?? false);
 
   const hasNextPage = provider
-    ? provider === "github"
-      ? data?.github?.pagination?.next !== null
-      : data?.gitlab?.pagination?.next !== null
-    : data?.github?.pagination?.next !== null ||
-      data?.gitlab?.pagination?.next !== null;
+    ? getHasNextPage(provider)
+    : getHasNextPage("github") || getHasNextPage("gitlab");
+
+  if (data === null) return <div>No pull requests found.</div>;
+  if (isLoading || isFetching) return <div>Loading pull requests...</div>;
+  if (isError) return <div>Failed to load pull requests.</div>;
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -119,87 +111,55 @@ export default function ProfileContributions({
         </div>
       </div>
 
-      {!enabled ? (
-        <div className="text-muted-foreground rounded-lg border p-6 text-sm">
-          Open the Contributions tab to load data.
-        </div>
-      ) : isLoading || isFetching ? (
-        <div className="text-muted-foreground rounded-lg border p-6 text-sm">
-          Loading contributions...
-        </div>
-      ) : isError ? (
-        <div className="text-destructive rounded-lg border p-6 text-sm">
-          Failed to load contributions.
-        </div>
-      ) : totalCount === 0 ? (
-        <div className="text-muted-foreground rounded-lg border p-6 text-sm">
-          No contributions found.
-        </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {!provider ? (
-            <>
-              <PRSection provider="github" list={data?.github?.data ?? []} />
-              <PRSection provider="gitlab" list={data?.gitlab?.data ?? []} />
-            </>
-          ) : (
-            <PRSection
-              provider={provider}
-              list={
-                provider === "github"
-                  ? (data?.github?.data ?? [])
-                  : (data?.gitlab?.data ?? [])
-              }
-            />
-          )}
-          <Pagination className="mt-2">
-            <PaginationContent>
-              <PaginationItem>
-                <Button
-                  variant="ghost"
-                  size="default"
-                  onClick={handlePrev}
-                  disabled={!hasPrevPage}
-                >
-                  Previous
-                </Button>
-              </PaginationItem>
-              <PaginationItem>
-                <Button
-                  variant="ghost"
-                  size="default"
-                  onClick={handleNext}
-                  disabled={!hasNextPage}
-                >
-                  Next
-                </Button>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function PRSection({
-  provider,
-  list,
-}: {
-  provider: "github" | "gitlab";
-  list: UserPullRequest[];
-}) {
-  if (!list || list.length === 0) return null;
-  return (
-    <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-4">
-        {list.map((pr, idx) => (
-          <PullRequestCard
-            key={`${pr.url}-${idx}`}
-            pr={pr}
+        {!provider ? (
+          <>
+            <PullRequestList
+              provider="github"
+              list={data?.github?.data ?? []}
+            />
+            <PullRequestList
+              provider="gitlab"
+              list={data?.gitlab?.data ?? []}
+            />
+          </>
+        ) : (
+          <PullRequestList
             provider={provider}
+            list={
+              provider === "github"
+                ? (data?.github?.data ?? [])
+                : (data?.gitlab?.data ?? [])
+            }
           />
-        ))}
+        )}
+        <Pagination className="mt-2">
+          <PaginationContent>
+            <PaginationItem>
+              <Button
+                variant="ghost"
+                size="default"
+                onClick={handlePrev}
+                disabled={!hasPrevPage || isFetching}
+              >
+                <HiChevronLeft className="size-4" /> Previous
+              </Button>
+            </PaginationItem>
+
+            <span className="px-2 text-sm opacity-80"> {page}</span>
+
+            <PaginationItem>
+              <Button
+                variant="ghost"
+                size="default"
+                onClick={handleNext}
+                disabled={!hasNextPage || isFetching}
+              >
+                Next <HiChevronRight className="size-4" />
+              </Button>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );

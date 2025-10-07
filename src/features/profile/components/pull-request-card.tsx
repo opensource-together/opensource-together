@@ -12,10 +12,11 @@ export default function PullRequestCard({
   pr: UserPullRequest;
   provider: "github" | "gitlab";
 }) {
-  const isMerged = !!pr.merged_at;
-  const state = pr.state?.toLowerCase();
-  const isClosed = !isMerged && state === "closed";
-  const isOpen = state === "open";
+  const normalizedState = pr.state?.toLowerCase();
+  const isMerged = normalizedState === "merged" || !!pr.merged_at;
+  const isClosed = normalizedState === "closed" && !isMerged;
+  const isOpen = normalizedState === "open";
+
   const createdAt = new Date(pr.created_at);
 
   const repoPath =
