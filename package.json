@@ -12,7 +12,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
-    "pages:build": "npx @opennextjs/cloudflare build"
+    "pages:build": "opennextjs-cloudflare build",
+    "pages:deploy": "opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -76,6 +77,6 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4.1.14",
     "typescript": "^5.8.3",
-    "wrangler": "^4.42.0"
+    "wrangler": "^4.42.1"
   }
 }
