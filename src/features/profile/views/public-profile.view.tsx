@@ -1,7 +1,7 @@
 "use client";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
-import { EmptyState } from "@/shared/components/ui/empty-state";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import {
   Tabs,
   TabsContent,
@@ -26,17 +26,16 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
   const { data: profile, isLoading, isError } = useProfile(userId);
 
   if (isLoading) return <SkeletonProfileView />;
-  if (isError || !profile) {
+  if (isError || !profile)
     return (
-      <>
-        <EmptyState
-          text="Profil non trouvé"
-          buttonText="Retour à l'accueil"
-          href="/"
-        />
-      </>
+      <ErrorState
+        message="An error has occurred while loading the profile. Please try again later."
+        queryKey={["user", userId]}
+        className="mt-20 mb-28"
+        buttonText="Back to projects"
+        href="/"
+      />
     );
-  }
 
   const shouldShowGithubData = profile.provider !== "google";
 

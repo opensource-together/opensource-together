@@ -58,9 +58,9 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
         </div>
       ) : joinedProjects.length === 0 ? (
         <EmptyState
-          text="Aucun projet rejoint"
+          text="No joined projects"
           icon={HiMiniSquare2Stack}
-          buttonText="Explorer les projets"
+          buttonText="Explore projects"
           href={profile.id === currentUser?.id ? "/" : undefined}
         />
       ) : (

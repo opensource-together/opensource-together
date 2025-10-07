@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
+import { ErrorState } from "@/shared/components/ui/error-state";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
-import ProfileError from "../components/error-ui/profile-error.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import ProfileEditMain from "../forms/profile-edit-main.form";
 import ProfileSidebarEditForm from "../forms/profile-sidebar-edit.form";
@@ -73,7 +73,16 @@ export default function ProfileEditView() {
   });
 
   if (isLoading) return <SkeletonProfileView />;
-  if (isError || !currentUser) return <ProfileError />;
+  if (isError || !currentUser)
+    return (
+      <ErrorState
+        message="An error has occurred while loading the profile edit. Please try again later."
+        queryKey={["user/me"]}
+        className="mt-20 mb-28"
+        buttonText="Back to projects"
+        href="/"
+      />
+    );
 
   return (
     <TwoColumnLayout
