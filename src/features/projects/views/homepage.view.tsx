@@ -1,11 +1,11 @@
 "use client";
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import PaginationNavigation from "@/shared/components/ui/pagination-navigation";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
-import HomepageError from "../components/error-ui/homepage-error.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useProjects } from "../hooks/use-projects.hook";
@@ -27,7 +27,10 @@ export default function HomepageView() {
   if (isError) {
     return (
       <HomepageLayout>
-        <HomepageError />
+        <ErrorState
+          message="An error has occurred while loading the projects. Please try again later."
+          queryKey={["projects"]}
+        />
       </HomepageLayout>
     );
   }
@@ -45,12 +48,7 @@ export default function HomepageView() {
   if (!projects || projects.length === 0) {
     return (
       <HomepageLayout>
-        <EmptyState
-          text="Aucun Projet Disponible"
-          buttonText="Réessayer"
-          href="/"
-          className="mb-28"
-        />
+        <EmptyState text="No projects available" className="mb-28" />
       </HomepageLayout>
     );
   }

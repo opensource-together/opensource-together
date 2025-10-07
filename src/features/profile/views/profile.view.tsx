@@ -3,6 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import {
   Tabs,
   TabsContent,
@@ -12,7 +13,6 @@ import {
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
-import ProfileError from "../components/error-ui/profile-error.component";
 import GithubGraph from "../components/github-graph.component";
 import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
@@ -29,7 +29,16 @@ export default function ProfileView() {
   const { currentUser, isLoading, isError } = useAuth();
 
   if (isLoading) return <SkeletonProfileView />;
-  if (isError || !currentUser) return <ProfileError />;
+  if (isError || !currentUser)
+    return (
+      <ErrorState
+        message="An error has occurred while loading the profile. Please try again later."
+        queryKey={["user/me"]}
+        className="mt-20 mb-28"
+        buttonText="Back to projects"
+        href="/"
+      />
+    );
 
   const shouldShowGithubCalendar = currentUser.provider !== "google";
 
