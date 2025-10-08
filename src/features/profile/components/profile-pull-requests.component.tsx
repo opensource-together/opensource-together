@@ -1,9 +1,12 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { GoGitPullRequest } from "react-icons/go";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import {
   Pagination,
   PaginationContent,
@@ -19,7 +22,7 @@ import {
 
 import { useUserPullRequests } from "../hooks/use-profile.hook";
 import { PullRequestQueryParams } from "../types/profile.type";
-import PullRequestList from "./pull-request-list";
+import PullRequestList from "./pull-request-card";
 
 const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;
@@ -68,9 +71,22 @@ export default function ProfilePullRequests() {
     ? getHasNextPage(provider)
     : getHasNextPage("github") || getHasNextPage("gitlab");
 
-  if (data === null) return <div>No pull requests found.</div>;
+  if (
+    data === null ||
+    data?.github?.data.length === 0 ||
+    data?.gitlab?.data.length === 0
+  )
+    return (
+      <EmptyState icon={GoGitPullRequest} text="No pull requests found." />
+    );
   if (isLoading || isFetching) return <div>Loading pull requests...</div>;
-  if (isError) return <div>Failed to load pull requests.</div>;
+  if (isError)
+    return (
+      <ErrorState
+        message="An error has occurred while loading the pull requests. Please try again later."
+        queryKey={["user", "me", "pullrequests"]}
+      />
+    );
 
   return (
     <div className="flex w-full flex-col gap-4">
