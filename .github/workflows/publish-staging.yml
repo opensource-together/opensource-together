@@ -1,4 +1,4 @@
-name: publish-prod.yml
+name: Publish Staging
 
 on:
   push:
@@ -27,15 +27,11 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          flavor: |
-            latest=auto
           images: |
             ghcr.io/opensource-together/front-staging
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
             type=sha
+            type=raw,value=latest
 
       - name: Upload server artifact
         uses: docker/build-push-action@v6

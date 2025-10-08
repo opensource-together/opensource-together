@@ -1,4 +1,4 @@
-name: publish-prod.yml
+name: Publish Prod
 
 on:
   release:
