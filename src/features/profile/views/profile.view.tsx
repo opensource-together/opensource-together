@@ -18,9 +18,9 @@ import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
-import ProfilePullRequests from "../components/profile-pull-requests.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
+import ProfilePullRequests from "./profile-pull-requests.view";
 
 export default function ProfileView() {
   const searchParams = useSearchParams();

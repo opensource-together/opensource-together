@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 
-import { ContributionGraph, ContributionLevel } from "../types/profile.type";
+import {
+  ContributionGraph,
+  ContributionLevel,
+} from "../types/github-graph.type";
 
 interface GithubGraphProps {
   contributionGraph?: ContributionGraph;

@@ -20,9 +20,9 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 
-import { useUserPullRequests } from "../hooks/use-profile.hook";
-import { PullRequestQueryParams } from "../types/profile.type";
-import PullRequestList from "./pull-request-card";
+import PullRequestList from "../components/pull-request-card";
+import { useUserPullRequests } from "../hooks/use-profile-pull-request.hook";
+import { PullRequestQueryParams } from "../types/profile.pull-request.type";
 
 const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;
