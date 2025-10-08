@@ -60,8 +60,8 @@ export default function ProfileView() {
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="contributions">Contributions</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsTrigger value="contributions">Contributions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
