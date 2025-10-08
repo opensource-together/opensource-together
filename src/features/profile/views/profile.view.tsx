@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -16,10 +18,14 @@ import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
+import ProfilePullRequests from "../components/profile-pull-requests.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 
 export default function ProfileView() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const { currentUser, isLoading, isError } = useAuth();
 
   if (isLoading) return <SkeletonProfileView />;
@@ -36,17 +42,26 @@ export default function ProfileView() {
 
   const shouldShowGithubCalendar = currentUser.provider !== "google";
 
+  const tab = searchParams.get("tab") || "overview";
+
+  const handleTabChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "overview") params.delete("tab");
+    else params.set("tab", value);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <TwoColumnLayout
       sidebar={<ProfileSidebar profile={currentUser} />}
       hero={<ProfileHero profile={currentUser} hideHeader={false} />}
       mobileHeader={<ProfileMobileHero profile={currentUser} />}
     >
-      <Tabs defaultValue="overview">
+      <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="stats">Stats</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsTrigger value="contributions">Contributions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -66,7 +81,7 @@ export default function ProfileView() {
           </div>
         </TabsContent>
 
-        <TabsContent value="stats" className="mt-6">
+        <TabsContent value="contributions" className="mt-6">
           {shouldShowGithubCalendar && (
             <div className="mb-2 w-full">
               <GithubGraph
@@ -77,6 +92,9 @@ export default function ProfileView() {
               />
             </div>
           )}
+          <div className="mt-12 w-full">
+            {tab === "contributions" && <ProfilePullRequests />}
+          </div>
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">

@@ -44,7 +44,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     <div className="flex flex-1 flex-col gap-5">
       {shouldShowStats && (
         <div className="mb-2 flex flex-col">
-          <h2 className="mb-4 text-sm">Github Stats</h2>
+          <h2 className="mb-4 text-sm">Community Stats</h2>
 
           <div className="flex items-center justify-between py-1">
             <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 className="opacity-50"
               />
               <span className="text-sm font-normal text-neutral-500">
-                Stars earned
+                Earned stars
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
@@ -109,7 +109,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       )}
 
       <div className="mb-2 flex flex-col">
-        <h2 className="mb-4 text-sm">Technologies</h2>
+        <h2 className="mb-4 text-sm">Technical Skills</h2>
         {userTechStacks.length > 0 ? (
           <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
             {userTechStacks.map((tech, index) => (
@@ -127,7 +127,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="mb-4 text-sm">External links</h2>
+        <h2 className="mb-4 text-sm">Social Links</h2>
         {(() => {
           const hasAnyLink = socialLinksConfig.some(({ key }) => {
             const v = profile[key] as string | undefined;

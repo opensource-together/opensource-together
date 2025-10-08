@@ -45,11 +45,11 @@ export default function ProfileSidebarEditForm({
                     onChange={field.onChange}
                     placeholder={
                       techStacksLoading
-                        ? "Chargement des technologies..."
-                        : "Ajouter des technologies..."
+                        ? "Loading technologies..."
+                        : "Add technologies..."
                     }
-                    searchPlaceholder="Rechercher une technologie..."
-                    emptyText="Aucune technologie trouvée."
+                    searchPlaceholder="Search for a technology..."
+                    emptyText="No technology found."
                     disabled={techStacksLoading}
                     maxSelections={10}
                   />
