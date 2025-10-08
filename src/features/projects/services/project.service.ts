@@ -10,7 +10,7 @@ import {
   ProjectCreateMethod,
   ProjectFormData,
 } from "../stores/project-create.store";
-import { GithubRepoType, Project } from "../types/project.type";
+import { Project } from "../types/project.type";
 import {
   UpdateProjectData,
   UpdateProjectSchema,
@@ -73,35 +73,6 @@ export const getProjectDetails = async (
     return response.json();
   } catch (error) {
     console.error("Error fetching project details:", error);
-    throw error;
-  }
-};
-
-/**
- * Fetch GitHub repositories for the authenticated user.
- *
- * @returns A promise that resolves to an array of GitHub repositories.
- */
-export const getGithubRepos = async (): Promise<GithubRepoType[]> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/github/repos`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || "Failed to fetch GitHub repositories"
-      );
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching GitHub repositories:", error);
     throw error;
   }
 };

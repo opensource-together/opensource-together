@@ -7,7 +7,6 @@ import { getQueryClient } from "@/shared/lib/query-client";
 import {
   createProject,
   deleteProject,
-  getGithubRepos,
   getProjectDetails,
   getProjects,
   updateProject,
@@ -16,7 +15,7 @@ import {
   ProjectCreateMethod,
   ProjectFormData,
 } from "../stores/project-create.store";
-import { GithubRepoType, Project } from "../types/project.type";
+import { Project } from "../types/project.type";
 import { UpdateProjectData } from "../validations/project.schema";
 
 /**
@@ -42,18 +41,6 @@ export function useProject(projectId: string) {
     queryKey: ["project", projectId],
     queryFn: () => getProjectDetails(projectId),
     enabled: !!projectId,
-  });
-}
-
-/**
- * Fetches the list of GitHub repositories for the authenticated user.
- *
- * @returns A React Query result containing the list of GitHub repositories.
- */
-export function useGithubRepos() {
-  return useQuery<GithubRepoType[]>({
-    queryKey: ["github-repos"],
-    queryFn: getGithubRepos,
   });
 }
 
