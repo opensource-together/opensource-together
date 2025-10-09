@@ -15,14 +15,6 @@ export const projectSchema = z.object({
     .string()
     .min(10, "La description doit contenir au moins 10 caractères"),
   readme: z.string().optional(),
-  keyFeatures: z
-    .array(
-      z.object({
-        feature: z.string(),
-      })
-    )
-    .min(1, "Au moins une fonctionnalité clé est requise"),
-
   techStack: z
     .array(z.string())
     .min(1, "Au moins une technologie est requise")
@@ -72,17 +64,6 @@ export const createProjectApiSchema = z.object({
   readme: z.string().optional(),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
-  keyFeatures: z
-    .array(z.string())
-    .min(1, "Au moins une fonctionnalité clé est requise"),
-
-  projectRoles: z.array(
-    z.object({
-      title: z.string().min(1, "Le titre du rôle est requis"),
-      description: z.string().min(1, "La description du rôle est requise"),
-      techStacks: z.array(z.string()),
-    })
-  ),
   externalLinks: z
     .array(
       z.object({
@@ -102,10 +83,6 @@ export const updateProjectApiSchema = z.object({
   readme: z.string().max(10000).optional(),
   techStacks: z.array(z.string()),
   categories: z.array(z.string()),
-  keyFeatures: z
-    .array(z.string())
-    .min(1, "Au moins une fonctionnalité clé est requise"),
-
   externalLinks: z
     .array(
       z.object({

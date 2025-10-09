@@ -17,8 +17,7 @@ export const selectedRepoSchema = z.object({
     .nullable(),
 });
 
-// Step 1: Basic Project Information
-export const stepOneSchema = z.object({
+export const stepDescribeProjectSchema = z.object({
   title: z
     .string()
     .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
@@ -27,17 +26,10 @@ export const stepOneSchema = z.object({
     .min(10, "La description doit contenir au moins 10 caractères")
     .max(100, "La description ne peut pas dépasser 100 caractères"),
   coverImages: z.array(z.instanceof(File)).optional(),
-  keyFeatures: z
-    .array(
-      z.object({
-        feature: z.string(),
-      })
-    )
-    .min(1, "Au moins une fonctionnalité clé est requise"),
 });
 
-// Step 2: Tech Stack and Categories
-export const stepTwoSchema = z.object({
+export const stepTechCategoriesSchema = z.object({
+  logo: z.instanceof(File).optional(),
   techStack: z
     .array(z.string())
     .min(1, "Au moins une technologie est requise")
@@ -46,30 +38,6 @@ export const stepTwoSchema = z.object({
     .array(z.string())
     .min(1, "Au moins une catégorie est requise")
     .max(6, "Maximum 6 catégories autorisées"),
-});
-
-// Step 3: Project Roles (reuse base role validation logic)
-export const roleSchema = z.object({
-  title: z
-    .string()
-    .min(3, "Le titre du rôle doit contenir au moins 3 caractères"),
-  techStack: z
-    .array(z.string())
-    .min(1, "Au moins une technologie est requise")
-    .max(6, "Maximum 6 technologies autorisées"),
-  description: z
-    .string()
-    .min(10, "La description doit contenir au moins 10 caractères")
-    .max(250, "La description ne peut pas dépasser 250 caractères"),
-});
-
-export const stepThreeSchema = z.object({
-  roles: z.array(roleSchema).min(1, "Au moins un rôle est requis"),
-});
-
-// Step 4: External Links and Logo (with domain validation)
-export const stepFourSchema = z.object({
-  logo: z.instanceof(File).optional(),
   externalLinks: z
     .object({
       github: urlWithDomainCheck(
@@ -100,9 +68,8 @@ export const stepFourSchema = z.object({
 // Create Project Schema (for stepper form)
 export const createProjectSchema = z.object({
   method: z.enum(["github", "scratch"]).nullable(),
-  ...stepOneSchema.shape,
-  ...stepTwoSchema.shape,
-  ...stepThreeSchema.shape,
+  ...stepDescribeProjectSchema.shape,
+  ...stepTechCategoriesSchema.shape,
   selectedRepository: selectedRepoSchema,
 });
 
@@ -110,9 +77,10 @@ export const createProjectSchema = z.object({
 // TYPE EXPORTS
 // ========================================
 export type SelectedRepoFormData = z.infer<typeof selectedRepoSchema>;
-export type StepOneFormData = z.infer<typeof stepOneSchema>;
-export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
-export type RoleFormData = z.infer<typeof roleSchema>;
-export type StepThreeFormData = z.infer<typeof stepThreeSchema>;
-export type StepFourFormData = z.infer<typeof stepFourSchema>;
+export type StepDescribeProjectFormData = z.infer<
+  typeof stepDescribeProjectSchema
+>;
+export type StepTechCategoriesFormData = z.infer<
+  typeof stepTechCategoriesSchema
+>;
 export type CreateProjectFormData = z.infer<typeof createProjectSchema>;

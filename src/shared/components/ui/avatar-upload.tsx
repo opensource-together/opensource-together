@@ -26,7 +26,7 @@ export function AvatarUpload({
   onFileSelect,
   accept = "image/*",
   maxSize = 5,
-  subtitle = "JPG, PNG. Taille max : 5MB",
+  subtitle = "JPG or PNG, 5MB Max",
   className,
   disabled = false,
   size = "2xl",
@@ -84,15 +84,13 @@ export function AvatarUpload({
         const error = rejection.errors[0];
         switch (error.code) {
           case "file-too-large":
-            setError(
-              `La taille du fichier doit être inférieure à ${maxSize}MB`
-            );
+            setError(`The file size must be less than ${maxSize}MB`);
             break;
           case "file-invalid-type":
-            setError("Type de fichier non supporté");
+            setError("File type not supported");
             break;
           default:
-            setError("Erreur lors du téléchargement du fichier");
+            setError("Error uploading file");
         }
       }
     },
@@ -171,7 +169,7 @@ export function AvatarUpload({
             input.click();
           }}
         >
-          Importer
+          Upload
           <Icon name="download" size="sm" />
         </Button>
       </div>

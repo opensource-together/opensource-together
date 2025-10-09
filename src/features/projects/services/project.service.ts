@@ -6,10 +6,7 @@ import {
   safeUploadMedia,
 } from "@/shared/services/media.service";
 
-import {
-  ProjectCreateMethod,
-  ProjectFormData,
-} from "../stores/project-create.store";
+import { ProjectFormData, provider } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
 import {
   UpdateProjectData,
@@ -88,7 +85,7 @@ export const getProjectDetails = async (
 export const createProject = async (
   storeData: ProjectFormData,
   imageFile?: File,
-  method: ProjectCreateMethod = "scratch"
+  method: provider = "scratch"
 ): Promise<Project> => {
   let imageUrl: string | null = null;
   const coverImageUrls: string[] = [];

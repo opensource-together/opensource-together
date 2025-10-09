@@ -11,10 +11,7 @@ import {
   getProjects,
   updateProject,
 } from "../services/project.service";
-import {
-  ProjectCreateMethod,
-  ProjectFormData,
-} from "../stores/project-create.store";
+import { ProjectFormData, provider } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
 import { UpdateProjectData } from "../validations/project.schema";
 
@@ -64,7 +61,7 @@ export function useCreateProject() {
     }: {
       projectData: ProjectFormData;
       imageFile?: File;
-      method: ProjectCreateMethod;
+      method: provider;
     }) => createProject(projectData, imageFile, method),
     loadingMessage: "Création du projet en cours...",
     successMessage: "Projet créé avec succès",

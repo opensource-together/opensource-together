@@ -38,8 +38,7 @@ export function useProjectCreateNavigation() {
       pathname.includes("/scratch/step-three") ||
       pathname.includes("/scratch/step-four");
 
-    const hasRequiredScratchData =
-      formData.title && formData.description && formData.keyFeatures?.length;
+    const hasRequiredScratchData = formData.title && formData.description;
 
     if (isScratchStepTwoOrLater && !hasRequiredScratchData) {
       router.replace("/projects/create/scratch/step-one");
@@ -55,14 +54,6 @@ export function useProjectCreateNavigation() {
 
     if (isScratchStepThreeOrLater && !hasRequiredStepTwoData) {
       router.replace("/projects/create/scratch/step-two");
-      return;
-    }
-
-    const isScratchStepFour = pathname.includes("/scratch/step-four");
-    const hasRequiredStepThreeData = formData.roles?.length > 0;
-
-    if (isScratchStepFour && !hasRequiredStepThreeData) {
-      router.replace("/projects/create/scratch/step-three");
       return;
     }
   }, [pathname, formData, router, hasHydrated]);

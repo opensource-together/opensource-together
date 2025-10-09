@@ -1,30 +1,26 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { ProjectRole } from "../types/project-role.type";
 import {
   Category,
   ExternalLink,
   GithubRepoType,
-  KeyFeature,
   TechStack,
 } from "../types/project.type";
 
-export type ProjectCreateMethod = "scratch" | "github";
+export type provider = "scratch" | "github" | "gitlab";
 
 export interface ProjectFormData {
-  method: ProjectCreateMethod;
+  method: provider;
   title: string;
   description: string;
   image: string;
   coverImages: File[];
   readme?: string;
   externalLinks: ExternalLink[];
-  keyFeatures: KeyFeature[];
   techStack: TechStack[];
   categories: Category[];
   selectedRepository: GithubRepoType | null;
-  roles: ProjectRole[];
 }
 
 interface ProjectCreateStore {
@@ -32,7 +28,7 @@ interface ProjectCreateStore {
   currentStep: number;
   hasHydrated: boolean;
 
-  setMethod: (method: ProjectCreateMethod) => void;
+  setMethod: (method: provider) => void;
   updateProjectInfo: (
     info: Partial<
       Pick<
@@ -42,16 +38,13 @@ interface ProjectCreateStore {
         | "image"
         | "coverImages"
         | "readme"
-        | "keyFeatures"
         | "techStack"
         | "categories"
-        | "roles"
         | "externalLinks"
       >
     >
   ) => void;
   selectRepository: (repo: GithubRepoType) => void;
-  updateRoles: (roles: ProjectFormData["roles"]) => void;
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;
@@ -66,11 +59,9 @@ const initialFormData: ProjectFormData = {
   coverImages: [],
   readme: "",
   externalLinks: [],
-  keyFeatures: [],
   selectedRepository: null,
   techStack: [],
   categories: [],
-  roles: [],
 };
 
 export const useProjectCreateStore = create<ProjectCreateStore>()(
@@ -98,9 +89,6 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
               readme: repo.readme || "",
             },
           })),
-
-        updateRoles: (roles) =>
-          set((state) => ({ formData: { ...state.formData, roles } })),
 
         nextStep: () =>
           set((state) => ({ currentStep: state.currentStep + 1 })),

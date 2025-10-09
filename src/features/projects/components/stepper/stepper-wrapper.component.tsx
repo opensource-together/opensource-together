@@ -2,12 +2,12 @@
 
 import React from "react";
 
-import { ProjectCreateMethod } from "../../stores/project-create.store";
+import { provider } from "../../stores/project-create.store";
 import StepperIndicatorComponent from "./stepper-indicator.component";
 
 interface StepperWrapperProps {
   currentStep: number;
-  method: ProjectCreateMethod;
+  method?: provider;
   children: React.ReactNode;
 }
 
@@ -16,15 +16,15 @@ export function StepperWrapper({
   method,
   children,
 }: StepperWrapperProps) {
-  const totalSteps = method === "github" ? 6 : 4;
+  const totalSteps = method === "github" ? 6 : method === "gitlab" ? 6 : 4;
 
   return (
     <div className="mx-auto mt-8 max-w-md">
-      <div className="my-24 flex flex-col items-center justify-center">
+      <div className="my-24 flex flex-col items-start justify-start">
         <StepperIndicatorComponent
           currentStep={currentStep}
           totalSteps={totalSteps}
-          className="mb-20"
+          className="mb-10"
         />
         {children}
       </div>

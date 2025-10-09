@@ -1,5 +1,4 @@
 import { ProjectFormData } from "../stores/project-create.store";
-import { TechStack } from "../types/project.type";
 import {
   CreateProjectApiData,
   ProjectSchema,
@@ -28,12 +27,6 @@ export const transformProjectForApi = (
       })) || [],
     techStacks: storeData.techStack.map((tech) => tech.id),
     categories: storeData.categories.map((cat) => cat.id),
-    keyFeatures: storeData.keyFeatures.map((feature) => feature.feature),
-    projectRoles: storeData.roles.map((role) => ({
-      title: role.title,
-      description: role.description,
-      techStacks: role.techStacks?.map((tech: TechStack) => tech.id),
-    })),
   };
 };
 
@@ -61,6 +54,5 @@ export const transformProjectForApiUpdate = (
       : [],
     techStacks: formData.techStack || [],
     categories: formData.categories || [],
-    keyFeatures: formData.keyFeatures?.map((feature) => feature.feature) || [],
   };
 };

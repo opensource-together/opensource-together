@@ -8,9 +8,9 @@ export default function StepperHeaderComponent({
   description,
 }: StepperHeaderComponentProps) {
   return (
-    <div className="flex flex-col items-center">
-      <h2 className="mb-2 text-center text-3xl">{title}</h2>
-      <p className="mb-12 text-center text-sm text-black/70">{description}</p>
+    <div className="flex flex-col">
+      <h2 className="mb-2 text-3xl">{title}</h2>
+      <p className="mb-12 text-sm text-black/70">{description}</p>
     </div>
   );
 }

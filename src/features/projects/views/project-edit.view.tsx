@@ -27,7 +27,6 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
       image: project?.image || undefined,
       title: project?.title || "",
       description: project?.description || "",
-      keyFeatures: project?.keyFeatures || [],
       techStack: project?.techStacks?.map((tech) => tech.id) || [],
       categories: project?.categories?.map((category) => category.id) || [],
       coverImages: project?.coverImages || [],
