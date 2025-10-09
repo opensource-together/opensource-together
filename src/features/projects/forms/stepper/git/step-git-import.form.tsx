@@ -1,18 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/shared/components/ui/form";
 import { useGitRepository } from "@/shared/hooks/use-git-repository.hook";
 import { UserGitRepository } from "@/shared/types/git-repository.type";
 
@@ -21,11 +12,6 @@ import {
   provider,
   useProjectCreateStore,
 } from "../../../stores/project-create.store";
-import { GithubRepoType } from "../../../types/project.type";
-import {
-  SelectedRepoFormData,
-  selectedRepoSchema,
-} from "../../../validations/project-stepper.schema";
 
 interface StepGitImportFormProps {
   provider: provider;
@@ -35,7 +21,10 @@ export default function StepGitImportForm({
   provider,
 }: StepGitImportFormProps) {
   const router = useRouter();
-  const { selectRepository, formData } = useProjectCreateStore();
+  const { selectRepository } = useProjectCreateStore();
+  const [selectedRepo, setSelectedRepo] = useState<UserGitRepository | null>(
+    null
+  );
 
   const isScratch = provider === "scratch";
   const actualProvider = isScratch ? undefined : provider;
@@ -44,22 +33,7 @@ export default function StepGitImportForm({
     actualProvider ? { provider: actualProvider } : {}
   );
 
-  const form = useForm<SelectedRepoFormData>({
-    resolver: zodResolver(selectedRepoSchema),
-    defaultValues: {
-      selectedRepository: formData.selectedRepository,
-    },
-  });
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { isSubmitting },
-  } = form;
-
-  const selectedRepository = watch("selectedRepository");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
@@ -113,133 +87,107 @@ export default function StepGitImportForm({
   ]);
 
   const handleRepositorySelect = (repo: UserGitRepository) => {
-    // Transform UserGitRepository to GithubRepoType format
-    const transformedRepo: GithubRepoType = {
-      owner: repo.name.split("/")[0] || "",
-      title: repo.name,
-      description: repo.description,
-      url: repo.html_url,
-      readme: "", // Will be fetched separately if needed
-    };
-    setValue("selectedRepository", transformedRepo);
+    setSelectedRepo(repo);
   };
 
   const handlePrevious = () => router.push("/projects/create");
 
-  const onSubmit = handleSubmit((data) => {
-    if (data.selectedRepository) {
-      selectRepository(data.selectedRepository);
+  const handleSubmit = async () => {
+    if (selectedRepo) {
+      setIsSubmitting(true);
+      selectRepository(selectedRepo);
       router.push(`/projects/create/${provider}/confirm`);
     }
-  });
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={onSubmit} className="w-full">
-        <FormField
-          control={control}
-          name="selectedRepository"
-          render={() => (
-            <FormItem>
-              <FormControl>
-                <div className="relative flex w-full">
-                  <div
-                    ref={scrollRef}
-                    className="mb-4 h-[350px] w-full overflow-y-auto rounded-md border border-black/4"
-                    onScroll={(e) =>
-                      setScrollTop((e.target as HTMLDivElement).scrollTop)
-                    }
-                    style={{ scrollbarWidth: "none" }}
-                  >
-                    <div className="flex flex-col divide-y divide-black/4">
-                      {isLoading ? (
-                        <RepositorySkeleton />
-                      ) : (
-                        repos?.map((repo: UserGitRepository, idx: number) => (
-                          <div
-                            key={idx}
-                            className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
-                              selectedRepository?.title === repo.name
-                                ? "bg-black-50"
-                                : "hover:bg-gray-50"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-black">
-                                {repo.name}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <Button
-                                type="button"
-                                variant={
-                                  selectedRepository?.title === repo.name
-                                    ? "default"
-                                    : "outline"
-                                }
-                                size="sm"
-                                onClick={() => handleRepositorySelect(repo)}
-                              >
-                                {selectedRepository?.title === repo.name
-                                  ? "Selected"
-                                  : "Select"}
-                              </Button>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
+    <div className="w-full">
+      <div className="relative flex w-full">
+        <div
+          ref={scrollRef}
+          className="mb-4 h-[350px] w-full overflow-y-auto rounded-md border border-black/4"
+          onScroll={(e) => setScrollTop((e.target as HTMLDivElement).scrollTop)}
+          style={{ scrollbarWidth: "none" }}
+        >
+          <div className="flex flex-col divide-y divide-black/4">
+            {isLoading ? (
+              <RepositorySkeleton />
+            ) : (
+              repos?.map((repo: UserGitRepository, idx: number) => (
+                <div
+                  key={idx}
+                  className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
+                    selectedRepo?.name === repo.name
+                      ? "bg-black-50"
+                      : "hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-black">
+                      {repo.name}
+                    </span>
                   </div>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      right: -18,
-                      width: 5,
-                      height: 320,
-                      background: "rgba(0,0,0,0.03)",
-                      borderRadius: 3,
-                      zIndex: 10,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 5,
-                        height: scrollbarHeight,
-                        background: "rgba(0,0,0,0.05)",
-                        borderRadius: 3,
-                        position: "absolute",
-                        top: scrollbarTop,
-                        left: 0,
-                        transition: "top 0.1s",
-                        cursor: "grab",
-                      }}
-                      onMouseDown={(e) => {
-                        setDragging(true);
-                        setDragStartY(e.clientY);
-                        setDragStartScroll(scrollbarTop);
-                      }}
-                    />
+                  <div className="flex items-center gap-3">
+                    <Button
+                      type="button"
+                      variant={
+                        selectedRepo?.name === repo.name ? "default" : "outline"
+                      }
+                      size="sm"
+                      onClick={() => handleRepositorySelect(repo)}
+                    >
+                      {selectedRepo?.name === repo.name ? "Selected" : "Select"}
+                    </Button>
                   </div>
                 </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="mt-4">
-          <FormNavigationButtons
-            onNext={onSubmit}
-            onPrevious={handlePrevious}
-            nextLabel="Confirm"
-            isLoading={isSubmitting}
-            nextType="submit"
-            isNextDisabled={!selectedRepository}
+              ))
+            )}
+          </div>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            right: -18,
+            width: 5,
+            height: 320,
+            background: "rgba(0,0,0,0.03)",
+            borderRadius: 3,
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 5,
+              height: scrollbarHeight,
+              background: "rgba(0,0,0,0.05)",
+              borderRadius: 3,
+              position: "absolute",
+              top: scrollbarTop,
+              left: 0,
+              transition: "top 0.1s",
+              cursor: "grab",
+            }}
+            onMouseDown={(e) => {
+              setDragging(true);
+              setDragStartY(e.clientY);
+              setDragStartScroll(scrollbarTop);
+            }}
           />
         </div>
-      </form>
-    </Form>
+      </div>
+
+      <div className="mt-4">
+        <FormNavigationButtons
+          onNext={handleSubmit}
+          onPrevious={handlePrevious}
+          nextLabel="Confirm"
+          isLoading={isSubmitting}
+          nextType="button"
+          isNextDisabled={!selectedRepo}
+        />
+      </div>
+    </div>
   );
 }
 

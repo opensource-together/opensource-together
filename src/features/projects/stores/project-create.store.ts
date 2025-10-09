@@ -1,12 +1,9 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import {
-  Category,
-  ExternalLink,
-  GithubRepoType,
-  TechStack,
-} from "../types/project.type";
+import { UserGitRepository } from "@/shared/types/git-repository.type";
+
+import { Category, ExternalLink, TechStack } from "../types/project.type";
 
 export type provider = "scratch" | "github" | "gitlab";
 
@@ -20,7 +17,7 @@ export interface ProjectFormData {
   externalLinks: ExternalLink[];
   techStack: TechStack[];
   categories: Category[];
-  selectedRepository: GithubRepoType | null;
+  selectedRepository: UserGitRepository | null;
 }
 
 interface ProjectCreateStore {
@@ -44,7 +41,7 @@ interface ProjectCreateStore {
       >
     >
   ) => void;
-  selectRepository: (repo: GithubRepoType) => void;
+  selectRepository: (repo: UserGitRepository) => void;
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;
@@ -81,14 +78,23 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
         updateProjectInfo: (info) =>
           set((state) => ({ formData: { ...state.formData, ...info } })),
 
-        selectRepository: (repo) =>
+        selectRepository: (repo) => {
           set((state) => ({
             formData: {
               ...state.formData,
               selectedRepository: repo,
-              readme: repo.readme || "",
+              // Reset project data when repository changes
+              title: "",
+              description: "",
+              image: "",
+              coverImages: [],
+              readme: "",
+              externalLinks: [],
+              techStack: [],
+              categories: [],
             },
-          })),
+          }));
+        },
 
         nextStep: () =>
           set((state) => ({ currentStep: state.currentStep + 1 })),

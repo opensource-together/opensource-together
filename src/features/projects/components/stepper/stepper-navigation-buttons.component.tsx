@@ -28,11 +28,11 @@ export function FormNavigationButtons({
   nextType = "submit",
 }: FormNavigationButtonsProps) {
   return (
-    <div className="mt-6 flex justify-center space-x-4">
+    <div className="mt-6 flex justify-start space-x-4">
       {showPrevious && (
         <Button
           type="button"
-          variant="ghost"
+          variant="secondary"
           onClick={onPrevious}
           disabled={isPreviousDisabled || isLoading}
         >

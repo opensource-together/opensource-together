@@ -18,45 +18,49 @@ export const selectedRepoSchema = z.object({
 });
 
 export const stepDescribeProjectSchema = z.object({
+  logo: z.instanceof(File).optional(),
   title: z
     .string()
-    .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
+    .min(2, "The project name must contain at least 2 characters"),
   description: z
     .string()
-    .min(10, "La description doit contenir au moins 10 caractères")
-    .max(100, "La description ne peut pas dépasser 100 caractères"),
+    .min(10, "The description must contain at least 10 characters")
+    .max(100, "The description cannot exceed 100 characters"),
   coverImages: z.array(z.instanceof(File)).optional(),
 });
 
 export const stepTechCategoriesSchema = z.object({
-  logo: z.instanceof(File).optional(),
   techStack: z
     .array(z.string())
-    .min(1, "Au moins une technologie est requise")
-    .max(10, "Maximum 10 technologies autorisées"),
+    .min(1, "At least one technology is required")
+    .max(10, "Maximum 10 technologies allowed"),
   categories: z
     .array(z.string())
-    .min(1, "Au moins une catégorie est requise")
-    .max(6, "Maximum 6 catégories autorisées"),
+    .min(1, "At least one category is required")
+    .max(6, "Maximum 6 categories allowed"),
   externalLinks: z
     .object({
       github: urlWithDomainCheck(
         ["github.com"],
-        "URL GitHub invalide (doit contenir github.com)"
+        "Invalid GitHub URL (must contain github.com)"
+      ),
+      gitlab: urlWithDomainCheck(
+        ["gitlab.com"],
+        "Invalid GitLab URL (must contain gitlab.com)"
       ),
       discord: urlWithDomainCheck(
         ["discord.gg", "discord.com"],
-        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+        "Invalid Discord URL (must contain discord.com or discord.gg)"
       ),
       twitter: urlWithDomainCheck(
         ["twitter.com", "x.com"],
-        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+        "Invalid Twitter/X URL (must contain twitter.com or x.com)"
       ),
       linkedin: urlWithDomainCheck(
         ["linkedin.com"],
-        "URL LinkedIn invalide (doit contenir linkedin.com)"
+        "Invalid LinkedIn URL (must contain linkedin.com)"
       ),
-      website: urlWithDomainCheck([], "URL du site web invalide"),
+      website: urlWithDomainCheck([], "Invalid website URL"),
     })
     .optional(),
 });

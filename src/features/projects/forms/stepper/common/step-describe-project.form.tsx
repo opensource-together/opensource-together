@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -24,7 +24,7 @@ import {
   stepDescribeProjectSchema,
 } from "../../../validations/project-stepper.schema";
 
-export function StepOneForm() {
+export function StepDescribeProjectForm() {
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const [coverImages, setCoverImages] = useState<File[]>(
     formData.coverImages || []
@@ -35,16 +35,38 @@ export function StepOneForm() {
   const form = useForm<StepDescribeProjectFormData>({
     resolver: zodResolver(stepDescribeProjectSchema),
     defaultValues: {
-      title: formData.title || "",
-      description: formData.description || "",
+      title: formData.title || formData.selectedRepository?.name || "",
+      description:
+        formData.description || formData.selectedRepository?.description || "",
     },
   });
 
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { isSubmitting },
   } = form;
+
+  useEffect(() => {
+    if (
+      formData.selectedRepository &&
+      !formData.title &&
+      !formData.description
+    ) {
+      if (formData.selectedRepository.name) {
+        setValue("title", formData.selectedRepository.name);
+      }
+      if (formData.selectedRepository.description) {
+        setValue("description", formData.selectedRepository.description);
+      }
+    }
+  }, [
+    formData.selectedRepository,
+    formData.title,
+    formData.description,
+    setValue,
+  ]);
 
   const onSubmit = handleSubmit((data) => {
     updateProjectInfo({

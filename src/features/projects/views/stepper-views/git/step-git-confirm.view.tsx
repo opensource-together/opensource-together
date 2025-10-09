@@ -3,15 +3,17 @@
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import StepTwoForm from "../../../forms/stepper/git/step-git-confirm.form";
+import StepGitConfirmForm from "../../../forms/stepper/git/step-git-confirm.form";
 import { provider } from "../../../stores/project-create.store";
 
-interface StepTwoViewProps {
+interface StepGitConfirmViewProps {
   provider: provider;
 }
 
-export default function StepTwoView({ provider }: StepTwoViewProps) {
-  const getProviderTitle = () => {
+export default function StepGitConfirmView({
+  provider,
+}: StepGitConfirmViewProps) {
+  const getProviderTitle = (): string => {
     switch (provider) {
       case "github":
         return "Confirm your Github information";
@@ -22,7 +24,7 @@ export default function StepTwoView({ provider }: StepTwoViewProps) {
     }
   };
 
-  const getProviderDescription = () => {
+  const getProviderDescription = (): string => {
     switch (provider) {
       case "github":
         return "Configure the details of your GitHub project.";
@@ -39,7 +41,7 @@ export default function StepTwoView({ provider }: StepTwoViewProps) {
         title={getProviderTitle()}
         description={getProviderDescription()}
       />
-      <StepTwoForm provider={provider} />
+      <StepGitConfirmForm provider={provider} />
     </StepperWrapper>
   );
 }

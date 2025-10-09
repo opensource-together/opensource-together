@@ -3,15 +3,17 @@
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import StepOneForm from "../../../forms/stepper/git/step-git-import.form";
+import StepGitImportForm from "../../../forms/stepper/git/step-git-import.form";
 import { provider } from "../../../stores/project-create.store";
 
-interface StepOneViewProps {
+interface StepGitImportViewProps {
   provider: provider;
 }
 
-export default function StepOneView({ provider }: StepOneViewProps) {
-  const getProviderTitle = () => {
+export default function StepGitImportView({
+  provider,
+}: StepGitImportViewProps) {
+  const getProviderTitle = (): string => {
     switch (provider) {
       case "github":
         return "Import Github Repository";
@@ -24,7 +26,7 @@ export default function StepOneView({ provider }: StepOneViewProps) {
     }
   };
 
-  const getProviderDescription = () => {
+  const getProviderDescription = (): string => {
     switch (provider) {
       case "github":
         return "Choose which Github repository you want to import.";
@@ -43,7 +45,7 @@ export default function StepOneView({ provider }: StepOneViewProps) {
         title={getProviderTitle()}
         description={getProviderDescription()}
       />
-      <StepOneForm provider={provider} />
+      <StepGitImportForm provider={provider} />
     </StepperWrapper>
   );
 }

@@ -25,7 +25,7 @@ export default function ChooseMethodCard({
   return (
     <div
       className={cn(
-        "flex w-64 flex-1 cursor-pointer flex-col rounded-[20px] p-6 transition-all",
+        "hover:bg-accent flex w-64 flex-1 cursor-pointer flex-col rounded-[20px] p-6 transition-all",
         isSelected
           ? "outline-ost-blue-two outline-2"
           : "outline-muted-black-stroke outline",

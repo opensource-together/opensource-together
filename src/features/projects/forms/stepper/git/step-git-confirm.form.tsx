@@ -40,7 +40,7 @@ export default function StepGitConfirmForm({
             <Label className="text-lg">Repository Name</Label>
           </div>
           <div className="mt-2 font-normal text-black/50">
-            {formData.selectedRepository?.title}
+            {formData.selectedRepository?.name}
           </div>
         </div>
         <div className="my-4 h-px border-t-2 border-black/5" />
@@ -55,7 +55,7 @@ export default function StepGitConfirmForm({
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
             >
-              {formData.selectedRepository?.readme ||
+              {formData.selectedRepository?.description ||
                 "No description available. You can add one in the next step."}
             </ReactMarkdown>
           </div>
@@ -68,7 +68,7 @@ export default function StepGitConfirmForm({
           <div className="mt-2 flex items-center gap-2">
             <Icon name="link" variant="gray" size="sm" />
             <span className="line-clamp-1 text-sm font-normal break-all text-black/50">
-              {formData.selectedRepository?.url}
+              {formData.selectedRepository?.html_url}
             </span>
           </div>
         </div>

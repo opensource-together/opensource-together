@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
+import DashboardCtaComponent from "@/features/dashboard/components/layout/dashboard-cta.component";
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
 import { StepperWrapper } from "@/features/projects/components/stepper/stepper-wrapper.component";
 
@@ -30,8 +31,17 @@ export default function StepSuccessView() {
     <StepperWrapper currentStep={currentStep() || 4}>
       <StepperHeaderComponent
         title="Your project has been created !"
-        description="You can now find your projects in your dashboard and contributer will be able to apply to any open roles."
+        description="You can now find your projects in your dashboard and contributer will be able to see your project."
       />
+      <div className="-mt-7 mb-20 w-full">
+        <DashboardCtaComponent
+          title="Star us on Github"
+          description="Star us on Github to support us and stay updated with the latest news and updates."
+          buttonText="Star us"
+          buttonVariant="ghost"
+          buttonLink="https://github.com/OpenSTogether"
+        />
+      </div>
 
       <FormNavigationButtons
         onPrevious={() => router.push("/")}

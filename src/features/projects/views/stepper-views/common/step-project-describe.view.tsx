@@ -4,9 +4,9 @@ import StepperHeaderComponent from "@/features/projects/components/stepper/stepp
 import { useProjectCreateStore } from "@/features/projects/stores/project-create.store";
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
-import { StepOneForm } from "../../../forms/stepper/common/step-describe-project.form";
+import { StepDescribeProjectForm } from "../../../forms/stepper/common/step-describe-project.form";
 
-export default function StepOneView() {
+export default function StepDescribeProjectView() {
   const { formData } = useProjectCreateStore();
 
   const currentStep = () => {
@@ -23,7 +23,7 @@ export default function StepOneView() {
         title="Describe your project"
         description="Fill in the information in regards of your project below"
       />
-      <StepOneForm />
+      <StepDescribeProjectForm />
     </StepperWrapper>
   );
 }

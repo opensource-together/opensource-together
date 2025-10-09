@@ -1,5 +1,3 @@
-import { ProjectRole } from "./project-role.type";
-
 export interface Owner {
   id: string;
   username: string;
@@ -58,14 +56,7 @@ export interface Collaborator {
   name: string;
   email?: string;
   avatarUrl?: string;
-  role?: string;
   collaboratorsCount?: number;
-}
-
-export interface KeyFeature {
-  id?: string;
-  projectId?: string;
-  feature: string;
 }
 
 export interface Project {
@@ -81,9 +72,7 @@ export interface Project {
   techStacks: TechStack[];
   externalLinks?: ExternalLink[];
   projectStats?: ProjectStats;
-  keyFeatures: KeyFeature[];
   categories: Category[];
-  projectRoles?: ProjectRole[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -95,18 +84,5 @@ export interface ProjectEditForm {
   status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
   techStacks: TechStack[];
   externalLinks?: ExternalLink[];
-  keyFeatures: KeyFeature[];
   categories?: Category[];
-}
-
-export interface GithubRepoType {
-  owner?: string;
-  title: string;
-  readme?: string;
-  description?: string | null;
-  url: string;
-}
-
-export interface GithubReposResponse {
-  repositories: GithubRepoType[];
 }
