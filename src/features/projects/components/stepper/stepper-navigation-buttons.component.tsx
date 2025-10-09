@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/shared/components/ui/button";
-import Icon from "@/shared/components/ui/icon";
 
 interface FormNavigationButtonsProps {
   onPrevious?: () => void;
@@ -19,8 +18,8 @@ interface FormNavigationButtonsProps {
 export function FormNavigationButtons({
   onPrevious,
   onNext,
-  nextLabel = "Suivant",
-  previousLabel = "Retour",
+  nextLabel = "Next",
+  previousLabel = "Back",
   isNextDisabled = false,
   isPreviousDisabled = false,
   isLoading = false,
@@ -33,11 +32,10 @@ export function FormNavigationButtons({
       {showPrevious && (
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           onClick={onPrevious}
           disabled={isPreviousDisabled || isLoading}
         >
-          <Icon name="chevron-left" size="xs" />
           {previousLabel}
         </Button>
       )}
@@ -48,8 +46,7 @@ export function FormNavigationButtons({
           onClick={nextType === "button" ? onNext : undefined}
           disabled={isNextDisabled || isLoading}
         >
-          {isLoading ? "En cours..." : nextLabel}
-          <Icon name="chevron-right" size="xs" variant="white" />
+          {isLoading ? "Loading..." : nextLabel}
         </Button>
       )}
     </div>
