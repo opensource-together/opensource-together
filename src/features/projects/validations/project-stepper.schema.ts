@@ -38,31 +38,27 @@ export const stepTechCategoriesSchema = z.object({
     .array(z.string())
     .min(1, "At least one category is required")
     .max(6, "Maximum 6 categories allowed"),
-  externalLinks: z
-    .object({
-      github: urlWithDomainCheck(
-        ["github.com"],
-        "Invalid GitHub URL (must contain github.com)"
-      ),
-      gitlab: urlWithDomainCheck(
-        ["gitlab.com"],
-        "Invalid GitLab URL (must contain gitlab.com)"
-      ),
-      discord: urlWithDomainCheck(
-        ["discord.gg", "discord.com"],
-        "Invalid Discord URL (must contain discord.com or discord.gg)"
-      ),
-      twitter: urlWithDomainCheck(
-        ["twitter.com", "x.com"],
-        "Invalid Twitter/X URL (must contain twitter.com or x.com)"
-      ),
-      linkedin: urlWithDomainCheck(
-        ["linkedin.com"],
-        "Invalid LinkedIn URL (must contain linkedin.com)"
-      ),
-      website: urlWithDomainCheck([], "Invalid website URL"),
-    })
-    .optional(),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "Invalid GitHub URL (must contain github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "Invalid GitLab URL (must contain gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "Invalid Discord URL (must contain discord.com or discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "Invalid Twitter/X URL (must contain twitter.com or x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "Invalid LinkedIn URL (must contain linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
 // ========================================

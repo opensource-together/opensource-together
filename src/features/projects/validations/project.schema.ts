@@ -99,25 +99,25 @@ export const updateProjectApiSchema = z.object({
   projectCategories: z.array(z.string()),
   githubUrl: urlWithDomainCheck(
     ["github.com"],
-    "URL GitHub invalide (doit contenir github.com)"
+    "Invalid GitHub URL (must contain github.com)"
   ).optional(),
   gitlabUrl: urlWithDomainCheck(
     ["gitlab.com"],
-    "URL GitLab invalide (doit contenir gitlab.com)"
+    "Invalid GitLab URL (must contain gitlab.com)"
   ).optional(),
   discordUrl: urlWithDomainCheck(
     ["discord.gg", "discord.com"],
-    "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+    "Invalid Discord URL (must contain discord.com or discord.gg)"
   ).optional(),
   twitterUrl: urlWithDomainCheck(
     ["twitter.com", "x.com"],
-    "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+    "Invalid Twitter/X URL (must contain twitter.com or x.com)"
   ).optional(),
   linkedinUrl: urlWithDomainCheck(
     ["linkedin.com"],
-    "URL LinkedIn invalide (doit contenir linkedin.com)"
+    "Invalid LinkedIn URL (must contain linkedin.com)"
   ).optional(),
-  websiteUrl: urlWithDomainCheck([], "URL du site web invalide").optional(),
+  websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
 // ========================================

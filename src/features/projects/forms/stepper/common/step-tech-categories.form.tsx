@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Combobox } from "@/shared/components/ui/combobox";
@@ -14,9 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
+import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-fields";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+
+import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
+import { useCreateProject } from "@/features/projects/hooks/use-projects.hook";
+import { ProjectSchema } from "@/features/projects/validations/project.schema";
 
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
@@ -27,30 +31,36 @@ import {
 
 export function StepTechCategoriesForm() {
   const router = useRouter();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [pendingFormData, setPendingFormData] =
+    useState<StepTechCategoriesFormData | null>(null);
+
+  const { createProject, isCreating } = useCreateProject();
+
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
-  const {
-    categoryOptions,
-    getCategoriesByIds,
-    isLoading: categoriesLoading,
-  } = useCategories();
+  const { categoryOptions, isLoading: categoriesLoading } = useCategories();
 
-  const getPreFilledLinks = () => {
+  const getPreFilledUrls = useCallback(() => {
     const repoUrl = formData.selectedRepository?.html_url || "";
     const provider = formData.method;
 
     return {
-      github: provider === "github" ? repoUrl : "",
-      gitlab: provider === "gitlab" ? repoUrl : "",
+      githubUrl: provider === "github" ? repoUrl : "",
+      gitlabUrl: provider === "gitlab" ? repoUrl : "",
+      discordUrl: "",
+      twitterUrl: "",
+      linkedinUrl: "",
+      websiteUrl: "",
     };
-  };
+  }, [formData.selectedRepository?.html_url, formData.method]);
 
   const form = useForm<StepTechCategoriesFormData>({
     resolver: zodResolver(stepTechCategoriesSchema),
     defaultValues: {
-      techStack: formData.techStack.map((tech) => tech.id) || [],
-      categories: formData.categories.map((cat) => cat.id) || [],
-      externalLinks: getPreFilledLinks(),
+      projectTechStacks: formData.projectTechStacks || [],
+      projectCategories: formData.projectCategories || [],
+      ...getPreFilledUrls(),
     },
   });
 
@@ -62,25 +72,76 @@ export function StepTechCategoriesForm() {
   } = form;
 
   useEffect(() => {
-    const preFilledLinks = getPreFilledLinks();
-    setValue("externalLinks", preFilledLinks);
-  }, [formData.selectedRepository, formData.method, setValue]);
+    const preFilledUrls = getPreFilledUrls();
+    Object.entries(preFilledUrls).forEach(([key, value]) => {
+      setValue(key as keyof StepTechCategoriesFormData, value);
+    });
+  }, [getPreFilledUrls, setValue]);
 
   const handlePrevious = () => {
     router.push("/projects/create/describe");
   };
 
-  const onSubmit = handleSubmit((data) => {
-    const selectedCategoriesData = getCategoriesByIds(data.categories);
+  const handleConfirmCreation = async () => {
+    if (!pendingFormData) return;
 
+    setShowConfirmation(false);
+
+    // Prepare project data
+    const projectData: ProjectSchema = {
+      title: formData.title,
+      description: formData.description,
+      provider: formData.method.toUpperCase() as
+        | "GITHUB"
+        | "GITLAB"
+        | "SCRATCH",
+      projectTechStacks: pendingFormData.projectTechStacks || [],
+      projectCategories: pendingFormData.projectCategories || [],
+      githubUrl: pendingFormData.githubUrl || "",
+      gitlabUrl: pendingFormData.gitlabUrl || "",
+      discordUrl: pendingFormData.discordUrl || "",
+      twitterUrl: pendingFormData.twitterUrl || "",
+      linkedinUrl: pendingFormData.linkedinUrl || "",
+      websiteUrl: pendingFormData.websiteUrl || "",
+    };
+
+    // Update the store with form data
     updateProjectInfo({
-      techStack: techStackOptions.filter((tech) =>
-        data.techStack.includes(tech.id)
-      ),
-      categories: selectedCategoriesData,
+      projectTechStacks: pendingFormData.projectTechStacks || [],
+      projectCategories: pendingFormData.projectCategories || [],
+      githubUrl: pendingFormData.githubUrl || "",
+      gitlabUrl: pendingFormData.gitlabUrl || "",
+      discordUrl: pendingFormData.discordUrl || "",
+      twitterUrl: pendingFormData.twitterUrl || "",
+      linkedinUrl: pendingFormData.linkedinUrl || "",
+      websiteUrl: pendingFormData.websiteUrl || "",
     });
 
-    router.push("/projects/create/success");
+    createProject(projectData);
+  };
+
+  const handleCancelCreation = () => {
+    setShowConfirmation(false);
+    setPendingFormData(null);
+  };
+
+  const onSubmit = handleSubmit((data) => {
+    // Store the form data for confirmation
+    setPendingFormData(data);
+
+    // Update the store with form data
+    updateProjectInfo({
+      projectTechStacks: data.projectTechStacks,
+      projectCategories: data.projectCategories,
+      githubUrl: data.githubUrl || "",
+      gitlabUrl: data.gitlabUrl || "",
+      discordUrl: data.discordUrl || "",
+      twitterUrl: data.twitterUrl || "",
+      linkedinUrl: data.linkedinUrl || "",
+      websiteUrl: data.websiteUrl || "",
+    });
+
+    setShowConfirmation(true);
   });
 
   return (
@@ -88,7 +149,7 @@ export function StepTechCategoriesForm() {
       <form className="flex w-full flex-col gap-6" onSubmit={onSubmit}>
         <FormField
           control={control}
-          name="techStack"
+          name="projectTechStacks"
           render={({ field }) => (
             <FormItem>
               <FormLabel required>Select technologies (max 10)</FormLabel>
@@ -115,7 +176,7 @@ export function StepTechCategoriesForm() {
 
         <FormField
           control={control}
-          name="categories"
+          name="projectCategories"
           render={({ field }) => (
             <FormItem>
               <FormLabel required>Select categories (max 6)</FormLabel>
@@ -142,102 +203,7 @@ export function StepTechCategoriesForm() {
 
         <div className="flex flex-col gap-2">
           <FormLabel>External links</FormLabel>
-          <FormField
-            control={control}
-            name="externalLinks.github"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="github"
-                    placeholder="https://github.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.gitlab"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="gitlab"
-                    placeholder="https://gitlab.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.discord"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="discord"
-                    placeholder="https://discord.gg/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.twitter"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="twitter"
-                    placeholder="https://x.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.linkedin"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="linkedin"
-                    placeholder="https://linkedin.com/..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="externalLinks.website"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <InputWithIcon
-                    icon="link"
-                    placeholder="https://..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <SocialLinksFormFields form={form} />
         </div>
 
         <FormNavigationButtons
@@ -245,6 +211,15 @@ export function StepTechCategoriesForm() {
           isLoading={isSubmitting}
           nextLabel="Create Project"
           nextType="submit"
+        />
+
+        <ProjectImportationConfirmDialog
+          open={showConfirmation}
+          onOpenChange={setShowConfirmation}
+          projectTitle={formData.title}
+          isCreating={isCreating}
+          onConfirm={handleConfirmCreation}
+          onCancel={handleCancelCreation}
         />
       </form>
     </Form>

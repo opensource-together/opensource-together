@@ -3,20 +3,23 @@ import { devtools, persist } from "zustand/middleware";
 
 import { UserGitRepository } from "@/shared/types/git-repository.type";
 
-import { Category, ExternalLink, TechStack } from "../types/project.type";
-
 export type provider = "scratch" | "github" | "gitlab";
 
 export interface ProjectFormData {
   method: provider;
   title: string;
   description: string;
-  image: string;
-  coverImages: File[];
+  imageUrls: string[];
+  logoUrl: string;
   readme?: string;
-  externalLinks: ExternalLink[];
-  techStack: TechStack[];
-  categories: Category[];
+  githubUrl: string;
+  gitlabUrl: string;
+  discordUrl: string;
+  twitterUrl: string;
+  linkedinUrl: string;
+  websiteUrl: string;
+  projectTechStacks: string[];
+  projectCategories: string[];
   selectedRepository: UserGitRepository | null;
 }
 
@@ -32,12 +35,17 @@ interface ProjectCreateStore {
         ProjectFormData,
         | "title"
         | "description"
-        | "image"
-        | "coverImages"
+        | "imageUrls"
+        | "logoUrl"
         | "readme"
-        | "techStack"
-        | "categories"
-        | "externalLinks"
+        | "projectTechStacks"
+        | "projectCategories"
+        | "githubUrl"
+        | "gitlabUrl"
+        | "discordUrl"
+        | "twitterUrl"
+        | "linkedinUrl"
+        | "websiteUrl"
       >
     >
   ) => void;
@@ -52,13 +60,18 @@ const initialFormData: ProjectFormData = {
   method: "scratch",
   title: "",
   description: "",
-  image: "",
-  coverImages: [],
+  imageUrls: [],
+  logoUrl: "",
   readme: "",
-  externalLinks: [],
+  githubUrl: "",
+  gitlabUrl: "",
+  discordUrl: "",
+  twitterUrl: "",
+  linkedinUrl: "",
+  websiteUrl: "",
   selectedRepository: null,
-  techStack: [],
-  categories: [],
+  projectTechStacks: [],
+  projectCategories: [],
 };
 
 export const useProjectCreateStore = create<ProjectCreateStore>()(
@@ -85,12 +98,11 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
               selectedRepository: repo,
               title: "",
               description: "",
-              image: "",
-              coverImages: [],
+              imageUrls: [],
+              logoUrl: "",
               readme: "",
-              externalLinks: [],
-              techStack: [],
-              categories: [],
+              githubUrl: "",
+              gitlabUrl: "",
             },
           }));
         },

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import { useGitRepository } from "@/shared/hooks/use-git-repository.hook";
 import { UserGitRepository } from "@/shared/types/git-repository.type";
 
@@ -29,9 +30,11 @@ export default function StepGitImportForm({
   const isScratch = provider === "scratch";
   const actualProvider = isScratch ? undefined : provider;
 
-  const { data: gitRepos, isLoading } = useGitRepository(
-    actualProvider ? { provider: actualProvider } : {}
-  );
+  const {
+    data: gitRepos,
+    isLoading,
+    isError,
+  } = useGitRepository(actualProvider ? { provider: actualProvider } : {});
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -99,6 +102,8 @@ export default function StepGitImportForm({
       router.push(`/projects/create/${provider}/confirm`);
     }
   };
+
+  if (isError) return <ErrorState message="Error loading repositories" />;
 
   return (
     <div className="w-full">

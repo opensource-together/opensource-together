@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
+import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-fields";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
@@ -88,103 +88,7 @@ export default function ProjectSidebarEditForm({
 
           <div className="mt-0 flex flex-col gap-4">
             <FormLabel>Liens sociaux</FormLabel>
-
-            <FormField
-              control={control}
-              name="githubUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="github"
-                      placeholder="https://github.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="gitlabUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="gitlab"
-                      placeholder="https://gitlab.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="discordUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="discord"
-                      placeholder="https://discord.gg/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="twitterUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="twitter"
-                      placeholder="https://x.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="linkedinUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="linkedin"
-                      placeholder="https://linkedin.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="websiteUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="link"
-                      placeholder="https://..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <SocialLinksFormFields form={form} />
           </div>
         </Form>
       </div>
