@@ -24,46 +24,38 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
   const form = useForm<ProjectSchema>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      image: project?.image || undefined,
+      logoUrl: project?.logoUrl || undefined,
       title: project?.title || "",
       description: project?.description || "",
-      techStack: project?.techStacks?.map((tech) => tech.id) || [],
-      categories: project?.categories?.map((category) => category.id) || [],
-      coverImages: project?.coverImages || [],
-      externalLinks:
-        project?.externalLinks?.reduce(
-          (acc, link) => {
-            const linkType =
-              link.type === "OTHER" ? "website" : link.type.toLowerCase();
-            acc[linkType as keyof typeof acc] = link.url;
-            return acc;
-          },
-          {} as {
-            github?: string;
-            discord?: string;
-            twitter?: string;
-            linkedin?: string;
-            website?: string;
-          }
-        ) || {},
+      projectTechStacks:
+        project?.projectTechStacks?.map((tech) => tech.id) || [],
+      projectCategories:
+        project?.projectCategories?.map((category) => category.id) || [],
+      imagesUrls: project?.imagesUrls || [],
+      githubUrl: project?.githubUrl || "",
+      gitlabUrl: project?.gitlabUrl || "",
+      discordUrl: project?.discordUrl || "",
+      twitterUrl: project?.twitterUrl || "",
+      linkedinUrl: project?.linkedinUrl || "",
+      websiteUrl: project?.websiteUrl || "",
     },
   });
 
   const { setValue } = form;
 
-  const visibleCoverImages = (project?.coverImages || []).filter(
-    (url) => !removedCoverImages.includes(url)
+  const visibleCoverImages = (project?.imagesUrls || []).filter(
+    (url: string) => !removedCoverImages.includes(url)
   );
 
   const handleImageSelect = (file: File | null) => {
     if (file) {
       setSelectedImageFile(file);
       setShouldDeleteImage(false);
-      setValue("image", "new-image-selected");
+      setValue("logoUrl", "new-image-selected");
     } else {
       setSelectedImageFile(null);
       setShouldDeleteImage(true);
-      setValue("image", "");
+      setValue("logoUrl", "");
     }
   };
 
@@ -71,17 +63,11 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     if (!project) return;
 
     updateProject({
-      updateData: {
-        data: {
-          ...data,
-          image: shouldDeleteImage ? undefined : data.image,
-        },
-        projectId: project.id || "",
+      data: {
+        ...data,
+        logoUrl: shouldDeleteImage ? undefined : data.logoUrl,
       },
-      newImageFile: selectedImageFile || undefined,
-      shouldDeleteImage,
-      newCoverFiles,
-      removedCoverImages,
+      projectId: project.id || "",
     });
   });
 

@@ -34,7 +34,7 @@ export default function ProjectSidebarEditForm({
         <Form {...form}>
           <FormField
             control={control}
-            name="techStack"
+            name="projectTechStacks"
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Technologies (max 10)</FormLabel>
@@ -61,7 +61,7 @@ export default function ProjectSidebarEditForm({
 
           <FormField
             control={control}
-            name="categories"
+            name="projectCategories"
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Catégories (max 6)</FormLabel>
@@ -91,7 +91,7 @@ export default function ProjectSidebarEditForm({
 
             <FormField
               control={control}
-              name="externalLinks.github"
+              name="githubUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -107,7 +107,23 @@ export default function ProjectSidebarEditForm({
             />
             <FormField
               control={control}
-              name="externalLinks.discord"
+              name="gitlabUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputWithIcon
+                      icon="gitlab"
+                      placeholder="https://gitlab.com/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="discordUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -123,7 +139,7 @@ export default function ProjectSidebarEditForm({
             />
             <FormField
               control={control}
-              name="externalLinks.twitter"
+              name="twitterUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -139,7 +155,7 @@ export default function ProjectSidebarEditForm({
             />
             <FormField
               control={control}
-              name="externalLinks.linkedin"
+              name="linkedinUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -155,7 +171,7 @@ export default function ProjectSidebarEditForm({
             />
             <FormField
               control={control}
-              name="externalLinks.website"
+              name="websiteUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

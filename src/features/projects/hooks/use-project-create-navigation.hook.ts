@@ -50,7 +50,7 @@ export function useProjectCreateNavigation() {
       pathname.includes("/scratch/step-four");
 
     const hasRequiredStepTwoData =
-      formData.techStack?.length && formData.categories?.length;
+      formData.projectTechStacks?.length && formData.projectCategories?.length;
 
     if (isScratchStepThreeOrLater && !hasRequiredStepTwoData) {
       router.replace("/projects/create/scratch/step-two");

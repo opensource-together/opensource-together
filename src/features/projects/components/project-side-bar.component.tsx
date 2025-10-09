@@ -19,11 +19,12 @@ interface ProjectSideBarProps {
 }
 
 const externalLinksConfig = [
-  { key: "github", icon: "github", alt: "GitHub" },
-  { key: "twitter", icon: "twitter", alt: "Twitter/X" },
-  { key: "linkedin", icon: "linkedin", alt: "LinkedIn" },
-  { key: "discord", icon: "discord", alt: "Discord" },
-  { key: "website", icon: "link", alt: "Website" },
+  { key: "githubUrl", icon: "github", alt: "GitHub" },
+  { key: "gitlabUrl", icon: "gitlab", alt: "GitLab" },
+  { key: "twitterUrl", icon: "twitter", alt: "Twitter/X" },
+  { key: "linkedinUrl", icon: "linkedin", alt: "LinkedIn" },
+  { key: "discordUrl", icon: "discord", alt: "Discord" },
+  { key: "websiteUrl", icon: "link", alt: "Website" },
 ];
 
 export default function ProjectSideBar({
@@ -34,9 +35,8 @@ export default function ProjectSideBar({
   const router = useRouter();
   const { navigateToProfile } = useProfileNavigation();
   const {
-    techStacks = [],
-    externalLinks = [],
-    categories = [],
+    projectTechStacks = [],
+    projectCategories = [],
     projectStats = {
       stars: 0,
       forks: 0,
@@ -49,10 +49,15 @@ export default function ProjectSideBar({
         author: { login: "", avatar_url: "", html_url: "" },
       },
     },
+    githubUrl,
+    gitlabUrl,
+    discordUrl,
+    twitterUrl,
+    linkedinUrl,
+    websiteUrl,
   } = project;
 
-  const githubLink =
-    externalLinks.find((link) => link.type === "GITHUB")?.url || "";
+  const githubLink = githubUrl || "";
 
   const contributors = project.projectStats?.contributors || [];
 
@@ -195,9 +200,9 @@ export default function ProjectSideBar({
 
       <div className="mb-2 flex flex-col">
         <h2 className="mb-4 text-sm">Technologies</h2>
-        {techStacks.length > 0 && (
+        {projectTechStacks.length > 0 && (
           <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
-            {techStacks.map((tech, index) => (
+            {projectTechStacks.map((tech, index) => (
               <StackLogo
                 key={index}
                 name={tech.name}
@@ -212,7 +217,7 @@ export default function ProjectSideBar({
       <div className="mb-2 flex flex-col">
         <h2 className="mb-4 text-sm">Catégories</h2>
         <div className="flex flex-wrap gap-2">
-          {categories.map((category, index) => (
+          {projectCategories.map((category, index) => (
             <Badge
               key={index}
               className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
@@ -257,22 +262,23 @@ export default function ProjectSideBar({
         </div>
       </div>
 
-      {externalLinks.length > 0 && (
+      {(githubUrl ||
+        gitlabUrl ||
+        discordUrl ||
+        twitterUrl ||
+        linkedinUrl ||
+        websiteUrl) && (
         <div className="mb-2 flex flex-col">
           <h2 className="mb-4 text-sm">Liens externes</h2>
           <div className="flex flex-col gap-6">
             {externalLinksConfig.map((config) => {
-              const link = externalLinks.find((l) =>
-                config.key === "website"
-                  ? l.type === "WEBSITE" || l.type === "OTHER"
-                  : l.type === config.key.toUpperCase()
-              );
-              if (!link) return null;
+              const url = project[config.key as keyof Project] as string;
+              if (!url) return null;
 
               return (
                 <Link
                   key={config.key}
-                  href={link.url}
+                  href={url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
@@ -284,7 +290,7 @@ export default function ProjectSideBar({
                     className="opacity-50 transition-opacity group-hover:opacity-100"
                     alt={config.alt}
                   />
-                  <span className="truncate">{formatUrl(link.url)}</span>
+                  <span className="truncate">{formatUrl(url)}</span>
                 </Link>
               );
             })}

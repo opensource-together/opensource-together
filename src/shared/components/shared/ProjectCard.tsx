@@ -14,12 +14,9 @@ import {
   ProjectCardTitle,
   ProjectCardViewText,
 } from "@/shared/components/ui/project-card";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import {
-  Owner,
-  ProjectStats,
-  TechStack,
-} from "@/features/projects/types/project.type";
+import { Owner, ProjectStats } from "@/features/projects/types/project.type";
 
 import StackLogo from "../logos/stack-logo";
 import { Avatar } from "../ui/avatar";
@@ -29,7 +26,7 @@ interface ProjectCardProps {
   projectId?: string;
   title?: string;
   description?: string;
-  techStacks?: TechStack[];
+  techStacks?: TechStackType[];
   showTechStack?: boolean;
   showViewProject?: boolean;
   className?: string;

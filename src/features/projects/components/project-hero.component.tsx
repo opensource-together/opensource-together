@@ -10,14 +10,14 @@ import ProjectReadme from "./project-readme.component";
 export function ProjectMobileHero({
   title,
   description,
-  image,
+  logoUrl,
   projectStats,
 }: Project) {
   const stars = projectStats?.stars || 0;
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center gap-4">
-        <Avatar src={image} name={title} alt={title} size="lg" />
+        <Avatar src={logoUrl} name={title} alt={title} size="lg" />
         <h1 className="flex-1 text-start text-xl font-medium">{title}</h1>
         <button className="flex h-[35px] min-w-[70px] items-center justify-center gap-1 rounded-full border border-black/5 text-sm font-medium">
           <span>{stars || 0}</span>
@@ -41,8 +41,8 @@ export default function ProjectHero({
   const {
     title = "",
     description = "",
-    coverImages = [],
-    image,
+    imagesUrls = [],
+    logoUrl,
     projectStats,
   } = project;
 
@@ -54,7 +54,7 @@ export default function ProjectHero({
         <div>
           <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <div className="flex items-center gap-3 sm:gap-4">
-              <Avatar src={image} name={title} alt={title} size="xl" />
+              <Avatar src={logoUrl} name={title} alt={title} size="xl" />
               <h1 className="text-start text-2xl font-medium sm:text-2xl">
                 {title}
               </h1>
@@ -73,13 +73,34 @@ export default function ProjectHero({
         </div>
       )}
 
-      {coverImages.length > 0 && <ImageSlider images={coverImages} />}
+      {imagesUrls.length > 0 && <ImageSlider images={imagesUrls} />}
 
       {project.readme && (
         <ProjectReadme
           readme={project.readme}
           projectTitle={title}
-          project={project}
+          project={{
+            externalLinks: [
+              project.githubUrl && { type: "GITHUB", url: project.githubUrl },
+              project.gitlabUrl && { type: "GITLAB", url: project.gitlabUrl },
+              project.twitterUrl && {
+                type: "TWITTER",
+                url: project.twitterUrl,
+              },
+              project.linkedinUrl && {
+                type: "LINKEDIN",
+                url: project.linkedinUrl,
+              },
+              project.discordUrl && {
+                type: "DISCORD",
+                url: project.discordUrl,
+              },
+              project.websiteUrl && {
+                type: "WEBSITE",
+                url: project.websiteUrl,
+              },
+            ].filter(Boolean) as { type: string; url: string }[],
+          }}
         />
       )}
     </div>

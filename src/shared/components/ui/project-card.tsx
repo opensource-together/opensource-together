@@ -3,8 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
-
-import { TechStack } from "@/features/projects/types/project.type";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
 /* ---------------------------------- Root ---------------------------------- */
 const ProjectCard = React.forwardRef<
@@ -113,7 +112,7 @@ ProjectCardTitle.displayName = "ProjectCardTitle";
 /* ------------------------------ Tech Stack ------------------------------- */
 interface ProjectCardTechStackProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  techStack: TechStack[];
+  techStack: TechStackType[];
 }
 
 const ProjectCardTechStack = React.forwardRef<
