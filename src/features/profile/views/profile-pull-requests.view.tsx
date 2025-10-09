@@ -21,7 +21,10 @@ import {
 } from "@/shared/components/ui/select";
 
 import PullRequestList from "../components/pull-request-card";
-import { useUserPullRequests } from "../hooks/use-profile-pull-request.hook";
+import {
+  useUserMyPullRequests,
+  useUserPullRequestsById,
+} from "../hooks/use-profile-pull-request.hook";
 import { PullRequestQueryParams } from "../types/profile.pull-request.type";
 
 const parseNumber = (value: string | null, fallback: number) => {
@@ -30,7 +33,13 @@ const parseNumber = (value: string | null, fallback: number) => {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 };
 
-export default function ProfilePullRequests() {
+interface ProfilePullRequestsProps {
+  userId?: string;
+}
+
+export default function ProfilePullRequests({
+  userId,
+}: ProfilePullRequestsProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -43,12 +52,22 @@ export default function ProfilePullRequests() {
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 10);
 
-  const { data, isLoading, isError, isFetching } = useUserPullRequests({
+  const queryParams = {
     provider,
     state,
     page,
     per_page: perPage,
-  });
+  };
+
+  const myPullRequestsResult = useUserMyPullRequests(queryParams);
+  const userPullRequestsResult = useUserPullRequestsById(
+    userId || "",
+    queryParams
+  );
+
+  const { data, isLoading, isError, isFetching } = userId
+    ? userPullRequestsResult
+    : myPullRequestsResult;
 
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -124,7 +143,11 @@ export default function ProfilePullRequests() {
         {renderFilters()}
         <ErrorState
           message="An error has occurred while loading the pull requests. Please try again later."
-          queryKey={["user", "me", "pullrequests"]}
+          queryKey={
+            userId
+              ? ["user", userId, "pullrequests"]
+              : ["user", "me", "pullrequests"]
+          }
         />
       </div>
     );
