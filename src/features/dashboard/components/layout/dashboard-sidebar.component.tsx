@@ -7,7 +7,6 @@ import {
   HiChatBubbleLeft,
   HiChevronRight,
   HiCog6Tooth,
-  HiInbox,
   HiMiniSquare2Stack,
   HiQuestionMarkCircle,
   HiUserGroup,
@@ -20,14 +19,9 @@ const sidebarSections = [
   {
     items: [
       {
-        label: "Projets",
+        label: "Projects",
         href: "/dashboard/my-projects",
         icon: HiMiniSquare2Stack,
-      },
-      {
-        label: "Candidatures",
-        href: "/dashboard/my-applications",
-        icon: HiInbox,
       },
     ],
   },

@@ -18,7 +18,7 @@ export const selectedRepoSchema = z.object({
 });
 
 export const stepDescribeProjectSchema = z.object({
-  logo: z.instanceof(File).optional(),
+  logoUrl: z.instanceof(File).optional(),
   title: z
     .string()
     .min(2, "The project name must contain at least 2 characters"),
@@ -26,15 +26,15 @@ export const stepDescribeProjectSchema = z.object({
     .string()
     .min(10, "The description must contain at least 10 characters")
     .max(100, "The description cannot exceed 100 characters"),
-  coverImages: z.array(z.instanceof(File)).optional(),
+  imageUrls: z.array(z.instanceof(File)).optional(),
 });
 
 export const stepTechCategoriesSchema = z.object({
-  techStack: z
+  projectTechStacks: z
     .array(z.string())
     .min(1, "At least one technology is required")
     .max(10, "Maximum 10 technologies allowed"),
-  categories: z
+  projectCategories: z
     .array(z.string())
     .min(1, "At least one category is required")
     .max(6, "Maximum 6 categories allowed"),

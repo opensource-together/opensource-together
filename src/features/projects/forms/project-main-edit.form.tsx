@@ -48,7 +48,7 @@ export default function ProjectMainEditForm({
         <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
           <FormField
             control={control}
-            name="image"
+            name="logoUrl"
             render={() => (
               <FormItem>
                 <FormLabel className="text-primary mb-2 text-sm font-medium">
@@ -63,7 +63,7 @@ export default function ProjectMainEditForm({
                     name={project.title}
                     fallback={project.title}
                     className="mt-4"
-                    currentImageUrl={project.image}
+                    currentImageUrl={project.logoUrl || undefined}
                   />
                 </FormControl>
                 <FormMessage />
@@ -121,7 +121,7 @@ export default function ProjectMainEditForm({
 
           <FormField
             control={control}
-            name="coverImages"
+            name="imagesUrls"
             render={() => (
               <FormItem>
                 <FormLabel
@@ -136,7 +136,7 @@ export default function ProjectMainEditForm({
                     maxFiles={4}
                     maxSize={5}
                     currentImages={
-                      currentCoverImages ?? project.coverImages ?? []
+                      currentCoverImages ?? project.imagesUrls ?? []
                     }
                     onFilesChange={(files) => onCoverFilesChange?.(files)}
                     onRemoveCurrentImage={(imageUrl, index) =>

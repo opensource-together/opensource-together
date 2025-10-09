@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import {
   Form,
   FormControl,
@@ -26,8 +27,8 @@ import {
 
 export function StepDescribeProjectForm() {
   const { formData, updateProjectInfo } = useProjectCreateStore();
-  const [coverImages, setCoverImages] = useState<File[]>(
-    formData.coverImages || []
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    formData.imageUrls || []
   );
 
   const router = useRouter();
@@ -48,12 +49,12 @@ export function StepDescribeProjectForm() {
     formState: { isSubmitting },
   } = form;
 
+  const handleLogoSelect = (file: File | null) => {
+    setValue("logoUrl", file || undefined);
+  };
+
   useEffect(() => {
-    if (
-      formData.selectedRepository &&
-      !formData.title &&
-      !formData.description
-    ) {
+    if (formData.selectedRepository) {
       if (formData.selectedRepository.name) {
         setValue("title", formData.selectedRepository.name);
       }
@@ -61,18 +62,13 @@ export function StepDescribeProjectForm() {
         setValue("description", formData.selectedRepository.description);
       }
     }
-  }, [
-    formData.selectedRepository,
-    formData.title,
-    formData.description,
-    setValue,
-  ]);
+  }, [formData.selectedRepository, setValue]);
 
   const onSubmit = handleSubmit((data) => {
     updateProjectInfo({
       title: data.title,
       description: data.description,
-      coverImages,
+      imageUrls,
     });
 
     router.push("/projects/create/tech-categories");
@@ -89,6 +85,27 @@ export function StepDescribeProjectForm() {
   return (
     <Form {...form}>
       <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
+        <FormField
+          control={control}
+          name="logoUrl"
+          render={() => (
+            <FormItem>
+              <FormLabel>Choose a logo</FormLabel>
+              <FormControl>
+                <AvatarUpload
+                  onFileSelect={handleLogoSelect}
+                  accept="image/*"
+                  maxSize={1}
+                  size="xl"
+                  name={formData.title}
+                  fallback={formData.title}
+                  className="mt-4"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={control}
           name="title"
@@ -127,7 +144,10 @@ export function StepDescribeProjectForm() {
           </FormLabel>
           <FormControl>
             <MultipleImageUpload
-              onFilesChange={setCoverImages}
+              onFilesChange={(files) => {
+                const urls = files.map((file) => URL.createObjectURL(file));
+                setImageUrls(urls);
+              }}
               maxFiles={4}
               maxSize={5}
               accept="image/*"

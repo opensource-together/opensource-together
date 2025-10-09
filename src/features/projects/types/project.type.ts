@@ -1,8 +1,11 @@
+import { CategoryType } from "@/shared/types/category.type";
+import { TechStackType } from "@/shared/types/tech-stack.type";
+
 export interface Owner {
   id: string;
   username: string;
   avatarUrl?: string;
-  techStacks?: TechStack[];
+  techStacks?: TechStackType[];
 }
 
 export interface Contributor {
@@ -10,12 +13,6 @@ export interface Contributor {
   username: string;
   avatarUrl: string | null;
   contributions: number;
-}
-
-export interface TechStack {
-  id: string;
-  name: string;
-  iconUrl?: string;
 }
 
 export interface ExternalLink {
@@ -46,11 +43,6 @@ export interface ProjectStats {
   lastCommit?: LastCommit;
 }
 
-export interface Category {
-  id: string;
-  name: string;
-}
-
 export interface Collaborator {
   id: string;
   name: string;
@@ -61,28 +53,41 @@ export interface Collaborator {
 
 export interface Project {
   id?: string;
-  slug?: string;
+  publicId?: string;
   title: string;
-  image?: string;
-  coverImages?: string[];
-  readme?: string;
+  imagesUrls: string[];
+  logoUrl: string | null;
+  provider: "GITHUB" | "GITLAB" | "SCRATCH";
+  readme: string | null;
   owner: Owner;
   description: string;
-  status?: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  techStacks: TechStack[];
-  externalLinks?: ExternalLink[];
+  projectTechStacks: TechStackType[];
+  published: boolean;
+  githubUrl: string | null;
+  gitlabUrl: string | null;
+  discordUrl: string | null;
+  twitterUrl: string | null;
+  linkedinUrl: string | null;
+  websiteUrl: string | null;
   projectStats?: ProjectStats;
-  categories: Category[];
+  projectCategories: CategoryType[];
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export interface ProjectEditForm {
-  image?: File;
+  id?: string;
+  publicId?: string;
+  logoUrl?: string;
   title: string;
   description: string;
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
-  techStacks: TechStack[];
-  externalLinks?: ExternalLink[];
-  categories?: Category[];
+  published: boolean;
+  githubUrl: string | null;
+  gitlabUrl: string | null;
+  discordUrl: string | null;
+  twitterUrl: string | null;
+  linkedinUrl: string | null;
+  websiteUrl: string | null;
+  projectTechStacks: TechStackType[];
+  projectCategories?: CategoryType[];
 }

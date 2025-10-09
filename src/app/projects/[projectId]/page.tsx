@@ -1,5 +1,4 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { Metadata } from "next";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
@@ -12,26 +11,26 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { projectId } = await params;
-  const project = await getProjectDetails(projectId);
+// export async function generateMetadata({ params }: Props): Promise<Metadata> {
+//   const { projectId } = await params;
+//   const project = await getProjectDetails(projectId);
 
-  return {
-    title: `${project.title} | OpenSource Together`,
-    description: project.description,
-    openGraph: {
-      title: `${project.title} | OpenSource Together`,
-      description: project.description,
-      images: [project.image || ""],
-      url: `https://opensourcetogether.com/projects/${projectId}`,
-      type: "website",
-      siteName: "OpenSource Together",
-      locale: "fr_FR",
-      countryName: "France",
-      emails: ["contact@opensourcetogether.com"],
-    },
-  };
-}
+//   return {
+//     title: `${project.title} | OpenSource Together`,
+//     description: project.description,
+//     openGraph: {
+//       title: `${project.title} | OpenSource Together`,
+//       description: project.description,
+//       images: [project.imageUrls || ""],
+//       url: `https://opensourcetogether.com/projects/${projectId}`,
+//       type: "website",
+//       siteName: "OpenSource Together",
+//       locale: "fr_FR",
+//       countryName: "France",
+//       emails: ["contact@opensourcetogether.com"],
+//     },
+//   };
+// }
 
 export default async function ProjectPage({
   params,

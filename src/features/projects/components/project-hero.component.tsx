@@ -42,7 +42,6 @@ export default function ProjectHero({
     title = "",
     description = "",
     coverImages = [],
-    keyFeatures = [],
     image,
     projectStats,
   } = project;
@@ -83,19 +82,6 @@ export default function ProjectHero({
           project={project}
         />
       )}
-
-      <div className="mt-10 w-full max-w-[629px]">
-        {keyFeatures.length > 0 && (
-          <>
-            <h2 className="mb-4 text-sm font-medium">Fonctionnalités clés</h2>
-            <ul className="mb-8 list-disc space-y-1 pl-5 text-sm leading-loose">
-              {keyFeatures.map((feature, index) => (
-                <li key={index}>{feature.feature}</li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
     </div>
   );
 }

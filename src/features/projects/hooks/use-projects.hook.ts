@@ -11,9 +11,11 @@ import {
   getProjects,
   updateProject,
 } from "../services/project.service";
-import { ProjectFormData, provider } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
-import { UpdateProjectData } from "../validations/project.schema";
+import {
+  ProjectSchema,
+  UpdateProjectData,
+} from "../validations/project.schema";
 
 /**
  * Fetches the list of all projects.
@@ -54,18 +56,10 @@ export function useCreateProject() {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
-    mutationFn: ({
-      projectData,
-      imageFile,
-      method,
-    }: {
-      projectData: ProjectFormData;
-      imageFile?: File;
-      method: provider;
-    }) => createProject(projectData, imageFile, method),
-    loadingMessage: "Création du projet en cours...",
-    successMessage: "Projet créé avec succès",
-    errorMessage: "Erreur lors de la création du projet",
+    mutationFn: (data: ProjectSchema) => createProject(data),
+    loadingMessage: "Creating project in progress...",
+    successMessage: "Project created successfully",
+    errorMessage: "Error while creating project",
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["projects"] });
@@ -94,29 +88,10 @@ export function useUpdateProject() {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
-    mutationFn: ({
-      updateData,
-      newImageFile,
-      shouldDeleteImage,
-      newCoverFiles,
-      removedCoverImages,
-    }: {
-      updateData: UpdateProjectData;
-      newImageFile?: File;
-      shouldDeleteImage?: boolean;
-      newCoverFiles?: File[];
-      removedCoverImages?: string[];
-    }) =>
-      updateProject(
-        updateData,
-        newImageFile,
-        shouldDeleteImage,
-        newCoverFiles,
-        removedCoverImages
-      ),
-    loadingMessage: "Mise à jour du projet en cours...",
-    successMessage: "Projet mis à jour avec succès",
-    errorMessage: "Erreur lors de la mise à jour du projet",
+    mutationFn: (projectData: UpdateProjectData) => updateProject(projectData),
+    loadingMessage: "Updating project in progress...",
+    successMessage: "Project updated successfully",
+    errorMessage: "Error while updating project",
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
@@ -146,9 +121,9 @@ export function useDeleteProject() {
 
   const mutation = useToastMutation({
     mutationFn: (projectId: string) => deleteProject(projectId),
-    loadingMessage: "Suppression du projet en cours...",
-    successMessage: "Projet supprimé avec succès",
-    errorMessage: "Erreur lors de la suppression du projet",
+    loadingMessage: "Deleting project in progress...",
+    successMessage: "Project deleted successfully",
+    errorMessage: "Error while deleting project",
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["projects"] });

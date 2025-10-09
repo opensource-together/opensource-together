@@ -15,7 +15,6 @@ import {
   ProjectCardViewText,
 } from "@/shared/components/ui/project-card";
 
-import { ProjectRole } from "@/features/projects/types/project-role.type";
 import {
   Owner,
   ProjectStats,
@@ -32,7 +31,6 @@ interface ProjectCardProps {
   description?: string;
   techStacks?: TechStack[];
   showTechStack?: boolean;
-  roles?: ProjectRole[];
   showViewProject?: boolean;
   className?: string;
   image?: string;

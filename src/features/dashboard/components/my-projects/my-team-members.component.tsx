@@ -101,12 +101,6 @@ export default function MyTeamMembers({
 
               <TableCell>
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm font-medium">{member.role}</span>
-                </div>
-              </TableCell>
-
-              <TableCell>
-                <div className="flex flex-col gap-1">
                   <span className="text-sm font-medium">
                     {formatDate(member.joinedAt)}
                   </span>

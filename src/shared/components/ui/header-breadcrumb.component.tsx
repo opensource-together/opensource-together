@@ -8,7 +8,6 @@ import { useProfile } from "@/features/profile/hooks/use-profile.hook";
 import { useProject } from "@/features/projects/hooks/use-projects.hook";
 
 import { useMyProjectDetails } from "../../../features/dashboard/hooks/use-my-projects.hook";
-import { useMyProjectRolesApplications } from "../../../features/dashboard/hooks/use-project-role-application.hook";
 
 export default function HeaderBreadcrumb() {
   const pathname = usePathname();
@@ -25,38 +24,25 @@ export default function HeaderBreadcrumb() {
 
   const getData = () => {
     const projectId = segments[segments.indexOf("my-projects") + 1];
-    const applicationId = segments[segments.indexOf("my-applications") + 1];
     const publicProjectId = segments[segments.indexOf("projects") + 1];
     const userId = segments[segments.indexOf("profile") + 1];
 
     return {
       projectId,
-      applicationId,
       publicProjectId,
       userId,
     };
   };
 
-  const { projectId, applicationId, publicProjectId, userId } = getData();
+  const { projectId, publicProjectId, userId } = getData();
 
   const { data: project } = useMyProjectDetails(projectId || "");
-  const { data: applications } = useMyProjectRolesApplications();
   const { data: publicProject } = useProject(publicProjectId || "");
   const { data: publicProfile } = useProfile(userId || "");
 
   const getBreadcrumbItems = () => {
     if (routeConfig[pathname as keyof typeof routeConfig]) {
       return routeConfig[pathname as keyof typeof routeConfig]();
-    }
-
-    if (pathname.startsWith("/dashboard/my-applications/") && applicationId) {
-      const application = applications?.find(
-        (app) => app.applicationId === applicationId
-      );
-      return [
-        { label: "Candidatures", href: "/dashboard/my-applications" },
-        { label: application?.project?.title || "Candidature", href: pathname },
-      ];
     }
 
     if (pathname.startsWith("/profile/") && userId && userId !== "me") {
@@ -80,7 +66,6 @@ export default function HeaderBreadcrumb() {
       const breadcrumbItems = [];
       const segmentLabels = {
         "my-projects": "Projets",
-        "my-applications": "Candidatures",
       };
 
       for (let i = 1; i < segments.length; i++) {
@@ -90,10 +75,6 @@ export default function HeaderBreadcrumb() {
 
         if (segment === projectId && project?.title) {
           label = project.title;
-        }
-
-        if (segments[1] === "my-projects" && segments[2] && i === 3) {
-          label = "Candidature";
         }
 
         const href = "/" + segments.slice(0, i + 1).join("/");

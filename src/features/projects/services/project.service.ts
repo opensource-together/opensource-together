@@ -1,23 +1,10 @@
 import { API_BASE_URL } from "@/config/config";
 
-import {
-  safeDeleteMedia,
-  safeReplaceMedia,
-  safeUploadMedia,
-} from "@/shared/services/media.service";
-
-import { ProjectFormData, provider } from "../stores/project-create.store";
 import { Project } from "../types/project.type";
 import {
+  ProjectSchema,
   UpdateProjectData,
-  UpdateProjectSchema,
-  createProjectApiSchema,
-  updateProjectApiSchema,
 } from "../validations/project.schema";
-import {
-  transformProjectForApi,
-  transformProjectForApiUpdate,
-} from "./project-transform.service";
 
 /**
  * Fetches the list of all projects.
@@ -75,160 +62,58 @@ export const getProjectDetails = async (
 };
 
 /**
- * Creates a new project with optional image upload.
+ * Creates a new project.
  *
- * @param storeData - The data for the new project.
- * @param imageFile - Optional image file to upload.
- * @param method - Method of creation ('scratch' or 'github').
+ * @param projectData - The project data.
  * @returns A promise that resolves to the created project.
  */
 export const createProject = async (
-  storeData: ProjectFormData,
-  imageFile?: File,
-  method: provider = "scratch"
+  projectData: ProjectSchema
 ): Promise<Project> => {
-  let imageUrl: string | null = null;
-  const coverImageUrls: string[] = [];
+  const response = await fetch(`${API_BASE_URL}/projects`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(projectData),
+  });
 
-  try {
-    if (imageFile) {
-      imageUrl = await safeUploadMedia(imageFile);
-      if (!imageUrl) {
-        throw new Error("Failed to upload image");
-      }
-    }
-
-    if (storeData.coverImages && storeData.coverImages.length > 0) {
-      const uploadPromises = storeData.coverImages.map((file) =>
-        safeUploadMedia(file)
-      );
-      const results = await Promise.all(uploadPromises);
-
-      results.forEach((url) => {
-        if (url) coverImageUrls.push(url);
-      });
-    }
-
-    const apiData = {
-      ...transformProjectForApi(storeData),
-      image: imageUrl || storeData.image,
-      coverImages: coverImageUrls,
-    };
-
-    const validatedData = createProjectApiSchema.parse(apiData);
-
-    const url =
-      method === "github"
-        ? `${API_BASE_URL}/projects?method=github`
-        : `${API_BASE_URL}/projects?method=scratch`;
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(validatedData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error creating project");
-    }
-
-    return response.json();
-  } catch (error) {
-    if (imageUrl) {
-      await safeDeleteMedia(imageUrl);
-    }
-    for (const coverImageUrl of coverImageUrls) {
-      await safeDeleteMedia(coverImageUrl);
-    }
-    throw error;
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Error creating project");
   }
+
+  return response.json();
 };
 
 /**
  * Updates an existing project with optional image handling.
  *
- * @param params - The data for the updated project.
- * @param newImageFile - Optional new image file to upload.
- * @param shouldDeleteImage - Whether to delete the current image.
+ * @param projectId - The ID of the project to update.
  * @returns A promise that resolves to the updated project.
  */
 export const updateProject = async (
-  params: UpdateProjectData,
-  newImageFile?: File,
-  shouldDeleteImage?: boolean,
-  newCoverFiles: File[] = [],
-  removedCoverImages: string[] = []
+  projectData: UpdateProjectData
 ): Promise<Project> => {
-  try {
-    const validatedParams = UpdateProjectSchema.parse(params);
-    const { data, projectId } = validatedParams;
-
-    const currentProject = await getProjectDetails(projectId);
-
-    let imageUrl: string | undefined = currentProject.image;
-    let coverImages: string[] = currentProject.coverImages || [];
-
-    if (shouldDeleteImage && currentProject.image) {
-      await safeDeleteMedia(currentProject.image);
-      imageUrl = undefined;
-    } else if (newImageFile) {
-      if (currentProject.image) {
-        const newImageUrl = await safeReplaceMedia(
-          currentProject.image,
-          newImageFile
-        );
-        imageUrl = newImageUrl || undefined;
-      } else {
-        const newImageUrl = await safeUploadMedia(newImageFile);
-        imageUrl = newImageUrl || undefined;
-      }
-    }
-
-    if (removedCoverImages.length > 0) {
-      const toDeleteSet = new Set(removedCoverImages);
-      await Promise.all(removedCoverImages.map((url) => safeDeleteMedia(url)));
-      coverImages = coverImages.filter((url) => !toDeleteSet.has(url));
-    }
-
-    if (newCoverFiles.length > 0) {
-      const uploaded = await Promise.all(
-        newCoverFiles.map((f) => safeUploadMedia(f))
-      );
-      const uploadedUrls = uploaded.filter((u): u is string => Boolean(u));
-      coverImages = [...coverImages, ...uploadedUrls].slice(0, 4);
-    }
-
-    const apiPayload = transformProjectForApiUpdate({
-      ...data,
-      image: imageUrl,
-      coverImages,
-    });
-
-    const validatedData = updateProjectApiSchema.parse(apiPayload);
-
-    const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+  const response = await fetch(
+    `${API_BASE_URL}/projects/${projectData.projectId}`,
+    {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(validatedData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error updating project");
+      body: JSON.stringify(projectData.data),
     }
+  );
 
-    return response.json();
-  } catch (error) {
-    console.error("Error updating project:", error);
-    throw error;
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Error updating project");
   }
+
+  return response.json();
 };
 
 /**
@@ -239,8 +124,6 @@ export const updateProject = async (
  */
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
-    const project = await getProjectDetails(projectId);
-
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
       method: "DELETE",
       credentials: "include",
@@ -254,10 +137,6 @@ export const deleteProject = async (projectId: string): Promise<void> => {
       throw new Error(
         error.message || "Erreur lors de la suppression du projet"
       );
-    }
-
-    if (project.image) {
-      await safeDeleteMedia(project.image);
     }
   } catch (error) {
     console.error("Error deleting project:", error);

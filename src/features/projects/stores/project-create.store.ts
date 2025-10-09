@@ -83,7 +83,6 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
             formData: {
               ...state.formData,
               selectedRepository: repo,
-              // Reset project data when repository changes
               title: "",
               description: "",
               image: "",

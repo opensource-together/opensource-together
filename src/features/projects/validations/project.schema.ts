@@ -15,40 +15,41 @@ export const projectSchema = z.object({
     .string()
     .min(10, "La description doit contenir au moins 10 caractères"),
   readme: z.string().optional(),
-  techStack: z
+  provider: z.enum(["GITHUB", "GITLAB", "SCRATCH"]),
+  projectTechStacks: z
     .array(z.string())
     .min(1, "Au moins une technologie est requise")
     .max(10, "Maximum 10 technologies autorisées"),
-  categories: z
+  projectCategories: z
     .array(z.string())
     .min(1, "Au moins une catégorie est requise")
     .max(6, "Maximum 6 catégories autorisées"),
-  image: z.string().optional(),
-  coverImages: z
+  logoUrl: z.string().optional(),
+  imagesUrls: z
     .array(z.string())
     .max(4, "Maximum 4 images de couverture autorisées")
     .optional(),
-  externalLinks: z
-    .object({
-      github: urlWithDomainCheck(
-        ["github.com"],
-        "URL GitHub invalide (doit contenir github.com)"
-      ),
-      discord: urlWithDomainCheck(
-        ["discord.gg", "discord.com"],
-        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-      ),
-      twitter: urlWithDomainCheck(
-        ["twitter.com", "x.com"],
-        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-      ),
-      linkedin: urlWithDomainCheck(
-        ["linkedin.com"],
-        "URL LinkedIn invalide (doit contenir linkedin.com)"
-      ),
-      website: urlWithDomainCheck([], "URL du site web invalide"),
-    })
-    .optional(),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "URL GitHub invalide (doit contenir github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "URL GitLab invalide (doit contenir gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "URL LinkedIn invalide (doit contenir linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "URL du site web invalide").optional(),
 });
 
 // ========================================
@@ -62,35 +63,61 @@ export const createProjectApiSchema = z.object({
   image: z.string().optional(),
   coverImages: z.array(z.string()).max(4).optional(),
   readme: z.string().optional(),
-  techStacks: z.array(z.string()),
-  categories: z.array(z.string()),
-  externalLinks: z
-    .array(
-      z.object({
-        type: z.string(),
-        url: z.string(),
-      })
-    )
-    .optional(),
+  projectTechStacks: z.array(z.string()),
+  projectCategories: z.array(z.string()),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "URL GitHub invalide (doit contenir github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "URL GitLab invalide (doit contenir gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "URL LinkedIn invalide (doit contenir linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "URL du site web invalide").optional(),
 });
 
 // API schema for updates - what the backend expects
 export const updateProjectApiSchema = z.object({
   title: z.string().min(3, "Le titre du projet est requis"),
   description: z.string().min(10, "Une description est requise"),
-  image: z.string().optional(),
-  coverImages: z.array(z.string()).max(4).optional(),
+  logoUrl: z.string().optional(),
+  imagesUrls: z.array(z.string()).max(4).optional(),
   readme: z.string().max(10000).optional(),
-  techStacks: z.array(z.string()),
-  categories: z.array(z.string()),
-  externalLinks: z
-    .array(
-      z.object({
-        type: z.string(),
-        url: z.string(),
-      })
-    )
-    .optional(),
+  projectTechStacks: z.array(z.string()),
+  projectCategories: z.array(z.string()),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "URL GitHub invalide (doit contenir github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "URL GitLab invalide (doit contenir gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "URL Discord invalide (doit contenir discord.com ou discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "URL LinkedIn invalide (doit contenir linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "URL du site web invalide").optional(),
 });
 
 // ========================================

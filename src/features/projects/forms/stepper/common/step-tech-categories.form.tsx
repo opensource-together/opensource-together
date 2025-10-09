@@ -2,9 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -35,12 +35,22 @@ export function StepTechCategoriesForm() {
     isLoading: categoriesLoading,
   } = useCategories();
 
+  const getPreFilledLinks = () => {
+    const repoUrl = formData.selectedRepository?.html_url || "";
+    const provider = formData.method;
+
+    return {
+      github: provider === "github" ? repoUrl : "",
+      gitlab: provider === "gitlab" ? repoUrl : "",
+    };
+  };
+
   const form = useForm<StepTechCategoriesFormData>({
     resolver: zodResolver(stepTechCategoriesSchema),
     defaultValues: {
-      logo: undefined,
       techStack: formData.techStack.map((tech) => tech.id) || [],
       categories: formData.categories.map((cat) => cat.id) || [],
+      externalLinks: getPreFilledLinks(),
     },
   });
 
@@ -51,9 +61,10 @@ export function StepTechCategoriesForm() {
     formState: { isSubmitting },
   } = form;
 
-  const handleLogoSelect = (file: File | null) => {
-    setValue("logo", file || undefined);
-  };
+  useEffect(() => {
+    const preFilledLinks = getPreFilledLinks();
+    setValue("externalLinks", preFilledLinks);
+  }, [formData.selectedRepository, formData.method, setValue]);
 
   const handlePrevious = () => {
     router.push("/projects/create/describe");
@@ -75,28 +86,6 @@ export function StepTechCategoriesForm() {
   return (
     <Form {...form}>
       <form className="flex w-full flex-col gap-6" onSubmit={onSubmit}>
-        <FormField
-          control={control}
-          name="logo"
-          render={() => (
-            <FormItem>
-              <FormLabel>Choose a logo</FormLabel>
-              <FormControl>
-                <AvatarUpload
-                  onFileSelect={handleLogoSelect}
-                  accept="image/*"
-                  maxSize={1}
-                  size="xl"
-                  name={formData.title}
-                  fallback={formData.title}
-                  className="mt-4"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <FormField
           control={control}
           name="techStack"
@@ -151,7 +140,7 @@ export function StepTechCategoriesForm() {
           )}
         />
 
-        <div className="mt-4 flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           <FormLabel>External links</FormLabel>
           <FormField
             control={control}
@@ -162,6 +151,22 @@ export function StepTechCategoriesForm() {
                   <InputWithIcon
                     icon="github"
                     placeholder="https://github.com/..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="externalLinks.gitlab"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <InputWithIcon
+                    icon="gitlab"
+                    placeholder="https://gitlab.com/..."
                     {...field}
                   />
                 </FormControl>

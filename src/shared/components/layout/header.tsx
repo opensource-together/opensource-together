@@ -69,11 +69,6 @@ function DashboardNavItems({ onClose }: { onClose?: () => void }) {
       href: "/dashboard/my-projects",
       icon: "mix",
     },
-    {
-      label: "Mes candidatures",
-      href: "/dashboard/my-applications",
-      icon: "file-text",
-    },
   ];
 
   const handleDashboardNav = (href: string) => {
