@@ -71,62 +71,80 @@ export default function ProfilePullRequests() {
     ? getHasNextPage(provider)
     : getHasNextPage("github") || getHasNextPage("gitlab");
 
-  if (
-    data === null ||
-    data?.github?.data.length === 0 ||
-    data?.gitlab?.data.length === 0
-  )
+  const renderFilters = () => (
+    <div className="flex items-center justify-between">
+      <h2 className="font-medium">Pull Requests</h2>
+      <div className="flex items-center gap-2">
+        <Select
+          value={provider ?? "all"}
+          onValueChange={(value) =>
+            updateParam("provider", value === "all" ? null : value)
+          }
+        >
+          <SelectTrigger className="h-9 w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Providers</SelectItem>
+            <SelectItem value="github">GitHub</SelectItem>
+            <SelectItem value="gitlab">GitLab</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
+          value={state ?? "all"}
+          onValueChange={(value) =>
+            updateParam("state", value === "all" ? null : value)
+          }
+        >
+          <SelectTrigger className="h-9 w-[100px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="open">Open</SelectItem>
+            <SelectItem value="merged">Merged</SelectItem>
+            <SelectItem value="closed">Closed</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+
+  if (isLoading || isFetching)
     return (
-      <EmptyState icon={GoGitPullRequest} text="No pull requests found." />
+      <div className="flex w-full flex-col gap-4">
+        {renderFilters()}
+        <div>Loading pull requests...</div>
+      </div>
     );
-  if (isLoading || isFetching) return <div>Loading pull requests...</div>;
+
   if (isError)
     return (
-      <ErrorState
-        message="An error has occurred while loading the pull requests. Please try again later."
-        queryKey={["user", "me", "pullrequests"]}
-      />
+      <div className="flex w-full flex-col gap-4">
+        {renderFilters()}
+        <ErrorState
+          message="An error has occurred while loading the pull requests. Please try again later."
+          queryKey={["user", "me", "pullrequests"]}
+        />
+      </div>
+    );
+
+  const hasNoData =
+    data === null ||
+    data?.github?.data.length === 0 ||
+    data?.gitlab?.data.length === 0;
+
+  if (hasNoData)
+    return (
+      <div className="flex w-full flex-col gap-4">
+        {renderFilters()}
+        <EmptyState icon={GoGitPullRequest} text="No pull requests found." />
+      </div>
     );
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-medium">Pull Requests</h2>
-        <div className="flex items-center gap-2">
-          <Select
-            value={provider ?? "all"}
-            onValueChange={(value) =>
-              updateParam("provider", value === "all" ? null : value)
-            }
-          >
-            <SelectTrigger className="h-9 w-[140px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Providers</SelectItem>
-              <SelectItem value="github">GitHub</SelectItem>
-              <SelectItem value="gitlab">GitLab</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={state ?? "all"}
-            onValueChange={(value) =>
-              updateParam("state", value === "all" ? null : value)
-            }
-          >
-            <SelectTrigger className="h-9 w-[100px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="merged">Merged</SelectItem>
-              <SelectItem value="closed">Closed</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
+      {renderFilters()}
       <div className="flex flex-col gap-4">
         {!provider ? (
           <>
