@@ -9,7 +9,6 @@ import { Separator } from "@/shared/components/ui/separator";
 export default function Footer() {
   const pathname = usePathname();
   const hideFooter =
-    pathname.startsWith("/auth") ||
     pathname.startsWith("/projects/create") ||
     pathname.startsWith("/dashboard");
 

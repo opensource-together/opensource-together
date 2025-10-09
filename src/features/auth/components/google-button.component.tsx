@@ -27,7 +27,7 @@ export default function GoogleButton({
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
-      className={`w-[420px] text-base ${
+      className={`w-[320px] text-sm sm:text-base md:w-[420px] ${
         isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
       }`}
     >
