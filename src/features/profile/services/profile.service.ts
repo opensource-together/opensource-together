@@ -108,7 +108,7 @@ export const getUserPullRequests = async (
     );
 
     const queryString = queryParams.toString();
-    const url = `${API_BASE_URL}/users/me/pullrequests${queryString ? `?${queryString}` : ""}`;
+    const url = `${API_BASE_URL}/users/me/pull-requests${queryString ? `?${queryString}` : ""}`;
 
     const response = await fetch(url, {
       method: "GET",

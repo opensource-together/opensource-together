@@ -1,4 +1,4 @@
-import { FRONTEND_URL } from "@/config/config";
+import { API_BASE_URL, FRONTEND_URL } from "@/config/config";
 
 import { authClient } from "@/shared/lib/auth-client";
 
@@ -31,16 +31,13 @@ export async function logout(): Promise<void> {
  */
 export const getCurrentUser = async (): Promise<Profile | null> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       const error = await response.json();
@@ -60,15 +57,12 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
  */
 export const getWebSocketToken = async (): Promise<string | null> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/notifications/ws-token`,
-      {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/notifications/ws-token`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (response.ok) {
       const data = await response.json();

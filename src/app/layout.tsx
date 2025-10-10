@@ -10,6 +10,9 @@ import "../../public/fonts/font-face.css";
 import "./globals.css";
 import { Providers } from "./providers";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
