@@ -1,21 +1,16 @@
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import { Icon, IconName } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
-import { Skeleton } from "@/shared/components/ui/skeleton";
 import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
 import { Contributor, Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
-  isMaintainer?: boolean;
-  isAuthLoading?: boolean;
 }
 
 const externalLinksConfig = [
@@ -27,12 +22,7 @@ const externalLinksConfig = [
   { key: "websiteUrl", icon: "link", alt: "Website" },
 ];
 
-export default function ProjectSideBar({
-  project,
-  isMaintainer = false,
-  isAuthLoading = false,
-}: ProjectSideBarProps) {
-  const router = useRouter();
+export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const { navigateToProfile } = useProfileNavigation();
   const {
     projectTechStacks = [],
@@ -57,8 +47,6 @@ export default function ProjectSideBar({
     websiteUrl,
   } = project;
 
-  const githubLink = githubUrl || "";
-
   const contributors = project.projectStats?.contributors || [];
 
   const allContributors = (() => {
@@ -81,10 +69,6 @@ export default function ProjectSideBar({
     return contributors;
   })();
 
-  const handleEditClick = () => {
-    router.push(`/projects/${project.id}/edit`);
-  };
-
   const handleContributorClick = (contributor: Contributor) => {
     navigateToProfile(contributor.id);
   };
@@ -101,26 +85,8 @@ export default function ProjectSideBar({
 
   return (
     <div className="flex flex-1 flex-col gap-5">
-      <div className="mb-3 flex gap-2">
-        {isMaintainer ? (
-          <Button className="h-8.5 gap-2" onClick={handleEditClick}>
-            Modifier
-            <Icon name="pencil" size="xs" variant="white" />
-          </Button>
-        ) : isAuthLoading ? (
-          <Skeleton className="h-10 w-48 rounded-full" />
-        ) : (
-          <Button className="h-8.5">Rôles Diponibles</Button>
-        )}
-        <Link href={githubLink} target="_blank" rel="noopener noreferrer">
-          <Button variant="secondary" className="h-[35px]">
-            Voir Repository
-          </Button>
-        </Link>
-      </div>
-
       <div className="mb-2 flex flex-1 flex-col">
-        <h2 className="mb-4 text-sm">Détails</h2>
+        <h2 className="mb-4 text-sm">Statistics</h2>
 
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-2">
@@ -162,7 +128,7 @@ export default function ProjectSideBar({
           <div className="flex items-center gap-2">
             <Icon name="last-commit" size="sm" variant="default" />
             <span className="text-sm font-normal text-neutral-500">
-              Dernier Commit
+              Last Commit
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
@@ -186,7 +152,7 @@ export default function ProjectSideBar({
               className="opacity-50"
             />
             <span className="text-sm font-normal text-neutral-500">
-              Contributeurs
+              Contributors
             </span>
           </div>
           <div className="mx-4 flex flex-1 items-center">
@@ -199,7 +165,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="mb-4 text-sm">Technologies</h2>
+        <h2 className="mb-4 text-sm">Technical Skills</h2>
         {projectTechStacks.length > 0 && (
           <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
             {projectTechStacks.map((tech, index) => (
@@ -215,13 +181,10 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="mb-4 text-sm">Catégories</h2>
+        <h2 className="mb-4 text-sm">Categories</h2>
         <div className="flex flex-wrap gap-2">
           {projectCategories.map((category, index) => (
-            <Badge
-              key={index}
-              className="flex h-[20px] min-w-[65px] items-center justify-center rounded-full bg-[#FAFAFA] px-3 text-xs font-medium text-black/50"
-            >
+            <Badge variant="gray" key={index}>
               {category.name}
             </Badge>
           ))}
@@ -229,7 +192,7 @@ export default function ProjectSideBar({
       </div>
 
       <div className="mb-2 flex flex-col">
-        <h2 className="mb-4 text-sm">Contributeurs Principaux</h2>
+        <h2 className="mb-4 text-sm">Contributors</h2>
 
         <div className="flex flex-col items-start">
           <div className="ml-5 flex gap-2">
@@ -269,7 +232,7 @@ export default function ProjectSideBar({
         linkedinUrl ||
         websiteUrl) && (
         <div className="mb-2 flex flex-col">
-          <h2 className="mb-4 text-sm">Liens externes</h2>
+          <h2 className="mb-4 text-sm">External Links</h2>
           <div className="flex flex-col gap-6">
             {externalLinksConfig.map((config) => {
               const url = project[config.key as keyof Project] as string;

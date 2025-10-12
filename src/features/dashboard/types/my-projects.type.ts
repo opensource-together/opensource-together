@@ -6,9 +6,9 @@ export interface MyProjectType {
   id: string;
   title: string;
   description: string;
-  techStacks: TechStackType[];
+  projectTechStacks: TechStackType[];
   owner: Owner;
-  image?: string;
+  logoUrl?: string;
   status: string;
   teamMembers: TeamMemberType[];
   createdAt: Date;

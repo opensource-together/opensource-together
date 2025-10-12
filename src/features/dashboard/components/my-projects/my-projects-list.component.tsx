@@ -43,7 +43,7 @@ export default function MyProjectsList() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar
-                      src={project.image}
+                      src={project.logoUrl}
                       name={project.title}
                       alt={project.title}
                       size="md"

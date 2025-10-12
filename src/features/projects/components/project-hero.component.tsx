@@ -1,4 +1,7 @@
+import Link from "next/link";
+
 import { Avatar } from "@/shared/components/ui/avatar";
+import { Button } from "@/shared/components/ui/button";
 import Icon from "@/shared/components/ui/icon";
 import ImageSlider from "@/shared/components/ui/image-slider.component";
 import { Separator } from "@/shared/components/ui/separator";
@@ -11,21 +14,27 @@ export function ProjectMobileHero({
   title,
   description,
   logoUrl,
-  projectStats,
+  githubUrl,
 }: Project) {
-  const stars = projectStats?.stars || 0;
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center gap-4">
         <Avatar src={logoUrl} name={title} alt={title} size="lg" />
         <h1 className="flex-1 text-start text-xl font-medium">{title}</h1>
-        <button className="flex h-[35px] min-w-[70px] items-center justify-center gap-1 rounded-full border border-black/5 text-sm font-medium">
-          <span>{stars || 0}</span>
-          <Icon name="star" size="sm" />
-        </button>
       </div>
-      <p className="mt-4 text-sm font-normal">{description}</p>
-      <Separator className="mt-5" />
+
+      <p className="mt-4 mb-8 text-sm font-normal">{description}</p>
+      <div className="flex items-center gap-2">
+        <Link href={githubUrl || ""} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline">
+            <Icon name="star" size="sm" />
+            Star
+          </Button>
+        </Link>
+        <Link href={githubUrl || ""} target="_blank" rel="noopener noreferrer">
+          <Button>View Repository</Button>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -43,10 +52,8 @@ export default function ProjectHero({
     description = "",
     imagesUrls = [],
     logoUrl,
-    projectStats,
+    githubUrl = "",
   } = project;
-
-  const stars = projectStats?.stars || 0;
 
   return (
     <div className="flex flex-col bg-white">
@@ -60,10 +67,27 @@ export default function ProjectHero({
               </h1>
             </div>
 
-            <button className="flex h-[35px] w-[70px] items-center justify-center gap-1 self-start rounded-full border border-black/5 text-sm font-medium sm:self-center">
-              <span>{stars}</span>
-              <Icon name="star" size="sm" />
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                href={githubUrl || ""}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline">
+                  <Icon name="star" size="sm" />
+                  Star
+                </Button>
+              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href={githubUrl || ""}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button>View Repository</Button>
+                </Link>
+              </div>
+            </div>
           </div>
 
           <div className="mt-4">

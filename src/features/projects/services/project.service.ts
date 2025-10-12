@@ -1,5 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
+import { mockProjectsResponse } from "../mocks/project.mock";
 import { Project } from "../types/project.type";
 import {
   ProjectSchema,
@@ -20,12 +21,13 @@ export const getProjects = async (): Promise<Project[]> => {
       },
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error fetching projects");
-    }
+    // if (!response.ok) {
+    //   const error = await response.json();
+    //   throw new Error(error.message || "Error fetching projects");
+    // }
 
-    return response.json();
+    // return response.json();
+    return mockProjectsResponse;
   } catch (error) {
     console.error("Error while sending the request to the API:", error);
     throw error;
@@ -49,12 +51,13 @@ export const getProjectDetails = async (
       },
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error fetching project details");
-    }
+    // if (!response.ok) {
+    //   const error = await response.json();
+    //   throw new Error(error.message || "Error fetching project details");
+    // }
 
-    return response.json();
+    // return response.json();
+    return mockProjectsResponse.find((project) => project.id === projectId)!;
   } catch (error) {
     console.error("Error fetching project details:", error);
     throw error;

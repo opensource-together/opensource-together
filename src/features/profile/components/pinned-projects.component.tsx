@@ -70,9 +70,8 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             projectId={project.id}
             title={project.title}
             description={project.description}
-            image={project.image || ""}
-            showViewProject={false}
-            techStacks={project.techStacks}
+            logoUrl={project.logoUrl || ""}
+            projectTechStacks={project.projectTechStacks}
             owner={{
               id: project.owner.id,
               username: project.owner.username,
