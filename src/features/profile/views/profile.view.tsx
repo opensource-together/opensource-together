@@ -35,7 +35,7 @@ export default function ProfileView() {
         message="An error has occurred while loading the profile. Please try again later."
         queryKey={["user/me"]}
         className="mt-20 mb-28"
-        buttonText="Back to projects"
+        buttonText="Back to homepage"
         href="/"
       />
     );

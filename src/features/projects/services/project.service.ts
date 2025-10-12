@@ -14,12 +14,12 @@ import {
  */
 export const getProjects = async (): Promise<Project[]> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/projects`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // const response = await fetch(`${API_BASE_URL}/projects`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
 
     // if (!response.ok) {
     //   const error = await response.json();
@@ -44,12 +44,12 @@ export const getProjectDetails = async (
   projectId: string
 ): Promise<Project> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
 
     // if (!response.ok) {
     //   const error = await response.json();

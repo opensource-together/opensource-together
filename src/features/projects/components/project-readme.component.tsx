@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
@@ -21,7 +22,8 @@ interface ProjectReadmeProps {
   readme: string;
   projectTitle: string;
   project: {
-    externalLinks?: { type: string; url: string }[];
+    githubUrl: string | null;
+    gitlabUrl: string | null;
   };
 }
 
@@ -270,20 +272,16 @@ export default function ProjectReadme({
               <div className="border-t border-black/10" />
               <div className="flex items-center justify-end gap-4 px-6 pt-4">
                 <Button variant="secondary" onClick={() => setIsOpen(false)}>
-                  Retour
+                  Back
                 </Button>
                 <Button variant="default" asChild>
-                  <a
-                    href={
-                      project?.externalLinks?.find(
-                        (link) => link.type === "GITHUB"
-                      )?.url || "#"
-                    }
+                  <Link
+                    href={project?.githubUrl || project?.gitlabUrl || ""}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Voir sur GitHub
-                  </a>
+                    View on {project?.githubUrl ? "GitHub" : "GitLab"}
+                  </Link>
                 </Button>
               </div>
             </div>

@@ -5,7 +5,7 @@ export const mockProjectsResponse: Project[] = [
     id: "pjt_c54b633eb12f4900b92b34e222096449",
     title: "LeetGrind",
     description:
-      "LeetGrind est un bot Discord qui propose un challenge LeetCode aléatoire chaque jour à une communauté active de développeurs. Avec un système de classement, un canal dédié à l'entraide et une interface ludique, LeetGrind aide les développeurs à coder de façon régulière, à progresser ensemble et à retrouver la motivation au quotidien.",
+      "Open Source Browser API for AI Agents & Apps. Steel Browser is a batteries-included browser sandbox that lets you automate the web without worrying about infrastructure.",
     provider: "GITHUB",
     readme: null,
     owner: {
