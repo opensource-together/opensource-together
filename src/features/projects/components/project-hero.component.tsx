@@ -15,7 +15,13 @@ export function ProjectMobileHero({
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center gap-4">
-        <Avatar src={logoUrl} name={title} alt={title} size="lg" />
+        <Avatar
+          src={logoUrl}
+          name={title}
+          alt={title}
+          size="lg"
+          shape="rounded"
+        />
         <h1 className="flex-1 text-start text-xl font-medium">{title}</h1>
       </div>
 
@@ -51,7 +57,13 @@ export default function ProjectHero({
         <div>
           <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <div className="flex items-center gap-3 sm:gap-4">
-              <Avatar src={logoUrl} name={title} alt={title} size="xl" />
+              <Avatar
+                src={logoUrl}
+                name={title}
+                alt={title}
+                size="xl"
+                shape="rounded"
+              />
               <h1 className="text-start text-2xl font-medium sm:text-2xl">
                 {title}
               </h1>

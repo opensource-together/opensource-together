@@ -67,7 +67,13 @@ export default function ProjectCardComponent({
       <ProjectCard className={className}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
-            <Avatar src={logoUrl} name={title} alt={title} size="lg" />
+            <Avatar
+              src={logoUrl}
+              name={title}
+              alt={title}
+              size="lg"
+              shape="rounded"
+            />
             <ProjectCardInfo>
               <ProjectCardTitle className="text-primary">
                 {title}

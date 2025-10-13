@@ -17,6 +17,7 @@ interface AvatarUploadProps {
   className?: string;
   disabled?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+  shape?: "circle" | "square" | "rounded";
   name?: string; // For fallback initials
   fallback?: string;
   currentImageUrl?: string;
@@ -30,6 +31,7 @@ export function AvatarUpload({
   className,
   disabled = false,
   size = "2xl",
+  shape = "circle",
   name,
   fallback,
   currentImageUrl,
@@ -126,6 +128,7 @@ export function AvatarUpload({
               name={name}
               fallback={fallback}
               size={size}
+              shape={shape}
               className={cn(
                 "border-2 transition-all duration-200",
                 preview || currentImageUrl

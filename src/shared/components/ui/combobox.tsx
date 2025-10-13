@@ -114,7 +114,7 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="text-primary border-input h-10 w-full min-w-0 justify-between rounded-md bg-white text-sm font-normal"
+            className="text-primary border-input h-10 w-full min-w-0 justify-start rounded-md bg-white text-start text-sm font-normal"
             disabled={disabled}
           >
             <span

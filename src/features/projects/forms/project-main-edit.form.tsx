@@ -45,13 +45,13 @@ export default function ProjectMainEditForm({
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
+        <form onSubmit={onSubmit} className="space-y-4 lg:w-[648px]">
           <FormField
             control={control}
             name="logoUrl"
             render={() => (
               <FormItem>
-                <FormLabel className="text-primary mb-2 text-sm font-medium">
+                <FormLabel className="text-primary text-sm font-medium">
                   Choose a logo
                 </FormLabel>
                 <FormControl>
@@ -60,6 +60,7 @@ export default function ProjectMainEditForm({
                     accept="image/*"
                     maxSize={1}
                     size="xl"
+                    shape="rounded"
                     name={project.title}
                     fallback={project.title}
                     className="mt-4"
