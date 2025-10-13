@@ -116,23 +116,19 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <div className="my-12.5">
-            <Separator />
-          </div>
+          <Separator className="mt-20" />
 
           <div className="sticky bottom-0 z-50 bg-white">
-            <div className="-mx-4.5 mt-16.5">
-              <div className="border-t border-black/10">
-                <div className="flex items-center justify-end gap-4 px-6 pt-4">
-                  <Link href="/profile/me">
-                    <Button variant="secondary" disabled={isUpdating}>
-                      Return
-                    </Button>
-                  </Link>
-                  <Button type="submit" disabled={isUpdating}>
-                    {isUpdating ? "Saving..." : "Confirm"}
+            <div className="-mx-4.5">
+              <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                <Link href="/profile/me">
+                  <Button variant="secondary" disabled={isUpdating}>
+                    Return
                   </Button>
-                </div>
+                </Link>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? "Saving..." : "Confirm"}
+                </Button>
               </div>
             </div>
           </div>

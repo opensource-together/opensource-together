@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { HiMiniSquare2Stack } from "react-icons/hi2";
+import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -23,7 +23,11 @@ export default function MyProjectsList() {
     return (
       <EmptyState
         icon={HiMiniSquare2Stack}
-        text="No projects have been created"
+        title="No projects"
+        description="Create a new project to get started"
+        buttonText="Create a project"
+        href="/projects/create"
+        buttonIcon={HiPlus}
       />
     );
   }

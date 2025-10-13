@@ -48,7 +48,7 @@ export default function MyTeamMembers({
   }
 
   if (members.length === 0) {
-    return <EmptyState text="Aucun membre dans l'équipe" />;
+    return <EmptyState title="Aucun membre dans l'équipe" />;
   }
 
   return (

@@ -12,7 +12,7 @@ export default function MyProjectsView() {
   return (
     <div>
       <DashboardHeading
-        title="Projects"
+        title="My Projects"
         icon={<HiMiniSquare2Stack size={16} />}
         description="Organize, review, edit, manage members, track progress, and handle projects — all in one space."
       />

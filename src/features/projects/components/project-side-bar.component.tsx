@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import StackLogo from "@/shared/components/logos/stack-logo";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import { Icon, IconName } from "@/shared/components/ui/icon";
+import { ExternalLinks } from "@/shared/components/ui/external-link";
+import { Icon } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
 import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
@@ -12,15 +11,6 @@ import { Contributor, Project } from "../types/project.type";
 interface ProjectSideBarProps {
   project: Project;
 }
-
-const externalLinksConfig = [
-  { key: "githubUrl", icon: "github", alt: "GitHub" },
-  { key: "gitlabUrl", icon: "gitlab", alt: "GitLab" },
-  { key: "twitterUrl", icon: "twitter", alt: "Twitter/X" },
-  { key: "linkedinUrl", icon: "linkedin", alt: "LinkedIn" },
-  { key: "discordUrl", icon: "discord", alt: "Discord" },
-  { key: "websiteUrl", icon: "link", alt: "Website" },
-];
 
 export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const { navigateToProfile } = useProfileNavigation();
@@ -39,12 +29,6 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         author: { login: "", avatar_url: "", html_url: "" },
       },
     },
-    githubUrl,
-    gitlabUrl,
-    discordUrl,
-    twitterUrl,
-    linkedinUrl,
-    websiteUrl,
   } = project;
 
   const contributors = project.projectStats?.contributors || [];
@@ -71,16 +55,6 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   const handleContributorClick = (contributor: Contributor) => {
     navigateToProfile(contributor.id);
-  };
-
-  const formatUrl = (url: string) => {
-    if (!url) return "";
-    try {
-      const urlObj = new URL(url);
-      return urlObj.hostname + urlObj.pathname;
-    } catch {
-      return url;
-    }
   };
 
   return (
@@ -185,7 +159,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         <div className="flex flex-wrap gap-2">
           {projectCategories.map((category, index) => (
             <Badge variant="gray" key={index}>
-              {category.name}
+              #{category.name}
             </Badge>
           ))}
         </div>
@@ -225,41 +199,8 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         </div>
       </div>
 
-      {(githubUrl ||
-        gitlabUrl ||
-        discordUrl ||
-        twitterUrl ||
-        linkedinUrl ||
-        websiteUrl) && (
-        <div className="mb-2 flex flex-col">
-          <h2 className="mb-4 text-sm">External Links</h2>
-          <div className="flex flex-col gap-6">
-            {externalLinksConfig.map((config) => {
-              const url = project[config.key as keyof Project] as string;
-              if (!url) return null;
-
-              return (
-                <Link
-                  key={config.key}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
-                >
-                  <Icon
-                    name={config.icon as IconName}
-                    size="md"
-                    variant="gray"
-                    className="opacity-50 transition-opacity group-hover:opacity-100"
-                    alt={config.alt}
-                  />
-                  <span className="truncate">{formatUrl(url)}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <h2 className="text-sm">External Links</h2>
+      <ExternalLinks source={project} />
     </div>
   );
 }

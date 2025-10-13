@@ -161,7 +161,7 @@ export default function ProfilePullRequests({
     return (
       <div className="flex w-full flex-col gap-4">
         {renderFilters()}
-        <EmptyState icon={GoGitPullRequest} text="No pull requests found." />
+        <EmptyState icon={GoGitPullRequest} title="No pull requests found." />
       </div>
     );
 

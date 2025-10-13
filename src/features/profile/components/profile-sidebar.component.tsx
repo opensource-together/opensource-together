@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import StackLogo from "@/shared/components/logos/stack-logo";
-import Icon, { IconName } from "@/shared/components/ui/icon";
+import { ExternalLinks } from "@/shared/components/ui/external-link";
+import Icon from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
 
 import { Profile } from "../types/profile.type";
@@ -9,15 +8,6 @@ import { Profile } from "../types/profile.type";
 interface ProfileSidebarProps {
   profile: Profile;
 }
-
-const socialLinksConfig = [
-  { key: "githubUrl", icon: "github", alt: "GitHub" },
-  { key: "gitlabUrl", icon: "gitlab", alt: "GitLab" },
-  { key: "twitterUrl", icon: "twitter", alt: "Twitter/X" },
-  { key: "linkedinUrl", icon: "linkedin", alt: "LinkedIn" },
-  { key: "discordUrl", icon: "discord", alt: "Discord" },
-  { key: "websiteUrl", icon: "link", alt: "Website" },
-] as const;
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   const { userTechStacks = [] } = profile;
@@ -29,16 +19,6 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
   };
 
   const shouldShowStats = profile.provider !== "google";
-
-  const formatUrl = (url: string) => {
-    if (!url) return "";
-    try {
-      const urlObj = new URL(url);
-      return urlObj.hostname + urlObj.pathname;
-    } catch {
-      return url;
-    }
-  };
 
   return (
     <div className="flex flex-1 flex-col gap-5">
@@ -128,46 +108,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
 
       <div className="mb-2 flex flex-col">
         <h2 className="mb-4 text-sm">Social Links</h2>
-        {(() => {
-          const hasAnyLink = socialLinksConfig.some(({ key }) => {
-            const v = profile[key] as string | undefined;
-            return Boolean(v && v.trim().length > 0);
-          });
-
-          if (!hasAnyLink) {
-            return (
-              <p className="text-muted-foreground text-sm">No links added</p>
-            );
-          }
-
-          return (
-            <div className="flex flex-col gap-6">
-              {socialLinksConfig.map(({ key, icon, alt }) => {
-                const url = profile[key] as string | undefined;
-                if (!url) return null;
-
-                return (
-                  <Link
-                    key={key}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-black"
-                  >
-                    <Icon
-                      name={icon as IconName}
-                      size="sm"
-                      variant="gray"
-                      alt={alt}
-                      className="opacity-50 transition-opacity group-hover:opacity-100"
-                    />
-                    <span className="truncate">{formatUrl(url)}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          );
-        })()}
+        <ExternalLinks source={profile} />
       </div>
     </div>
   );

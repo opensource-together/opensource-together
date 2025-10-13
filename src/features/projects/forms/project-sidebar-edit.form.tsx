@@ -37,7 +37,7 @@ export default function ProjectSidebarEditForm({
             name="projectTechStacks"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (max 10)</FormLabel>
+                <FormLabel required>Technologies (10 max)</FormLabel>
                 <FormControl className="mt-[-6px]">
                   <Combobox
                     options={techStackOptions}

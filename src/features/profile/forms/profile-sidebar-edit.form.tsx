@@ -37,7 +37,7 @@ export default function ProfileSidebarEditForm({
             name="userTechStacks"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (max 10)</FormLabel>
+                <FormLabel required>Technologies (10 max)</FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}

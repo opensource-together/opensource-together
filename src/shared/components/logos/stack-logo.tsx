@@ -33,9 +33,7 @@ export default function StackLogo({
           <Image src={iconSrcToUse} alt={alt} width={width} height={height} />
         </div>
         {name && (
-          <span className="text-xs font-medium text-black/70 md:text-sm">
-            {name}
-          </span>
+          <span className="text-xs text-black/70 md:text-sm">{name}</span>
         )}
       </div>
     </div>

@@ -8,6 +8,7 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 import { useGitRepository } from "@/shared/hooks/use-git-repository.hook";
 import { UserGitRepository } from "@/shared/types/git-repository.type";
 
+import CustomScrollbar from "../../../components/stepper/custom-scrollbar.component";
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
 import {
   provider,
@@ -40,54 +41,35 @@ export default function StepGitImportForm({
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [dragStartY, setDragStartY] = useState(0);
-  const [dragStartScroll, setDragStartScroll] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(320);
 
   const itemHeight = 64;
-  const repos = actualProvider ? gitRepos?.[actualProvider]?.data || [] : [];
+  const repos = actualProvider
+    ? (gitRepos?.[actualProvider]?.data || []).sort((a, b) => {
+        if (!a.updated_at || !b.updated_at) return 0;
+        return (
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        );
+      })
+    : [];
   const totalCount = repos.length;
   const totalHeight = itemHeight * totalCount;
-  const visibleHeight = 320;
-  const scrollbarHeight = Math.max(
-    (visibleHeight / totalHeight) * visibleHeight,
-    40
-  );
-  const maxScrollTop = totalHeight - visibleHeight;
-  const scrollbarTop =
-    maxScrollTop > 0
-      ? (scrollTop / maxScrollTop) * (visibleHeight - scrollbarHeight)
-      : 0;
+  const visibleHeight = containerHeight;
+  const hasOverflow = totalHeight > visibleHeight;
 
   useEffect(() => {
-    if (!dragging) return;
-    const onMouseMove = (e: MouseEvent) => {
-      const deltaY = e.clientY - dragStartY;
-      const newTop = Math.min(
-        Math.max(dragStartScroll + deltaY, 0),
-        visibleHeight - scrollbarHeight
-      );
-      const newScrollTop =
-        (newTop / (visibleHeight - scrollbarHeight)) * maxScrollTop;
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = newScrollTop;
-      }
-    };
-    const onMouseUp = () => setDragging(false);
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    if (!scrollRef.current) return;
+    const el = scrollRef.current;
+    const update = () => setContainerHeight(el.clientHeight || 320);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener("resize", update);
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+      ro.disconnect();
+      window.removeEventListener("resize", update);
     };
-  }, [
-    dragging,
-    dragStartY,
-    dragStartScroll,
-    maxScrollTop,
-    scrollbarHeight,
-    visibleHeight,
-  ]);
+  }, []);
 
   const handleRepositorySelect = (repo: UserGitRepository) => {
     setSelectedRepo(repo);
@@ -110,8 +92,12 @@ export default function StepGitImportForm({
       <div className="relative flex w-full">
         <div
           ref={scrollRef}
-          className="mb-4 h-[350px] w-full overflow-y-auto rounded-md border border-black/4"
-          onScroll={(e) => setScrollTop((e.target as HTMLDivElement).scrollTop)}
+          className={`mb-4 h-[340px] w-full rounded-md border border-black/4 ${
+            hasOverflow ? "overflow-y-auto" : "overflow-hidden"
+          }`}
+          onScroll={(e) =>
+            hasOverflow && setScrollTop((e.target as HTMLDivElement).scrollTop)
+          }
           style={{ scrollbarWidth: "none" }}
         >
           <div className="flex flex-col divide-y divide-black/4">
@@ -132,7 +118,12 @@ export default function StepGitImportForm({
                       {repo.name}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
+                    <span className="text-muted-foreground text-xs">
+                      {repo.updated_at
+                        ? new Date(repo.updated_at).toLocaleDateString()
+                        : "N/A"}
+                    </span>
                     <Button
                       type="button"
                       variant={
@@ -149,37 +140,17 @@ export default function StepGitImportForm({
             )}
           </div>
         </div>
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            right: -18,
-            width: 5,
-            height: 320,
-            background: "rgba(0,0,0,0.03)",
-            borderRadius: 3,
-            zIndex: 10,
+        <CustomScrollbar
+          height={containerHeight}
+          contentHeight={totalHeight}
+          scrollTop={scrollTop}
+          onScrollTopChange={(value) => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollTop = value;
+            }
+            setScrollTop(value);
           }}
-        >
-          <div
-            style={{
-              width: 5,
-              height: scrollbarHeight,
-              background: "rgba(0,0,0,0.05)",
-              borderRadius: 3,
-              position: "absolute",
-              top: scrollbarTop,
-              left: 0,
-              transition: "top 0.1s",
-              cursor: "grab",
-            }}
-            onMouseDown={(e) => {
-              setDragging(true);
-              setDragStartY(e.clientY);
-              setDragStartScroll(scrollbarTop);
-            }}
-          />
-        </div>
+        />
       </div>
 
       <div className="mt-4">

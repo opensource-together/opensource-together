@@ -16,7 +16,7 @@ export function StepperWrapper({
   method,
   children,
 }: StepperWrapperProps) {
-  const totalSteps = method === "github" ? 6 : method === "gitlab" ? 6 : 4;
+  const totalSteps = method === "github" ? 4 : method === "gitlab" ? 4 : 2;
 
   return (
     <div className="mx-auto mt-8 max-w-md">

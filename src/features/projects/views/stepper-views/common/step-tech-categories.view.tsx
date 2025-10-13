@@ -12,11 +12,11 @@ export default function StepTechCategoriesView() {
     if (formData.method === "scratch") {
       return 2;
     } else if (formData.method === "github" || formData.method === "gitlab") {
-      return 3;
+      return 4;
     }
   };
   return (
-    <StepperWrapper currentStep={currentStep() || 2}>
+    <StepperWrapper currentStep={currentStep() || 2} method={formData.method}>
       <StepperHeaderComponent
         title="Add technologies & categories"
         description="Complete very detail regarding your open source project"

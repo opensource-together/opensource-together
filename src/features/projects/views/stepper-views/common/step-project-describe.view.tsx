@@ -13,12 +13,12 @@ export default function StepDescribeProjectView() {
     if (formData.method === "scratch") {
       return 1;
     } else if (formData.method === "github" || formData.method === "gitlab") {
-      return 2;
+      return 3;
     }
   };
 
   return (
-    <StepperWrapper currentStep={currentStep() || 1}>
+    <StepperWrapper currentStep={currentStep() || 1} method={formData.method}>
       <StepperHeaderComponent
         title="Describe your project"
         description="Fill in the information in regards of your project below"
