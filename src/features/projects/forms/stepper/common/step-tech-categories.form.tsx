@@ -22,6 +22,7 @@ import { ProjectImportationConfirmDialog } from "@/features/projects/components/
 import { useCreateProject } from "@/features/projects/hooks/use-projects.hook";
 import { ProjectSchema } from "@/features/projects/validations/project.schema";
 
+import { ProjectTechCategoriesPreview } from "../../../components/stepper/project-tech-categories-preview.component";
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 import {
@@ -68,8 +69,11 @@ export function StepTechCategoriesForm() {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { isSubmitting },
   } = form;
+
+  const watched = watch();
 
   useEffect(() => {
     const preFilledUrls = getPreFilledUrls();
@@ -145,83 +149,109 @@ export function StepTechCategoriesForm() {
   });
 
   return (
-    <Form {...form}>
-      <form className="flex w-full flex-col gap-6" onSubmit={onSubmit}>
-        <FormField
-          control={control}
-          name="projectTechStacks"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Select technologies (10 max)</FormLabel>
-              <FormControl>
-                <Combobox
-                  options={techStackOptions}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder={
-                    techStacksLoading
-                      ? "Loading technologies..."
-                      : "Add technologies..."
-                  }
-                  searchPlaceholder="Search a technology..."
-                  emptyText="No technology found."
-                  disabled={techStacksLoading}
-                  maxSelections={10}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="flex w-full justify-between gap-14">
+      <div className="flex-1 flex-col gap-4">
+        <Form {...form}>
+          <form className="flex w-full flex-col gap-8" onSubmit={onSubmit}>
+            <FormField
+              control={control}
+              name="projectTechStacks"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Select technologies (10 max)</FormLabel>
+                  <FormControl>
+                    <Combobox
+                      options={techStackOptions}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={
+                        techStacksLoading
+                          ? "Loading technologies..."
+                          : "Add technologies..."
+                      }
+                      searchPlaceholder="Search a technology..."
+                      emptyText="No technology found."
+                      disabled={techStacksLoading}
+                      maxSelections={10}
+                      showTags={false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={control}
-          name="projectCategories"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Select categories (6 max)</FormLabel>
-              <FormControl>
-                <Combobox
-                  options={categoryOptions}
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder={
-                    categoriesLoading
-                      ? "Loading categories..."
-                      : "Add categories..."
-                  }
-                  searchPlaceholder="Search a category..."
-                  emptyText="No category found."
-                  disabled={categoriesLoading}
-                  maxSelections={6}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={control}
+              name="projectCategories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Select categories (6 max)</FormLabel>
+                  <FormControl>
+                    <Combobox
+                      options={categoryOptions}
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={
+                        categoriesLoading
+                          ? "Loading categories..."
+                          : "Add categories..."
+                      }
+                      searchPlaceholder="Search a category..."
+                      emptyText="No category found."
+                      disabled={categoriesLoading}
+                      maxSelections={6}
+                      showTags={false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div className="flex flex-col gap-2">
-          <FormLabel>External links</FormLabel>
-          <SocialLinksFormFields form={form} />
+            <div className="flex flex-col gap-2">
+              <FormLabel>External links</FormLabel>
+              <SocialLinksFormFields form={form} />
+            </div>
+
+            <FormNavigationButtons
+              onPrevious={handlePrevious}
+              isLoading={isSubmitting}
+              nextLabel="Create Project"
+              nextType="submit"
+            />
+          </form>
+        </Form>
+      </div>
+
+      <div className="hidden w-[45%] lg:block">
+        <div className="sticky top-8">
+          <h3 className="mb-4 text-lg font-medium">Preview</h3>
+          <ProjectTechCategoriesPreview
+            projectTechStacks={useTechStack().getTechStacksByIds(
+              watched.projectTechStacks || []
+            )}
+            projectCategories={useCategories().getCategoriesByIds(
+              watched.projectCategories || []
+            )}
+            githubUrl={watched.githubUrl || ""}
+            gitlabUrl={watched.gitlabUrl || ""}
+            discordUrl={watched.discordUrl || ""}
+            twitterUrl={watched.twitterUrl || ""}
+            linkedinUrl={watched.linkedinUrl || ""}
+            websiteUrl={watched.websiteUrl || ""}
+          />
         </div>
+      </div>
 
-        <FormNavigationButtons
-          onPrevious={handlePrevious}
-          isLoading={isSubmitting}
-          nextLabel="Create Project"
-          nextType="submit"
-        />
-
-        <ProjectImportationConfirmDialog
-          open={showConfirmation}
-          onOpenChange={setShowConfirmation}
-          projectTitle={formData.title}
-          isCreating={isCreating}
-          onConfirm={handleConfirmCreation}
-          onCancel={handleCancelCreation}
-        />
-      </form>
-    </Form>
+      <ProjectImportationConfirmDialog
+        open={showConfirmation}
+        onOpenChange={setShowConfirmation}
+        projectTitle={formData.title}
+        isCreating={isCreating}
+        onConfirm={handleConfirmCreation}
+        onCancel={handleCancelCreation}
+      />
+    </div>
   );
 }

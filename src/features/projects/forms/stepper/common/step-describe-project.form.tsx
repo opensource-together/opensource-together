@@ -18,6 +18,8 @@ import { Input } from "@/shared/components/ui/input";
 import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-upload";
 import { Textarea } from "@/shared/components/ui/textarea";
 
+import { ProjectDescribePreview } from "@/features/projects/components/stepper/project-describe-preview.component copy";
+
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 import {
@@ -30,6 +32,7 @@ export function StepDescribeProjectForm() {
   const [imageUrls, setImageUrls] = useState<string[]>(
     formData.imageUrls || []
   );
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const router = useRouter();
 
@@ -46,10 +49,15 @@ export function StepDescribeProjectForm() {
     control,
     handleSubmit,
     setValue,
+    watch,
     formState: { isSubmitting },
   } = form;
 
+  // Watch form values for real-time preview
+  const watchedValues = watch();
+
   const handleLogoSelect = (file: File | null) => {
+    setLogoFile(file);
     setValue("logoUrl", file || undefined);
   };
 
@@ -83,84 +91,105 @@ export function StepDescribeProjectForm() {
   };
 
   return (
-    <Form {...form}>
-      <form className="flex w-full flex-col gap-5" onSubmit={onSubmit}>
-        <FormField
-          control={control}
-          name="logoUrl"
-          render={() => (
-            <FormItem>
-              <FormLabel>Choose a logo</FormLabel>
-              <FormControl>
-                <AvatarUpload
-                  onFileSelect={handleLogoSelect}
-                  accept="image/*"
-                  maxSize={1}
-                  size="xl"
-                  name={formData.title}
-                  fallback={formData.title}
-                  className="mt-4"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Project name</FormLabel>
-              <FormControl>
-                <Input placeholder="Project name" {...field} maxLength={100} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Project description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe your project"
-                  {...field}
-                  maxLength={250}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormItem>
-          <FormLabel tooltip="Add up to 4 cover images to present your project. These images will be displayed on the project page.">
-            Cover images
-          </FormLabel>
-          <FormControl>
-            <MultipleImageUpload
-              onFilesChange={(files) => {
-                const urls = files.map((file) => URL.createObjectURL(file));
-                setImageUrls(urls);
-              }}
-              maxFiles={4}
-              maxSize={5}
-              accept="image/*"
+    <div className="flex w-full justify-between gap-14">
+      <div className="flex-1 flex-col gap-4">
+        <Form {...form}>
+          <form className="flex w-full flex-col gap-8" onSubmit={onSubmit}>
+            <FormField
+              control={control}
+              name="logoUrl"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Choose a logo</FormLabel>
+                  <FormControl>
+                    <AvatarUpload
+                      onFileSelect={handleLogoSelect}
+                      accept="image/*"
+                      maxSize={1}
+                      size="xl"
+                      shape="rounded"
+                      name={watchedValues.title}
+                      fallback={watchedValues.title}
+                      className="mt-4"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </FormControl>
-        </FormItem>
+            <FormField
+              control={control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Project name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Project name"
+                      {...field}
+                      maxLength={100}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormNavigationButtons
-          onPrevious={handlePrevious}
-          isLoading={isSubmitting}
-          nextType="submit"
-        />
-      </form>
-    </Form>
+            <FormField
+              control={control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>Project description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe your project"
+                      {...field}
+                      maxLength={250}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormItem>
+              <FormLabel tooltip="Add up to 4 cover images to present your project. These images will be displayed on the project page.">
+                Cover images
+              </FormLabel>
+              <FormControl>
+                <MultipleImageUpload
+                  onFilesChange={(files) => {
+                    const urls = files.map((file) => URL.createObjectURL(file));
+                    setImageUrls(urls);
+                  }}
+                  maxFiles={4}
+                  maxSize={5}
+                  accept="image/*"
+                />
+              </FormControl>
+            </FormItem>
+
+            <FormNavigationButtons
+              onPrevious={handlePrevious}
+              isLoading={isSubmitting}
+              nextType="submit"
+            />
+          </form>
+        </Form>
+      </div>
+
+      <div className="hidden w-[55%] lg:block">
+        <div className="sticky top-8">
+          <h3 className="mb-4 text-lg font-medium">Preview</h3>
+          <ProjectDescribePreview
+            title={watchedValues.title}
+            description={watchedValues.description}
+            logoUrl={logoFile || undefined}
+            imageUrls={imageUrls}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

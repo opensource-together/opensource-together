@@ -72,7 +72,9 @@ export function ExternalLinks({ source }: { source: LinkSource }) {
               aria-label={alt}
             >
               <div className="text-muted-foreground hover:text-muted-foreground/80 flex items-center gap-1.5 rounded-full text-sm tracking-tight transition-colors">
-                <Icon size={20} aria-hidden />
+                <div className="flex-shrink-0">
+                  <Icon size={20} aria-hidden />
+                </div>
                 <span className="truncate">{formatUrl(raw as string)}</span>
               </div>
             </Link>

@@ -47,7 +47,7 @@ export default function StepGitConfirmForm({
         <div className="mb-4">
           <div className="mb-1 flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Label className="text-lg">README.md</Label>
+              <Label className="text-lg">Description</Label>
             </div>
           </div>
           <div className="mb-3 line-clamp-5 h-[100px] text-sm leading-6 text-black/50">

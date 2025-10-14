@@ -39,11 +39,15 @@ export default function StepGitImportView({
     }
   };
 
+  const totalSteps = provider === "github" ? 4 : provider === "gitlab" ? 4 : 2;
+
   return (
-    <StepperWrapper currentStep={1} method={provider}>
+    <StepperWrapper>
       <StepperHeaderComponent
         title={getProviderTitle()}
         description={getProviderDescription()}
+        currentStep={1}
+        totalSteps={totalSteps}
       />
       <StepGitImportForm provider={provider} />
     </StepperWrapper>

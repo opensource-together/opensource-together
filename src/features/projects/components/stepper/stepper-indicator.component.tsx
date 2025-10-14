@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 interface StepperIndicatorProps {
@@ -16,7 +14,7 @@ export function StepperIndicatorComponent({
   onStepChange,
 }: StepperIndicatorProps) {
   return (
-    <div className={`mx-auto min-w-md space-y-8 text-center ${className}`}>
+    <div className={`mx-auto min-w-4xl space-y-8 text-center ${className}`}>
       <div className="space-y-3">
         <div className="flex items-center gap-1">
           {Array.from({ length: totalSteps }, (_, index) => {

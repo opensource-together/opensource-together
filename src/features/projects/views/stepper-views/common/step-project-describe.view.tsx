@@ -17,11 +17,16 @@ export default function StepDescribeProjectView() {
     }
   };
 
+  const totalSteps =
+    formData.method === "github" ? 4 : formData.method === "gitlab" ? 4 : 2;
+
   return (
-    <StepperWrapper currentStep={currentStep() || 1} method={formData.method}>
+    <StepperWrapper className="lg:max-w-4xl">
       <StepperHeaderComponent
         title="Describe your project"
         description="Fill in the information in regards of your project below"
+        currentStep={currentStep() || 1}
+        totalSteps={totalSteps}
       />
       <StepDescribeProjectForm />
     </StepperWrapper>

@@ -15,11 +15,16 @@ export default function StepTechCategoriesView() {
       return 4;
     }
   };
+  const totalSteps =
+    formData.method === "github" ? 4 : formData.method === "gitlab" ? 4 : 2;
+
   return (
-    <StepperWrapper currentStep={currentStep() || 2} method={formData.method}>
+    <StepperWrapper className="lg:max-w-4xl">
       <StepperHeaderComponent
         title="Add technologies & categories"
         description="Complete very detail regarding your open source project"
+        currentStep={currentStep() || 2}
+        totalSteps={totalSteps}
       />
       <StepTechCategoriesForm />
     </StepperWrapper>

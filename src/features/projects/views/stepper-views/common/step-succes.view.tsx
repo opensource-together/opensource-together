@@ -28,7 +28,7 @@ export default function StepSuccessView() {
   // }, [resetForm]);
 
   return (
-    <StepperWrapper currentStep={currentStep() || 4}>
+    <StepperWrapper>
       <StepperHeaderComponent
         title="Your project has been created !"
         description="You can now find your projects in your dashboard and contributer will be able to see your project."

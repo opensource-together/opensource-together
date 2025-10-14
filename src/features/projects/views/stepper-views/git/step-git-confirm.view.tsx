@@ -35,11 +35,15 @@ export default function StepGitConfirmView({
     }
   };
 
+  const totalSteps = provider === "github" || provider === "gitlab" ? 4 : 4;
+
   return (
-    <StepperWrapper currentStep={2} method={provider}>
+    <StepperWrapper>
       <StepperHeaderComponent
         title={getProviderTitle()}
         description={getProviderDescription()}
+        currentStep={2}
+        totalSteps={totalSteps}
       />
       <StepGitConfirmForm provider={provider} />
     </StepperWrapper>

@@ -1,6 +1,14 @@
 "use client";
 
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { HiMiniLink } from "react-icons/hi2";
+import {
+  RiGithubFill,
+  RiGitlabFill,
+  RiLinkedinFill,
+  RiTwitterXFill,
+} from "react-icons/ri";
+import { RxDiscordLogo } from "react-icons/rx";
 
 import {
   FormControl,
@@ -22,37 +30,37 @@ export type SocialLinksValues = {
 const socialLinksConfig = [
   {
     name: "githubUrl",
-    icon: "github",
+    iconNode: <RiGithubFill size={18} />,
     placeholder: "https://github.com/...",
     label: "GitHub",
   },
   {
     name: "gitlabUrl",
-    icon: "gitlab",
+    iconNode: <RiGitlabFill size={18} />,
     placeholder: "https://gitlab.com/...",
     label: "GitLab",
   },
   {
     name: "discordUrl",
-    icon: "discord",
+    iconNode: <RxDiscordLogo size={18} />,
     placeholder: "https://discord.gg/...",
     label: "Discord",
   },
   {
     name: "twitterUrl",
-    icon: "twitter",
+    iconNode: <RiTwitterXFill size={18} />,
     placeholder: "https://x.com/...",
     label: "Twitter/X",
   },
   {
     name: "linkedinUrl",
-    icon: "linkedin",
+    iconNode: <RiLinkedinFill size={18} />,
     placeholder: "https://linkedin.com/...",
     label: "LinkedIn",
   },
   {
     name: "websiteUrl",
-    icon: "link",
+    iconNode: <HiMiniLink size={18} />,
     placeholder: "https://...",
     label: "Website",
   },
@@ -72,7 +80,7 @@ export function SocialLinksFormFields<
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      {socialLinksConfig.map(({ name, icon, placeholder }) => (
+      {socialLinksConfig.map(({ name, iconNode, placeholder }) => (
         <FormField<TFieldValues>
           key={name}
           control={control}
@@ -81,7 +89,7 @@ export function SocialLinksFormFields<
             <FormItem>
               <FormControl>
                 <InputWithIcon
-                  icon={icon}
+                  iconNode={iconNode}
                   placeholder={placeholder}
                   {...field}
                 />
