@@ -68,7 +68,7 @@ export default function StepGitConfirmForm({
           <div className="mt-2 flex items-center gap-2">
             <Icon name="link" variant="gray" size="sm" />
             <span className="line-clamp-1 text-sm font-normal break-all text-black/50">
-              {formData.selectedRepository?.html_url}
+              {formData.repoUrl || formData.selectedRepository?.html_url}
             </span>
           </div>
         </div>

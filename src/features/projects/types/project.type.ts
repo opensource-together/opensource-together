@@ -63,6 +63,7 @@ export interface Project {
   description: string;
   projectTechStacks: TechStackType[];
   published: boolean;
+  repoUrl: string | null;
   githubUrl: string | null;
   gitlabUrl: string | null;
   discordUrl: string | null;
@@ -82,6 +83,7 @@ export interface ProjectEditForm {
   title: string;
   description: string;
   published: boolean;
+  repoUrl: string | null;
   githubUrl: string | null;
   gitlabUrl: string | null;
   discordUrl: string | null;

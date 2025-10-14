@@ -29,10 +29,13 @@ import {
 
 export function StepDescribeProjectForm() {
   const { formData, updateProjectInfo } = useProjectCreateStore();
-  const [imageUrls, setImageUrls] = useState<string[]>(
-    formData.imageUrls || []
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [logoFile, setLogoFile] = useState<File | null>(
+    formData.logoFile || null
   );
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(
+    formData.logoUrl || formData.selectedRepository?.logo_url || null
+  );
 
   const router = useRouter();
 
@@ -42,6 +45,7 @@ export function StepDescribeProjectForm() {
       title: formData.title || formData.selectedRepository?.name || "",
       description:
         formData.description || formData.selectedRepository?.description || "",
+      imagesUrls: [],
     },
   });
 
@@ -58,7 +62,12 @@ export function StepDescribeProjectForm() {
 
   const handleLogoSelect = (file: File | null) => {
     setLogoFile(file);
-    setValue("logoUrl", file || undefined);
+    if (file) {
+      setLogoUrl(null); // Clear URL when file is selected
+      setValue("logoUrl", file);
+    } else {
+      setValue("logoUrl", undefined);
+    }
   };
 
   useEffect(() => {
@@ -69,14 +78,33 @@ export function StepDescribeProjectForm() {
       if (formData.selectedRepository.description) {
         setValue("description", formData.selectedRepository.description);
       }
+      if (formData.selectedRepository.logo_url) {
+        setLogoUrl(formData.selectedRepository.logo_url);
+        setLogoFile(null);
+      }
     }
   }, [formData.selectedRepository, setValue]);
 
   const onSubmit = handleSubmit((data) => {
+    let finalLogoUrl = "";
+    if (logoFile) {
+      finalLogoUrl = URL.createObjectURL(logoFile);
+    } else if (logoUrl) {
+      finalLogoUrl = logoUrl;
+    } else if (data.logoUrl && typeof data.logoUrl === "string") {
+      finalLogoUrl = data.logoUrl;
+    }
+
+    // Convert image files to URLs for preview
+    const imagesUrls = imageFiles.map((file) => URL.createObjectURL(file));
+
     updateProjectInfo({
       title: data.title,
       description: data.description,
-      imageUrls,
+      logoUrl: finalLogoUrl,
+      logoFile: logoFile,
+      imagesUrls,
+      imageFiles,
     });
 
     router.push("/projects/create/tech-categories");
@@ -110,6 +138,7 @@ export function StepDescribeProjectForm() {
                       shape="rounded"
                       name={watchedValues.title}
                       fallback={watchedValues.title}
+                      currentImageUrl={logoUrl || undefined}
                       className="mt-4"
                     />
                   </FormControl>
@@ -160,8 +189,7 @@ export function StepDescribeProjectForm() {
               <FormControl>
                 <MultipleImageUpload
                   onFilesChange={(files) => {
-                    const urls = files.map((file) => URL.createObjectURL(file));
-                    setImageUrls(urls);
+                    setImageFiles(files);
                   }}
                   maxFiles={4}
                   maxSize={5}
@@ -179,14 +207,14 @@ export function StepDescribeProjectForm() {
         </Form>
       </div>
 
-      <div className="hidden w-[55%] lg:block">
+      <div className="w-[55%]">
         <div className="sticky top-8">
           <h3 className="mb-4 text-lg font-medium">Preview</h3>
           <ProjectDescribePreview
             title={watchedValues.title}
             description={watchedValues.description}
-            logoUrl={logoFile || undefined}
-            imageUrls={imageUrls}
+            logoUrl={logoUrl || logoFile || undefined}
+            imagesUrls={imageFiles.map((file) => URL.createObjectURL(file))}
           />
         </div>
       </div>

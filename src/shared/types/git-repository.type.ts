@@ -11,6 +11,7 @@ export type UserGitRepository = {
   forks_count: number | undefined;
   open_issues_count: number | undefined;
   url: string | null;
+  logo_url: string | null;
   html_url: string;
   created_at: string | null | undefined;
   updated_at: string | null | undefined;

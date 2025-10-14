@@ -26,7 +26,7 @@ export const stepDescribeProjectSchema = z.object({
     .string()
     .min(10, "The description must contain at least 10 characters")
     .max(500, "The description cannot exceed 500 characters"),
-  imageUrls: z.array(z.instanceof(File)).optional(),
+  imagesUrls: z.array(z.instanceof(File)).optional(),
 });
 
 export const stepTechCategoriesSchema = z.object({

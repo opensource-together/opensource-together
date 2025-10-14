@@ -9,9 +9,12 @@ export interface ProjectFormData {
   method: provider;
   title: string;
   description: string;
-  imageUrls: string[];
+  imagesUrls: string[];
+  imageFiles?: File[];
   logoUrl: string;
+  logoFile?: File | null;
   readme?: string;
+  repoUrl: string;
   githubUrl: string;
   gitlabUrl: string;
   discordUrl: string;
@@ -35,9 +38,12 @@ interface ProjectCreateStore {
         ProjectFormData,
         | "title"
         | "description"
-        | "imageUrls"
+        | "imagesUrls"
+        | "imageFiles"
         | "logoUrl"
+        | "logoFile"
         | "readme"
+        | "repoUrl"
         | "projectTechStacks"
         | "projectCategories"
         | "githubUrl"
@@ -60,9 +66,12 @@ const initialFormData: ProjectFormData = {
   method: "scratch",
   title: "",
   description: "",
-  imageUrls: [],
+  imagesUrls: [],
+  imageFiles: [],
   logoUrl: "",
+  logoFile: null,
   readme: "",
+  repoUrl: "",
   githubUrl: "",
   gitlabUrl: "",
   discordUrl: "",
@@ -98,9 +107,11 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
               selectedRepository: repo,
               title: "",
               description: "",
-              imageUrls: [],
+              imagesUrls: [],
               logoUrl: "",
+              logoFile: null,
               readme: "",
+              repoUrl: repo.html_url || "",
               githubUrl: "",
               gitlabUrl: "",
             },

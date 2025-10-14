@@ -92,7 +92,7 @@ export default function StepGitImportForm({
       <div className="relative flex w-full">
         <div
           ref={scrollRef}
-          className={`mb-4 h-[340px] w-full rounded-md border border-black/4 ${
+          className={`mb-4 h-[350px] w-full rounded-md border border-black/4 ${
             hasOverflow ? "overflow-y-auto" : "overflow-hidden"
           }`}
           onScroll={(e) =>

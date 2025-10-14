@@ -10,6 +10,8 @@ import {
   getProjectDetails,
   getProjects,
   updateProject,
+  updateProjectCover,
+  updateProjectLogo,
 } from "../services/project.service";
 import { Project } from "../types/project.type";
 import {
@@ -47,7 +49,7 @@ export function useProject(projectId: string) {
  * Handles the creation of a new project.
  *
  * @returns An object containing:
- * - createProject: function to trigger the project creation
+ * - createProjectAsync: function to trigger the project creation
  * - isCreating: boolean indicating if the creation is in progress
  * - isCreateError: boolean indicating if an error occurred
  */
@@ -69,7 +71,7 @@ export function useCreateProject() {
   });
 
   return {
-    createProject: mutation.mutate,
+    createProjectAsync: mutation.mutateAsync,
     isCreating: mutation.isPending,
     isCreateError: mutation.isError,
   };
@@ -136,5 +138,77 @@ export function useDeleteProject() {
     deleteProject: mutation.mutate,
     isDeleting: mutation.isPending,
     isDeleteError: mutation.isError,
+  };
+}
+
+/**
+ * Handles the update of the logo of a project.
+ *
+ * @returns An object containing:
+ * - updateProjectLogo: function to trigger the project logo update
+ * - isUpdatingLogo: boolean indicating if the update is in progress
+ * - isUpdateErrorLogo: boolean indicating if an error occurred
+ */
+export function useUpdateProjectLogo() {
+  const queryClient = getQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: ({
+      projectId,
+      logoFile,
+    }: {
+      projectId: string;
+      logoFile: File;
+    }) => updateProjectLogo(projectId, logoFile),
+    loadingMessage: "Updating project logo in progress...",
+    successMessage: "Project logo updated successfully",
+    errorMessage: "Error while updating project logo",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+      },
+    },
+  });
+
+  return {
+    updateProjectLogo: mutation.mutate,
+    isUpdatingLogo: mutation.isPending,
+    isUpdateErrorLogo: mutation.isError,
+  };
+}
+
+/**
+ * Handles the update of the cover image of a project.
+ *
+ * @returns An object containing:
+ * - updateProjectCover: function to trigger the project cover update
+ * - isUpdatingCover: boolean indicating if the update is in progress
+ * - isUpdateErrorCover: boolean indicating if an error occurred
+ */
+export function useUpdateProjectCover() {
+  const queryClient = getQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: ({
+      projectId,
+      coverFile,
+    }: {
+      projectId: string;
+      coverFile: File;
+    }) => updateProjectCover(projectId, coverFile),
+    loadingMessage: "Updating project cover image in progress...",
+    successMessage: "Project cover updated successfully",
+    errorMessage: "Error while updating project cover",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+      },
+    },
+  });
+
+  return {
+    updateProjectCover: mutation.mutate,
+    isUpdatingCover: mutation.isPending,
+    isUpdateErrorCover: mutation.isError,
   };
 }

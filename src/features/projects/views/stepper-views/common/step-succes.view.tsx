@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 import DashboardCtaComponent from "@/features/dashboard/components/layout/dashboard-cta.component";
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
@@ -10,22 +11,14 @@ import FormNavigationButtons from "../../../components/stepper/stepper-navigatio
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 export default function StepSuccessView() {
-  const { formData } = useProjectCreateStore();
+  const { resetForm } = useProjectCreateStore();
   const searchParams = useSearchParams();
   const router = useRouter();
   const projectId = searchParams.get("projectId");
 
-  const currentStep = () => {
-    if (formData.method === "scratch") {
-      return 4;
-    } else if (formData.method === "github" || formData.method === "gitlab") {
-      return 5;
-    }
-  };
-
-  // useEffect(() => {
-  //   resetForm();
-  // }, [resetForm]);
+  useEffect(() => {
+    resetForm();
+  }, [resetForm]);
 
   return (
     <StepperWrapper>
@@ -44,8 +37,8 @@ export default function StepSuccessView() {
       </div>
 
       <FormNavigationButtons
-        onPrevious={() => router.push("/")}
-        previousLabel="Return to Home"
+        onPrevious={() => router.push("/dashboard/my-projects")}
+        previousLabel="Return to dashboard"
         onNext={() => router.push(`/projects/${projectId}`)}
         nextLabel="View Project"
         isNextDisabled={false}

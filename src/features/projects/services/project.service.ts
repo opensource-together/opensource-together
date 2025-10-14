@@ -44,20 +44,21 @@ export const getProjectDetails = async (
   projectId: string
 ): Promise<Project> => {
   try {
-    // const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
+    const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    // if (!response.ok) {
-    //   const error = await response.json();
-    //   throw new Error(error.message || "Error fetching project details");
-    // }
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error fetching project details");
+    }
 
-    // return response.json();
-    return mockProjectsResponse.find((project) => project.id === projectId)!;
+    const apiResponse = await response.json();
+    return apiResponse?.data;
+    // return mockProjectsResponse.find((project) => project.id === projectId)!;
   } catch (error) {
     console.error("Error fetching project details:", error);
     throw error;
@@ -87,7 +88,8 @@ export const createProject = async (
     throw new Error(error.message || "Error creating project");
   }
 
-  return response.json();
+  const apiResponse = await response.json();
+  return apiResponse?.data || apiResponse;
 };
 
 /**
@@ -145,4 +147,60 @@ export const deleteProject = async (projectId: string): Promise<void> => {
     console.error("Error deleting project:", error);
     throw error;
   }
+};
+
+/**
+ * Updates the logo of a project.
+ *
+ * @param projectId - The ID of the project to update.
+ * @param logoFile - The logo file to upload.
+ * @returns A promise that resolves to the updated project.
+ */
+export const updateProjectLogo = async (
+  projectId: string,
+  logoFile: File
+): Promise<Project> => {
+  const formData = new FormData();
+  formData.append("file", logoFile);
+
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/logo`, {
+    method: "PATCH",
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Error updating project logo");
+  }
+
+  return response.json();
+};
+
+/**
+ * Updates the cover image of a project.
+ *
+ * @param projectId - The ID of the project to update.
+ * @param coverFile - The cover file to upload.
+ * @returns A promise that resolves to the updated project.
+ */
+export const updateProjectCover = async (
+  projectId: string,
+  coverFile: File
+): Promise<Project> => {
+  const formData = new FormData();
+  formData.append("file", coverFile);
+
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/images`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Error updating project cover");
+  }
+
+  return response.json();
 };

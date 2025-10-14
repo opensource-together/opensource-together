@@ -19,7 +19,7 @@ export default function StepTechCategoriesView() {
     formData.method === "github" ? 4 : formData.method === "gitlab" ? 4 : 2;
 
   return (
-    <StepperWrapper className="lg:max-w-4xl">
+    <StepperWrapper className="lg:max-w-3xl">
       <StepperHeaderComponent
         title="Add technologies & categories"
         description="Complete very detail regarding your open source project"

@@ -4,16 +4,16 @@ import { memo, useMemo } from "react";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 
-const ProjectImages = memo(({ imageUrls }: { imageUrls: string[] }) => {
-  if (imageUrls.length === 0) return null;
+const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
+  if (imagesUrls.length === 0) return null;
 
   return (
     <div className="flex gap-1">
-      {imageUrls.length === 1 ? (
+      {imagesUrls.length === 1 ? (
         <div className="w-full">
           <div className="relative h-[207px] overflow-hidden rounded-md">
             <img
-              src={imageUrls[0]}
+              src={imagesUrls[0]}
               alt="Project screenshot"
               className="h-full w-full object-cover"
             />
@@ -24,14 +24,14 @@ const ProjectImages = memo(({ imageUrls }: { imageUrls: string[] }) => {
           <div className="w-3/4">
             <div className="relative h-[207px] w-full overflow-hidden rounded-md">
               <img
-                src={imageUrls[0]}
+                src={imagesUrls[0]}
                 alt="Project screenshot 1"
                 className="h-full w-full object-cover"
               />
             </div>
           </div>
           <div className="w-1/4 space-y-1">
-            {imageUrls.slice(1, 4).map((url, idx) => (
+            {imagesUrls.slice(1, 4).map((url, idx) => (
               <div
                 key={idx}
                 className="relative h-[67px] w-full overflow-hidden rounded-md"
@@ -56,14 +56,14 @@ interface ProjectDescribePreviewProps {
   title?: string;
   description?: string;
   logoUrl?: string | File;
-  imageUrls?: string[];
+  imagesUrls?: string[];
 }
 
 export function ProjectDescribePreview({
   title = "Project Name",
   description = "Project description will appear here...",
   logoUrl,
-  imageUrls = [],
+  imagesUrls = [],
 }: ProjectDescribePreviewProps) {
   const logoPreview = useMemo(() => {
     return logoUrl instanceof File ? URL.createObjectURL(logoUrl) : logoUrl;
@@ -84,7 +84,7 @@ export function ProjectDescribePreview({
 
       <p className="mb-6 text-sm">{description}</p>
 
-      <ProjectImages imageUrls={imageUrls} />
+      <ProjectImages imagesUrls={imagesUrls} />
     </div>
   );
 }
