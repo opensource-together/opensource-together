@@ -17,8 +17,8 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           description={project.description}
           logoUrl={project.logoUrl || ""}
           projectTechStacks={project.projectTechStacks}
-          owner={project.owner}
-          projectStats={project.projectStats}
+          owner={project.repositoryDetails?.owner}
+          projectStats={project.repositoryDetails}
         />
       ))}
     </div>

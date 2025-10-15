@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
@@ -7,6 +7,7 @@ import { getQueryClient } from "@/shared/lib/query-client";
 import {
   createProject,
   deleteProject,
+  deleteProjectImage,
   getProjectDetails,
   getProjects,
   updateProject,
@@ -90,14 +91,25 @@ export function useUpdateProject() {
   const queryClient = getQueryClient();
 
   const mutation = useToastMutation({
-    mutationFn: (projectData: UpdateProjectData) => updateProject(projectData),
+    mutationFn: ({
+      id,
+      updateData,
+    }: {
+      id: string;
+      updateData: UpdateProjectData;
+    }) => updateProject(id, updateData),
     loadingMessage: "Updating project in progress...",
     successMessage: "Project updated successfully",
     errorMessage: "Error while updating project",
     options: {
-      onSuccess: (project) => {
-        queryClient.invalidateQueries({ queryKey: ["project", project.id] });
-        router.push(`/projects/${project.id}`);
+      onSuccess: (project, variables) => {
+        const targetId = project?.publicId || variables?.id;
+        if (targetId) {
+          queryClient.invalidateQueries({
+            queryKey: ["project", targetId],
+          });
+          router.push(`/projects/${targetId}`);
+        }
       },
     },
   });
@@ -152,7 +164,7 @@ export function useDeleteProject() {
 export function useUpdateProjectLogo() {
   const queryClient = getQueryClient();
 
-  const mutation = useToastMutation({
+  const mutation = useMutation({
     mutationFn: ({
       projectId,
       logoFile,
@@ -160,19 +172,27 @@ export function useUpdateProjectLogo() {
       projectId: string;
       logoFile: File;
     }) => updateProjectLogo(projectId, logoFile),
-    loadingMessage: "Updating project logo in progress...",
-    successMessage: "Project logo updated successfully",
-    errorMessage: "Error while updating project logo",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
-      },
+
+    onSuccess: (project, variables) => {
+      const targetId = variables?.projectId;
+      if (targetId) {
+        const versionSuffix = `?t=${Date.now()}`;
+        const baseUrl = (project?.logoUrl || "").split("?")[0];
+        const versionedLogo = baseUrl ? `${baseUrl}${versionSuffix}` : null;
+
+        const updateProjectLogoUrl = (
+          old: Project | undefined
+        ): Project | undefined =>
+          old ? { ...old, logoUrl: versionedLogo } : old;
+
+        queryClient.setQueryData(["project", targetId], updateProjectLogoUrl);
+        queryClient.invalidateQueries({ queryKey: ["project", targetId] });
+      }
     },
   });
 
   return {
     updateProjectLogo: mutation.mutate,
-    isUpdatingLogo: mutation.isPending,
     isUpdateErrorLogo: mutation.isError,
   };
 }
@@ -182,13 +202,12 @@ export function useUpdateProjectLogo() {
  *
  * @returns An object containing:
  * - updateProjectCover: function to trigger the project cover update
- * - isUpdatingCover: boolean indicating if the update is in progress
  * - isUpdateErrorCover: boolean indicating if an error occurred
  */
 export function useUpdateProjectCover() {
   const queryClient = getQueryClient();
 
-  const mutation = useToastMutation({
+  const mutation = useMutation({
     mutationFn: ({
       projectId,
       coverFile,
@@ -196,19 +215,47 @@ export function useUpdateProjectCover() {
       projectId: string;
       coverFile: File;
     }) => updateProjectCover(projectId, coverFile),
-    loadingMessage: "Updating project cover image in progress...",
-    successMessage: "Project cover updated successfully",
-    errorMessage: "Error while updating project cover",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
-      },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
   });
 
   return {
     updateProjectCover: mutation.mutate,
-    isUpdatingCover: mutation.isPending,
     isUpdateErrorCover: mutation.isError,
+  };
+}
+
+/**
+ * Handles deletion of a specific project cover image by URL.
+ *
+ * @returns An object containing:
+ * - deleteProjectImage: function to trigger the project cover image deletion
+ * - isDeleteProjectImageError: boolean indicating if an error occurred
+ */
+export function useDeleteProjectImage() {
+  const queryClient = getQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({
+      projectId,
+      imageUrl,
+    }: {
+      projectId: string;
+      imageUrl: string;
+    }) => deleteProjectImage(projectId, imageUrl),
+    onSuccess: (_project, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      if (variables?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        });
+      }
+    },
+  });
+
+  return {
+    deleteProjectImage: mutation.mutate,
+    isDeleteProjectImageError: mutation.isError,
   };
 }

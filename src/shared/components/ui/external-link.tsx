@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type ComponentType } from "react";
+import { ComponentType } from "react";
 import { HiMiniLink } from "react-icons/hi2";
 import {
   RiGithubFill,
@@ -42,19 +42,26 @@ const ensureProtocol = (url: string) =>
 const formatUrl = (raw: string) => {
   try {
     const u = new URL(ensureProtocol(raw));
-    return `${u.hostname}${u.pathname}`.replace(/\/$/, "");
+    return `${u.hostname}${u.pathname.replace(/\/$/, "")}`;
   } catch {
     return raw;
   }
 };
 
-export function ExternalLinks({ source }: { source: LinkSource }) {
-  const hasAny = LINK_CONFIG.some(({ key }) => isFilled(source[key]));
-  if (!hasAny)
-    return <p className="text-muted-foreground text-sm">No links added</p>;
+export function ExternalLinks({
+  source,
+  title,
+  emptyText,
+}: {
+  source: LinkSource;
+  title?: string;
+  emptyText?: string;
+}) {
+  const hasAnyLink = LINK_CONFIG.some(({ key }) => isFilled(source[key]));
 
   return (
     <div className="mb-2 flex flex-col">
+      {title && <h2 className="mb-3 text-sm">{title}</h2>}
       <div className="flex flex-col gap-4">
         {LINK_CONFIG.map(({ key, Icon, alt }) => {
           const raw = source[key];
@@ -80,6 +87,10 @@ export function ExternalLinks({ source }: { source: LinkSource }) {
             </Link>
           );
         })}
+
+        {!hasAnyLink && emptyText && (
+          <p className="text-muted-foreground text-sm">{emptyText}</p>
+        )}
       </div>
     </div>
   );

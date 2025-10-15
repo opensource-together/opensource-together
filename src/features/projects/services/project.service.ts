@@ -99,19 +99,22 @@ export const createProject = async (
  * @returns A promise that resolves to the updated project.
  */
 export const updateProject = async (
+  projectId: string,
   projectData: UpdateProjectData
 ): Promise<Project> => {
-  const response = await fetch(
-    `${API_BASE_URL}/projects/${projectData.projectId}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(projectData.data),
-    }
-  );
+  const {
+    logoUrl: _omitLogoUrl,
+    imagesUrls: _omitImagesUrls,
+    ...payload
+  } = projectData;
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
 
   if (!response.ok) {
     const error = await response.json();
@@ -200,6 +203,34 @@ export const updateProjectCover = async (
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || "Error updating project cover");
+  }
+
+  return response.json();
+};
+
+/**
+ * Deletes a specific cover image from a project by its URL.
+ *
+ * @param projectId - The ID or publicId of the project.
+ * @param imageUrl - The public URL of the image to delete.
+ * @returns A promise that resolves to the updated project.
+ */
+export const deleteProjectImage = async (
+  projectId: string,
+  imageUrl: string
+): Promise<Project> => {
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/images`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ url: imageUrl }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Error deleting project image");
   }
 
   return response.json();

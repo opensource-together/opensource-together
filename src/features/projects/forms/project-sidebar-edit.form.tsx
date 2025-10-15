@@ -14,11 +14,11 @@ import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { Project } from "../types/project.type";
-import { ProjectSchema } from "../validations/project.schema";
+import { UpdateProjectApiData } from "../validations/project.schema";
 
 interface ProjectSidebarEditFormProps {
   project: Project;
-  form: UseFormReturn<ProjectSchema>;
+  form: UseFormReturn<UpdateProjectApiData>;
 }
 
 export default function ProjectSidebarEditForm({

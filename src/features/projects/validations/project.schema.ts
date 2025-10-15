@@ -61,8 +61,8 @@ export const createProjectApiSchema = z.object({
   title: z.string().min(3, "Title is required"),
   description: z.string().min(10, "Description is required"),
   provider: z.enum(["GITHUB", "GITLAB"]),
-  image: z.string().optional(),
-  coverImages: z.array(z.string()).max(4).optional(),
+  logoUrl: z.string().optional(),
+  imagesUrls: z.array(z.string()).max(4).optional(),
   readme: z.string().optional(),
   projectTechStacks: z.array(z.string()),
   projectCategories: z.array(z.string()),
@@ -96,10 +96,8 @@ export const updateProjectApiSchema = z.object({
   description: z.string().min(10, "Description is required"),
   logoUrl: z.string().optional(),
   imagesUrls: z.array(z.string()).max(4).optional(),
-  readme: z.string().max(10000).optional(),
   projectTechStacks: z.array(z.string()),
   projectCategories: z.array(z.string()),
-  repoUrl: urlWithDomainCheck([], "Invalid repository URL").optional(),
   githubUrl: urlWithDomainCheck(
     ["github.com"],
     "Invalid GitHub URL (must contain github.com)"
@@ -132,10 +130,7 @@ export const CreateProjectSchema = z.object({
   data: projectSchema,
 });
 
-export const UpdateProjectSchema = z.object({
-  projectId: z.string().min(1),
-  data: projectSchema,
-});
+export const UpdateProjectSchema = projectSchema;
 
 // ========================================
 // BASE TYPE EXPORTS

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
@@ -10,19 +10,31 @@ import ProjectDetailError from "../components/error-ui/project-detail-content-er
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import ProjectMainEditForm from "../forms/project-main-edit.form";
 import ProjectSidebarEditForm from "../forms/project-sidebar-edit.form";
-import { useProject, useUpdateProject } from "../hooks/use-projects.hook";
-import { ProjectSchema, projectSchema } from "../validations/project.schema";
+import {
+  useDeleteProjectImage,
+  useProject,
+  useUpdateProject,
+  useUpdateProjectCover,
+  useUpdateProjectLogo,
+} from "../hooks/use-projects.hook";
+import {
+  UpdateProjectApiData,
+  UpdateProjectData,
+  updateProjectApiSchema,
+} from "../validations/project.schema";
 
 export default function ProjectEditView({ projectId }: { projectId: string }) {
   const { data: project, isLoading, isError } = useProject(projectId);
   const { updateProject, isUpdating } = useUpdateProject();
+  const { updateProjectLogo } = useUpdateProjectLogo();
+  const { updateProjectCover } = useUpdateProjectCover();
+  const { deleteProjectImage } = useDeleteProjectImage();
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-  const [shouldDeleteImage, setShouldDeleteImage] = useState(false);
   const [newCoverFiles, setNewCoverFiles] = useState<File[]>([]);
   const [removedCoverImages, setRemovedCoverImages] = useState<string[]>([]);
 
-  const form = useForm<ProjectSchema>({
-    resolver: zodResolver(projectSchema),
+  const form = useForm<UpdateProjectApiData>({
+    resolver: zodResolver(updateProjectApiSchema),
     defaultValues: {
       logoUrl: project?.logoUrl || undefined,
       title: project?.title || "",
@@ -41,34 +53,50 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     },
   });
 
-  const { setValue } = form;
+  useEffect(() => {
+    if (!project) return;
+    form.reset({
+      logoUrl: project.logoUrl || undefined,
+      title: project.title || "",
+      description: project.description || "",
+      projectTechStacks: project.projectTechStacks?.map((t) => t.id) || [],
+      projectCategories: project.projectCategories?.map((c) => c.id) || [],
+      imagesUrls: project.imagesUrls || [],
+      githubUrl: project.githubUrl || "",
+      gitlabUrl: project.gitlabUrl || "",
+      discordUrl: project.discordUrl || "",
+      twitterUrl: project.twitterUrl || "",
+      linkedinUrl: project.linkedinUrl || "",
+      websiteUrl: project.websiteUrl || "",
+    });
+  }, [project, form]);
+
+  const handleImageSelect = (file: File | null) => {
+    setSelectedImageFile(file);
+  };
 
   const visibleCoverImages = (project?.imagesUrls || []).filter(
     (url: string) => !removedCoverImages.includes(url)
   );
 
-  const handleImageSelect = (file: File | null) => {
-    if (file) {
-      setSelectedImageFile(file);
-      setShouldDeleteImage(false);
-      setValue("logoUrl", "new-image-selected");
-    } else {
-      setSelectedImageFile(null);
-      setShouldDeleteImage(true);
-      setValue("logoUrl", "");
-    }
-  };
-
   const onSubmit = form.handleSubmit(async (data) => {
     if (!project) return;
 
-    updateProject({
-      data: {
-        ...data,
-        logoUrl: shouldDeleteImage ? undefined : data.logoUrl,
-      },
-      projectId: project.id || "",
-    });
+    const id = project.id || project.publicId || "";
+    updateProject({ id, updateData: data as UpdateProjectData });
+
+    if (selectedImageFile) {
+      updateProjectLogo({
+        projectId: id,
+        logoFile: selectedImageFile,
+      });
+    }
+
+    if (newCoverFiles && newCoverFiles.length > 0) {
+      newCoverFiles.forEach((file) => {
+        updateProjectCover({ projectId: id, coverFile: file });
+      });
+    }
   });
 
   if (isLoading) return <SkeletonProjectDetail />;
@@ -85,11 +113,14 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
           onImageSelect={handleImageSelect}
           isUpdating={isUpdating}
           onCoverFilesChange={setNewCoverFiles}
-          onRemoveExistingCover={(imageUrl) =>
+          onRemoveExistingCover={(imageUrl) => {
+            const id = project.publicId || project.id;
+            if (!id) return;
             setRemovedCoverImages((prev) =>
               prev.includes(imageUrl) ? prev : [...prev, imageUrl]
-            )
-          }
+            );
+            deleteProjectImage({ projectId: id, imageUrl });
+          }}
           currentCoverImages={visibleCoverImages}
         />
       }
