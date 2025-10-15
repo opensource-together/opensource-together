@@ -21,7 +21,7 @@ export default function DashboardHeader() {
   const pathname = usePathname();
   const { isAuthenticated, isLoading } = useAuth();
 
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith("/auth") || pathname.startsWith("/onboarding")) {
     return null;
   }
 
