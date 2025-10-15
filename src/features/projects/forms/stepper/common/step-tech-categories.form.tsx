@@ -19,7 +19,11 @@ import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
-import { useCreateProject } from "@/features/projects/hooks/use-projects.hook";
+import {
+  useCreateProject,
+  useUpdateProjectCover,
+  useUpdateProjectLogo,
+} from "@/features/projects/hooks/use-projects.hook";
 import { ProjectSchema } from "@/features/projects/validations/project.schema";
 
 import { ProjectTechCategoriesPreview } from "../../../components/stepper/project-tech-categories-preview.component";
@@ -36,11 +40,21 @@ export function StepTechCategoriesForm() {
   const [pendingFormData, setPendingFormData] =
     useState<StepTechCategoriesFormData | null>(null);
 
-  const { createProject, isCreating } = useCreateProject();
+  const { createProjectAsync, isCreating } = useCreateProject();
+  const { updateProjectLogo } = useUpdateProjectLogo();
+  const { updateProjectCover } = useUpdateProjectCover();
 
   const { formData, updateProjectInfo } = useProjectCreateStore();
-  const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
-  const { categoryOptions, isLoading: categoriesLoading } = useCategories();
+  const {
+    techStackOptions,
+    isLoading: techStacksLoading,
+    getTechStacksByIds,
+  } = useTechStack();
+  const {
+    categoryOptions,
+    isLoading: categoriesLoading,
+    getCategoriesByIds,
+  } = useCategories();
 
   const getPreFilledUrls = useCallback(() => {
     const repoUrl = formData.selectedRepository?.html_url || "";
@@ -86,6 +100,80 @@ export function StepTechCategoriesForm() {
     router.push("/projects/create/describe");
   };
 
+  // Helper function to prepare logo file
+  const prepareLogoFile = async (): Promise<File | null> => {
+    if (formData.logoFile) {
+      return formData.logoFile;
+    }
+
+    if (formData.logoUrl) {
+      return fetch(formData.logoUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const inferredType = blob.type || "image/png";
+          return new File([blob], "logo.png", { type: inferredType });
+        });
+    }
+
+    return null;
+  };
+
+  // Helper function to prepare cover image files
+  const prepareCoverFiles = async (): Promise<File[]> => {
+    if (formData.imageFiles && formData.imageFiles.length > 0) {
+      return formData.imageFiles;
+    }
+
+    // Fallback: process imagesUrls if no files available
+    const coverFiles: File[] = [];
+    if (formData.imagesUrls && formData.imagesUrls.length > 0) {
+      for (const imageUrl of formData.imagesUrls) {
+        if (typeof imageUrl === "string") {
+          // If it's a URL, fetch it and convert to File
+          try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const inferredType = blob.type || "image/png";
+            const fileName = imageUrl.split("/").pop() || "cover-image.png";
+            coverFiles.push(new File([blob], fileName, { type: inferredType }));
+          } catch (error) {
+            console.error("Failed to fetch cover image:", error);
+          }
+        }
+      }
+    }
+
+    return coverFiles;
+  };
+
+  // Helper function to upload project logo
+  const uploadProjectLogo = (projectId: string, logoFile: File) => {
+    return updateProjectLogo({
+      projectId,
+      logoFile,
+    });
+  };
+
+  // Helper function to upload project cover images
+  const uploadProjectCovers = async (projectId: string, imageFiles: File[]) => {
+    const uploadPromises = imageFiles.map((file) =>
+      updateProjectCover({
+        projectId,
+        coverFile: file,
+      })
+    );
+    return Promise.all(uploadPromises);
+  };
+
+  // Helper function to get project ID from response
+  const getProjectId = (createdProject: any): string | undefined => {
+    const anyProject = createdProject as unknown as {
+      data?: { id?: string };
+      id?: string;
+    };
+    return anyProject?.data?.id || anyProject?.id;
+  };
+
   const handleConfirmCreation = async () => {
     if (!pendingFormData) return;
 
@@ -95,12 +183,10 @@ export function StepTechCategoriesForm() {
     const projectData: ProjectSchema = {
       title: formData.title,
       description: formData.description,
-      provider: formData.method.toUpperCase() as
-        | "GITHUB"
-        | "GITLAB"
-        | "SCRATCH",
+      provider: formData.method.toUpperCase() as "GITHUB" | "GITLAB",
       projectTechStacks: pendingFormData.projectTechStacks || [],
       projectCategories: pendingFormData.projectCategories || [],
+      repoUrl: formData.repoUrl || "",
       githubUrl: pendingFormData.githubUrl || "",
       gitlabUrl: pendingFormData.gitlabUrl || "",
       discordUrl: pendingFormData.discordUrl || "",
@@ -121,7 +207,27 @@ export function StepTechCategoriesForm() {
       websiteUrl: pendingFormData.websiteUrl || "",
     });
 
-    createProject(projectData);
+    try {
+      // Create project
+      const createdProject = await createProjectAsync(projectData);
+      const projectId = getProjectId(createdProject);
+
+      if (!projectId) {
+        throw new Error("Failed to get project ID from response");
+      }
+
+      const logoFile = await prepareLogoFile();
+      if (logoFile) {
+        await uploadProjectLogo(projectId, logoFile);
+      }
+
+      const coverFiles = await prepareCoverFiles();
+      if (coverFiles.length > 0) {
+        await uploadProjectCovers(projectId, coverFiles);
+      }
+    } catch (error) {
+      console.error("Error in project creation flow:", error);
+    }
   };
 
   const handleCancelCreation = () => {
@@ -224,14 +330,14 @@ export function StepTechCategoriesForm() {
         </Form>
       </div>
 
-      <div className="hidden w-[45%] lg:block">
+      <div className="hidden w-[40%] lg:block">
         <div className="sticky top-8">
           <h3 className="mb-4 text-lg font-medium">Preview</h3>
           <ProjectTechCategoriesPreview
-            projectTechStacks={useTechStack().getTechStacksByIds(
+            projectTechStacks={getTechStacksByIds(
               watched.projectTechStacks || []
             )}
-            projectCategories={useCategories().getCategoriesByIds(
+            projectCategories={getCategoriesByIds(
               watched.projectCategories || []
             )}
             githubUrl={watched.githubUrl || ""}

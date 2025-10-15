@@ -27,21 +27,12 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
   const contributors = project.repositoryDetails?.contributors || [];
 
   const allContributors = (() => {
-    const ownerContributor = {
-      login: project.repositoryDetails?.owner?.login || "Owner",
-      avatar_url: project.repositoryDetails?.owner?.avatar_url || "",
-      contributions: 0,
-    };
+    if (!contributors || contributors.length === 0) return [];
 
-    const isOwnerInContributors = contributors.some(
-      (contributor) => contributor.login === ownerContributor.login
+    const ownerLogin = project.repositoryDetails?.owner?.login;
+    return contributors.filter(
+      (contributor) => contributor.login !== ownerLogin
     );
-
-    if (!isOwnerInContributors && project.repositoryDetails?.owner) {
-      return [ownerContributor, ...contributors];
-    }
-
-    return contributors;
   })();
 
   const handleContributorClick = (contributor: { login?: string }) => {
