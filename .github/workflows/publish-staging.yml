@@ -27,10 +27,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/opensource-together/front-staging
+            ghcr.io/opensource-together/frontend
           tags: |
             type=sha
-            type=raw,value=latest
+            type=raw,value=develop
 
       - name: Upload server artifact
         uses: docker/build-push-action@v6
@@ -41,4 +41,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_STAGING }}

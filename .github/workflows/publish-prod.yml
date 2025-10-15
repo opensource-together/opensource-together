@@ -28,7 +28,7 @@ jobs:
           flavor: |
             latest=auto
           images: |
-            ghcr.io/opensource-together/front
+            ghcr.io/opensource-together/frontend
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
