@@ -16,6 +16,9 @@ import { Input } from "@/shared/components/ui/input";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useProfileUpdate } from "@/features/profile/hooks/use-profile.hook";
+
 type OnboardingFormValues = {
   title: string;
   techStacks: string[];
@@ -34,12 +37,33 @@ export default function OnboardingForm() {
 
   const { techStackOptions } = useTechStack();
   const { categoryOptions } = useCategories();
+  const { currentUser } = useAuth();
+  const { updateProfileAsync, isUpdating } = useProfileUpdate({});
 
   const { control, handleSubmit } = form;
 
-  const onSubmit = handleSubmit((values) => {
-    // For now we only log; integration can be added to persist onboarding data
-    console.log("onboarding-submit", values);
+  const onSubmit = handleSubmit(async (values) => {
+    const id = currentUser?.publicId || currentUser?.id || "";
+    if (!id) return;
+
+    await updateProfileAsync({
+      id,
+      updateData: {
+        name: currentUser?.name || "",
+        image: currentUser?.image || "",
+        jobTitle: values.title || currentUser?.jobTitle || "",
+        userTechStacks: values.techStacks,
+        bio: currentUser?.bio || "",
+        githubUrl: currentUser?.githubUrl || undefined,
+        gitlabUrl: currentUser?.gitlabUrl || undefined,
+        discordUrl: currentUser?.discordUrl || undefined,
+        twitterUrl: currentUser?.twitterUrl || undefined,
+        linkedinUrl: currentUser?.linkedinUrl || undefined,
+        websiteUrl: currentUser?.websiteUrl || undefined,
+      },
+    });
+
+    location.href = "/";
   });
 
   return (
@@ -107,7 +131,12 @@ export default function OnboardingForm() {
                 )}
               />
 
-              <Button type="submit" size="lg" className="w-full">
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full"
+                disabled={isUpdating}
+              >
                 Continue
               </Button>
             </form>

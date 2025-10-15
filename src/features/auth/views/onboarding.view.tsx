@@ -3,10 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { useOnboardingGate } from "@/features/auth/hooks/use-auth.hook";
+
 import AuthIllustration from "../components/auth-illustration.component";
 import OnboardingForm from "../components/onboarding-form.component";
 
 export default function OnboardingView() {
+  const { canRender } = useOnboardingGate();
+
+  if (!canRender) return null;
+
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden">
       <Link href="/" className="absolute top-12 left-1/2 z-10 -translate-x-1/2">

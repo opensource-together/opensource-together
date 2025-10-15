@@ -33,7 +33,7 @@ export const useProfile = (id: string) => {
  * - isUpdating: boolean indicating if the update is in progress
  * - isUpdateError: boolean indicating if an error occurred
  */
-export const useProfileUpdate = () => {
+export const useProfileUpdate = (options?: { onSuccess?: () => void }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -51,13 +51,18 @@ export const useProfileUpdate = () => {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        router.push("/profile/me");
+        if (options?.onSuccess) {
+          options.onSuccess();
+        } else {
+          router.push("/profile/me");
+        }
       },
     },
   });
 
   return {
     updateProfile: mutation.mutate,
+    updateProfileAsync: mutation.mutateAsync,
     isUpdating: mutation.isPending,
     isUpdateError: mutation.isError,
   };
