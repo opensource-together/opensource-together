@@ -19,7 +19,6 @@ import {
 } from "@/shared/components/ui/sheet";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
-import { NotificationPanel } from "@/features/notifications/components/notification-panel.component";
 
 import { Avatar } from "../ui/avatar";
 import Icon, { IconName } from "../ui/icon";
@@ -433,7 +432,6 @@ export default function Header() {
 
           {isAuthenticated && !showLoadingState && (
             <>
-              <NotificationPanel />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

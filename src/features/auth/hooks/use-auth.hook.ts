@@ -3,11 +3,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
-import { socket } from "@/shared/realtime/socket";
 
 import {
   getCurrentUser,
-  getWebSocketToken,
   logout,
   signInWithProvider,
 } from "../services/auth.service";
@@ -44,22 +42,6 @@ export default function useAuth() {
     queryFn: getCurrentUser,
   });
 
-  // Query to get the WebSocket token
-  const { data: wsToken } = useQuery({
-    queryKey: ["ws-token"],
-    queryFn: getWebSocketToken,
-    enabled: !!currentUser,
-  });
-
-  // Effect to manage the WebSocket token in the localStorage
-  useEffect(() => {
-    if (wsToken) {
-      localStorage.setItem("wsToken", wsToken);
-    } else if (!currentUser) {
-      localStorage.removeItem("wsToken");
-    }
-  }, [wsToken, currentUser]);
-
   const signInMutation = useToastMutation<unknown, Error, string>({
     mutationFn: async (provider) => await signInWithProvider(provider),
     loadingMessage: "Connexion en cours...",
@@ -75,9 +57,6 @@ export default function useAuth() {
     options: {
       onSuccess: () => {
         queryClient.setQueryData(["user/me"], null);
-        queryClient.setQueryData(["ws-token"], null);
-        localStorage.removeItem("wsToken");
-        socket.disconnect();
         router.push("/");
       },
     },
@@ -102,7 +81,6 @@ export default function useAuth() {
     isAuthenticated: !!currentUser,
     isLoading,
     isError,
-    wsToken,
 
     signInWithProvider: signInMutation.mutate,
     logout: logoutMutation.mutate,
