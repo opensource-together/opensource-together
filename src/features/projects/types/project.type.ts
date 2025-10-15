@@ -1,56 +1,6 @@
 import { CategoryType } from "@/shared/types/category.type";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
-export interface Owner {
-  id: string;
-  username: string;
-  avatarUrl?: string;
-  techStacks?: TechStackType[];
-}
-
-export interface Contributor {
-  id: string;
-  username: string;
-  avatarUrl: string | null;
-  contributions: number;
-}
-
-export interface ExternalLink {
-  id?: string;
-  type: "GITHUB" | "WEBSITE" | "DISCORD" | "TWITTER" | "LINKEDIN" | "OTHER";
-  url: string;
-}
-
-export interface LastCommit {
-  sha: string;
-  message: string;
-  date: string;
-  url: string;
-  author: {
-    login: string;
-    avatar_url: string;
-    html_url: string;
-  };
-}
-
-export interface ProjectStats {
-  contributors?: Contributor[];
-  stars?: number;
-  forks?: number;
-  watchers?: number;
-  openIssues?: number;
-  commits?: number;
-  lastCommit?: LastCommit;
-}
-
-export interface Collaborator {
-  id: string;
-  name: string;
-  email?: string;
-  avatarUrl?: string;
-  collaboratorsCount?: number;
-}
-
 export interface Project {
   id?: string;
   publicId?: string;
@@ -59,9 +9,7 @@ export interface Project {
   logoUrl: string | null;
   provider: "GITHUB" | "GITLAB" | "SCRATCH";
   readme: string | null;
-  owner: Owner;
   description: string;
-  projectTechStacks: TechStackType[];
   published: boolean;
   repoUrl: string | null;
   githubUrl: string | null;
@@ -70,8 +18,9 @@ export interface Project {
   twitterUrl: string | null;
   linkedinUrl: string | null;
   websiteUrl: string | null;
-  projectStats?: ProjectStats;
+  projectTechStacks: TechStackType[];
   projectCategories: CategoryType[];
+  repositoryDetails: RepositoryWithDetails;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -93,3 +42,64 @@ export interface ProjectEditForm {
   projectTechStacks: TechStackType[];
   projectCategories?: CategoryType[];
 }
+
+export type Contributor = {
+  login: string | undefined;
+  avatar_url: string | undefined;
+  contributions: number;
+};
+
+export type PullRequest = {
+  title: string;
+  state: string;
+  draft: boolean | undefined;
+  number: number;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  merged_at: string | null;
+  url: string;
+  author: {
+    login: string | undefined;
+    avatar_url: string | undefined;
+  };
+};
+
+export type Issue = {
+  title: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  author: {
+    login: string | undefined;
+    avatar_url: string | undefined;
+  };
+  url: string;
+};
+
+export type RepositoryWithDetails = {
+  name: string;
+  description: string | null;
+  url: string | null;
+  html_url: string;
+  created_at: string | null | undefined;
+  updated_at: string | null | undefined;
+  pushed_at: string | null | undefined;
+  stars: number;
+  tags: string[];
+  forksCount: number;
+  openIssuesCount: number;
+  subscribersCount: number;
+  visibility: string | null | undefined;
+  owner: {
+    login: string | undefined;
+    avatar_url: string | undefined;
+  };
+  contributors: Contributor[];
+  issues: Issue[];
+  pullRequests: PullRequest[];
+  readme: string;
+  contributionFile: string | undefined;
+  cocFile: string | undefined;
+};
