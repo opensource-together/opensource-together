@@ -102,7 +102,7 @@ export function StepDescribeProjectForm() {
       title: data.title,
       description: data.description,
       logoUrl: finalLogoUrl,
-      logoFile: logoFile,
+      logoFile,
       imagesUrls,
       imageFiles,
     });

@@ -166,8 +166,10 @@ export function StepTechCategoriesForm() {
   };
 
   // Helper function to get project ID from response
-  const getProjectId = (createdProject: any): string | undefined => {
-    const anyProject = createdProject as unknown as {
+  const getProjectId = (
+    createdProject: { id?: string; data?: { id?: string } } | unknown
+  ): string | undefined => {
+    const anyProject = createdProject as {
       data?: { id?: string };
       id?: string;
     };
