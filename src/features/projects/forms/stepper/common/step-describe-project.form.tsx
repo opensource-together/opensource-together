@@ -207,7 +207,7 @@ export function StepDescribeProjectForm() {
         </Form>
       </div>
 
-      <div className="w-[55%]">
+      <div className="hidden w-[55%] lg:block">
         <div className="sticky top-8">
           <h3 className="mb-4 text-lg font-medium">Preview</h3>
           <ProjectDescribePreview

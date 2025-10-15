@@ -16,8 +16,8 @@ export async function generateMetadata({
   const { provider } = await params;
 
   const titles = {
-    github: "Importer Github Repository | OpenSource Together",
-    gitlab: "Importer GitLab Repository | OpenSource Together",
+    github: "Import Github Repository | OpenSource Together",
+    gitlab: "Import GitLab Repository | OpenSource Together",
   };
 
   const descriptions = {

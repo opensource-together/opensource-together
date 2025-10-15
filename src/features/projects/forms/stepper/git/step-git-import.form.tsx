@@ -157,7 +157,7 @@ export default function StepGitImportForm({
         <FormNavigationButtons
           onNext={handleSubmit}
           onPrevious={handlePrevious}
-          nextLabel="Confirm"
+          nextLabel="Next"
           isLoading={isSubmitting}
           nextType="button"
           isNextDisabled={!selectedRepo}

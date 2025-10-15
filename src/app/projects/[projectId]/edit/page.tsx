@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await getProjectDetails(projectId);
 
   return {
-    title: `Modifier ${project.title} | OpenSource Together`,
+    title: `Edit ${project.title} | OpenSource Together`,
     description: project.description,
   };
 }

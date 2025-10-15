@@ -78,6 +78,7 @@ export default function StepGitConfirmForm({
         onNext={handleNext}
         onPrevious={handlePrevious}
         nextType="button"
+        nextLabel="Confirm"
       />
     </div>
   );

@@ -33,7 +33,7 @@ export default function StepIntroductionView() {
   };
 
   return (
-    <div className="mx-auto mt-8 max-w-2xl">
+    <div className="mx-7 mt-8 max-w-2xl sm:mx-auto">
       <div className="mt-[100px] flex flex-col items-center justify-center">
         <div className="flex flex-col sm:items-start">
           <h2 className="text-3xl font-medium">Choose your Method</h2>
@@ -66,6 +66,7 @@ export default function StepIntroductionView() {
             />
           </div>
           <FormNavigationButtons
+            onPrevious={() => router.push("/dashboard/my-projects")}
             onNext={handleNext}
             nextLabel="Continue"
             isNextDisabled={!selectedMethod}

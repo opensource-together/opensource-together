@@ -14,11 +14,13 @@ export default function HeaderBreadcrumb() {
   const segments = pathname.split("/").filter(Boolean);
 
   const routeConfig = {
-    "/dashboard": () => [{ label: "Projets", href: "/dashboard/my-projects" }],
-    "/profile/me": () => [{ label: "Profil", href: "/profile/me" }],
+    "/dashboard": () => [
+      { label: "My Projects", href: "/dashboard/my-projects" },
+    ],
+    "/profile/me": () => [{ label: "Profile", href: "/profile/me" }],
     "/profile/me/edit": () => [
-      { label: "Profil", href: "/profile/me" },
-      { label: "Modifier", href: "/profile/me/edit" },
+      { label: "Profile", href: "/profile/me" },
+      { label: "Edit", href: "/profile/me/edit" },
     ],
   };
 
@@ -46,26 +48,26 @@ export default function HeaderBreadcrumb() {
     }
 
     if (pathname.startsWith("/profile/") && userId && userId !== "me") {
-      return [{ label: publicProfile?.name || "Profil", href: pathname }];
+      return [{ label: publicProfile?.name || "Profile", href: pathname }];
     }
 
     if (pathname.startsWith("/projects/") && publicProjectId) {
       if (pathname.endsWith("/edit")) {
         return [
           {
-            label: publicProject?.title || "Projet",
+            label: publicProject?.title || "Project",
             href: `/projects/${publicProjectId}`,
           },
-          { label: "Modifier", href: pathname },
+          { label: "Edit", href: pathname },
         ];
       }
-      return [{ label: publicProject?.title || "Projet", href: pathname }];
+      return [{ label: publicProject?.title || "Project", href: pathname }];
     }
 
     if (segments[0] === "dashboard" && segments.length > 1) {
       const breadcrumbItems = [];
       const segmentLabels = {
-        "my-projects": "Projets",
+        "my-projects": "Projects",
       };
 
       for (let i = 1; i < segments.length; i++) {

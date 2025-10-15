@@ -28,11 +28,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
   const allContributors = (() => {
     if (!contributors || contributors.length === 0) return [];
-
-    const ownerLogin = project.repositoryDetails?.owner?.login;
-    return contributors.filter(
-      (contributor) => contributor.login !== ownerLogin
-    );
+    return contributors;
   })();
 
   const handleContributorClick = (contributor: { login?: string }) => {
