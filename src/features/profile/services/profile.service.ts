@@ -1,10 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import {
-  Profile,
-  PullRequestQueryParams,
-  PullRequestsResponse,
-} from "../types/profile.type";
+import { Profile } from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
 
 /**
@@ -69,6 +65,13 @@ export const updateProfile = async (
   }
 };
 
+/**
+ * Updates the profile logo/avatar of a user.
+ *
+ * @param id - The user ID to update.
+ * @param avatarFile - The avatar file to upload.
+ * @returns A promise that resolves to the updated image data.
+ */
 export const updateProfileLogo = async (
   id: string,
   avatarFile: File
@@ -89,41 +92,4 @@ export const updateProfileLogo = async (
 
   const apiResponse = await response.json();
   return apiResponse?.data;
-};
-
-/**
- * Gets the pull requests of the current user.
- *
- * @param params - Optional query parameters to filter pull requests.
- * @returns A promise that resolves to the pull requests data.
- */
-export const getUserPullRequests = async (
-  params?: PullRequestQueryParams
-): Promise<PullRequestsResponse> => {
-  try {
-    const queryParams = new URLSearchParams(
-      Object.entries(params ?? {})
-        .filter(([_, v]) => v !== undefined && v !== null)
-        .map(([k, v]) => [k, String(v)])
-    );
-
-    const queryString = queryParams.toString();
-    const url = `${API_BASE_URL}/users/me/pullrequests${queryString ? `?${queryString}` : ""}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch pull requests");
-    }
-
-    const apiResponse = await response.json();
-    return apiResponse.data;
-  } catch (error) {
-    console.error("Error fetching pull requests:", error);
-    throw error;
-  }
 };

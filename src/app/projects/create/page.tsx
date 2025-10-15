@@ -1,13 +1,12 @@
 import { Metadata } from "next";
 
-import StepZeroView from "@/features/projects/views/stepper-views/step-zero.view";
+import StepIntroductionView from "@/features/projects/views/stepper-views/common/step-introduction.view";
 
 export const metadata: Metadata = {
-  title: "Choisir une méthode de création | OpenSource Together",
-  description:
-    "Choisissez une méthode de création pour votre projet OpenSource Together",
+  title: "Choose a creation method | OpenSource Together",
+  description: "Choose a creation method for your project OpenSource Together",
 };
 
 export default function ProjectCreateMethodPage() {
-  return <StepZeroView />;
+  return <StepIntroductionView />;
 }

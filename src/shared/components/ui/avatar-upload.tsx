@@ -17,6 +17,7 @@ interface AvatarUploadProps {
   className?: string;
   disabled?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+  shape?: "circle" | "square" | "rounded";
   name?: string; // For fallback initials
   fallback?: string;
   currentImageUrl?: string;
@@ -26,10 +27,11 @@ export function AvatarUpload({
   onFileSelect,
   accept = "image/*",
   maxSize = 5,
-  subtitle = "JPG, PNG. Taille max : 5MB",
+  subtitle = "JPG or PNG, 5MB Max",
   className,
   disabled = false,
   size = "2xl",
+  shape = "circle",
   name,
   fallback,
   currentImageUrl,
@@ -84,15 +86,13 @@ export function AvatarUpload({
         const error = rejection.errors[0];
         switch (error.code) {
           case "file-too-large":
-            setError(
-              `La taille du fichier doit être inférieure à ${maxSize}MB`
-            );
+            setError(`The file size must be less than ${maxSize}MB`);
             break;
           case "file-invalid-type":
-            setError("Type de fichier non supporté");
+            setError("File type not supported");
             break;
           default:
-            setError("Erreur lors du téléchargement du fichier");
+            setError("Error uploading file");
         }
       }
     },
@@ -128,6 +128,7 @@ export function AvatarUpload({
               name={name}
               fallback={fallback}
               size={size}
+              shape={shape}
               className={cn(
                 "border-2 transition-all duration-200",
                 preview || currentImageUrl
@@ -171,7 +172,7 @@ export function AvatarUpload({
             input.click();
           }}
         >
-          Importer
+          Upload
           <Icon name="download" size="sm" />
         </Button>
       </div>

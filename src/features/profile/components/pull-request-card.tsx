@@ -3,7 +3,7 @@ import { FaGithub, FaGitlab } from "react-icons/fa6";
 
 import { Badge } from "@/shared/components/ui/badge";
 
-import { UserPullRequest } from "../types/profile.type";
+import { UserPullRequest } from "../types/profile.pull-request.type";
 
 export default function PullRequestList({
   provider,

@@ -7,7 +7,6 @@ import {
   HiChatBubbleLeft,
   HiChevronRight,
   HiCog6Tooth,
-  HiInbox,
   HiMiniSquare2Stack,
   HiQuestionMarkCircle,
   HiUserGroup,
@@ -20,14 +19,9 @@ const sidebarSections = [
   {
     items: [
       {
-        label: "Projets",
+        label: "My Projects",
         href: "/dashboard/my-projects",
         icon: HiMiniSquare2Stack,
-      },
-      {
-        label: "Candidatures",
-        href: "/dashboard/my-applications",
-        icon: HiInbox,
       },
     ],
   },
@@ -44,8 +38,8 @@ const sidebarSections = [
 ];
 
 const bottomSidebarItems = [
-  { label: "Paramètres", href: "/settings", icon: HiCog6Tooth },
-  { label: "Besoin d'aide", href: "/help", icon: HiQuestionMarkCircle },
+  { label: "Settings", href: "/settings", icon: HiCog6Tooth },
+  { label: "Need help", href: "/help", icon: HiQuestionMarkCircle },
 ];
 
 interface SidebarItem {
@@ -107,8 +101,8 @@ export default function DashboardSidebar() {
         <div>
           <div className="bg-secondary rounded-xl p-4">
             <div className="text-muted-foreground mb-3 text-center text-xs">
-              Créer un projet pour OpenSource Together. Importer un repo Github
-              ou depuis zéro.
+              Create a new project for OST. Import a repo from Github or start
+              from scratch.
             </div>
             <Button
               asChild
@@ -116,7 +110,7 @@ export default function DashboardSidebar() {
               className="hidden w-full justify-between lg:flex"
             >
               <Link href="/projects/create">
-                Créer un Projet
+                Create a project
                 <HiChevronRight size={12} />
               </Link>
             </Button>

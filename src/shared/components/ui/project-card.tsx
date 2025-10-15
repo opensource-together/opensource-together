@@ -3,9 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
-
-import { ProjectRole } from "@/features/projects/types/project-role.type";
-import { TechStack } from "@/features/projects/types/project.type";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
 /* ---------------------------------- Root ---------------------------------- */
 const ProjectCard = React.forwardRef<
@@ -114,7 +112,7 @@ ProjectCardTitle.displayName = "ProjectCardTitle";
 /* ------------------------------ Tech Stack ------------------------------- */
 interface ProjectCardTechStackProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  techStack: TechStack[];
+  techStack: TechStackType[];
 }
 
 const ProjectCardTechStack = React.forwardRef<
@@ -218,68 +216,6 @@ const ProjectCardFooter = React.forwardRef<
 ));
 ProjectCardFooter.displayName = "ProjectCardFooter";
 
-/* ------------------------------ Roles Count ------------------------------- */
-interface ProjectCardRolesCountProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  count: number;
-  counterRef?: React.RefObject<HTMLDivElement>;
-}
-
-const ProjectCardRolesCount = React.forwardRef<
-  HTMLDivElement,
-  ProjectCardRolesCountProps
->(({ className, count, counterRef, ...props }, ref) => (
-  <div
-    ref={counterRef || ref}
-    className={cn(
-      "flex flex-shrink-0 items-center gap-1 text-[10px] tracking-tighter",
-      className
-    )}
-    {...props}
-  >
-    <span className="font-semibold">{count}</span> Rôles Disponibles
-  </div>
-));
-ProjectCardRolesCount.displayName = "ProjectCardRolesCount";
-
-/* ------------------------------ Roles List -------------------------------- */
-interface ProjectCardRolesListProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  roles: ProjectRole[];
-  maxVisible?: number;
-}
-
-const ProjectCardRolesList = React.forwardRef<
-  HTMLDivElement,
-  ProjectCardRolesListProps
->(({ className, roles, maxVisible = roles.length, ...props }, ref) => {
-  const visibleRoles = roles.slice(0, maxVisible);
-  const remainingRoles = roles.length - maxVisible;
-
-  return (
-    <div
-      ref={ref}
-      className={cn("flex items-center gap-1", className)}
-      {...props}
-    >
-      {visibleRoles.map((role, index) => (
-        <span
-          key={index}
-          className="flex h-5 flex-shrink-0 items-center rounded-full bg-[#1E1E1E]/[0.1] px-1 text-xs font-semibold tracking-tighter whitespace-nowrap text-[#1E1E1E]/[0.8]"
-        >
-          {role.title}
-        </span>
-      ))}
-      {remainingRoles > 0 && (
-        <span className="flex h-5 flex-shrink-0 items-center rounded-full bg-transparent px-1 text-xs font-semibold tracking-tighter whitespace-nowrap text-[black]/20">
-          +{remainingRoles}
-        </span>
-      )}
-    </div>
-  );
-});
-ProjectCardRolesList.displayName = "ProjectCardRolesList";
-
 /* ------------------------------- View Link -------------------------------- */
 interface ProjectCardViewLinkProps
   extends Omit<React.ComponentPropsWithoutRef<typeof Link>, "href"> {
@@ -341,8 +277,6 @@ export {
   ProjectCardImage,
   ProjectCardInfo,
   ProjectCardLeftGroup,
-  ProjectCardRolesCount,
-  ProjectCardRolesList,
   ProjectCardStars,
   ProjectCardTechStack,
   ProjectCardTitle,

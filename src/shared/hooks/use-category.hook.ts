@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { ComboboxOption } from "@/shared/components/ui/combobox";
 
-import { CategoryItem, fetchCategories } from "../services/category.service";
+import { fetchCategories } from "../services/category.service";
+import { CategoryType } from "../types/category.type";
 
 export interface CategoryOption extends ComboboxOption {}
 
@@ -25,14 +26,14 @@ export function useCategories() {
     name: category.name,
   }));
 
-  const getCategoryById = (id: string): CategoryItem | null => {
+  const getCategoryById = (id: string): CategoryType | null => {
     return categories.find((category) => category.id === id) || null;
   };
 
-  const getCategoriesByIds = (ids: string[]): CategoryItem[] => {
+  const getCategoriesByIds = (ids: string[]): CategoryType[] => {
     return ids
       .map((id) => getCategoryById(id))
-      .filter((category): category is CategoryItem => category !== null);
+      .filter((category): category is CategoryType => category !== null);
   };
 
   return {

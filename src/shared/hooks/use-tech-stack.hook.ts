@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { ComboboxOption } from "@/shared/components/ui/combobox";
 
-import { TechStackItem, fetchTechStacks } from "../services/tech-stack.service";
+import { fetchTechStacks } from "../services/tech-stack.service";
+import { TechStackType } from "../types/tech-stack.type";
 
 export type TechStackOption = ComboboxOption;
 
@@ -47,14 +48,14 @@ export function useTechStack() {
     ...technologyOptions,
   ];
 
-  const getTechStackById = (id: string): TechStackItem | null => {
+  const getTechStackById = (id: string): TechStackType | null => {
     return techStacks.find((tech) => tech.id === id) || null;
   };
 
-  const getTechStacksByIds = (ids: string[]): TechStackItem[] => {
+  const getTechStacksByIds = (ids: string[]): TechStackType[] => {
     return ids
       .map((id) => getTechStackById(id))
-      .filter((tech): tech is TechStackItem => tech !== null);
+      .filter((tech): tech is TechStackType => tech !== null);
   };
 
   return {

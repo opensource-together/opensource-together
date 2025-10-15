@@ -18,8 +18,7 @@ import {
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
-
-import { TechStack } from "@/features/projects/types/project.type";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
 import Icon from "./icon";
 
@@ -27,7 +26,7 @@ export interface CustomComboboxOption {
   id: string;
   name: string;
   iconUrl?: string;
-  techStack?: TechStack[];
+  techStack?: TechStackType[];
   type?: "LANGUAGE" | "TECH";
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { HiMiniSquare2Stack } from "react-icons/hi2";
+import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -23,9 +23,11 @@ export default function MyProjectsList() {
     return (
       <EmptyState
         icon={HiMiniSquare2Stack}
-        text="Aucun projet n'a été créé"
-        buttonText="Créer un projet"
+        title="No projects"
+        description="Create a new project to get started"
+        buttonText="Create a project"
         href="/projects/create"
+        buttonIcon={HiPlus}
       />
     );
   }
@@ -45,7 +47,7 @@ export default function MyProjectsList() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar
-                      src={project.image}
+                      src={project.logoUrl}
                       name={project.title}
                       alt={project.title}
                       size="md"
@@ -60,31 +62,9 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <div className="flex items-center">
-                    {project.applications?.length === 0 ? (
-                      <span className="text-muted-foreground text-sm">
-                        Aucun candidat
-                      </span>
-                    ) : (
-                      <div className="flex items-center">
-                        <span className="bg-ost-blue-three mr-1.5 inline-block size-2 rounded-full" />
-                        <span className="mr-1 text-sm font-medium">
-                          {project.applications?.length}
-                        </span>
-                        <span className="text-muted-foreground text-sm text-nowrap">
-                          {project.applications?.length > 1
-                            ? "Nouveaux candidats"
-                            : "Nouveau candidat"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <div className="flex items-center">
                     {project.teamMembers?.length === 0 ? (
                       <span className="text-muted-foreground text-sm text-nowrap">
-                        Aucun membre
+                        No member
                       </span>
                     ) : (
                       <>
@@ -92,7 +72,7 @@ export default function MyProjectsList() {
                           {project.teamMembers?.length}
                         </span>
                         <span className="text-muted-foreground text-sm">
-                          Membre{project.teamMembers?.length > 1 ? "s" : ""}
+                          Member{project.teamMembers?.length > 1 ? "s" : ""}
                         </span>
                       </>
                     )}

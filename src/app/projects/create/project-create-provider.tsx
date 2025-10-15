@@ -1,8 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { ReactNode } from "react";
 
-import { useProjectCreateNavigation } from "../../../features/projects/hooks/use-project-create-navigation.hook";
+import { useProjectCreateNavigation } from "@/features/projects/hooks/use-project-create-navigation.hook";
 
 interface ProjectCreateProviderProps {
   children: ReactNode;

@@ -58,9 +58,10 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
         </div>
       ) : joinedProjects.length === 0 ? (
         <EmptyState
-          text="No joined projects"
+          title="No projects"
+          description="No projects have been joined yet"
           icon={HiMiniSquare2Stack}
-          buttonText="Explore projects"
+          buttonText="Back to home"
           href={profile.id === currentUser?.id ? "/" : undefined}
         />
       ) : (
@@ -70,9 +71,8 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             projectId={project.id}
             title={project.title}
             description={project.description}
-            image={project.image || ""}
-            showViewProject={false}
-            techStacks={project.techStacks}
+            logoUrl={project.logoUrl || ""}
+            projectTechStacks={project.projectTechStacks}
             owner={{
               id: project.owner.id,
               username: project.owner.username,
@@ -81,9 +81,8 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             projectStats={{
               forks: 0,
               contributors: project.teamMembers.map((member) => ({
-                id: member.id,
-                username: member.name,
-                avatarUrl: member.avatarUrl || "",
+                login: member.name,
+                avatar_url: member.avatarUrl || undefined,
                 contributions: 1,
               })),
               stars: 0,

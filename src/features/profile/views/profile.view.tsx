@@ -18,9 +18,9 @@ import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
-import ProfilePullRequests from "../components/profile-pull-requests.component";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
+import ProfilePullRequests from "./profile-pull-requests.view";
 
 export default function ProfileView() {
   const searchParams = useSearchParams();
@@ -35,7 +35,7 @@ export default function ProfileView() {
         message="An error has occurred while loading the profile. Please try again later."
         queryKey={["user/me"]}
         className="mt-20 mb-28"
-        buttonText="Back to projects"
+        buttonText="Back to homepage"
         href="/"
       />
     );

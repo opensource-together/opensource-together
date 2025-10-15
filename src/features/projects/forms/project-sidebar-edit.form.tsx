@@ -9,16 +9,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
-import { InputWithIcon } from "@/shared/components/ui/input-with-icon";
+import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-fields";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { Project } from "../types/project.type";
-import { ProjectSchema } from "../validations/project.schema";
+import { UpdateProjectApiData } from "../validations/project.schema";
 
 interface ProjectSidebarEditFormProps {
   project: Project;
-  form: UseFormReturn<ProjectSchema>;
+  form: UseFormReturn<UpdateProjectApiData>;
 }
 
 export default function ProjectSidebarEditForm({
@@ -34,22 +34,22 @@ export default function ProjectSidebarEditForm({
         <Form {...form}>
           <FormField
             control={control}
-            name="techStack"
+            name="projectTechStacks"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (max 10)</FormLabel>
+                <FormLabel required>Technologies (10 max)</FormLabel>
                 <FormControl className="mt-[-6px]">
                   <Combobox
                     options={techStackOptions}
-                    value={field.value}
+                    value={field.value || []}
                     onChange={field.onChange}
                     placeholder={
                       techStacksLoading
-                        ? "Chargement des technologies..."
-                        : "Ajouter des technologies..."
+                        ? "Loading technologies..."
+                        : "Add technologies..."
                     }
-                    searchPlaceholder="Rechercher une technologie..."
-                    emptyText="Aucune technologie trouvée."
+                    searchPlaceholder="Search for a technology..."
+                    emptyText="No technology found."
                     disabled={techStacksLoading}
                     maxSelections={10}
                   />
@@ -61,10 +61,10 @@ export default function ProjectSidebarEditForm({
 
           <FormField
             control={control}
-            name="categories"
+            name="projectCategories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Catégories (max 6)</FormLabel>
+                <FormLabel required>Categories (6 max)</FormLabel>
                 <FormControl className="mt-[-6px]">
                   <Combobox
                     options={categoryOptions}
@@ -72,11 +72,11 @@ export default function ProjectSidebarEditForm({
                     onChange={field.onChange}
                     placeholder={
                       categoriesLoading
-                        ? "Chargement des catégories..."
-                        : "Ajouter des catégories..."
+                        ? "Loading categories..."
+                        : "Add categories..."
                     }
-                    searchPlaceholder="Rechercher une catégorie..."
-                    emptyText="Aucune catégorie trouvée."
+                    searchPlaceholder="Search for a category..."
+                    emptyText="No category found."
                     disabled={categoriesLoading}
                     maxSelections={6}
                   />
@@ -87,88 +87,8 @@ export default function ProjectSidebarEditForm({
           />
 
           <div className="mt-0 flex flex-col gap-4">
-            <FormLabel>Liens sociaux</FormLabel>
-
-            <FormField
-              control={control}
-              name="externalLinks.github"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="github"
-                      placeholder="https://github.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="externalLinks.discord"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="discord"
-                      placeholder="https://discord.gg/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="externalLinks.twitter"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="twitter"
-                      placeholder="https://x.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="externalLinks.linkedin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="linkedin"
-                      placeholder="https://linkedin.com/..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="externalLinks.website"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <InputWithIcon
-                      icon="link"
-                      placeholder="https://..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FormLabel>External links</FormLabel>
+            <SocialLinksFormFields form={form} />
           </div>
         </Form>
       </div>

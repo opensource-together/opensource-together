@@ -19,7 +19,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
-import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
 import { TeamMemberType } from "../../types/my-projects.type";
 import MyTeamMembersSkeleton from "../skeletons/my-team-members-skeleton.component";
@@ -42,13 +41,12 @@ export default function MyTeamMembers({
   projectOwnerId,
   currentUserId,
 }: MyTeamMembersProps) {
-  const { navigateToProfile } = useProfileNavigation();
   if (isLoading) {
     return <MyTeamMembersSkeleton />;
   }
 
   if (members.length === 0) {
-    return <EmptyState text="Aucun membre dans l'équipe" />;
+    return <EmptyState title="Aucun membre dans l'équipe" />;
   }
 
   return (
@@ -101,12 +99,6 @@ export default function MyTeamMembers({
 
               <TableCell>
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm font-medium">{member.role}</span>
-                </div>
-              </TableCell>
-
-              <TableCell>
-                <div className="flex flex-col gap-1">
                   <span className="text-sm font-medium">
                     {formatDate(member.joinedAt)}
                   </span>
@@ -121,9 +113,7 @@ export default function MyTeamMembers({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64 p-2">
-                    <DropdownMenuItem
-                      onClick={() => navigateToProfile(member.id)}
-                    >
+                    <DropdownMenuItem>
                       <div className="flex w-full items-center justify-between">
                         <div className="flex flex-col gap-1">
                           <span className="font-medium">Voir profil</span>

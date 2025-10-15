@@ -2,16 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { TechStack } from "@/features/projects/types/project.type";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import { ApplicationType, TeamMemberType } from "../../types/my-projects.type";
-import MyApplicationsReceived from "./my-applications-received.component";
+import { TeamMemberType } from "../../types/my-projects.type";
 import MyTeamMembers from "./my-team-members.component";
 
 interface MyProjectTabsProps {
   projectId: string;
-  applications: ApplicationType[];
-  teamMembers?: TeamMemberType[];
   isLoading?: boolean;
   projectOwnerId?: string;
   currentUserId?: string;
@@ -20,23 +17,21 @@ interface MyProjectTabsProps {
     id: string;
     username: string;
     avatarUrl?: string;
-    techStacks?: TechStack[];
+    techStacks?: TechStackType[];
   };
 }
 
 type TabType = "applications" | "members";
 
 export default function MyProjectTabs({
-  projectId,
-  applications,
-  teamMembers = [],
+  // projectId,
   isLoading = false,
   projectOwnerId,
   currentUserId,
   isAuthLoading = false,
   projectOwner,
 }: MyProjectTabsProps) {
-  const [activeTab, setActiveTab] = useState<TabType>("applications");
+  const [activeTab, setActiveTab] = useState<TabType>("members");
 
   const canViewApplications =
     projectOwnerId && currentUserId && projectOwnerId === currentUserId;
@@ -44,33 +39,26 @@ export default function MyProjectTabs({
   const isAuthDataReady = !isAuthLoading && projectOwnerId && currentUserId;
   const shouldDisableApplications = isAuthDataReady && !canViewApplications;
 
-  const allTeamMembers = useMemo(() => {
-    if (!projectOwner || !projectOwnerId) return teamMembers;
+  const allTeamMembers: TeamMemberType[] = useMemo(() => {
+    if (!projectOwner || !projectOwnerId) return [];
 
-    const ownerExists = teamMembers.some(
-      (member) => member.id === projectOwnerId
+    const ownerExists = allTeamMembers.some(
+      (member: TeamMemberType) => member.id === projectOwnerId
     );
-    if (ownerExists) return teamMembers;
+    if (ownerExists) return allTeamMembers;
 
     const ownerAsMember: TeamMemberType = {
       id: projectOwner.id,
       name: projectOwner.username,
       avatarUrl: projectOwner.avatarUrl || null,
-      role: "Propriétaire",
       joinedAt: new Date(),
       techStacks: projectOwner.techStacks || [],
     };
 
-    return [ownerAsMember, ...teamMembers];
-  }, [teamMembers, projectOwner, projectOwnerId]);
+    return [ownerAsMember, ...allTeamMembers];
+  }, [projectOwner, projectOwnerId]);
 
   const tabs = [
-    {
-      id: "applications" as TabType,
-      label: "Candidatures",
-      count: applications.length,
-      disabled: shouldDisableApplications,
-    },
     {
       id: "members" as TabType,
       label: "Membres du projet",
@@ -80,10 +68,10 @@ export default function MyProjectTabs({
   ];
 
   useEffect(() => {
-    if (shouldDisableApplications && activeTab === "applications") {
+    if (shouldDisableApplications && activeTab === "members") {
       setActiveTab("members");
     }
-  }, [shouldDisableApplications, activeTab]);
+  }, [shouldDisableApplications, activeTab, allTeamMembers]);
 
   return (
     <div className="sticky top-0 z-10">
@@ -104,7 +92,7 @@ export default function MyProjectTabs({
             {tab.label}
             {tab.count > 0 && (
               <span className="ml-2 rounded-full bg-black/10 px-2 py-0.5 text-xs">
-                {tab.count}
+                {tab.count || 0}
               </span>
             )}
             {activeTab === tab.id && (
@@ -115,13 +103,6 @@ export default function MyProjectTabs({
       </div>
 
       <div className="mt-6">
-        {activeTab === "applications" && (
-          <MyApplicationsReceived
-            projectId={projectId}
-            applications={applications}
-            isLoading={isLoading}
-          />
-        )}
         {activeTab === "members" && (
           <MyTeamMembers
             members={allTeamMembers}
