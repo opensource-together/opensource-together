@@ -19,7 +19,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
-import useProfileNavigation from "@/shared/hooks/use-profile-navigation.hook";
 
 import { TeamMemberType } from "../../types/my-projects.type";
 import MyTeamMembersSkeleton from "../skeletons/my-team-members-skeleton.component";
@@ -42,7 +41,6 @@ export default function MyTeamMembers({
   projectOwnerId,
   currentUserId,
 }: MyTeamMembersProps) {
-  const { navigateToProfile } = useProfileNavigation();
   if (isLoading) {
     return <MyTeamMembersSkeleton />;
   }
@@ -115,9 +113,7 @@ export default function MyTeamMembers({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64 p-2">
-                    <DropdownMenuItem
-                      onClick={() => navigateToProfile(member.id)}
-                    >
+                    <DropdownMenuItem>
                       <div className="flex w-full items-center justify-between">
                         <div className="flex flex-col gap-1">
                           <span className="font-medium">Voir profil</span>

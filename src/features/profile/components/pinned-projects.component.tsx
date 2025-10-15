@@ -81,9 +81,8 @@ export default function PinnedProjects({ profile }: PinnedProjectsProps) {
             projectStats={{
               forks: 0,
               contributors: project.teamMembers.map((member) => ({
-                id: member.id,
-                username: member.name,
-                avatarUrl: member.avatarUrl || "",
+                login: member.name,
+                avatar_url: member.avatarUrl || undefined,
                 contributions: 1,
               })),
               stars: 0,

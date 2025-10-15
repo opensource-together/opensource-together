@@ -21,6 +21,7 @@ export interface Project {
   projectTechStacks: TechStackType[];
   projectCategories: CategoryType[];
   repositoryDetails: RepositoryWithDetails;
+  owner?: Owner;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -102,4 +103,35 @@ export type RepositoryWithDetails = {
   readme: string;
   contributionFile: string | undefined;
   cocFile: string | undefined;
+};
+
+// Lightweight owner information used across the app
+export type Owner = {
+  id: string;
+  username: string;
+  avatarUrl: string | null;
+};
+
+export type LastCommitAuthor = {
+  login: string | undefined;
+  avatar_url: string | undefined;
+  html_url: string | undefined;
+};
+
+export type LastCommit = {
+  sha: string;
+  message: string;
+  date: string;
+  url: string;
+  author: LastCommitAuthor;
+};
+
+export type ProjectStats = {
+  forks: number;
+  contributors: Contributor[];
+  stars: number;
+  watchers: number;
+  openIssues: number;
+  commits: number;
+  lastCommit: LastCommit;
 };
