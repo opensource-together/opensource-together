@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
-
 import { Button } from "@/shared/components/ui/button";
+import { Icon } from "@/shared/components/ui/icon";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
@@ -13,7 +12,7 @@ interface GitHubButtonProps {
 }
 
 export default function GitHubButton({
-  text = "Continuer avec Github",
+  text = "Login with Github",
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {
@@ -27,7 +26,7 @@ export default function GitHubButton({
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
-      className={`w-[320px] text-sm sm:text-base md:w-[420px] ${
+      className={`w-[320px] text-xs sm:text-base md:w-[420px] ${
         isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
       }`}
     >
@@ -38,16 +37,7 @@ export default function GitHubButton({
           } border-t-transparent`}
         />
       ) : (
-        <Image
-          src={
-            isOutlineVariant
-              ? "/icons/new-github-icon-black.svg"
-              : "/icons/new-github-icon.svg"
-          }
-          alt="GitHub"
-          width={16}
-          height={16}
-        />
+        <Icon name="github" size="sm" variant="white" />
       )}
       <span className="ml-0">{text}</span>
     </Button>

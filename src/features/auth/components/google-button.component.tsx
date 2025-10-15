@@ -13,7 +13,7 @@ interface GitHubButtonProps {
 }
 
 export default function GoogleButton({
-  text = "Continuer avec Google",
+  text = "Login with Google",
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {
@@ -27,7 +27,7 @@ export default function GoogleButton({
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
-      className={`w-[320px] text-sm sm:text-base md:w-[420px] ${
+      className={`w-[320px] text-xs sm:text-base md:w-[420px] ${
         isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
       }`}
     >

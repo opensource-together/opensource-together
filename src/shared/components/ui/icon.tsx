@@ -83,7 +83,7 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     gray: "/icons/gitlab-gray.svg",
     white: "/icons/gitlab-white.svg",
     black: "/icons/gitlab.svg",
-    filled: "/icons/gitlab.svg",
+    filled: "/icons/filled-gitlab-icon.svg",
     outline: "/icons/gitlab.svg",
   },
   twitter: {
