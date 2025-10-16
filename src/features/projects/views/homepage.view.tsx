@@ -2,6 +2,7 @@
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import Icon from "@/shared/components/ui/icon";
 import PaginationNavigation from "@/shared/components/ui/pagination-navigation";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
@@ -57,11 +58,38 @@ export default function HomepageView() {
     <HomepageLayout>
       <div className="mt-6">
         <ProjectGrid projects={projects} />
-        {projects.length > 8 && (
+        {/* {projects.length > 8 && (
           <div className="mt-[8.5px] mb-[50px]">
             <PaginationNavigation />
           </div>
-        )}
+        )} */}
+      </div>
+      <div className="mt-14 text-lg font-medium">
+        Trending Projects{" "}
+        <Icon
+          className="mb-1"
+          name="chevron-right"
+          size="xs"
+          variant="default"
+        />
+      </div>
+      <div className="mt-6">
+        <ProjectGrid projects={projects} />
+      </div>
+      <div className="mt-14 text-lg font-medium">
+        Trending Projects{" "}
+        <Icon
+          className="mb-1"
+          name="chevron-right"
+          size="xs"
+          variant="default"
+        />
+      </div>
+      <div className="mt-6">
+        <ProjectGrid projects={projects} />
+      </div>
+      <div className="mt-8 mb-[50px]">
+        <PaginationNavigation />
       </div>
     </HomepageLayout>
   );
