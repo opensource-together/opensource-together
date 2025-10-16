@@ -25,8 +25,6 @@ export default function MyProjectDetailsView({
       <div className="my-8"></div>
       <MyProjectTabs
         projectId={projectId}
-        applications={project.applications}
-        teamMembers={project.teamMembers}
         projectOwnerId={project.owner.id}
         currentUserId={currentUser?.id}
         isAuthLoading={isAuthLoading}

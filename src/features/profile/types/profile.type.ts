@@ -1,44 +1,8 @@
+import { TechStackType } from "@/shared/types/tech-stack.type";
+
 import { Project } from "@/features/projects/types/project.type";
 
-export type ProfileTechStack = {
-  id: string;
-  name: string;
-  iconUrl: string;
-  type: "LANGUAGE" | "TECH";
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type ContributionLevel =
-  | "NONE"
-  | "FIRST_QUARTILE"
-  | "SECOND_QUARTILE"
-  | "THIRD_QUARTILE"
-  | "FOURTH_QUARTILE";
-
-export type ContributionDay = {
-  date: string;
-  contributionCount: number;
-  contributionLevel: ContributionLevel;
-  color: string;
-};
-
-export type ContributionWeek = {
-  contributionDays: ContributionDay[];
-};
-
-export type ContributionGraph = {
-  weeks: ContributionWeek[];
-  totalContributions: number;
-  maxContributions?: number;
-};
-
-export type GithubStats = {
-  totalStars: number;
-  contributedRepos: number;
-  commitsThisYear: number;
-  contributionGraph: ContributionGraph;
-};
+import { ContributionGraph, GithubStats } from "./github-graph.type";
 
 export type Profile = {
   id: string;
@@ -62,6 +26,6 @@ export type Profile = {
   linkedinUrl?: string;
   websiteUrl?: string;
   userTechStacksIds?: string[];
-  userTechStacks?: ProfileTechStack[];
+  userTechStacks?: TechStackType[];
   projects?: Project[];
 };

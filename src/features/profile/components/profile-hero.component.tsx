@@ -30,7 +30,7 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
         <p className="mt-4 text-sm leading-6 tracking-tighter">{bio}</p>
 
         <Link href="/profile/me/edit" className="mt-6">
-          <Button className="font-normal">Modifier le profil</Button>
+          <Button>Edit profile</Button>
         </Link>
       </div>
     </div>

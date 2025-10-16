@@ -54,30 +54,3 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
     throw error;
   }
 };
-
-/**
- * Get WebSocket token for notifications
- */
-export const getWebSocketToken = async (): Promise<string | null> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/notifications/ws-token`,
-      {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.wsToken || null; // use 'wsToken' instead of 'token'
-    }
-
-    throw new Error("Failed to fetch WebSocket token");
-  } catch (error) {
-    console.error("Error fetching WebSocket token:", error);
-    return null;
-  }
-};

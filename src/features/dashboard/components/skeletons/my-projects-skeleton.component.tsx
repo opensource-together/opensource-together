@@ -8,7 +8,7 @@ export default function MyProjectsSkeletonComponent() {
       <DashboardHeading
         title="Mes projets"
         icon={<HiMiniSquare2Stack size={16} />}
-        description="Gérez vos projets Open Source et vos candidatures reçues."
+        description="Organize, review, edit, manage members, track progress, and handle projects — all in one space."
       />
       <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:gap-8">
         {/* Section Mes Projets - Desktop */}

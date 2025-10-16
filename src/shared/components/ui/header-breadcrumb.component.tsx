@@ -8,39 +8,37 @@ import { useProfile } from "@/features/profile/hooks/use-profile.hook";
 import { useProject } from "@/features/projects/hooks/use-projects.hook";
 
 import { useMyProjectDetails } from "../../../features/dashboard/hooks/use-my-projects.hook";
-import { useMyProjectRolesApplications } from "../../../features/dashboard/hooks/use-project-role-application.hook";
 
 export default function HeaderBreadcrumb() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
   const routeConfig = {
-    "/dashboard": () => [{ label: "Projets", href: "/dashboard/my-projects" }],
-    "/profile/me": () => [{ label: "Profil", href: "/profile/me" }],
+    "/dashboard": () => [
+      { label: "My Projects", href: "/dashboard/my-projects" },
+    ],
+    "/profile/me": () => [{ label: "Profile", href: "/profile/me" }],
     "/profile/me/edit": () => [
-      { label: "Profil", href: "/profile/me" },
-      { label: "Modifier", href: "/profile/me/edit" },
+      { label: "Profile", href: "/profile/me" },
+      { label: "Edit", href: "/profile/me/edit" },
     ],
   };
 
   const getData = () => {
     const projectId = segments[segments.indexOf("my-projects") + 1];
-    const applicationId = segments[segments.indexOf("my-applications") + 1];
     const publicProjectId = segments[segments.indexOf("projects") + 1];
     const userId = segments[segments.indexOf("profile") + 1];
 
     return {
       projectId,
-      applicationId,
       publicProjectId,
       userId,
     };
   };
 
-  const { projectId, applicationId, publicProjectId, userId } = getData();
+  const { projectId, publicProjectId, userId } = getData();
 
   const { data: project } = useMyProjectDetails(projectId || "");
-  const { data: applications } = useMyProjectRolesApplications();
   const { data: publicProject } = useProject(publicProjectId || "");
   const { data: publicProfile } = useProfile(userId || "");
 
@@ -49,38 +47,27 @@ export default function HeaderBreadcrumb() {
       return routeConfig[pathname as keyof typeof routeConfig]();
     }
 
-    if (pathname.startsWith("/dashboard/my-applications/") && applicationId) {
-      const application = applications?.find(
-        (app) => app.applicationId === applicationId
-      );
-      return [
-        { label: "Candidatures", href: "/dashboard/my-applications" },
-        { label: application?.project?.title || "Candidature", href: pathname },
-      ];
-    }
-
     if (pathname.startsWith("/profile/") && userId && userId !== "me") {
-      return [{ label: publicProfile?.name || "Profil", href: pathname }];
+      return [{ label: publicProfile?.name || "Profile", href: pathname }];
     }
 
     if (pathname.startsWith("/projects/") && publicProjectId) {
       if (pathname.endsWith("/edit")) {
         return [
           {
-            label: publicProject?.title || "Projet",
+            label: publicProject?.title || "Project",
             href: `/projects/${publicProjectId}`,
           },
-          { label: "Modifier", href: pathname },
+          { label: "Edit", href: pathname },
         ];
       }
-      return [{ label: publicProject?.title || "Projet", href: pathname }];
+      return [{ label: publicProject?.title || "Project", href: pathname }];
     }
 
     if (segments[0] === "dashboard" && segments.length > 1) {
       const breadcrumbItems = [];
       const segmentLabels = {
-        "my-projects": "Projets",
-        "my-applications": "Candidatures",
+        "my-projects": "Projects",
       };
 
       for (let i = 1; i < segments.length; i++) {
@@ -90,10 +77,6 @@ export default function HeaderBreadcrumb() {
 
         if (segment === projectId && project?.title) {
           label = project.title;
-        }
-
-        if (segments[1] === "my-projects" && segments[2] && i === 3) {
-          label = "Candidature";
         }
 
         const href = "/" + segments.slice(0, i + 1).join("/");

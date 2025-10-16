@@ -17,7 +17,7 @@ export default function MyProjectDetailsHeadingComponent({
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3 sm:gap-4">
         <Avatar
-          src={project.image}
+          src={project.logoUrl}
           name={project.title}
           alt={project.title}
           size="2xl"

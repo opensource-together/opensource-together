@@ -81,26 +81,53 @@ export function Combobox({
   const isMaxReached = maxSelections && value.length >= maxSelections;
 
   return (
-    <div className={cn("flex w-full flex-col gap-3", className)}>
+    <div
+      className={cn(
+        "flex w-full max-w-full flex-col gap-3 overflow-hidden",
+        className
+      )}
+    >
+      {showTags && selectedOptions.length > 0 && (
+        <div className="-mb-1 flex flex-wrap gap-2">
+          {selectedOptions.map((option) => (
+            <Badge
+              key={option.id}
+              variant="outline"
+              className="text-primary flex items-center gap-1 border border-black/5 bg-white pr-1 text-xs font-medium"
+            >
+              {option.name}
+              <button
+                type="button"
+                onClick={() => handleRemove(option.id)}
+                className="flex size-4 cursor-pointer items-center justify-center rounded-full"
+                disabled={disabled}
+              >
+                <Icon name="cross" size="xxs" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      )}
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="text-primary border-input h-10 w-full justify-between rounded-md bg-white text-sm font-normal"
+            className="text-primary border-input h-10 w-full min-w-0 justify-start rounded-md bg-white text-start text-sm font-normal"
             disabled={disabled}
           >
             <span
               className={cn(
-                "truncate",
+                "min-w-0 flex-1 truncate",
                 selectedOptions.length === 0 && "text-muted-foreground"
               )}
             >
               {selectedOptions.length > 0
-                ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
+                ? selectedOptions.map((opt) => opt.name).join(", ")
                 : placeholder}
             </span>
+
             <Icon name="chevron-down" />
           </Button>
         </PopoverTrigger>
@@ -214,28 +241,6 @@ export function Combobox({
           </Command>
         </PopoverContent>
       </Popover>
-
-      {showTags && selectedOptions.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {selectedOptions.map((option) => (
-            <Badge
-              key={option.id}
-              variant="outline"
-              className="text-primary flex items-center gap-1 border border-black/5 bg-white pr-1 text-xs font-normal"
-            >
-              {option.name}
-              <button
-                type="button"
-                onClick={() => handleRemove(option.id)}
-                className="flex size-4 cursor-pointer items-center justify-center rounded-full"
-                disabled={disabled}
-              >
-                <Icon name="cross" size="xxs" />
-              </button>
-            </Badge>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

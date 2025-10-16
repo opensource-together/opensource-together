@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 
-import { ContributionGraph, ContributionLevel } from "../types/profile.type";
+import {
+  ContributionGraph,
+  ContributionLevel,
+} from "../types/github-graph.type";
 
 interface GithubGraphProps {
   contributionGraph?: ContributionGraph;
@@ -37,7 +40,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
+    return date.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -173,7 +176,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
           <div className="text-gray-300">
             {tooltip.contributionCount === 0
               ? "No contribution data available"
-              : `${tooltip.contributionCount} contribution${tooltip.contributionCount > 1 ? "s" : ""} Github`}
+              : `${tooltip.contributionCount} Github contribution${tooltip.contributionCount > 1 ? "s" : ""}`}
           </div>
         </div>
       )}

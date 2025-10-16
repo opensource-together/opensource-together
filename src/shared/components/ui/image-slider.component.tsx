@@ -61,7 +61,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
     <div className="mt-2 flex flex-row gap-1">
       <div className="flex-1">
         <div
-          className="relative h-[207px] w-full overflow-hidden rounded-md select-none sm:h-[393px]"
+          className="relative h-[207px] w-full overflow-hidden rounded-md select-none sm:h-[370px]"
           onTouchStart={handleDragStart}
           onTouchMove={handleDragMove}
           onTouchEnd={handleDragEnd}

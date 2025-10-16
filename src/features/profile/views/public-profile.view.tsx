@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -17,12 +19,16 @@ import ProfileHero, {
 import ProfileSidebar from "../components/profile-sidebar.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import { useProfile } from "../hooks/use-profile.hook";
+import ProfilePullRequests from "./profile-pull-requests.view";
 
 interface PublicProfileViewProps {
   userId: string;
 }
 
 export function PublicProfileView({ userId }: PublicProfileViewProps) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const { data: profile, isLoading, isError } = useProfile(userId);
 
   if (isLoading) return <SkeletonProfileView />;
@@ -39,6 +45,15 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
 
   const shouldShowGithubData = profile.provider !== "google";
 
+  const tab = searchParams.get("tab") || "overview";
+
+  const handleTabChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "overview") params.delete("tab");
+    else params.set("tab", value);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <TwoColumnLayout
       sidebar={<ProfileSidebar profile={profile} />}
@@ -47,11 +62,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
       }
       mobileHeader={<ProfileMobileHero profile={profile} />}
     >
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="stats">Stats</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
+          <TabsTrigger value="contributions">Contributions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -71,7 +86,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
           </div>
         </TabsContent>
 
-        <TabsContent value="stats" className="mt-6">
+        <TabsContent value="contributions" className="mt-6">
           {shouldShowGithubData && (
             <div className="mb-2 w-full">
               <GithubGraph
@@ -82,6 +97,9 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
               />
             </div>
           )}
+          <div className="mt-12 w-full">
+            {tab === "contributions" && <ProfilePullRequests userId={userId} />}
+          </div>
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">

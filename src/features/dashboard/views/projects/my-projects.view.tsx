@@ -12,14 +12,14 @@ export default function MyProjectsView() {
   return (
     <div>
       <DashboardHeading
-        title="Projets"
+        title="My Projects"
         icon={<HiMiniSquare2Stack size={16} />}
-        description="Organisez, modifiez, gérez les membres et administrez vos projets — tout en un seul endroit."
+        description="Organize, review, edit, manage members, track progress, and handle projects — all in one space."
       />
       <DashboardCtaComponent
-        title="Construisez OpenSource Together"
-        description="Lancez un nouveau projet, importez un repository Github ou commencez de zéro."
-        buttonText="Créer un projet"
+        title="Build OpenSource Together"
+        description="Create a new project, import a repository from Github or completly start from scratch."
+        buttonText="Create a project"
         buttonLink="/projects/create"
       />
 

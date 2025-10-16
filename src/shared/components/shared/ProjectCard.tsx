@@ -12,15 +12,10 @@ import {
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardTitle,
-  ProjectCardViewText,
 } from "@/shared/components/ui/project-card";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import { ProjectRole } from "@/features/projects/types/project-role.type";
-import {
-  Owner,
-  ProjectStats,
-  TechStack,
-} from "@/features/projects/types/project.type";
+import { Owner, ProjectStats } from "@/features/projects/types/project.type";
 
 import StackLogo from "../logos/stack-logo";
 import { Avatar } from "../ui/avatar";
@@ -30,12 +25,10 @@ interface ProjectCardProps {
   projectId?: string;
   title?: string;
   description?: string;
-  techStacks?: TechStack[];
+  projectTechStacks?: TechStackType[];
   showTechStack?: boolean;
-  roles?: ProjectRole[];
-  showViewProject?: boolean;
   className?: string;
-  image?: string;
+  logoUrl?: string;
   owner?: Owner;
   projectStats?: ProjectStats;
 }
@@ -44,11 +37,10 @@ export default function ProjectCardComponent({
   projectId = "1",
   title = "",
   description = "",
-  techStacks = [],
+  projectTechStacks = [],
   showTechStack = true,
-  showViewProject = true,
   className = "",
-  image = "",
+  logoUrl = "",
   owner = {
     id: "",
     username: "",
@@ -75,7 +67,13 @@ export default function ProjectCardComponent({
       <ProjectCard className={className}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
-            <Avatar src={image} name={title} alt={title} size="lg" />
+            <Avatar
+              src={logoUrl}
+              name={title}
+              alt={title}
+              size="lg"
+              shape="rounded"
+            />
             <ProjectCardInfo>
               <ProjectCardTitle className="text-primary">
                 {title}
@@ -85,7 +83,6 @@ export default function ProjectCardComponent({
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
-          {showViewProject && <ProjectCardViewText />}
         </ProjectCardHeader>
         <ProjectCardContent>
           <ProjectCardDescription>{description}</ProjectCardDescription>
@@ -94,7 +91,7 @@ export default function ProjectCardComponent({
             <ProjectCardFooter>
               <>
                 <div className="flex gap-2.5">
-                  {techStacks.slice(0, 3).map((tech, index) => (
+                  {projectTechStacks.slice(0, 3).map((tech, index) => (
                     <StackLogo
                       key={tech.id || index}
                       icon={tech.iconUrl || ""}
@@ -103,9 +100,9 @@ export default function ProjectCardComponent({
                     />
                   ))}
                 </div>
-                {techStacks.length > 3 && (
+                {projectTechStacks.length > 3 && (
                   <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                    +{techStacks.length - 3}
+                    +{projectTechStacks.length - 3}
                   </span>
                 )}
               </>

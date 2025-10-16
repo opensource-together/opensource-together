@@ -15,7 +15,6 @@ import {
 import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
-import { NotificationPanel } from "@/features/notifications/components/notification-panel.component";
 
 export default function DashboardHeader() {
   const pathname = usePathname();
@@ -65,7 +64,6 @@ export default function DashboardHeader() {
             </>
           ) : isAuthenticated ? (
             <>
-              <NotificationPanel />
               <UserDropdown />
             </>
           ) : (

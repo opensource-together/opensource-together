@@ -1,13 +1,9 @@
 import { API_BASE_URL } from "@/config/config";
 
-export interface CategoryItem {
-  id: string;
-  name: string;
-}
+import { CategoryType } from "../types/category.type";
 
 interface CategoryApiResponse {
-  id: string;
-  name: string;
+  data: CategoryType[];
 }
 
 /**
@@ -15,16 +11,14 @@ interface CategoryApiResponse {
  *
  * @returns A promise that resolves to an array of category items
  */
-export const fetchCategories = async (): Promise<CategoryItem[]> => {
+export const fetchCategories = async (): Promise<CategoryType[]> => {
   const response = await fetch(`${API_BASE_URL}/categories`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch categories");
   }
 
-  const data: CategoryApiResponse[] = await response.json();
-  return data.map((item) => ({
-    id: item.id,
-    name: item.name,
-  }));
+  const data: CategoryApiResponse = await response.json();
+
+  return data.data;
 };

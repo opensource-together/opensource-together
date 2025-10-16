@@ -69,7 +69,7 @@ export const useProfileUpdate = (options?: { onSuccess?: () => void }) => {
 };
 
 /**
- * Hook to fetch the authenticated user's pull requests with pagination and filters.
+ * * Hook to update the logo of a user by their ID.
  *
  * @param id - The ID of the user to update.
  * @param file - The file to update the logo with.

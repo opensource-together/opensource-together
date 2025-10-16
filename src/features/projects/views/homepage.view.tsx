@@ -48,7 +48,7 @@ export default function HomepageView() {
   if (!projects || projects.length === 0) {
     return (
       <HomepageLayout>
-        <EmptyState text="No projects available" className="mb-28" />
+        <EmptyState title="No projects available" className="mb-28" />
       </HomepageLayout>
     );
   }

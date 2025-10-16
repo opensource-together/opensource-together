@@ -2,7 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { HiChevronLeft, HiExclamationCircle } from "react-icons/hi";
+import { HiExclamationCircle } from "react-icons/hi";
 import { IconType } from "react-icons/lib";
 
 import { Button } from "./button";
@@ -71,9 +71,7 @@ export function ErrorState({
       <div className="flex gap-3 sm:flex-row">
         {href && (
           <Link href={href}>
-            <Button variant="ghost">
-              <HiChevronLeft /> {buttonText}
-            </Button>
+            <Button variant="secondary">{buttonText}</Button>
           </Link>
         )}
         {(onRetry || queryKey || refetchFn) && (

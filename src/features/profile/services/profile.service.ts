@@ -65,6 +65,13 @@ export const updateProfile = async (
   }
 };
 
+/**
+ * Updates the profile logo/avatar of a user.
+ *
+ * @param id - The user ID to update.
+ * @param avatarFile - The avatar file to upload.
+ * @returns A promise that resolves to the updated image data.
+ */
 export const updateProfileLogo = async (
   id: string,
   avatarFile: File

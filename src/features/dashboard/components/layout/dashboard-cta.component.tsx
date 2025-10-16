@@ -9,6 +9,7 @@ interface DashboardCtaComponentProps {
   description: string;
   buttonText: string;
   buttonLink?: string;
+  buttonVariant?: "default" | "outline" | "secondary" | "ghost" | "link";
 }
 
 export default function DashboardCtaComponent({
@@ -16,6 +17,7 @@ export default function DashboardCtaComponent({
   description,
   buttonText,
   buttonLink,
+  buttonVariant,
 }: DashboardCtaComponentProps) {
   return (
     <div className="border-muted-black-stroke relative mt-6.5 overflow-hidden rounded-3xl border px-5 py-7">
@@ -23,7 +25,7 @@ export default function DashboardCtaComponent({
       <p className="text-muted-foreground mt-2 max-w-72 text-sm">
         {description}
       </p>
-      <Button className="mt-6" asChild>
+      <Button className="mt-6" asChild variant={buttonVariant}>
         <Link href={buttonLink || ""}>
           {buttonText} <HiChevronRight size={10} />
         </Link>

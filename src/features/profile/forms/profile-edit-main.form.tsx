@@ -44,7 +44,7 @@ export default function ProfileEditMainForm({
             name="image"
             render={() => (
               <FormItem>
-                <FormLabel>Choisir un avatar</FormLabel>
+                <FormLabel>Choose an avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
                     currentImageUrl={profile.image}
@@ -67,11 +67,11 @@ export default function ProfileEditMainForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Votre nom"
+                    placeholder="Your name"
                     className="bg-white text-sm"
                   />
                 </FormControl>
@@ -85,11 +85,11 @@ export default function ProfileEditMainForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Titre</FormLabel>
+                <FormLabel>Job Title</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Ex: Développeur Full Stack"
+                    placeholder="Ex: Full Stack Developer"
                     className="bg-white text-sm"
                   />
                 </FormControl>
@@ -107,7 +107,7 @@ export default function ProfileEditMainForm({
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Parlez-nous de vous, vos passions, votre expérience..."
+                    placeholder="Tell us about yourself, your passions, your experience..."
                     className="min-h-[120px] w-full resize-none bg-white text-sm"
                   />
                 </FormControl>
@@ -116,23 +116,19 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <div className="my-12.5">
-            <Separator />
-          </div>
+          <Separator className="mt-20" />
 
           <div className="sticky bottom-0 z-50 bg-white">
-            <div className="-mx-4.5 mt-16.5">
-              <div className="border-t border-black/10">
-                <div className="flex items-center justify-end gap-4 px-6 pt-4">
-                  <Link href="/profile/me">
-                    <Button variant="secondary" disabled={isUpdating}>
-                      Retour
-                    </Button>
-                  </Link>
-                  <Button type="submit" disabled={isUpdating}>
-                    {isUpdating ? "Enregistrement..." : "Confirmer"}
+            <div className="-mx-4.5">
+              <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                <Link href="/profile/me">
+                  <Button variant="secondary" disabled={isUpdating}>
+                    Return
                   </Button>
-                </div>
+                </Link>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? "Saving..." : "Confirm"}
+                </Button>
               </div>
             </div>
           </div>

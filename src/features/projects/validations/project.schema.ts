@@ -10,53 +10,46 @@ import { urlWithDomainCheck } from "@/shared/validations/url-with-domain-check.s
 export const projectSchema = z.object({
   title: z
     .string()
-    .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
+    .min(3, "The project name must contain at least 3 characters"),
   description: z
     .string()
-    .min(10, "La description doit contenir au moins 10 caractères"),
+    .min(10, "The description must contain at least 10 characters"),
   readme: z.string().optional(),
-  keyFeatures: z
-    .array(
-      z.object({
-        feature: z.string(),
-      })
-    )
-    .min(1, "Au moins une fonctionnalité clé est requise"),
-
-  techStack: z
+  provider: z.enum(["GITHUB", "GITLAB", "SCRATCH"]),
+  projectTechStacks: z
     .array(z.string())
-    .min(1, "Au moins une technologie est requise")
-    .max(10, "Maximum 10 technologies autorisées"),
-  categories: z
+    .min(1, "At least one technology is required")
+    .max(10, "Maximum 10 technologies allowed"),
+  projectCategories: z
     .array(z.string())
-    .min(1, "Au moins une catégorie est requise")
-    .max(6, "Maximum 6 catégories autorisées"),
-  image: z.string().optional(),
-  coverImages: z
+    .min(1, "At least one category is required")
+    .max(6, "Maximum 6 categories allowed"),
+  logoUrl: z.string().optional(),
+  imagesUrls: z
     .array(z.string())
-    .max(4, "Maximum 4 images de couverture autorisées")
+    .max(4, "Maximum 4 images cover allowed")
     .optional(),
-  externalLinks: z
-    .object({
-      github: urlWithDomainCheck(
-        ["github.com"],
-        "URL GitHub invalide (doit contenir github.com)"
-      ),
-      discord: urlWithDomainCheck(
-        ["discord.gg", "discord.com"],
-        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-      ),
-      twitter: urlWithDomainCheck(
-        ["twitter.com", "x.com"],
-        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-      ),
-      linkedin: urlWithDomainCheck(
-        ["linkedin.com"],
-        "URL LinkedIn invalide (doit contenir linkedin.com)"
-      ),
-      website: urlWithDomainCheck([], "URL du site web invalide"),
-    })
-    .optional(),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "Invalid GitHub URL (must contain github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "Invalid GitLab URL (must contain gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "Invalid Discord URL (must contain discord.com or discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "Invalid Twitter/X URL (must contain twitter.com or x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "Invalid LinkedIn URL (must contain linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
 // ========================================
@@ -65,55 +58,67 @@ export const projectSchema = z.object({
 
 // API schema - what the backend expects
 export const createProjectApiSchema = z.object({
-  title: z.string().min(3, "Le titre du projet est requis"),
-  description: z.string().min(10, "Une description est requise"),
-  image: z.string().optional(),
-  coverImages: z.array(z.string()).max(4).optional(),
+  title: z.string().min(3, "Title is required"),
+  description: z.string().min(10, "Description is required"),
+  provider: z.enum(["GITHUB", "GITLAB"]),
+  logoUrl: z.string().optional(),
+  imagesUrls: z.array(z.string()).max(4).optional(),
   readme: z.string().optional(),
-  techStacks: z.array(z.string()),
-  categories: z.array(z.string()),
-  keyFeatures: z
-    .array(z.string())
-    .min(1, "Au moins une fonctionnalité clé est requise"),
-
-  projectRoles: z.array(
-    z.object({
-      title: z.string().min(1, "Le titre du rôle est requis"),
-      description: z.string().min(1, "La description du rôle est requise"),
-      techStacks: z.array(z.string()),
-    })
-  ),
-  externalLinks: z
-    .array(
-      z.object({
-        type: z.string(),
-        url: z.string(),
-      })
-    )
-    .optional(),
+  projectTechStacks: z.array(z.string()),
+  projectCategories: z.array(z.string()),
+  repoUrl: urlWithDomainCheck([], "Invalid repository URL").optional(),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "Invalid GitHub URL (must contain github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "Invalid GitLab URL (must contain gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "Invalid Discord URL (must contain discord.com or discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "Invalid Twitter/X URL (must contain twitter.com or x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "URL Linked In invalide (must contain linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
 // API schema for updates - what the backend expects
 export const updateProjectApiSchema = z.object({
-  title: z.string().min(3, "Le titre du projet est requis"),
-  description: z.string().min(10, "Une description est requise"),
-  image: z.string().optional(),
-  coverImages: z.array(z.string()).max(4).optional(),
-  readme: z.string().max(10000).optional(),
-  techStacks: z.array(z.string()),
-  categories: z.array(z.string()),
-  keyFeatures: z
-    .array(z.string())
-    .min(1, "Au moins une fonctionnalité clé est requise"),
-
-  externalLinks: z
-    .array(
-      z.object({
-        type: z.string(),
-        url: z.string(),
-      })
-    )
-    .optional(),
+  title: z.string().min(3, "Title is required"),
+  description: z.string().min(10, "Description is required"),
+  logoUrl: z.string().optional(),
+  imagesUrls: z.array(z.string()).max(4).optional(),
+  projectTechStacks: z.array(z.string()),
+  projectCategories: z.array(z.string()),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "Invalid GitHub URL (must contain github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "Invalid GitLab URL (must contain gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "Invalid Discord URL (must contain discord.com or discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "Invalid Twitter/X URL (must contain twitter.com or x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "Invalid LinkedIn URL (must contain linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
 // ========================================
@@ -125,17 +130,14 @@ export const CreateProjectSchema = z.object({
   data: projectSchema,
 });
 
-export const UpdateProjectSchema = z.object({
-  projectId: z.string().min(1),
-  data: projectSchema,
-});
+export const UpdateProjectSchema = projectSchema;
 
 // ========================================
 // BASE TYPE EXPORTS
 // ========================================
 
 // Main project types
-export type ProjectSchema = z.infer<typeof projectSchema>;
+export type ProjectSchema = z.infer<typeof createProjectApiSchema>;
 
 // API types
 export type CreateProjectApiData = z.infer<typeof createProjectApiSchema>;
