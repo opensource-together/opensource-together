@@ -10,7 +10,8 @@ export default function Footer() {
   const pathname = usePathname();
   const hideFooter =
     pathname.startsWith("/projects/create") ||
-    pathname.startsWith("/dashboard");
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/auth");
 
   const navigationLinks = [
     { name: "Home", href: "/" },
