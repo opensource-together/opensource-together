@@ -36,6 +36,26 @@ function truncate(text?: string, max = 120): string {
 
 export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
   const router = useRouter();
+  // Toggle on Cmd/Ctrl/Alt + K
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    const w = window as unknown as { __ostSearchHotkeyBound?: boolean };
+    if (w.__ostSearchHotkeyBound) return;
+    w.__ostSearchHotkeyBound = true;
+
+    const down = (e: KeyboardEvent) => {
+      const isK = e.key.toLowerCase() === "k";
+      if (isK && (e.metaKey || e.ctrlKey || e.altKey)) {
+        e.preventDefault();
+        onOpenChange(!open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => {
+      document.removeEventListener("keydown", down);
+      w.__ostSearchHotkeyBound = false;
+    };
+  }, [open, onOpenChange]);
   React.useEffect(() => {
     if (typeof document === "undefined") return;
     const body = document.body;
@@ -71,7 +91,7 @@ export default function SearchModal({ open, onOpenChange }: SearchModalProps) {
       open={open}
       onOpenChange={onOpenChange}
       showCloseButton={false}
-      className="w-[525px] max-w-[525px] min-w-[525px] p-1 [&_[data-slot=command-input-wrapper]]:border-b-0"
+      className="w-[525px] max-w-[525px] min-w-[525px] px-2 py-1 [&_[data-slot=command-input-wrapper]]:border-b-0"
     >
       <style jsx global>{`
         body[data-search-modal-open="true"] [data-slot="dialog-overlay"] {

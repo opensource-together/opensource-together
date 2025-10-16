@@ -416,4 +416,116 @@ export const mockProjectsResponse: Project[] = [
       cocFile: undefined,
     },
   },
+  {
+    id: "pjt_codesnippet_001",
+    title: "CodeSnippet",
+    description:
+      "CodeSnippet révolutionne la gestion du code pour les développeurs. Notre plateforme vous permet de stocker, organiser et découvrir facilement des snippets de code. Le Hub communautaire vous offre la possibilité de partager et d'explorer des snippets créés par d'autres développeurs. Simplifiez votre flux de travail et apprenez des autres—votre code, toujours à portée de main.",
+    provider: "GITHUB",
+    readme: null,
+    owner: {
+      id: "usr_c54b633eb12f4900b92b34e222096449",
+      username: "CodeSnippet",
+      avatarUrl: "/icons/codesnippet-icon.png",
+    },
+    logoUrl: "/icons/zero-icon.svg",
+    published: true,
+    githubUrl: "https://github.com/codesnippet/codesnippet",
+    gitlabUrl: null,
+    twitterUrl: "https://twitter.com/codesnippet",
+    linkedinUrl: null,
+    discordUrl: null,
+    websiteUrl: "https://code-snippet-mocha.vercel.app",
+    imagesUrls: [
+      "/illustrations/bg-screen.png",
+      "/illustrations/bg-screen.png",
+    ],
+    projectTechStacks: [
+      {
+        id: "tst_nextjs_004",
+        name: "Next.js",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg",
+        type: "TECH",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "tst_typescript_003",
+        name: "TypeScript",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+        type: "TECH",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "tst_tailwind_003",
+        name: "Tailwind CSS",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+        type: "TECH",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "tst_nodejs_001",
+        name: "Node.js",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+        type: "TECH",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "tst_postgresql_004",
+        name: "PostgreSQL",
+        iconUrl:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
+        type: "TECH",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ],
+    projectCategories: [
+      {
+        id: "cat_ide_001",
+        name: "IDE",
+      },
+      {
+        id: "cat_opensource_004",
+        name: "Open Source",
+      },
+      {
+        id: "cat_snippets_001",
+        name: "Snippets",
+      },
+    ],
+    repoUrl: null,
+    repositoryDetails: {
+      name: "codesnippet",
+      description: null,
+      url: null,
+      html_url: "https://github.com/codesnippet/codesnippet",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      pushed_at: new Date().toISOString(),
+      stars: 0,
+      tags: [],
+      forksCount: 0,
+      openIssuesCount: 0,
+      subscribersCount: 0,
+      visibility: "public",
+      owner: {
+        login: "CodeSnippet",
+        avatar_url: "/icons/codesnippet-icon.png",
+      },
+      contributors: [],
+      issues: [],
+      pullRequests: [],
+      readme: "",
+      contributionFile: undefined,
+      cocFile: undefined,
+    },
+  },
 ];
