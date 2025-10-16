@@ -10,7 +10,7 @@ export function ProjectMobileHero({
   title,
   description,
   logoUrl,
-  githubUrl,
+  repoUrl,
 }: Project) {
   return (
     <div className="flex flex-col bg-white">
@@ -27,13 +27,13 @@ export function ProjectMobileHero({
 
       <p className="mt-4 mb-8 text-sm font-normal">{description}</p>
       <div className="flex items-center gap-2">
-        <Link href={githubUrl || ""} target="_blank" rel="noopener noreferrer">
+        <Link href={repoUrl || ""} target="_blank" rel="noopener noreferrer">
           <Button variant="outline">
             <Icon name="star" size="sm" />
             Star
           </Button>
         </Link>
-        <Link href={githubUrl || ""} target="_blank" rel="noopener noreferrer">
+        <Link href={repoUrl || ""} target="_blank" rel="noopener noreferrer">
           <Button>View Repository</Button>
         </Link>
       </div>
@@ -49,7 +49,7 @@ export default function ProjectHero({
   project,
   hideHeader = false,
 }: ProjectHeroProps) {
-  const { title = "", description = "", logoUrl, githubUrl = "" } = project;
+  const { title = "", description = "", logoUrl, repoUrl = "" } = project;
 
   return (
     <div className="flex flex-col bg-white">
@@ -71,7 +71,7 @@ export default function ProjectHero({
 
             <div className="flex items-center gap-2">
               <Link
-                href={githubUrl || ""}
+                href={repoUrl || ""}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -82,7 +82,7 @@ export default function ProjectHero({
               </Link>
               <div className="flex gap-2">
                 <Link
-                  href={githubUrl || ""}
+                  href={repoUrl || ""}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

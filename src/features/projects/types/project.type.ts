@@ -8,7 +8,6 @@ export interface Project {
   imagesUrls: string[];
   logoUrl: string | null;
   provider: "GITHUB" | "GITLAB" | "SCRATCH";
-  readme: string | null;
   description: string;
   published: boolean;
   repoUrl: string | null;
@@ -69,6 +68,9 @@ export type PullRequest = {
 export type Issue = {
   title: string;
   status: string;
+  body: string | null;
+  labels: string[];
+
   created_at: string;
   updated_at: string;
   closed_at: string | null;
@@ -91,6 +93,7 @@ export type RepositoryWithDetails = {
   tags: string[];
   forksCount: number;
   openIssuesCount: number;
+  pullRequestsCount: number;
   subscribersCount: number;
   visibility: string | null | undefined;
   owner: {

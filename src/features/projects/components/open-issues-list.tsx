@@ -1,0 +1,44 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+import { Button } from "@/shared/components/ui/button";
+
+import IssueCard from "../../../shared/components/ui/issue-card";
+import { Issue } from "../types/project.type";
+
+interface OpenIssuesProps {
+  issues: Issue[];
+  className?: string;
+}
+
+export default function OpenIssuesList({ issues, className }: OpenIssuesProps) {
+  const [visibleCount, setVisibleCount] = useState<number>(10);
+  const visibleIssues = useMemo(
+    () => issues.slice(0, Math.max(visibleCount, 0)),
+    [issues, visibleCount]
+  );
+
+  const canLoadMore = visibleCount < issues.length;
+
+  return (
+    <section className={className}>
+      <div className="flex flex-col gap-6">
+        {visibleIssues.map((issue, idx) => (
+          <IssueCard key={`${issue.url}-${idx}`} issue={issue} />
+        ))}
+      </div>
+      {canLoadMore && (
+        <div className="mt-6 flex justify-center">
+          <Button
+            variant="outline"
+            onClick={() => setVisibleCount((c) => c + 10)}
+            aria-label="Load more issues"
+          >
+            Load more
+          </Button>
+        </div>
+      )}
+    </section>
+  );
+}

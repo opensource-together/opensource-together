@@ -67,7 +67,6 @@ export default function useAuth() {
     const encodedRedirectUrl = encodeURIComponent(redirectUrl);
     router.push(`/auth/login?redirect=${encodedRedirectUrl}`);
   };
-
   const requireAuth = (action: () => void, customRedirectUrl?: string) => {
     if (!currentUser) {
       redirectToLogin(customRedirectUrl);

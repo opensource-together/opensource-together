@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
@@ -11,7 +12,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
+import { decodeBase64Safe } from "@/shared/lib/utils/decode-base-64";
 
+import ContributorsList from "../components/contributors-list";
+import OpenIssuesList from "../components/open-issues-list";
+import OpenRecentIssues from "../components/open-recent-issues";
 import ProjectHero, {
   ProjectMobileHero,
 } from "../components/project-hero.component";
@@ -33,6 +38,15 @@ export default function ProjectDetailView({
   const router = useRouter();
 
   const tab = searchParams.get("tab") || "overview";
+
+  const sourceReadme = project?.repositoryDetails?.readme ?? undefined;
+  const decodedReadme = useMemo(
+    () =>
+      sourceReadme
+        ? (decodeBase64Safe(sourceReadme) ?? sourceReadme)
+        : undefined,
+    [sourceReadme]
+  );
 
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -61,27 +75,52 @@ export default function ProjectDetailView({
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="projects">Open Issues</TabsTrigger>
-          <TabsTrigger value="pull-requests">Pull Requests</TabsTrigger>
-          <TabsTrigger value="contributions">Contributors</TabsTrigger>
+          <TabsTrigger
+            value="open-issues"
+            count={project.repositoryDetails.openIssuesCount}
+          >
+            Open Issues
+          </TabsTrigger>
+          <TabsTrigger
+            value="pull-requests"
+            count={project.repositoryDetails.pullRequestsCount}
+          >
+            Pull Requests
+          </TabsTrigger>
+          <TabsTrigger
+            value="contributions"
+            count={(() => {
+              const n = project.repositoryDetails.contributors?.length ?? 0;
+              return n > 99 ? "99+" : n;
+            })()}
+          >
+            Contributors
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
           {project.imagesUrls.length > 0 && (
             <ImageSlider images={project.imagesUrls} />
           )}
-
-          {project.readme && (
+          {decodedReadme && (
             <ProjectReadme
-              readme={project.readme}
+              readme={decodedReadme}
               projectTitle={project.title}
               project={{
-                githubUrl: project.githubUrl,
-                gitlabUrl: project.gitlabUrl,
+                repoUrl: project.repoUrl,
               }}
             />
           )}
-          {/* TODO: Add open recent issues card here */}
+          <OpenRecentIssues issues={project.repositoryDetails.issues || []} />
+        </TabsContent>
+
+        <TabsContent value="open-issues" className="mt-6">
+          <OpenIssuesList issues={project.repositoryDetails.issues || []} />
+        </TabsContent>
+        <TabsContent value="contributions" className="mt-6">
+          <ContributorsList
+            contributors={project.repositoryDetails.contributors || []}
+          />
         </TabsContent>
       </Tabs>
     </TwoColumnLayout>
