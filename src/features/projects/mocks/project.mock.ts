@@ -417,8 +417,8 @@ export const mockProjectsResponse: Project[] = [
     },
   },
   {
-    id: "pjt_codesnippet_001",
-    title: "CodeSnippet",
+    id: "pjt_codesnippet_005",
+    title: "CodeSnippet 5",
     description:
       "CodeSnippet révolutionne la gestion du code pour les développeurs. Notre plateforme vous permet de stocker, organiser et découvrir facilement des snippets de code. Le Hub communautaire vous offre la possibilité de partager et d'explorer des snippets créés par d'autres développeurs. Simplifiez votre flux de travail et apprenez des autres—votre code, toujours à portée de main.",
     provider: "GITHUB",
