@@ -1,7 +1,5 @@
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import { Project } from "@/features/projects/types/project.type";
-
 import { ContributionGraph, GithubStats } from "./github-graph.type";
 
 export type Profile = {
@@ -27,5 +25,4 @@ export type Profile = {
   websiteUrl?: string;
   userTechStacksIds?: string[];
   userTechStacks?: TechStackType[];
-  projects?: Project[];
 };

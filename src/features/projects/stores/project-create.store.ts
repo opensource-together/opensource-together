@@ -13,7 +13,6 @@ export interface ProjectFormData {
   imageFiles?: File[];
   logoUrl: string;
   logoFile?: File | null;
-  readme?: string;
   repoUrl: string;
   githubUrl: string;
   gitlabUrl: string;
@@ -42,7 +41,6 @@ interface ProjectCreateStore {
         | "imageFiles"
         | "logoUrl"
         | "logoFile"
-        | "readme"
         | "repoUrl"
         | "projectTechStacks"
         | "projectCategories"
@@ -70,7 +68,6 @@ const initialFormData: ProjectFormData = {
   imageFiles: [],
   logoUrl: "",
   logoFile: null,
-  readme: "",
   repoUrl: "",
   githubUrl: "",
   gitlabUrl: "",
@@ -110,7 +107,6 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
               imagesUrls: [],
               logoUrl: "",
               logoFile: null,
-              readme: "",
               repoUrl: repo.html_url || "",
               githubUrl: "",
               gitlabUrl: "",

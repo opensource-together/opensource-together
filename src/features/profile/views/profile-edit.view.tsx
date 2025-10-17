@@ -22,7 +22,7 @@ export default function ProfileEditView() {
   const { currentUser, isLoading, isError } = useAuth();
   const { updateProfile, isUpdating } = useProfileUpdate();
   const { updateProfileLogo, isUpdatingLogo } = useProfileLogoUpdate(
-    currentUser?.publicId || currentUser?.id || ""
+    currentUser?.id || ""
   );
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
@@ -65,7 +65,7 @@ export default function ProfileEditView() {
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const id = currentUser?.publicId || currentUser?.id || "";
+    const id = currentUser?.id || "";
     updateProfile({ id, updateData: data });
     if (selectedImageFile) {
       updateProfileLogo(selectedImageFile);

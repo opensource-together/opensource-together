@@ -1,6 +1,6 @@
 "use client";
 
-import StackLogo from "@/shared/components/logos/stack-logo";
+import StackLogo from "@/shared/components/ui/stack-logo";
 
 type Tech = {
   id?: string;

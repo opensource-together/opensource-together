@@ -17,9 +17,9 @@ import { TechStackType } from "@/shared/types/tech-stack.type";
 
 import { Owner, ProjectStats } from "@/features/projects/types/project.type";
 
-import StackLogo from "../logos/stack-logo";
 import { Avatar } from "../ui/avatar";
 import { Icon } from "../ui/icon";
+import StackLogo from "../ui/stack-logo";
 
 interface ProjectCardProps {
   projectId?: string;

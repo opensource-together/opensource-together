@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { HiDotsVertical } from "react-icons/hi";
 import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
-import { Icon } from "@/shared/components/ui/icon";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import {
   Table,
   TableBody,
@@ -15,10 +16,22 @@ import {
 } from "@/shared/components/ui/table";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 
 export default function MyProjectsList() {
-  const { data: projects = [] } = useMyProjects();
+  const { data: projects = [], isLoading, isError } = useMyProjects();
   const router = useRouter();
+
+  if (isLoading) return <MyProjectsSkeleton />;
+
+  if (isError)
+    return (
+      <ErrorState
+        message="Failed to fetch projects"
+        queryKey={["user", "me", "projects"]}
+      />
+    );
+
   if (projects.length === 0) {
     return (
       <EmptyState
@@ -40,9 +53,7 @@ export default function MyProjectsList() {
             return (
               <TableRow
                 key={project.id}
-                onClick={() =>
-                  router.push(`/dashboard/my-projects/${project.id}`)
-                }
+                onClick={() => router.push(`/projects/${project.id}`)}
               >
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -61,25 +72,6 @@ export default function MyProjectsList() {
                 </TableCell>
 
                 <TableCell>
-                  <div className="flex items-center">
-                    {project.teamMembers?.length === 0 ? (
-                      <span className="text-muted-foreground text-sm text-nowrap">
-                        No member
-                      </span>
-                    ) : (
-                      <>
-                        <span className="mr-1 text-sm font-medium">
-                          {project.teamMembers?.length}
-                        </span>
-                        <span className="text-muted-foreground text-sm">
-                          Member{project.teamMembers?.length > 1 ? "s" : ""}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </TableCell>
-
-                <TableCell>
                   <span className="text-sm font-medium">
                     {new Date(project.createdAt).toLocaleDateString("fr-FR", {
                       day: "2-digit",
@@ -91,7 +83,7 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <Button variant="outline" size="icon">
-                    <Icon name="trash" />
+                    <HiDotsVertical />
                   </Button>
                 </TableCell>
               </TableRow>
