@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { VscIssues } from "react-icons/vsc";
 
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import IssueCard from "../../../shared/components/ui/issue-card";
 import { Issue } from "../types/project.type";
@@ -18,6 +20,16 @@ export default function OpenIssuesList({ issues, className }: OpenIssuesProps) {
     () => issues.slice(0, Math.max(visibleCount, 0)),
     [issues, visibleCount]
   );
+
+  if (issues.length === 0) {
+    return (
+      <EmptyState
+        title="No issues"
+        description="No open issues found for this project"
+        icon={VscIssues}
+      />
+    );
+  }
 
   const canLoadMore = visibleCount < issues.length;
 

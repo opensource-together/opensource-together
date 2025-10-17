@@ -43,8 +43,7 @@ export default function ProjectCardComponent({
   logoUrl = "",
   owner = {
     id: "",
-    username: "",
-    avatarUrl: "",
+    name: "",
   },
   projectStats = {
     forks: 0,
@@ -72,14 +71,14 @@ export default function ProjectCardComponent({
               name={title}
               alt={title}
               size="lg"
-              shape="rounded"
+              shape="soft"
             />
             <ProjectCardInfo>
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {owner.username}
+                by {owner.name}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>

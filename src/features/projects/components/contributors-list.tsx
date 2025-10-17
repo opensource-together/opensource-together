@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { HiUserGroup } from "react-icons/hi";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import { Contributor } from "../types/project.type";
 
@@ -20,6 +22,16 @@ export default function ContributorsList({
     () => contributors.slice(0, Math.max(visibleCount, 0)),
     [contributors, visibleCount]
   );
+
+  if (contributors.length === 0) {
+    return (
+      <EmptyState
+        title="No contributors"
+        description="No contributors found for this project"
+        icon={HiUserGroup}
+      />
+    );
+  }
 
   const canLoadMore = visibleCount < contributors.length;
 

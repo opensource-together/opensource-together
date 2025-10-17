@@ -111,8 +111,7 @@ export type RepositoryWithDetails = {
 // Lightweight owner information used across the app
 export type Owner = {
   id: string;
-  username: string;
-  avatarUrl: string | null;
+  name: string;
 };
 
 export type LastCommitAuthor = {

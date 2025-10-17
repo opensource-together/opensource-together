@@ -1,11 +1,22 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { HiDotsVertical } from "react-icons/hi";
-import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
+import {
+  HiMiniEllipsisVertical,
+  HiMiniPencilSquare,
+  HiMiniSquare2Stack,
+  HiMiniTrash,
+  HiPlus,
+} from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -62,6 +73,7 @@ export default function MyProjectsList() {
                       name={project.title}
                       alt={project.title}
                       size="md"
+                      shape="soft"
                     />
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
@@ -82,9 +94,28 @@ export default function MyProjectsList() {
                 </TableCell>
 
                 <TableCell>
-                  <Button variant="outline" size="icon">
-                    <HiDotsVertical />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <HiMiniEllipsisVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/projects/${project.id}/edit`);
+                        }}
+                      >
+                        <HiMiniPencilSquare className="size-4" />
+                        Edit Project
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <HiMiniTrash className="text-destructive size-4" />
+                        Delete Project
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             );

@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
@@ -12,6 +11,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
+import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 import { decodeBase64Safe } from "@/shared/lib/utils/decode-base-64";
 
 import ContributorsList from "../components/contributors-list";
@@ -33,11 +33,7 @@ export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const tab = searchParams.get("tab") || "overview";
+  const { tab, handleTabChange } = useTabNavigation("overview");
 
   const sourceReadme = project?.repositoryDetails?.readme ?? undefined;
   const decodedReadme = useMemo(
@@ -47,13 +43,6 @@ export default function ProjectDetailView({
         : undefined,
     [sourceReadme]
   );
-
-  const handleTabChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === "overview") params.delete("tab");
-    else params.set("tab", value);
-    router.replace(`${pathname}?${params.toString()}`);
-  };
 
   if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project)
