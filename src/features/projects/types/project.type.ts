@@ -66,11 +66,11 @@ export type PullRequest = {
 };
 
 export type Issue = {
+  number: number;
   title: string;
   status: string;
   body: string | null;
   labels: string[];
-
   created_at: string;
   updated_at: string;
   closed_at: string | null;
@@ -96,10 +96,6 @@ export type RepositoryWithDetails = {
   pullRequestsCount: number;
   subscribersCount: number;
   visibility: string | null | undefined;
-  owner: {
-    login: string | undefined;
-    avatar_url: string | undefined;
-  };
   contributors: Contributor[];
   issues: Issue[];
   pullRequests: PullRequest[];
@@ -108,7 +104,6 @@ export type RepositoryWithDetails = {
   cocFile: string | undefined;
 };
 
-// Lightweight owner information used across the app
 export type Owner = {
   id: string;
   name: string;
@@ -126,14 +121,4 @@ export type LastCommit = {
   date: string;
   url: string;
   author: LastCommitAuthor;
-};
-
-export type ProjectStats = {
-  forks: number;
-  contributors: Contributor[];
-  stars: number;
-  watchers: number;
-  openIssues: number;
-  commits: number;
-  lastCommit: LastCommit;
 };

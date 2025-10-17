@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { LuClock3 } from "react-icons/lu";
 import { VscIssues } from "react-icons/vsc";
 
@@ -10,10 +9,12 @@ import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
+import IssueDetailSheet from "@/features/projects/components/issue-detail-sheet.component";
 import { Issue } from "@/features/projects/types/project.type";
 
 interface IssueCardProps {
   issue: Issue;
+  projectId: string;
   className?: string;
 }
 
@@ -22,10 +23,14 @@ function extractNumberFromUrl(url: string): string | null {
   return match?.[1] ?? null;
 }
 
-export default function IssueCard({ issue, className }: IssueCardProps) {
+export default function IssueCard({
+  issue,
+  projectId,
+  className,
+}: IssueCardProps) {
   const number = extractNumberFromUrl(issue.url);
   return (
-    <Link href={issue.url} target="_blank" rel="noreferrer">
+    <IssueDetailSheet issue={issue} projectId={projectId}>
       <article
         className={cn(
           "rounded-[20px] border border-[black]/6 px-5 py-4 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
@@ -83,6 +88,6 @@ export default function IssueCard({ issue, className }: IssueCardProps) {
           </div>
         </div>
       </article>
-    </Link>
+    </IssueDetailSheet>
   );
 }

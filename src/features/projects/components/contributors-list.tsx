@@ -72,7 +72,7 @@ function ContributorCard({ contributor }: { contributor: Contributor }) {
           alt={contributor.login}
           size="md"
         />
-        <div className="flex flex-col gap-0.5 text-nowrap">
+        <div className="flex flex-col gap-0.5 truncate text-nowrap">
           <p className="text-sm font-medium">{contributor.login}</p>
           <p className="text-muted-foreground text-sm">
             {contributor.contributions}{" "}

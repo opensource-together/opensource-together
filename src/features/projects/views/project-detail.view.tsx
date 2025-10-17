@@ -66,20 +66,20 @@ export default function ProjectDetailView({
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger
             value="open-issues"
-            count={project.repositoryDetails.openIssuesCount}
+            count={project.repositoryDetails?.openIssuesCount}
           >
             Open Issues
           </TabsTrigger>
           <TabsTrigger
             value="pull-requests"
-            count={project.repositoryDetails.pullRequestsCount}
+            count={project.repositoryDetails?.pullRequestsCount}
           >
             Pull Requests
           </TabsTrigger>
           <TabsTrigger
             value="contributions"
             count={(() => {
-              const n = project.repositoryDetails.contributors?.length ?? 0;
+              const n = project.repositoryDetails?.contributors?.length ?? 0;
               return n > 99 ? "99+" : n;
             })()}
           >
@@ -100,15 +100,21 @@ export default function ProjectDetailView({
               }}
             />
           )}
-          <OpenRecentIssues issues={project.repositoryDetails.issues || []} />
+          <OpenRecentIssues
+            issues={project.repositoryDetails?.issues || []}
+            projectId={projectId}
+          />
         </TabsContent>
 
         <TabsContent value="open-issues" className="mt-6">
-          <OpenIssuesList issues={project.repositoryDetails.issues || []} />
+          <OpenIssuesList
+            issues={project.repositoryDetails?.issues || []}
+            projectId={projectId}
+          />
         </TabsContent>
         <TabsContent value="contributions" className="mt-6">
           <ContributorsList
-            contributors={project.repositoryDetails.contributors || []}
+            contributors={project.repositoryDetails?.contributors || []}
           />
         </TabsContent>
       </Tabs>

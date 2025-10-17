@@ -4,11 +4,15 @@ import Link from "next/link";
 import { useState } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
 import { Button } from "@/shared/components/ui/button";
+import {
+  readmeFullMarkdownComponents,
+  readmePreviewMarkdownComponents,
+} from "@/shared/components/ui/markdown-components";
 import { Separator } from "@/shared/components/ui/separator";
 import {
   Sheet,
@@ -41,88 +45,7 @@ export default function ProjectReadme({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
-              components={{
-                h1: ({ children }) => (
-                  <h1 className="mb-2 text-lg font-medium text-black">
-                    {children}
-                  </h1>
-                ),
-                h2: ({ children }) => (
-                  <h2 className="mb-1 text-base font-medium text-black">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="mb-1 text-base font-medium text-black">
-                    {children}
-                  </h3>
-                ),
-                p: ({ children }) => (
-                  <p className="mb-2 text-sm text-black/70">{children}</p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="mb-2 list-disc space-y-1 pl-5 text-sm text-black/70">
-                    {children}
-                  </ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="mb-2 list-decimal space-y-1 pl-5 text-sm text-black/70">
-                    {children}
-                  </ol>
-                ),
-                li: ({ children }) => (
-                  <li className="leading-relaxed text-black/70">{children}</li>
-                ),
-                code: ({ children }) => (
-                  <code className="bg-accent rounded px-1 py-0.5 font-mono text-xs text-green-700">
-                    {children}
-                  </code>
-                ),
-                pre: ({ children }) => (
-                  <pre className="bg-accent mb-2 overflow-x-auto rounded-lg p-3 text-xs text-black/70">
-                    {children}
-                  </pre>
-                ),
-                blockquote: ({ children }) => (
-                  <blockquote className="mb-2 border-l-4 border-gray-300 pl-3 text-black/70 italic">
-                    {children}
-                  </blockquote>
-                ),
-                a: ({ children }) => (
-                  <span
-                    className="text-muted-foreground pointer-events-none cursor-default text-sm font-medium select-text"
-                    aria-disabled
-                  >
-                    {children}
-                  </span>
-                ),
-                img: ({ src, alt, width, height }) => (
-                  <img
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    className="h-auto max-w-full rounded"
-                  />
-                ),
-                table: ({ children }) => (
-                  <div className="mb-2 overflow-x-auto">
-                    <table className="min-w-full border-collapse border border-gray-300">
-                      {children}
-                    </table>
-                  </div>
-                ),
-                th: ({ children }) => (
-                  <th className="bg-accent border border-gray-300 px-3 py-2 text-left text-sm font-medium">
-                    {children}
-                  </th>
-                ),
-                td: ({ children }) => (
-                  <td className="border border-gray-300 px-3 py-2 text-sm">
-                    {children}
-                  </td>
-                ),
-              }}
+              components={readmePreviewMarkdownComponents as Components}
             >
               {readme}
             </ReactMarkdown>
@@ -166,88 +89,7 @@ export default function ProjectReadme({
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
-                components={{
-                  h1: ({ children }) => (
-                    <h1 className="mb-4 text-2xl font-semibold">{children}</h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="mt-6 mb-3 text-xl font-semibold">
-                      {children}
-                    </h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 className="mt-4 mb-2 text-lg font-medium">
-                      {children}
-                    </h3>
-                  ),
-                  p: ({ children }) => (
-                    <p className="mb-3 leading-relaxed">{children}</p>
-                  ),
-                  ul: ({ children }) => (
-                    <ul className="mb-3 list-disc space-y-1 pl-6">
-                      {children}
-                    </ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="mb-3 list-decimal space-y-1 pl-6">
-                      {children}
-                    </ol>
-                  ),
-                  li: ({ children }) => (
-                    <li className="leading-relaxed">{children}</li>
-                  ),
-                  code: ({ children }) => (
-                    <code className="bg-accent rounded px-1 py-0.5 font-mono text-sm">
-                      {children}
-                    </code>
-                  ),
-                  pre: ({ children }) => (
-                    <pre className="bg-accent mb-3 overflow-x-auto rounded-lg p-4">
-                      {children}
-                    </pre>
-                  ),
-                  blockquote: ({ children }) => (
-                    <blockquote className="mb-3 border-l-4 border-gray-300 pl-4 italic">
-                      {children}
-                    </blockquote>
-                  ),
-                  a: ({ children, href }) => (
-                    <a
-                      href={href}
-                      className="text-ost-blue-three hover:text-ost-blue-four underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {children}
-                    </a>
-                  ),
-                  img: ({ src, alt, width, height }) => (
-                    <img
-                      src={src}
-                      alt={alt}
-                      width={width}
-                      height={height}
-                      className="my-3 h-auto max-w-full rounded"
-                    />
-                  ),
-                  table: ({ children }) => (
-                    <div className="mb-3 overflow-x-auto">
-                      <table className="min-w-full border-collapse border border-gray-300">
-                        {children}
-                      </table>
-                    </div>
-                  ),
-                  th: ({ children }) => (
-                    <th className="bg-accent border border-gray-300 px-3 py-2 text-left text-sm font-medium">
-                      {children}
-                    </th>
-                  ),
-                  td: ({ children }) => (
-                    <td className="border border-gray-300 px-3 py-2 text-sm">
-                      {children}
-                    </td>
-                  ),
-                }}
+                components={readmeFullMarkdownComponents as Components}
               >
                 {readme}
               </ReactMarkdown>
@@ -256,10 +98,7 @@ export default function ProjectReadme({
           <div className="sticky bottom-0 z-50 bg-white">
             <div className="-mx-6">
               <div className="border-muted-black-stroke border-t" />
-              <div className="flex items-center justify-end gap-4 px-6 pt-4">
-                <Button variant="secondary" onClick={() => setIsOpen(false)}>
-                  Back
-                </Button>
+              <div className="flex items-center justify-end px-6 pt-4">
                 {(() => {
                   const sourceUrl = project?.repoUrl || "";
                   const isGitHub = /github\.com/i.test(sourceUrl);

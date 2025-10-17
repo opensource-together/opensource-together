@@ -8,11 +8,13 @@ import IssueCard from "../../../shared/components/ui/issue-card";
 
 interface OpenRecentIssuesProps {
   issues: Issue[];
+  projectId: string;
   className?: string;
 }
 
 export default function OpenRecentIssues({
   issues,
+  projectId,
   className,
 }: OpenRecentIssuesProps) {
   if (!issues || issues.length === 0) {
@@ -36,7 +38,11 @@ export default function OpenRecentIssues({
       </div>
       <div className="flex flex-col gap-6">
         {issues.slice(0, 3).map((issue, idx) => (
-          <IssueCard key={`${issue.url}-${idx}`} issue={issue} />
+          <IssueCard
+            key={`${issue.url}-${idx}`}
+            issue={issue}
+            projectId={projectId}
+          />
         ))}
       </div>
     </section>

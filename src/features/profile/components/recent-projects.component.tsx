@@ -57,20 +57,13 @@ export default function RecentProjects() {
             id: project.owner?.id || "",
             name: project.owner?.name || "",
           }}
-          projectStats={{
-            forks: 0,
-            contributors: [],
-            stars: 0,
-            watchers: 0,
-            openIssues: 0,
-            commits: 0,
-            lastCommit: {
-              sha: "",
-              message: "",
-              date: "",
-              url: "",
-              author: { login: "", avatar_url: "", html_url: "" },
-            },
+          repositoryDetails={{
+            stars: project.repositoryDetails?.stars || 0,
+            contributors: project.repositoryDetails?.contributors || [],
+            forksCount: project.repositoryDetails?.forksCount || 0,
+            openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
+            pullRequestsCount:
+              project.repositoryDetails?.pullRequestsCount || 0,
           }}
           className="w-full"
         />

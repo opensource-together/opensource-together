@@ -19,27 +19,15 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           projectTechStacks={project.projectTechStacks}
           owner={{
             id: project.owner?.id || "",
-            username: project.owner?.username || "",
-            avatarUrl: project.owner?.avatarUrl || "",
+            name: project.owner?.name || "",
           }}
-          projectStats={{
-            forks: project.repositoryDetails?.forksCount || 0,
+          repositoryDetails={{
+            forksCount: project.repositoryDetails?.forksCount || 0,
             contributors: project.repositoryDetails?.contributors || [],
             stars: project.repositoryDetails?.stars || 0,
-            watchers: project.repositoryDetails?.subscribersCount || 0,
-            openIssues: project.repositoryDetails?.openIssuesCount || 0,
-            commits: 0,
-            lastCommit: {
-              sha: "",
-              message: "",
-              date: "",
-              url: "",
-              author: {
-                login: project.repositoryDetails?.owner?.login,
-                avatar_url: project.repositoryDetails?.owner?.avatar_url,
-                html_url: project.repositoryDetails?.html_url,
-              },
-            },
+            openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
+            pullRequestsCount:
+              project.repositoryDetails?.pullRequestsCount || 0,
           }}
         />
       ))}

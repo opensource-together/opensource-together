@@ -103,13 +103,14 @@ export default function MyProjectsList() {
                           e.stopPropagation();
                           router.push(`/projects/${project.id}/edit`);
                         }}
+                        className="flex items-center justify-between"
                       >
-                        <HiMiniPencilSquare className="size-4" />
                         Edit Project
+                        <HiMiniPencilSquare className="size-4" />
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <HiMiniTrash className="text-destructive size-4" />
+                      <DropdownMenuItem className="text-destructive flex items-center justify-between">
                         Delete Project
+                        <HiMiniTrash className="text-destructive size-4" />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
