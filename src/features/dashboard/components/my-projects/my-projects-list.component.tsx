@@ -25,6 +25,7 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
+import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
@@ -85,11 +86,7 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <span className="text-sm font-medium">
-                    {new Date(project.createdAt).toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}
+                    {formatTimeAgo(project.createdAt)}
                   </span>
                 </TableCell>
 

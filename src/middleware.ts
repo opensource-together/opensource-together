@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
 
   const hasBetterAuthCookie = request.cookies
     .getAll()
-    .some((cookie) => cookie.name.startsWith("better-auth"));
+    .some((cookie) => cookie.name.startsWith("better-auth.session"));
 
   const hasSessionCookies = hasBetterAuthCookie;
 

@@ -21,8 +21,8 @@ export interface Project {
   projectCategories: CategoryType[];
   repositoryDetails: RepositoryWithDetails;
   owner?: Owner;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProjectEditForm {

@@ -62,19 +62,6 @@ export default function useAuth() {
     },
   });
 
-  const redirectToLogin = (customRedirectUrl?: string) => {
-    const redirectUrl = customRedirectUrl || pathname;
-    const encodedRedirectUrl = encodeURIComponent(redirectUrl);
-    router.push(`/auth/login?redirect=${encodedRedirectUrl}`);
-  };
-  const requireAuth = (action: () => void, customRedirectUrl?: string) => {
-    if (!currentUser) {
-      redirectToLogin(customRedirectUrl);
-      return;
-    }
-    action();
-  };
-
   return {
     currentUser,
     isAuthenticated: !!currentUser,
@@ -83,8 +70,6 @@ export default function useAuth() {
 
     signInWithProvider: signInMutation.mutate,
     logout: logoutMutation.mutate,
-    redirectToLogin,
-    requireAuth,
 
     isSigningIn: signInMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
