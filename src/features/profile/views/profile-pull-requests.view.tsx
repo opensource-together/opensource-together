@@ -194,7 +194,7 @@ export default function ProfilePullRequests({
             <PaginationItem>
               <Button
                 variant="ghost"
-                size="default"
+                size="sm"
                 onClick={handlePrev}
                 disabled={!hasPrevPage || isFetching}
               >
@@ -207,7 +207,7 @@ export default function ProfilePullRequests({
             <PaginationItem>
               <Button
                 variant="ghost"
-                size="default"
+                size="sm"
                 onClick={handleNext}
                 disabled={!hasNextPage || isFetching}
               >

@@ -65,7 +65,8 @@ export function useCreateProject() {
     errorMessage: "Error while creating project",
     options: {
       onSuccess: (project) => {
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         router.push(`/projects/create/success?projectId=${project.id}`);
       },
     },
@@ -106,8 +107,9 @@ export function useUpdateProject() {
         const targetId = project?.publicId || variables?.id;
         if (targetId) {
           queryClient.invalidateQueries({
-            queryKey: ["project", targetId],
+            queryKey: ["user", "me", "projects"],
           });
+          queryClient.invalidateQueries({ queryKey: ["project", targetId] });
           router.push(`/projects/${targetId}`);
         }
       },
@@ -140,8 +142,8 @@ export function useDeleteProject() {
     errorMessage: "Error while deleting project",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
-        router.push("/projects");
+        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        router.push("/dashboard/my-projects");
       },
     },
   });
