@@ -40,7 +40,7 @@ export default function ProjectReadme({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <div className="font-geist relative mt-8 flex h-[322px] cursor-pointer flex-col rounded-[22px] border border-black/5 bg-white p-5 transition-colors duration-300 hover:bg-black/5">
+        <div className="font-geist relative mb-14 flex h-[322px] cursor-pointer flex-col rounded-[22px] border border-black/5 bg-white p-5 transition-colors duration-300 hover:bg-black/5">
           <div className="mb-2 flex-1 overflow-hidden leading-7">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

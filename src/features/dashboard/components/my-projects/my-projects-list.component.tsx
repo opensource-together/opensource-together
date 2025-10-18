@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   HiMiniEllipsisVertical,
   HiMiniPencilSquare,
@@ -11,6 +11,7 @@ import {
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +20,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import { PaginationInfo } from "@/shared/components/ui/pagination-info.component";
 import {
   Table,
   TableBody,
@@ -28,11 +30,31 @@ import {
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 
+const parseNumber = (value: string | null, fallback: number) => {
+  if (!value) return fallback;
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
+
 export default function MyProjectsList() {
-  const { data: projects = [], isLoading, isError } = useMyProjects();
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const page = parseNumber(searchParams.get("page"), 1);
+  const perPage = parseNumber(searchParams.get("per_page"), 7);
+  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+
+  const {
+    data: myProjectsResponse,
+    isLoading,
+    isError,
+  } = useMyProjects(queryParams);
+
+  const myProjects = myProjectsResponse?.data || [];
+  const pagination = myProjectsResponse?.pagination;
 
   if (isLoading) return <MyProjectsSkeleton />;
 
@@ -44,7 +66,7 @@ export default function MyProjectsList() {
       />
     );
 
-  if (projects.length === 0) {
+  if (myProjects.length === 0) {
     return (
       <EmptyState
         icon={HiMiniSquare2Stack}
@@ -61,7 +83,7 @@ export default function MyProjectsList() {
     <div>
       <Table>
         <TableBody>
-          {projects.map((project) => {
+          {myProjects.map((project) => {
             return (
               <TableRow
                 key={project.id}
@@ -120,6 +142,13 @@ export default function MyProjectsList() {
           })}
         </TableBody>
       </Table>
+
+      {pagination && (
+        <div className="mt-4 flex items-center justify-between">
+          <PaginationInfo pagination={pagination} />
+          <DataTablePagination pagination={pagination} />
+        </div>
+      )}
     </div>
   );
 }

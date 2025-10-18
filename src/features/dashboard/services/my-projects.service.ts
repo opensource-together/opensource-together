@@ -1,15 +1,34 @@
 import { API_BASE_URL } from "@/config/config";
 
+import {
+  PaginatedResponse,
+  PaginationParams,
+} from "@/shared/types/pagination.type";
+
 import { Project } from "@/features/projects/types/project.type";
+
+export interface ProjectQueryParams extends PaginationParams {}
+
+export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
 
 /**
  * Fetches the list of projects for the current user.
  *
+ * @param params - Optional query parameters to filter user projects.
  * @returns A promise that resolves to an array of projects.
  */
-export const getMyProjects = async (): Promise<Project[]> => {
+export const getMyProjects = async (
+  params?: ProjectQueryParams
+): Promise<PaginatedProjectsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/users/me/projects`, {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/users/me/projects${queryString ? `?${queryString}` : ""}`;
+    const response = await fetch(url, {
       method: "GET",
       credentials: "include",
     });
@@ -18,7 +37,7 @@ export const getMyProjects = async (): Promise<Project[]> => {
       throw new Error(error.message || "Failed to fetch my projects");
     }
     const apiResponse = await response.json();
-    return apiResponse.data;
+    return apiResponse;
   } catch (error) {
     console.error("Error fetching my projects:", error);
     throw error;

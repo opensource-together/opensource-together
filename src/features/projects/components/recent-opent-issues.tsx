@@ -25,7 +25,7 @@ export default function RecentOpenIssues({
 
   return (
     <section className={className}>
-      <div className="mt-14 mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
           <h2 className="text-muted-foreground text-sm">

@@ -9,7 +9,8 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 
 export default function RecentProjects() {
-  const { data: myProjects = [], isLoading, isError } = useMyProjects();
+  const { data: myProjectsResponse, isLoading, isError } = useMyProjects();
+  const myProjects = myProjectsResponse?.data || [];
 
   if (isLoading) return <div>loading</div>;
   if (isError)

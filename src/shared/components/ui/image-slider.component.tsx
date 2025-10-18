@@ -58,7 +58,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-2 flex flex-row gap-1">
+    <div className="mt-2 mb-8 flex flex-row gap-1">
       <div className="flex-1">
         <div
           className="relative h-[207px] w-full overflow-hidden rounded-2xl select-none sm:h-[370px]"
