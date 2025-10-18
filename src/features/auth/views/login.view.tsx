@@ -40,8 +40,10 @@ export default function LoginView() {
             <LoginForm />
           </div>
         </div>
+        <div className="mt-auto">
+          <FooterLogin />
+        </div>
       </div>
-      <FooterLogin />
     </>
   );
 }
