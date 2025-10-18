@@ -2,7 +2,7 @@ import { TechStackType } from "@/shared/types/tech-stack.type";
 
 import { ContributionGraph, GithubStats } from "./github-graph.type";
 
-export type Profile = {
+export interface Profile {
   id: string;
   publicId?: string;
   name: string;
@@ -25,4 +25,4 @@ export type Profile = {
   websiteUrl?: string;
   userTechStacksIds?: string[];
   userTechStacks?: TechStackType[];
-};
+}
