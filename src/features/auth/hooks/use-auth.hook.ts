@@ -38,7 +38,7 @@ export default function useAuth() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["user/me"],
+    queryKey: ["users", "me"],
     queryFn: getCurrentUser,
   });
 
@@ -56,7 +56,7 @@ export default function useAuth() {
     errorMessage: "Erreur lors de la déconnexion",
     options: {
       onSuccess: () => {
-        queryClient.setQueryData(["user/me"], null);
+        queryClient.setQueryData(["users", "me"], null);
         router.push("/");
       },
     },

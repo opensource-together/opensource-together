@@ -16,12 +16,12 @@ import { decodeBase64Safe } from "@/shared/lib/utils/decode-base-64";
 
 import ContributorsList from "../components/contributors-list";
 import OpenIssuesList from "../components/open-issues-list";
-import OpenRecentIssues from "../components/open-recent-issues";
 import ProjectHero, {
   ProjectMobileHero,
 } from "../components/project-hero.component";
 import ProjectReadme from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
+import RecentOpenIssues from "../components/recent-opent-issues";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import { useProject } from "../hooks/use-projects.hook";
 
@@ -100,7 +100,7 @@ export default function ProjectDetailView({
               }}
             />
           )}
-          <OpenRecentIssues
+          <RecentOpenIssues
             issues={project.repositoryDetails?.issues || []}
             projectId={projectId}
           />

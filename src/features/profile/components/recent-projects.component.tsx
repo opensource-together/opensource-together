@@ -29,6 +29,8 @@ export default function RecentProjects() {
       />
     );
 
+  const recentProjects = myProjects.slice(0, 3);
+
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="mt-14 mb-4 flex items-center justify-between">
@@ -36,16 +38,16 @@ export default function RecentProjects() {
           <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
           <h2 className="text-muted-foreground">
             <span className="text-primary font-medium">
-              {myProjects.slice(0, 3).length}
+              {recentProjects.length}
             </span>{" "}
-            {myProjects.length === 1 ? "Recent Project" : "Recent Projects"}
+            {recentProjects.length === 1 ? "Recent Project" : "Recent Projects"}
           </h2>
         </div>
         <Link href="?tab=projects">
           <Button variant="outline">View All Projects</Button>
         </Link>
       </div>
-      {myProjects.slice(0, 3).map((project) => (
+      {recentProjects.map((project) => (
         <ProjectCardComponent
           key={project.id}
           projectId={project.id}
