@@ -11,6 +11,7 @@ import { PullRequest } from "@/features/projects/types/project.type";
 
 import { Avatar } from "./avatar";
 import { Badge } from "./badge";
+import { BadgeWithIcon } from "./badge-with-icon";
 import { Separator } from "./separator";
 
 interface PullRequestCardProps {
@@ -33,9 +34,13 @@ export default function PullRequestCard({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2">
-              <Badge variant="info" className="py-1 text-sm">
-                <VscGitPullRequest />#{pullRequest.number}
-              </Badge>
+              <BadgeWithIcon
+                variant="info"
+                className="pl-1.5"
+                icon={VscGitPullRequest}
+              >
+                #{pullRequest.number}
+              </BadgeWithIcon>
               <span className="line-clamp-1 text-sm font-medium tracking-tight">
                 {pullRequest.title}
               </span>

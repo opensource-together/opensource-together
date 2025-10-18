@@ -1,7 +1,7 @@
 "use client";
 
+import { GoIssueOpened } from "react-icons/go";
 import { LuClock3 } from "react-icons/lu";
-import { VscIssues } from "react-icons/vsc";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -11,6 +11,8 @@ import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import IssueDetailSheet from "@/features/projects/components/issue-detail-sheet.component";
 import { Issue } from "@/features/projects/types/project.type";
+
+import { BadgeWithIcon } from "./badge-with-icon";
 
 interface IssueCardProps {
   issue: Issue;
@@ -41,9 +43,14 @@ export default function IssueCard({
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2">
               {number && (
-                <Badge variant="info" className="py-1 text-sm">
-                  <VscIssues />#{number}
-                </Badge>
+                <BadgeWithIcon
+                  variant="info"
+                  iconSize="size-3"
+                  className="pl-1.5"
+                  icon={GoIssueOpened}
+                >
+                  #{number}
+                </BadgeWithIcon>
               )}
               <span className="line-clamp-1 text-sm font-medium tracking-tight">
                 {issue.title}
