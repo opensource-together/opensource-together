@@ -15,7 +15,7 @@ import {
  * @returns A React Query result containing the repositories data.
  */
 export const useGitRepository = (params: UserGitRepositoryQueryParams = {}) => {
-  const per_page = params.per_page ?? 50;
+  const per_page = params.per_page ?? 100;
   const page = params.page ?? 1;
   const queryParams: UserGitRepositoryQueryParams = {
     ...params,

@@ -16,9 +16,6 @@ export const getProjects = async (): Promise<Project[]> => {
   try {
     // const response = await fetch(`${API_BASE_URL}/projects`, {
     //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
     // });
 
     // if (!response.ok) {
@@ -46,9 +43,6 @@ export const getProjectDetails = async (
   try {
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
 
     if (!response.ok) {

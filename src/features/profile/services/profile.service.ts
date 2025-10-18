@@ -17,12 +17,10 @@ export const getUserById = async (id: string): Promise<Profile> => {
         "Content-Type": "application/json",
       },
     });
-
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to fetch user");
     }
-
     const apiResponse = await response.json();
     return apiResponse.data;
   } catch (error) {
@@ -76,20 +74,23 @@ export const updateProfileLogo = async (
   id: string,
   avatarFile: File
 ): Promise<Pick<Profile, "image">> => {
-  const formData = new FormData();
-  formData.append("file", avatarFile);
+  try {
+    const formData = new FormData();
+    formData.append("file", avatarFile);
 
-  const response = await fetch(`${API_BASE_URL}/users/${id}/logo`, {
-    method: "PATCH",
-    credentials: "include",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to upload avatar");
+    const response = await fetch(`${API_BASE_URL}/users/${id}/logo`, {
+      method: "PATCH",
+      credentials: "include",
+      body: formData,
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to upload avatar");
+    }
+    const apiResponse = await response.json();
+    return apiResponse.data;
+  } catch (error) {
+    console.error("Error updating profile logo:", error);
+    throw error;
   }
-
-  const apiResponse = await response.json();
-  return apiResponse?.data;
 };

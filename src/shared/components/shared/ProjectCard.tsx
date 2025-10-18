@@ -15,11 +15,14 @@ import {
 } from "@/shared/components/ui/project-card";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import { Owner, ProjectStats } from "@/features/projects/types/project.type";
+import {
+  Owner,
+  RepositoryWithDetails,
+} from "@/features/projects/types/project.type";
 
-import StackLogo from "../logos/stack-logo";
 import { Avatar } from "../ui/avatar";
 import { Icon } from "../ui/icon";
+import StackLogo from "../ui/stack-logo";
 
 interface ProjectCardProps {
   projectId?: string;
@@ -30,7 +33,14 @@ interface ProjectCardProps {
   className?: string;
   logoUrl?: string;
   owner?: Owner;
-  projectStats?: ProjectStats;
+  repositoryDetails?: Pick<
+    RepositoryWithDetails,
+    | "stars"
+    | "forksCount"
+    | "openIssuesCount"
+    | "pullRequestsCount"
+    | "contributors"
+  >;
 }
 
 export default function ProjectCardComponent({
@@ -43,23 +53,14 @@ export default function ProjectCardComponent({
   logoUrl = "",
   owner = {
     id: "",
-    username: "",
-    avatarUrl: "",
+    name: "",
   },
-  projectStats = {
-    forks: 0,
+  repositoryDetails = {
+    forksCount: 0,
     contributors: [],
     stars: 0,
-    watchers: 0,
-    openIssues: 0,
-    commits: 0,
-    lastCommit: {
-      sha: "",
-      message: "",
-      date: "",
-      url: "",
-      author: { login: "", avatar_url: "", html_url: "" },
-    },
+    openIssuesCount: 0,
+    pullRequestsCount: 0,
   },
 }: ProjectCardProps) {
   return (
@@ -72,14 +73,14 @@ export default function ProjectCardComponent({
               name={title}
               alt={title}
               size="lg"
-              shape="rounded"
+              shape="soft"
             />
             <ProjectCardInfo>
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {owner.username}
+                by {owner.name}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
@@ -109,15 +110,15 @@ export default function ProjectCardComponent({
               <div className="ml-auto flex items-center justify-between space-x-2">
                 <div className="flex items-center justify-center text-[10px]">
                   <Icon name="fork" size="xxs" className="mr-0.5" />
-                  {projectStats.forks || 0}
+                  {repositoryDetails.forksCount || 0}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-[10px]">
                   <HiUserGroup className="mr-0.5 size-3 text-black" />
-                  {projectStats.contributors?.length || 0}
+                  {repositoryDetails.contributors?.length || 0}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-[10px]">
                   <FaStar className="text-primary mr-0.5 size-2.5" />
-                  {projectStats.stars || 0}
+                  {repositoryDetails.stars || 0}
                 </div>
               </div>
             </ProjectCardFooter>

@@ -27,10 +27,11 @@ type ToastMutationOptions<TData, TError, TVariables> = {
  * @param errorMessage    - Message displayed if the mutation fails
  * @param options         - Additional options for TanStack Query's `useMutation` (except mutationFn)
  *
- * Callbacks (`onSuccess`, `onError`) receive 3 parameters:
- * @param data      - The result returned by `mutationFn`, e.g. the updated/created entity
- * @param variables - The variables passed to `mutate` or `mutateAsync`, e.g. `{ id, data }`
- * @param context   - The object returned from `onMutate`, useful for optimistic updates or toast tracking (e.g. `{ toastId }`)
+ * Callbacks (`onSuccess`, `onError`) receive parameters:
+ * @param data              - The result returned by `mutationFn`, e.g. the updated/created entity
+ * @param variables         - The variables passed to `mutate` or `mutateAsync`, e.g. `{ id, data }`
+ * @param context           - The object returned from `onMutate`, useful for optimistic updates or toast tracking (e.g. `{ toastId }`)
+ * @param mutationFnMutate  - The mutation function instance (for `onSuccess` only)
  *
  * @returns A wrapped version of `useMutation` with toast notifications included.
  */
@@ -50,14 +51,14 @@ export function useToastMutation<TData, TError = Error, TVariables = void>({
       const toastId = toast.loading(loadingMessage);
       return { toastId };
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, context, mutationFnMutate) => {
       if (context?.toastId) {
         toast.dismiss(context.toastId);
       }
       toast.success(successMessage);
-      onSuccess?.(data, variables, context);
+      onSuccess?.(data, variables, context, mutationFnMutate);
     },
-    onError: (error, variables, context) => {
+    onError: (error, variables, context, mutationFnMutate) => {
       if (context?.toastId) {
         toast.dismiss(context.toastId);
       }
@@ -69,7 +70,7 @@ export function useToastMutation<TData, TError = Error, TVariables = void>({
 
       toast.error(displayMessage);
       console.error(errorMessage, error);
-      onError?.(error, variables, context);
+      onError?.(error, variables, context, mutationFnMutate);
     },
   });
 }

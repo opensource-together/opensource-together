@@ -14,27 +14,29 @@ import {
 export const getUserMyPullRequests = async (
   params?: PullRequestQueryParams
 ): Promise<PullRequestsResponse> => {
-  const queryParams = new URLSearchParams(
-    Object.entries(params ?? {})
-      .filter(([_, v]) => v !== undefined && v !== null)
-      .map(([k, v]) => [k, String(v)])
-  );
+  try {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/users/me/pull-requests${queryString ? `?${queryString}` : ""}`;
 
-  const queryString = queryParams.toString();
-  const url = `${API_BASE_URL}/users/me/pull-requests${queryString ? `?${queryString}` : ""}`;
-
-  const response = await fetch(url, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to fetch pull requests");
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch pull requests");
+    }
+    const apiResponse = await response.json();
+    return apiResponse.data;
+  } catch (error) {
+    console.error("Error fetching pull requests:", error);
+    throw error;
   }
-
-  const apiResponse = await response.json();
-  return apiResponse.data;
 };
 
 /**
@@ -48,25 +50,27 @@ export const getUserPullRequestsById = async (
   userId: string,
   params?: PullRequestQueryParams
 ): Promise<PullRequestsResponse> => {
-  const queryParams = new URLSearchParams(
-    Object.entries(params ?? {})
-      .filter(([_, v]) => v !== undefined && v !== null)
-      .map(([k, v]) => [k, String(v)])
-  );
+  try {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/users/${userId}/pull-requests${queryString ? `?${queryString}` : ""}`;
 
-  const queryString = queryParams.toString();
-  const url = `${API_BASE_URL}/users/${userId}/pull-requests${queryString ? `?${queryString}` : ""}`;
-
-  const response = await fetch(url, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Failed to fetch user pull requests");
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch user pull requests");
+    }
+    const apiResponse = await response.json();
+    return apiResponse.data;
+  } catch (error) {
+    console.error("Error fetching user pull requests:", error);
+    throw error;
   }
-
-  const apiResponse = await response.json();
-  return apiResponse.data;
 };

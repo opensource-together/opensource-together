@@ -19,6 +19,7 @@ const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
     shape: {
       circle: "rounded-full",
       square: "rounded-none",
+      soft: "rounded-lg",
       rounded: "rounded-2xl",
     },
   },

@@ -1,7 +1,5 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -10,13 +8,15 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
+import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 
 import GithubGraph from "../components/github-graph.component";
-import PinnedProjects from "../components/pinned-projects.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
+import ProfileProjectsList from "../components/profile-projects-list";
 import ProfileSidebar from "../components/profile-sidebar.component";
+import RecentProjects from "../components/recent-projects.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import { useProfile } from "../hooks/use-profile.hook";
 import ProfilePullRequests from "./profile-pull-requests.view";
@@ -26,10 +26,8 @@ interface PublicProfileViewProps {
 }
 
 export function PublicProfileView({ userId }: PublicProfileViewProps) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
   const { data: profile, isLoading, isError } = useProfile(userId);
+  const { tab, handleTabChange } = useTabNavigation("overview");
 
   if (isLoading) return <SkeletonProfileView />;
   if (isError || !profile)
@@ -44,15 +42,6 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     );
 
   const shouldShowGithubData = profile.provider !== "google";
-
-  const tab = searchParams.get("tab") || "overview";
-
-  const handleTabChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === "overview") params.delete("tab");
-    else params.set("tab", value);
-    router.replace(`${pathname}?${params.toString()}`);
-  };
 
   return (
     <TwoColumnLayout
@@ -80,9 +69,14 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
               />
             </div>
           )}
-
           <div className="mt-12 flex w-full">
-            <PinnedProjects profile={profile} />
+            <RecentProjects />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="projects" className="mt-6">
+          <div className="flex w-full">
+            <ProfileProjectsList />
           </div>
         </TabsContent>
 
@@ -99,12 +93,6 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
           )}
           <div className="mt-12 w-full">
             {tab === "contributions" && <ProfilePullRequests userId={userId} />}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="projects" className="mt-6">
-          <div className="flex w-full">
-            <PinnedProjects profile={profile} />
           </div>
         </TabsContent>
       </Tabs>

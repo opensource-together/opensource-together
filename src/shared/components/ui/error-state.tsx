@@ -17,7 +17,7 @@ interface ErrorStateProps {
   retryText?: string;
   className?: string;
   width?: string;
-  queryKey?: string[];
+  queryKey?: unknown[];
   refetchFn?: () => Promise<unknown>;
 }
 

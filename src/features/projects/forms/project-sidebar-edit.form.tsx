@@ -38,7 +38,7 @@ export default function ProjectSidebarEditForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Technologies (10 max)</FormLabel>
-                <FormControl className="mt-[-6px]">
+                <FormControl>
                   <Combobox
                     options={techStackOptions}
                     value={field.value || []}
@@ -65,7 +65,7 @@ export default function ProjectSidebarEditForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel required>Categories (6 max)</FormLabel>
-                <FormControl className="mt-[-6px]">
+                <FormControl>
                   <Combobox
                     options={categoryOptions}
                     value={field.value}

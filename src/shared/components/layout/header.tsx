@@ -59,7 +59,7 @@ function NavLink({
 // Composant pour les éléments de navigation du dashboard
 function DashboardNavItems({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const { isAuthenticated, requireAuth } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   const dashboardItems = [
@@ -72,7 +72,7 @@ function DashboardNavItems({ onClose }: { onClose?: () => void }) {
 
   const handleDashboardNav = (href: string) => {
     if (!isAuthenticated) {
-      requireAuth(() => router.push(href), href);
+      router.push(href);
     } else {
       router.push(href);
     }
@@ -128,18 +128,15 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const headerDashboard = pathname.startsWith("/dashboard");
-  const { isAuthenticated, currentUser, logout, requireAuth, isLoading } =
-    useAuth();
+  const { isAuthenticated, currentUser, logout, isLoading } = useAuth();
 
   if (pathname.startsWith("/auth") || pathname.startsWith("/dashboard")) {
     return null;
   }
 
-  const handleProfile = () =>
-    requireAuth(() => router.push("/profile/me"), "/profile/me");
+  const handleProfile = () => router.push("/profile/me");
 
-  const handleDashboard = () =>
-    requireAuth(() => router.push("/dashboard"), "/dashboard");
+  const handleDashboard = () => router.push("/dashboard");
 
   const handleLogout = () => {
     logout();

@@ -8,7 +8,6 @@ export interface Project {
   imagesUrls: string[];
   logoUrl: string | null;
   provider: "GITHUB" | "GITLAB" | "SCRATCH";
-  readme: string | null;
   description: string;
   published: boolean;
   repoUrl: string | null;
@@ -22,8 +21,8 @@ export interface Project {
   projectCategories: CategoryType[];
   repositoryDetails: RepositoryWithDetails;
   owner?: Owner;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProjectEditForm {
@@ -67,8 +66,11 @@ export type PullRequest = {
 };
 
 export type Issue = {
+  number: number;
   title: string;
   status: string;
+  body: string | null;
+  labels: string[];
   created_at: string;
   updated_at: string;
   closed_at: string | null;
@@ -91,12 +93,9 @@ export type RepositoryWithDetails = {
   tags: string[];
   forksCount: number;
   openIssuesCount: number;
+  pullRequestsCount: number;
   subscribersCount: number;
   visibility: string | null | undefined;
-  owner: {
-    login: string | undefined;
-    avatar_url: string | undefined;
-  };
   contributors: Contributor[];
   issues: Issue[];
   pullRequests: PullRequest[];
@@ -105,11 +104,9 @@ export type RepositoryWithDetails = {
   cocFile: string | undefined;
 };
 
-// Lightweight owner information used across the app
 export type Owner = {
   id: string;
-  username: string;
-  avatarUrl: string | null;
+  name: string;
 };
 
 export type LastCommitAuthor = {
@@ -124,14 +121,4 @@ export type LastCommit = {
   date: string;
   url: string;
   author: LastCommitAuthor;
-};
-
-export type ProjectStats = {
-  forks: number;
-  contributors: Contributor[];
-  stars: number;
-  watchers: number;
-  openIssues: number;
-  commits: number;
-  lastCommit: LastCommit;
 };
