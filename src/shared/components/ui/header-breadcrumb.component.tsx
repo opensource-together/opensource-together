@@ -7,8 +7,6 @@ import { HiChevronRight } from "react-icons/hi2";
 import { useProfile } from "@/features/profile/hooks/use-profile.hook";
 import { useProject } from "@/features/projects/hooks/use-projects.hook";
 
-import { useMyProjectDetails } from "../../../features/dashboard/hooks/use-my-projects.hook";
-
 export default function HeaderBreadcrumb() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
@@ -25,20 +23,17 @@ export default function HeaderBreadcrumb() {
   };
 
   const getData = () => {
-    const projectId = segments[segments.indexOf("my-projects") + 1];
     const publicProjectId = segments[segments.indexOf("projects") + 1];
     const userId = segments[segments.indexOf("profile") + 1];
 
     return {
-      projectId,
       publicProjectId,
       userId,
     };
   };
 
-  const { projectId, publicProjectId, userId } = getData();
+  const { publicProjectId, userId } = getData();
 
-  const { data: project } = useMyProjectDetails(projectId || "");
   const { data: publicProject } = useProject(publicProjectId || "");
   const { data: publicProfile } = useProfile(userId || "");
 
@@ -67,17 +62,13 @@ export default function HeaderBreadcrumb() {
     if (segments[0] === "dashboard" && segments.length > 1) {
       const breadcrumbItems = [];
       const segmentLabels = {
-        "my-projects": "Projects",
+        "my-projects": "My Projects",
       };
 
       for (let i = 1; i < segments.length; i++) {
         const segment = segments[i];
-        let label =
+        const label =
           segmentLabels[segment as keyof typeof segmentLabels] || segment;
-
-        if (segment === projectId && project?.title) {
-          label = project.title;
-        }
 
         const href = "/" + segments.slice(0, i + 1).join("/");
         breadcrumbItems.push({ label, href });

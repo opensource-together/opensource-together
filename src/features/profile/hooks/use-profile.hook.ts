@@ -19,7 +19,7 @@ import { ProfileSchema } from "../validations/profile.schema";
  */
 export const useProfile = (id: string) => {
   return useQuery({
-    queryKey: ["user", id],
+    queryKey: ["users", id],
     queryFn: () => getUserById(id),
     enabled: !!id,
   });
@@ -50,12 +50,8 @@ export const useProfileUpdate = (options?: { onSuccess?: () => void }) => {
     errorMessage: "Error updating your profile",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
-        if (options?.onSuccess) {
-          options.onSuccess();
-        } else {
-          router.push("/profile/me");
-        }
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+        router.push("/profile/me");
       },
     },
   });
@@ -96,9 +92,9 @@ export const useProfileLogoUpdate = (id: string) => {
         const updateImage = (old: Profile | undefined): Profile | undefined =>
           old ? { ...old, image: versionedImage } : old;
 
-        queryClient.setQueryData(["user/me"], updateImage);
+        queryClient.setQueryData(["user", "me"], updateImage);
 
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
   });

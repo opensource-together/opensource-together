@@ -1,10 +1,11 @@
 import { CategoryList } from "@/shared/components/ui/category-list";
-import { ContributorsList } from "@/shared/components/ui/contributors-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
 import { StatsList } from "@/shared/components/ui/stats-list";
 import { TechStackList } from "@/shared/components/ui/tech-stack-list";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
+
+import { ContributorsSidebarList } from "@/features/projects/components/contributors-sidebar-list";
 
 import { Project } from "../types/project.type";
 
@@ -56,7 +57,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
           {
             icon: "people",
             label: "Contributors",
-            value: allContributors.length,
+            value: allContributors.length > 99 ? "99+" : allContributors.length,
           },
           {
             icon: "last-commit",
@@ -80,7 +81,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         emptyText="No categories added"
       />
 
-      <ContributorsList
+      <ContributorsSidebarList
         title="Contributors"
         contributors={allContributors}
         onClickContributor={handleContributorClick}

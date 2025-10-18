@@ -13,32 +13,13 @@ import {
 export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (
-      !pathname?.startsWith("/auth") ||
-      pathname?.includes("/auth/callback")
-    ) {
-      return;
-    }
-
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const redirectUrl = urlParams.get("redirect");
-      if (redirectUrl) {
-        const decodedRedirectUrl = decodeURIComponent(redirectUrl);
-        sessionStorage.setItem("auth_redirect_url", decodedRedirectUrl);
-      }
-    }
-  }, [pathname]);
 
   const {
     data: currentUser,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["user/me"],
+    queryKey: ["users", "me"],
     queryFn: getCurrentUser,
   });
 
@@ -61,37 +42,23 @@ export default function useAuth() {
   }, [currentUser, isLoading, pathname, router]);
   const signInMutation = useToastMutation<unknown, Error, string>({
     mutationFn: async (provider) => await signInWithProvider(provider),
-    loadingMessage: "Connexion en cours...",
-    successMessage: "Connexion réussie !",
-    errorMessage: "Une erreur est survenue lors de la connexion",
+    loadingMessage: "Logging in...",
+    successMessage: "Logged in successfully!",
+    errorMessage: "An error occurred while logging in",
   });
 
   const logoutMutation = useToastMutation({
     mutationFn: logout,
-    loadingMessage: "Déconnexion en cours...",
-    successMessage: "Déconnexion réussie !",
-    errorMessage: "Erreur lors de la déconnexion",
+    loadingMessage: "Logging out...",
+    successMessage: "Logged out successfully!",
+    errorMessage: "An error occurred while logging out",
     options: {
       onSuccess: () => {
-        queryClient.setQueryData(["user/me"], null);
+        queryClient.setQueryData(["users", "me"], null);
         router.push("/");
       },
     },
   });
-
-  const redirectToLogin = (customRedirectUrl?: string) => {
-    const redirectUrl = customRedirectUrl || pathname;
-    const encodedRedirectUrl = encodeURIComponent(redirectUrl);
-    router.push(`/auth/login?redirect=${encodedRedirectUrl}`);
-  };
-
-  const requireAuth = (action: () => void, customRedirectUrl?: string) => {
-    if (!currentUser) {
-      redirectToLogin(customRedirectUrl);
-      return;
-    }
-    action();
-  };
 
   return {
     currentUser,
@@ -101,8 +68,6 @@ export default function useAuth() {
 
     signInWithProvider: signInMutation.mutate,
     logout: logoutMutation.mutate,
-    redirectToLogin,
-    requireAuth,
 
     isSigningIn: signInMutation.isPending,
     isLoggingOut: logoutMutation.isPending,

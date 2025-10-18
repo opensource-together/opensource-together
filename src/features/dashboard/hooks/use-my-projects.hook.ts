@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  getMyProjectDetails,
-  getMyProjects,
-} from "../services/my-projects.service";
-import { MyProjectType } from "../types/my-projects.type";
+import { Project } from "@/features/projects/types/project.type";
+
+import { getMyProjects } from "../services/my-projects.service";
 
 /**
  * Fetches the list of projects for the current user.
@@ -12,22 +10,8 @@ import { MyProjectType } from "../types/my-projects.type";
  * @returns A React Query result containing the list of projects.
  */
 export function useMyProjects() {
-  return useQuery<MyProjectType[]>({
-    queryKey: ["my-projects"],
+  return useQuery<Project[]>({
+    queryKey: ["user", "me", "projects"],
     queryFn: getMyProjects,
-  });
-}
-
-/**
- * Fetches the details of a specific project for the current user.
- *
- * @param projectId - The ID of the project to fetch.
- * @returns A React Query result containing the project details.
- */
-export function useMyProjectDetails(projectId: string) {
-  return useQuery<MyProjectType>({
-    queryKey: ["my-project", projectId],
-    queryFn: () => getMyProjectDetails(projectId),
-    enabled: !!projectId,
   });
 }

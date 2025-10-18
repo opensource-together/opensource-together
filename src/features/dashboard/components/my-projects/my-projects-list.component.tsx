@@ -1,24 +1,49 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
+import {
+  HiMiniEllipsisVertical,
+  HiMiniPencilSquare,
+  HiMiniSquare2Stack,
+  HiMiniTrash,
+  HiPlus,
+} from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 import { EmptyState } from "@/shared/components/ui/empty-state";
-import { Icon } from "@/shared/components/ui/icon";
+import { ErrorState } from "@/shared/components/ui/error-state";
 import {
   Table,
   TableBody,
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
+import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 
 export default function MyProjectsList() {
-  const { data: projects = [] } = useMyProjects();
+  const { data: projects = [], isLoading, isError } = useMyProjects();
   const router = useRouter();
+
+  if (isLoading) return <MyProjectsSkeleton />;
+
+  if (isError)
+    return (
+      <ErrorState
+        message="Failed to fetch projects"
+        queryKey={["user", "me", "projects"]}
+      />
+    );
+
   if (projects.length === 0) {
     return (
       <EmptyState
@@ -40,9 +65,7 @@ export default function MyProjectsList() {
             return (
               <TableRow
                 key={project.id}
-                onClick={() =>
-                  router.push(`/dashboard/my-projects/${project.id}`)
-                }
+                onClick={() => router.push(`/projects/${project.id}`)}
               >
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -51,6 +74,7 @@ export default function MyProjectsList() {
                       name={project.title}
                       alt={project.title}
                       size="md"
+                      shape="soft"
                     />
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
@@ -61,38 +85,35 @@ export default function MyProjectsList() {
                 </TableCell>
 
                 <TableCell>
-                  <div className="flex items-center">
-                    {project.teamMembers?.length === 0 ? (
-                      <span className="text-muted-foreground text-sm text-nowrap">
-                        No member
-                      </span>
-                    ) : (
-                      <>
-                        <span className="mr-1 text-sm font-medium">
-                          {project.teamMembers?.length}
-                        </span>
-                        <span className="text-muted-foreground text-sm">
-                          Member{project.teamMembers?.length > 1 ? "s" : ""}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </TableCell>
-
-                <TableCell>
                   <span className="text-sm font-medium">
-                    {new Date(project.createdAt).toLocaleDateString("fr-FR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}
+                    {formatTimeAgo(project.createdAt)}
                   </span>
                 </TableCell>
 
                 <TableCell>
-                  <Button variant="outline" size="icon">
-                    <Icon name="trash" />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <HiMiniEllipsisVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/projects/${project.id}/edit`);
+                        }}
+                        className="flex items-center justify-between"
+                      >
+                        Edit Project
+                        <HiMiniPencilSquare className="size-4" />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-destructive flex items-center justify-between">
+                        Delete Project
+                        <HiMiniTrash className="text-destructive size-4" />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             );

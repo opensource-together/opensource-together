@@ -99,7 +99,7 @@ export function Combobox({
               <button
                 type="button"
                 onClick={() => handleRemove(option.id)}
-                className="flex size-4 cursor-pointer items-center justify-center rounded-full"
+                className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
                 disabled={disabled}
               >
                 <Icon name="cross" size="xxs" />
@@ -161,10 +161,19 @@ export function Combobox({
                               size="xs"
                               variant="gray"
                               className={cn(
-                                "mr-2",
                                 isSelected ? "opacity-100" : "opacity-0"
                               )}
                             />
+                            {option.iconUrl && (
+                              <img
+                                src={option.iconUrl}
+                                alt={option.name}
+                                className="size-3.5 flex-shrink-0"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
                             {option.name}
                           </CommandItem>
                         );
@@ -193,10 +202,19 @@ export function Combobox({
                               size="xs"
                               variant="gray"
                               className={cn(
-                                "mr-2",
                                 isSelected ? "opacity-100" : "opacity-0"
                               )}
                             />
+                            {option.iconUrl && (
+                              <img
+                                src={option.iconUrl}
+                                alt={option.name}
+                                className="size-3.5 flex-shrink-0"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
                             {option.name}
                           </CommandItem>
                         );
@@ -227,10 +245,19 @@ export function Combobox({
                           size="xs"
                           variant="gray"
                           className={cn(
-                            "mr-2",
                             isSelected ? "opacity-100" : "opacity-0"
                           )}
                         />
+                        {option.iconUrl && (
+                          <img
+                            src={option.iconUrl}
+                            alt={option.name}
+                            className="size-3.5 flex-shrink-0"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        )}
                         {option.name}
                       </CommandItem>
                     );

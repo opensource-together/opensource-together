@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from "@/shared/components/ui/select";
 
-import PullRequestList from "../components/pull-request-card";
+import ProfilePullRequestList from "../components/profile-pull-request-card";
+import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pull-requests-skeleton.component";
 import {
   useUserMyPullRequests,
   useUserPullRequestsById,
@@ -129,13 +130,7 @@ export default function ProfilePullRequests({
     </div>
   );
 
-  if (isLoading || isFetching)
-    return (
-      <div className="flex w-full flex-col gap-4">
-        {renderFilters()}
-        <div>Loading pull requests...</div>
-      </div>
-    );
+  if (isLoading) return <ProfilePullRequestsSkeleton />;
 
   if (isError)
     return (
@@ -161,7 +156,11 @@ export default function ProfilePullRequests({
     return (
       <div className="flex w-full flex-col gap-4">
         {renderFilters()}
-        <EmptyState icon={GoGitPullRequest} title="No pull requests found." />
+        <EmptyState
+          icon={GoGitPullRequest}
+          title="No PRs found"
+          description="No pull requests have been made yet."
+        />
       </div>
     );
 
@@ -171,17 +170,17 @@ export default function ProfilePullRequests({
       <div className="flex flex-col gap-4">
         {!provider ? (
           <>
-            <PullRequestList
+            <ProfilePullRequestList
               provider="github"
               list={data?.github?.data ?? []}
             />
-            <PullRequestList
+            <ProfilePullRequestList
               provider="gitlab"
               list={data?.gitlab?.data ?? []}
             />
           </>
         ) : (
-          <PullRequestList
+          <ProfilePullRequestList
             provider={provider}
             list={
               provider === "github"

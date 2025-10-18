@@ -7,22 +7,28 @@ export type ContributorLike = {
   avatar_url?: string;
 };
 
-interface ContributorsListProps {
+interface ContributorsSidebarListProps {
   title?: string;
   contributors: ContributorLike[];
   maxVisible?: number;
   onClickContributor?: (c: ContributorLike) => void;
   emptyText?: string;
+  totalCount?: number;
 }
 
-export function ContributorsList({
+export function ContributorsSidebarList({
   title,
   contributors,
   maxVisible = 6,
   onClickContributor,
   emptyText,
-}: ContributorsListProps) {
+  totalCount,
+}: ContributorsSidebarListProps) {
   const visible = contributors.slice(0, maxVisible);
+  const total =
+    typeof totalCount === "number" ? totalCount : contributors.length;
+  const remaining = Math.max(total - 3, 0);
+  const remainingDisplay = total >= 100 || remaining > 99 ? "99+" : remaining;
   return (
     <div>
       {title && <h2 className="mb-3 text-sm">{title}</h2>}
@@ -52,7 +58,7 @@ export function ContributorsList({
           .slice(0, 3)
           .map((contributor) => contributor.login)
           .join(", ")}
-        {contributors.length > 3 && <> &amp; {contributors.length - 3} more</>}
+        {total > 3 && <> &amp; {remainingDisplay} more</>}
       </div>
     </div>
   );

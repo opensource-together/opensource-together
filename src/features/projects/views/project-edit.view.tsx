@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
+import { ErrorState } from "@/shared/components/ui/error-state";
 
-import ProjectDetailError from "../components/error-ui/project-detail-content-error.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import ProjectMainEditForm from "../forms/project-main-edit.form";
 import ProjectSidebarEditForm from "../forms/project-sidebar-edit.form";
@@ -100,7 +100,16 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
   });
 
   if (isLoading) return <SkeletonProjectDetail />;
-  if (isError || !project) return <ProjectDetailError />;
+  if (isError || !project)
+    return (
+      <ErrorState
+        message="An error has occurred while loading the project edit. Please try again later."
+        queryKey={["project", projectId]}
+        className="mt-20 mb-28"
+        buttonText="Back to project"
+        href={`/projects/${projectId}`}
+      />
+    );
 
   return (
     <TwoColumnLayout
