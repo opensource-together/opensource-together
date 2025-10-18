@@ -14,37 +14,6 @@ export function useProjectCreateNavigation() {
   useEffect(() => {
     if (!hasHydrated) return;
 
-    if (pathname.includes("/projects/create/success")) {
-      if (!formData.method) {
-        router.replace("/projects/create");
-        return;
-      }
-
-      if (
-        (formData.method === "github" || formData.method === "gitlab") &&
-        !formData.selectedRepository
-      ) {
-        router.replace(`/projects/create/${formData.method}/import`);
-        return;
-      }
-
-      const hasDescribe = Boolean(formData.title && formData.description);
-      if (!hasDescribe) {
-        router.replace("/projects/create/describe");
-        return;
-      }
-
-      const hasTechCategories = Boolean(
-        formData.projectTechStacks?.length && formData.projectCategories?.length
-      );
-      if (!hasTechCategories) {
-        router.replace("/projects/create/tech-categories");
-        return;
-      }
-
-      return;
-    }
-
     const inCreateFlow = pathname.startsWith("/projects/create");
     if (!inCreateFlow) return;
 
