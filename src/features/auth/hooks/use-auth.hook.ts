@@ -13,6 +13,7 @@ import {
 export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
 
   const {
     data: currentUser,
