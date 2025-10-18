@@ -12,10 +12,10 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1(react-hook-form@7.61.1(react@19.2.0))
       '@opennextjs/cloudflare':
-        specifier: ^1.9.2
+        specifier: ^1.9.1
         version: 1.11.0(wrangler@4.42.0)
       '@radix-ui/react-alert-dialog':
-        specifier: ^1.1.15
+        specifier: ^1.1.14
         version: 1.1.15(@types/react-dom@19.2.2(@types/react@19.0.14))(@types/react@19.0.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/react-avatar':
         specifier: ^1.1.10
@@ -4672,7 +4672,6 @@ packages:
   rclone.js@0.6.6:
     resolution: {integrity: sha512-Dxh34cab/fNjFq5SSm0fYLNkGzG2cQSBy782UW9WwxJCEiVO4cGXkvaXcNlgv817dK8K8PuQ+NHUqSAMMhWujQ==}
     engines: {node: '>=12'}
-    cpu: [arm, arm64, mips, mipsel, x32, x64]
     os: [darwin, freebsd, linux, openbsd, sunos, win32]
     hasBin: true
 
