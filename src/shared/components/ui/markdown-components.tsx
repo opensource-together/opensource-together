@@ -101,7 +101,7 @@ export const issueMarkdownComponents = {
       alt={alt}
       width={width}
       height={height}
-      className="my-3 h-auto max-w-full rounded"
+      className="border-border my-3 inline-block h-auto max-w-full rounded"
     />
   ),
   table: ({ children }: MarkdownElementProps) => (
@@ -172,7 +172,7 @@ export const readmePreviewMarkdownComponents = {
       alt={alt}
       width={width}
       height={height}
-      className="h-auto max-w-full rounded"
+      className="border-border my-3 inline-block h-auto max-w-full rounded"
     />
   ),
   table: ({ children }: MarkdownElementProps) => (
@@ -239,7 +239,7 @@ export const readmeFullMarkdownComponents = {
       alt={alt}
       width={width}
       height={height}
-      className="my-3 h-auto max-w-full rounded"
+      className="border-border my-3 inline-block h-auto max-w-full rounded"
     />
   ),
   table: ({ children }: MarkdownElementProps) => (

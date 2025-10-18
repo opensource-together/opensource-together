@@ -33,7 +33,7 @@ export default function IssueCard({
     <IssueDetailSheet issue={issue} projectId={projectId}>
       <article
         className={cn(
-          "rounded-[20px] border border-[black]/6 px-5 py-4 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+          "rounded-[20px] border border-[black]/6 px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
           className
         )}
       >

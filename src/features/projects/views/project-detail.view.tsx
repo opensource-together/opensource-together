@@ -19,6 +19,7 @@ import OpenIssuesList from "../components/open-issues-list";
 import ProjectHero, {
   ProjectMobileHero,
 } from "../components/project-hero.component";
+import ProjectPullRequestList from "../components/project-pull-request-list";
 import ProjectReadme from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import RecentOpenIssues from "../components/recent-opent-issues";
@@ -112,6 +113,13 @@ export default function ProjectDetailView({
             projectId={projectId}
           />
         </TabsContent>
+
+        <TabsContent value="pull-requests" className="mt-6">
+          <ProjectPullRequestList
+            pullRequests={project.repositoryDetails?.pullRequests || []}
+          />
+        </TabsContent>
+
         <TabsContent value="contributions" className="mt-6">
           <ContributorsList
             contributors={project.repositoryDetails?.contributors || []}
