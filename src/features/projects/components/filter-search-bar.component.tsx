@@ -31,7 +31,6 @@ export default function FilterSearchBar() {
   const [categoryOptions, setCategoryOptions] = useState<
     CustomComboboxOption[]
   >([]);
-  const [roleOptions, _setRoleOptions] = useState<CustomComboboxOption[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -56,8 +55,6 @@ export default function FilterSearchBar() {
   const handleTechStacksChange = (_ids: string[]) => {};
 
   const handleCategoriesChange = (_ids: string[]) => {};
-
-  const handleRolesChange = (_ids: string[]) => {};
 
   return (
     <div

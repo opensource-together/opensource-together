@@ -38,7 +38,7 @@ export default function OnboardingForm() {
   const { techStackOptions } = useTechStack();
   const { categoryOptions } = useCategories();
   const { currentUser } = useAuth();
-  const { updateProfileAsync, isUpdating } = useProfileUpdate({});
+  const { updateProfileAsync, isUpdating } = useProfileUpdate();
 
   const { control, handleSubmit } = form;
 

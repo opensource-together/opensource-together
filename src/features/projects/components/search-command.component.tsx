@@ -20,7 +20,7 @@ import { useProjects } from "../hooks/use-projects.hook";
 export default function SearchCommand() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const projects = useProjects();
+  const projects = useProjects({ enabled: open });
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -38,7 +38,7 @@ export default function SearchCommand() {
     setOpen(false);
   };
 
-  const suggestions = projects.data?.map((project) => ({
+  const suggestions = projects?.data?.map((project) => ({
     id: project.id,
     name: project.title,
     description: project.description,

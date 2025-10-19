@@ -33,7 +33,7 @@ export const useProfile = (id: string) => {
  * - isUpdating: boolean indicating if the update is in progress
  * - isUpdateError: boolean indicating if an error occurred
  */
-export const useProfileUpdate = (options?: { onSuccess?: () => void }) => {
+export const useProfileUpdate = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 

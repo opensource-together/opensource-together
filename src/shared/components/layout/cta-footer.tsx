@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { HiStar } from "react-icons/hi";
 
 import { Button } from "../ui/button";
-import { Icon } from "../ui/icon";
 
 interface CTAFooterProps {
   imageIllustration?: string;
@@ -47,7 +47,7 @@ export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
           >
             <Button>
               Star Us on Github
-              <Icon name="star" variant="filled" size="sm" />
+              <HiStar size={16} />
             </Button>
           </Link>
           <Link

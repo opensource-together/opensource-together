@@ -1,6 +1,5 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { mockProjectsResponse } from "../mocks/project.mock";
 import { Project } from "../types/project.type";
 import {
   ProjectSchema,
@@ -14,17 +13,17 @@ import {
  */
 export const getProjects = async (): Promise<Project[]> => {
   try {
-    // const response = await fetch(`${API_BASE_URL}/projects`, {
-    //   method: "GET",
-    // });
+    const response = await fetch(`${API_BASE_URL}/projects`, {
+      method: "GET",
+    });
 
-    // if (!response.ok) {
-    //   const error = await response.json();
-    //   throw new Error(error.message || "Error fetching projects");
-    // }
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error fetching projects");
+    }
 
-    // return response.json();
-    return mockProjectsResponse;
+    const apiResponse = await response.json();
+    return apiResponse?.data;
   } catch (error) {
     console.error("Error while sending the request to the API:", error);
     throw error;

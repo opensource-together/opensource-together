@@ -14,9 +14,6 @@ export default function Footer() {
     pathname.startsWith("/auth") ||
     pathname.startsWith("/onboarding");
 
-  const navigationLinks = [
-    // ading later the right links
-  ];
   return (
     <>
       {!hideFooter && (
