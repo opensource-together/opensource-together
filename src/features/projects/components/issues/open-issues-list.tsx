@@ -6,8 +6,8 @@ import { VscIssues } from "react-icons/vsc";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
-import IssueCard from "../../../shared/components/ui/issue-card";
-import { Issue } from "../types/project.type";
+import IssueCard from "../../../../shared/components/ui/issue-card";
+import { Issue } from "../../types/project.type";
 
 interface OpenIssuesProps {
   issues: Issue[];

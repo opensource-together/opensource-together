@@ -52,7 +52,6 @@ export const getProjectDetails = async (
 
     const apiResponse = await response.json();
     return apiResponse?.data;
-    // return mockProjectsResponse.find((project) => project.id === projectId)!;
   } catch (error) {
     console.error("Error fetching project details:", error);
     throw error;
@@ -136,9 +135,7 @@ export const deleteProject = async (projectId: string): Promise<void> => {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(
-        error.message || "Erreur lors de la suppression du projet"
-      );
+      throw new Error(error.message || "Error while deleting project");
     }
   } catch (error) {
     console.error("Error deleting project:", error);

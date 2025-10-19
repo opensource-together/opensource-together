@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+import { HiMiniExclamationTriangle } from "react-icons/hi2";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import ImageSlider from "@/shared/components/ui/image-slider.component";
 import {
@@ -15,14 +17,14 @@ import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 import { decodeBase64Safe } from "@/shared/lib/utils/decode-base-64";
 
 import ContributorsList from "../components/contributors-list";
-import OpenIssuesList from "../components/open-issues-list";
+import OpenIssuesList from "../components/issues/open-issues-list";
+import RecentOpenIssues from "../components/issues/recent-opent-issues";
 import ProjectHero, {
   ProjectMobileHero,
 } from "../components/project-hero.component";
 import ProjectPullRequestList from "../components/project-pull-request-list";
 import ProjectReadme from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
-import RecentOpenIssues from "../components/recent-opent-issues";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import { useProject } from "../hooks/use-projects.hook";
 
@@ -56,6 +58,7 @@ export default function ProjectDetailView({
         href="/projects"
       />
     );
+
   return (
     <TwoColumnLayout
       sidebar={<ProjectSideBar project={project} />}
@@ -89,22 +92,43 @@ export default function ProjectDetailView({
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          {project.imagesUrls.length > 0 && (
-            <ImageSlider images={project.imagesUrls} />
-          )}
-          {decodedReadme && (
-            <ProjectReadme
-              readme={decodedReadme}
-              projectTitle={project.title}
-              project={{
-                repoUrl: project.repoUrl,
-              }}
-            />
-          )}
-          <RecentOpenIssues
-            issues={project.repositoryDetails?.issues || []}
-            projectId={projectId}
-          />
+          {(() => {
+            if (
+              project.imagesUrls.length === 0 &&
+              !decodedReadme &&
+              (!project.repositoryDetails?.issues ||
+                project.repositoryDetails.issues.length === 0)
+            ) {
+              return (
+                <EmptyState
+                  title="No data available"
+                  description="This project has no overview data available."
+                  icon={HiMiniExclamationTriangle}
+                />
+              );
+            }
+
+            return (
+              <>
+                {project.imagesUrls.length > 0 && (
+                  <ImageSlider images={project.imagesUrls} />
+                )}
+                {decodedReadme && (
+                  <ProjectReadme
+                    readme={decodedReadme}
+                    projectTitle={project.title}
+                    project={{
+                      repoUrl: project.repoUrl,
+                    }}
+                  />
+                )}
+                <RecentOpenIssues
+                  issues={project.repositoryDetails?.issues || []}
+                  projectId={projectId}
+                />
+              </>
+            );
+          })()}
         </TabsContent>
 
         <TabsContent value="open-issues" className="mt-6">

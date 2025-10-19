@@ -28,7 +28,7 @@ import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { Issue } from "@/features/projects/types/project.type";
 
-import { useOpenIssueDetail } from "../hooks/use-open-issue-detail";
+import { useOpenIssueDetail } from "../../hooks/use-open-issue-detail";
 
 interface IssueDetailSheetProps {
   issue: Issue;

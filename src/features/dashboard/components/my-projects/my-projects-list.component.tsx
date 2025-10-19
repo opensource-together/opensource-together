@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import {
   HiMiniEllipsisVertical,
   HiMiniPencilSquare,
@@ -11,6 +12,8 @@ import {
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +22,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import { PaginationInfo } from "@/shared/components/ui/pagination-info.component";
 import {
   Table,
   TableBody,
@@ -27,12 +31,59 @@ import {
 } from "@/shared/components/ui/table";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
+import { useDeleteProject } from "@/features/projects/hooks/use-projects.hook";
+
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 
+const parseNumber = (value: string | null, fallback: number) => {
+  if (!value) return fallback;
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
+
 export default function MyProjectsList() {
-  const { data: projects = [], isLoading, isError } = useMyProjects();
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+
+  const page = parseNumber(searchParams.get("page"), 1);
+  const perPage = parseNumber(searchParams.get("per_page"), 7);
+  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+
+  const {
+    data: myProjectsResponse,
+    isLoading,
+    isError,
+  } = useMyProjects(queryParams);
+
+  const { deleteProject, isDeleting } = useDeleteProject();
+
+  const myProjects = myProjectsResponse?.data || [];
+  const pagination = myProjectsResponse?.pagination;
+
+  const handleDeleteClick = (project: { id: string; title: string }) => {
+    setProjectToDelete(project);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (projectToDelete?.id) {
+      deleteProject(projectToDelete.id);
+      setDeleteDialogOpen(false);
+      setProjectToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setProjectToDelete(null);
+  };
 
   if (isLoading) return <MyProjectsSkeleton />;
 
@@ -44,7 +95,7 @@ export default function MyProjectsList() {
       />
     );
 
-  if (projects.length === 0) {
+  if (myProjects.length === 0) {
     return (
       <EmptyState
         icon={HiMiniSquare2Stack}
@@ -61,7 +112,7 @@ export default function MyProjectsList() {
     <div>
       <Table>
         <TableBody>
-          {projects.map((project) => {
+          {myProjects.map((project) => {
             return (
               <TableRow
                 key={project.id}
@@ -108,7 +159,16 @@ export default function MyProjectsList() {
                         Edit Project
                         <HiMiniPencilSquare className="size-4" />
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive flex items-center justify-between">
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteClick({
+                            id: project.id ?? "",
+                            title: project.title || "Untitled Project",
+                          });
+                        }}
+                        className="text-destructive flex items-center justify-between"
+                      >
                         Delete Project
                         <HiMiniTrash className="text-destructive size-4" />
                       </DropdownMenuItem>
@@ -120,6 +180,25 @@ export default function MyProjectsList() {
           })}
         </TableBody>
       </Table>
+
+      {pagination && (
+        <div className="mt-4 flex items-center justify-between">
+          <PaginationInfo pagination={pagination} />
+          <DataTablePagination pagination={pagination} />
+        </div>
+      )}
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete project"
+        description={`Are you sure you want to delete the project "${projectToDelete?.title}" ? This action is irreversible.`}
+        isLoading={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        confirmText="Delete Project"
+        confirmVariant="destructive"
+      />
     </div>
   );
 }

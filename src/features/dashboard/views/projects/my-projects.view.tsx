@@ -16,11 +16,9 @@ export default function MyProjectsView() {
         description="Organize, review, edit, manage members, track progress, and handle projects — all in one space."
       />
 
-      <Separator className="my-10" />
+      <Separator className="my-4" />
 
-      <div className="w-full">
-        <MyProjectsList />
-      </div>
+      <MyProjectsList />
     </div>
   );
 }
