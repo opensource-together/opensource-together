@@ -2,6 +2,7 @@
 
 import { Command as CommandPrimitive } from "cmdk";
 import * as React from "react";
+import { HiOutlineSearch } from "react-icons/hi";
 
 import {
   Dialog,
@@ -10,8 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
-// replaced icon with design-system Icon component
-import Icon from "@/shared/components/ui/icon";
 import { cn } from "@/shared/lib/utils";
 
 function Command({
@@ -70,12 +69,7 @@ function CommandInput({
       data-slot="command-input-wrapper"
       className="border-muted-black-stroke flex h-9 items-center gap-2 border-b px-3"
     >
-      <Icon
-        name="search"
-        variant="gray"
-        size="xs"
-        className="ml-0 shrink-0 opacity-70"
-      />
+      <HiOutlineSearch className="text-muted-foreground size-3.5" />
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
