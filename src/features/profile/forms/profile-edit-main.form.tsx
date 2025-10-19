@@ -85,7 +85,7 @@ export default function ProfileEditMainForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Job Title</FormLabel>
+                <FormLabel required>Job Title</FormLabel>
                 <FormControl>
                   <Input
                     {...field}

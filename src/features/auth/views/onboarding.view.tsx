@@ -5,16 +5,25 @@ import Link from "next/link";
 
 import FooterLogin from "@/shared/components/layout/footer-login";
 
-import AuthIllustration from "../components/auth-illustration.component";
-import LoginForm from "../components/login-form.component";
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 
-export default function LoginView() {
+import AuthIllustration from "../components/auth-illustration.component";
+import OnboardingForm from "../components/onboarding-form.component";
+
+export default function OnboardingView() {
+  const { currentUser, isLoading } = useAuth();
+
+  if (isLoading || !currentUser) return null;
+  const isOnboardingCompleted =
+    !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
+  if (isOnboardingCompleted) return null;
+
   return (
     <>
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <Link
           href="/"
-          className="absolute top-7 left-0 z-10 md:top-12 md:left-1/2 md:-translate-x-1/2"
+          className="absolute top-12 left-1/2 z-10 -translate-x-1/2"
         >
           <Image
             src="/ostogether-logo.svg"
@@ -25,19 +34,13 @@ export default function LoginView() {
           />
         </Link>
 
-        {/* Mobile: show a dedicated top section with centered illustration */}
-        <div className="relative top-30 z-0 w-full md:hidden">
+        <div className="pointer-events-none absolute inset-0 z-0">
           <AuthIllustration />
         </div>
 
-        {/* Desktop+: background illustration covers behind content */}
-        <div className="pointer-events-none absolute inset-0 z-0 hidden md:block">
-          <AuthIllustration />
-        </div>
-
-        <div className="relative z-10 flex w-full flex-1 items-end px-4 pb-6 md:grid md:place-items-center md:pb-0">
+        <div className="relative z-10 grid w-full flex-1 place-items-center px-4">
           <div className="mx-auto w-full max-w-sm md:max-w-md">
-            <LoginForm />
+            <OnboardingForm />
           </div>
         </div>
         <div className="mt-auto">

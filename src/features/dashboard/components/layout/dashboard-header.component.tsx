@@ -15,12 +15,13 @@ import {
 import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
+import SearchCommand from "@/features/projects/components/search-command.component";
 
 export default function DashboardHeader() {
   const pathname = usePathname();
   const { isAuthenticated, isLoading } = useAuth();
 
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith("/auth") || pathname.startsWith("/onboarding")) {
     return null;
   }
 
@@ -41,19 +42,20 @@ export default function DashboardHeader() {
         </div>
         <div className="flex items-center gap-2">
           <div className="mr-2 flex items-center gap-2">
-            <Button
-              variant="ghost"
-              className={pathname === "/" ? "bg-accent" : ""}
-              size="sm"
-            >
-              <Link href="/">Home</Link>
-            </Button>
+            <SearchCommand />
             <Button
               variant="ghost"
               className={pathname.startsWith("/dashboard") ? "bg-accent" : ""}
               size="sm"
             >
               <Link href="/dashboard/my-projects">Dashboard</Link>
+            </Button>
+            <Button
+              variant="ghost"
+              className={pathname.startsWith("/about") ? "bg-accent" : ""}
+              size="sm"
+            >
+              <Link href="/about">About</Link>
             </Button>
           </div>
 

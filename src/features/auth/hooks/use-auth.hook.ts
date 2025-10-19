@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -12,6 +13,7 @@ import {
 export default function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
 
   const {
     data: currentUser,
@@ -21,6 +23,20 @@ export default function useAuth() {
     queryKey: ["users", "me"],
     queryFn: getCurrentUser,
   });
+
+  useEffect(() => {
+    if (isLoading || !currentUser) return;
+
+    const isOnboardingCompleted =
+      !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
+
+    const isOnboarding = pathname?.startsWith("/onboarding");
+    const isAuth = pathname?.startsWith("/auth");
+
+    if (!isOnboardingCompleted && !isOnboarding && !isAuth) {
+      router.push("/onboarding");
+    }
+  }, [currentUser, isLoading, pathname, router]);
 
   const signInMutation = useToastMutation<unknown, Error, string>({
     mutationFn: async (provider) => await signInWithProvider(provider),

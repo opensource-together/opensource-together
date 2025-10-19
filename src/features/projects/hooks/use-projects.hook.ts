@@ -23,12 +23,14 @@ import {
 /**
  * Fetches the list of all projects.
  *
+ * @param options - Optional query options
  * @returns A React Query result containing the list of projects.
  */
-export function useProjects() {
+export function useProjects(options?: { enabled?: boolean }) {
   return useQuery<Project[]>({
     queryKey: ["projects"],
     queryFn: getProjects,
+    enabled: options?.enabled,
   });
 }
 

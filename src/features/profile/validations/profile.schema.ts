@@ -6,20 +6,17 @@ export const profileSchema = z.object({
   image: z.string().optional(),
   name: z
     .string()
-    .min(1, "Le nom d'utilisateur est requis")
-    .max(50, "Le nom d'utilisateur ne peut pas dépasser 50 caractères"),
+    .min(1, "Username is required")
+    .max(50, "Username cannot exceed 50 characters"),
   jobTitle: z
     .string()
-    .max(200, "Le titre ne peut pas dépasser 200 caractères")
-    .optional(),
-  bio: z
-    .string()
-    .max(500, "La bio ne peut pas dépasser 500 caractères")
-    .optional(),
+    .min(1, "Job title is required")
+    .max(200, "Le titre ne peut pas dépasser 200 caractères"),
+  bio: z.string().max(500, "Bio cannot exceed 500 characters").optional(),
   userTechStacks: z
     .array(z.string())
-    .max(10, "Maximum 10 technologies autorisées")
-    .optional(),
+    .min(1, "At least one technology is required")
+    .max(10, "Maximum 10 technologies allowed"),
   githubUrl: urlWithDomainCheck(
     ["github.com"],
     "Invalid GitHub URL (must contain github.com)"
