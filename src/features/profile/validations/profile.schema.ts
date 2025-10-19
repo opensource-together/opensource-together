@@ -8,10 +8,14 @@ export const profileSchema = z.object({
     .string()
     .min(1, "Username is required")
     .max(50, "Username cannot exceed 50 characters"),
-  jobTitle: z.string().max(200, "Le titre ne peut pas dépasser 200 caractères"),
+  jobTitle: z
+    .string()
+    .min(1, "Job title is required")
+    .max(200, "Le titre ne peut pas dépasser 200 caractères"),
   bio: z.string().max(500, "Bio cannot exceed 500 characters").optional(),
   userTechStacks: z
     .array(z.string())
+    .min(1, "At least one technology is required")
     .max(10, "Maximum 10 technologies allowed"),
   githubUrl: urlWithDomainCheck(
     ["github.com"],
