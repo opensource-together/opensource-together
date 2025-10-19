@@ -10,9 +10,9 @@ interface CTAFooterProps {
 
 export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
   return (
-    <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center overflow-hidden px-4 pt-8 pb-16 md:px-7 md:pb-20">
+    <div className="overflow relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 pt-8 pb-16 md:px-7 md:pb-20">
       {/* Background illustration anchored to the right, behind content */}
-      <div className="pointer-events-none absolute inset-0 z-0">
+      <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="flex h-full w-full items-center justify-end">
           <Image
             src={imageIllustration || "/background-footer.png"}

@@ -13,7 +13,7 @@ export default function ProjectTrendingPage() {
   return (
     <>
       <ProjectTrendingView />
-      <CTAFooter imageIllustration="/illustrations/knight.png" />
+      <CTAFooter imageIllustration="/illustrations/king.png" />
     </>
   );
 }

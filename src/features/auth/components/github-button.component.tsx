@@ -12,7 +12,7 @@ interface GitHubButtonProps {
 }
 
 export default function GitHubButton({
-  text = "Login with Github",
+  text = "Sign in with Github",
   isLoading = false,
   variant = "default",
 }: GitHubButtonProps) {
@@ -39,7 +39,7 @@ export default function GitHubButton({
       ) : (
         <Icon name="github" size="sm" variant="white" />
       )}
-      <span className="ml-0">{text}</span>
+      <span className="ml-1">{text}</span>
     </Button>
   );
 }

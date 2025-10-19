@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 
+import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import {
   CommandDialog,
@@ -50,12 +50,12 @@ export default function SearchCommand() {
     <>
       <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
         <HiOutlineSearch className="size-3" />
-        <span>Search</span>
+        <span>Search </span>
       </Button>
-      <CommandDialog open={open} onOpenChange={setOpen} showCloseButton={false}>
+      <CommandDialog open={open} onOpenChange={setOpen} className="rounded-2xl">
         <CommandInput placeholder="Search your next project…" />
         <CommandList className="scroll-py-0">
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>No projects found.</CommandEmpty>
           <CommandGroup
             heading="Suggestions"
             className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
@@ -66,22 +66,22 @@ export default function SearchCommand() {
                 onSelect={() => handleSelect(s.href)}
                 className="mb-3 h-8 px-3 py-0"
               >
-                <div className="mr-0 flex size-6 items-center justify-center rounded-md text-xs">
-                  {s.iconSrc ? (
-                    <Image
-                      src={s.iconSrc}
-                      alt={s.name}
-                      width={22}
-                      height={22}
-                    />
-                  ) : (
-                    <span className="text-neutral-500">●</span>
-                  )}
-                </div>
+                {s.iconSrc ? (
+                  <Avatar
+                    src={s.iconSrc}
+                    name={s.name}
+                    alt={s.name}
+                    size="xs"
+                    shape="sharp"
+                  />
+                ) : (
+                  <span className="text-muted-foreground">●</span>
+                )}
+
                 <span className="min-w-0 flex-1 truncate font-medium">
                   {s.name}
                 </span>
-                <span className="hidden max-w-[60%] truncate text-xs text-neutral-500 sm:block">
+                <span className="text-muted-foreground hidden max-w-[60%] truncate text-xs sm:block">
                   {s.description}
                 </span>
               </CommandItem>

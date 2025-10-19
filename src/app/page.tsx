@@ -19,7 +19,7 @@ export default async function HomePage() {
   return (
     <HydrationBoundary state={dehydratedState}>
       <HomepageViews />
-      <CTAFooter imageIllustration="/illustrations/knight.png" />
+      <CTAFooter imageIllustration="/illustrations/king.png" />
     </HydrationBoundary>
   );
 }

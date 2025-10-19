@@ -121,7 +121,7 @@ function TabsTrigger({
     >
       <span className="truncate">{children}</span>
       {count !== undefined && count !== null && (
-        <span className="text-muted-foreground group-data-[state=active]:text-primary bg-accent rounded-full p-1 px-1.5 text-[10px] leading-4 font-medium">
+        <span className="text-muted-foreground group-data-[state=active]:text-primary bg-accent min-w-[18px] rounded-full px-1.5 py-0.5 text-center text-[10px] leading-4 font-medium">
           {count}
         </span>
       )}

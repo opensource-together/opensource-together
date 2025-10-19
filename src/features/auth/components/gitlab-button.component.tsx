@@ -12,7 +12,7 @@ interface GitlabButtonProps {
 }
 
 export default function GitlabButton({
-  text = "Login with Gitlab",
+  text = "Sign in with Gitlab",
   isLoading = false,
   variant = "default",
 }: GitlabButtonProps) {
@@ -39,7 +39,7 @@ export default function GitlabButton({
       ) : (
         <Icon name="gitlab" size="sm" variant="filled" />
       )}
-      <span className="ml-0">{text}</span>
+      <span className="ml-1">{text}</span>
     </Button>
   );
 }

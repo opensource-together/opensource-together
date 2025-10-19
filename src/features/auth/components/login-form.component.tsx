@@ -16,9 +16,9 @@ export default function LoginForm() {
             </p>
           </div>
           <div className="flex flex-col items-center gap-3 sm:gap-4">
-            <GitHubButton text="Login with Github" />
-            <GitlabButton text="Login with Gitlab" />
-            <GoogleButton variant="outline" text="Login with Google" />
+            <GitHubButton />
+            <GitlabButton />
+            <GoogleButton variant="outline" />
           </div>
         </div>
       </div>

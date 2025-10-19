@@ -6,6 +6,74 @@ import { usePathname } from "next/navigation";
 
 import { Separator } from "@/shared/components/ui/separator";
 
+const footerLinks = {
+  developers: [
+    {
+      label: "Documentation",
+      href: "#",
+    },
+    {
+      label: "Github",
+      href: "https://github.com/opensource-together/opensource-together",
+      external: true,
+    },
+  ],
+  resources: [
+    {
+      label: "Changelog",
+      href: "#",
+    },
+    {
+      label: "Press Kit",
+      href: "#",
+    },
+    {
+      label: "Blog",
+      href: "#",
+    },
+  ],
+  company: [
+    {
+      label: "Contact",
+      href: "#",
+    },
+    {
+      label: "X (Twitter)",
+      href: "https://x.com/OpenSTogether",
+      external: true,
+    },
+    {
+      label: "Legal",
+      href: "#",
+    },
+  ],
+};
+
+const renderLinkSection = (
+  title: string,
+  links: typeof footerLinks.developers
+) => (
+  <div>
+    <h4 className="text-foreground mb-5 font-medium md:mb-6">{title}</h4>
+    <ul className="text-muted-foreground space-y-5 md:space-y-6">
+      {links.map((link) => (
+        <li key={link.href}>
+          <Link
+            className="hover:text-foreground transition"
+            href={link.href}
+            {...(link.external && {
+              target: "_blank",
+              rel: "noopener noreferrer",
+            })}
+          >
+            {link.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
 export default function Footer() {
   const pathname = usePathname();
   const hideFooter =
@@ -18,8 +86,8 @@ export default function Footer() {
     <>
       {!hideFooter && (
         <>
-          <footer className="mx-4 max-w-7xl pt-0 pb-3 md:mx-auto md:px-0 md:pb-5">
-            <Separator className="mx-auto mb-5 w-11/12 md:mb-8 lg:mb-8 lg:w-full" />
+          <footer className="mx-4 max-w-7xl bg-white md:mx-auto md:px-0">
+            <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
             <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
               {/* Left: Logo + copyright */}
               <div className="flex w-full flex-col items-start gap-2 md:w-auto md:pl-7">
@@ -32,103 +100,17 @@ export default function Footer() {
                     className="h-auto max-h-[50px] w-auto md:max-h-[50px]"
                   />
                 </Link>
-                <span className="text-xs text-neutral-500 md:text-sm">
+                <span className="text-muted-foreground text-sm">
                   © OpenSource Together • 2025
                 </span>
               </div>
 
               {/* Right: Link sections */}
-              <div className="grid w-full grid-cols-2 gap-12 text-xs md:ml-auto md:w-auto md:grid-cols-3 md:gap-20 md:text-sm">
-                <div>
-                  <h4 className="mb-5 font-medium text-neutral-900 md:mb-6">
-                    Developers
-                  </h4>
-                  <ul className="space-y-5 text-neutral-500 md:space-y-6">
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="#"
-                      >
-                        Documentation
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="https://github.com/opensource-together/opensource-together"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Github
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="mb-5 font-medium text-neutral-900 md:mb-6">
-                    Ressources
-                  </h4>
-                  <ul className="space-y-5 text-neutral-500 md:space-y-6">
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="#"
-                      >
-                        Changelog
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="#"
-                      >
-                        Press Kit
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="#"
-                      >
-                        Blog
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-
+              <div className="gap- grid w-full grid-cols-2 md:ml-auto md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+                {renderLinkSection("Developers", footerLinks.developers)}
+                {renderLinkSection("Ressources", footerLinks.resources)}
                 <div className="mb-5 md:mb-5">
-                  <h4 className="mb-5 font-medium text-neutral-900 md:mb-6">
-                    Company
-                  </h4>
-                  <ul className="space-y-5 text-neutral-500 md:space-y-6">
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="#"
-                      >
-                        Contact
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="https://x.com/OpenSTogether"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        X (Twitter)
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="transition hover:text-neutral-700"
-                        href="#"
-                      >
-                        Legal
-                      </Link>
-                    </li>
-                  </ul>
+                  {renderLinkSection("Company", footerLinks.company)}
                 </div>
               </div>
             </div>

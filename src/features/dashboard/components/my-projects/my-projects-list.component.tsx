@@ -11,6 +11,7 @@ import {
 } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
@@ -133,6 +134,12 @@ export default function MyProjectsList() {
                       </div>
                     </div>
                   </div>
+                </TableCell>
+
+                <TableCell>
+                  <Badge variant={project.published ? "info" : "gray"}>
+                    {project.published ? "Published" : "Unpublished"}
+                  </Badge>
                 </TableCell>
 
                 <TableCell>
