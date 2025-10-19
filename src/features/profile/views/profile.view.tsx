@@ -1,5 +1,7 @@
 "use client";
 
+import { Suspense } from "react";
+
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -19,6 +21,8 @@ import ProfileHero, {
 import ProfileProjectsList from "../components/profile-projects-list";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import RecentProjects from "../components/recent-projects.component";
+import ProfileProjectsSkeleton from "../components/skeletons/profile-projects-skeleton.component";
+import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pull-requests-skeleton.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import ProfilePullRequests from "./profile-pull-requests.view";
 
@@ -72,7 +76,9 @@ export default function ProfileView() {
 
         <TabsContent value="projects" className="mt-6">
           <div className="flex w-full">
-            <ProfileProjectsList />
+            <Suspense fallback={<ProfileProjectsSkeleton />}>
+              <ProfileProjectsList />
+            </Suspense>
           </div>
         </TabsContent>
 
@@ -88,7 +94,11 @@ export default function ProfileView() {
             </div>
           )}
           <div className="mt-12 w-full">
-            {tab === "contributions" && <ProfilePullRequests />}
+            {tab === "contributions" && (
+              <Suspense fallback={<ProfilePullRequestsSkeleton />}>
+                <ProfilePullRequests />
+              </Suspense>
+            )}
           </div>
         </TabsContent>
       </Tabs>

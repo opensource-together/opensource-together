@@ -1,11 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
 
 import { Separator } from "@/shared/components/ui/separator";
 
 import DashboardHeading from "../../components/layout/dashboard-heading.component";
 import MyProjectsList from "../../components/my-projects/my-projects-list.component";
+import MyProjectsSkeleton from "../../components/skeletons/my-projects-skeleton.component";
 
 export default function MyProjectsView() {
   return (
@@ -18,7 +20,9 @@ export default function MyProjectsView() {
 
       <Separator className="my-4" />
 
-      <MyProjectsList />
+      <Suspense fallback={<MyProjectsSkeleton />}>
+        <MyProjectsList />
+      </Suspense>
     </div>
   );
 }

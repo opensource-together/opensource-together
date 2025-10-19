@@ -1,5 +1,7 @@
 "use client";
 
+import { Suspense } from "react";
+
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -17,6 +19,8 @@ import ProfileHero, {
 import ProfileProjectsList from "../components/profile-projects-list";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import RecentProjects from "../components/recent-projects.component";
+import ProfileProjectsSkeleton from "../components/skeletons/profile-projects-skeleton.component";
+import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pull-requests-skeleton.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import { useProfile } from "../hooks/use-profile.hook";
 import ProfilePullRequests from "./profile-pull-requests.view";
@@ -76,7 +80,9 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
 
         <TabsContent value="projects" className="mt-6">
           <div className="flex w-full">
-            <ProfileProjectsList />
+            <Suspense fallback={<ProfileProjectsSkeleton />}>
+              <ProfileProjectsList />
+            </Suspense>
           </div>
         </TabsContent>
 
@@ -92,7 +98,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
             </div>
           )}
           <div className="mt-12 w-full">
-            {tab === "contributions" && <ProfilePullRequests userId={userId} />}
+            {tab === "contributions" && (
+              <Suspense fallback={<ProfilePullRequestsSkeleton />}>
+                <ProfilePullRequests userId={userId} />
+              </Suspense>
+            )}
           </div>
         </TabsContent>
       </Tabs>
