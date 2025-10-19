@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
@@ -27,20 +27,17 @@ export default function useAuth() {
   useEffect(() => {
     if (isLoading || !currentUser) return;
 
-    const titleEmpty = !currentUser.jobTitle;
-    const techsEmpty = !currentUser.userTechStacks?.length;
-
-    const categoriesEmpty = true;
-
-    const isIncomplete = titleEmpty && techsEmpty && categoriesEmpty;
+    const isOnboardingCompleted =
+      !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
 
     const isOnboarding = pathname?.startsWith("/onboarding");
     const isAuth = pathname?.startsWith("/auth");
 
-    if (isIncomplete && !isOnboarding && !isAuth) {
+    if (!isOnboardingCompleted && !isOnboarding && !isAuth) {
       router.push("/onboarding");
     }
   }, [currentUser, isLoading, pathname, router]);
+
   const signInMutation = useToastMutation<unknown, Error, string>({
     mutationFn: async (provider) => await signInWithProvider(provider),
     loadingMessage: "Logging in...",
@@ -73,32 +70,4 @@ export default function useAuth() {
     isSigningIn: signInMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
   };
-}
-
-/**
- * Gate access to the onboarding page without requiring useEffect in the view.
- * Redirects to home when the profile is not fully empty, and returns whether
- * the onboarding content should render.
- */
-export function useOnboardingGate() {
-  const { currentUser, isLoading } = useAuth();
-  const router = useRouter();
-
-  const isIncomplete = useMemo(() => {
-    if (!currentUser) return false;
-    const titleEmpty = !currentUser.jobTitle;
-    const techsEmpty = !currentUser.userTechStacks?.length;
-
-    const categoriesEmpty = true;
-    return titleEmpty && techsEmpty && categoriesEmpty;
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (isLoading || !currentUser) return;
-    if (!isIncomplete) {
-      window.location.replace("/");
-    }
-  }, [currentUser, isLoading, isIncomplete, router]);
-
-  return { canRender: !isLoading && !!currentUser && isIncomplete };
 }

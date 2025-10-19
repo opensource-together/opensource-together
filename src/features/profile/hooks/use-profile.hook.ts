@@ -58,7 +58,6 @@ export const useProfileUpdate = () => {
 
   return {
     updateProfile: mutation.mutate,
-    updateProfileAsync: mutation.mutateAsync,
     isUpdating: mutation.isPending,
     isUpdateError: mutation.isError,
   };

@@ -11,40 +11,48 @@ const footerLinks = {
     {
       label: "Documentation",
       href: "#",
+      id: "developers-documentation",
     },
     {
       label: "Github",
       href: "https://github.com/opensource-together/opensource-together",
       external: true,
+      id: "developers-github",
     },
   ],
   resources: [
     {
       label: "Changelog",
       href: "#",
+      id: "resources-changelog",
     },
     {
       label: "Press Kit",
       href: "#",
+      id: "resources-presskit",
     },
     {
       label: "Blog",
       href: "#",
+      id: "resources-blog",
     },
   ],
   company: [
     {
       label: "Contact",
       href: "#",
+      id: "company-contact",
     },
     {
       label: "X (Twitter)",
       href: "https://x.com/OpenSTogether",
       external: true,
+      id: "company-x",
     },
     {
       label: "Legal",
       href: "#",
+      id: "company-legal",
     },
   ],
 };
@@ -57,7 +65,7 @@ const renderLinkSection = (
     <h4 className="text-foreground mb-5 font-medium md:mb-6">{title}</h4>
     <ul className="text-muted-foreground space-y-5 md:space-y-6">
       {links.map((link) => (
-        <li key={link.href}>
+        <li key={link.id}>
           <Link
             className="hover:text-foreground transition"
             href={link.href}

@@ -5,15 +5,18 @@ import Link from "next/link";
 
 import FooterLogin from "@/shared/components/layout/footer-login";
 
-import { useOnboardingGate } from "@/features/auth/hooks/use-auth.hook";
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import AuthIllustration from "../components/auth-illustration.component";
 import OnboardingForm from "../components/onboarding-form.component";
 
 export default function OnboardingView() {
-  const { canRender } = useOnboardingGate();
+  const { currentUser, isLoading } = useAuth();
 
-  if (!canRender) return null;
+  if (isLoading || !currentUser) return null;
+  const isOnboardingCompleted =
+    !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
+  if (isOnboardingCompleted) return null;
 
   return (
     <>

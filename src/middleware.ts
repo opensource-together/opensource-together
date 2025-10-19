@@ -5,6 +5,7 @@ const protectedRoutes = [
   "/profile/me",
   "/projects/create",
   "/projects/:id/edit",
+  "/onboarding",
   "/dashboard",
 ];
 const authRoutes = ["/auth/login"];
