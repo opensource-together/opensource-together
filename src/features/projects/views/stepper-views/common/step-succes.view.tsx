@@ -18,7 +18,16 @@ export default function StepSuccessView() {
 
   useEffect(() => {
     resetForm();
+    return () => resetForm();
   }, [resetForm]);
+
+  const handleReturnToDashboard = () => {
+    router.replace("/dashboard/my-projects");
+  };
+
+  const handleViewProject = () => {
+    router.replace(`/projects/${projectId}`);
+  };
 
   return (
     <StepperWrapper>
@@ -37,9 +46,9 @@ export default function StepSuccessView() {
       </div>
 
       <FormNavigationButtons
-        onPrevious={() => router.push("/dashboard/my-projects")}
+        onPrevious={handleReturnToDashboard}
         previousLabel="Return to dashboard"
-        onNext={() => router.push(`/projects/${projectId}`)}
+        onNext={handleViewProject}
         nextLabel="View Project"
         isNextDisabled={false}
         nextType="button"

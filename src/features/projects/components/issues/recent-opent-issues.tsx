@@ -4,32 +4,35 @@ import { Button } from "@/shared/components/ui/button";
 
 import { Issue } from "@/features/projects/types/project.type";
 
-import IssueCard from "../../../shared/components/ui/issue-card";
+import IssueCard from "../../../../shared/components/ui/issue-card";
 
-interface OpenRecentIssuesProps {
+interface RecentOpenIssuesProps {
   issues: Issue[];
   projectId: string;
   className?: string;
 }
 
-export default function OpenRecentIssues({
+export default function RecentOpenIssues({
   issues,
   projectId,
   className,
-}: OpenRecentIssuesProps) {
+}: RecentOpenIssuesProps) {
   if (!issues || issues.length === 0) {
     return null;
   }
+
+  const recentIssues = issues.slice(0, 3);
+
   return (
     <section className={className}>
-      <div className="mt-14 mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
           <h2 className="text-muted-foreground text-sm">
             <span className="text-primary font-medium">
-              {issues.slice(0, 3).length}
+              {recentIssues.length}
             </span>{" "}
-            {issues.slice(0, 3).length === 1 ? "Recent Issue" : "Recent Issues"}
+            {recentIssues.length === 1 ? "Recent Issue" : "Recent Issues"}
           </h2>
         </div>
         <Link href="?tab=open-issues">
@@ -37,7 +40,7 @@ export default function OpenRecentIssues({
         </Link>
       </div>
       <div className="flex flex-col gap-6">
-        {issues.slice(0, 3).map((issue, idx) => (
+        {recentIssues.map((issue, idx) => (
           <IssueCard
             key={`${issue.url}-${idx}`}
             issue={issue}

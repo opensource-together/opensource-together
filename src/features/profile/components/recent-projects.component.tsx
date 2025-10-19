@@ -8,10 +8,13 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 
-export default function RecentProjects() {
-  const { data: myProjects = [], isLoading, isError } = useMyProjects();
+import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
-  if (isLoading) return <div>loading</div>;
+export default function RecentProjects() {
+  const { data: myProjectsResponse, isLoading, isError } = useMyProjects();
+  const myProjects = myProjectsResponse?.data || [];
+
+  if (isLoading) return <ProfileProjectsSkeleton />;
   if (isError)
     return (
       <ErrorState
