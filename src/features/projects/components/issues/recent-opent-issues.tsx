@@ -4,7 +4,7 @@ import { Button } from "@/shared/components/ui/button";
 
 import { Issue } from "@/features/projects/types/project.type";
 
-import IssueCard from "../../../shared/components/ui/issue-card";
+import IssueCard from "../../../../shared/components/ui/issue-card";
 
 interface RecentOpenIssuesProps {
   issues: Issue[];

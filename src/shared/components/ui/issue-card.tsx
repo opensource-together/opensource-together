@@ -9,7 +9,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
-import IssueDetailSheet from "@/features/projects/components/issue-detail-sheet.component";
+import IssueDetailSheet from "@/features/projects/components/issues/issue-detail-sheet.component";
 import { Issue } from "@/features/projects/types/project.type";
 
 import { BadgeWithIcon } from "./badge-with-icon";

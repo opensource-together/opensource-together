@@ -17,14 +17,14 @@ import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 import { decodeBase64Safe } from "@/shared/lib/utils/decode-base-64";
 
 import ContributorsList from "../components/contributors-list";
-import OpenIssuesList from "../components/open-issues-list";
+import OpenIssuesList from "../components/issues/open-issues-list";
+import RecentOpenIssues from "../components/issues/recent-opent-issues";
 import ProjectHero, {
   ProjectMobileHero,
 } from "../components/project-hero.component";
 import ProjectPullRequestList from "../components/project-pull-request-list";
 import ProjectReadme from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
-import RecentOpenIssues from "../components/recent-opent-issues";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import { useProject } from "../hooks/use-projects.hook";
 
