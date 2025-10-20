@@ -13,12 +13,10 @@ import {
   ProjectCardLeftGroup,
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
+import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repository-owner";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import {
-  Owner,
-  RepositoryWithDetails,
-} from "@/features/projects/types/project.type";
+import { RepositoryWithDetails } from "@/features/projects/types/project.type";
 
 import { Avatar } from "../ui/avatar";
 import { Icon } from "../ui/icon";
@@ -32,7 +30,8 @@ interface ProjectCardProps {
   showTechStack?: boolean;
   className?: string;
   logoUrl?: string;
-  owner?: Owner;
+  owner?: string;
+  repositoryUrl?: string;
   repositoryDetails?: Pick<
     RepositoryWithDetails,
     | "stars"
@@ -51,10 +50,7 @@ export default function ProjectCardComponent({
   showTechStack = true,
   className = "",
   logoUrl = "",
-  owner = {
-    id: "",
-    name: "",
-  },
+  repositoryUrl = "",
   repositoryDetails = {
     forksCount: 0,
     contributors: [],
@@ -63,6 +59,8 @@ export default function ProjectCardComponent({
     pullRequestsCount: 0,
   },
 }: ProjectCardProps) {
+  const ownerLabel = extractRepositoryOwner(repositoryUrl) || "Unknown";
+
   return (
     <Link href={`/projects/${projectId}`} className="block">
       <ProjectCard className={className}>
@@ -80,7 +78,7 @@ export default function ProjectCardComponent({
                 {title}
               </ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {owner.name}
+                by {ownerLabel}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>

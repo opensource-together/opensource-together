@@ -7,10 +7,6 @@ export const mockProjectsResponse: Project[] = [
     description:
       "Open Source Browser API for AI Agents & Apps. Steel Browser is a batteries-included browser sandbox that lets you automate the web without worrying about infrastructure.",
     provider: "GITHUB",
-    owner: {
-      id: "usr_steelbrowser_001",
-      name: "Steel Browser",
-    },
     logoUrl: "/icons/steeldev-logo.jpg",
     published: true,
     githubUrl: "https://github.com/steelbrowser",
@@ -117,7 +113,6 @@ export const mockProjectsResponse: Project[] = [
     description:
       "Bun is a runtime JavaScript for Node.js. It is designed to be faster and more efficient than Node.js, and it is compatible with existing Node.js projects.",
     provider: "GITHUB",
-    owner: { id: "usr_bun_001", name: "Bun" },
     logoUrl: "/icons/bun-logo.jpg",
     published: true,
     githubUrl: "https://github.com/oven-sh/bun",
@@ -214,7 +209,6 @@ export const mockProjectsResponse: Project[] = [
     description:
       "TanStack Query is a library for managing server state in React applications. It is designed to be a simple and easy to use library for managing server state in React applications.",
     provider: "GITHUB",
-    owner: { id: "usr_tanstack_001", name: "TanStack Query" },
     logoUrl: "/icons/tanstack-logo.png",
     published: true,
     githubUrl: "https://github.com/TanStack/query",
@@ -302,7 +296,6 @@ export const mockProjectsResponse: Project[] = [
     description:
       "Better Auth is a library for authentication and authorization in React applications. It is designed to be a simple and easy to use library for authentication and authorization in React applications.",
     provider: "GITHUB",
-    owner: { id: "usr_betterauth_001", name: "Better Auth" },
     logoUrl: "/icons/betterauth-logo.png",
     published: true,
     githubUrl: "https://github.com/better-auth/better-auth",

@@ -20,7 +20,6 @@ export interface Project {
   projectTechStacks: TechStackType[];
   projectCategories: CategoryType[];
   repositoryDetails: RepositoryWithDetails;
-  owner?: Owner;
   createdAt: Date;
   updatedAt: Date;
 }
