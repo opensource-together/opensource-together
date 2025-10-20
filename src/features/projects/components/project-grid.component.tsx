@@ -17,6 +17,7 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           title={project.title}
           description={project.description}
           logoUrl={project.logoUrl || ""}
+          repositoryUrl={project.repoUrl || ""}
           projectTechStacks={project.projectTechStacks}
           owner={extractRepositoryOwner(project.repoUrl) || ""}
           repositoryDetails={{
