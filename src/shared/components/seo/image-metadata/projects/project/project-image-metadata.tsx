@@ -5,12 +5,18 @@ interface ProjectImageMetadataProps {
   name: string;
   description?: string;
   imageUrl?: string | null;
+  forksCount?: number | null;
+  openIssuesCount?: number | null;
+  pullRequestsCount?: number | null;
 }
 
 export function ProjectImageMetadata({
   name,
   description,
   imageUrl,
+  forksCount,
+  openIssuesCount,
+  pullRequestsCount,
 }: ProjectImageMetadataProps) {
   const logo =
     imageUrl ||
@@ -26,6 +32,19 @@ export function ProjectImageMetadata({
     }
     return `${description.slice(0, 130)}...`;
   })();
+
+  const stats = [
+    { label: "Forks", value: forksCount },
+    { label: "Open issues", value: openIssuesCount },
+    { label: "Pull requests", value: pullRequestsCount },
+  ].filter(
+    (stat) =>
+      typeof stat.value === "number" &&
+      stat.value !== null &&
+      stat.value !== undefined
+  ) as Array<{ label: string; value: number }>;
+  const numberFormatter = new Intl.NumberFormat("en-US");
+
   return (
     <ImageMetadataBackground>
       <div
@@ -40,11 +59,61 @@ export function ProjectImageMetadata({
           paddingTop: "48px",
         }}
       >
-        <ImageMetadataContent
-          title={name}
-          // subtitle="OpenSource Together"
-          description={summary}
-        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            height: "100%",
+            maxWidth: "640px",
+          }}
+        >
+          <ImageMetadataContent title={name} description={summary} />
+          {stats.length ? (
+            <div
+              style={{
+                display: "flex",
+                gap: "32px",
+                marginTop: "48px",
+              }}
+            >
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "40px",
+                      fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
+                      fontWeight: 500,
+                      letterSpacing: "-0.02em",
+                      color: "#0f172a",
+                    }}
+                  >
+                    {numberFormatter.format(stat.value)}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "20px",
+                      fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
+                      fontWeight: 400,
+                      letterSpacing: "-0.01em",
+                      color: "#475569",
+                    }}
+                  >
+                    {stat.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
         {logo ? (
           <div
             style={{
