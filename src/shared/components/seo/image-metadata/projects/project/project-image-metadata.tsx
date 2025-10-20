@@ -41,7 +41,7 @@ export function ProjectImageMetadata({
         }}
       >
         <ImageMetadataContent
-          title={`Explore ${name}`}
+          title={name}
           // subtitle="OpenSource Together"
           description={summary}
         />
@@ -56,7 +56,6 @@ export function ProjectImageMetadata({
               height: "300px",
               borderRadius: "40px",
               overflow: "hidden",
-              boxShadow: "0 30px 70px rgba(15, 23, 42, 0.08)",
               background: "#ffffff",
             }}
           >

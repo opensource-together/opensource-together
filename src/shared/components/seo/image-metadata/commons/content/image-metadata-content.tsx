@@ -29,7 +29,7 @@ export function ImageMetadataContent({
         style={{
           fontSize: "64px",
           fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
-          fontWeight: 600,
+          fontWeight: 500,
           lineHeight: 1.02,
           letterSpacing: "-0.03em",
         }}
