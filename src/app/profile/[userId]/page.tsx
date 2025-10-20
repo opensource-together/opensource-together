@@ -2,6 +2,8 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
+import { FRONTEND_URL } from "@/config/config";
+
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
 
@@ -21,14 +23,23 @@ export async function generateMetadata({
   const { userId } = await params;
   const user = await getUserById(userId);
 
+  const userUrl = `${FRONTEND_URL.replace(/\/$/, "")}/profile/${userId}`;
+
   return {
     title: `${user.name} | OpenSource Together`,
     description: user.bio,
     openGraph: {
       title: `${user.name} | OpenSource Together`,
       description: user.bio,
-      images: [user.image || ""],
-      url: `https://opensourcetogether.com/profile/${userId}`,
+      images: [
+        {
+          url: `${userUrl}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: `${user.name} profile preview`,
+        },
+      ],
+      url: userUrl,
       type: "website",
       siteName: "OpenSource Together",
       locale: "fr_FR",
