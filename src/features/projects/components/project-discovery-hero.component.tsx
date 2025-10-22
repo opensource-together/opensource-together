@@ -42,9 +42,7 @@ export default function ProjectDiscoveryHero() {
         </FadeUp>
 
         <div className="mt-8 hidden md:block">
-          <FadeUp delay={0.7}>
-            <FilterSearchBar />
-          </FadeUp>
+          <FilterSearchBar />
         </div>
       </div>
     </div>

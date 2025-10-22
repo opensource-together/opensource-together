@@ -1,6 +1,11 @@
 import type { AnchorHTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";
+import { useState } from "react";
+import { HiMiniCheck } from "react-icons/hi2";
+import { LuCopy } from "react-icons/lu";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import { Button } from "@/shared/components/ui/button";
 
 interface CodeBlockProps {
   children: ReactNode;
@@ -27,25 +32,51 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
 function CodeBlock({ children, className, ...props }: CodeBlockProps) {
   const match = /language-(\w+)/.exec(className || "");
   const language = match ? match[1] : "";
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const codeText = String(children).replace(/\n$/, "");
+    try {
+      await navigator.clipboard.writeText(codeText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy code:", err);
+    }
+  };
 
   if (language) {
     return (
-      <SyntaxHighlighter
-        style={oneLight}
-        language={language}
-        PreTag="div"
-        className="!mt-0 !mb-3 rounded-lg"
-        customStyle={{
-          margin: "0 0 12px 0",
-          fontSize: "0.875rem",
-          lineHeight: "1.5",
-          background: "hsl(var(--accent))",
-          color: "hsl(var(--accent-foreground))",
-        }}
-        {...props}
-      >
-        {String(children).replace(/\n$/, "")}
-      </SyntaxHighlighter>
+      <div className="group relative">
+        <SyntaxHighlighter
+          style={oneLight}
+          language={language}
+          PreTag="div"
+          className="!mt-0 !mb-3 rounded-lg"
+          customStyle={{
+            margin: "0 0 12px 0",
+            fontSize: "0.875rem",
+            lineHeight: "1.5",
+            background: "hsl(var(--accent))",
+            color: "hsl(var(--accent-foreground))",
+          }}
+          {...props}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={handleCopy}
+          className="absolute top-2 right-2 size-8 rounded-md p-0"
+        >
+          {copied ? (
+            <HiMiniCheck className="text-ost-blue-three size-4" />
+          ) : (
+            <LuCopy className="text-muted-foreground size-4" />
+          )}
+        </Button>
+      </div>
     );
   }
 

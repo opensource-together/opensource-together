@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "react-icons/hi";
 import {
+  HiChartBar,
   HiChatBubbleLeft,
   HiChevronRight,
   HiCog6Tooth,
@@ -27,6 +28,12 @@ const sidebarSections = [
   },
   {
     items: [
+      {
+        label: "Analytics",
+        href: "/dashboard/analytics",
+        icon: HiChartBar,
+        disabled: true,
+      },
       {
         label: "Chat",
         href: "/dashboard/chat",
@@ -102,7 +109,7 @@ export default function DashboardSidebar() {
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
-    <aside className="hidden w-16 flex-col border-[black]/5 px-2 pt-5 lg:ml-5 lg:flex lg:w-72">
+    <aside className="border-muted-black-stroke hidden w-16 flex-col px-2 pt-5 lg:ml-5 lg:flex lg:h-full lg:w-72">
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-col gap-6">
           {sidebarSections.map((section, sectionIndex) => (
@@ -121,9 +128,9 @@ export default function DashboardSidebar() {
 
         <div>
           <div className="bg-secondary rounded-xl p-4">
-            <div className="text-muted-foreground mb-3 text-center text-xs">
-              Create a new project for OST. <br /> Import a repo from Github or
-              Gitlab.
+            <div className="text-muted-foreground mb-3 text-start text-xs">
+              Create a project for OpenSource Together. <br /> Import a
+              repository from Github or Gitlab.
             </div>
             <Button
               asChild

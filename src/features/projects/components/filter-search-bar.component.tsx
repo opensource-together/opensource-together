@@ -97,7 +97,7 @@ export default function FilterSearchBar() {
         </div>
         <Button
           type="button"
-          className="pointer-events-auto absolute right-2 h-8.5 px-4 text-sm"
+          className="absolute right-2 px-6"
           onClick={() => {}}
         >
           Filter Projects

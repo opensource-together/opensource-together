@@ -173,10 +173,11 @@ export default function MyProjectsList() {
                             title: project.title || "Untitled Project",
                           });
                         }}
-                        className="text-destructive flex items-center justify-between"
+                        className="flex items-center justify-between"
+                        variant="destructive"
                       >
                         Delete Project
-                        <HiMiniTrash className="text-destructive size-4" />
+                        <HiMiniTrash className="size-4" />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
