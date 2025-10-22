@@ -16,7 +16,7 @@ import { useProjects } from "../hooks/use-projects.hook";
 function HomepageLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="mt-8 flex flex-col items-center">
+      <div className="flex flex-col items-center">
         <ProjectDiscoveryHero />
       </div>
       <div className="mx-6 max-w-6xl pb-4 md:pb-8 lg:mx-auto">{children}</div>

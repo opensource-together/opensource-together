@@ -63,7 +63,7 @@ const renderLinkSection = (
 ) => (
   <div>
     <h4 className="text-foreground mb-5 font-medium md:mb-6">{title}</h4>
-    <ul className="text-muted-foreground space-y-5 md:space-y-6">
+    <ul className="text-muted-foreground space-y-5">
       {links.map((link) => (
         <li key={link.id}>
           <Link
@@ -94,11 +94,11 @@ export default function Footer() {
     <>
       {!hideFooter && (
         <>
-          <footer className="mx-4 mb-6 max-w-7xl bg-white md:mx-auto md:px-0">
+          <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
             <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
             <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
               {/* Left: Logo + copyright */}
-              <div className="flex w-full flex-col items-start gap-2 md:w-auto md:pl-7">
+              <div className="flex w-full flex-col items-start gap-4 md:w-auto">
                 <Link href="/" className="flex items-center">
                   <Image
                     src="/ostogether-logo.svg"

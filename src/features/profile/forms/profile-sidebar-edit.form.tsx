@@ -48,8 +48,8 @@ export default function ProfileSidebarEditForm({
                         ? "Loading technologies..."
                         : "Add technologies..."
                     }
-                    searchPlaceholder="Search for a technology..."
-                    emptyText="No technology found."
+                    searchPlaceholder="Search technologies..."
+                    emptyText="No technologies found."
                     disabled={techStacksLoading}
                     maxSelections={10}
                   />

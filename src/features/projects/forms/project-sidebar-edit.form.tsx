@@ -48,8 +48,8 @@ export default function ProjectSidebarEditForm({
                         ? "Loading technologies..."
                         : "Add technologies..."
                     }
-                    searchPlaceholder="Search for a technology..."
-                    emptyText="No technology found."
+                    searchPlaceholder="Search technologies..."
+                    emptyText="No technologies found."
                     disabled={techStacksLoading}
                     maxSelections={10}
                   />
@@ -75,8 +75,8 @@ export default function ProjectSidebarEditForm({
                         ? "Loading categories..."
                         : "Add categories..."
                     }
-                    searchPlaceholder="Search for a category..."
-                    emptyText="No category found."
+                    searchPlaceholder="Search categories..."
+                    emptyText="No categories found."
                     disabled={categoriesLoading}
                     maxSelections={6}
                   />

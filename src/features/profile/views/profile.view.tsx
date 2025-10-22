@@ -81,11 +81,9 @@ export default function ProfileView() {
         </TabsContent>
 
         <TabsContent value="pull-request" className="mt-6">
-          {tab === "pull-request" && (
-            <Suspense fallback={<ProfilePullRequestsSkeleton />}>
-              <ProfilePullRequests />
-            </Suspense>
-          )}
+          <Suspense fallback={<ProfilePullRequestsSkeleton />}>
+            <ProfilePullRequests />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </TwoColumnLayout>

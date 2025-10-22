@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { HiCheck } from "react-icons/hi2";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
   Command,
@@ -41,21 +41,19 @@ interface ComboboxProps {
   className?: string;
   trigger?: React.ReactNode;
   disabled?: boolean;
-  showTags?: boolean;
 }
 
 export function CustomCombobox({
   options,
   value,
   onChange,
-  placeholder = "Sélectionner...",
-  searchPlaceholder = "Rechercher...",
-  emptyText = "Aucun résultat trouvé.",
+  placeholder = "Select...",
+  searchPlaceholder = "Search...",
+  emptyText = "No results found.",
   maxSelections,
   className,
   trigger,
   disabled = false,
-  showTags = true,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -74,10 +72,6 @@ export function CustomCombobox({
         onChange([...value, optionId]);
       }
     }
-  };
-
-  const handleRemove = (optionId: string) => {
-    onChange(value.filter((id) => id !== optionId));
   };
 
   const isMaxReached = maxSelections && value.length >= maxSelections;
@@ -113,7 +107,7 @@ export function CustomCombobox({
                 )}
               >
                 {selectedOptions.length > 0
-                  ? `${selectedOptions.length} sélectionné${selectedOptions.length > 1 ? "s" : ""}`
+                  ? `${selectedOptions.length} selected${selectedOptions.length > 1 ? "s" : ""}`
                   : placeholder}
               </span>
               <Icon name="chevron-down" />
@@ -157,15 +151,24 @@ export function CustomCombobox({
                               isDisabled && "cursor-not-allowed opacity-50"
                             )}
                           >
-                            <Icon
-                              name="check"
-                              size="xs"
-                              variant="gray"
+                            <HiCheck
+                              size={16}
                               className={cn(
-                                "mr-2",
-                                isSelected ? "opacity-100" : "opacity-0"
+                                isSelected
+                                  ? "text-ost-blue-three opacity-100"
+                                  : "opacity-0"
                               )}
                             />
+                            {option.iconUrl && (
+                              <img
+                                src={option.iconUrl}
+                                alt={option.name}
+                                className="size-3.5 flex-shrink-0"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
                             {option.name}
                           </CommandItem>
                         );
@@ -189,15 +192,24 @@ export function CustomCombobox({
                               isDisabled && "cursor-not-allowed opacity-50"
                             )}
                           >
-                            <Icon
-                              name="check"
-                              size="xs"
-                              variant="gray"
+                            <HiCheck
+                              size={16}
                               className={cn(
-                                "mr-2",
-                                isSelected ? "opacity-100" : "opacity-0"
+                                isSelected
+                                  ? "text-ost-blue-three opacity-100"
+                                  : "opacity-0"
                               )}
                             />
+                            {option.iconUrl && (
+                              <img
+                                src={option.iconUrl}
+                                alt={option.name}
+                                className="size-3.5 flex-shrink-0"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
                             {option.name}
                           </CommandItem>
                         );
@@ -223,15 +235,24 @@ export function CustomCombobox({
                           isDisabled && "cursor-not-allowed opacity-50"
                         )}
                       >
-                        <Icon
-                          name="check"
-                          size="xs"
-                          variant="gray"
+                        <HiCheck
+                          size={16}
                           className={cn(
-                            "mr-2",
-                            isSelected ? "opacity-100" : "opacity-0"
+                            isSelected
+                              ? "text-ost-blue-three opacity-100"
+                              : "opacity-0"
                           )}
                         />
+                        {option.iconUrl && (
+                          <img
+                            src={option.iconUrl}
+                            alt={option.name}
+                            className="size-3.5 flex-shrink-0"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        )}
                         {option.name}
                       </CommandItem>
                     );
@@ -242,28 +263,6 @@ export function CustomCombobox({
           </Command>
         </PopoverContent>
       </Popover>
-
-      {showTags && selectedOptions.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {selectedOptions.map((option) => (
-            <Badge
-              key={option.id}
-              variant="outline"
-              className="text-primary flex items-center gap-1 border border-black/5 bg-white pr-1 text-xs font-normal"
-            >
-              {option.name}
-              <button
-                type="button"
-                onClick={() => handleRemove(option.id)}
-                className="flex size-4 cursor-pointer items-center justify-center rounded-full"
-                disabled={disabled}
-              >
-                <Icon name="cross" size="xxs" />
-              </button>
-            </Badge>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

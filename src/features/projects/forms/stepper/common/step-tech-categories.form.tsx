@@ -325,7 +325,7 @@ export function StepTechCategoriesForm() {
             <FormNavigationButtons
               onPrevious={handlePrevious}
               isLoading={isSubmitting}
-              nextLabel="Create Project"
+              nextLabel="Publish project"
               nextType="submit"
             />
           </form>
@@ -334,7 +334,7 @@ export function StepTechCategoriesForm() {
 
       <div className="hidden w-[40%] lg:block">
         <div className="sticky top-8">
-          <h3 className="mb-4 text-lg font-medium">Preview</h3>
+          <h3 className="mb-4 text-lg font-medium">Project preview</h3>
           <ProjectTechCategoriesPreview
             projectTechStacks={getTechStacksByIds(
               watched.projectTechStacks || []

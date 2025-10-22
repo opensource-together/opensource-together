@@ -1,5 +1,7 @@
 "use client";
 
+import type { ComponentProps } from "react";
+
 import { Badge } from "@/shared/components/ui/badge";
 
 type Category = {
@@ -13,6 +15,8 @@ interface CategoryListProps {
   emptyText?: string;
   className?: string;
   dense?: boolean;
+  badgeVariant?: ComponentProps<typeof Badge>["variant"];
+  badgeClassName?: string;
 }
 
 export function CategoryList({
@@ -21,6 +25,8 @@ export function CategoryList({
   emptyText,
   className,
   dense = false,
+  badgeVariant = "gray",
+  badgeClassName,
 }: CategoryListProps) {
   return (
     <div className={className}>
@@ -31,7 +37,8 @@ export function CategoryList({
         >
           {categories.map((category, index) => (
             <Badge
-              variant="gray"
+              variant={badgeVariant}
+              className={badgeClassName}
               key={category.id || `${category.name}-${index}`}
             >
               {category.name}
