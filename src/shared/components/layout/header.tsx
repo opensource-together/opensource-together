@@ -7,10 +7,7 @@ import { usePathname } from "next/navigation";
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
 import "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
-import {
-  SkeletonBreadcrumb,
-  SkeletonUserDropdown,
-} from "@/shared/components/ui/skeleton-header";
+import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
 import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
@@ -35,7 +32,7 @@ export default function Header() {
             height={50}
           />
         </Link>
-        {isLoading ? <SkeletonBreadcrumb /> : <HeaderBreadcrumb />}
+        <HeaderBreadcrumb />
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2">

@@ -41,9 +41,7 @@ export default function HomepageView() {
   if (isLoading) {
     return (
       <HomepageLayout>
-        <div className="mt-6">
-          <SkeletonProjectGrid />
-        </div>
+        <SkeletonProjectGrid />
       </HomepageLayout>
     );
   }
@@ -58,9 +56,8 @@ export default function HomepageView() {
 
   return (
     <HomepageLayout>
-      <div className="mt-6">
-        <ProjectGrid projects={projects} />
-      </div>
+      <ProjectGrid projects={projects} />
+
       <Link href="/projects/trending">
         <div className="mt-14 flex items-center gap-1 font-medium">
           Trending Projects <HiOutlineChevronRight size={16} />
