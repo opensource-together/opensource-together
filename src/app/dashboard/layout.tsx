@@ -10,11 +10,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div className="flex flex-1 overflow-hidden">
         <DashboardSidebar />
         <main className="mx-7 flex-1 overflow-y-auto pt-8 lg:mx-0 lg:ml-52">
-          <div className="max-w-[708px]">{children}</div>
+          <div className="max-w-[708px]">
+            {children}
+
+            <FooterLogin />
+          </div>
         </main>
-      </div>
-      <div className="mx-auto w-full max-w-7xl px-4 lg:px-40 xl:px-56">
-        <FooterLogin />
       </div>
     </div>
   );

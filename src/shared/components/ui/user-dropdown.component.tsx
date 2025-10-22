@@ -33,7 +33,7 @@ export default function UserDropdown() {
           name={currentUser?.name}
           alt={currentUser?.name}
           size="md"
-          className="ml-3 cursor-pointer"
+          className="cursor-pointer"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48 p-2">
@@ -45,7 +45,7 @@ export default function UserDropdown() {
         <Link href="/profile/me">
           <DropdownMenuItem>
             <div className="text-muted-foreground flex w-full items-center justify-between">
-              <p className="text-sm font-medium">Mon profil</p>
+              <p className="text-sm font-medium">My profile</p>
               <HiUser className="size-4" />
             </div>
           </DropdownMenuItem>
@@ -53,7 +53,7 @@ export default function UserDropdown() {
         <Link href="/profile/me/edit">
           <DropdownMenuItem>
             <div className="text-muted-foreground flex w-full items-center justify-between">
-              <p className="text-sm font-medium">Modifier le profil</p>
+              <p className="text-sm font-medium">Edit profile</p>
               <HiMiniPencilSquare className="size-4" />
             </div>
           </DropdownMenuItem>
@@ -62,14 +62,14 @@ export default function UserDropdown() {
         <Link href="/settings">
           <DropdownMenuItem>
             <div className="text-muted-foreground flex w-full items-center justify-between">
-              <p className="text-sm font-medium">Paramètres</p>
+              <p className="text-sm font-medium">Settings</p>
               <HiCog6Tooth className="size-4" />
             </div>
           </DropdownMenuItem>
         </Link>
         <DropdownMenuItem onClick={handleLogout}>
           <div className="text-destructive flex w-full items-center justify-between">
-            <p className="text-sm font-medium">Déconnexion</p>
+            <p className="text-sm font-medium">Sign out</p>
             <HiLogout className="text-destructive size-4" />
           </div>
         </DropdownMenuItem>

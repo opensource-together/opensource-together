@@ -34,7 +34,7 @@ export function CategoryList({
               variant="gray"
               key={category.id || `${category.name}-${index}`}
             >
-              #{category.name}
+              {category.name}
             </Badge>
           ))}
         </div>

@@ -13,7 +13,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist rounded-[20px] border border-[black]/6 px-6.5 pt-6.5 pb-5 transition-all duration-200 hover:cursor-pointer hover:shadow-[0_0_8px_rgba(0,0,0,0.1)]",
+      "font-geist border-muted-black-stroke rounded-[20px] border px-6.5 pt-6.5 pb-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
       className
     )}
     {...props}

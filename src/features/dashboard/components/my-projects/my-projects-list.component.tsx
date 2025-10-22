@@ -30,7 +30,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
-import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { useDeleteProject } from "@/features/projects/hooks/use-projects.hook";
 
@@ -144,7 +143,7 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <span className="text-sm font-medium">
-                    {formatTimeAgo(project.createdAt)}
+                    {new Date(project.createdAt).toLocaleDateString()}
                   </span>
                 </TableCell>
 

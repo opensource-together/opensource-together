@@ -94,7 +94,7 @@ export default function Footer() {
     <>
       {!hideFooter && (
         <>
-          <footer className="mx-4 max-w-7xl bg-white md:mx-auto md:px-0">
+          <footer className="mx-4 mb-6 max-w-7xl bg-white md:mx-auto md:px-0">
             <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
             <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
               {/* Left: Logo + copyright */}

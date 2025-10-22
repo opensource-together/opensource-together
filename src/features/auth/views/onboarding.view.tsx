@@ -43,7 +43,7 @@ export default function OnboardingView() {
             <OnboardingForm />
           </div>
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto px-4 md:px-10">
           <FooterLogin />
         </div>
       </div>

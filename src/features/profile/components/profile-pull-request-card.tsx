@@ -53,7 +53,7 @@ export function PullRequestCard({
 
   return (
     <Link href={pr.url} target="_blank" rel="noreferrer">
-      <article className="rounded-[20px] border border-[black]/6 px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
+      <article className="border-muted-black-stroke rounded-[20px] border px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2">
