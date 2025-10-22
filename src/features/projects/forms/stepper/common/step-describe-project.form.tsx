@@ -111,9 +111,7 @@ export function StepDescribeProjectForm() {
   });
 
   const handlePrevious = () => {
-    if (formData.method === "scratch") {
-      router.push("/projects/create");
-    } else if (formData.method === "github" || formData.method === "gitlab") {
+    if (formData.method === "github" || formData.method === "gitlab") {
       router.push(`/projects/create/${formData.method}/import`);
     }
   };

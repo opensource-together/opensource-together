@@ -22,36 +22,23 @@ interface StepGitImportFormProps {
 export default function StepGitImportForm({
   provider,
 }: StepGitImportFormProps) {
-  const router = useRouter();
-  const { selectRepository } = useProjectCreateStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(320);
   const [selectedRepo, setSelectedRepo] = useState<UserGitRepository | null>(
     null
   );
-
-  const isScratch = provider === "scratch";
-  const actualProvider = isScratch ? undefined : provider;
-
-  const {
-    data: gitRepos,
-    isLoading,
-    isError,
-  } = useGitRepository(actualProvider ? { provider: actualProvider } : {});
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollTop, setScrollTop] = useState(0);
-  const [containerHeight, setContainerHeight] = useState(320);
+  const router = useRouter();
+  const { selectRepository } = useProjectCreateStore();
+
+  const { data: gitRepos, isLoading, isError } = useGitRepository({ provider });
 
   const itemHeight = 64;
-  const repos = actualProvider
-    ? (gitRepos?.[actualProvider]?.data || []).sort((a, b) => {
-        if (!a.updated_at || !b.updated_at) return 0;
-        return (
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-        );
-      })
-    : [];
+  const repos = (gitRepos?.[provider]?.data || []).sort((a, b) => {
+    if (!a.updated_at || !b.updated_at) return 0;
+    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+  });
   const totalCount = repos.length;
   const totalHeight = itemHeight * totalCount;
   const visibleHeight = containerHeight;

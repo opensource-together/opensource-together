@@ -45,7 +45,7 @@ export default function StepperHeaderComponent({
         </div>
       </div>
       <h2 className="mb-2 text-3xl">{title}</h2>
-      <p className="mb-4 text-sm text-black/70">{description}</p>
+      <p className="text-muted-foreground mb-4 text-sm">{description}</p>
     </div>
   );
 }

@@ -19,8 +19,6 @@ export default function StepGitImportView({
         return "Import Github Repository";
       case "gitlab":
         return "Import GitLab Repository";
-      case "scratch":
-        return "Create Project from Scratch";
       default:
         return "Import Repository";
     }
@@ -32,14 +30,12 @@ export default function StepGitImportView({
         return "Choose which Github repository you want to import.";
       case "gitlab":
         return "Choose which GitLab repository you want to import.";
-      case "scratch":
-        return "Configure your project from scratch.";
       default:
         return "Choose which repository you want to import.";
     }
   };
 
-  const totalSteps = provider === "github" ? 4 : provider === "gitlab" ? 4 : 2;
+  const totalSteps = 4;
 
   return (
     <StepperWrapper>

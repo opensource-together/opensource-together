@@ -101,8 +101,7 @@ export default function DashboardSidebar() {
         <div>
           <div className="bg-secondary rounded-xl p-4">
             <div className="text-muted-foreground mb-3 text-center text-xs">
-              Create a new project for OST. Import a repo from Github or start
-              from scratch.
+              Create a new project for OST. Import a repo from Github or Gitlab.
             </div>
             <Button
               asChild
