@@ -3,7 +3,6 @@
 import * as React from "react";
 import { HiCheck } from "react-icons/hi2";
 
-import { Button } from "@/shared/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -19,8 +18,6 @@ import {
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
 import { TechStackType } from "@/shared/types/tech-stack.type";
-
-import Icon from "./icon";
 
 export interface CustomComboboxOption {
   id: string;
@@ -47,7 +44,6 @@ export function CustomCombobox({
   options,
   value,
   onChange,
-  placeholder = "Select...",
   searchPlaceholder = "Search...",
   emptyText = "No results found.",
   maxSelections,
@@ -56,8 +52,6 @@ export function CustomCombobox({
   disabled = false,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-
-  const selectedOptions = options.filter((option) => value.includes(option.id));
 
   const handleSelect = (optionName: string) => {
     const option = options.find((opt) => opt.name === optionName);
@@ -80,55 +74,21 @@ export function CustomCombobox({
     <div className={cn("flex w-full flex-col gap-3", className)}>
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          {trigger ? (
-            <div
-              className={cn(
-                "inline-flex w-full",
-                disabled && "pointer-events-none opacity-50"
-              )}
-            >
-              {trigger}
-            </div>
-          ) : (
-            <Button
-              type="button"
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className={cn(
-                "text-primary border-input h-10 w-full justify-between rounded-md bg-white text-sm font-normal"
-              )}
-              disabled={disabled}
-            >
-              <span
-                className={cn(
-                  "truncate",
-                  selectedOptions.length === 0 && "text-muted-foreground"
-                )}
-              >
-                {selectedOptions.length > 0
-                  ? `${selectedOptions.length} selected${selectedOptions.length > 1 ? "s" : ""}`
-                  : placeholder}
-              </span>
-              <Icon name="chevron-down" />
-            </Button>
-          )}
+          <div
+            className={cn(
+              "inline-flex w-full",
+              disabled && "pointer-events-none opacity-50"
+            )}
+          >
+            {trigger}
+          </div>
         </PopoverTrigger>
         <PopoverContent
-          className="border-muted-black-stroke rounded-2xl px-1 py-0 pt-2 shadow-xs"
+          className="border-muted-black-stroke p-1 shadow-xs"
           align="start"
         >
           <Command>
-            <CommandInput
-              placeholder={searchPlaceholder}
-              className="h-9"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              }}
-            />
+            <CommandInput placeholder={searchPlaceholder} className="h-9" />
             <CommandList>
               <CommandEmpty>{emptyText}</CommandEmpty>
               {options.some((opt) => opt.type === "LANGUAGE") && (

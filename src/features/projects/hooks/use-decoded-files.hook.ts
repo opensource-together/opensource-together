@@ -37,9 +37,5 @@ export function useDecodedFiles(project: Project | undefined): DecodedFiles {
         ? (decodeBase64Safe(cocFile) ?? cocFile)
         : undefined,
     };
-  }, [
-    project?.repositoryDetails?.readme,
-    project?.repositoryDetails?.contributionFile,
-    project?.repositoryDetails?.cocFile,
-  ]);
+  }, [project?.repositoryDetails]);
 }

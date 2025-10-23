@@ -12,11 +12,11 @@ interface FilterItemProps {
 
 function FilterItem({ label, value }: FilterItemProps) {
   return (
-    <div className="group flex h-12 w-37 cursor-pointer flex-col rounded-full px-8 py-2 transition-all duration-200 hover:rounded-full hover:bg-white">
+    <div className="group flex h-14 w-44 cursor-pointer flex-col rounded-full px-8 py-2.5 transition-all duration-200 hover:rounded-full hover:bg-white">
       <span className="text-xs font-normal text-black/40 transition-colors duration-200">
         {label}
       </span>
-      <span className="group-hover:text-primary text-xs font-medium tracking-tight whitespace-nowrap transition-colors duration-200">
+      <span className="text-sm font-medium tracking-tight whitespace-nowrap transition-colors duration-200 group-hover:text-black">
         {value}
       </span>
     </div>
@@ -40,7 +40,7 @@ export default function FilterSearchBar() {
 
   return (
     <div
-      className="mb-[19px] flex h-12.5 w-[592px] items-center justify-center"
+      className="flex h-14 w-[700px] items-center justify-center"
       role="search"
     >
       <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
@@ -62,7 +62,7 @@ export default function FilterSearchBar() {
               />
             </div>
 
-            <div className="z-10 mx-1 h-5 w-px self-center bg-black/10" />
+            <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
             <div className="relative pr-0">
               <CustomCombobox
@@ -80,7 +80,7 @@ export default function FilterSearchBar() {
               />
             </div>
 
-            <div className="z-10 mx-1 h-5 w-px self-center bg-black/10" />
+            <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
             <div className="relative pr-0">
               <CustomCombobox
@@ -97,7 +97,7 @@ export default function FilterSearchBar() {
         </div>
         <Button
           type="button"
-          className="absolute right-2 px-6"
+          className="absolute right-2 px-6 py-5"
           onClick={() => {}}
         >
           Filter Projects

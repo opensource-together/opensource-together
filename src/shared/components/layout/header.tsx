@@ -22,7 +22,7 @@ export default function Header() {
   }
 
   return (
-    <div className="flex justify-between px-10 py-4">
+    <header className="sticky top-0 z-50 flex justify-between bg-white/50 px-10 py-4 backdrop-blur-2xl">
       <div className="flex items-center gap-4">
         <Link href="/">
           <Image
@@ -67,6 +67,6 @@ export default function Header() {
           </Link>
         )}
       </div>
-    </div>
+    </header>
   );
 }
