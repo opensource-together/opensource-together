@@ -47,12 +47,11 @@ export function useProjectCreateNavigation() {
     const isTechCategories = pathname.endsWith(
       "/projects/create/tech-categories"
     );
-
     if (isTechCategories) {
-      const hasRequiredScratchData = Boolean(
+      const hasRequiredDescribeData = Boolean(
         formData.title && formData.description
       );
-      if (!hasRequiredScratchData) {
+      if (!hasRequiredDescribeData) {
         router.replace("/projects/create/describe");
         return;
       }

@@ -39,6 +39,7 @@ export function ProjectTechCategoriesPreview({
           title="Categories"
           categories={projectCategories}
           emptyText="No categories added"
+          badgeVariant="white"
         />
 
         <ExternalLinks

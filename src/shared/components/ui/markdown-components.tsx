@@ -1,4 +1,9 @@
+"use client";
+
 import type { AnchorHTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";
+import { useState } from "react";
+import { HiMiniCheck } from "react-icons/hi2";
+import { LuCopy } from "react-icons/lu";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -24,28 +29,70 @@ interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   height?: number;
 }
 
+interface CopyButtonProps {
+  text: string;
+}
+
+function CopyButton({ text }: CopyButtonProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="bg-accent text-muted-foreground hover:bg-muted hover:text-ost-blue-three rounded p-1.5 transition-colors"
+      aria-label={copied ? "Copied!" : "Copy to clipboard"}
+      title={copied ? "Copied!" : "Copy to clipboard"}
+    >
+      {copied ? (
+        <HiMiniCheck className="h-4 w-4" />
+      ) : (
+        <LuCopy className="h-4 w-4" />
+      )}
+    </button>
+  );
+}
+
 function CodeBlock({ children, className, ...props }: CodeBlockProps) {
   const match = /language-(\w+)/.exec(className || "");
   const language = match ? match[1] : "";
+  const codeText = String(children).replace(/\n$/, "");
 
   if (language) {
     return (
-      <SyntaxHighlighter
-        style={oneLight}
-        language={language}
-        PreTag="div"
-        className="!mt-0 !mb-3 rounded-lg"
-        customStyle={{
-          margin: "0 0 12px 0",
-          fontSize: "0.875rem",
-          lineHeight: "1.5",
-          background: "hsl(var(--accent))",
-          color: "hsl(var(--accent-foreground))",
-        }}
-        {...props}
-      >
-        {String(children).replace(/\n$/, "")}
-      </SyntaxHighlighter>
+      <div className="bg-accent relative rounded-md pr-2">
+        <div className="flex flex-row">
+          <SyntaxHighlighter
+            style={oneLight}
+            language={language}
+            PreTag="div"
+            className="m-0 w-full overflow-x-auto pr-10 whitespace-pre"
+            customStyle={{
+              margin: "0",
+              fontSize: "0.875rem",
+              lineHeight: "1.5",
+              background: "transparent",
+              color: "hsl(var(--accent-foreground))",
+              padding: "0.5rem",
+            }}
+            {...props}
+          >
+            {codeText}
+          </SyntaxHighlighter>
+          <div className="absolute inset-y-0 right-2 flex items-center">
+            <CopyButton text={codeText} />
+          </div>
+        </div>
+      </div>
     );
   }
 

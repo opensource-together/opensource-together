@@ -111,9 +111,7 @@ export function StepDescribeProjectForm() {
   });
 
   const handlePrevious = () => {
-    if (formData.method === "scratch") {
-      router.push("/projects/create");
-    } else if (formData.method === "github" || formData.method === "gitlab") {
+    if (formData.method === "github" || formData.method === "gitlab") {
       router.push(`/projects/create/${formData.method}/import`);
     }
   };
@@ -122,7 +120,7 @@ export function StepDescribeProjectForm() {
     <div className="flex w-full justify-between gap-14">
       <div className="flex-1 flex-col gap-4">
         <Form {...form}>
-          <form className="flex w-full flex-col gap-8" onSubmit={onSubmit}>
+          <form className="mt-7 flex w-full flex-col gap-8" onSubmit={onSubmit}>
             <FormField
               control={control}
               name="logoUrl"
@@ -209,7 +207,7 @@ export function StepDescribeProjectForm() {
 
       <div className="hidden w-[55%] lg:block">
         <div className="sticky top-8">
-          <h3 className="mb-4 text-lg font-medium">Preview</h3>
+          <h3 className="mt-7 mb-4 text-lg font-medium">Preview</h3>
           <ProjectDescribePreview
             title={watchedValues.title}
             description={watchedValues.description}

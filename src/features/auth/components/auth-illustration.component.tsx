@@ -21,7 +21,6 @@ export default function AuthIllustration() {
         alt="Background"
         fill
         priority
-        sizes="(min-width: 768px) 100vw, 0px"
         className="hidden object-cover md:block"
       />
     </div>

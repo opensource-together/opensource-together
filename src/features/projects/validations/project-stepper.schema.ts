@@ -67,7 +67,7 @@ export const stepTechCategoriesSchema = z.object({
 
 // Create Project Schema (for stepper form)
 export const createProjectSchema = z.object({
-  method: z.enum(["github", "scratch"]).nullable(),
+  method: z.enum(["github", "gitlab"]).nullable(),
   ...stepDescribeProjectSchema.shape,
   ...stepTechCategoriesSchema.shape,
   selectedRepository: selectedRepoSchema,

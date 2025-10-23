@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
-import {
-  CustomCombobox,
-  CustomComboboxOption,
-} from "@/shared/components/ui/custom-combobox";
-import { fetchCategories } from "@/shared/services/category.service";
-import { fetchTechStacks } from "@/shared/services/tech-stack.service";
+import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
+import { useCategories } from "@/shared/hooks/use-category.hook";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 interface FilterItemProps {
   label: string;
@@ -15,11 +12,11 @@ interface FilterItemProps {
 
 function FilterItem({ label, value }: FilterItemProps) {
   return (
-    <div className="group flex h-12 w-37 cursor-pointer flex-col rounded-full px-8 py-2 transition-all duration-200 hover:rounded-full hover:bg-white">
+    <div className="group flex h-14 w-44 cursor-pointer flex-col rounded-full px-8 py-2.5 transition-all duration-200 hover:rounded-full hover:bg-white">
       <span className="text-xs font-normal text-black/40 transition-colors duration-200">
         {label}
       </span>
-      <span className="group-hover:text-primary text-xs font-medium tracking-tight whitespace-nowrap transition-colors duration-200">
+      <span className="text-sm font-medium tracking-tight whitespace-nowrap transition-colors duration-200 group-hover:text-black">
         {value}
       </span>
     </div>
@@ -27,38 +24,23 @@ function FilterItem({ label, value }: FilterItemProps) {
 }
 
 export default function FilterSearchBar() {
-  const [techOptions, setTechOptions] = useState<CustomComboboxOption[]>([]);
-  const [categoryOptions, setCategoryOptions] = useState<
-    CustomComboboxOption[]
-  >([]);
+  const [selectedTechStacks, setSelectedTechStacks] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      const [techs, cats] = await Promise.all([
-        fetchTechStacks(),
-        fetchCategories(),
-      ]);
-      if (!mounted) return;
-      setTechOptions(
-        techs.map((t) => ({ id: t.id, name: t.name, type: t.type }))
-      );
-      setCategoryOptions(cats.map((c) => ({ id: c.id, name: c.name })));
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const { categoryOptions, isLoading: categoryLoading } = useCategories();
 
-  const languageAndTechOptions = useMemo(() => techOptions, [techOptions]);
+  const handleTechStacksChange = (ids: string[]) => {
+    setSelectedTechStacks(ids);
+  };
 
-  const handleTechStacksChange = (_ids: string[]) => {};
-
-  const handleCategoriesChange = (_ids: string[]) => {};
+  const handleCategoriesChange = (ids: string[]) => {
+    setSelectedCategories(ids);
+  };
 
   return (
     <div
-      className="mb-[19px] flex h-12.5 w-[592px] items-center justify-center"
+      className="flex h-14 w-[700px] items-center justify-center"
       role="search"
     >
       <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
@@ -66,35 +48,39 @@ export default function FilterSearchBar() {
           <div className="flex items-center">
             <div className="relative pr-0">
               <CustomCombobox
-                options={languageAndTechOptions}
-                value={[]}
+                options={techStackOptions}
+                value={selectedTechStacks}
                 onChange={handleTechStacksChange}
-                placeholder="Technologies"
-                searchPlaceholder="Rechercher une techno..."
-                emptyText="Aucune techno"
-                maxSelections={6}
-                showTags={false}
+                placeholder={
+                  techStacksLoading
+                    ? "Loading technologies..."
+                    : "Add technologies..."
+                }
+                searchPlaceholder="Search technologies..."
+                emptyText="No technologies found."
                 trigger={<FilterItem label="Choose" value="Technologies" />}
               />
             </div>
 
-            <div className="z-10 mx-1 h-5 w-px self-center bg-black/10" />
+            <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
             <div className="relative pr-0">
               <CustomCombobox
                 options={categoryOptions}
-                value={[]}
+                value={selectedCategories}
                 onChange={handleCategoriesChange}
-                placeholder="Catégories"
-                searchPlaceholder="Rechercher une catégorie..."
-                emptyText="Aucune catégorie"
-                maxSelections={4}
-                showTags={false}
+                placeholder={
+                  categoryLoading
+                    ? "Loading categories..."
+                    : "Add categories..."
+                }
+                searchPlaceholder="Search categories..."
+                emptyText="No categories found."
                 trigger={<FilterItem label="Select" value="Categories" />}
               />
             </div>
 
-            <div className="z-10 mx-1 h-5 w-px self-center bg-black/10" />
+            <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
             <div className="relative pr-0">
               <CustomCombobox
@@ -102,10 +88,8 @@ export default function FilterSearchBar() {
                 value={[]}
                 onChange={handleTechStacksChange}
                 placeholder="Most Popular"
-                searchPlaceholder="Rechercher un tri..."
-                emptyText="Aucun tri"
-                maxSelections={6}
-                showTags={false}
+                searchPlaceholder="Sort by..."
+                emptyText="No results found."
                 trigger={<FilterItem label="Sort" value="Most Popular" />}
               />
             </div>
@@ -113,7 +97,7 @@ export default function FilterSearchBar() {
         </div>
         <Button
           type="button"
-          className="pointer-events-auto absolute right-2 h-8.5 px-4 text-sm"
+          className="absolute right-2 px-6 py-5"
           onClick={() => {}}
         >
           Filter Projects

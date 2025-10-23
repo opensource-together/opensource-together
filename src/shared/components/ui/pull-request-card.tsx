@@ -27,7 +27,7 @@ export default function PullRequestCard({
     <Link href={pullRequest.url} target="_blank" rel="noreferrer">
       <article
         className={cn(
-          "rounded-[20px] border border-[black]/6 px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+          "border-muted-black-stroke rounded-[20px] border px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
           className
         )}
       >

@@ -5,7 +5,7 @@ import { TechStackList } from "@/shared/components/ui/tech-stack-list";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
-import { ContributorsSidebarList } from "@/features/projects/components/contributors-sidebar-list";
+import { ContributorsSidebarList } from "@/features/projects/components/contributors-sidebar-list.component";
 
 import { Project } from "../types/project.type";
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import "react-icons/hi";
 import {
+  HiChartBar,
   HiChatBubbleLeft,
   HiChevronRight,
   HiCog6Tooth,
@@ -27,11 +28,23 @@ const sidebarSections = [
   },
   {
     items: [
-      { label: "Chat", href: "/dashboard/chat", icon: HiChatBubbleLeft },
+      {
+        label: "Analytics",
+        href: "/dashboard/analytics",
+        icon: HiChartBar,
+        disabled: true,
+      },
+      {
+        label: "Chat",
+        href: "/dashboard/chat",
+        icon: HiChatBubbleLeft,
+        disabled: true,
+      },
       {
         label: "Invitations",
         href: "/dashboard/invitations",
         icon: HiUserGroup,
+        disabled: true,
       },
     ],
   },
@@ -46,6 +59,7 @@ interface SidebarItem {
   label: string;
   href: string;
   icon: React.ElementType;
+  disabled?: boolean;
 }
 
 function SidebarLink({
@@ -55,6 +69,20 @@ function SidebarLink({
   item: SidebarItem;
   isActive: boolean;
 }) {
+  if (item.disabled) {
+    return (
+      <div className="group hidden cursor-not-allowed items-center justify-between gap-3 rounded-full px-4 py-2 opacity-50 transition-all duration-200 lg:flex">
+        <span className="text-muted-foreground flex items-center gap-2 text-sm">
+          <span>{item.label}</span>
+          <span className="text-muted-foreground translate-x-1 text-xs opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-hover:delay-75">
+            Coming soon
+          </span>
+        </span>
+        <item.icon className="text-muted-foreground size-4" />
+      </div>
+    );
+  }
+
   return (
     <Link
       href={item.href}
@@ -81,7 +109,7 @@ export default function DashboardSidebar() {
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
-    <aside className="hidden w-16 flex-col border-[black]/5 px-2 pt-5 lg:ml-5 lg:flex lg:w-72">
+    <aside className="border-muted-black-stroke hidden w-16 flex-col px-2 pt-5 lg:ml-5 lg:flex lg:h-full lg:w-72">
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-col gap-6">
           {sidebarSections.map((section, sectionIndex) => (
@@ -100,9 +128,9 @@ export default function DashboardSidebar() {
 
         <div>
           <div className="bg-secondary rounded-xl p-4">
-            <div className="text-muted-foreground mb-3 text-center text-xs">
-              Create a new project for OST. Import a repo from Github or start
-              from scratch.
+            <div className="text-muted-foreground mb-3 text-start text-xs">
+              Create a project for OpenSource Together. <br /> Import a
+              repository from Github or Gitlab.
             </div>
             <Button
               asChild

@@ -54,7 +54,7 @@ export default function ProfileView() {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="contributions">Contributions</TabsTrigger>
+          <TabsTrigger value="pull-request">Pull Requests</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -75,31 +75,15 @@ export default function ProfileView() {
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">
-          <div className="flex w-full">
-            <Suspense fallback={<ProfileProjectsSkeleton />}>
-              <ProfileProjectsList />
-            </Suspense>
-          </div>
+          <Suspense fallback={<ProfileProjectsSkeleton />}>
+            <ProfileProjectsList />
+          </Suspense>
         </TabsContent>
 
-        <TabsContent value="contributions" className="mt-6">
-          {shouldShowGithubCalendar && (
-            <div className="mb-2 w-full">
-              <GithubGraph
-                contributionGraph={currentUser.contributionGraph}
-                contributionsCount={
-                  currentUser.contributionGraph?.totalContributions || 0
-                }
-              />
-            </div>
-          )}
-          <div className="mt-12 w-full">
-            {tab === "contributions" && (
-              <Suspense fallback={<ProfilePullRequestsSkeleton />}>
-                <ProfilePullRequests />
-              </Suspense>
-            )}
-          </div>
+        <TabsContent value="pull-request" className="mt-6">
+          <Suspense fallback={<ProfilePullRequestsSkeleton />}>
+            <ProfilePullRequests />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </TwoColumnLayout>

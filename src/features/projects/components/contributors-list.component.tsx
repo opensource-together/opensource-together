@@ -65,7 +65,7 @@ function ContributorCard({ contributor }: { contributor: Contributor }) {
 
   return (
     <Link href={contributorUrl} target="_blank" rel="noreferrer">
-      <div className="flex items-center gap-4 rounded-[20px] border border-[black]/6 px-4 py-3.5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
+      <div className="border-muted-black-stroke flex items-center gap-4 rounded-[20px] border px-4 py-3.5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
         <Avatar
           src={contributor.avatar_url}
           name={contributor.login}

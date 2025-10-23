@@ -14,7 +14,7 @@ export default function TwoColumnLayout({
   mobileHeader,
 }: TwoColumnLayoutProps) {
   return (
-    <div className="mx-7 mt-2 mb-20 flex max-w-[1007px] flex-col gap-8 md:mt-13.5 md:mb-36 lg:mx-auto">
+    <div className="mx-7 mt-2 mb-20 flex max-w-[1007px] flex-col gap-8 md:mt-8 md:mb-36 lg:mx-auto">
       {mobileHeader && <div className="md:hidden">{mobileHeader}</div>}
 
       <div className="flex flex-col gap-6 md:flex-row-reverse md:items-start md:gap-25">

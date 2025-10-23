@@ -9,8 +9,11 @@ const protectedRoutes = [
   "/dashboard",
 ];
 const authRoutes = ["/auth/login"];
+const onboardingRoutePrefix = "/onboarding";
 
-export function middleware(request: NextRequest) {
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const hasBetterAuthCookie = request.cookies
@@ -28,6 +31,20 @@ export function middleware(request: NextRequest) {
   if (isAuthRoute && hasSessionCookies)
     return NextResponse.redirect(new URL("/", request.url));
 
+  const isOnboardingRoute = pathname.startsWith(onboardingRoutePrefix);
+
+  if (
+    hasSessionCookies &&
+    !isAuthRoute &&
+    !isOnboardingRoute &&
+    !pathname.startsWith("/api")
+  ) {
+    const isOnboardingCompleted = await checkOnboardingCompleted(request);
+    if (!isOnboardingCompleted) {
+      return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
+  }
+
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
@@ -35,6 +52,19 @@ export function middleware(request: NextRequest) {
   if (!isProtectedRoute) return NextResponse.next();
 
   if (!hasSessionCookies) return redirectToLogin(request);
+
+  if (!isOnboardingRoute) {
+    const isOnboardingCompleted = await checkOnboardingCompleted(request);
+    if (!isOnboardingCompleted) {
+      return NextResponse.redirect(new URL("/onboarding", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  const isOnboardingCompleted = await checkOnboardingCompleted(request);
+  if (isOnboardingCompleted) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return NextResponse.next();
 }
@@ -50,3 +80,39 @@ export const config = {
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+
+async function checkOnboardingCompleted(
+  request: NextRequest
+): Promise<boolean> {
+  if (!apiBaseUrl) {
+    return true;
+  }
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/users/me`, {
+      headers: {
+        accept: "application/json",
+        cookie: request.headers.get("cookie") ?? "",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return true;
+    }
+
+    const data = await response.json();
+    const user = data?.data;
+    if (!user) {
+      return true;
+    }
+
+    const hasJobTitle = Boolean(user.jobTitle);
+    const hasTechStacks =
+      Array.isArray(user.userTechStacks) && user.userTechStacks.length > 0;
+
+    return hasJobTitle || hasTechStacks;
+  } catch {
+    return true;
+  }
+}

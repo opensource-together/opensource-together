@@ -9,6 +9,12 @@ import {
 } from "react-icons/ri";
 import { RxDiscordLogo } from "react-icons/rx";
 
+import {
+  type ExternalLinkType,
+  ensureExternalUrlProtocol,
+  formatExternalUrl,
+} from "@/shared/lib/utils/format-external-url";
+
 type LinkSource = {
   githubUrl?: string | null;
   gitlabUrl?: string | null;
@@ -36,18 +42,6 @@ const LINK_CONFIG: ReadonlyArray<LinkConfig> = [
 const isFilled = (v?: string | null) =>
   typeof v === "string" && v.trim().length > 0;
 
-const ensureProtocol = (url: string) =>
-  /^https?:\/\//i.test(url) ? url : `https://${url}`;
-
-const formatUrl = (raw: string) => {
-  try {
-    const u = new URL(ensureProtocol(raw));
-    return `${u.hostname}${u.pathname.replace(/\/$/, "")}`;
-  } catch {
-    return raw;
-  }
-};
-
 export function ExternalLinks({
   source,
   title,
@@ -67,7 +61,7 @@ export function ExternalLinks({
           const raw = source[key];
           if (!isFilled(raw)) return null;
 
-          const href = ensureProtocol(raw as string);
+          const href = ensureExternalUrlProtocol(raw as string);
           return (
             <Link
               key={String(key)}
@@ -79,10 +73,12 @@ export function ExternalLinks({
               aria-label={alt}
             >
               <div className="text-muted-foreground hover:text-muted-foreground/80 flex items-center gap-1.5 rounded-full text-sm tracking-tight transition-colors">
-                <div className="flex-shrink-0">
-                  <Icon size={20} aria-hidden />
-                </div>
-                <span className="truncate">{formatUrl(raw as string)}</span>
+                <span className="flex items-center gap-1 rounded-full border px-2 py-px">
+                  <Icon size={14} />
+                  <span className="truncate">
+                    {formatExternalUrl(raw as string, key as ExternalLinkType)}
+                  </span>
+                </span>
               </div>
             </Link>
           );

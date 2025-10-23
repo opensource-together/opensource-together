@@ -35,9 +35,9 @@ export default function ChooseMethodCard({
     >
       <div className="flex items-center space-x-2">
         <IconComp size={20} />
-        <h3 className="font-medium text-gray-900">{title}</h3>
+        <h3 className="font-medium">{title}</h3>
       </div>
-      <p className="mt-3 text-sm text-gray-500">{description}</p>
+      <p className="text-muted-foreground mt-3 text-sm">{description}</p>
     </div>
   );
 }
