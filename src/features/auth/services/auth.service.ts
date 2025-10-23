@@ -1,4 +1,4 @@
-import { API_BASE_URL, FRONTEND_URL } from "@/config/config";
+import { API_BASE_URL } from "@/config/config";
 
 import { authClient } from "@/shared/lib/auth-client";
 
@@ -8,7 +8,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   try {
     await authClient.signIn.social({
       provider,
-      callbackURL: `${FRONTEND_URL}/`,
+      callbackURL: window.location.origin,
     });
   } catch (error) {
     console.error("signInWithProvider error:", error);
