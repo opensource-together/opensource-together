@@ -81,7 +81,9 @@ export const config = {
   ],
 };
 
-async function checkOnboardingCompleted(request: NextRequest): Promise<boolean> {
+async function checkOnboardingCompleted(
+  request: NextRequest
+): Promise<boolean> {
   if (!apiBaseUrl) {
     return true;
   }
