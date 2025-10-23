@@ -22,6 +22,7 @@ export default function useAuth() {
   } = useQuery({
     queryKey: ["users", "me"],
     queryFn: getCurrentUser,
+    retry: 0,
   });
 
   useEffect(() => {
