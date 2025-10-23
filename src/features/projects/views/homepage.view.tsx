@@ -46,7 +46,7 @@ export default function HomepageView() {
     );
   }
 
-  if (!projects || projects.length === 0) {
+  if (projects && projects.length === 0) {
     return (
       <HomepageLayout>
         <EmptyState title="No projects available" className="mb-28" />
@@ -56,7 +56,7 @@ export default function HomepageView() {
 
   return (
     <HomepageLayout>
-      <ProjectGrid projects={projects} />
+      <ProjectGrid projects={projects || []} />
 
       <Link href="/projects/trending">
         <div className="mt-14 flex items-center gap-1 font-medium">
@@ -65,7 +65,7 @@ export default function HomepageView() {
       </Link>
 
       <div className="mt-6">
-        <ProjectGrid projects={projects} />
+        <ProjectGrid projects={projects || []} />
       </div>
 
       <div className="mt-8 mb-[50px]">
