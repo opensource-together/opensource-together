@@ -93,7 +93,6 @@ export function ProjectImageMetadata({
                       fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
                       fontWeight: 500,
                       letterSpacing: "-0.02em",
-                      color: "#0f172a",
                     }}
                   >
                     {numberFormatter.format(stat.value)}
@@ -123,7 +122,7 @@ export function ProjectImageMetadata({
               justifyContent: "center",
               width: "300px",
               height: "300px",
-              borderRadius: "40px",
+              borderRadius: "65px",
               overflow: "hidden",
               background: "#ffffff",
             }}

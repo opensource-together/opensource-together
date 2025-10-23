@@ -18,7 +18,7 @@ export function ImageMetadataContent({
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        maxWidth: "620px",
+        maxWidth: "630px",
         gap: "20px",
         zIndex: 1,
       }}
