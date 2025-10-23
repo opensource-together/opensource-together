@@ -11,7 +11,7 @@ export default function ProjectDiscoveryHero() {
     <div className="relative mx-auto w-full">
       <FadeIn delay={0.1}>
         <Image
-          src="/illustrations/top.png"
+          src="/illustrations/traveler.png"
           alt="Bible gauche"
           width={1441}
           height={400}
