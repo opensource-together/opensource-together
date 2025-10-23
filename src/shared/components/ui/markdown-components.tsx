@@ -67,7 +67,7 @@ function CodeBlock({ children, className, ...props }: CodeBlockProps) {
 
   if (language) {
     return (
-      <div className="relative pr-2">
+      <div className="bg-accent relative rounded-md pr-2">
         <div className="flex flex-row">
           <SyntaxHighlighter
             style={oneLight}

@@ -14,14 +14,13 @@ export default function LoginView() {
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <Link
           href="/"
-          className="absolute top-7 left-0 z-10 md:top-12 md:left-1/2 md:-translate-x-1/2"
+          className="absolute top-7 left-0 z-50 md:top-12 md:left-1/2 md:-translate-x-1/2"
         >
           <Image
             src="/ostogether-logo.svg"
             alt="ost-logo"
-            width={209}
+            width={200}
             height={12}
-            className="max-h-[16px] lg:max-h-[25px]"
           />
         </Link>
 
@@ -31,7 +30,7 @@ export default function LoginView() {
         </div>
 
         {/* Desktop+: background illustration covers behind content */}
-        <div className="pointer-events-none absolute inset-0 z-0 hidden md:block">
+        <div className="pointer-events-none absolute inset-0 z-0 hidden pb-10 md:block">
           <AuthIllustration />
         </div>
 
