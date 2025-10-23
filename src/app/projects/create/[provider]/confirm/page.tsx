@@ -18,7 +18,6 @@ export async function generateMetadata({
   const titles = {
     github: "Configure GitHub Project | OpenSource Together",
     gitlab: "Configure GitLab Project | OpenSource Together",
-    scratch: "Configure Project | OpenSource Together",
   };
 
   return {

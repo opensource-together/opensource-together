@@ -3,7 +3,7 @@ import { devtools, persist } from "zustand/middleware";
 
 import { UserGitRepository } from "@/shared/types/git-repository.type";
 
-export type provider = "scratch" | "github" | "gitlab";
+export type provider = "github" | "gitlab";
 
 export interface ProjectFormData {
   method: provider;
@@ -61,7 +61,7 @@ interface ProjectCreateStore {
 }
 
 const initialFormData: ProjectFormData = {
-  method: "scratch",
+  method: "github",
   title: "",
   description: "",
   imagesUrls: [],

@@ -14,7 +14,7 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <main className="flex h-[calc(80vh-100px)] flex-col items-center justify-center text-center">
+    <main className="flex h-[calc(75vh-100px)] flex-col items-center justify-center text-center">
       <h1 className="text-6xl font-medium">500</h1>
       <p className="mt-4 text-lg font-medium">Internal Server Error</p>
       <p className="text-muted-foreground mt-2 max-w-72">

@@ -30,7 +30,6 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
-import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { useDeleteProject } from "@/features/projects/hooks/use-projects.hook";
 
@@ -144,7 +143,7 @@ export default function MyProjectsList() {
 
                 <TableCell>
                   <span className="text-sm font-medium">
-                    {formatTimeAgo(project.createdAt)}
+                    {new Date(project.createdAt).toLocaleDateString()}
                   </span>
                 </TableCell>
 
@@ -174,10 +173,11 @@ export default function MyProjectsList() {
                             title: project.title || "Untitled Project",
                           });
                         }}
-                        className="text-destructive flex items-center justify-between"
+                        className="flex items-center justify-between"
+                        variant="destructive"
                       >
                         Delete Project
-                        <HiMiniTrash className="text-destructive size-4" />
+                        <HiMiniTrash className="size-4" />
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

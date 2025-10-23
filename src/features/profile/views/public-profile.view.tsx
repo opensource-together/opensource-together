@@ -59,7 +59,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="contributions">Contributions</TabsTrigger>
+          <TabsTrigger value="pull-requests">Pull Requests</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -86,24 +86,10 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
           </div>
         </TabsContent>
 
-        <TabsContent value="contributions" className="mt-6">
-          {shouldShowGithubData && (
-            <div className="mb-2 w-full">
-              <GithubGraph
-                contributionGraph={profile.contributionGraph}
-                contributionsCount={
-                  profile.contributionGraph?.totalContributions || 0
-                }
-              />
-            </div>
-          )}
-          <div className="mt-12 w-full">
-            {tab === "contributions" && (
-              <Suspense fallback={<ProfilePullRequestsSkeleton />}>
-                <ProfilePullRequests userId={userId} />
-              </Suspense>
-            )}
-          </div>
+        <TabsContent value="pull-requests" className="mt-6">
+          <Suspense fallback={<ProfilePullRequestsSkeleton />}>
+            <ProfilePullRequests userId={userId} />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </TwoColumnLayout>

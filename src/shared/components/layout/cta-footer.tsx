@@ -10,22 +10,18 @@ interface CTAFooterProps {
 
 export default function CTAFooter({ imageIllustration }: CTAFooterProps) {
   return (
-    <div className="overflow relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 pt-8 pb-16 md:px-7 md:pb-20">
-      {/* Background illustration anchored to the right, behind content */}
+    <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center overflow-hidden px-4 pt-8 pb-16 md:px-7 md:pb-20">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="flex h-full w-full items-center justify-end">
-          <Image
-            src={imageIllustration || "/background-footer.png"}
-            alt="ost-footer-bg"
-            width={643}
-            height={376}
-            className="w-[500px] object-contain md:w-[700px] md:-translate-y-6 lg:-translate-y-8"
-            priority
-          />
-        </div>
+        <Image
+          src={imageIllustration || ""}
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 1120px, 100vw"
+          className="object-cover object-right-top md:object-right"
+          priority
+        />
       </div>
 
-      {/* Foreground content centered */}
       <div className="relative z-10 min-w-0 flex-shrink-0 text-center md:text-center">
         <h1
           className="text-2xl leading-tight font-medium tracking-tighter md:text-2xl lg:text-5xl"

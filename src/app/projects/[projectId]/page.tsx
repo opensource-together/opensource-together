@@ -65,7 +65,7 @@ export default async function ProjectPage({
   return (
     <HydrationBoundary state={dehydratedState}>
       <ProjectDetailView projectId={projectId} />
-      <CTAFooter imageIllustration="/illustrations/man-walking.png" />
+      <CTAFooter imageIllustration="/illustrations/winged-angel.png" />
     </HydrationBoundary>
   );
 }

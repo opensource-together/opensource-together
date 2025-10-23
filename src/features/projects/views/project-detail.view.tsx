@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { HiMiniExclamationTriangle } from "react-icons/hi2";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
@@ -14,18 +13,20 @@ import {
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
 import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
-import { decodeBase64Safe } from "@/shared/lib/utils/decode-base-64";
 
-import ContributorsList from "../components/contributors-list";
+import ContributingComponent from "../components/contributing.component";
+import ContributorsList from "../components/contributors-list.component";
 import OpenIssuesList from "../components/issues/open-issues-list";
 import RecentOpenIssues from "../components/issues/recent-opent-issues";
+import ProjectCodeOfConduct from "../components/project-code-of-conduct.component";
 import ProjectHero, {
   ProjectMobileHero,
 } from "../components/project-hero.component";
-import ProjectPullRequestList from "../components/project-pull-request-list";
+import ProjectPullRequestList from "../components/project-pull-request-list.component";
 import ProjectReadme from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
+import { useDecodedFiles } from "../hooks/use-decoded-files.hook";
 import { useProject } from "../hooks/use-projects.hook";
 
 interface ProjectDetailViewProps {
@@ -37,15 +38,7 @@ export default function ProjectDetailView({
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProject(projectId);
   const { tab, handleTabChange } = useTabNavigation("overview");
-
-  const sourceReadme = project?.repositoryDetails?.readme ?? undefined;
-  const decodedReadme = useMemo(
-    () =>
-      sourceReadme
-        ? (decodeBase64Safe(sourceReadme) ?? sourceReadme)
-        : undefined,
-    [sourceReadme]
-  );
+  const { readme, contributionFile, codeOfConduct } = useDecodedFiles(project);
 
   if (isLoading) return <SkeletonProjectDetail />;
   if (isError || !project)
@@ -68,6 +61,7 @@ export default function ProjectDetailView({
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="contributing">Contributing</TabsTrigger>
           <TabsTrigger
             value="open-issues"
             count={project.repositoryDetails?.openIssuesCount}
@@ -95,7 +89,7 @@ export default function ProjectDetailView({
           {(() => {
             if (
               project.imagesUrls.length === 0 &&
-              !decodedReadme &&
+              !readme &&
               (!project.repositoryDetails?.issues ||
                 project.repositoryDetails.issues.length === 0)
             ) {
@@ -113,9 +107,9 @@ export default function ProjectDetailView({
                 {project.imagesUrls.length > 0 && (
                   <ImageSlider images={project.imagesUrls} />
                 )}
-                {decodedReadme && (
+                {readme && (
                   <ProjectReadme
-                    readme={decodedReadme}
+                    readme={readme}
                     projectTitle={project.title}
                     project={{
                       repoUrl: project.repoUrl,
@@ -129,6 +123,19 @@ export default function ProjectDetailView({
               </>
             );
           })()}
+        </TabsContent>
+
+        <TabsContent value="contributing" className="mt-6">
+          <ContributingComponent contributionFile={contributionFile ?? ""} />
+          {codeOfConduct && (
+            <ProjectCodeOfConduct
+              codeOfConduct={codeOfConduct}
+              projectTitle={project.title}
+              project={{
+                repoUrl: project.repoUrl,
+              }}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="open-issues" className="mt-6">

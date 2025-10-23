@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { HiCheck } from "react-icons/hi2";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -47,9 +48,9 @@ export function Combobox({
   options,
   value,
   onChange,
-  placeholder = "Sélectionner...",
-  searchPlaceholder = "Rechercher...",
-  emptyText = "Aucun résultat trouvé.",
+  placeholder = "Select...",
+  searchPlaceholder = "Search...",
+  emptyText = "No results found.",
   maxSelections,
   className,
   disabled = false,
@@ -156,12 +157,12 @@ export function Combobox({
                               isDisabled && "cursor-not-allowed opacity-50"
                             )}
                           >
-                            <Icon
-                              name="check"
-                              size="xs"
-                              variant="gray"
+                            <HiCheck
+                              size={16}
                               className={cn(
-                                isSelected ? "opacity-100" : "opacity-0"
+                                isSelected
+                                  ? "text-ost-blue-three opacity-100"
+                                  : "opacity-0"
                               )}
                             />
                             {option.iconUrl && (
@@ -197,12 +198,12 @@ export function Combobox({
                               isDisabled && "cursor-not-allowed opacity-50"
                             )}
                           >
-                            <Icon
-                              name="check"
-                              size="xs"
-                              variant="gray"
+                            <HiCheck
+                              size={16}
                               className={cn(
-                                isSelected ? "opacity-100" : "opacity-0"
+                                isSelected
+                                  ? "text-ost-blue-three opacity-100"
+                                  : "opacity-0"
                               )}
                             />
                             {option.iconUrl && (
@@ -240,12 +241,12 @@ export function Combobox({
                           isDisabled && "cursor-not-allowed opacity-50"
                         )}
                       >
-                        <Icon
-                          name="check"
-                          size="xs"
-                          variant="gray"
+                        <HiCheck
+                          size={16}
                           className={cn(
-                            isSelected ? "opacity-100" : "opacity-0"
+                            isSelected
+                              ? "text-ost-blue-three opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         {option.iconUrl && (

@@ -27,8 +27,7 @@ export function useOnboarding() {
       return data;
     },
     loadingMessage: "Completing your setup...",
-    successMessage:
-      "Welcome to OpenSource Together! Your profile is now complete.",
+    successMessage: "Profile completed. Welcome to OpenSource Together 🎉!",
     errorMessage: "Failed to complete onboarding. Please try again.",
     options: {
       onSuccess: () => {

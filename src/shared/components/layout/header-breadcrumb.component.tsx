@@ -26,8 +26,12 @@ export default function HeaderBreadcrumb() {
   };
 
   const getData = () => {
-    const publicProjectId = segments[segments.indexOf("projects") + 1];
-    const userId = segments[segments.indexOf("profile") + 1];
+    const projectIndex = segments.indexOf("projects");
+    const profileIndex = segments.indexOf("profile");
+
+    const publicProjectId =
+      projectIndex !== -1 ? segments[projectIndex + 1] : undefined;
+    const userId = profileIndex !== -1 ? segments[profileIndex + 1] : undefined;
 
     return {
       publicProjectId,
@@ -37,8 +41,8 @@ export default function HeaderBreadcrumb() {
 
   const { publicProjectId, userId } = getData();
 
-  const { data: publicProject } = useProject(publicProjectId || "");
-  const { data: publicProfile } = useProfile(userId || "");
+  const { data: publicProject } = useProject(publicProjectId ?? "");
+  const { data: publicProfile } = useProfile(userId ?? "");
 
   const getBreadcrumbItems = () => {
     if (routeConfig[pathname as keyof typeof routeConfig]) {

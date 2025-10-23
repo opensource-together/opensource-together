@@ -17,11 +17,11 @@ const avatarVariants = cva("relative flex shrink-0 overflow-hidden", {
       "2xl": "size-20",
     },
     shape: {
-      circle: "rounded-full",
-      square: "rounded-none",
-      sharp: "rounded-sm",
-      soft: "rounded-lg",
-      rounded: "rounded-2xl",
+      circle: "rounded-full outline outline-muted-black-stroke",
+      square: "rounded-none outline outline-muted-black-stroke",
+      sharp: "rounded-sm outline outline-muted-black-stroke",
+      soft: "rounded-lg outline outline-muted-black-stroke",
+      rounded: "rounded-2xl outline outline-muted-black-stroke",
     },
   },
   defaultVariants: {

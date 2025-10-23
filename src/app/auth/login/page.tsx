@@ -3,9 +3,8 @@ import { Metadata } from "next";
 import LoginView from "@/features/auth/views/login.view";
 
 export const metadata: Metadata = {
-  title: "Connexion | OpenSource Together",
-  description:
-    "Connectez-vous à votre compte Github pour continuer à utiliser OpenSource Together",
+  title: "Sign in | OpenSource Together",
+  description: "Sign in to your account to continue using OpenSource Together",
 };
 
 export default function LoginPage() {

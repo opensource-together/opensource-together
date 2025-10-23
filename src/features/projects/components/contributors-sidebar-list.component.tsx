@@ -27,7 +27,7 @@ export function ContributorsSidebarList({
   const visible = contributors.slice(0, maxVisible);
   const total =
     typeof totalCount === "number" ? totalCount : contributors.length;
-  const remaining = Math.max(total - 3, 0);
+  const remaining = Math.max(total - 2, 0);
   const remainingDisplay = total >= 100 || remaining > 99 ? "99+" : remaining;
   return (
     <div>
@@ -55,10 +55,10 @@ export function ContributorsSidebarList({
       )}
       <div className="text-muted-foreground mt-3 text-xs">
         {visible
-          .slice(0, 3)
+          .slice(0, 2)
           .map((contributor) => contributor.login)
           .join(", ")}
-        {total > 3 && <> &amp; {remainingDisplay} more</>}
+        {total > 2 && <> &amp; {remainingDisplay} more</>}
       </div>
     </div>
   );

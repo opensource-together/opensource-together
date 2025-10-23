@@ -7,7 +7,7 @@ export interface Project {
   title: string;
   imagesUrls: string[];
   logoUrl: string | null;
-  provider: "GITHUB" | "GITLAB" | "SCRATCH";
+  provider: "GITHUB" | "GITLAB";
   description: string;
   published: boolean;
   repoUrl: string | null;

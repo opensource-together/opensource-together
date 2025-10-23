@@ -17,7 +17,7 @@ export default function FooterLogin() {
   ];
 
   return (
-    <footer className="relative z-20 hidden h-16 w-full bg-white px-4 pt-0 pb-4 md:block md:px-10 md:pb-3">
+    <footer className="relative z-20 hidden h-16 w-full bg-white pt-0 pb-4 md:block md:pb-3">
       <Separator className="mb-3 w-full md:mb-3 lg:mb-3" />
       <div className="flex w-full flex-col items-center gap-3 md:flex-row md:items-center md:justify-between md:gap-6">
         <div className="flex w-full items-center justify-center gap-4 md:w-auto md:justify-start md:gap-6">
