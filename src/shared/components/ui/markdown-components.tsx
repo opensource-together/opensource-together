@@ -1,3 +1,5 @@
+"use client";
+
 import type { AnchorHTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";
 import { useState } from "react";
 import { HiMiniCheck } from "react-icons/hi2";
