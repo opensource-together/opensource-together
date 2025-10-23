@@ -13,6 +13,7 @@ export const getUserById = async (id: string): Promise<Profile> => {
   try {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: "GET",
+      credentials: "include",
     });
     if (!response.ok) {
       const error = await response.json();
