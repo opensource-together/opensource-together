@@ -1,4 +1,5 @@
 import ProjectCard from "@/shared/components/shared/ProjectCard";
+import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repository-owner";
 
 import { Project } from "../types/project.type";
 
@@ -16,11 +17,9 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           title={project.title}
           description={project.description}
           logoUrl={project.logoUrl || ""}
+          repositoryUrl={project.repoUrl || ""}
           projectTechStacks={project.projectTechStacks}
-          owner={{
-            id: project.owner?.id || "",
-            name: project.owner?.name || "",
-          }}
+          owner={extractRepositoryOwner(project.repoUrl) || ""}
           repositoryDetails={{
             forksCount: project.repositoryDetails?.forksCount || 0,
             contributors: project.repositoryDetails?.contributors || [],

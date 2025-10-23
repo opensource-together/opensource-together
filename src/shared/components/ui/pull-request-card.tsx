@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { HiArrowUpRight } from "react-icons/hi2";
 import { LuClock3 } from "react-icons/lu";
 import { VscGitPullRequest } from "react-icons/vsc";
 
@@ -70,6 +71,7 @@ export default function PullRequestCard({
               </div>
               <div className="flex items-center gap-2">
                 {pullRequest.draft && <Badge variant="gray">Draft</Badge>}
+                <HiArrowUpRight className="size-3" />
               </div>
             </div>
           </div>

@@ -1,6 +1,8 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
 
+import { FRONTEND_URL } from "@/config/config";
+
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { getQueryClient } from "@/shared/lib/query-client";
 
@@ -16,14 +18,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { projectId } = await params;
   const project = await getProjectDetails(projectId);
 
+  const projectUrl = `${FRONTEND_URL.replace(/\/$/, "")}/projects/${projectId}`;
+
   return {
     title: `${project.title} | OpenSource Together`,
     description: project.description,
     openGraph: {
       title: `${project.title} | OpenSource Together`,
       description: project.description,
-      images: [project.logoUrl || ""],
-      url: `https://opensourcetogether.com/projects/${projectId}`,
+      images: [
+        {
+          url: `${projectUrl}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: `${project.title} project preview`,
+        },
+      ],
+      url: projectUrl,
       type: "website",
       siteName: "OpenSource Together",
       locale: "fr_FR",

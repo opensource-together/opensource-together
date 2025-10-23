@@ -5,6 +5,7 @@ import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repository-owner";
 
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 
@@ -57,11 +58,9 @@ export default function RecentProjects() {
           title={project.title}
           description={project.description}
           logoUrl={project.logoUrl || ""}
+          repositoryUrl={project.repoUrl || ""}
           projectTechStacks={project.projectTechStacks}
-          owner={{
-            id: project.owner?.id || "",
-            name: project.owner?.name || "",
-          }}
+          owner={extractRepositoryOwner(project.repoUrl) || ""}
           repositoryDetails={{
             stars: project.repositoryDetails?.stars || 0,
             contributors: project.repositoryDetails?.contributors || [],
