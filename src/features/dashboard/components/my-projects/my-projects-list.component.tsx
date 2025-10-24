@@ -2,25 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import {
-  HiMiniEllipsisVertical,
-  HiMiniPencilSquare,
-  HiMiniSquare2Stack,
-  HiMiniTrash,
-  HiPlus,
-} from "react-icons/hi2";
+import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/components/ui/dropdown-menu";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { PaginationInfo } from "@/shared/components/ui/pagination-info.component";
@@ -31,11 +18,16 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 
-import { useDeleteProject } from "@/features/projects/hooks/use-projects.hook";
+import {
+  useDeleteProject,
+  useToggleProjectPublished,
+} from "@/features/projects/hooks/use-projects.hook";
+import { Project } from "@/features/projects/types/project.type";
 
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
 import { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
+import { ProjectActions } from "./project-table-actions.component";
 
 const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;
@@ -51,6 +43,9 @@ export default function MyProjectsList() {
     id: string;
     title: string;
   } | null>(null);
+  const [togglingProjectId, setTogglingProjectId] = useState<string | null>(
+    null
+  );
 
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 7);
@@ -63,6 +58,8 @@ export default function MyProjectsList() {
   } = useMyProjects(queryParams);
 
   const { deleteProject, isDeleting } = useDeleteProject();
+  const { toggleProjectPublished, isTogglingPublished } =
+    useToggleProjectPublished();
 
   const myProjects = myProjectsResponse?.data || [];
   const pagination = myProjectsResponse?.pagination;
@@ -83,6 +80,22 @@ export default function MyProjectsList() {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
     setProjectToDelete(null);
+  };
+
+  const handleTogglePublish = (project: Project) => {
+    if (!project.id) return;
+
+    setTogglingProjectId(project.id);
+    toggleProjectPublished(
+      { project, published: !project.published },
+      {
+        onSettled: () => {
+          setTogglingProjectId((current) =>
+            current === project.id ? null : current
+          );
+        },
+      }
+    );
   };
 
   if (isLoading) return <MyProjectsSkeleton />;
@@ -148,39 +161,13 @@ export default function MyProjectsList() {
                 </TableCell>
 
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <HiMiniEllipsisVertical />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/projects/${project.id}/edit`);
-                        }}
-                        className="flex items-center justify-between"
-                      >
-                        Edit Project
-                        <HiMiniPencilSquare className="size-4" />
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteClick({
-                            id: project.id ?? "",
-                            title: project.title || "Untitled Project",
-                          });
-                        }}
-                        className="flex items-center justify-between"
-                        variant="destructive"
-                      >
-                        Delete Project
-                        <HiMiniTrash className="size-4" />
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <ProjectActions
+                    project={project}
+                    onTogglePublish={handleTogglePublish}
+                    onDelete={handleDeleteClick}
+                    isTogglingPublished={isTogglingPublished}
+                    togglingProjectId={togglingProjectId}
+                  />
                 </TableCell>
               </TableRow>
             );
