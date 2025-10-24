@@ -23,6 +23,7 @@ export function ProjectImageMetadata({
     `https://ui-avatars.com/api/?name=${encodeURIComponent(
       name
     )}&background=f8fafc&color=0f172a&bold=true`;
+  const logoSize = 300;
   const summary = (() => {
     if (!description) {
       return "Discover contributors, highlight your roadmap, and grow your open-source project with the community.";
@@ -120,23 +121,24 @@ export function ProjectImageMetadata({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "300px",
-              height: "300px",
+              width: `${logoSize}px`,
+              height: `${logoSize}px`,
               borderRadius: "65px",
               overflow: "hidden",
               background: "#ffffff",
+              backgroundColor: "#f8fafc",
             }}
+            aria-label={`${name} logo`}
           >
             <img
               src={logo}
               alt={`${name} logo`}
-              width="300"
-              height="300"
+              width={logoSize}
+              height={logoSize}
               style={{
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                backgroundColor: "#f8fafc",
               }}
             />
           </div>
