@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
+import { MobileHeader } from "@/shared/components/layout/mobile-header.component";
 import "@/shared/components/ui/breadcrumb-navigation";
 import { Button } from "@/shared/components/ui/button";
 import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
@@ -22,51 +23,59 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 flex justify-between bg-white/50 px-10 py-4 backdrop-blur-2xl">
-      <div className="flex items-center gap-4">
-        <Link href="/">
-          <Image
-            src="/ostogether-logo.svg"
-            alt="ost-logo"
-            width={200}
-            height={50}
-          />
-        </Link>
-        <HeaderBreadcrumb />
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2">
-          <SearchCommand />
-          <Button
-            variant="ghost"
-            className={pathname.startsWith("/dashboard") ? "bg-accent" : ""}
-            size="sm"
-          >
-            <Link href="/dashboard/my-projects">Dashboard</Link>
-          </Button>
-          <Button
-            variant="ghost"
-            className={pathname.startsWith("/about") ? "bg-accent" : ""}
-            size="sm"
-          >
-            <Link href="/about">About</Link>
-          </Button>
-        </div>
+    <>
+      <MobileHeader />
 
-        {isLoading ? (
-          <>
-            <SkeletonUserDropdown />
-          </>
-        ) : isAuthenticated ? (
-          <>
-            <UserDropdown />
-          </>
-        ) : (
-          <Link href="/auth/login">
-            <Button variant="default">Sign In</Button>
+      <header className="sticky top-0 z-40 hidden justify-between bg-white/50 px-10 py-4 backdrop-blur-2xl md:flex">
+        <div className="flex items-center gap-4">
+          <Link href="/">
+            <Image
+              src="/ostogether-logo.svg"
+              alt="ost-logo"
+              width={200}
+              height={50}
+            />
           </Link>
-        )}
-      </div>
-    </header>
+          <HeaderBreadcrumb />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <SearchCommand />
+            <Link href="/dashboard/my-projects">
+              <Button
+                variant="ghost"
+                className={pathname.startsWith("/dashboard") ? "bg-accent" : ""}
+                size="sm"
+              >
+                Dashboard
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button
+                variant="ghost"
+                className={pathname.startsWith("/about") ? "bg-accent" : ""}
+                size="sm"
+              >
+                About
+              </Button>
+            </Link>
+          </div>
+
+          {isLoading ? (
+            <>
+              <SkeletonUserDropdown />
+            </>
+          ) : isAuthenticated ? (
+            <>
+              <UserDropdown />
+            </>
+          ) : (
+            <Link href="/auth/login">
+              <Button variant="default">Sign In</Button>
+            </Link>
+          )}
+        </div>
+      </header>
+    </>
   );
 }
