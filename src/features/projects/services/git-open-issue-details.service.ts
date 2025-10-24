@@ -11,6 +11,7 @@ export const getGitOpenIssueDetails = async (
       `${API_BASE_URL}/projects/${projectId}/issues/${issueNumber}`,
       {
         method: "GET",
+        credentials: "include",
       }
     );
     if (!response.ok) {
