@@ -12,11 +12,6 @@ export function UserImageMetadata({
   description,
   imageUrl,
 }: UserImageMetadataProps) {
-  const logo =
-    imageUrl ||
-    `https://ui-avatars.com/ap  /?name=${encodeURIComponent(
-      name
-    )}&background=f8fafc&color=0f172a&bold=true`;
   const logoSize = 300;
   const summary = (() => {
     if (!description) {
@@ -46,7 +41,7 @@ export function UserImageMetadata({
           // subtitle="OpenSource Together"
           description={summary}
         />
-        {logo ? (
+        {imageUrl ? (
           <div
             style={{
               position: "relative",
@@ -64,7 +59,7 @@ export function UserImageMetadata({
             aria-label={`${name} logo`}
           >
             <img
-              src={logo}
+              src={imageUrl}
               alt={`${name} logo`}
               width={logoSize}
               height={logoSize}

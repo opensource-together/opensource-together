@@ -1,4 +1,5 @@
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
+import { resolveOgImageSource } from "@/shared/components/seo/image-metadata/commons/utils/resolve-og-image";
 import { UserImageMetadata } from "@/shared/components/seo/image-metadata/user/user-image-metadata";
 
 import { getUserById } from "@/features/profile/services/profile.service";
@@ -20,12 +21,14 @@ export default async function Image({
   try {
     const user = (await getUserById(params.userId)) as Profile;
 
+    const safeImage = await resolveOgImageSource(user.image, user.name);
+
     return Generator({
       children: (
         <UserImageMetadata
           name={user.name}
           description={user.bio || ""}
-          imageUrl={user.image}
+          imageUrl={safeImage}
         />
       ),
     });

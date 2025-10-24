@@ -18,11 +18,6 @@ export function ProjectImageMetadata({
   openIssuesCount,
   pullRequestsCount,
 }: ProjectImageMetadataProps) {
-  const logo =
-    imageUrl ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      name
-    )}&background=f8fafc&color=0f172a&bold=true`;
   const logoSize = 300;
   const summary = (() => {
     if (!description) {
@@ -114,7 +109,7 @@ export function ProjectImageMetadata({
             </div>
           ) : null}
         </div>
-        {logo ? (
+        {imageUrl ? (
           <div
             style={{
               position: "relative",
@@ -131,7 +126,7 @@ export function ProjectImageMetadata({
             aria-label={`${name} logo`}
           >
             <img
-              src={logo}
+              src={imageUrl}
               alt={`${name} logo`}
               width={logoSize}
               height={logoSize}
