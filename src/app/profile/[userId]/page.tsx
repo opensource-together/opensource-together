@@ -21,31 +21,39 @@ export async function generateMetadata({
   params,
 }: PublicProfilePageProps): Promise<Metadata> {
   const { userId } = await params;
-  const user = await getUserById(userId);
+  try {
+    const user = await getUserById(userId);
 
-  const userUrl = `${FRONTEND_URL.replace(/\/$/, "")}/profile/${userId}`;
+    const userUrl = `${FRONTEND_URL.replace(/\/$/, "")}/profile/${userId}`;
 
-  return {
-    title: `${user.name} | OpenSource Together`,
-    description: user.bio,
-    openGraph: {
+    return {
       title: `${user.name} | OpenSource Together`,
       description: user.bio,
-      images: [
-        {
-          url: `${userUrl}/opengraph-image`,
-          width: 1200,
-          height: 630,
-          alt: `${user.name} profile preview`,
-        },
-      ],
-      url: userUrl,
-      type: "website",
-      siteName: "OpenSource Together",
-      locale: "fr_FR",
-      countryName: "France",
-    },
-  };
+      openGraph: {
+        title: `${user.name} | OpenSource Together`,
+        description: user.bio,
+        images: [
+          {
+            url: `${userUrl}/opengraph-image`,
+            width: 1200,
+            height: 630,
+            alt: `${user.name} profile preview`,
+          },
+        ],
+        url: userUrl,
+        type: "website",
+        siteName: "OpenSource Together",
+        locale: "fr_FR",
+        countryName: "France",
+      },
+    };
+  } catch (error) {
+    console.error("generateMetadata user fetch failed:", error);
+    return {
+      title: "User | OpenSource Together",
+      description: "Discover open source users on OpenSource Together.",
+    };
+  }
 }
 
 export default async function PublicProfilePage({
@@ -72,7 +80,7 @@ export default async function PublicProfilePage({
       <HydrationBoundary state={dehydratedState}>
         <PublicProfileView userId={userId} />
       </HydrationBoundary>
-      <CTAFooter imageIllustration="/illustrations/hooded-man.png" />
+      <CTAFooter imageIllustration="/illustrations/magician.png" />
     </>
   );
 }

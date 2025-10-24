@@ -33,15 +33,14 @@ export function ProjectImportationConfirmDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-3">
-            Publish project
+            Create project
           </AlertDialogTitle>
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p className="text-muted-foreground text-sm">
-                Publishing <strong>{projectTitle}</strong> makes it visible to
-                everyone on OpenSource Together. Your repository stays
-                unchanged, and you can update or remove the project whenever you
-                need.
+                <strong>{projectTitle}</strong> will be created and added to
+                your <strong>dashboard</strong>. You’ll be able to publish it
+                later to make it visible on OpenSource Together.
               </p>
             </div>
           </AlertDialogDescription>
@@ -49,7 +48,7 @@ export function ProjectImportationConfirmDialog({
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={isCreating}>
-            {isCreating ? "Publishing..." : "Publish project"}
+            {isCreating ? "Creating..." : "Create project"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

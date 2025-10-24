@@ -40,8 +40,11 @@ export default function ProjectDetailView({
   const { tab, handleTabChange } = useTabNavigation("overview");
   const { readme, contributionFile, codeOfConduct } = useDecodedFiles(project);
 
-  if (isLoading) return <SkeletonProjectDetail />;
-  if (isError || !project)
+  if (!project && isLoading) {
+    return <SkeletonProjectDetail />;
+  }
+
+  if (!project && isError) {
     return (
       <ErrorState
         message="An error has occurred while loading the project. Please try again later."
@@ -51,6 +54,9 @@ export default function ProjectDetailView({
         href="/projects"
       />
     );
+  }
+
+  if (!project) return null;
 
   return (
     <TwoColumnLayout

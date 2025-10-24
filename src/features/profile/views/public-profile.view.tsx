@@ -33,8 +33,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
   const { data: profile, isLoading, isError } = useProfile(userId);
   const { tab, handleTabChange } = useTabNavigation("overview");
 
-  if (isLoading) return <SkeletonProfileView />;
-  if (isError || !profile)
+  if (!profile && isLoading) {
+    return <SkeletonProfileView />;
+  }
+
+  if (!profile && isError) {
     return (
       <ErrorState
         message="An error has occurred while loading the profile. Please try again later."
@@ -44,6 +47,9 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
         href="/"
       />
     );
+  }
+
+  if (!profile) return null;
 
   const shouldShowGithubData = profile.provider !== "google";
 

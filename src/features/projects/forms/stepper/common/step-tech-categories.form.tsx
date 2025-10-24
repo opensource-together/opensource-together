@@ -325,7 +325,7 @@ export function StepTechCategoriesForm() {
             <FormNavigationButtons
               onPrevious={handlePrevious}
               isLoading={isSubmitting}
-              nextLabel="Publish project"
+              nextLabel="Create project"
               nextType="submit"
             />
           </form>

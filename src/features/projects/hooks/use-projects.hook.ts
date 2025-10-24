@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import { getQueryClient } from "@/shared/lib/query-client";
@@ -13,12 +14,17 @@ import {
   updateProject,
   updateProjectCover,
   updateProjectLogo,
+  updateProjectPublishedStatus,
 } from "../services/project.service";
 import { Project } from "../types/project.type";
 import {
   ProjectSchema,
   UpdateProjectData,
 } from "../validations/project.schema";
+import {
+  formatMissingFieldsMessage,
+  validateProjectForPublishing,
+} from "../validations/publish-toggle.validation";
 
 /**
  * Fetches the list of all projects.
@@ -154,6 +160,58 @@ export function useDeleteProject() {
     deleteProject: mutation.mutate,
     isDeleting: mutation.isPending,
     isDeleteError: mutation.isError,
+  };
+}
+
+/**
+ * Toggles the published state of a project.
+ */
+export function useToggleProjectPublished() {
+  const queryClient = getQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: ({
+      project,
+      published,
+    }: {
+      project: Project;
+      published: boolean;
+    }) => {
+      return updateProjectPublishedStatus(project.id || "", project, published);
+    },
+    loadingMessage: "Updating project visibility...",
+    successMessage: "Project visibility updated",
+    errorMessage: "Failed to update project visibility",
+    options: {
+      onSuccess: (_, variables) => {
+        const targetId = variables.project.id || "";
+        if (targetId) {
+          queryClient.invalidateQueries({ queryKey: ["project", targetId] });
+        }
+        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+      },
+    },
+  });
+
+  const toggleProjectPublished = (
+    variables: { project: Project; published: boolean },
+    options?: any
+  ) => {
+    if (variables.published) {
+      const validation = validateProjectForPublishing(variables.project);
+      if (!validation.isValid) {
+        toast.error(formatMissingFieldsMessage(validation.missingFields));
+        return;
+      }
+    }
+
+    mutation.mutate(variables, options);
+  };
+
+  return {
+    toggleProjectPublished,
+    toggleProjectPublishedAsync: mutation.mutateAsync,
+    isTogglingPublished: mutation.isPending,
   };
 }
 

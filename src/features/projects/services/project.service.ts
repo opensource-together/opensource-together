@@ -5,6 +5,7 @@ import {
   ProjectSchema,
   UpdateProjectData,
 } from "../validations/project.schema";
+import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
 /**
  * Fetches the list of all projects.
@@ -142,6 +143,15 @@ export const deleteProject = async (projectId: string): Promise<void> => {
     console.error("Error deleting project:", error);
     throw error;
   }
+};
+
+export const updateProjectPublishedStatus = async (
+  projectId: string,
+  project: Project,
+  published: boolean
+): Promise<Project> => {
+  const payload = transformProjectForPublishedToggle(project, published);
+  return updateProject(projectId, payload);
 };
 
 /**

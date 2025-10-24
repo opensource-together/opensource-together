@@ -14,7 +14,6 @@ export const projectSchema = z.object({
   description: z
     .string()
     .min(10, "The description must contain at least 10 characters"),
-  readme: z.string().optional(),
   provider: z.enum(["GITHUB", "GITLAB"]),
   projectTechStacks: z
     .array(z.string())
