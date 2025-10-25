@@ -180,6 +180,7 @@ export function MultipleImageUpload({
                     alt={`Cover image ${index + 1}`}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
                     <p className="text-xs font-medium text-white">
