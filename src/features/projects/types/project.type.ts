@@ -80,6 +80,17 @@ export type Issue = {
   url: string;
 };
 
+export type IssueLabels = {
+  id: number;
+  description: string | null;
+  name: string;
+  color: string;
+};
+
+export type RepositoryLanguages = {
+  [language: string]: number;
+};
+
 export type RepositoryWithDetails = {
   name: string;
   description: string | null;
@@ -95,8 +106,10 @@ export type RepositoryWithDetails = {
   pullRequestsCount: number;
   subscribersCount: number;
   visibility: string | null | undefined;
+  languages: RepositoryLanguages;
   contributors: Contributor[];
   issues: Issue[];
+  issueLabels: IssueLabels[];
   pullRequests: PullRequest[];
   readme: string;
   contributionFile: string | undefined;

@@ -62,6 +62,7 @@ export default function RecentProjects() {
           projectTechStacks={project.projectTechStacks}
           owner={extractRepositoryOwner(project.repoUrl) || ""}
           repositoryDetails={{
+            languages: project.repositoryDetails?.languages || {},
             stars: project.repositoryDetails?.stars || 0,
             contributors: project.repositoryDetails?.contributors || [],
             forksCount: project.repositoryDetails?.forksCount || 0,

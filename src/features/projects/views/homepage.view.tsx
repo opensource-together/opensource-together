@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { HiOutlineChevronRight } from "react-icons/hi";
-
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import PaginationNavigation from "@/shared/components/ui/pagination-navigation";
@@ -57,16 +54,6 @@ export default function HomepageView() {
   return (
     <HomepageLayout>
       <ProjectGrid projects={projects} />
-
-      <Link href="/projects/trending">
-        <div className="mt-14 flex items-center gap-1 font-medium">
-          Trending Projects <HiOutlineChevronRight size={16} />
-        </div>
-      </Link>
-
-      <div className="mt-6">
-        <ProjectGrid projects={projects} />
-      </div>
 
       <div className="mt-8 mb-[50px]">
         <PaginationNavigation />

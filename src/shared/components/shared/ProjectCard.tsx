@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useMemo } from "react";
 import { FaStar } from "react-icons/fa6";
 import { HiUserGroup } from "react-icons/hi2";
 
@@ -13,6 +14,7 @@ import {
   ProjectCardLeftGroup,
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
+import { languagesToTechStacks } from "@/shared/lib/language-icons";
 import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repository-owner";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
@@ -39,6 +41,7 @@ interface ProjectCardProps {
     | "openIssuesCount"
     | "pullRequestsCount"
     | "contributors"
+    | "languages"
   >;
 }
 
@@ -57,9 +60,21 @@ export default function ProjectCardComponent({
     stars: 0,
     openIssuesCount: 0,
     pullRequestsCount: 0,
+    languages: {},
   },
 }: ProjectCardProps) {
   const ownerLabel = extractRepositoryOwner(repositoryUrl) || "Unknown";
+
+  const languagesTechStacks = useMemo(() => {
+    return languagesToTechStacks(repositoryDetails.languages);
+  }, [repositoryDetails.languages]);
+
+  const allTechStacks = useMemo(() => {
+    if (projectTechStacks.length > 0) {
+      return projectTechStacks;
+    }
+    return languagesTechStacks;
+  }, [projectTechStacks, languagesTechStacks]);
 
   return (
     <Link href={`/projects/${projectId}`} className="block">
@@ -90,7 +105,7 @@ export default function ProjectCardComponent({
             <ProjectCardFooter>
               <>
                 <div className="flex gap-2.5">
-                  {projectTechStacks.slice(0, 3).map((tech, index) => (
+                  {allTechStacks.slice(0, 3).map((tech, index) => (
                     <StackLogo
                       key={tech.id || index}
                       icon={tech.iconUrl || ""}
@@ -99,9 +114,9 @@ export default function ProjectCardComponent({
                     />
                   ))}
                 </div>
-                {projectTechStacks.length > 3 && (
+                {allTechStacks.length > 3 && (
                   <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                    +{projectTechStacks.length - 3}
+                    +{allTechStacks.length - 3}
                   </span>
                 )}
               </>

@@ -64,6 +64,7 @@ export default function ProfileProjectsList() {
           projectTechStacks={project.projectTechStacks}
           owner={extractRepositoryOwner(project.repoUrl) || ""}
           repositoryDetails={{
+            languages: project.repositoryDetails?.languages || {},
             forksCount: project.repositoryDetails?.forksCount || 0,
             contributors: project.repositoryDetails?.contributors || [],
             stars: project.repositoryDetails?.stars || 0,

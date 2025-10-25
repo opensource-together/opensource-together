@@ -1,7 +1,12 @@
+"use client";
+
+import { useMemo } from "react";
+
 import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
 import { StatsList } from "@/shared/components/ui/stats-list";
 import { TechStackList } from "@/shared/components/ui/tech-stack-list";
+import { languagesToTechStacks } from "@/shared/lib/language-icons";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
@@ -22,6 +27,8 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       forksCount: null,
       contributors: [],
       pushed_at: null,
+      tags: [],
+      languages: {},
     },
   } = project;
 
@@ -38,6 +45,33 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       window.open(url, "_blank", "noopener,noreferrer");
     }
   };
+
+  const languagesTechStacks = useMemo(() => {
+    const converted = languagesToTechStacks(repositoryDetails?.languages || {});
+    return converted;
+  }, [repositoryDetails?.languages]);
+
+  const allTechStacks = useMemo(() => {
+    if (projectTechStacks.length > 0) {
+      return projectTechStacks;
+    }
+    return languagesTechStacks;
+  }, [projectTechStacks, languagesTechStacks]);
+
+  const tagsCategories = useMemo(() => {
+    return (
+      repositoryDetails?.tags?.map((tag) => ({
+        name: tag,
+      })) || []
+    );
+  }, [repositoryDetails?.tags]);
+
+  const allCategories = useMemo(() => {
+    if (projectCategories.length > 0) {
+      return projectCategories;
+    }
+    return tagsCategories;
+  }, [projectCategories, tagsCategories]);
 
   return (
     <div className="flex flex-1 flex-col gap-8">
@@ -71,14 +105,14 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
 
       <TechStackList
         title="Technical Stack"
-        techs={projectTechStacks}
+        techs={allTechStacks}
         emptyText="No technologies added"
       />
 
       <CategoryList
-        title="Category Tags"
-        categories={projectCategories}
-        emptyText="No categories added"
+        title={projectCategories.length > 0 ? "Categories" : "Tags"}
+        categories={allCategories}
+        emptyText="No tags added"
       />
 
       <ContributorsSidebarList
