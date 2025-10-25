@@ -12,8 +12,9 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
-    "pages:build": "opennextjs-cloudflare build",
-    "pages:deploy": "opennextjs-cloudflare deploy"
+    "worker:build": "opennextjs-cloudflare build",
+    "worker:preview": "opennextjs-cloudflare preview",
+    "worker:deploy": "opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
