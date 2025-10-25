@@ -5,7 +5,7 @@ import { UserImageMetadata } from "@/shared/components/seo/image-metadata/user/u
 import { getUserById } from "@/features/profile/services/profile.service";
 import { Profile } from "@/features/profile/types/profile.type";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 export const contentType = "image/png";
 export const size = {
   width: 1200,
