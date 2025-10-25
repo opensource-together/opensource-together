@@ -7,10 +7,10 @@ export async function GET(
   {
     params,
   }: {
-    params: { projectId: string; issueNumber: string };
+    params: Promise<{ projectId: string; issueNumber: string }>;
   }
 ) {
-  const { projectId, issueNumber } = params;
+  const { projectId, issueNumber } = await params;
 
   try {
     const response = await fetch(
