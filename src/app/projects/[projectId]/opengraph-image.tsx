@@ -5,7 +5,7 @@ import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/pro
 import { getProjectDetails } from "@/features/projects/services/project.service";
 import { Project } from "@/features/projects/types/project.type";
 
-export const runtime = "edge";
+//export const runtime = "edge";
 export const contentType = "image/png";
 export const size = {
   width: 1200,
