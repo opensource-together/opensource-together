@@ -84,6 +84,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
                 width={688}
                 height={393}
                 className="h-[207px] w-full shrink-0 rounded-2xl object-cover sm:h-[365px]"
+                unoptimized
                 priority={idx === currentImageIndex}
               />
             ))}
