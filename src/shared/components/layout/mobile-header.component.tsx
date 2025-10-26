@@ -161,7 +161,10 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                         </DropdownMenuItem>
                       </Link>
                       <DropdownMenuSeparator />
-                      <Link href="/settings" onClick={handleLinkClick}>
+                      <Link
+                        href="/dashboard/settings"
+                        onClick={handleLinkClick}
+                      >
                         <DropdownMenuItem>
                           <HiCog6Tooth className="size-4" />
                           Settings

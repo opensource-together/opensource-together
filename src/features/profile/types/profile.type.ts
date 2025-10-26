@@ -23,6 +23,7 @@ export interface Profile {
   twitterUrl?: string;
   linkedinUrl?: string;
   websiteUrl?: string;
+  connectedProviders?: string[];
   userTechStacksIds?: string[];
   userTechStacks?: TechStackType[];
 }

@@ -51,7 +51,7 @@ const sidebarSections = [
 ];
 
 const bottomSidebarItems = [
-  { label: "Settings", href: "/settings", icon: HiCog6Tooth },
+  { label: "Settings", href: "/dashboard/settings", icon: HiCog6Tooth },
   { label: "Need help", href: "/help", icon: HiQuestionMarkCircle },
 ];
 
