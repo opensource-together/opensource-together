@@ -5,7 +5,6 @@ import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
-import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repository-owner";
 
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 import { ProjectQueryParams } from "@/features/dashboard/services/my-projects.service";
@@ -60,9 +59,7 @@ export default function ProfileProjectsList() {
           title={project.title}
           description={project.description}
           logoUrl={project.logoUrl || ""}
-          repositoryUrl={project.repoUrl || ""}
           projectTechStacks={project.projectTechStacks}
-          owner={extractRepositoryOwner(project.repoUrl) || ""}
           repositoryDetails={{
             languages: project.repositoryDetails?.languages || {},
             forksCount: project.repositoryDetails?.forksCount || 0,
@@ -71,6 +68,7 @@ export default function ProfileProjectsList() {
             openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
             pullRequestsCount:
               project.repositoryDetails?.pullRequestsCount || 0,
+            owner: project.repositoryDetails?.owner,
           }}
           className="w-full"
         />

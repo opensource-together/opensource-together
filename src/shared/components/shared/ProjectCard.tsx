@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { FaStar } from "react-icons/fa6";
-import { HiUserGroup } from "react-icons/hi2";
+import { VscIssues } from "react-icons/vsc";
 
 import {
   ProjectCard,
@@ -15,7 +15,7 @@ import {
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
 import { languagesToTechStacks } from "@/shared/lib/language-icons";
-import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repository-owner";
+import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
 import { RepositoryWithDetails } from "@/features/projects/types/project.type";
@@ -26,14 +26,12 @@ import StackLogo from "../ui/stack-logo";
 
 interface ProjectCardProps {
   projectId?: string;
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   projectTechStacks?: TechStackType[];
   showTechStack?: boolean;
   className?: string;
   logoUrl?: string;
-  owner?: string;
-  repositoryUrl?: string;
   repositoryDetails?: Pick<
     RepositoryWithDetails,
     | "stars"
@@ -42,18 +40,19 @@ interface ProjectCardProps {
     | "pullRequestsCount"
     | "contributors"
     | "languages"
+    | "owner"
   >;
 }
 
 export default function ProjectCardComponent({
-  projectId = "1",
+  projectId,
   title = "",
   description = "",
   projectTechStacks = [],
   showTechStack = true,
   className = "",
   logoUrl = "",
-  repositoryUrl = "",
+
   repositoryDetails = {
     forksCount: 0,
     contributors: [],
@@ -61,10 +60,12 @@ export default function ProjectCardComponent({
     openIssuesCount: 0,
     pullRequestsCount: 0,
     languages: {},
+    owner: {
+      login: "",
+      avatar_url: "",
+    },
   },
 }: ProjectCardProps) {
-  const ownerLabel = extractRepositoryOwner(repositoryUrl) || "Unknown";
-
   const languagesTechStacks = useMemo(() => {
     return languagesToTechStacks(repositoryDetails.languages);
   }, [repositoryDetails.languages]);
@@ -93,7 +94,7 @@ export default function ProjectCardComponent({
                 {title}
               </ProjectCardTitle>
               <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {ownerLabel}
+                by {repositoryDetails.owner.login}
               </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
@@ -121,17 +122,17 @@ export default function ProjectCardComponent({
                 )}
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
-                <div className="flex items-center justify-center text-[10px]">
+                <div className="flex items-center justify-center text-xs">
                   <Icon name="fork" size="xxs" className="mr-0.5" />
-                  {repositoryDetails.forksCount || 0}
+                  {formatNumberShort(repositoryDetails.forksCount || 0)}
                 </div>
-                <div className="flex items-center justify-center gap-0 text-[10px]">
-                  <HiUserGroup className="mr-0.5 size-3 text-black" />
-                  {repositoryDetails.contributors?.length || 0}
+                <div className="flex items-center justify-center gap-0 text-xs">
+                  <VscIssues className="mr-0.5 size-3 text-black" />
+                  {formatNumberShort(repositoryDetails.openIssuesCount || 0)}
                 </div>
-                <div className="flex items-center justify-center gap-0 text-[10px]">
+                <div className="flex items-center justify-center gap-0 text-xs">
                   <FaStar className="text-primary mr-0.5 size-2.5" />
-                  {repositoryDetails.stars || 0}
+                  {formatNumberShort(repositoryDetails.stars || 0)}
                 </div>
               </div>
             </ProjectCardFooter>

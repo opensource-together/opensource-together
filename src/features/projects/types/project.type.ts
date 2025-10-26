@@ -1,6 +1,11 @@
 import { CategoryType } from "@/shared/types/category.type";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
+export interface ProjectOwner {
+  id: string;
+  name: string;
+}
+
 export interface Project {
   id?: string;
   publicId?: string;
@@ -10,6 +15,7 @@ export interface Project {
   provider: "GITHUB" | "GITLAB";
   description: string;
   published: boolean;
+  trending: boolean;
   repoUrl: string | null;
   githubUrl: string | null;
   gitlabUrl: string | null;
@@ -19,6 +25,7 @@ export interface Project {
   websiteUrl: string | null;
   projectTechStacks: TechStackType[];
   projectCategories: CategoryType[];
+  owner: ProjectOwner;
   repositoryDetails: RepositoryWithDetails;
   createdAt: Date;
   updatedAt: Date;
@@ -91,6 +98,11 @@ export type RepositoryLanguages = {
   [language: string]: number;
 };
 
+export type RepositoryOwner = {
+  login: string;
+  avatar_url: string;
+};
+
 export type RepositoryWithDetails = {
   name: string;
   description: string | null;
@@ -107,6 +119,7 @@ export type RepositoryWithDetails = {
   subscribersCount: number;
   visibility: string | null | undefined;
   languages: RepositoryLanguages;
+  owner: RepositoryOwner;
   contributors: Contributor[];
   issues: Issue[];
   issueLabels: IssueLabels[];
@@ -114,11 +127,6 @@ export type RepositoryWithDetails = {
   readme: string;
   contributionFile: string | undefined;
   cocFile: string | undefined;
-};
-
-export type Owner = {
-  id: string;
-  name: string;
 };
 
 export type LastCommitAuthor = {
