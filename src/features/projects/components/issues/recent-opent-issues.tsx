@@ -1,10 +1,13 @@
 import Link from "next/link";
 
 import { Button } from "@/shared/components/ui/button";
+import IssueCard from "@/shared/components/ui/issue-card";
+import {
+  GOOD_FIRST_BADGE_LABEL,
+  isGoodFirstIssue,
+} from "@/shared/lib/utils/good-first-issue";
 
 import { Issue } from "@/features/projects/types/project.type";
-
-import IssueCard from "../../../../shared/components/ui/issue-card";
 
 interface RecentOpenIssuesProps {
   issues: Issue[];
@@ -45,6 +48,9 @@ export default function RecentOpenIssues({
             key={`${issue.url}-${idx}`}
             issue={issue}
             projectId={projectId}
+            highlightLabel={
+              isGoodFirstIssue(issue) ? GOOD_FIRST_BADGE_LABEL : undefined
+            }
           />
         ))}
       </div>
