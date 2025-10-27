@@ -96,7 +96,7 @@ export default function OpenIssuesList({
               disabled={goodFirstCount === 0}
               aria-pressed={filter === "good-first"}
             >
-              {GOOD_FIRST_BADGE_LABEL}s ({goodFirstCount})
+              {GOOD_FIRST_BADGE_LABEL}s
             </Button>
           </div>
         </div>

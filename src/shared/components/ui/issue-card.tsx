@@ -83,7 +83,7 @@ export default function IssueCard({
               {issue.labels && issue.labels.length > 0 && (
                 <div className="flex items-center gap-2">
                   {highlightLabel ? (
-                    <Badge variant="indigo">{highlightLabel}</Badge>
+                    <Badge variant="info">{highlightLabel}</Badge>
                   ) : (
                     <Badge key={issue.labels[0]} variant="gray">
                       {issue.labels[0]}
