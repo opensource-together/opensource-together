@@ -102,7 +102,10 @@ export function CustomCombobox({
               {isLoading ? (
                 <CommandGroup>
                   {[...Array(5)].map((_, i) => (
-                    <div key={i} className="flex items-center gap-2 px-2 py-1.5">
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 px-2 py-1.5"
+                    >
                       <div className="flex-1 space-y-1">
                         <div className="bg-muted h-7 w-full animate-pulse rounded-lg" />
                       </div>
@@ -113,91 +116,91 @@ export function CustomCombobox({
                 <>
                   <CommandEmpty>{emptyText}</CommandEmpty>
                   {options.some((opt) => opt.type === "LANGUAGE") && (
-                <>
-                  <CommandGroup heading="Langages">
-                    {options
-                      .filter((opt) => opt.type === "LANGUAGE")
-                      .map((option) => {
-                        const isSelected = value.includes(option.id);
-                        const isDisabled = !isSelected && isMaxReached;
-                        return (
-                          <CommandItem
-                            key={option.id}
-                            value={option.name}
-                            onSelect={(selectedName) =>
-                              !isDisabled && handleSelect(selectedName)
-                            }
-                            className={cn(
-                              "cursor-pointer",
-                              isDisabled && "cursor-not-allowed opacity-50"
-                            )}
-                          >
-                            <HiCheck
-                              size={16}
-                              className={cn(
-                                isSelected
-                                  ? "text-ost-blue-three opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {option.iconUrl && (
-                              <img
-                                src={option.iconUrl}
-                                alt={option.name}
-                                className="size-3.5 flex-shrink-0"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            )}
-                            {option.name}
-                          </CommandItem>
-                        );
-                      })}
-                  </CommandGroup>
-                  <CommandGroup heading="Technologies">
-                    {options
-                      .filter((opt) => opt.type === "TECH")
-                      .map((option) => {
-                        const isSelected = value.includes(option.id);
-                        const isDisabled = !isSelected && isMaxReached;
-                        return (
-                          <CommandItem
-                            key={option.id}
-                            value={option.name}
-                            onSelect={(selectedName) =>
-                              !isDisabled && handleSelect(selectedName)
-                            }
-                            className={cn(
-                              "cursor-pointer",
-                              isDisabled && "cursor-not-allowed opacity-50"
-                            )}
-                          >
-                            <HiCheck
-                              size={16}
-                              className={cn(
-                                isSelected
-                                  ? "text-ost-blue-three opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {option.iconUrl && (
-                              <img
-                                src={option.iconUrl}
-                                alt={option.name}
-                                className="size-3.5 flex-shrink-0"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                              />
-                            )}
-                            {option.name}
-                          </CommandItem>
-                        );
-                      })}
-                  </CommandGroup>
-                </>
-              )}
+                    <>
+                      <CommandGroup heading="Langages">
+                        {options
+                          .filter((opt) => opt.type === "LANGUAGE")
+                          .map((option) => {
+                            const isSelected = value.includes(option.id);
+                            const isDisabled = !isSelected && isMaxReached;
+                            return (
+                              <CommandItem
+                                key={option.id}
+                                value={option.name}
+                                onSelect={(selectedName) =>
+                                  !isDisabled && handleSelect(selectedName)
+                                }
+                                className={cn(
+                                  "cursor-pointer",
+                                  isDisabled && "cursor-not-allowed opacity-50"
+                                )}
+                              >
+                                <HiCheck
+                                  size={16}
+                                  className={cn(
+                                    isSelected
+                                      ? "text-ost-blue-three opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {option.iconUrl && (
+                                  <img
+                                    src={option.iconUrl}
+                                    alt={option.name}
+                                    className="size-3.5 flex-shrink-0"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                  />
+                                )}
+                                {option.name}
+                              </CommandItem>
+                            );
+                          })}
+                      </CommandGroup>
+                      <CommandGroup heading="Technologies">
+                        {options
+                          .filter((opt) => opt.type === "TECH")
+                          .map((option) => {
+                            const isSelected = value.includes(option.id);
+                            const isDisabled = !isSelected && isMaxReached;
+                            return (
+                              <CommandItem
+                                key={option.id}
+                                value={option.name}
+                                onSelect={(selectedName) =>
+                                  !isDisabled && handleSelect(selectedName)
+                                }
+                                className={cn(
+                                  "cursor-pointer",
+                                  isDisabled && "cursor-not-allowed opacity-50"
+                                )}
+                              >
+                                <HiCheck
+                                  size={16}
+                                  className={cn(
+                                    isSelected
+                                      ? "text-ost-blue-three opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {option.iconUrl && (
+                                  <img
+                                    src={option.iconUrl}
+                                    alt={option.name}
+                                    className="size-3.5 flex-shrink-0"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = "none";
+                                    }}
+                                  />
+                                )}
+                                {option.name}
+                              </CommandItem>
+                            );
+                          })}
+                      </CommandGroup>
+                    </>
+                  )}
                   {!options.some((opt) => opt.type === "LANGUAGE") && (
                     <CommandGroup>
                       {options.map((option) => {
