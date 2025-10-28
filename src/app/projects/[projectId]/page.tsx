@@ -1,10 +1,8 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
 
 import { FRONTEND_URL } from "@/config/config";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
-import { getQueryClient } from "@/shared/lib/query-client";
 
 import { getProjectDetails } from "@/features/projects/services/project.service";
 import ProjectDetailView from "@/features/projects/views/project-detail.view";
@@ -61,19 +59,10 @@ export default async function ProjectPage({
 }) {
   const { projectId } = await params;
 
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["project", projectId],
-    queryFn: () => getProjectDetails(projectId),
-  });
-
-  const dehydratedState = dehydrate(queryClient);
-
   return (
-    <HydrationBoundary state={dehydratedState}>
+    <>
       <ProjectDetailView projectId={projectId} />
       <CTAFooter imageIllustration="/illustrations/winged-angel.png" />
-    </HydrationBoundary>
+    </>
   );
 }
