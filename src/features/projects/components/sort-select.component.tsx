@@ -5,7 +5,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/shared/components/ui/command";
@@ -59,7 +58,6 @@ export function SortSelect({
         align="start"
       >
         <Command>
-          <CommandInput placeholder="Sort by..." className="h-9" />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>

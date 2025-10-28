@@ -55,7 +55,10 @@ export default function ProjectDiscoveryHero({
         </FadeUp>
 
         <div className="mt-8 hidden md:block">
-          <FilterSearchBar onFilterChange={onFilterChange} isLoading={isLoading} />
+          <FilterSearchBar
+            onFilterChange={onFilterChange}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>

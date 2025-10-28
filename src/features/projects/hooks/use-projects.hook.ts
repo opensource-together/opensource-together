@@ -32,9 +32,13 @@ import {
  * Fetches the list of all projects.
  *
  * @param params - Optional query parameters to filter projects.
+ * @param options - Optional React Query options (e.g., enabled).
  * @returns A React Query result containing the list of projects with pagination.
  */
-export function useProjects(params: ProjectQueryParams = {}) {
+export function useProjects(
+  params: ProjectQueryParams = {},
+  options?: { enabled?: boolean }
+) {
   const per_page = params.per_page ?? 50;
   const page = params.page ?? 1;
   const queryParams: ProjectQueryParams = { ...params, per_page, page };
@@ -42,6 +46,7 @@ export function useProjects(params: ProjectQueryParams = {}) {
   return useQuery<PaginatedProjectsResponse>({
     queryKey: ["projects", queryParams],
     queryFn: () => getProjects(queryParams),
+    enabled: options?.enabled ?? true,
   });
 }
 
