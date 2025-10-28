@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
@@ -16,16 +16,41 @@ function FilterItem({ label, value }: FilterItemProps) {
       <span className="text-xs font-normal text-black/40 transition-colors duration-200">
         {label}
       </span>
-      <span className="text-sm font-medium tracking-tight whitespace-nowrap transition-colors duration-200 group-hover:text-black">
+      <span className="truncate text-sm font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
         {value}
       </span>
     </div>
   );
 }
 
-export default function FilterSearchBar() {
+interface SortOption {
+  id: string;
+  name: string;
+}
+
+const SORT_OPTIONS: SortOption[] = [
+  { id: "most_popular", name: "Most Popular" },
+  { id: "newest", name: "Newest" },
+  { id: "oldest", name: "Oldest" },
+  { id: "a-z", name: "A-Z" },
+  { id: "z-a", name: "Z-A" },
+];
+
+interface FilterSearchBarProps {
+  onFilterChange?: (filters: {
+    techStacks: string[];
+    categories: string[];
+    orderBy: "createdAt" | "title";
+    orderDirection: "asc" | "desc";
+  }) => void;
+}
+
+export default function FilterSearchBar({
+  onFilterChange,
+}: FilterSearchBarProps) {
   const [selectedTechStacks, setSelectedTechStacks] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedSort, setSelectedSort] = useState<string>("most_popular");
 
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
   const { categoryOptions, isLoading: categoryLoading } = useCategories();
@@ -36,6 +61,87 @@ export default function FilterSearchBar() {
 
   const handleCategoriesChange = (ids: string[]) => {
     setSelectedCategories(ids);
+  };
+
+  const handleSortChange = (ids: string[]) => {
+    if (ids.length > 0) {
+      setSelectedSort(ids[0]);
+    }
+  };
+
+  const formatSelectedValues = (
+    selectedIds: string[],
+    options: Array<{ id: string; name: string }>,
+    defaultText: string,
+    maxLength: number = 30
+  ): string => {
+    if (selectedIds.length === 0) return defaultText;
+
+    const selectedNames = selectedIds
+      .map((id) => options.find((opt) => opt.id === id)?.name)
+      .filter((name): name is string => !!name);
+
+    const namesText = selectedNames.join(", ");
+
+    // Truncate if too long
+    if (namesText.length > maxLength) {
+      return namesText.substring(0, maxLength - 3) + "...";
+    }
+
+    return namesText;
+  };
+
+  const techStacksValue = useMemo(
+    () =>
+      formatSelectedValues(
+        selectedTechStacks,
+        techStackOptions,
+        "Technologies"
+      ),
+    [selectedTechStacks, techStackOptions]
+  );
+
+  const categoriesValue = useMemo(
+    () =>
+      formatSelectedValues(selectedCategories, categoryOptions, "Categories"),
+    [selectedCategories, categoryOptions]
+  );
+
+  const sortValue = useMemo(() => {
+    return (
+      SORT_OPTIONS.find((opt) => opt.id === selectedSort)?.name ||
+      "Most Popular"
+    );
+  }, [selectedSort]);
+
+  // Helper function to convert sort option to API params
+  const getSortParams = () => {
+    switch (selectedSort) {
+      case "most_popular":
+        return {
+          orderBy: "createdAt" as const,
+          orderDirection: "desc" as const,
+        };
+      case "newest":
+        return {
+          orderBy: "createdAt" as const,
+          orderDirection: "desc" as const,
+        };
+      case "oldest":
+        return {
+          orderBy: "createdAt" as const,
+          orderDirection: "asc" as const,
+        };
+      case "a-z":
+        return { orderBy: "title" as const, orderDirection: "asc" as const };
+      case "z-a":
+        return { orderBy: "title" as const, orderDirection: "desc" as const };
+      default:
+        return {
+          orderBy: "createdAt" as const,
+          orderDirection: "desc" as const,
+        };
+    }
   };
 
   return (
@@ -58,7 +164,7 @@ export default function FilterSearchBar() {
                 }
                 searchPlaceholder="Search technologies..."
                 emptyText="No technologies found."
-                trigger={<FilterItem label="Choose" value="Technologies" />}
+                trigger={<FilterItem label="Choose" value={techStacksValue} />}
               />
             </div>
 
@@ -76,7 +182,7 @@ export default function FilterSearchBar() {
                 }
                 searchPlaceholder="Search categories..."
                 emptyText="No categories found."
-                trigger={<FilterItem label="Select" value="Categories" />}
+                trigger={<FilterItem label="Select" value={categoriesValue} />}
               />
             </div>
 
@@ -84,13 +190,14 @@ export default function FilterSearchBar() {
 
             <div className="relative pr-0">
               <CustomCombobox
-                options={[]}
-                value={[]}
-                onChange={handleTechStacksChange}
+                options={SORT_OPTIONS}
+                value={[selectedSort]}
+                onChange={handleSortChange}
                 placeholder="Most Popular"
                 searchPlaceholder="Sort by..."
                 emptyText="No results found."
-                trigger={<FilterItem label="Sort" value="Most Popular" />}
+                maxSelections={1}
+                trigger={<FilterItem label="Sort" value={sortValue} />}
               />
             </div>
           </div>
@@ -98,7 +205,17 @@ export default function FilterSearchBar() {
         <Button
           type="button"
           className="absolute right-2 px-6 py-5"
-          onClick={() => {}}
+          onClick={() => {
+            if (onFilterChange) {
+              const sortParams = getSortParams();
+              onFilterChange({
+                techStacks: selectedTechStacks,
+                categories: selectedCategories,
+                orderBy: sortParams.orderBy,
+                orderDirection: sortParams.orderDirection,
+              });
+            }
+          }}
         >
           Filter Projects
         </Button>

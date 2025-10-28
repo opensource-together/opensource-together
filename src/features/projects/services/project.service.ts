@@ -12,10 +12,14 @@ import {
 } from "../validations/project.schema";
 import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
-export interface ProjectQueryParams extends PaginationParams {}
+export interface ProjectQueryParams extends PaginationParams {
+  techStacks?: string | string[];
+  categories?: string | string[];
+  orderBy?: "createdAt" | "title";
+  orderDirection?: "asc" | "desc";
+}
 
-export interface PaginatedProjectsResponse
-  extends PaginatedResponse<Project> {}
+export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
 
 /**
  * Fetches the list of all projects.

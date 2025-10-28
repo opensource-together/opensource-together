@@ -11,7 +11,7 @@ export default async function HomePage() {
 
   await queryClient.prefetchQuery({
     queryKey: ["projects"],
-    queryFn: getProjects,
+    queryFn: () => getProjects(),
   });
 
   const dehydratedState = dehydrate(queryClient);

@@ -1,6 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { HiMiniSquare2Stack } from "react-icons/hi2";
 
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -18,11 +20,21 @@ const parseNumber = (value: string | null, fallback: number): number => {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 };
 
-function HomepageLayout({ children }: { children: React.ReactNode }) {
+interface HomepageLayoutProps {
+  children: React.ReactNode;
+  onFilterChange?: (filters: {
+    techStacks: string[];
+    categories: string[];
+    orderBy: "createdAt" | "title";
+    orderDirection: "asc" | "desc";
+  }) => void;
+}
+
+function HomepageLayout({ children, onFilterChange }: HomepageLayoutProps) {
   return (
     <>
       <div className="flex flex-col items-center">
-        <ProjectDiscoveryHero />
+        <ProjectDiscoveryHero onFilterChange={onFilterChange} />
       </div>
       <div className="mx-6 max-w-6xl pb-4 md:pb-8 lg:mx-auto">{children}</div>
     </>
@@ -31,10 +43,28 @@ function HomepageLayout({ children }: { children: React.ReactNode }) {
 
 export default function HomepageView() {
   const searchParams = useSearchParams();
+  const [filters, setFilters] = useState<{
+    techStacks: string[];
+    categories: string[];
+    orderBy: "createdAt" | "title";
+    orderDirection: "asc" | "desc";
+  }>({
+    techStacks: [],
+    categories: [],
+    orderBy: "createdAt",
+    orderDirection: "desc",
+  });
 
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 50);
-  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+  const queryParams: ProjectQueryParams = {
+    page,
+    per_page: perPage,
+    techStacks: filters.techStacks.length > 0 ? filters.techStacks : undefined,
+    categories: filters.categories.length > 0 ? filters.categories : undefined,
+    orderBy: filters.orderBy,
+    orderDirection: filters.orderDirection,
+  };
 
   const {
     data: projectsResponse,
@@ -47,7 +77,7 @@ export default function HomepageView() {
 
   if (isLoading) {
     return (
-      <HomepageLayout>
+      <HomepageLayout onFilterChange={setFilters}>
         <SkeletonProjectGrid />
       </HomepageLayout>
     );
@@ -55,10 +85,10 @@ export default function HomepageView() {
 
   if (isError) {
     return (
-      <HomepageLayout>
+      <HomepageLayout onFilterChange={setFilters}>
         <ErrorState
           message="An error has occurred while loading the projects. Please try again later."
-          queryKey={["projects"]}
+          queryKey={["projects", queryParams]}
         />
       </HomepageLayout>
     );
@@ -66,14 +96,19 @@ export default function HomepageView() {
 
   if (!projects || projects.length === 0) {
     return (
-      <HomepageLayout>
-        <EmptyState title="No projects available" className="mb-28" />
+      <HomepageLayout onFilterChange={setFilters}>
+        <EmptyState
+          title="No projects"
+          description="No projects founded here"
+          icon={HiMiniSquare2Stack}
+          className="mb-28"
+        />
       </HomepageLayout>
     );
   }
 
   return (
-    <HomepageLayout>
+    <HomepageLayout onFilterChange={setFilters}>
       <ProjectGrid projects={projects} />
 
       {pagination && (
