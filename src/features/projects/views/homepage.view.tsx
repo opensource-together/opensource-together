@@ -28,13 +28,21 @@ interface HomepageLayoutProps {
     orderBy: "createdAt" | "title";
     orderDirection: "asc" | "desc";
   }) => void;
+  isLoading?: boolean;
 }
 
-function HomepageLayout({ children, onFilterChange }: HomepageLayoutProps) {
+function HomepageLayout({
+  children,
+  onFilterChange,
+  isLoading,
+}: HomepageLayoutProps) {
   return (
     <>
       <div className="flex flex-col items-center">
-        <ProjectDiscoveryHero onFilterChange={onFilterChange} />
+        <ProjectDiscoveryHero
+          onFilterChange={onFilterChange}
+          isLoading={isLoading}
+        />
       </div>
       <div className="mx-6 max-w-6xl pb-4 md:pb-8 lg:mx-auto">{children}</div>
     </>
@@ -77,7 +85,7 @@ export default function HomepageView() {
 
   if (isLoading) {
     return (
-      <HomepageLayout onFilterChange={setFilters}>
+      <HomepageLayout onFilterChange={setFilters} isLoading={isLoading}>
         <SkeletonProjectGrid />
       </HomepageLayout>
     );
@@ -85,7 +93,7 @@ export default function HomepageView() {
 
   if (isError) {
     return (
-      <HomepageLayout onFilterChange={setFilters}>
+      <HomepageLayout onFilterChange={setFilters} isLoading={false}>
         <ErrorState
           message="An error has occurred while loading the projects. Please try again later."
           queryKey={["projects", queryParams]}
@@ -96,7 +104,7 @@ export default function HomepageView() {
 
   if (!projects || projects.length === 0) {
     return (
-      <HomepageLayout onFilterChange={setFilters}>
+      <HomepageLayout onFilterChange={setFilters} isLoading={false}>
         <EmptyState
           title="No projects"
           description="No projects founded here"
@@ -108,7 +116,7 @@ export default function HomepageView() {
   }
 
   return (
-    <HomepageLayout onFilterChange={setFilters}>
+    <HomepageLayout onFilterChange={setFilters} isLoading={isLoading}>
       <ProjectGrid projects={projects} />
 
       {pagination && (

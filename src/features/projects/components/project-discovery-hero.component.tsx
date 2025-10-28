@@ -13,10 +13,12 @@ interface ProjectDiscoveryHeroProps {
     orderBy: "createdAt" | "title";
     orderDirection: "asc" | "desc";
   }) => void;
+  isLoading?: boolean;
 }
 
 export default function ProjectDiscoveryHero({
   onFilterChange,
+  isLoading,
 }: ProjectDiscoveryHeroProps) {
   return (
     <div className="relative mx-auto w-full">
@@ -53,7 +55,7 @@ export default function ProjectDiscoveryHero({
         </FadeUp>
 
         <div className="mt-8 hidden md:block">
-          <FilterSearchBar onFilterChange={onFilterChange} />
+          <FilterSearchBar onFilterChange={onFilterChange} isLoading={isLoading} />
         </div>
       </div>
     </div>

@@ -5,6 +5,8 @@ import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
+import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
+
 interface FilterItemProps {
   label: string;
   value: string;
@@ -23,19 +25,6 @@ function FilterItem({ label, value }: FilterItemProps) {
   );
 }
 
-interface SortOption {
-  id: string;
-  name: string;
-}
-
-const SORT_OPTIONS: SortOption[] = [
-  { id: "most_popular", name: "Most Popular" },
-  { id: "newest", name: "Newest" },
-  { id: "oldest", name: "Oldest" },
-  { id: "a-z", name: "A-Z" },
-  { id: "z-a", name: "Z-A" },
-];
-
 interface FilterSearchBarProps {
   onFilterChange?: (filters: {
     techStacks: string[];
@@ -43,10 +32,12 @@ interface FilterSearchBarProps {
     orderBy: "createdAt" | "title";
     orderDirection: "asc" | "desc";
   }) => void;
+  isLoading?: boolean;
 }
 
 export default function FilterSearchBar({
   onFilterChange,
+  isLoading = false,
 }: FilterSearchBarProps) {
   const [selectedTechStacks, setSelectedTechStacks] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -63,10 +54,8 @@ export default function FilterSearchBar({
     setSelectedCategories(ids);
   };
 
-  const handleSortChange = (ids: string[]) => {
-    if (ids.length > 0) {
-      setSelectedSort(ids[0]);
-    }
+  const handleSortChange = (value: string) => {
+    setSelectedSort(value);
   };
 
   const formatSelectedValues = (
@@ -189,14 +178,10 @@ export default function FilterSearchBar({
             <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
             <div className="relative pr-0">
-              <CustomCombobox
+              <SortSelect
                 options={SORT_OPTIONS}
-                value={[selectedSort]}
+                value={selectedSort}
                 onChange={handleSortChange}
-                placeholder="Most Popular"
-                searchPlaceholder="Sort by..."
-                emptyText="No results found."
-                maxSelections={1}
                 trigger={<FilterItem label="Sort" value={sortValue} />}
               />
             </div>
@@ -205,6 +190,7 @@ export default function FilterSearchBar({
         <Button
           type="button"
           className="absolute right-2 px-6 py-5"
+          disabled={isLoading}
           onClick={() => {
             if (onFilterChange) {
               const sortParams = getSortParams();
