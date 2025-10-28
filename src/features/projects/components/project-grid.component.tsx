@@ -25,7 +25,10 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
             openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
             pullRequestsCount:
               project.repositoryDetails?.pullRequestsCount || 0,
-            owner: project.repositoryDetails?.owner,
+            owner: project.repositoryDetails?.owner || {
+              login: "",
+              avatar_url: "",
+            },
           }}
         />
       ))}

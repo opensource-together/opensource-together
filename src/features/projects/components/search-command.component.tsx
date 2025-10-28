@@ -20,7 +20,10 @@ import { useProjects } from "../hooks/use-projects.hook";
 export default function SearchCommand() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const projects = useProjects({ enabled: open });
+  const { data: projectsResponse, isLoading } = useProjects(
+    {},
+    { enabled: open }
+  );
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -38,7 +41,7 @@ export default function SearchCommand() {
     setOpen(false);
   };
 
-  const suggestions = projects?.data?.map((project) => ({
+  const suggestions = projectsResponse?.data?.map((project) => ({
     id: project.id,
     name: project.title,
     description: project.description,
@@ -55,38 +58,56 @@ export default function SearchCommand() {
       <CommandDialog open={open} onOpenChange={setOpen} className="rounded-2xl">
         <CommandInput placeholder="Search your next project…" />
         <CommandList className="scroll-py-0">
-          <CommandEmpty>No projects found.</CommandEmpty>
-          <CommandGroup
-            heading="Suggestions"
-            className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
-          >
-            {suggestions?.map((s) => (
-              <CommandItem
-                key={s.id}
-                onSelect={() => handleSelect(s.href)}
-                className="mb-3 h-8 px-3 py-0"
+          {isLoading ? (
+            <CommandGroup
+              heading="Suggestions"
+              className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
+            >
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="mb-3 flex h-8 items-center gap-3 px-3">
+                  <div className="bg-muted size-8 animate-pulse rounded-sm" />
+                  <div className="flex-1 space-y-1">
+                    <div className="bg-muted h-3 w-3/4 animate-pulse rounded" />
+                  </div>
+                </div>
+              ))}
+            </CommandGroup>
+          ) : (
+            <>
+              <CommandEmpty>No projects found.</CommandEmpty>
+              <CommandGroup
+                heading="Suggestions"
+                className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
               >
-                {s.iconSrc ? (
-                  <Avatar
-                    src={s.iconSrc}
-                    name={s.name}
-                    alt={s.name}
-                    size="xs"
-                    shape="sharp"
-                  />
-                ) : (
-                  <span className="text-muted-foreground">●</span>
-                )}
+                {suggestions?.map((s) => (
+                  <CommandItem
+                    key={s.id}
+                    onSelect={() => handleSelect(s.href)}
+                    className="mb-3 h-8 px-3 py-0"
+                  >
+                    {s.iconSrc ? (
+                      <Avatar
+                        src={s.iconSrc}
+                        name={s.name}
+                        alt={s.name}
+                        size="xs"
+                        shape="sharp"
+                      />
+                    ) : (
+                      <span className="text-muted-foreground">●</span>
+                    )}
 
-                <span className="min-w-0 flex-1 truncate font-medium">
-                  {s.name}
-                </span>
-                <span className="text-muted-foreground hidden max-w-[60%] truncate text-xs sm:block">
-                  {s.description}
-                </span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
+                    <span className="min-w-0 flex-1 truncate font-medium">
+                      {s.name}
+                    </span>
+                    <span className="text-muted-foreground hidden max-w-[60%] truncate text-xs sm:block">
+                      {s.description}
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </>
+          )}
         </CommandList>
       </CommandDialog>
     </>
