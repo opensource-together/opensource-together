@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
-import { useCategories } from "@/shared/hooks/use-category.hook";
-import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
+import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
@@ -43,8 +43,16 @@ export default function FilterSearchBar({
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState<string>("most_popular");
 
-  const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
-  const { categoryOptions, isLoading: categoryLoading } = useCategories();
+  const {
+    techStackOptions,
+    isLoading: techStacksLoading,
+    onOpenChange: onTechStackOpenChange,
+  } = useLazyTechStack();
+  const {
+    categoryOptions,
+    isLoading: categoryLoading,
+    onOpenChange: onCategoryOpenChange,
+  } = useLazyCategory();
 
   const handleTechStacksChange = (ids: string[]) => {
     setSelectedTechStacks(ids);
@@ -154,6 +162,7 @@ export default function FilterSearchBar({
                 searchPlaceholder="Search technologies..."
                 emptyText="No technologies found."
                 trigger={<FilterItem label="Choose" value={techStacksValue} />}
+                onOpenChange={onTechStackOpenChange}
               />
             </div>
 
@@ -172,6 +181,7 @@ export default function FilterSearchBar({
                 searchPlaceholder="Search categories..."
                 emptyText="No categories found."
                 trigger={<FilterItem label="Select" value={categoriesValue} />}
+                onOpenChange={onCategoryOpenChange}
               />
             </div>
 

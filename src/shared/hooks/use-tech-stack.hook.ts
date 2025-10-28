@@ -9,9 +9,10 @@ export type TechStackOption = ComboboxOption;
 
 /**
  * Hook to get the tech stack options from the API
+ * @param options - Optional query options (e.g., enabled)
  * @returns {Object} - An object containing the tech stack options, getTechStackById, and getTechStacksByIds
  */
-export function useTechStack() {
+export function useTechStack(options?: { enabled?: boolean }) {
   const {
     data: techStacks = [],
     isLoading,
@@ -19,6 +20,7 @@ export function useTechStack() {
   } = useQuery({
     queryKey: ["techStacks"],
     queryFn: fetchTechStacks,
+    enabled: options?.enabled ?? true,
   });
 
   const languageOptions: TechStackOption[] = techStacks

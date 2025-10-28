@@ -38,6 +38,7 @@ interface ComboboxProps {
   className?: string;
   trigger?: React.ReactNode;
   disabled?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function CustomCombobox({
@@ -50,8 +51,14 @@ export function CustomCombobox({
   className,
   trigger,
   disabled = false,
+  onOpenChange,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
 
   const handleSelect = (optionName: string) => {
     const option = options.find((opt) => opt.name === optionName);
@@ -72,7 +79,7 @@ export function CustomCombobox({
 
   return (
     <div className={cn("flex w-full flex-col gap-3", className)}>
-      <Popover modal={true} open={open} onOpenChange={setOpen}>
+      <Popover modal={true} open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <div
             className={cn(
