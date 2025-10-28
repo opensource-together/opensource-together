@@ -50,6 +50,15 @@ export default function Header() {
                 Dashboard
               </Button>
             </Link>
+            <Link href="/guide">
+              <Button
+                variant="ghost"
+                className={pathname.startsWith("/guide") ? "bg-accent" : ""}
+                size="sm"
+              >
+                Guide
+              </Button>
+            </Link>
             <Link href="/about">
               <Button
                 variant="ghost"
