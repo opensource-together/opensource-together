@@ -38,7 +38,6 @@ interface ProjectCardProps {
     | "forksCount"
     | "openIssuesCount"
     | "pullRequestsCount"
-    | "contributors"
     | "languages"
     | "owner"
   >;
@@ -55,7 +54,6 @@ export default function ProjectCardComponent({
 
   repositoryDetails = {
     forksCount: 0,
-    contributors: [],
     stars: 0,
     openIssuesCount: 0,
     pullRequestsCount: 0,

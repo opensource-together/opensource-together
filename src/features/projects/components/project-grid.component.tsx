@@ -20,7 +20,6 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           repositoryDetails={{
             languages: project.repositoryDetails?.languages || {},
             forksCount: project.repositoryDetails?.forksCount || 0,
-            contributors: project.repositoryDetails?.contributors || [],
             stars: project.repositoryDetails?.stars || 0,
             openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
             pullRequestsCount:

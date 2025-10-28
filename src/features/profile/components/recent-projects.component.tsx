@@ -11,7 +11,13 @@ import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
 export default function RecentProjects() {
-  const { data: myProjectsResponse, isLoading, isError } = useMyProjects();
+  const {
+    data: myProjectsResponse,
+    isLoading,
+    isError,
+  } = useMyProjects({
+    published: true,
+  });
   const myProjects = myProjectsResponse?.data || [];
 
   if (isLoading) return <ProfileProjectsSkeleton />;
@@ -60,14 +66,13 @@ export default function RecentProjects() {
           projectTechStacks={project.projectTechStacks}
           repositoryDetails={{
             languages: project.repositoryDetails?.languages || {},
-            stars: project.repositoryDetails?.stars || 0,
-            contributors: project.repositoryDetails?.contributors || [],
             forksCount: project.repositoryDetails?.forksCount || 0,
+            stars: project.repositoryDetails?.stars || 0,
             openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
             pullRequestsCount:
               project.repositoryDetails?.pullRequestsCount || 0,
             owner: project.repositoryDetails?.owner || {
-              login: project.owner?.name || "",
+              login: "",
               avatar_url: "",
             },
           }}
