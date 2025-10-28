@@ -66,7 +66,10 @@ export default function RecentProjects() {
             openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
             pullRequestsCount:
               project.repositoryDetails?.pullRequestsCount || 0,
-            owner: project.repositoryDetails?.owner || project.owner.name,
+            owner: project.repositoryDetails?.owner || {
+              login: project.owner?.name || "",
+              avatar_url: "",
+            },
           }}
           className="w-full"
         />

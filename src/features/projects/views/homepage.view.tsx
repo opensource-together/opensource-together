@@ -1,14 +1,22 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
+import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
-import PaginationNavigation from "@/shared/components/ui/pagination-navigation";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useProjects } from "../hooks/use-projects.hook";
+import { ProjectQueryParams } from "../services/project.service";
+
+const parseNumber = (value: string | null, fallback: number): number => {
+  const n = value ? Number(value) : NaN;
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
 
 function HomepageLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,9 +30,22 @@ function HomepageLayout({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomepageView() {
-  const { data: projects, isError, isLoading } = useProjects();
+  const searchParams = useSearchParams();
 
-  if (!projects && isLoading) {
+  const page = parseNumber(searchParams.get("page"), 1);
+  const perPage = parseNumber(searchParams.get("per_page"), 50);
+  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+
+  const {
+    data: projectsResponse,
+    isError,
+    isLoading,
+  } = useProjects(queryParams);
+
+  const projects = projectsResponse?.data || [];
+  const pagination = projectsResponse?.pagination;
+
+  if (isLoading) {
     return (
       <HomepageLayout>
         <SkeletonProjectGrid />
@@ -32,7 +53,7 @@ export default function HomepageView() {
     );
   }
 
-  if (!projects && isError) {
+  if (isError) {
     return (
       <HomepageLayout>
         <ErrorState
@@ -55,9 +76,11 @@ export default function HomepageView() {
     <HomepageLayout>
       <ProjectGrid projects={projects} />
 
-      <div className="mt-8 mb-[50px]">
-        <PaginationNavigation />
-      </div>
+      {pagination && (
+        <div className="mt-8 mb-[50px]">
+          <DataTablePagination pagination={pagination} />
+        </div>
+      )}
     </HomepageLayout>
   );
 }

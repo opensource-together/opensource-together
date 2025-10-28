@@ -93,9 +93,11 @@ export default function ProjectCardComponent({
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
-              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {repositoryDetails.owner.login}
-              </p>
+              {repositoryDetails.owner?.login && (
+                <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+                  by {repositoryDetails.owner.login}
+                </p>
+              )}
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
         </ProjectCardHeader>

@@ -1,5 +1,10 @@
 import { API_BASE_URL } from "@/config/config";
 
+import {
+  PaginatedResponse,
+  PaginationParams,
+} from "@/shared/types/pagination.type";
+
 import { Project } from "../types/project.type";
 import {
   ProjectSchema,
@@ -7,14 +12,29 @@ import {
 } from "../validations/project.schema";
 import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
+export interface ProjectQueryParams extends PaginationParams {}
+
+export interface PaginatedProjectsResponse
+  extends PaginatedResponse<Project> {}
+
 /**
  * Fetches the list of all projects.
  *
- * @returns A promise that resolves to an array of projects.
+ * @param params - Optional query parameters to filter projects.
+ * @returns A promise that resolves to the projects data.
  */
-export const getProjects = async (): Promise<Project[]> => {
+export const getProjects = async (
+  params?: ProjectQueryParams
+): Promise<PaginatedProjectsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/projects`, {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/projects${queryString ? `?${queryString}` : ""}`;
+    const response = await fetch(url, {
       method: "GET",
       credentials: "include",
     });
@@ -25,7 +45,7 @@ export const getProjects = async (): Promise<Project[]> => {
     }
 
     const apiResponse = await response.json();
-    return apiResponse?.data;
+    return apiResponse;
   } catch (error) {
     console.error("Error while sending the request to the API:", error);
     throw error;

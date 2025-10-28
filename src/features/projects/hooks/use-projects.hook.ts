@@ -6,6 +6,8 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import { getQueryClient } from "@/shared/lib/query-client";
 
 import {
+  PaginatedProjectsResponse,
+  ProjectQueryParams,
   createProject,
   deleteProject,
   deleteProjectImage,
@@ -29,14 +31,17 @@ import {
 /**
  * Fetches the list of all projects.
  *
- * @param options - Optional query options
- * @returns A React Query result containing the list of projects.
+ * @param params - Optional query parameters to filter projects.
+ * @returns A React Query result containing the list of projects with pagination.
  */
-export function useProjects(options?: { enabled?: boolean }) {
-  return useQuery<Project[]>({
-    queryKey: ["projects"],
-    queryFn: getProjects,
-    enabled: options?.enabled,
+export function useProjects(params: ProjectQueryParams = {}) {
+  const per_page = params.per_page ?? 50;
+  const page = params.page ?? 1;
+  const queryParams: ProjectQueryParams = { ...params, per_page, page };
+
+  return useQuery<PaginatedProjectsResponse>({
+    queryKey: ["projects", queryParams],
+    queryFn: () => getProjects(queryParams),
   });
 }
 
@@ -74,6 +79,7 @@ export function useCreateProject() {
     options: {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         router.push(`/projects/create/success?projectId=${project.id}`);
       },
@@ -117,6 +123,7 @@ export function useUpdateProject() {
           queryClient.invalidateQueries({
             queryKey: ["user", "me", "projects"],
           });
+          queryClient.invalidateQueries({ queryKey: ["projects"] });
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
           router.push(`/projects/${targetId}`);
         }
@@ -151,6 +158,7 @@ export function useDeleteProject() {
     options: {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
         router.push("/dashboard/my-projects");
       },
     },
@@ -189,6 +197,7 @@ export function useToggleProjectPublished() {
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
         }
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
       },
     },
   });
