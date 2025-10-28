@@ -163,6 +163,7 @@ export default function FilterSearchBar({
                 emptyText="No technologies found."
                 trigger={<FilterItem label="Choose" value={techStacksValue} />}
                 onOpenChange={onTechStackOpenChange}
+                isLoading={techStacksLoading}
               />
             </div>
 
@@ -182,6 +183,7 @@ export default function FilterSearchBar({
                 emptyText="No categories found."
                 trigger={<FilterItem label="Select" value={categoriesValue} />}
                 onOpenChange={onCategoryOpenChange}
+                isLoading={categoryLoading}
               />
             </div>
 

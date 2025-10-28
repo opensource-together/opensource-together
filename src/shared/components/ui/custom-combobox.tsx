@@ -39,6 +39,7 @@ interface ComboboxProps {
   trigger?: React.ReactNode;
   disabled?: boolean;
   onOpenChange?: (open: boolean) => void;
+  isLoading?: boolean;
 }
 
 export function CustomCombobox({
@@ -52,6 +53,7 @@ export function CustomCombobox({
   trigger,
   disabled = false,
   onOpenChange,
+  isLoading = false,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -97,8 +99,20 @@ export function CustomCombobox({
           <Command>
             <CommandInput placeholder={searchPlaceholder} className="h-9" />
             <CommandList>
-              <CommandEmpty>{emptyText}</CommandEmpty>
-              {options.some((opt) => opt.type === "LANGUAGE") && (
+              {isLoading ? (
+                <CommandGroup>
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-2 px-2 py-1.5">
+                      <div className="flex-1 space-y-1">
+                        <div className="bg-muted h-7 w-full animate-pulse rounded-lg" />
+                      </div>
+                    </div>
+                  ))}
+                </CommandGroup>
+              ) : (
+                <>
+                  <CommandEmpty>{emptyText}</CommandEmpty>
+                  {options.some((opt) => opt.type === "LANGUAGE") && (
                 <>
                   <CommandGroup heading="Langages">
                     {options
@@ -184,47 +198,49 @@ export function CustomCombobox({
                   </CommandGroup>
                 </>
               )}
-              {!options.some((opt) => opt.type === "LANGUAGE") && (
-                <CommandGroup>
-                  {options.map((option) => {
-                    const isSelected = value.includes(option.id);
-                    const isDisabled = !isSelected && isMaxReached;
+                  {!options.some((opt) => opt.type === "LANGUAGE") && (
+                    <CommandGroup>
+                      {options.map((option) => {
+                        const isSelected = value.includes(option.id);
+                        const isDisabled = !isSelected && isMaxReached;
 
-                    return (
-                      <CommandItem
-                        key={option.id}
-                        value={option.name}
-                        onSelect={(selectedName) =>
-                          !isDisabled && handleSelect(selectedName)
-                        }
-                        className={cn(
-                          "cursor-pointer",
-                          isDisabled && "cursor-not-allowed opacity-50"
-                        )}
-                      >
-                        <HiCheck
-                          size={16}
-                          className={cn(
-                            isSelected
-                              ? "text-ost-blue-three opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {option.iconUrl && (
-                          <img
-                            src={option.iconUrl}
-                            alt={option.name}
-                            className="size-3.5 flex-shrink-0"
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none";
-                            }}
-                          />
-                        )}
-                        {option.name}
-                      </CommandItem>
-                    );
-                  })}
-                </CommandGroup>
+                        return (
+                          <CommandItem
+                            key={option.id}
+                            value={option.name}
+                            onSelect={(selectedName) =>
+                              !isDisabled && handleSelect(selectedName)
+                            }
+                            className={cn(
+                              "cursor-pointer",
+                              isDisabled && "cursor-not-allowed opacity-50"
+                            )}
+                          >
+                            <HiCheck
+                              size={16}
+                              className={cn(
+                                isSelected
+                                  ? "text-ost-blue-three opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {option.iconUrl && (
+                              <img
+                                src={option.iconUrl}
+                                alt={option.name}
+                                className="size-3.5 flex-shrink-0"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                              />
+                            )}
+                            {option.name}
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  )}
+                </>
               )}
             </CommandList>
           </Command>
