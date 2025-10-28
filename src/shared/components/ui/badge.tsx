@@ -23,6 +23,8 @@ const badgeVariants = cva(
         success:
           "border-transparent text-[#00D492] bg-[#D0FAE580] [a&]:hover:bg-[#D0FAE580]/90",
         gray: "border-transparent bg-accent text-muted-foreground [a&]:hover:bg-accent/90",
+        indigo:
+          "border-transparent text-[#7C86FF] bg-[#E0E7FF80] [a&]:hover:bg-[#E0E7FF80]/90",
         white:
           "border border-muted-black-stroke bg-white text-foreground [a&]:hover:bg-white/80",
       },
