@@ -37,27 +37,27 @@ export default function ProfileExperiences({
         {experiences.map((exp, idx) => (
           <div
             key={`${exp.title}-${idx}`}
-            className="mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-12"
+            className="mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-[auto_1fr_auto]"
           >
-            <div className="text-muted-foreground md:col-span-3">
+            <div className="text-muted-foreground">
               <span className="text-[15px] whitespace-nowrap">
                 {formatRange(exp)}
               </span>
             </div>
-            <div className="bg-muted relative hidden h-px w-full md:col-span-6 md:block" />
-            <div className="flex items-center gap-2 md:col-span-3">
+            <div className="bg-muted relative hidden h-px w-full md:block" />
+            <div className="flex min-w-0 items-center justify-end gap-2">
               {exp.url ? (
                 <Link
                   href={exp.url}
-                  className="inline-flex items-center gap-2 text-[15px] font-medium whitespace-nowrap hover:underline"
+                  className="inline-flex max-w-full items-center gap-2 text-[15px] font-medium whitespace-nowrap hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {exp.title}
-                  <LuExternalLink className="size-3.5" />
+                  <span className="truncate">{exp.title}</span>
+                  <LuExternalLink className="size-3.5 shrink-0" />
                 </Link>
               ) : (
-                <span className="text-[15px] font-medium whitespace-nowrap">
+                <span className="truncate text-[15px] font-medium whitespace-nowrap">
                   {exp.title}
                 </span>
               )}
