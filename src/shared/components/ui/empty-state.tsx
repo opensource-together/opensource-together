@@ -28,11 +28,13 @@ export function EmptyState({
     <div
       className={`mx-auto flex max-w-46 flex-col items-center justify-center py-12 text-center ${className}`}
     >
-      {Icon && (
+      {Icon ? (
         <div className="flex items-center gap-2">
           <Icon size={20} aria-hidden />
           <p className="font-medium">{title}</p>
         </div>
+      ) : (
+        <p className="font-medium">{title}</p>
       )}
 
       {description && (

@@ -22,7 +22,11 @@ export default function ProfileProjectsList() {
 
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 6);
-  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+  const queryParams: ProjectQueryParams = {
+    page,
+    per_page: perPage,
+    published: true,
+  };
 
   const {
     data: projectsResponse,
@@ -63,12 +67,14 @@ export default function ProfileProjectsList() {
           repositoryDetails={{
             languages: project.repositoryDetails?.languages || {},
             forksCount: project.repositoryDetails?.forksCount || 0,
-            contributors: project.repositoryDetails?.contributors || [],
             stars: project.repositoryDetails?.stars || 0,
             openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
             pullRequestsCount:
               project.repositoryDetails?.pullRequestsCount || 0,
-            owner: project.repositoryDetails?.owner,
+            owner: project.repositoryDetails?.owner || {
+              login: "",
+              avatar_url: "",
+            },
           }}
           className="w-full"
         />

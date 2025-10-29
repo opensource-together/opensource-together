@@ -6,7 +6,20 @@ import HeroBadge from "@/shared/components/ui/hero-badge";
 
 import FilterSearchBar from "./filter-search-bar.component";
 
-export default function ProjectDiscoveryHero() {
+interface ProjectDiscoveryHeroProps {
+  onFilterChange?: (filters: {
+    techStacks: string[];
+    categories: string[];
+    orderBy: "createdAt" | "title";
+    orderDirection: "asc" | "desc";
+  }) => void;
+  isLoading?: boolean;
+}
+
+export default function ProjectDiscoveryHero({
+  onFilterChange,
+  isLoading,
+}: ProjectDiscoveryHeroProps) {
   return (
     <div className="relative mx-auto w-full">
       <FadeIn delay={0.1}>
@@ -42,7 +55,10 @@ export default function ProjectDiscoveryHero() {
         </FadeUp>
 
         <div className="mt-8 hidden md:block">
-          <FilterSearchBar />
+          <FilterSearchBar
+            onFilterChange={onFilterChange}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>

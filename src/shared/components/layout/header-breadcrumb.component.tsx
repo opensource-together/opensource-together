@@ -15,14 +15,15 @@ export default function HeaderBreadcrumb() {
     "/dashboard": () => [
       { label: "My Projects", href: "/dashboard/my-projects" },
     ],
+    "/dashboard/settings": () => [
+      { label: "Settings", href: "/dashboard/settings" },
+    ],
     "/profile/me": () => [{ label: "Profile", href: "/profile/me" }],
     "/profile/me/edit": () => [
       { label: "Profile", href: "/profile/me" },
       { label: "Edit", href: "/profile/me/edit" },
     ],
-    "/dashboard/settings": () => [
-      { label: "Settings", href: "/dashboard/settings" },
-    ],
+    "/guide": () => [{ label: "Guide", href: "/guide" }],
   };
 
   const getData = () => {

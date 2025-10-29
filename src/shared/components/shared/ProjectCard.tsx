@@ -38,7 +38,6 @@ interface ProjectCardProps {
     | "forksCount"
     | "openIssuesCount"
     | "pullRequestsCount"
-    | "contributors"
     | "languages"
     | "owner"
   >;
@@ -55,7 +54,6 @@ export default function ProjectCardComponent({
 
   repositoryDetails = {
     forksCount: 0,
-    contributors: [],
     stars: 0,
     openIssuesCount: 0,
     pullRequestsCount: 0,
@@ -93,9 +91,11 @@ export default function ProjectCardComponent({
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
-              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {repositoryDetails.owner.login}
-              </p>
+              {repositoryDetails.owner?.login && (
+                <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+                  by {repositoryDetails.owner.login}
+                </p>
+              )}
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
         </ProjectCardHeader>

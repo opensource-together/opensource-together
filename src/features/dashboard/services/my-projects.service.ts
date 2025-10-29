@@ -7,7 +7,9 @@ import {
 
 import { Project } from "@/features/projects/types/project.type";
 
-export interface ProjectQueryParams extends PaginationParams {}
+export interface ProjectQueryParams extends PaginationParams {
+  published?: boolean;
+}
 
 export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
 

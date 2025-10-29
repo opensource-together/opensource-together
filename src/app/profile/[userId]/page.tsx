@@ -1,11 +1,9 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { FRONTEND_URL } from "@/config/config";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
-import { getQueryClient } from "@/shared/lib/query-client";
 
 import { getCurrentUser } from "@/features/auth/services/auth.service";
 import { getUserById } from "@/features/profile/services/profile.service";
@@ -67,19 +65,9 @@ export default async function PublicProfilePage({
     redirect("/profile/me");
   }
 
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["user", userId],
-    queryFn: () => getUserById(userId),
-  });
-
-  const dehydratedState = dehydrate(queryClient);
-
   return (
     <>
-      <HydrationBoundary state={dehydratedState}>
-        <PublicProfileView userId={userId} />
-      </HydrationBoundary>
+      <PublicProfileView userId={userId} />
       <CTAFooter imageIllustration="/illustrations/magician.png" />
     </>
   );

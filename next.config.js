@@ -8,6 +8,7 @@ const nextConfig = {
       "avatars.githubusercontent.com",
       "cdn.jsdelivr.net",
       "s3-staging.opensource-together.com",
+      "upload.wikimedia.org",
     ],
   },
 };

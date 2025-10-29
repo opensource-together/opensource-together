@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiLogout } from "react-icons/hi";
 import {
+  HiBookOpen,
   HiCog6Tooth,
   HiMiniBars3,
   HiMiniPencilSquare,
@@ -43,6 +44,7 @@ const DEFAULT_LINKS: MobileHeaderProps["links"] = [
     href: "/dashboard/my-projects",
   },
   { label: "About", icon: HiOutlineInformationCircle, href: "/about" },
+  { label: "Guide", icon: HiBookOpen, href: "/guide" },
 ];
 
 export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {

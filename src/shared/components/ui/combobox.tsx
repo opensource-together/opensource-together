@@ -42,6 +42,7 @@ interface ComboboxProps {
   className?: string;
   disabled?: boolean;
   showTags?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function Combobox({
@@ -55,8 +56,14 @@ export function Combobox({
   className,
   disabled = false,
   showTags = true,
+  onOpenChange,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
 
   const selectedOptions = options.filter((option) => value.includes(option.id));
 
@@ -109,7 +116,7 @@ export function Combobox({
           ))}
         </div>
       )}
-      <Popover modal={true} open={open} onOpenChange={setOpen}>
+      <Popover modal={true} open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"

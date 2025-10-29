@@ -18,6 +18,7 @@ interface IssueCardProps {
   issue: Issue;
   projectId: string;
   className?: string;
+  highlightLabel?: string;
 }
 
 function extractNumberFromUrl(url: string): string | null {
@@ -29,6 +30,7 @@ export default function IssueCard({
   issue,
   projectId,
   className,
+  highlightLabel,
 }: IssueCardProps) {
   const number = extractNumberFromUrl(issue.url);
   return (
@@ -80,10 +82,13 @@ export default function IssueCard({
               </div>
               {issue.labels && issue.labels.length > 0 && (
                 <div className="flex items-center gap-2">
-                  <Badge key={issue.labels[0]} variant="gray">
-                    {issue.labels[0]}
-                  </Badge>
-
+                  {highlightLabel ? (
+                    <Badge variant="info">{highlightLabel}</Badge>
+                  ) : (
+                    <Badge key={issue.labels[0]} variant="gray">
+                      {issue.labels[0]}
+                    </Badge>
+                  )}
                   {issue.labels.length >= 2 && (
                     <span className="text-muted-foreground flex h-5.5 flex-shrink-0 items-center text-xs font-medium whitespace-nowrap">
                       +{issue.labels.length - 1}
