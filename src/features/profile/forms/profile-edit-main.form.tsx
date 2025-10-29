@@ -13,12 +13,27 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/shared/components/ui/popover";
 import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Profile } from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
+
+/**
+ * Format a Date object to YYYY-MM-DD string in local timezone
+ * This avoids timezone issues when using toISOString() which converts to UTC
+ */
+function formatDateLocal(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 interface ProfileEditMainFormProps {
   profile: Profile;
@@ -191,16 +206,27 @@ export default function ProfileEditMainForm({
                         control={control}
                         name={`experiences.${index}.startAt` as const}
                         render={({ field }) => {
-                          const selectedDate = field.value ? new Date(field.value) : undefined;
+                          const selectedDate = field.value
+                            ? new Date(field.value + "T00:00:00")
+                            : undefined;
+                          const endVal = form.getValues(
+                            `experiences.${index}.endAt` as const
+                          ) as string | null | undefined;
+                          const endDate = endVal
+                            ? new Date(endVal + "T00:00:00")
+                            : undefined;
                           return (
                             <FormItem>
                               <FormLabel required>Start date</FormLabel>
                               <FormControl>
                                 <Popover>
                                   <PopoverTrigger asChild>
-                                    <Button variant="outline" className="justify-start">
+                                    <Button
+                                      variant="outline"
+                                      className="justify-start rounded-md"
+                                    >
                                       {selectedDate
-                                        ? selectedDate.toISOString().slice(0, 10)
+                                        ? formatDateLocal(selectedDate)
                                         : "Select date"}
                                     </Button>
                                   </PopoverTrigger>
@@ -208,9 +234,14 @@ export default function ProfileEditMainForm({
                                     <Calendar
                                       mode="single"
                                       selected={selectedDate}
+                                      disabled={
+                                        endDate ? { after: endDate } : undefined
+                                      }
                                       onSelect={(date) => {
-                                        const iso = date ? date.toISOString().slice(0, 10) : "";
-                                        field.onChange(iso);
+                                        const formatted = date
+                                          ? formatDateLocal(date)
+                                          : "";
+                                        field.onChange(formatted);
                                       }}
                                     />
                                   </PopoverContent>
@@ -226,16 +257,29 @@ export default function ProfileEditMainForm({
                         control={control}
                         name={`experiences.${index}.endAt` as const}
                         render={({ field }) => {
-                          const selectedDate = field.value ? new Date(field.value as string) : undefined;
+                          const selectedDate = field.value
+                            ? new Date((field.value as string) + "T00:00:00")
+                            : undefined;
+                          const startVal = form.getValues(
+                            `experiences.${index}.startAt` as const
+                          ) as string | undefined;
+                          const startDate = startVal
+                            ? new Date(startVal + "T00:00:00")
+                            : undefined;
                           return (
                             <FormItem>
-                              <FormLabel>End date (or leave empty for current)</FormLabel>
+                              <FormLabel>
+                                End date (or leave empty for current)
+                              </FormLabel>
                               <FormControl>
                                 <Popover>
                                   <PopoverTrigger asChild>
-                                    <Button variant="outline" className="justify-start">
+                                    <Button
+                                      variant="outline"
+                                      className="justify-start rounded-md"
+                                    >
                                       {selectedDate
-                                        ? selectedDate.toISOString().slice(0, 10)
+                                        ? formatDateLocal(selectedDate)
                                         : "Select date"}
                                     </Button>
                                   </PopoverTrigger>
@@ -243,9 +287,16 @@ export default function ProfileEditMainForm({
                                     <Calendar
                                       mode="single"
                                       selected={selectedDate}
+                                      disabled={
+                                        startDate
+                                          ? { before: startDate }
+                                          : undefined
+                                      }
                                       onSelect={(date) => {
-                                        const iso = date ? date.toISOString().slice(0, 10) : null;
-                                        field.onChange(iso);
+                                        const formatted = date
+                                          ? formatDateLocal(date)
+                                          : null;
+                                        field.onChange(formatted);
                                       }}
                                     />
                                   </PopoverContent>

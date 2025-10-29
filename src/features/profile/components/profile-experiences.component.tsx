@@ -12,11 +12,17 @@ interface ProfileExperiencesProps {
 }
 
 function formatRange(exp: UserExperience): string {
-  const startYear = exp.startAt?.slice(0, 4);
-  const endYear = exp.endAt ? exp.endAt.slice(0, 4) : "Current";
-  return `${startYear} — ${endYear}`;
-}
+  const formatDate = (dateStr?: string): string => {
+    if (!dateStr) return "Current";
+    const date = new Date(dateStr);
+    return date.toLocaleString("en-US", { month: "short", year: "numeric" }); // ex: Oct 2024
+  };
 
+  const start = formatDate(exp.startAt);
+  const end = exp.endAt ? formatDate(exp.endAt) : "Current";
+
+  return `${start} — ${end}`;
+}
 export default function ProfileExperiences({
   title = "Work Experience",
   experiences = [],
@@ -34,14 +40,16 @@ export default function ProfileExperiences({
             className="mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-12"
           >
             <div className="text-muted-foreground md:col-span-3">
-              <span>{formatRange(exp)}</span>
+              <span className="text-[15px] whitespace-nowrap">
+                {formatRange(exp)}
+              </span>
             </div>
             <div className="bg-muted relative hidden h-px w-full md:col-span-6 md:block" />
             <div className="flex items-center gap-2 md:col-span-3">
               {exp.url ? (
                 <Link
                   href={exp.url}
-                  className="no-wrap inline-flex items-center gap-2 font-medium hover:underline"
+                  className="inline-flex items-center gap-2 text-[15px] font-medium whitespace-nowrap hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -49,7 +57,9 @@ export default function ProfileExperiences({
                   <LuExternalLink className="size-3.5" />
                 </Link>
               ) : (
-                <span className="font-medium">{exp.title}</span>
+                <span className="text-[15px] font-medium whitespace-nowrap">
+                  {exp.title}
+                </span>
               )}
             </div>
           </div>
