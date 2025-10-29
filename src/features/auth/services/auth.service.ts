@@ -28,6 +28,19 @@ export const linkSocialAccount = async (provider: string): Promise<void> => {
   }
 };
 
+export const unlinkSocialAccount = async (
+  providerId: string
+): Promise<void> => {
+  try {
+    await authClient.unlinkAccount({
+      providerId,
+    });
+  } catch (error) {
+    console.error("unlinkSocialAccount error:", error);
+    throw error;
+  }
+};
+
 export async function logout(): Promise<void> {
   try {
     await authClient.signOut();
@@ -49,9 +62,6 @@ export async function deleteAccount(): Promise<void> {
   }
 }
 
-/**
- * Check if session exists and get user profile
- */
 export const getCurrentUser = async (): Promise<Profile | null> => {
   try {
     const response = await fetch(`${API_BASE_URL}/users/me`, {

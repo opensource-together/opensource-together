@@ -10,6 +10,7 @@ import {
   linkSocialAccount,
   logout,
   signInWithProvider,
+  unlinkSocialAccount,
 } from "../services/auth.service";
 
 export default function useAuth() {
@@ -60,6 +61,18 @@ export default function useAuth() {
     },
   });
 
+  const unlinkSocialAccountMutation = useToastMutation<unknown, Error, string>({
+    mutationFn: async (providerId) => await unlinkSocialAccount(providerId),
+    loadingMessage: "Unlinking social account...",
+    successMessage: "Social account unlinked successfully",
+    errorMessage: "An error occurred while unlinking social account",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      },
+    },
+  });
+
   const logoutMutation = useToastMutation({
     mutationFn: logout,
     loadingMessage: "Logging out...",
@@ -94,11 +107,13 @@ export default function useAuth() {
 
     signInWithProvider: signInMutation.mutate,
     linkSocialAccount: linkSocialAccountMutation.mutate,
+    unlinkSocialAccount: unlinkSocialAccountMutation.mutate,
     logout: logoutMutation.mutate,
     deleteAccount: deleteAccountMutation.mutate,
 
     isSigningIn: signInMutation.isPending,
     isLinkingSocialAccount: linkSocialAccountMutation.isPending,
+    isUnlinkingSocialAccount: unlinkSocialAccountMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
     isDeletingAccount: deleteAccountMutation.isPending,
   };

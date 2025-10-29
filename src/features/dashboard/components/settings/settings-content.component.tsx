@@ -14,17 +14,19 @@ import { SettingsSkeleton } from "../skeletons/settings-skeletons.component";
 
 export function SettingsContent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [unlinkProviderId, setUnlinkProviderId] = useState<string | null>(null);
   const {
     currentUser,
     isLoading,
     isError,
     logout,
     isLoggingOut,
-    isSigningIn,
     deleteAccount,
     isDeletingAccount,
     linkSocialAccount,
     isLinkingSocialAccount,
+    unlinkSocialAccount,
+    isUnlinkingSocialAccount,
   } = useAuth();
 
   if (isLoading) {
@@ -49,6 +51,13 @@ export function SettingsContent() {
 
   const handleConfirmDelete = () => {
     deleteAccount();
+  };
+
+  const handleConfirmUnlink = () => {
+    if (unlinkProviderId) {
+      unlinkSocialAccount(unlinkProviderId);
+      setUnlinkProviderId(null);
+    }
   };
 
   const providers = [
@@ -139,7 +148,7 @@ export function SettingsContent() {
                 </div>
                 {!provider.connected && (
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="sm"
                     disabled={isLinkingSocialAccount}
                     onClick={() => linkSocialAccount(provider.id)}
@@ -147,9 +156,37 @@ export function SettingsContent() {
                     {isLinkingSocialAccount ? "Linking..." : "Link"}
                   </Button>
                 )}
+                {provider.connected &&
+                  (currentUser.connectedProviders?.length ?? 0) > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={isUnlinkingSocialAccount}
+                      onClick={() => setUnlinkProviderId(provider.id)}
+                    >
+                      {isUnlinkingSocialAccount ? "Unlinking..." : "Unlink"}
+                    </Button>
+                  )}
               </div>
             ))}
           </div>
+          {unlinkProviderId && (
+            <ConfirmDialog
+              open={!!unlinkProviderId}
+              onOpenChange={(open) => {
+                if (!open) setUnlinkProviderId(null);
+              }}
+              title={`Unlink ${providers.find((p) => p.id === unlinkProviderId)?.name}?`}
+              description={`Are you sure you want to unlink your ${providers.find((p) => p.id === unlinkProviderId)?.name} account? You will no longer be able to sign in using this provider.`}
+              isLoading={isUnlinkingSocialAccount}
+              onConfirm={handleConfirmUnlink}
+              onCancel={() => setUnlinkProviderId(null)}
+              confirmText={
+                isUnlinkingSocialAccount ? "Unlinking..." : "Confirm unlink"
+              }
+              confirmVariant="destructive"
+            />
+          )}
         </section>
 
         {/* Danger Zone */}
