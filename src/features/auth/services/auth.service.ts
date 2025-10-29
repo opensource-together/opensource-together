@@ -16,11 +16,15 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   }
 };
 
-export const linkSocialAccount = async (provider: string): Promise<void> => {
+export const linkSocialAccount = async (
+  provider: string,
+  callbackURL?: string
+): Promise<void> => {
   try {
     await authClient.linkSocial({
       provider,
-      callbackURL: `${window.location.origin}/dashboard/settings`,
+      callbackURL:
+        callbackURL || `${window.location.origin}/dashboard/settings`,
     });
   } catch (error) {
     console.error("linkSocialAccount error:", error);
@@ -41,7 +45,7 @@ export const unlinkSocialAccount = async (
   }
 };
 
-export async function logout(): Promise<void> {
+export const logout = async (): Promise<void> => {
   try {
     await authClient.signOut();
     if (typeof window !== "undefined") window.location.replace("/");
@@ -49,9 +53,9 @@ export async function logout(): Promise<void> {
     console.error("logout error:", error);
     throw error;
   }
-}
+};
 
-export async function deleteAccount(): Promise<void> {
+export const deleteAccount = async (): Promise<void> => {
   try {
     await authClient.deleteUser({
       callbackURL: window.location.origin,
@@ -60,7 +64,7 @@ export async function deleteAccount(): Promise<void> {
     console.error("deleteAccount error:", error);
     throw error;
   }
-}
+};
 
 export const getCurrentUser = async (): Promise<Profile | null> => {
   try {

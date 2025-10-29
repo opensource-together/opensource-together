@@ -49,8 +49,17 @@ export default function useAuth() {
     errorMessage: "An error occurred while logging in",
   });
 
-  const linkSocialAccountMutation = useToastMutation<unknown, Error, string>({
-    mutationFn: async (provider) => await linkSocialAccount(provider),
+  const linkSocialAccountMutation = useToastMutation<
+    unknown,
+    Error,
+    string | { provider: string; callbackURL?: string }
+  >({
+    mutationFn: async (arg) => {
+      if (typeof arg === "string") {
+        return await linkSocialAccount(arg);
+      }
+      return await linkSocialAccount(arg.provider, arg.callbackURL);
+    },
     loadingMessage: "Linking social account...",
     successMessage: "Social account linked successfully!",
     errorMessage: "An error occurred while linking social account",
