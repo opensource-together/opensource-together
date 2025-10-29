@@ -11,21 +11,29 @@ export default function MyProjectsSkeleton() {
     <div>
       <Table>
         <TableBody>
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 7 }).map((_, index) => (
             <TableRow key={index}>
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                  <div className="flex flex-col gap-2">
-                    <Skeleton className="h-4 w-48" />
+                  <Skeleton className="h-10 w-10 rounded-lg" />
+                  <div className="flex flex-col">
+                    <Skeleton className="h-4 w-32" />
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-24 rounded-full" />
               </TableCell>
               <TableCell>
-                <Skeleton className="h-9 w-9 rounded-md" />
+                <Skeleton className="h-5 w-18 rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="size-8 rounded-full" />
+                </div>
               </TableCell>
             </TableRow>
           ))}

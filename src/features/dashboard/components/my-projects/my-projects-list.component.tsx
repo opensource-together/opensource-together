@@ -17,6 +17,7 @@ import {
   TableCell,
   TableRow,
 } from "@/shared/components/ui/table";
+import { formatNumberShort } from "@/shared/lib/utils/format-number";
 
 import {
   useDeleteProject,
@@ -145,6 +146,22 @@ export default function MyProjectsList() {
                         <h4 className="font-medium">{project.title}</h4>
                       </div>
                     </div>
+                  </div>
+                </TableCell>
+
+                <TableCell>
+                  <div className="flex items-center gap-1.5">
+                    <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
+                    <h2 className="text-muted-foreground text-sm">
+                      <span className="text-primary font-medium">
+                        {formatNumberShort(
+                          project.repositoryDetails?.openIssuesCount
+                        )}
+                      </span>{" "}
+                      {project.repositoryDetails?.openIssuesCount > 1
+                        ? "Open Issues"
+                        : "Open Issue"}
+                    </h2>
                   </div>
                 </TableCell>
 
