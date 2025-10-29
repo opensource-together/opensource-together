@@ -20,8 +20,8 @@ export default function HeaderBreadcrumb() {
       { label: "Profile", href: "/profile/me" },
       { label: "Edit", href: "/profile/me/edit" },
     ],
-    "/projects/trending": () => [
-      { label: "Trending Projects", href: "/projects/trending" },
+    "/dashboard/settings": () => [
+      { label: "Settings", href: "/dashboard/settings" },
     ],
   };
 
