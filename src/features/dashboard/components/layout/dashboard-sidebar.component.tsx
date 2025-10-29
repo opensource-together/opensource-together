@@ -51,8 +51,8 @@ const sidebarSections = [
 ];
 
 const bottomSidebarItems = [
-  { label: "Settings", href: "/settings", icon: HiCog6Tooth },
-  { label: "Need help", href: "/guide", icon: HiQuestionMarkCircle },
+  { label: "Settings", href: "/dashboard/settings", icon: HiCog6Tooth },
+  { label: "Need help", href: "/help", icon: HiQuestionMarkCircle },
 ];
 
 interface SidebarItem {

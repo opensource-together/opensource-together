@@ -15,6 +15,9 @@ export default function HeaderBreadcrumb() {
     "/dashboard": () => [
       { label: "My Projects", href: "/dashboard/my-projects" },
     ],
+    "/dashboard/settings": () => [
+      { label: "Settings", href: "/dashboard/settings" },
+    ],
     "/profile/me": () => [{ label: "Profile", href: "/profile/me" }],
     "/profile/me/edit": () => [
       { label: "Profile", href: "/profile/me" },

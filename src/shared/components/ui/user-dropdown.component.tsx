@@ -58,7 +58,7 @@ export default function UserDropdown() {
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <Link href="/settings">
+        <Link href="/dashboard/settings">
           <DropdownMenuItem>
             <HiCog6Tooth className="size-4" />
             Settings

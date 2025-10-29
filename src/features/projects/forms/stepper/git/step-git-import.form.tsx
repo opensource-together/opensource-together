@@ -1,12 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useGitRepository } from "@/shared/hooks/use-git-repository.hook";
 import { UserGitRepository } from "@/shared/types/git-repository.type";
+
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import CustomScrollbar from "../../../components/stepper/custom-scrollbar.component";
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
@@ -30,7 +32,9 @@ export default function StepGitImportForm({
   );
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const { selectRepository } = useProjectCreateStore();
+  const { linkSocialAccount, isLinkingSocialAccount } = useAuth();
 
   const { data: gitRepos, isLoading, isError } = useGitRepository({ provider });
 
@@ -72,7 +76,27 @@ export default function StepGitImportForm({
     }
   };
 
-  if (isError) return <ErrorState message="Error loading repositories" />;
+  if (isError) {
+    const handleLinkAccount = () => {
+      linkSocialAccount({
+        provider,
+        callbackURL: `${window.location.origin}${pathname}`,
+      });
+    };
+
+    return (
+      <ErrorState
+        title="Error loading repositories"
+        message={`We couldn't load your ${provider} repositories. Please link your ${provider} account to continue.`}
+        onRetry={handleLinkAccount}
+        retryText={
+          isLinkingSocialAccount
+            ? `Linking ${provider}...`
+            : `Link ${provider} account`
+        }
+      />
+    );
+  }
 
   return (
     <div className="w-full">

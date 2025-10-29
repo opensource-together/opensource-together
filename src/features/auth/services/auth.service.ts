@@ -16,7 +16,36 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   }
 };
 
-export async function logout(): Promise<void> {
+export const linkSocialAccount = async (
+  provider: string,
+  callbackURL?: string
+): Promise<void> => {
+  try {
+    await authClient.linkSocial({
+      provider,
+      callbackURL:
+        callbackURL || `${window.location.origin}/dashboard/settings`,
+    });
+  } catch (error) {
+    console.error("linkSocialAccount error:", error);
+    throw error;
+  }
+};
+
+export const unlinkSocialAccount = async (
+  providerId: string
+): Promise<void> => {
+  try {
+    await authClient.unlinkAccount({
+      providerId,
+    });
+  } catch (error) {
+    console.error("unlinkSocialAccount error:", error);
+    throw error;
+  }
+};
+
+export const logout = async (): Promise<void> => {
   try {
     await authClient.signOut();
     if (typeof window !== "undefined") window.location.replace("/");
@@ -24,11 +53,19 @@ export async function logout(): Promise<void> {
     console.error("logout error:", error);
     throw error;
   }
-}
+};
 
-/**
- * Check if session exists and get user profile
- */
+export const deleteAccount = async (): Promise<void> => {
+  try {
+    await authClient.deleteUser({
+      callbackURL: window.location.origin,
+    });
+  } catch (error) {
+    console.error("deleteAccount error:", error);
+    throw error;
+  }
+};
+
 export const getCurrentUser = async (): Promise<Profile | null> => {
   try {
     const response = await fetch(`${API_BASE_URL}/users/me`, {

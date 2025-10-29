@@ -5,9 +5,12 @@ import { useEffect } from "react";
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
 import {
+  deleteAccount,
   getCurrentUser,
+  linkSocialAccount,
   logout,
   signInWithProvider,
+  unlinkSocialAccount,
 } from "../services/auth.service";
 
 export default function useAuth() {
@@ -46,6 +49,39 @@ export default function useAuth() {
     errorMessage: "An error occurred while logging in",
   });
 
+  const linkSocialAccountMutation = useToastMutation<
+    unknown,
+    Error,
+    string | { provider: string; callbackURL?: string }
+  >({
+    mutationFn: async (arg) => {
+      if (typeof arg === "string") {
+        return await linkSocialAccount(arg);
+      }
+      return await linkSocialAccount(arg.provider, arg.callbackURL);
+    },
+    loadingMessage: "Linking social account...",
+    successMessage: "Social account linked successfully!",
+    errorMessage: "An error occurred while linking social account",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      },
+    },
+  });
+
+  const unlinkSocialAccountMutation = useToastMutation<unknown, Error, string>({
+    mutationFn: async (providerId) => await unlinkSocialAccount(providerId),
+    loadingMessage: "Unlinking social account...",
+    successMessage: "Social account unlinked successfully",
+    errorMessage: "An error occurred while unlinking social account",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      },
+    },
+  });
+
   const logoutMutation = useToastMutation({
     mutationFn: logout,
     loadingMessage: "Logging out...",
@@ -59,6 +95,19 @@ export default function useAuth() {
     },
   });
 
+  const deleteAccountMutation = useToastMutation({
+    mutationFn: deleteAccount,
+    loadingMessage: "Deleting account...",
+    successMessage: "Your account has been deleted.",
+    errorMessage: "Failed to delete your account",
+    options: {
+      onSuccess: () => {
+        queryClient.clear();
+        router.push("/");
+      },
+    },
+  });
+
   return {
     currentUser,
     isAuthenticated: !!currentUser,
@@ -66,9 +115,15 @@ export default function useAuth() {
     isError,
 
     signInWithProvider: signInMutation.mutate,
+    linkSocialAccount: linkSocialAccountMutation.mutate,
+    unlinkSocialAccount: unlinkSocialAccountMutation.mutate,
     logout: logoutMutation.mutate,
+    deleteAccount: deleteAccountMutation.mutate,
 
     isSigningIn: signInMutation.isPending,
+    isLinkingSocialAccount: linkSocialAccountMutation.isPending,
+    isUnlinkingSocialAccount: unlinkSocialAccountMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
+    isDeletingAccount: deleteAccountMutation.isPending,
   };
 }
