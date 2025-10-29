@@ -20,10 +20,11 @@ export function SettingsContent() {
     isError,
     logout,
     isLoggingOut,
-    signInWithProvider,
     isSigningIn,
     deleteAccount,
     isDeletingAccount,
+    linkSocialAccount,
+    isLinkingSocialAccount,
   } = useAuth();
 
   if (isLoading) {
@@ -140,10 +141,10 @@ export function SettingsContent() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    disabled={isSigningIn}
-                    onClick={() => signInWithProvider(provider.id)}
+                    disabled={isLinkingSocialAccount}
+                    onClick={() => linkSocialAccount(provider.id)}
                   >
-                    {isSigningIn ? "Connecting..." : "Connect"}
+                    {isLinkingSocialAccount ? "Linking..." : "Link"}
                   </Button>
                 )}
               </div>

@@ -7,6 +7,7 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import {
   deleteAccount,
   getCurrentUser,
+  linkSocialAccount,
   logout,
   signInWithProvider,
 } from "../services/auth.service";
@@ -47,6 +48,18 @@ export default function useAuth() {
     errorMessage: "An error occurred while logging in",
   });
 
+  const linkSocialAccountMutation = useToastMutation<unknown, Error, string>({
+    mutationFn: async (provider) => await linkSocialAccount(provider),
+    loadingMessage: "Linking social account...",
+    successMessage: "Social account linked successfully!",
+    errorMessage: "An error occurred while linking social account",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      },
+    },
+  });
+
   const logoutMutation = useToastMutation({
     mutationFn: logout,
     loadingMessage: "Logging out...",
@@ -80,10 +93,12 @@ export default function useAuth() {
     isError,
 
     signInWithProvider: signInMutation.mutate,
+    linkSocialAccount: linkSocialAccountMutation.mutate,
     logout: logoutMutation.mutate,
     deleteAccount: deleteAccountMutation.mutate,
 
     isSigningIn: signInMutation.isPending,
+    isLinkingSocialAccount: linkSocialAccountMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
     isDeletingAccount: deleteAccountMutation.isPending,
   };

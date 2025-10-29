@@ -16,6 +16,18 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   }
 };
 
+export const linkSocialAccount = async (provider: string): Promise<void> => {
+  try {
+    await authClient.linkSocial({
+      provider,
+      callbackURL: `${window.location.origin}/dashboard/settings`,
+    });
+  } catch (error) {
+    console.error("linkSocialAccount error:", error);
+    throw error;
+  }
+};
+
 export async function logout(): Promise<void> {
   try {
     await authClient.signOut();
