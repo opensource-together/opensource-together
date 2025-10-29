@@ -26,6 +26,17 @@ export async function logout(): Promise<void> {
   }
 }
 
+export async function deleteAccount(): Promise<void> {
+  try {
+    await authClient.deleteUser({
+      callbackURL: window.location.origin,
+    });
+  } catch (error) {
+    console.error("deleteAccount error:", error);
+    throw error;
+  }
+}
+
 /**
  * Check if session exists and get user profile
  */

@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { RiGithubFill, RiGitlabFill, RiGoogleFill } from "react-icons/ri";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { formatExternalUrl } from "@/shared/lib/utils/format-external-url";
 
@@ -11,6 +13,7 @@ import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { SettingsSkeleton } from "../skeletons/settings-skeletons.component";
 
 export function SettingsContent() {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const {
     currentUser,
     isLoading,
@@ -19,6 +22,8 @@ export function SettingsContent() {
     isLoggingOut,
     signInWithProvider,
     isSigningIn,
+    deleteAccount,
+    isDeletingAccount,
   } = useAuth();
 
   if (isLoading) {
@@ -39,6 +44,10 @@ export function SettingsContent() {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleConfirmDelete = () => {
+    deleteAccount();
   };
 
   const providers = [
@@ -157,7 +166,23 @@ export function SettingsContent() {
             >
               {isLoggingOut ? "Signing out..." : "Sign out"}
             </Button>
-            <Button variant="secondary">Delete account</Button>
+            <Button
+              variant="secondary"
+              onClick={() => setIsDeleteDialogOpen(true)}
+            >
+              Delete account
+            </Button>
+            <ConfirmDialog
+              open={isDeleteDialogOpen}
+              onOpenChange={setIsDeleteDialogOpen}
+              title="Delete account?"
+              description="This action is permanent and will remove your account and related data. Depending on your sign-in method, an email confirmation may be required."
+              isLoading={isDeletingAccount}
+              onConfirm={handleConfirmDelete}
+              onCancel={() => setIsDeleteDialogOpen(false)}
+              confirmText={isDeletingAccount ? "Deleting..." : "Confirm delete"}
+              confirmVariant="destructive"
+            />
           </div>
         </section>
       </div>

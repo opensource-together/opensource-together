@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
 import {
+  deleteAccount,
   getCurrentUser,
   logout,
   signInWithProvider,
@@ -59,6 +60,19 @@ export default function useAuth() {
     },
   });
 
+  const deleteAccountMutation = useToastMutation({
+    mutationFn: deleteAccount,
+    loadingMessage: "Deleting account...",
+    successMessage: "Your account has been deleted.",
+    errorMessage: "Failed to delete your account",
+    options: {
+      onSuccess: () => {
+        queryClient.clear();
+        router.push("/");
+      },
+    },
+  });
+
   return {
     currentUser,
     isAuthenticated: !!currentUser,
@@ -67,8 +81,10 @@ export default function useAuth() {
 
     signInWithProvider: signInMutation.mutate,
     logout: logoutMutation.mutate,
+    deleteAccount: deleteAccountMutation.mutate,
 
     isSigningIn: signInMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
+    isDeletingAccount: deleteAccountMutation.isPending,
   };
 }
