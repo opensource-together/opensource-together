@@ -15,8 +15,6 @@ export interface Profile {
   contributionsCount?: number;
   createdAt?: string;
   updatedAt?: string;
-  githubStats?: GithubStats;
-  contributionGraph?: ContributionGraph;
   githubUrl?: string;
   gitlabUrl?: string;
   discordUrl?: string;
@@ -25,4 +23,14 @@ export interface Profile {
   websiteUrl?: string;
   userTechStacksIds?: string[];
   userTechStacks?: TechStackType[];
+  userExperiences?: UserExperience[];
+  githubStats?: GithubStats;
+  contributionGraph?: ContributionGraph;
+}
+
+export interface UserExperience {
+  title: string;
+  startAt: string;
+  endAt?: string | null;
+  url?: string | null;
 }

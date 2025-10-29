@@ -34,6 +34,13 @@ export default function ProfileEditView() {
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
       userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      experiences:
+        currentUser?.userExperiences?.map((e) => ({
+          title: e.title,
+          startAt: e.startAt,
+          endAt: e.endAt ?? null,
+          url: e.url ?? undefined,
+        })) || [],
       githubUrl: currentUser?.githubUrl || "",
       gitlabUrl: currentUser?.gitlabUrl || "",
       discordUrl: currentUser?.discordUrl || "",
@@ -51,6 +58,13 @@ export default function ProfileEditView() {
       jobTitle: currentUser.jobTitle || "",
       bio: currentUser.bio || "",
       userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      experiences:
+        currentUser?.userExperiences?.map((e) => ({
+          title: e.title,
+          startAt: e.startAt,
+          endAt: e.endAt ?? null,
+          url: e.url ?? undefined,
+        })) || [],
       githubUrl: currentUser.githubUrl || "",
       gitlabUrl: currentUser.gitlabUrl || "",
       discordUrl: currentUser.discordUrl || "",

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFieldArray } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
+import { Calendar } from "@/shared/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -12,6 +13,7 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
@@ -34,6 +36,10 @@ export default function ProfileEditMainForm({
   isUpdating,
 }: ProfileEditMainFormProps) {
   const { control } = form;
+  const experiencesArray = useFieldArray({
+    control,
+    name: "experiences" as const,
+  });
 
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
@@ -115,6 +121,155 @@ export default function ProfileEditMainForm({
               </FormItem>
             )}
           />
+
+          <div className="mt-10 space-y-4">
+            <div className="flex items-center justify-between">
+              <FormLabel>Work Experience</FormLabel>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  experiencesArray.append({
+                    title: "",
+                    startAt: "",
+                    endAt: null,
+                    url: "",
+                  })
+                }
+              >
+                Add experience
+              </Button>
+            </div>
+
+            {experiencesArray.fields.length === 0 && (
+              <p className="text-muted-foreground text-sm">
+                No experiences added.
+              </p>
+            )}
+
+            <div className="flex flex-col gap-6">
+              {experiencesArray.fields.map((field, index) => (
+                <div key={field.id} className="rounded-2xl border p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+                      <FormField
+                        control={control}
+                        name={`experiences.${index}.title` as const}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel required>Title</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Backend Dev @ PrimeIntellect"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={control}
+                        name={`experiences.${index}.url` as const}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Link (optional)</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                value={field.value ?? ""}
+                                placeholder="https://company.com"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={control}
+                        name={`experiences.${index}.startAt` as const}
+                        render={({ field }) => {
+                          const selectedDate = field.value ? new Date(field.value) : undefined;
+                          return (
+                            <FormItem>
+                              <FormLabel required>Start date</FormLabel>
+                              <FormControl>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button variant="outline" className="justify-start">
+                                      {selectedDate
+                                        ? selectedDate.toISOString().slice(0, 10)
+                                        : "Select date"}
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="p-0" align="start">
+                                    <Calendar
+                                      mode="single"
+                                      selected={selectedDate}
+                                      onSelect={(date) => {
+                                        const iso = date ? date.toISOString().slice(0, 10) : "";
+                                        field.onChange(iso);
+                                      }}
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+
+                      <FormField
+                        control={control}
+                        name={`experiences.${index}.endAt` as const}
+                        render={({ field }) => {
+                          const selectedDate = field.value ? new Date(field.value as string) : undefined;
+                          return (
+                            <FormItem>
+                              <FormLabel>End date (or leave empty for current)</FormLabel>
+                              <FormControl>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button variant="outline" className="justify-start">
+                                      {selectedDate
+                                        ? selectedDate.toISOString().slice(0, 10)
+                                        : "Select date"}
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="p-0" align="start">
+                                    <Calendar
+                                      mode="single"
+                                      selected={selectedDate}
+                                      onSelect={(date) => {
+                                        const iso = date ? date.toISOString().slice(0, 10) : null;
+                                        field.onChange(iso);
+                                      }}
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => experiencesArray.remove(index)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <Separator className="mt-20" />
 
