@@ -15,6 +15,7 @@ import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import GithubGraph from "../components/github-graph.component";
+import ProfileExperiences from "../components/profile-experiences.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
@@ -68,6 +69,10 @@ export default function ProfileView() {
               />
             </div>
           )}
+
+          <div className="mt-12 flex w-full">
+            <ProfileExperiences experiences={currentUser.userExperiences} />
+          </div>
 
           <div className="mt-12 flex w-full">
             <RecentProjects />

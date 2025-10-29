@@ -13,6 +13,7 @@ import {
 import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 
 import GithubGraph from "../components/github-graph.component";
+import ProfileExperiences from "../components/profile-experiences.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
@@ -79,6 +80,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
               />
             </div>
           )}
+
+          <div className="mt-12 flex w-full">
+            <ProfileExperiences experiences={profile.userExperiences} />
+          </div>
+
           <div className="mt-12 flex w-full">
             <RecentProjects />
           </div>

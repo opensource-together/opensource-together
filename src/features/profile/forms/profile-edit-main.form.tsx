@@ -1,5 +1,10 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
+import { useState } from "react";
+import { UseFormReturn, useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
@@ -16,7 +21,9 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Profile } from "../types/profile.type";
-import { ProfileSchema } from "../validations/profile.schema";
+import { ProfileSchema, experienceSchema } from "../validations/profile.schema";
+import ExperienceModalForm from "./experience-modal.form";
+import ProfileExperiencesEditor from "./profile-experiences-editor.form";
 
 interface ProfileEditMainFormProps {
   profile: Profile;
@@ -26,6 +33,8 @@ interface ProfileEditMainFormProps {
   isUpdating: boolean;
 }
 
+type ExperienceFormData = z.infer<typeof experienceSchema>;
+
 export default function ProfileEditMainForm({
   profile,
   form,
@@ -34,6 +43,52 @@ export default function ProfileEditMainForm({
   isUpdating,
 }: ProfileEditMainFormProps) {
   const { control } = form;
+  const experiencesArray = useFieldArray({
+    control,
+    name: "experiences" as const,
+  });
+
+  const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+  const experienceForm = useForm<ExperienceFormData>({
+    resolver: zodResolver(experienceSchema),
+    defaultValues: {
+      title: "",
+      startAt: "",
+      endAt: undefined,
+      url: undefined,
+    },
+  });
+
+  const handleOpenAddExperience = () => {
+    setEditingIndex(null);
+    experienceForm.reset({
+      title: "",
+      startAt: "",
+      endAt: undefined,
+      url: undefined,
+    });
+    setIsExperienceModalOpen(true);
+  };
+
+  const handleOpenEditExperience = (index: number) => {
+    const experience = experiencesArray.fields[index];
+    setEditingIndex(index);
+    experienceForm.reset({
+      title: experience.title || "",
+      startAt: experience.startAt || "",
+      endAt: experience.endAt ?? undefined,
+      url: experience.url ?? undefined,
+    });
+    setIsExperienceModalOpen(true);
+  };
+
+  const handleCancelExperience = () => {
+    setIsExperienceModalOpen(false);
+    experienceForm.reset();
+    setEditingIndex(null);
+  };
 
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
@@ -72,7 +127,7 @@ export default function ProfileEditMainForm({
                   <Input
                     {...field}
                     placeholder="Your name"
-                    className="bg-white text-sm"
+                    className="text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -90,7 +145,7 @@ export default function ProfileEditMainForm({
                   <Input
                     {...field}
                     placeholder="Ex: Full Stack Developer"
-                    className="bg-white text-sm"
+                    className="text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -108,7 +163,7 @@ export default function ProfileEditMainForm({
                   <Textarea
                     {...field}
                     placeholder="Tell us about yourself, your passions, your experience..."
-                    className="min-h-[120px] w-full resize-none bg-white text-sm"
+                    className="min-h-[120px] w-full resize-none text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -116,9 +171,23 @@ export default function ProfileEditMainForm({
             )}
           />
 
+          <div className="mt-10">
+            <ProfileExperiencesEditor
+              experiences={experiencesArray.fields.map((e) => ({
+                title: e.title || "",
+                startAt: e.startAt || "",
+                endAt: (e.endAt as string | null | undefined) ?? null,
+                url: (e.url as string | null | undefined) ?? null,
+              }))}
+              onAdd={handleOpenAddExperience}
+              onEdit={handleOpenEditExperience}
+              onRemove={(idx) => experiencesArray.remove(idx)}
+            />
+          </div>
+
           <Separator className="mt-20" />
 
-          <div className="sticky bottom-0 z-50 bg-white">
+          <div className="sticky bottom-0 z-50">
             <div className="-mx-4.5">
               <div className="flex items-center justify-end gap-4 px-6 pt-4">
                 <Link href="/profile/me">
@@ -134,6 +203,30 @@ export default function ProfileEditMainForm({
           </div>
         </form>
       </Form>
+
+      <ExperienceModalForm
+        open={isExperienceModalOpen}
+        onOpenChange={setIsExperienceModalOpen}
+        title={editingIndex !== null ? "Edit Experience" : "Add Experience"}
+        description={
+          editingIndex !== null
+            ? "Update your work experience details"
+            : "Add a new work experience to your profile"
+        }
+        confirmText={editingIndex !== null ? "Update" : "Add"}
+        cancelText="Cancel"
+        onConfirm={(values) => {
+          if (editingIndex !== null) {
+            experiencesArray.update(editingIndex, values);
+          } else {
+            experiencesArray.append(values);
+          }
+          setIsExperienceModalOpen(false);
+          experienceForm.reset();
+        }}
+        onCancel={handleCancelExperience}
+        form={experienceForm}
+      />
     </div>
   );
 }

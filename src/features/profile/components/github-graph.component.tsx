@@ -71,7 +71,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
     return (
       <div className="w-full max-w-full overflow-hidden">
         <div>
-          <h3 className="mb-3.5">Contribution Activity</h3>
+          <h3 className="mb-2">Contribution Activity</h3>
           <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
               No contribution data available
@@ -101,7 +101,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div>
-        <h2 className="mb-4">Contribution Activity</h2>
+        <h2 className="mb-2">Contribution Activity</h2>
 
         <div className="relative">
           <div className="mb-0.5 flex pr-2.5">
