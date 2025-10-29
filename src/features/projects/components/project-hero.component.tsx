@@ -6,12 +6,16 @@ import Icon from "@/shared/components/ui/icon";
 
 import { Project } from "../types/project.type";
 
-export function ProjectMobileHero({
-  title,
-  description,
-  logoUrl,
-  repoUrl,
-}: Project) {
+export function ProjectMobileHero({ project }: ProjectHeroProps) {
+  const {
+    id = "",
+    title = "",
+    description = "",
+    logoUrl,
+    repoUrl = "",
+    published = false,
+  } = project;
+
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center gap-4">
@@ -27,15 +31,31 @@ export function ProjectMobileHero({
 
       <p className="mt-4 mb-8 text-sm font-normal">{description}</p>
       <div className="flex items-center gap-2">
-        <Link href={repoUrl || ""} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline">
-            <Icon name="star" size="sm" />
-            Star
-          </Button>
-        </Link>
-        <Link href={repoUrl || ""} target="_blank" rel="noopener noreferrer">
-          <Button>View Repository</Button>
-        </Link>
+        {published ? (
+          <>
+            <Link
+              href={repoUrl || ""}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline">
+                <Icon name="star" size="sm" />
+                Star
+              </Button>
+            </Link>
+            <Link
+              href={repoUrl || ""}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button>View Repository</Button>
+            </Link>
+          </>
+        ) : (
+          <Link href={`/projects/${id}/edit`}>
+            <Button>Edit Project</Button>
+          </Link>
+        )}
       </div>
     </div>
   );
@@ -49,7 +69,14 @@ export default function ProjectHero({
   project,
   hideHeader = false,
 }: ProjectHeroProps) {
-  const { title = "", description = "", logoUrl, repoUrl = "" } = project;
+  const {
+    id = "",
+    title = "",
+    description = "",
+    logoUrl,
+    repoUrl = "",
+    published = false,
+  } = project;
 
   return (
     <div className="flex flex-col bg-white">
@@ -70,25 +97,31 @@ export default function ProjectHero({
             </div>
 
             <div className="flex items-center gap-2">
-              <Link
-                href={repoUrl || ""}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="outline">
-                  <Icon name="star" size="sm" />
-                  Star
-                </Button>
-              </Link>
-              <div className="flex gap-2">
-                <Link
-                  href={repoUrl || ""}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button>View Repository</Button>
+              {published ? (
+                <>
+                  <Link
+                    href={repoUrl || ""}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline">
+                      <Icon name="star" size="sm" />
+                      Star
+                    </Button>
+                  </Link>
+                  <Link
+                    href={repoUrl || ""}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button>View Repository</Button>
+                  </Link>
+                </>
+              ) : (
+                <Link href={`/projects/${id}/edit`}>
+                  <Button>Edit Project</Button>
                 </Link>
-              </div>
+              )}
             </div>
           </div>
 

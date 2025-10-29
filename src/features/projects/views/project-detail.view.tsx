@@ -62,7 +62,7 @@ export default function ProjectDetailView({
     <TwoColumnLayout
       sidebar={<ProjectSideBar project={project} />}
       hero={<ProjectHero project={project} />}
-      mobileHeader={<ProjectMobileHero {...project} />}
+      mobileHeader={<ProjectMobileHero project={project} />}
     >
       <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
