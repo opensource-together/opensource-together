@@ -8,7 +8,11 @@ interface BadgeProps {
 
 const HeroBadge: React.FC<BadgeProps> = ({ className = "" }) => {
   return (
-    <Link href="https://discord.gg/u4y6y5KC" target="_blank">
+    <Link
+      href="https://discord.gg/u4y6y5KC"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <div
         className={`hover:bg-accent inline-flex items-center justify-between rounded-full border border-black/5 bg-white py-1 pr-2 pl-1 tracking-tight transition-colors ${className}`}
       >
