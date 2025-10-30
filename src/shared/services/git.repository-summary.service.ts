@@ -1,24 +1,13 @@
 import { API_BASE_URL } from "@/config/config";
 
 export interface RepositoryDetailsResponse {
-  name: string;
-  description: string | null;
-  url: string | null;
-  html_url: string;
+  forksCount: number;
+  openIssuesCount: number;
+  stars: number;
+  languages: { [language: string]: number };
   created_at?: string | null;
   updated_at?: string | null;
   pushed_at?: string | null;
-  stars: number;
-  tags: string[];
-  forksCount: number;
-  openIssuesCount: number;
-  pullRequestsCount: number;
-  visibility?: string | null;
-  owner: {
-    login: string | undefined;
-    avatar_url: string | undefined;
-  };
-  languages: { [language: string]: number };
 }
 
 export const getProjectRepositorySummary = async (

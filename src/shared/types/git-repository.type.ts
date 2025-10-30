@@ -1,10 +1,10 @@
-export type UserGitRepositoryQueryParams = {
+export type GitUserRepositoriesQueryParams = {
   provider?: "github" | "gitlab";
   page?: number;
   per_page?: number;
 };
 
-export type UserGitRepository = {
+export type GitUserRepositoryType = {
   name: string;
   description: string | null;
   stargazers_count: number | undefined;
@@ -18,17 +18,17 @@ export type UserGitRepository = {
   pushed_at: string | null | undefined;
 };
 
-export type UserGitRepositoryPagination = {
+export type GitUserRepositoriesPagination = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 };
 
-export type UserGitRepositoryProviderData = {
-  data: UserGitRepository[];
-  pagination: UserGitRepositoryPagination;
+export type GitUserRepositoriesProviderData = {
+  data: GitUserRepositoryType[];
+  pagination: GitUserRepositoriesPagination;
 };
 
-export type UserGitRepositoryResponse = {
-  github?: UserGitRepositoryProviderData | null;
-  gitlab?: UserGitRepositoryProviderData | null;
+export type GitUserRepositoriesResponse = {
+  github?: GitUserRepositoriesProviderData | null;
+  gitlab?: GitUserRepositoriesProviderData | null;
 };

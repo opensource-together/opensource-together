@@ -4,9 +4,9 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { TableCell, TableRow } from "@/shared/components/ui/table";
+import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 
-import { useProjectRepositorySummary } from "@/features/projects/hooks/use-git-repo-summary.hook";
 import { Project } from "@/features/projects/types/project.type";
 
 import { ProjectTableActions } from "./project-table-actions.component";

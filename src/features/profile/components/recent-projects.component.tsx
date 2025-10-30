@@ -5,9 +5,9 @@ import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
-import { useProjectRepositorySummary } from "@/features/projects/hooks/use-git-repo-summary.hook";
 import type { Project } from "@/features/projects/types/project.type";
 
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
@@ -27,10 +27,6 @@ function RecentProjectItem({ project }: { project: Project }) {
       repoSummary?.openIssuesCount ??
       project.repositoryDetails?.openIssuesCount ??
       0,
-    pullRequestsCount:
-      repoSummary?.pullRequestsCount ??
-      project.repositoryDetails?.pullRequestsCount ??
-      0,
   };
 
   return (
@@ -41,9 +37,7 @@ function RecentProjectItem({ project }: { project: Project }) {
       description={project.description}
       logoUrl={project.logoUrl || ""}
       projectTechStacks={project.projectTechStacks}
-      repoUrl={
-        project.repoUrl || project.githubUrl || repoSummary?.html_url || ""
-      }
+      repoUrl={project.repoUrl || ""}
       repositoryDetails={repositoryDetails}
       isRepositoryLoading={isLoading}
       className="w-full"
