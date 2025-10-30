@@ -113,16 +113,10 @@ export default function ProjectCardComponent({
                         ))
                     : isRepositoryLoading
                       ? Array.from({ length: 3 }).map((_, idx) => (
-                          <>
-                            <Skeleton
-                              key={idx}
-                              className="size-5.5 rounded-full"
-                            />
-                            <Skeleton
-                              key={idx}
-                              className="h-5.5 w-16 rounded-md"
-                            />
-                          </>
+                          <div key={idx} className="flex items-center gap-1.5">
+                            <Skeleton className="size-5.5 rounded-full" />
+                            <Skeleton className="h-5.5 w-16 rounded-md" />
+                          </div>
                         ))
                       : null}
                 </div>

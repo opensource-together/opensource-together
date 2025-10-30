@@ -1,23 +1,15 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
-import { Avatar } from "@/shared/components/ui/avatar";
-import { Badge } from "@/shared/components/ui/badge";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { PaginationInfo } from "@/shared/components/ui/pagination-info.component";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/shared/components/ui/table";
-import { formatNumberShort } from "@/shared/lib/utils/format-number";
+import { Table, TableBody } from "@/shared/components/ui/table";
 
 import {
   useDeleteProject,
@@ -28,7 +20,7 @@ import { Project } from "@/features/projects/types/project.type";
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
 import { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
-import { ProjectActions } from "./project-table-actions.component";
+import MyProjectRow from "./my-projects-row.component";
 
 const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;
@@ -38,7 +30,6 @@ const parseNumber = (value: string | null, fallback: number) => {
 
 export default function MyProjectsList() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<{
     id: string;
@@ -126,71 +117,16 @@ export default function MyProjectsList() {
     <div>
       <Table>
         <TableBody>
-          {myProjects.map((project) => {
-            return (
-              <TableRow
-                key={project.id}
-                onClick={() => router.push(`/projects/${project.id}`)}
-              >
-                <TableCell>
-                  <div className="flex min-w-0 items-center gap-3">
-                    <Avatar
-                      src={project.logoUrl}
-                      name={project.title}
-                      alt={project.title}
-                      size="md"
-                      shape="soft"
-                    />
-                    <div className="flex min-w-0 flex-col">
-                      <div className="flex min-w-0 items-center gap-2">
-                        <h4 className="max-w-[60vw] truncate font-medium md:max-w-[16rem]">
-                          {project.title}
-                        </h4>
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <div className="flex items-center gap-1.5">
-                    <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
-                    <h2 className="text-muted-foreground text-sm">
-                      <span className="text-primary font-medium">
-                        {formatNumberShort(
-                          project.repositoryDetails?.openIssuesCount
-                        )}
-                      </span>{" "}
-                      {project.repositoryDetails?.openIssuesCount > 1
-                        ? "Open Issues"
-                        : "Open Issue"}
-                    </h2>
-                  </div>
-                </TableCell>
-
-                <TableCell>
-                  <Badge variant={project.published ? "info" : "gray"}>
-                    {project.published ? "Published" : "Unpublished"}
-                  </Badge>
-                </TableCell>
-
-                <TableCell>
-                  <span className="text-sm font-medium">
-                    {new Date(project.createdAt).toLocaleDateString()}
-                  </span>
-                </TableCell>
-
-                <TableCell>
-                  <ProjectActions
-                    project={project}
-                    onTogglePublish={handleTogglePublish}
-                    onDelete={handleDeleteClick}
-                    isTogglingPublished={isTogglingPublished}
-                    togglingProjectId={togglingProjectId}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {myProjects.map((project) => (
+            <MyProjectRow
+              key={project.id}
+              project={project}
+              onTogglePublish={handleTogglePublish}
+              onDelete={handleDeleteClick}
+              isTogglingPublished={isTogglingPublished}
+              togglingProjectId={togglingProjectId}
+            />
+          ))}
         </TableBody>
       </Table>
 
