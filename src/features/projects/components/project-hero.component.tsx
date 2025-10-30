@@ -1,12 +1,19 @@
 import Link from "next/link";
+import { useState } from "react";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import Icon from "@/shared/components/ui/icon";
 
+import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
 
 export function ProjectMobileHero({ project }: ProjectHeroProps) {
+  const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
+  const { toggleProjectPublished, isTogglingPublished } =
+    useToggleProjectPublished();
+
   const {
     id = "",
     title = "",
@@ -52,9 +59,30 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
             </Link>
           </>
         ) : (
-          <Link href={`/projects/${id}/edit`}>
-            <Button>Edit Project</Button>
-          </Link>
+          <>
+            <Button
+              variant="outline"
+              onClick={() => setPublishDialogOpen(true)}
+            >
+              Publish Project
+            </Button>
+            <Link href={`/projects/${id}/edit`}>
+              <Button>Edit Project</Button>
+            </Link>
+
+            <ConfirmDialog
+              open={isPublishDialogOpen}
+              onOpenChange={setPublishDialogOpen}
+              title="Publish project?"
+              description="Once published, your project becomes visible to everyone. You can unpublish later."
+              isLoading={isTogglingPublished}
+              onConfirm={() =>
+                toggleProjectPublished({ project, published: true })
+              }
+              onCancel={() => setPublishDialogOpen(false)}
+              confirmText="Publish"
+            />
+          </>
         )}
       </div>
     </div>
@@ -69,6 +97,10 @@ export default function ProjectHero({
   project,
   hideHeader = false,
 }: ProjectHeroProps) {
+  const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
+  const { toggleProjectPublished, isTogglingPublished } =
+    useToggleProjectPublished();
+
   const {
     id = "",
     title = "",
@@ -118,9 +150,30 @@ export default function ProjectHero({
                   </Link>
                 </>
               ) : (
-                <Link href={`/projects/${id}/edit`}>
-                  <Button>Edit Project</Button>
-                </Link>
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={() => setPublishDialogOpen(true)}
+                  >
+                    Publish Project
+                  </Button>
+                  <Link href={`/projects/${id}/edit`}>
+                    <Button>Edit Project</Button>
+                  </Link>
+
+                  <ConfirmDialog
+                    open={isPublishDialogOpen}
+                    onOpenChange={setPublishDialogOpen}
+                    title="Publish project?"
+                    description="Once published, your project becomes visible to everyone. You can unpublish later."
+                    isLoading={isTogglingPublished}
+                    onConfirm={() =>
+                      toggleProjectPublished({ project, published: true })
+                    }
+                    onCancel={() => setPublishDialogOpen(false)}
+                    confirmText="Publish"
+                  />
+                </>
               )}
             </div>
           </div>

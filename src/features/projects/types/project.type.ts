@@ -117,7 +117,7 @@ export type RepositoryWithDetails = {
   openIssuesCount: number;
   pullRequestsCount: number;
   subscribersCount: number;
-  visibility: string | null | undefined;
+  license: string | null | undefined;
   languages: RepositoryLanguages;
   owner: RepositoryOwner;
   contributors: Contributor[];
