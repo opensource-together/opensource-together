@@ -71,9 +71,10 @@ export function ExternalLinks({
               prefetch={false}
               title={alt}
               aria-label={alt}
+              className="min-w-0"
             >
               <div className="text-muted-foreground hover:text-muted-foreground/80 flex items-center gap-1.5 rounded-full text-sm tracking-tight transition-colors">
-                <span className="flex items-center gap-1 rounded-full border px-2 py-px">
+                <span className="flex min-w-0 items-center gap-1 rounded-full border px-2 py-px">
                   <Icon size={14} />
                   <span className="truncate">
                     {formatExternalUrl(raw as string, key as ExternalLinkType)}

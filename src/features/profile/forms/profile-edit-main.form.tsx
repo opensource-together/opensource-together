@@ -187,9 +187,9 @@ export default function ProfileEditMainForm({
 
           <Separator className="mt-20" />
 
-          <div className="sticky bottom-0 z-50">
+          <div className="bg-background sticky bottom-0 z-50">
             <div className="-mx-4.5">
-              <div className="flex items-center justify-end gap-4 px-6 pt-4">
+              <div className="flex items-center justify-end gap-4 px-6 py-4">
                 <Link href="/profile/me">
                   <Button variant="secondary" disabled={isUpdating}>
                     Return

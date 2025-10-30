@@ -69,7 +69,7 @@ export default function ProjectReadme({
             <div className="-mx-6">
               <div className="px-6 pb-4">
                 <div className="flex items-center justify-between">
-                  <SheetTitle className="text-left font-semibold">
+                  <SheetTitle className="truncate text-left font-semibold">
                     README - {projectTitle}
                   </SheetTitle>
                   <Button
