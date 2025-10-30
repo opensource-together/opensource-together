@@ -114,6 +114,7 @@ export function useCreateProject() {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         router.push(`/projects/create/success?projectId=${project.id}`);
       },
@@ -158,6 +159,7 @@ export function useUpdateProject() {
             queryKey: ["user", "me", "projects"],
           });
           queryClient.invalidateQueries({ queryKey: ["projects"] });
+          queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
           router.push(`/projects/${targetId}`);
         }
@@ -193,6 +195,7 @@ export function useDeleteProject() {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         router.push("/dashboard/my-projects");
       },
     },
@@ -232,6 +235,7 @@ export function useToggleProjectPublished() {
         }
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       },
     },
   });
@@ -322,6 +326,7 @@ export function useUpdateProjectCover() {
     }) => updateProjectCover(projectId, coverFile),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
     },
   });
 
@@ -351,6 +356,7 @@ export function useDeleteProjectImage() {
     }) => deleteProjectImage(projectId, imageUrl),
     onSuccess: (_project, variables) => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       if (variables?.projectId) {
         queryClient.invalidateQueries({
           queryKey: ["project", variables.projectId],
