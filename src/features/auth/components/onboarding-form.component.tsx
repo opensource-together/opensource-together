@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { Input } from "@/shared/components/ui/input";
+import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { useOnboarding } from "@/features/auth/hooks/use-onboarding.hook";
@@ -29,11 +30,13 @@ export default function OnboardingForm() {
     defaultValues: {
       jobTitle: "",
       techStacks: [],
+      userCategories: [],
     },
     mode: "onChange",
   });
 
-  const { techStackOptions } = useTechStack();
+  const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const { categoryOptions, isLoading: categoriesLoading } = useCategories();
   const { completeOnboarding, isCompletingOnboarding } = useOnboarding();
 
   const { control, handleSubmit } = form;
@@ -80,7 +83,41 @@ export default function OnboardingForm() {
                         options={techStackOptions}
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder="Select Technologies"
+                        placeholder={
+                          techStacksLoading
+                            ? "Loading technologies..."
+                            : "Select technologies"
+                        }
+                        searchPlaceholder="Search technologies..."
+                        disabled={techStacksLoading}
+                        maxSelections={10}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="userCategories"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categories</FormLabel>
+                    <FormControl>
+                      <Combobox
+                        options={categoryOptions}
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder={
+                          categoriesLoading
+                            ? "Loading categories..."
+                            : "Select categories"
+                        }
+                        searchPlaceholder="Search categories..."
+                        emptyText="No categories found."
+                        disabled={categoriesLoading}
+                        maxSelections={6}
                       />
                     </FormControl>
                     <FormMessage />

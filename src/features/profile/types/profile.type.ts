@@ -1,3 +1,4 @@
+import { CategoryType } from "@/shared/types/category.type";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
 import { ContributionGraph, GithubStats } from "./github-graph.type";
@@ -24,6 +25,7 @@ export interface Profile {
   connectedProviders?: string[];
   userTechStacksIds?: string[];
   userTechStacks?: TechStackType[];
+  userCategories?: CategoryType[];
   userExperiences?: UserExperience[];
   githubStats?: GithubStats;
   contributionGraph?: ContributionGraph;
