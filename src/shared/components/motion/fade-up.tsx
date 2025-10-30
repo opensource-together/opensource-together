@@ -1,25 +1,29 @@
 "use client";
 
+import { cubicBezier } from "motion";
 import { motion } from "motion/react";
 
-type FadeUpType = {
+type FadeUpProps = {
   children: React.ReactNode;
   delay?: number;
   className?: string;
 };
 
-export function FadeUp({ children, delay = 0, className }: FadeUpType) {
-  const variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
+const ease = cubicBezier(0.25, 0.1, 0.25, 1);
 
+const variants = {
+  hidden: { opacity: 0, filter: "blur(6px)", y: 20 },
+  visible: { opacity: 1, filter: "blur(0)", y: 0 },
+};
+
+export function FadeUp({ children, delay = 0, className }: FadeUpProps) {
   return (
     <motion.div
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.6 }}
       variants={variants}
-      transition={{ duration: 0.8, delay }}
+      transition={{ duration: 0.8, delay, ease }}
       className={className}
     >
       {children}
