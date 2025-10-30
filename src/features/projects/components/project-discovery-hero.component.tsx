@@ -21,7 +21,7 @@ export default function ProjectDiscoveryHero({
   isLoading,
 }: ProjectDiscoveryHeroProps) {
   return (
-    <div className="relative top-10 mx-auto h-[361px] w-full md:top-0 md:h-auto">
+    <div className="relative mx-auto h-[361px] w-full md:h-auto">
       <FadeIn delay={0.1}>
         {/* Desktop / Tablet image */}
         <Image
