@@ -7,8 +7,49 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
+import { useProjectRepositorySummary } from "@/features/projects/hooks/use-git-repo-summary.hook";
+import type { Project } from "@/features/projects/types/project.type";
 
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
+
+function RecentProjectItem({ project }: { project: Project }) {
+  const { data: repoSummary, isLoading } = useProjectRepositorySummary(
+    project.publicId || project.id
+  );
+
+  const repositoryDetails = {
+    languages:
+      repoSummary?.languages ?? project.repositoryDetails?.languages ?? {},
+    forksCount:
+      repoSummary?.forksCount ?? project.repositoryDetails?.forksCount ?? 0,
+    stars: repoSummary?.stars ?? project.repositoryDetails?.stars ?? 0,
+    openIssuesCount:
+      repoSummary?.openIssuesCount ??
+      project.repositoryDetails?.openIssuesCount ??
+      0,
+    pullRequestsCount:
+      repoSummary?.pullRequestsCount ??
+      project.repositoryDetails?.pullRequestsCount ??
+      0,
+  };
+
+  return (
+    <ProjectCardComponent
+      key={project.id}
+      projectId={project.id}
+      title={project.title}
+      description={project.description}
+      logoUrl={project.logoUrl || ""}
+      projectTechStacks={project.projectTechStacks}
+      repoUrl={
+        project.repoUrl || project.githubUrl || repoSummary?.html_url || ""
+      }
+      repositoryDetails={repositoryDetails}
+      isRepositoryLoading={isLoading}
+      className="w-full"
+    />
+  );
+}
 
 export default function RecentProjects() {
   const {
@@ -57,27 +98,7 @@ export default function RecentProjects() {
         </Link>
       </div>
       {recentProjects.map((project) => (
-        <ProjectCardComponent
-          key={project.id}
-          projectId={project.id}
-          title={project.title}
-          description={project.description}
-          logoUrl={project.logoUrl || ""}
-          projectTechStacks={project.projectTechStacks}
-          repositoryDetails={{
-            languages: project.repositoryDetails?.languages || {},
-            forksCount: project.repositoryDetails?.forksCount || 0,
-            stars: project.repositoryDetails?.stars || 0,
-            openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
-            pullRequestsCount:
-              project.repositoryDetails?.pullRequestsCount || 0,
-            owner: project.repositoryDetails?.owner || {
-              login: "",
-              avatar_url: "",
-            },
-          }}
-          className="w-full"
-        />
+        <RecentProjectItem key={project.id} project={project} />
       ))}
     </div>
   );
