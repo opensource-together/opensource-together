@@ -21,14 +21,25 @@ export default function ProjectDiscoveryHero({
   isLoading,
 }: ProjectDiscoveryHeroProps) {
   return (
-    <div className="relative mx-auto w-full">
+    <div className="relative top-10 mx-auto h-[361px] w-full md:top-0 md:h-auto">
       <FadeIn delay={0.1}>
+        {/* Desktop / Tablet image */}
         <Image
           src="/illustrations/traveler.png"
           alt="Bible gauche"
           width={1441}
           height={400}
-          className="absolute bottom-10 left-1/2 z-[-1] h-auto w-[100%] -translate-x-1/2 object-contain sm:bottom-0 sm:w-[95%] md:bottom-6 md:w-[100%] lg:bottom-3 lg:w-[105%]"
+          quality={100}
+          className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-[100%] -translate-x-1/2 object-contain md:block lg:bottom-3 lg:w-[105%]"
+        />
+        {/* Mobile image (no props change, same src, tailored sizing) */}
+        <Image
+          src="/illustrations/traveler-mobile.png"
+          alt="Bible gauche"
+          width={402}
+          height={361}
+          quality={100}
+          className="absolute bottom-10 left-1/2 z-[-1] h-auto w-[115%] -translate-x-1/2 object-contain sm:bottom-8 md:hidden"
         />
       </FadeIn>
 
