@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { HiMiniSquare2Stack } from "react-icons/hi2";
+import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
@@ -92,6 +92,9 @@ export default function ProfileProjectsList() {
         title="No projects"
         description="No projects have been joined yet"
         icon={HiMiniSquare2Stack}
+        buttonText="Create a project"
+        href="/projects/create"
+        buttonIcon={HiPlus}
       />
     );
 

@@ -79,10 +79,12 @@ export function ProjectDescribePreview({
           size="xl"
           shape="rounded"
         />
-        <h1 className="text-xl font-medium">{title}</h1>
+        <h1 className="line-clamp-2 flex-1 text-xl font-medium break-words">
+          {title}
+        </h1>
       </div>
 
-      <p className="mb-6 text-sm">{description}</p>
+      <p className="mb-6 line-clamp-3 text-sm break-words">{description}</p>
 
       <ProjectImages imagesUrls={imagesUrls} />
     </div>

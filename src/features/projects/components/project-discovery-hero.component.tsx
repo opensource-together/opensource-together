@@ -21,23 +21,34 @@ export default function ProjectDiscoveryHero({
   isLoading,
 }: ProjectDiscoveryHeroProps) {
   return (
-    <div className="relative mx-auto w-full">
+    <div className="relative mx-auto h-[361px] w-full md:h-auto">
       <FadeIn delay={0.1}>
+        {/* Desktop / Tablet image */}
         <Image
           src="/illustrations/traveler.png"
           alt="Bible gauche"
           width={1441}
           height={400}
-          className="absolute bottom-10 left-1/2 z-[-1] h-auto w-[100%] -translate-x-1/2 object-contain sm:bottom-0 sm:w-[95%] md:bottom-6 md:w-[100%] lg:bottom-3 lg:w-[105%]"
+          quality={100}
+          className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-[100%] -translate-x-1/2 object-contain md:block lg:bottom-3 lg:w-[105%]"
+        />
+        {/* Mobile image (no props change, same src, tailored sizing) */}
+        <Image
+          src="/illustrations/traveler-mobile.png"
+          alt="Bible gauche"
+          width={402}
+          height={361}
+          quality={100}
+          className="absolute bottom-10 left-1/2 z-[-1] h-auto w-[115%] -translate-x-1/2 object-contain sm:bottom-8 md:hidden"
         />
       </FadeIn>
 
       <div className="relative z-10 mx-auto mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:min-h-[320px] lg:min-h-[400px]">
-        <FadeUp delay={0.1}>
+        <FadeUp delay={0.05}>
           <HeroBadge className="mb-3" />
         </FadeUp>
 
-        <FadeUp delay={0.3}>
+        <FadeUp delay={0.1}>
           <h1
             className="mt-3 text-center text-3xl leading-none md:text-5xl"
             style={{ fontFamily: "Aspekta", fontWeight: 500 }}
@@ -47,7 +58,7 @@ export default function ProjectDiscoveryHero({
           </h1>
         </FadeUp>
 
-        <FadeUp delay={0.5}>
+        <FadeUp delay={0.15}>
           <p className="mt-5 max-w-[450px] text-center text-xs text-neutral-950 md:text-sm">
             Empowering open source initiatives through effortless project
             discovery, collaboration, and contributor connection.

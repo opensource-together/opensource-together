@@ -10,7 +10,8 @@ import { urlWithDomainCheck } from "@/shared/validations/url-with-domain-check.s
 export const projectSchema = z.object({
   title: z
     .string()
-    .min(3, "The project name must contain at least 3 characters"),
+    .min(2, "The project name must contain at least 2 characters")
+    .max(50, "The project name cannot exceed 50 characters"),
   description: z
     .string()
     .min(10, "The description must contain at least 10 characters"),
@@ -57,7 +58,10 @@ export const projectSchema = z.object({
 
 // API schema - what the backend expects
 export const createProjectApiSchema = z.object({
-  title: z.string().min(3, "Title is required"),
+  title: z
+    .string()
+    .min(2, "Title is required")
+    .max(50, "Title cannot exceed 50 characters"),
   description: z.string().min(10, "Description is required"),
   provider: z.enum(["GITHUB", "GITLAB"]),
   logoUrl: z.string().optional(),
@@ -91,7 +95,10 @@ export const createProjectApiSchema = z.object({
 
 // API schema for updates - what the backend expects
 export const updateProjectApiSchema = z.object({
-  title: z.string().min(3, "Title is required"),
+  title: z
+    .string()
+    .min(2, "Title is required")
+    .max(50, "Title cannot exceed 50 characters"),
   description: z.string().min(10, "Description is required"),
   logoUrl: z.string().optional(),
   imagesUrls: z.array(z.string()).max(4).optional(),

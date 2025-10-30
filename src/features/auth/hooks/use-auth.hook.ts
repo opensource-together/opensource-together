@@ -32,7 +32,9 @@ export default function useAuth() {
     if (isLoading || !currentUser) return;
 
     const isOnboardingCompleted =
-      !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
+      !!currentUser.jobTitle ||
+      (currentUser.userTechStacks?.length ?? 0) > 0 ||
+      (currentUser.userCategories?.length ?? 0) > 0;
 
     const isOnboarding = pathname?.startsWith("/onboarding");
     const isAuth = pathname?.startsWith("/auth");

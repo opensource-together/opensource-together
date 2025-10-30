@@ -9,7 +9,6 @@ import {
   HiMiniBars3,
   HiMiniPencilSquare,
   HiMiniSquare2Stack,
-  HiOutlineInformationCircle,
   HiUserCircle,
 } from "react-icons/hi2";
 import { RxDotsVertical } from "react-icons/rx";
@@ -43,7 +42,6 @@ const DEFAULT_LINKS: MobileHeaderProps["links"] = [
     icon: HiMiniSquare2Stack,
     href: "/dashboard/my-projects",
   },
-  { label: "About", icon: HiOutlineInformationCircle, href: "/about" },
   { label: "Guide", icon: HiBookOpen, href: "/guide" },
 ];
 
@@ -64,7 +62,7 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
   };
 
   return (
-    <div className="sticky top-0 z-40 flex items-center justify-between gap-2 border-b border-black/5 bg-white/70 px-4 py-4 backdrop-blur-lg md:hidden">
+    <div className="sticky top-0 z-40 flex items-center justify-between gap-2 bg-white/70 px-4 py-4 backdrop-blur-lg md:hidden">
       <Link href="/" className="flex items-center gap-2">
         <Image
           src="/ostogether-logo.svg"
@@ -134,10 +132,10 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                           />
                         </div>
                         <div className="flex flex-col truncate">
-                          <p className="text-sm font-medium text-black">
+                          <p className="mr-10 truncate text-sm font-medium text-black">
                             {currentUser?.name}
                           </p>
-                          <p className="text-muted-foreground text-xs">
+                          <p className="text-muted-foreground mr-10 truncate text-xs">
                             {currentUser?.email}
                           </p>
                         </div>

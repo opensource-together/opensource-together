@@ -72,7 +72,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
       <div className="w-full max-w-full overflow-hidden">
         <div>
           <h3 className="mb-2">Contribution Activity</h3>
-          <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
+          <div className="flex h-[87px] w-full items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
               No contribution data available
             </p>
@@ -116,7 +116,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
 
           <div className="flex">
             <div
-              className="h-[60px] w-full max-w-[598.07px] rounded-md border border-black/5 p-1 md:h-[93px] md:p-2"
+              className="h-[60px] w-full rounded-md border border-black/5 p-1 md:h-[93px] md:p-2"
               onMouseMove={handleMouseMove}
             >
               <div className="flex h-full gap-[1px] md:gap-0.5">
@@ -128,7 +128,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
                     {week.contributionDays.map((day, dayIndex) => (
                       <div
                         key={dayIndex}
-                        className={`size-[6px] rounded-xs md:size-[9px] ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
+                        className={`size-[5px] rounded-xs md:size-[9.5px] ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
                         onMouseEnter={(e) => handleMouseEnter(day, e)}
                         onMouseLeave={handleMouseLeave}
                       />

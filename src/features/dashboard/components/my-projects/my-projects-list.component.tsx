@@ -133,7 +133,7 @@ export default function MyProjectsList() {
                 onClick={() => router.push(`/projects/${project.id}`)}
               >
                 <TableCell>
-                  <div className="flex items-center gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <Avatar
                       src={project.logoUrl}
                       name={project.title}
@@ -141,9 +141,11 @@ export default function MyProjectsList() {
                       size="md"
                       shape="soft"
                     />
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium">{project.title}</h4>
+                    <div className="flex min-w-0 flex-col">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <h4 className="max-w-[60vw] truncate font-medium md:max-w-[16rem]">
+                          {project.title}
+                        </h4>
                       </div>
                     </div>
                   </div>

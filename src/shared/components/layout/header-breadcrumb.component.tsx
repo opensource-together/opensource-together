@@ -95,17 +95,19 @@ export default function HeaderBreadcrumb() {
   }
 
   return (
-    <nav className="text-muted-foreground flex items-center space-x-1 text-sm">
+    <nav className="text-muted-foreground flex min-w-0 items-center space-x-1 overflow-hidden text-sm">
       {breadcrumbItems.map((item, index) => (
-        <div key={item.href} className="flex items-center">
+        <div key={item.href} className="flex min-w-0 items-center">
           <HiChevronRight size={12} className="text-muted-foreground mr-2" />
 
           {index === breadcrumbItems.length - 1 ? (
-            <span className="text-foreground font-medium">{item.label}</span>
+            <span className="text-foreground max-w-[50vw] truncate font-medium md:max-w-[32rem] lg:max-w-[48rem]">
+              {item.label}
+            </span>
           ) : (
             <Link
               href={item.href}
-              className="hover:text-foreground transition-colors duration-200"
+              className="hover:text-foreground max-w-[20vw] truncate transition-colors duration-200 md:max-w-[12rem] lg:max-w-[16rem]"
             >
               {item.label}
             </Link>
