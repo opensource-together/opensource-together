@@ -25,7 +25,7 @@ const footerLinks: {
   resources: [
     {
       label: "OSS Guide",
-      href: "/guide",
+      href: "/oss-guide",
       id: "resources-oss-guide",
     },
   ],
@@ -58,7 +58,7 @@ const footerLinks: {
   legal: [
     {
       label: "Terms and Conditions",
-      href: "/term-and-conditions",
+      href: "/terms-and-conditions",
       id: "legal-terms",
     },
     {
@@ -125,7 +125,7 @@ export default function Footer() {
               </div>
 
               {/* Right: Link sections */}
-              <div className="gap- grid w-full grid-cols-3 text-xs md:ml-auto md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+              <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
                 {renderLinkSection("Resources", footerLinks.resources)}
                 {renderLinkSection("Company", footerLinks.company)}
                 <div className="mb-5 md:mb-5">
