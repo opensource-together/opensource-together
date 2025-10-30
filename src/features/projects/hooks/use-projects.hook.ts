@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -47,6 +47,34 @@ export function useProjects(
     queryKey: ["projects", queryParams],
     queryFn: () => getProjects(queryParams),
     enabled: options?.enabled ?? true,
+  });
+}
+
+/**
+ * Get projects in a paginated way in infinite scroll mode.
+ * @param params - Filters (except page, which is controlled by useInfiniteQuery)
+ * @param options - Options React Query
+ */
+export function useInfiniteProjects(
+  params: Omit<ProjectQueryParams, "page"> = {}
+) {
+  const per_page = params.per_page ?? 20;
+  return useInfiniteQuery<PaginatedProjectsResponse>({
+    queryKey: ["projects-infinite", params],
+    queryFn: async ({ pageParam }) =>
+      getProjects({
+        ...params,
+        page: typeof pageParam === "number" ? pageParam : 1,
+        per_page,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { pagination } = lastPage;
+      if (!pagination) return undefined;
+      return pagination.currentPage < pagination.lastPage
+        ? pagination.currentPage + 1
+        : undefined;
+    },
   });
 }
 

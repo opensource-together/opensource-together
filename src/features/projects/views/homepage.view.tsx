@@ -1,10 +1,10 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
+import { useInView } from "react-intersection-observer";
 
-import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
+import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 
@@ -12,13 +12,7 @@ import ProjectDiscoveryHero from "@/features/projects/components/project-discove
 
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
-import { useProjects } from "../hooks/use-projects.hook";
-import { ProjectQueryParams } from "../services/project.service";
-
-const parseNumber = (value: string | null, fallback: number): number => {
-  const n = value ? Number(value) : NaN;
-  return Number.isFinite(n) && n > 0 ? n : fallback;
-};
+import { useInfiniteProjects } from "../hooks/use-projects.hook";
 
 interface HomepageLayoutProps {
   children: React.ReactNode;
@@ -50,7 +44,6 @@ function HomepageLayout({
 }
 
 export default function HomepageView() {
-  const searchParams = useSearchParams();
   const [filters, setFilters] = useState<{
     techStacks: string[];
     categories: string[];
@@ -63,25 +56,27 @@ export default function HomepageView() {
     orderDirection: "desc",
   });
 
-  const page = parseNumber(searchParams.get("page"), 1);
-  const perPage = parseNumber(searchParams.get("per_page"), 50);
-  const queryParams: ProjectQueryParams = {
-    page,
-    per_page: perPage,
-    techStacks: filters.techStacks.length > 0 ? filters.techStacks : undefined,
-    categories: filters.categories.length > 0 ? filters.categories : undefined,
-    orderBy: filters.orderBy,
-    orderDirection: filters.orderDirection,
-  };
+  // Infinite scroll
+  const { ref, inView } = useInView();
 
   const {
-    data: projectsResponse,
-    isError,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
-  } = useProjects(queryParams);
+    isError,
+  } = useInfiniteProjects(filters);
 
-  const projects = projectsResponse?.data || [];
-  const pagination = projectsResponse?.pagination;
+  // Merge all pages of projects
+  const projects = data?.pages.flatMap((page) => page.data) || [];
+
+  // Load next page on scroll
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
     return (
@@ -96,7 +91,7 @@ export default function HomepageView() {
       <HomepageLayout onFilterChange={setFilters} isLoading={false}>
         <ErrorState
           message="An error has occurred while loading the projects. Please try again later."
-          queryKey={["projects", queryParams]}
+          queryKey={["projects-infinite", filters]}
         />
       </HomepageLayout>
     );
@@ -118,10 +113,23 @@ export default function HomepageView() {
   return (
     <HomepageLayout onFilterChange={setFilters} isLoading={isLoading}>
       <ProjectGrid projects={projects} />
-
-      {pagination && (
-        <div className="mt-8 mb-[50px]">
-          <DataTablePagination pagination={pagination} />
+      {hasNextPage && (
+        <div ref={ref}>
+          {isFetchingNextPage ? (
+            <div className="my-4 sm:my-5 md:my-6">
+              <SkeletonProjectGrid />
+            </div>
+          ) : (
+            <div className="my-12 flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() => fetchNextPage()}
+                aria-label="Load more projects"
+              >
+                Load more projects
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </HomepageLayout>
