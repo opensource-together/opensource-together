@@ -43,7 +43,7 @@ export default function CTAFooter({
 
       <div className="relative z-10 min-w-0 flex-shrink-0 text-center md:text-center">
         <h1
-          className="text-2xl leading-tight font-medium tracking-tighter md:text-2xl lg:text-5xl"
+          className="text-3xl leading-tight font-medium tracking-tighter md:text-3xl lg:text-5xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
           Build your projects,
