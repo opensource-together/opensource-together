@@ -47,12 +47,12 @@ export default function OnboardingForm() {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <div className="p-4">
           <div className="mb-7 text-center">
             <h1 className="mb-2 text-2xl">Let’s get you started</h1>
-            <p className="mt-0 text-sm text-black/70">
-              Enter your information to get top project picks.
+            <p className="text-muted-foreground text-sm">
+              Share a few details to get personalized project recommendations.
             </p>
           </div>
 
@@ -65,7 +65,10 @@ export default function OnboardingForm() {
                   <FormItem>
                     <FormLabel>Your Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="eg; Fullstack Developer" {...field} />
+                      <Input
+                        placeholder="Example: Fullstack Developer"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -77,7 +80,7 @@ export default function OnboardingForm() {
                 name="techStacks"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Technical Skills</FormLabel>
+                    <FormLabel>Technical Skills (10 max)</FormLabel>
                     <FormControl>
                       <Combobox
                         options={techStackOptions}
@@ -86,7 +89,7 @@ export default function OnboardingForm() {
                         placeholder={
                           techStacksLoading
                             ? "Loading technologies..."
-                            : "Select technologies"
+                            : "Select your tech stack"
                         }
                         searchPlaceholder="Search technologies..."
                         disabled={techStacksLoading}
@@ -103,7 +106,7 @@ export default function OnboardingForm() {
                 name="userCategories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Categories</FormLabel>
+                    <FormLabel>Your Interests (6 max)</FormLabel>
                     <FormControl>
                       <Combobox
                         options={categoryOptions}
@@ -112,10 +115,10 @@ export default function OnboardingForm() {
                         placeholder={
                           categoriesLoading
                             ? "Loading categories..."
-                            : "Select categories"
+                            : "Select your interests"
                         }
                         searchPlaceholder="Search categories..."
-                        emptyText="No categories found."
+                        emptyText="No interests found."
                         disabled={categoriesLoading}
                         maxSelections={6}
                       />

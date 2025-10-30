@@ -1,3 +1,4 @@
+import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
 import { StatsList } from "@/shared/components/ui/stats-list";
 import { TechStackList } from "@/shared/components/ui/tech-stack-list";
@@ -9,7 +10,7 @@ interface ProfileSidebarProps {
 }
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
-  const { userTechStacks = [] } = profile;
+  const { userTechStacks = [], userCategories = [] } = profile;
 
   const stats = {
     starsEarned: profile.githubStats?.totalStars || 0,
@@ -48,6 +49,12 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
         title="Technical Skills"
         techs={userTechStacks}
         emptyText="No skills added"
+      />
+
+      <CategoryList
+        title="Interests"
+        categories={userCategories}
+        emptyText="No interests added"
       />
 
       <ExternalLinks
