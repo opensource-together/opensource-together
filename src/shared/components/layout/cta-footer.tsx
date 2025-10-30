@@ -14,9 +14,9 @@ export default function CTAFooter({
   imageIllustrationMobile,
 }: CTAFooterProps) {
   return (
-    <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center overflow-hidden px-4 pt-8 pb-16 md:px-7 md:pb-20">
+    <div className="relative mx-auto flex h-[402px] w-full max-w-7xl flex-col items-center justify-center overflow-hidden px-4 pt-8 pb-16 md:px-7 md:pb-20">
       {imageIllustrationMobile ? (
-        <div className="pointer-events-none absolute -top-30 right-0 bottom-0 left-0 -z-10 md:hidden">
+        <div className="pointer-events-none absolute -top-0 right-0 bottom-0 left-0 -z-10 md:hidden">
           <Image
             src={imageIllustrationMobile}
             alt=""

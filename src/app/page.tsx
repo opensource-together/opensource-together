@@ -11,7 +11,7 @@ export default async function HomePage() {
         <HomepageViews />
       </Suspense>
       <CTAFooter
-        imageIllustrationMobile="/illustrations/king2.png"
+        imageIllustrationMobile="/illustrations/king-mobile.png"
         imageIllustration="/illustrations/king.png"
       />
     </>

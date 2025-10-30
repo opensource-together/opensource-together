@@ -62,8 +62,10 @@ const renderLinkSection = (
   links: typeof footerLinks.developers
 ) => (
   <div>
-    <h4 className="text-foreground mb-5 font-medium md:mb-6">{title}</h4>
-    <ul className="text-muted-foreground space-y-5">
+    <h4 className="text-foreground mb-5 text-xs font-medium md:mb-6 md:text-sm">
+      {title}
+    </h4>
+    <ul className="text-muted-foreground space-y-5 text-xs md:text-sm">
       {links.map((link) => (
         <li key={link.id}>
           <Link
@@ -114,7 +116,7 @@ export default function Footer() {
               </div>
 
               {/* Right: Link sections */}
-              <div className="gap- grid w-full grid-cols-2 md:ml-auto md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+              <div className="gap- grid w-full grid-cols-3 text-xs md:ml-auto md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
                 {renderLinkSection("Developers", footerLinks.developers)}
                 {renderLinkSection("Ressources", footerLinks.resources)}
                 <div className="mb-5 md:mb-5">
