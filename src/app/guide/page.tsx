@@ -4,7 +4,6 @@ import Link from "next/link";
 import { LuCheck, LuCircle } from "react-icons/lu";
 
 import CTAFooter from "@/shared/components/layout/cta-footer";
-import HeroBadge from "@/shared/components/ui/hero-badge";
 
 export const metadata: Metadata = {
   title: "Guide - OpenSource Together",
@@ -26,8 +25,6 @@ export default function GuidePage() {
         />
 
         <div className="relative z-10 mx-auto mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:min-h-[320px] lg:min-h-[400px]">
-          <HeroBadge className="mb-3" />
-
           <div className="mx-6">
             <h1
               className="mt-3 text-center text-3xl leading-tight md:text-5xl"
@@ -112,8 +109,8 @@ export default function GuidePage() {
                 ))}
               </ul>
               <div className="bg-accent mt-4 rounded-lg p-3 text-sm">
-                <strong>💡 Tip:</strong> A "clean repo" builds trust. Review
-                your commit history and configuration files before opening the
+                <strong>Tip:</strong> A "clean repo" builds trust. Review your
+                commit history and configuration files before opening the
                 project.
               </div>
             </div>
@@ -321,7 +318,7 @@ export default function GuidePage() {
                 ))}
               </ul>
               <div className="bg-accent mt-4 rounded-lg p-3 text-sm">
-                <strong>🔐 </strong>Responsible open source means balancing
+                <strong> </strong>Responsible open source means balancing
                 transparency with safety.
               </div>
             </div>
@@ -400,7 +397,7 @@ export default function GuidePage() {
         </section>
       </div>
       {/* CTA OST */}
-      <CTAFooter imageIllustration="/illustrations/winged-angel.png" />
+      <CTAFooter imageIllustration="/illustrations/angel.png" />
     </div>
   );
 }

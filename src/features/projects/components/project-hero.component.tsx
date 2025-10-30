@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
-import Icon from "@/shared/components/ui/icon";
 
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
@@ -44,16 +43,6 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
       <div className="flex items-center gap-2">
         {published ? (
           <>
-            <Link
-              href={repoUrl || ""}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="outline">
-                <Icon name="star" size="sm" />
-                Star
-              </Button>
-            </Link>
             <Link
               href={repoUrl || ""}
               target="_blank"
@@ -135,16 +124,6 @@ export default function ProjectHero({
             <div className="flex items-center gap-2">
               {published ? (
                 <>
-                  <Link
-                    href={repoUrl || ""}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="outline">
-                      <Icon name="star" size="sm" />
-                      Star
-                    </Button>
-                  </Link>
                   <Link
                     href={repoUrl || ""}
                     target="_blank"

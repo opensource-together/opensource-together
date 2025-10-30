@@ -33,11 +33,11 @@ export default function ProjectDiscoveryHero({
       </FadeIn>
 
       <div className="relative z-10 mx-auto mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:min-h-[320px] lg:min-h-[400px]">
-        <FadeUp delay={0.1}>
+        <FadeUp delay={0.05}>
           <HeroBadge className="mb-3" />
         </FadeUp>
 
-        <FadeUp delay={0.3}>
+        <FadeUp delay={0.1}>
           <h1
             className="mt-3 text-center text-3xl leading-none md:text-5xl"
             style={{ fontFamily: "Aspekta", fontWeight: 500 }}
@@ -47,7 +47,7 @@ export default function ProjectDiscoveryHero({
           </h1>
         </FadeUp>
 
-        <FadeUp delay={0.5}>
+        <FadeUp delay={0.15}>
           <p className="mt-5 max-w-[450px] text-center text-xs text-neutral-950 md:text-sm">
             Empowering open source initiatives through effortless project
             discovery, collaboration, and contributor connection.
