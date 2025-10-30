@@ -10,7 +10,10 @@ export default async function HomePage() {
       <Suspense>
         <HomepageViews />
       </Suspense>
-      <CTAFooter imageIllustration="/illustrations/king.png" />
+      <CTAFooter
+        imageIllustrationMobile="/illustrations/king2.png"
+        imageIllustration="/illustrations/king.png"
+      />
     </>
   );
 }
