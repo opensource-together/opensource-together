@@ -58,12 +58,12 @@ const footerLinks: {
   legal: [
     {
       label: "Terms and Conditions",
-      href: "#",
+      href: "/term-and-conditions",
       id: "legal-terms",
     },
     {
       label: "Privacy Policy",
-      href: "#",
+      href: "/privacy-policy",
       id: "legal-privacy",
     },
   ],

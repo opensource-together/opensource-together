@@ -7,8 +7,8 @@ import { Separator } from "@/shared/components/ui/separator";
 
 export default function FooterLogin() {
   const navigationLinks = [
-    { name: "Privacy", href: "/privacy" },
-    { name: "About", href: "/about" },
+    { name: "Privacy", href: "/privacy-policy" },
+    { name: "Guide", href: "/guide" },
     { name: "X / Twitter", href: "https://x.com/OpenSTogether" },
     {
       name: "LinkedIn",
