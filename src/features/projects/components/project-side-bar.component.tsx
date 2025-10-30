@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { LiaBalanceScaleSolid } from "react-icons/lia";
 
 import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
@@ -29,6 +30,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       pushed_at: null,
       tags: [],
       languages: {},
+      license: null,
     },
   } = project;
 
@@ -121,6 +123,16 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         onClickContributor={handleContributorClick}
         emptyText="No contributors yet"
       />
+
+      {repositoryDetails?.license && repositoryDetails?.license !== "Other" && (
+        <div className="mb-2 flex flex-col">
+          <h2 className="mb-3 text-sm">License</h2>
+          <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
+            <LiaBalanceScaleSolid className="size-5" />
+            {repositoryDetails?.license}
+          </p>
+        </div>
+      )}
 
       <ExternalLinks
         title="External Links"

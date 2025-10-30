@@ -39,7 +39,7 @@ export default function Header() {
           <HeaderBreadcrumb />
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:mr-2">
             <SearchCommand />
             <Link href="/dashboard/my-projects">
               <Button
@@ -57,15 +57,6 @@ export default function Header() {
                 size="sm"
               >
                 Guide
-              </Button>
-            </Link>
-            <Link href="/about">
-              <Button
-                variant="ghost"
-                className={pathname.startsWith("/about") ? "bg-accent" : ""}
-                size="sm"
-              >
-                About
               </Button>
             </Link>
           </div>

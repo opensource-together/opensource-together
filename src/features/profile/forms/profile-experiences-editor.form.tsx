@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { HiOutlinePencil, HiOutlineTrash } from "react-icons/hi";
+import { HiOutlineTrash } from "react-icons/hi";
+import { HiMiniPencilSquare } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -96,7 +97,7 @@ export default function ProfileExperiencesEditor({
                   size="icon"
                   onClick={() => onEdit(idx)}
                 >
-                  <HiOutlinePencil className="size-4" />
+                  <HiMiniPencilSquare className="size-3.5" />
                 </Button>
                 <Button
                   type="button"
@@ -104,7 +105,7 @@ export default function ProfileExperiencesEditor({
                   size="icon"
                   onClick={() => onRemove(idx)}
                 >
-                  <HiOutlineTrash className="size-4" />
+                  <HiOutlineTrash className="size-3.5" />
                 </Button>
               </div>
             </div>
