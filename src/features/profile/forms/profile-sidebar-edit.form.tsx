@@ -66,8 +66,8 @@ export default function ProfileSidebarEditForm({
             name="userCategories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel tooltip="Select categories so the platform can recommend projects that match your interests. ">
-                  Categories (6 max)
+                <FormLabel tooltip="Select your interests so the platform can recommend projects that match your interests. ">
+                  Interests (6 max)
                 </FormLabel>
                 <FormControl>
                   <Combobox
@@ -77,7 +77,7 @@ export default function ProfileSidebarEditForm({
                     placeholder={
                       categoriesLoading
                         ? "Loading categories..."
-                        : "Add categories..."
+                        : "Add interests..."
                     }
                     searchPlaceholder="Search categories..."
                     emptyText="No categories found."
