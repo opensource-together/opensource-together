@@ -397,7 +397,10 @@ export default function GuidePage() {
         </section>
       </div>
       {/* CTA OST */}
-      <CTAFooter imageIllustration="/illustrations/angel.png" />
+      <CTAFooter
+        imageIllustration="/illustrations/winged-angel.png"
+        imageIllustrationMobile="/illustrations/winged-angel-mobile.png"
+      />
     </div>
   );
 }

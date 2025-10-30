@@ -63,7 +63,7 @@ export default async function ProjectPage({
     <>
       <ProjectDetailView projectId={projectId} />
       <CTAFooter
-        imageIllustration="/illustrations/angel.png"
+        imageIllustration="/illustrations/winged-angel.png"
         imageIllustrationMobile="/illustrations/winged-angel-mobile.png"
       />
     </>
