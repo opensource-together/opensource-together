@@ -12,6 +12,7 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-fields";
+import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { Profile } from "../types/profile.type";
@@ -26,6 +27,7 @@ export default function ProfileSidebarEditForm({
   form,
 }: ProfileSidebarEditProps) {
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
+  const { categoryOptions, isLoading: categoriesLoading } = useCategories();
   const { control } = form;
 
   return (
@@ -52,6 +54,35 @@ export default function ProfileSidebarEditForm({
                     emptyText="No technologies found."
                     disabled={techStacksLoading}
                     maxSelections={10}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="userCategories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel tooltip="Select categories so the platform can recommend projects that match your interests. ">
+                  Categories (6 max)
+                </FormLabel>
+                <FormControl>
+                  <Combobox
+                    options={categoryOptions}
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    placeholder={
+                      categoriesLoading
+                        ? "Loading categories..."
+                        : "Add categories..."
+                    }
+                    searchPlaceholder="Search categories..."
+                    emptyText="No categories found."
+                    disabled={categoriesLoading}
+                    maxSelections={6}
                   />
                 </FormControl>
                 <FormMessage />
