@@ -59,13 +59,14 @@ export function useInfiniteProjects(
   params: Omit<ProjectQueryParams, "page"> = {}
 ) {
   const per_page = params.per_page ?? 20;
+  const queryParams = { ...params, per_page };
+
   return useInfiniteQuery<PaginatedProjectsResponse>({
-    queryKey: ["projects-infinite", params],
+    queryKey: ["projects-infinite", queryParams],
     queryFn: async ({ pageParam }) =>
       getProjects({
-        ...params,
+        ...queryParams,
         page: typeof pageParam === "number" ? pageParam : 1,
-        per_page,
       }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
