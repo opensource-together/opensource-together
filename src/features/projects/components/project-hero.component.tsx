@@ -25,7 +25,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
 
   return (
     <div className="flex flex-col bg-white">
-      <div className="flex items-center gap-4">
+      <div className="flex min-w-0 items-center gap-4">
         <Avatar
           src={logoUrl}
           name={title}
@@ -33,10 +33,14 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
           size="lg"
           shape="rounded"
         />
-        <h1 className="flex-1 text-start text-xl font-medium">{title}</h1>
+        <h1 className="flex-1 truncate text-start text-xl font-medium">
+          {title}
+        </h1>
       </div>
 
-      <p className="mt-4 mb-8 text-sm font-normal">{description}</p>
+      <p className="mt-4 mb-8 line-clamp-5 text-sm font-normal break-words">
+        {description}
+      </p>
       <div className="flex items-center gap-2">
         {published ? (
           <>
@@ -115,7 +119,7 @@ export default function ProjectHero({
       {!hideHeader && (
         <div>
           <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <Avatar
                 src={logoUrl}
                 name={title}
@@ -123,7 +127,7 @@ export default function ProjectHero({
                 size="xl"
                 shape="rounded"
               />
-              <h1 className="text-start text-2xl font-medium sm:text-2xl">
+              <h1 className="max-w-[70vw] truncate text-start text-2xl font-medium sm:max-w-[45vw] sm:text-2xl">
                 {title}
               </h1>
             </div>
@@ -178,7 +182,7 @@ export default function ProjectHero({
             </div>
           </div>
 
-          <p className="mt-4 text-sm">{description}</p>
+          <p className="mt-4 line-clamp-6 text-sm break-words">{description}</p>
         </div>
       )}
     </div>

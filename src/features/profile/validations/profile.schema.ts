@@ -15,7 +15,7 @@ export const experienceSchema = z
     title: z
       .string()
       .min(1, "Title is required")
-      .max(120, "Title cannot exceed 120 characters"),
+      .max(50, "Title cannot exceed 50 characters"),
     startAt: dateStringSchema,
     endAt: z
       .union([dateStringSchema, z.null()])
@@ -49,7 +49,7 @@ export const profileSchema = z.object({
   jobTitle: z
     .string()
     // .min(1, "Job title is required")
-    .max(200, "Le titre ne peut pas dépasser 200 caractères")
+    .max(50, "Job title cannot exceed 50 characters")
     .optional(),
   bio: z.string().max(500, "Bio cannot exceed 500 characters").optional(),
   userTechStacks: z

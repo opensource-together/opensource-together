@@ -18,16 +18,22 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
   return (
     <div>
       <div className="flex flex-col items-start">
-        <div className="flex items-center">
+        <div className="flex min-w-0 items-center">
           <div className="mr-4">
             <Avatar src={image} name={name} alt={name} size="xl" />
           </div>
-          <div>
-            <h2 className="text-2xl">{name}</h2>
-            <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
+          <div className="min-w-0">
+            <h2 className="max-w-[65vw] truncate text-start text-2xl font-medium">
+              {name}
+            </h2>
+            <p className="text-muted-foreground max-w-[65vw] truncate text-sm tracking-tighter">
+              {jobTitle}
+            </p>
           </div>
         </div>
-        <p className="mt-4 text-sm leading-6 tracking-tighter">{bio}</p>
+        <p className="mt-4 mb-8 line-clamp-5 text-sm font-normal break-words">
+          {bio}
+        </p>
 
         <Link href="/profile/me/edit" className="mt-6">
           <Button>Edit Profile</Button>
@@ -67,13 +73,15 @@ export default function ProfileHero({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center">
+        <div className="flex min-w-0 items-center">
           <div className="mr-4">
             <Avatar src={image} name={name} alt={name} size="xl" />
           </div>
-          <div>
-            <h2 className="text-2xl">{name}</h2>
-            <p className="text-sm tracking-tighter text-black/50">{jobTitle}</p>
+          <div className="min-w-0">
+            <h2 className="truncate text-2xl">{name}</h2>
+            <p className="truncate text-sm tracking-tighter text-black/50">
+              {jobTitle}
+            </p>
           </div>
         </div>
 
