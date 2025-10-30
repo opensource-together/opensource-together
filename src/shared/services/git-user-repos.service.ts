@@ -1,8 +1,8 @@
 import { API_BASE_URL } from "@/config/config";
 
 import {
-  UserGitRepositoryQueryParams,
-  UserGitRepositoryResponse,
+  GitUserRepositoriesQueryParams,
+  GitUserRepositoriesResponse,
 } from "../types/git-repository.type";
 
 /**
@@ -11,9 +11,9 @@ import {
  * @param params - Optional query parameters to filter repositories.
  * @returns A promise that resolves to the repositories data.
  */
-export const getUserRepos = async (
-  params?: UserGitRepositoryQueryParams
-): Promise<UserGitRepositoryResponse> => {
+export const getGitUserRepositories = async (
+  params?: GitUserRepositoriesQueryParams
+): Promise<GitUserRepositoriesResponse> => {
   const queryParams = new URLSearchParams(
     Object.entries(params ?? {})
       .filter(([_, v]) => v !== undefined && v !== null)

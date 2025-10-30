@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -51,6 +51,35 @@ export function useProjects(
 }
 
 /**
+ * Get projects in a paginated way in infinite scroll mode.
+ * @param params - Filters (except page, which is controlled by useInfiniteQuery)
+ * @param options - Options React Query
+ */
+export function useInfiniteProjects(
+  params: Omit<ProjectQueryParams, "page"> = {}
+) {
+  const per_page = params.per_page ?? 20;
+  const queryParams = { ...params, per_page };
+
+  return useInfiniteQuery<PaginatedProjectsResponse>({
+    queryKey: ["projects-infinite", queryParams],
+    queryFn: async ({ pageParam }) =>
+      getProjects({
+        ...queryParams,
+        page: typeof pageParam === "number" ? pageParam : 1,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { pagination } = lastPage;
+      if (!pagination) return undefined;
+      return pagination.currentPage < pagination.lastPage
+        ? pagination.currentPage + 1
+        : undefined;
+    },
+  });
+}
+
+/**
  * Fetches the details of a specific project by ID.
  *
  * @param projectId - The ID of the project to retrieve.
@@ -85,6 +114,7 @@ export function useCreateProject() {
       onSuccess: (project) => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         router.push(`/projects/create/success?projectId=${project.id}`);
       },
@@ -129,6 +159,7 @@ export function useUpdateProject() {
             queryKey: ["user", "me", "projects"],
           });
           queryClient.invalidateQueries({ queryKey: ["projects"] });
+          queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
           router.push(`/projects/${targetId}`);
         }
@@ -164,6 +195,7 @@ export function useDeleteProject() {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         router.push("/dashboard/my-projects");
       },
     },
@@ -203,6 +235,7 @@ export function useToggleProjectPublished() {
         }
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       },
     },
   });
@@ -293,6 +326,7 @@ export function useUpdateProjectCover() {
     }) => updateProjectCover(projectId, coverFile),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
     },
   });
 
@@ -322,6 +356,7 @@ export function useDeleteProjectImage() {
     }) => deleteProjectImage(projectId, imageUrl),
     onSuccess: (_project, variables) => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       if (variables?.projectId) {
         queryClient.invalidateQueries({
           queryKey: ["project", variables.projectId],

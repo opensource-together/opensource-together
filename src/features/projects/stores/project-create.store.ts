@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { UserGitRepository } from "@/shared/types/git-repository.type";
+import { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 export type provider = "github" | "gitlab";
 
@@ -22,7 +22,7 @@ export interface ProjectFormData {
   websiteUrl: string;
   projectTechStacks: string[];
   projectCategories: string[];
-  selectedRepository: UserGitRepository | null;
+  selectedRepository: GitUserRepositoryType | null;
 }
 
 interface ProjectCreateStore {
@@ -53,7 +53,7 @@ interface ProjectCreateStore {
       >
     >
   ) => void;
-  selectRepository: (repo: UserGitRepository) => void;
+  selectRepository: (repo: GitUserRepositoryType) => void;
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;

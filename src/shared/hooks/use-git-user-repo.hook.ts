@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getUserRepos } from "../services/git-repository.service";
+import { getGitUserRepositories } from "../services/git-user-repos.service";
 import {
-  UserGitRepositoryQueryParams,
-  UserGitRepositoryResponse,
+  GitUserRepositoriesQueryParams,
+  GitUserRepositoriesResponse,
 } from "../types/git-repository.type";
 
 /**
@@ -14,17 +14,19 @@ import {
  * @param params - Filters and pagination parameters
  * @returns A React Query result containing the repositories data.
  */
-export const useGitRepository = (params: UserGitRepositoryQueryParams = {}) => {
+export const useGitUserRepositories = (
+  params: GitUserRepositoriesQueryParams = {}
+) => {
   const per_page = params.per_page ?? 100;
   const page = params.page ?? 1;
-  const queryParams: UserGitRepositoryQueryParams = {
+  const queryParams: GitUserRepositoriesQueryParams = {
     ...params,
     per_page,
     page,
   };
 
-  return useQuery<UserGitRepositoryResponse>({
+  return useQuery<GitUserRepositoriesResponse>({
     queryKey: ["user", "me", "repos", queryParams],
-    queryFn: () => getUserRepos(queryParams),
+    queryFn: () => getGitUserRepositories(queryParams),
   });
 };

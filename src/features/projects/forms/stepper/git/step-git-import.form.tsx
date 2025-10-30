@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
-import { useGitRepository } from "@/shared/hooks/use-git-repository.hook";
-import { UserGitRepository } from "@/shared/types/git-repository.type";
+import { useGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
+import { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
@@ -27,16 +27,19 @@ export default function StepGitImportForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(320);
-  const [selectedRepo, setSelectedRepo] = useState<UserGitRepository | null>(
-    null
-  );
+  const [selectedRepo, setSelectedRepo] =
+    useState<GitUserRepositoryType | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const { selectRepository } = useProjectCreateStore();
   const { linkSocialAccount, isLinkingSocialAccount } = useAuth();
 
-  const { data: gitRepos, isLoading, isError } = useGitRepository({ provider });
+  const {
+    data: gitRepos,
+    isLoading,
+    isError,
+  } = useGitUserRepositories({ provider });
 
   const itemHeight = 64;
   const repos = (gitRepos?.[provider]?.data || []).sort((a, b) => {
@@ -62,7 +65,7 @@ export default function StepGitImportForm({
     };
   }, []);
 
-  const handleRepositorySelect = (repo: UserGitRepository) => {
+  const handleRepositorySelect = (repo: GitUserRepositoryType) => {
     setSelectedRepo(repo);
   };
 
@@ -115,7 +118,7 @@ export default function StepGitImportForm({
             {isLoading ? (
               <RepositorySkeleton />
             ) : (
-              repos?.map((repo: UserGitRepository, idx: number) => (
+              repos?.map((repo: GitUserRepositoryType, idx: number) => (
                 <div
                   key={idx}
                   className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
