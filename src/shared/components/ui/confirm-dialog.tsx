@@ -10,7 +10,6 @@ import {
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
-import Icon, { IconName, IconVariant } from "@/shared/components/ui/icon";
 import { Separator } from "@/shared/components/ui/separator";
 
 interface ConfirmDialogProps {
@@ -22,8 +21,6 @@ interface ConfirmDialogProps {
   onConfirm: () => void;
   onCancel: () => void;
   confirmText?: string;
-  confirmIcon?: IconName;
-  confirmIconVariant?: IconVariant;
   confirmVariant?:
     | "default"
     | "destructive"
@@ -41,15 +38,9 @@ export function ConfirmDialog({
   isLoading,
   onConfirm,
   onCancel,
-  confirmText = "Confirmer",
-  confirmIcon = "check",
+  confirmText = "Confirm",
   confirmVariant = "default",
 }: ConfirmDialogProps) {
-  const renderIcon = () => {
-    if (!confirmIcon) return null;
-    return <Icon name="check" size="xs" variant="white" />;
-  };
-
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -64,7 +55,7 @@ export function ConfirmDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <Separator
-          className="mt-3 mb-1"
+          className="mt-1 mb-1"
           style={{
             marginLeft: "-24px",
             marginRight: "-24px",
@@ -72,25 +63,14 @@ export function ConfirmDialog({
           }}
         />
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <Button
             variant={confirmVariant}
             onClick={onConfirm}
             disabled={isLoading}
-            className={`flex items-center gap-2 ${
-              confirmVariant === "destructive"
-                ? "bg-red-500 hover:bg-red-600"
-                : ""
-            }`}
+            className="flex items-center gap-2"
           >
-            {isLoading ? (
-              "En cours..."
-            ) : (
-              <>
-                {confirmText}
-                {renderIcon()}
-              </>
-            )}
+            {isLoading ? "Loading..." : <>{confirmText}</>}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

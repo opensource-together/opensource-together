@@ -81,20 +81,16 @@ export function MultipleImageUpload({
         const error = rejection.errors[0];
         switch (error.code) {
           case "file-too-large":
-            setError(
-              `La taille du fichier doit être inférieure à ${maxSize}MB`
-            );
+            setError(`The file size must be less than ${maxSize}MB`);
             break;
           case "file-invalid-type":
-            setError("Type de fichier non supporté");
+            setError("Unsupported file type");
             break;
           case "too-many-files":
-            setError(
-              `Vous ne pouvez télécharger que ${maxFiles} images maximum`
-            );
+            setError(`You can only upload ${maxFiles} images maximum`);
             break;
           default:
-            setError("Erreur lors du téléchargement du fichier");
+            setError("Error uploading file");
         }
       }
     },
@@ -149,8 +145,8 @@ export function MultipleImageUpload({
             <div>
               <p className="text-sm font-medium text-gray-700">
                 {isDragActive
-                  ? "Déposez vos images ici..."
-                  : "Glissez-déposez vos images ici ou cliquez pour parcourir"}
+                  ? "Drop your images here..."
+                  : "Drag and drop your images here or click to browse"}
               </p>
               {!isDragActive && (
                 <Button
@@ -159,12 +155,12 @@ export function MultipleImageUpload({
                   className="mt-2"
                   disabled={isDropzoneDisabled}
                 >
-                  Parcourir
+                  Browse
                 </Button>
               )}
             </div>
             <p className="text-xs text-gray-500">
-              JPG, PNG, GIF jusqu'à {maxSize}MB • Maximum {maxFiles} images
+              JPG, PNG, GIF up to {maxSize}MB • Maximum {maxFiles} images
             </p>
           </div>
         </div>
@@ -181,9 +177,10 @@ export function MultipleImageUpload({
                 <div className="absolute inset-0 overflow-hidden rounded-lg">
                   <Image
                     src={image}
-                    alt={`Image de couverture ${index + 1}`}
+                    alt={`Cover image ${index + 1}`}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
                     <p className="text-xs font-medium text-white">

@@ -1,5 +1,10 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
+import { useState } from "react";
+import { UseFormReturn, useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
@@ -16,7 +21,9 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import { Profile } from "../types/profile.type";
-import { ProfileSchema } from "../validations/profile.schema";
+import { ProfileSchema, experienceSchema } from "../validations/profile.schema";
+import ExperienceModalForm from "./experience-modal.form";
+import ProfileExperiencesEditor from "./profile-experiences-editor.form";
 
 interface ProfileEditMainFormProps {
   profile: Profile;
@@ -26,6 +33,8 @@ interface ProfileEditMainFormProps {
   isUpdating: boolean;
 }
 
+type ExperienceFormData = z.infer<typeof experienceSchema>;
+
 export default function ProfileEditMainForm({
   profile,
   form,
@@ -34,6 +43,52 @@ export default function ProfileEditMainForm({
   isUpdating,
 }: ProfileEditMainFormProps) {
   const { control } = form;
+  const experiencesArray = useFieldArray({
+    control,
+    name: "experiences" as const,
+  });
+
+  const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+  const experienceForm = useForm<ExperienceFormData>({
+    resolver: zodResolver(experienceSchema),
+    defaultValues: {
+      title: "",
+      startAt: "",
+      endAt: undefined,
+      url: undefined,
+    },
+  });
+
+  const handleOpenAddExperience = () => {
+    setEditingIndex(null);
+    experienceForm.reset({
+      title: "",
+      startAt: "",
+      endAt: undefined,
+      url: undefined,
+    });
+    setIsExperienceModalOpen(true);
+  };
+
+  const handleOpenEditExperience = (index: number) => {
+    const experience = experiencesArray.fields[index];
+    setEditingIndex(index);
+    experienceForm.reset({
+      title: experience.title || "",
+      startAt: experience.startAt || "",
+      endAt: experience.endAt ?? undefined,
+      url: experience.url ?? undefined,
+    });
+    setIsExperienceModalOpen(true);
+  };
+
+  const handleCancelExperience = () => {
+    setIsExperienceModalOpen(false);
+    experienceForm.reset();
+    setEditingIndex(null);
+  };
 
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
@@ -44,7 +99,7 @@ export default function ProfileEditMainForm({
             name="image"
             render={() => (
               <FormItem>
-                <FormLabel>Choisir un avatar</FormLabel>
+                <FormLabel>Choose an avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
                     currentImageUrl={profile.image}
@@ -67,12 +122,12 @@ export default function ProfileEditMainForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Votre nom"
-                    className="bg-white text-sm"
+                    placeholder="Your name"
+                    className="text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -85,12 +140,12 @@ export default function ProfileEditMainForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Titre</FormLabel>
+                <FormLabel required>Job Title</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Ex: Développeur Full Stack"
-                    className="bg-white text-sm"
+                    placeholder="Ex: Full Stack Developer"
+                    className="text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -107,8 +162,8 @@ export default function ProfileEditMainForm({
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="Parlez-nous de vous, vos passions, votre expérience..."
-                    className="min-h-[120px] w-full resize-none bg-white text-sm"
+                    placeholder="Tell us about yourself, your passions, your experience..."
+                    className="min-h-[120px] w-full resize-none text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -116,28 +171,62 @@ export default function ProfileEditMainForm({
             )}
           />
 
-          <div className="my-12.5">
-            <Separator />
+          <div className="mt-10">
+            <ProfileExperiencesEditor
+              experiences={experiencesArray.fields.map((e) => ({
+                title: e.title || "",
+                startAt: e.startAt || "",
+                endAt: (e.endAt as string | null | undefined) ?? null,
+                url: (e.url as string | null | undefined) ?? null,
+              }))}
+              onAdd={handleOpenAddExperience}
+              onEdit={handleOpenEditExperience}
+              onRemove={(idx) => experiencesArray.remove(idx)}
+            />
           </div>
 
-          <div className="sticky bottom-0 z-50 bg-white">
-            <div className="-mx-4.5 mt-16.5">
-              <div className="border-t border-black/10">
-                <div className="flex items-center justify-end gap-4 px-6 pt-4">
-                  <Link href="/profile/me">
-                    <Button variant="secondary" disabled={isUpdating}>
-                      Retour
-                    </Button>
-                  </Link>
-                  <Button type="submit" disabled={isUpdating}>
-                    {isUpdating ? "Enregistrement..." : "Confirmer"}
+          <Separator className="mt-20" />
+
+          <div className="sticky bottom-0 z-50">
+            <div className="-mx-4.5">
+              <div className="flex items-center justify-end gap-4 px-6 pt-4">
+                <Link href="/profile/me">
+                  <Button variant="secondary" disabled={isUpdating}>
+                    Return
                   </Button>
-                </div>
+                </Link>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? "Saving..." : "Confirm"}
+                </Button>
               </div>
             </div>
           </div>
         </form>
       </Form>
+
+      <ExperienceModalForm
+        open={isExperienceModalOpen}
+        onOpenChange={setIsExperienceModalOpen}
+        title={editingIndex !== null ? "Edit Experience" : "Add Experience"}
+        description={
+          editingIndex !== null
+            ? "Update your work experience details"
+            : "Add a new work experience to your profile"
+        }
+        confirmText={editingIndex !== null ? "Update" : "Add"}
+        cancelText="Cancel"
+        onConfirm={(values) => {
+          if (editingIndex !== null) {
+            experiencesArray.update(editingIndex, values);
+          } else {
+            experiencesArray.append(values);
+          }
+          setIsExperienceModalOpen(false);
+          experienceForm.reset();
+        }}
+        onCancel={handleCancelExperience}
+        form={experienceForm}
+      />
     </div>
   );
 }

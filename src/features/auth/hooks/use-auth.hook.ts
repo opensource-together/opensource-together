@@ -3,113 +3,127 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
-import { socket } from "@/shared/realtime/socket";
 
 import {
+  deleteAccount,
   getCurrentUser,
-  getWebSocketToken,
+  linkSocialAccount,
   logout,
   signInWithProvider,
+  unlinkSocialAccount,
 } from "../services/auth.service";
 
 export default function useAuth() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (
-      !pathname?.startsWith("/auth") ||
-      pathname?.includes("/auth/callback")
-    ) {
-      return;
-    }
-
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const redirectUrl = urlParams.get("redirect");
-      if (redirectUrl) {
-        const decodedRedirectUrl = decodeURIComponent(redirectUrl);
-        sessionStorage.setItem("auth_redirect_url", decodedRedirectUrl);
-      }
-    }
-  }, [pathname]);
+  const queryClient = useQueryClient();
 
   const {
     data: currentUser,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["user/me"],
+    queryKey: ["users", "me"],
     queryFn: getCurrentUser,
+    retry: 0,
   });
 
-  // Query to get the WebSocket token
-  const { data: wsToken } = useQuery({
-    queryKey: ["ws-token"],
-    queryFn: getWebSocketToken,
-    enabled: !!currentUser,
-  });
-
-  // Effect to manage the WebSocket token in the localStorage
   useEffect(() => {
-    if (wsToken) {
-      localStorage.setItem("wsToken", wsToken);
-    } else if (!currentUser) {
-      localStorage.removeItem("wsToken");
+    if (isLoading || !currentUser) return;
+
+    const isOnboardingCompleted =
+      !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
+
+    const isOnboarding = pathname?.startsWith("/onboarding");
+    const isAuth = pathname?.startsWith("/auth");
+
+    if (!isOnboardingCompleted && !isOnboarding && !isAuth) {
+      router.push("/onboarding");
     }
-  }, [wsToken, currentUser]);
+  }, [currentUser, isLoading, pathname, router]);
 
   const signInMutation = useToastMutation<unknown, Error, string>({
     mutationFn: async (provider) => await signInWithProvider(provider),
-    loadingMessage: "Connexion en cours...",
-    successMessage: "Connexion réussie !",
-    errorMessage: "Une erreur est survenue lors de la connexion",
+    loadingMessage: "Logging in...",
+    successMessage: "Logged in successfully!",
+    errorMessage: "An error occurred while logging in",
+  });
+
+  const linkSocialAccountMutation = useToastMutation<
+    unknown,
+    Error,
+    string | { provider: string; callbackURL?: string }
+  >({
+    mutationFn: async (arg) => {
+      if (typeof arg === "string") {
+        return await linkSocialAccount(arg);
+      }
+      return await linkSocialAccount(arg.provider, arg.callbackURL);
+    },
+    loadingMessage: "Linking social account...",
+    successMessage: "Social account linked successfully!",
+    errorMessage: "An error occurred while linking social account",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      },
+    },
+  });
+
+  const unlinkSocialAccountMutation = useToastMutation<unknown, Error, string>({
+    mutationFn: async (providerId) => await unlinkSocialAccount(providerId),
+    loadingMessage: "Unlinking social account...",
+    successMessage: "Social account unlinked successfully",
+    errorMessage: "An error occurred while unlinking social account",
+    options: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      },
+    },
   });
 
   const logoutMutation = useToastMutation({
     mutationFn: logout,
-    loadingMessage: "Déconnexion en cours...",
-    successMessage: "Déconnexion réussie !",
-    errorMessage: "Erreur lors de la déconnexion",
+    loadingMessage: "Logging out...",
+    successMessage: "Logged out successfully!",
+    errorMessage: "An error occurred while logging out",
     options: {
       onSuccess: () => {
-        queryClient.setQueryData(["user/me"], null);
-        queryClient.setQueryData(["ws-token"], null);
-        localStorage.removeItem("wsToken");
-        socket.disconnect();
+        queryClient.setQueryData(["users", "me"], null);
         router.push("/");
       },
     },
   });
 
-  const redirectToLogin = (customRedirectUrl?: string) => {
-    const redirectUrl = customRedirectUrl || pathname;
-    const encodedRedirectUrl = encodeURIComponent(redirectUrl);
-    router.push(`/auth/login?redirect=${encodedRedirectUrl}`);
-  };
-
-  const requireAuth = (action: () => void, customRedirectUrl?: string) => {
-    if (!currentUser) {
-      redirectToLogin(customRedirectUrl);
-      return;
-    }
-    action();
-  };
+  const deleteAccountMutation = useToastMutation({
+    mutationFn: deleteAccount,
+    loadingMessage: "Deleting account...",
+    successMessage: "Your account has been deleted.",
+    errorMessage: "Failed to delete your account",
+    options: {
+      onSuccess: () => {
+        queryClient.clear();
+        router.push("/");
+      },
+    },
+  });
 
   return {
     currentUser,
     isAuthenticated: !!currentUser,
     isLoading,
     isError,
-    wsToken,
 
     signInWithProvider: signInMutation.mutate,
+    linkSocialAccount: linkSocialAccountMutation.mutate,
+    unlinkSocialAccount: unlinkSocialAccountMutation.mutate,
     logout: logoutMutation.mutate,
-    redirectToLogin,
-    requireAuth,
+    deleteAccount: deleteAccountMutation.mutate,
 
     isSigningIn: signInMutation.isPending,
+    isLinkingSocialAccount: linkSocialAccountMutation.isPending,
+    isUnlinkingSocialAccount: unlinkSocialAccountMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
+    isDeletingAccount: deleteAccountMutation.isPending,
   };
 }

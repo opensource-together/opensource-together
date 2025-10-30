@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { useMemo } from "react";
 import { FaStar } from "react-icons/fa6";
-import { HiUserGroup } from "react-icons/hi2";
+import { VscIssues } from "react-icons/vsc";
 
 import {
   ProjectCard,
@@ -12,80 +13,91 @@ import {
   ProjectCardInfo,
   ProjectCardLeftGroup,
   ProjectCardTitle,
-  ProjectCardViewText,
 } from "@/shared/components/ui/project-card";
+import { languagesToTechStacks } from "@/shared/lib/language-icons";
+import { formatNumberShort } from "@/shared/lib/utils/format-number";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
-import { ProjectRole } from "@/features/projects/types/project-role.type";
-import {
-  Owner,
-  ProjectStats,
-  TechStack,
-} from "@/features/projects/types/project.type";
+import { RepositoryWithDetails } from "@/features/projects/types/project.type";
 
-import StackLogo from "../logos/stack-logo";
 import { Avatar } from "../ui/avatar";
 import { Icon } from "../ui/icon";
+import StackLogo from "../ui/stack-logo";
 
 interface ProjectCardProps {
   projectId?: string;
-  title?: string;
-  description?: string;
-  techStacks?: TechStack[];
+  title: string;
+  description: string;
+  projectTechStacks?: TechStackType[];
   showTechStack?: boolean;
-  roles?: ProjectRole[];
-  showViewProject?: boolean;
   className?: string;
-  image?: string;
-  owner?: Owner;
-  projectStats?: ProjectStats;
+  logoUrl?: string;
+  repositoryDetails?: Pick<
+    RepositoryWithDetails,
+    | "stars"
+    | "forksCount"
+    | "openIssuesCount"
+    | "pullRequestsCount"
+    | "languages"
+    | "owner"
+  >;
 }
 
 export default function ProjectCardComponent({
-  projectId = "1",
+  projectId,
   title = "",
   description = "",
-  techStacks = [],
+  projectTechStacks = [],
   showTechStack = true,
-  showViewProject = true,
   className = "",
-  image = "",
-  owner = {
-    id: "",
-    username: "",
-    avatarUrl: "",
-  },
-  projectStats = {
-    forks: 0,
-    contributors: [],
+  logoUrl = "",
+
+  repositoryDetails = {
+    forksCount: 0,
     stars: 0,
-    watchers: 0,
-    openIssues: 0,
-    commits: 0,
-    lastCommit: {
-      sha: "",
-      message: "",
-      date: "",
-      url: "",
-      author: { login: "", avatar_url: "", html_url: "" },
+    openIssuesCount: 0,
+    pullRequestsCount: 0,
+    languages: {},
+    owner: {
+      login: "",
+      avatar_url: "",
     },
   },
 }: ProjectCardProps) {
+  const languagesTechStacks = useMemo(() => {
+    return languagesToTechStacks(repositoryDetails.languages);
+  }, [repositoryDetails.languages]);
+
+  const allTechStacks = useMemo(() => {
+    if (projectTechStacks.length > 0) {
+      return projectTechStacks;
+    }
+    return languagesTechStacks;
+  }, [projectTechStacks, languagesTechStacks]);
+
   return (
     <Link href={`/projects/${projectId}`} className="block">
       <ProjectCard className={className}>
         <ProjectCardHeader>
           <ProjectCardLeftGroup>
-            <Avatar src={image} name={title} alt={title} size="lg" />
+            <Avatar
+              src={logoUrl}
+              name={title}
+              alt={title}
+              size="lg"
+              shape="soft"
+            />
             <ProjectCardInfo>
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
-              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                by {owner.username}
-              </p>
+              {repositoryDetails.owner?.login && (
+                <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+                  by {repositoryDetails.owner.login}
+                </p>
+              )}
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
-          {showViewProject && <ProjectCardViewText />}
         </ProjectCardHeader>
         <ProjectCardContent>
           <ProjectCardDescription>{description}</ProjectCardDescription>
@@ -94,7 +106,7 @@ export default function ProjectCardComponent({
             <ProjectCardFooter>
               <>
                 <div className="flex gap-2.5">
-                  {techStacks.slice(0, 3).map((tech, index) => (
+                  {allTechStacks.slice(0, 3).map((tech, index) => (
                     <StackLogo
                       key={tech.id || index}
                       icon={tech.iconUrl || ""}
@@ -103,24 +115,24 @@ export default function ProjectCardComponent({
                     />
                   ))}
                 </div>
-                {techStacks.length > 3 && (
+                {allTechStacks.length > 3 && (
                   <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
-                    +{techStacks.length - 3}
+                    +{allTechStacks.length - 3}
                   </span>
                 )}
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
-                <div className="flex items-center justify-center text-[10px]">
+                <div className="flex items-center justify-center text-xs">
                   <Icon name="fork" size="xxs" className="mr-0.5" />
-                  {projectStats.forks || 0}
+                  {formatNumberShort(repositoryDetails.forksCount || 0)}
                 </div>
-                <div className="flex items-center justify-center gap-0 text-[10px]">
-                  <HiUserGroup className="mr-0.5 size-3 text-black" />
-                  {projectStats.contributors?.length || 0}
+                <div className="flex items-center justify-center gap-0 text-xs">
+                  <VscIssues className="mr-0.5 size-3 text-black" />
+                  {formatNumberShort(repositoryDetails.openIssuesCount || 0)}
                 </div>
-                <div className="flex items-center justify-center gap-0 text-[10px]">
+                <div className="flex items-center justify-center gap-0 text-xs">
                   <FaStar className="text-primary mr-0.5 size-2.5" />
-                  {projectStats.stars || 0}
+                  {formatNumberShort(repositoryDetails.stars || 0)}
                 </div>
               </div>
             </ProjectCardFooter>

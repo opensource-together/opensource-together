@@ -1,4 +1,4 @@
-import { FRONTEND_URL } from "@/config/config";
+import { API_BASE_URL } from "@/config/config";
 
 import { authClient } from "@/shared/lib/auth-client";
 
@@ -8,7 +8,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   try {
     await authClient.signIn.social({
       provider,
-      callbackURL: `${FRONTEND_URL}/`,
+      callbackURL: window.location.origin,
     });
   } catch (error) {
     console.error("signInWithProvider error:", error);
@@ -16,7 +16,36 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   }
 };
 
-export async function logout(): Promise<void> {
+export const linkSocialAccount = async (
+  provider: string,
+  callbackURL?: string
+): Promise<void> => {
+  try {
+    await authClient.linkSocial({
+      provider,
+      callbackURL:
+        callbackURL || `${window.location.origin}/dashboard/settings`,
+    });
+  } catch (error) {
+    console.error("linkSocialAccount error:", error);
+    throw error;
+  }
+};
+
+export const unlinkSocialAccount = async (
+  providerId: string
+): Promise<void> => {
+  try {
+    await authClient.unlinkAccount({
+      providerId,
+    });
+  } catch (error) {
+    console.error("unlinkSocialAccount error:", error);
+    throw error;
+  }
+};
+
+export const logout = async (): Promise<void> => {
   try {
     await authClient.signOut();
     if (typeof window !== "undefined") window.location.replace("/");
@@ -24,23 +53,25 @@ export async function logout(): Promise<void> {
     console.error("logout error:", error);
     throw error;
   }
-}
+};
 
-/**
- * Check if session exists and get user profile
- */
+export const deleteAccount = async (): Promise<void> => {
+  try {
+    await authClient.deleteUser({
+      callbackURL: window.location.origin,
+    });
+  } catch (error) {
+    console.error("deleteAccount error:", error);
+    throw error;
+  }
+};
+
 export const getCurrentUser = async (): Promise<Profile | null> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
+      method: "GET",
+      credentials: "include",
+    });
 
     if (!response.ok) {
       const error = await response.json();
@@ -52,32 +83,5 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
   } catch (error) {
     console.error("Error fetching current user:", error);
     throw error;
-  }
-};
-
-/**
- * Get WebSocket token for notifications
- */
-export const getWebSocketToken = async (): Promise<string | null> => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/notifications/ws-token`,
-      {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.wsToken || null; // use 'wsToken' instead of 'token'
-    }
-
-    throw new Error("Failed to fetch WebSocket token");
-  } catch (error) {
-    console.error("Error fetching WebSocket token:", error);
-    return null;
   }
 };

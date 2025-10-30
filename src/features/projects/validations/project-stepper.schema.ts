@@ -17,80 +17,48 @@ export const selectedRepoSchema = z.object({
     .nullable(),
 });
 
-// Step 1: Basic Project Information
-export const stepOneSchema = z.object({
+export const stepDescribeProjectSchema = z.object({
+  logoUrl: z.instanceof(File).optional(),
   title: z
     .string()
-    .min(3, "Le nom du projet doit contenir au moins 3 caractères"),
+    .min(2, "The project name must contain at least 2 characters"),
   description: z
     .string()
-    .min(10, "La description doit contenir au moins 10 caractères")
-    .max(100, "La description ne peut pas dépasser 100 caractères"),
-  coverImages: z.array(z.instanceof(File)).optional(),
-  keyFeatures: z
-    .array(
-      z.object({
-        feature: z.string(),
-      })
-    )
-    .min(1, "Au moins une fonctionnalité clé est requise"),
+    .min(10, "The description must contain at least 10 characters")
+    .max(500, "The description cannot exceed 500 characters"),
+  imagesUrls: z.array(z.instanceof(File)).optional(),
 });
 
-// Step 2: Tech Stack and Categories
-export const stepTwoSchema = z.object({
-  techStack: z
+export const stepTechCategoriesSchema = z.object({
+  projectTechStacks: z
     .array(z.string())
-    .min(1, "Au moins une technologie est requise")
-    .max(10, "Maximum 10 technologies autorisées"),
-  categories: z
+    .min(1, "At least one technology is required")
+    .max(10, "Maximum 10 technologies allowed"),
+  projectCategories: z
     .array(z.string())
-    .min(1, "Au moins une catégorie est requise")
-    .max(6, "Maximum 6 catégories autorisées"),
-});
-
-// Step 3: Project Roles (reuse base role validation logic)
-export const roleSchema = z.object({
-  title: z
-    .string()
-    .min(3, "Le titre du rôle doit contenir au moins 3 caractères"),
-  techStack: z
-    .array(z.string())
-    .min(1, "Au moins une technologie est requise")
-    .max(6, "Maximum 6 technologies autorisées"),
-  description: z
-    .string()
-    .min(10, "La description doit contenir au moins 10 caractères")
-    .max(250, "La description ne peut pas dépasser 250 caractères"),
-});
-
-export const stepThreeSchema = z.object({
-  roles: z.array(roleSchema).min(1, "Au moins un rôle est requis"),
-});
-
-// Step 4: External Links and Logo (with domain validation)
-export const stepFourSchema = z.object({
-  logo: z.instanceof(File).optional(),
-  externalLinks: z
-    .object({
-      github: urlWithDomainCheck(
-        ["github.com"],
-        "URL GitHub invalide (doit contenir github.com)"
-      ),
-      discord: urlWithDomainCheck(
-        ["discord.gg", "discord.com"],
-        "URL Discord invalide (doit contenir discord.com ou discord.gg)"
-      ),
-      twitter: urlWithDomainCheck(
-        ["twitter.com", "x.com"],
-        "URL Twitter/X invalide (doit contenir twitter.com ou x.com)"
-      ),
-      linkedin: urlWithDomainCheck(
-        ["linkedin.com"],
-        "URL LinkedIn invalide (doit contenir linkedin.com)"
-      ),
-      website: urlWithDomainCheck([], "URL du site web invalide"),
-    })
-    .optional(),
+    .min(1, "At least one category is required")
+    .max(6, "Maximum 6 categories allowed"),
+  githubUrl: urlWithDomainCheck(
+    ["github.com"],
+    "Invalid GitHub URL (must contain github.com)"
+  ).optional(),
+  gitlabUrl: urlWithDomainCheck(
+    ["gitlab.com"],
+    "Invalid GitLab URL (must contain gitlab.com)"
+  ).optional(),
+  discordUrl: urlWithDomainCheck(
+    ["discord.gg", "discord.com"],
+    "Invalid Discord URL (must contain discord.com or discord.gg)"
+  ).optional(),
+  twitterUrl: urlWithDomainCheck(
+    ["twitter.com", "x.com"],
+    "Invalid Twitter/X URL (must contain twitter.com or x.com)"
+  ).optional(),
+  linkedinUrl: urlWithDomainCheck(
+    ["linkedin.com"],
+    "Invalid LinkedIn URL (must contain linkedin.com)"
+  ).optional(),
+  websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
 // ========================================
@@ -99,10 +67,9 @@ export const stepFourSchema = z.object({
 
 // Create Project Schema (for stepper form)
 export const createProjectSchema = z.object({
-  method: z.enum(["github", "scratch"]).nullable(),
-  ...stepOneSchema.shape,
-  ...stepTwoSchema.shape,
-  ...stepThreeSchema.shape,
+  method: z.enum(["github", "gitlab"]).nullable(),
+  ...stepDescribeProjectSchema.shape,
+  ...stepTechCategoriesSchema.shape,
   selectedRepository: selectedRepoSchema,
 });
 
@@ -110,9 +77,10 @@ export const createProjectSchema = z.object({
 // TYPE EXPORTS
 // ========================================
 export type SelectedRepoFormData = z.infer<typeof selectedRepoSchema>;
-export type StepOneFormData = z.infer<typeof stepOneSchema>;
-export type StepTwoFormData = z.infer<typeof stepTwoSchema>;
-export type RoleFormData = z.infer<typeof roleSchema>;
-export type StepThreeFormData = z.infer<typeof stepThreeSchema>;
-export type StepFourFormData = z.infer<typeof stepFourSchema>;
+export type StepDescribeProjectFormData = z.infer<
+  typeof stepDescribeProjectSchema
+>;
+export type StepTechCategoriesFormData = z.infer<
+  typeof stepTechCategoriesSchema
+>;
 export type CreateProjectFormData = z.infer<typeof createProjectSchema>;

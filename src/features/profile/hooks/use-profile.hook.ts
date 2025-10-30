@@ -19,7 +19,7 @@ import { ProfileSchema } from "../validations/profile.schema";
  */
 export const useProfile = (id: string) => {
   return useQuery({
-    queryKey: ["user", id],
+    queryKey: ["users", id],
     queryFn: () => getUserById(id),
     enabled: !!id,
   });
@@ -50,7 +50,7 @@ export const useProfileUpdate = () => {
     errorMessage: "Error updating your profile",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
         router.push("/profile/me");
       },
     },
@@ -64,7 +64,7 @@ export const useProfileUpdate = () => {
 };
 
 /**
- * Hook to fetch the authenticated user's pull requests with pagination and filters.
+ * * Hook to update the logo of a user by their ID.
  *
  * @param id - The ID of the user to update.
  * @param file - The file to update the logo with.
@@ -91,9 +91,9 @@ export const useProfileLogoUpdate = (id: string) => {
         const updateImage = (old: Profile | undefined): Profile | undefined =>
           old ? { ...old, image: versionedImage } : old;
 
-        queryClient.setQueryData(["user/me"], updateImage);
+        queryClient.setQueryData(["user", "me"], updateImage);
 
-        queryClient.invalidateQueries({ queryKey: ["user/me"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
   });

@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 
-import { ContributionGraph, ContributionLevel } from "../types/profile.type";
+import {
+  ContributionGraph,
+  ContributionLevel,
+} from "../types/github-graph.type";
 
 interface GithubGraphProps {
   contributionGraph?: ContributionGraph;
@@ -37,7 +40,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
+    return date.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -68,7 +71,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
     return (
       <div className="w-full max-w-full overflow-hidden">
         <div>
-          <h3 className="mb-3.5 text-lg">Contribution Activity</h3>
+          <h3 className="mb-2">Contribution Activity</h3>
           <div className="flex h-[87px] w-full max-w-[598.07px] items-center justify-center rounded-lg border border-black/5 p-2">
             <p className="text-sm text-gray-500">
               No contribution data available
@@ -98,7 +101,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
   return (
     <div className="w-full max-w-full overflow-hidden">
       <div>
-        <h2 className="mb-4 text-sm">Contribution Activity</h2>
+        <h2 className="mb-2">Contribution Activity</h2>
 
         <div className="relative">
           <div className="mb-0.5 flex pr-2.5">
@@ -173,7 +176,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
           <div className="text-gray-300">
             {tooltip.contributionCount === 0
               ? "No contribution data available"
-              : `${tooltip.contributionCount} contribution${tooltip.contributionCount > 1 ? "s" : ""} Github`}
+              : `${tooltip.contributionCount} Github contribution${tooltip.contributionCount > 1 ? "s" : ""}`}
           </div>
         </div>
       )}

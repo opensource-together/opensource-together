@@ -6,7 +6,7 @@ import { HiCheckCircle, HiXCircle } from "react-icons/hi2";
 import { cn } from "@/shared/lib/utils";
 
 const badgeWithIconVariants = cva(
-  "inline-flex items-center justify-center font-medium tracking-tighter rounded-full border pl-0.5 pr-1.5 h-5 text-[10px] w-fit whitespace-nowrap shrink-0 gap-1.5 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  "inline-flex items-center text-sm pl-1 pr-2 h-5.5 justify-center font-medium tracking-tighter rounded-full border w-fit whitespace-nowrap shrink-0 gap-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
   {
     variants: {
       variant: {
@@ -29,15 +29,21 @@ interface BadgeWithIconProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeWithIconVariants> {
   children: React.ReactNode;
+  icon?: React.ComponentType<{ className?: string }>;
+  iconSize?: string;
 }
 
 function BadgeWithIcon({
   className,
   variant = "info",
   children,
+  icon,
+  iconSize = "size-3",
   ...props
 }: BadgeWithIconProps) {
   const getIcon = () => {
+    if (icon) return icon;
+
     switch (variant) {
       case "success":
         return HiCheckCircle;
@@ -57,7 +63,7 @@ function BadgeWithIcon({
       className={cn(badgeWithIconVariants({ variant }), className)}
       {...props}
     >
-      <Icon className="size-4" />
+      <Icon className={iconSize} />
       {children}
     </span>
   );

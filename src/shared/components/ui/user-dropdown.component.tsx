@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HiLogout } from "react-icons/hi";
-import { HiCog6Tooth, HiMiniPencilSquare, HiUser } from "react-icons/hi2";
+import { HiCog6Tooth, HiMiniPencilSquare, HiUserCircle } from "react-icons/hi2";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import {
@@ -33,45 +33,40 @@ export default function UserDropdown() {
           name={currentUser?.name}
           alt={currentUser?.name}
           size="md"
-          className="ml-3 cursor-pointer"
+          className="cursor-pointer"
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48 p-2">
-        <div className="flex flex-col p-2">
-          <p className="text-sm font-medium">{currentUser?.name}</p>
-          <p className="text-muted-foreground text-sm">{currentUser?.email}</p>
+      <DropdownMenuContent
+        align="end"
+        className="text-muted-foreground w-48 px-2"
+      >
+        <div className="flex flex-col truncate p-2 text-sm">
+          <p className="text-primary font-medium">{currentUser?.name}</p>
+          <p className="text-muted-foreground">{currentUser?.email}</p>
         </div>
         <DropdownMenuSeparator />
         <Link href="/profile/me">
           <DropdownMenuItem>
-            <div className="text-muted-foreground flex w-full items-center justify-between">
-              <p className="text-sm font-medium">Mon profil</p>
-              <HiUser className="size-4" />
-            </div>
+            <HiUserCircle className="size-4" />
+            View profile
           </DropdownMenuItem>
         </Link>
         <Link href="/profile/me/edit">
           <DropdownMenuItem>
-            <div className="text-muted-foreground flex w-full items-center justify-between">
-              <p className="text-sm font-medium">Modifier le profil</p>
-              <HiMiniPencilSquare className="size-4" />
-            </div>
+            <HiMiniPencilSquare className="size-4" />
+            Edit profile
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <Link href="/settings">
+        <Link href="/dashboard/settings">
           <DropdownMenuItem>
-            <div className="text-muted-foreground flex w-full items-center justify-between">
-              <p className="text-sm font-medium">Paramètres</p>
-              <HiCog6Tooth className="size-4" />
-            </div>
+            <HiCog6Tooth className="size-4" />
+            Settings
           </DropdownMenuItem>
         </Link>
-        <DropdownMenuItem onClick={handleLogout}>
-          <div className="text-destructive flex w-full items-center justify-between">
-            <p className="text-sm font-medium">Déconnexion</p>
-            <HiLogout className="text-destructive size-4" />
-          </div>
+        <DropdownMenuItem onClick={handleLogout} variant="destructive">
+          <HiLogout className="size-4" />
+          Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

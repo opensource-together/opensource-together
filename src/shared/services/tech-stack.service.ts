@@ -1,24 +1,17 @@
 import { API_BASE_URL } from "@/config/config";
 
-export interface TechStackItem {
-  id: string;
-  name: string;
-  iconUrl: string;
-  type: "LANGUAGE" | "TECH";
-  createdAt: string;
-  updatedAt: string;
-}
+import { TechStackType } from "../types/tech-stack.type";
 
 interface TechStackApiResponse {
-  data: TechStackItem[];
+  data: TechStackType[];
 }
 
 /**
  * Fetch tech stacks from the API
  *
- * @returns A promise that resolves to an array of tech stack items
+ * @returns A promise that resolves to an array of tech stack types
  */
-export const fetchTechStacks = async (): Promise<TechStackItem[]> => {
+export const fetchTechStacks = async (): Promise<TechStackType[]> => {
   try {
     const response = await fetch(`${API_BASE_URL}/techstacks`);
 

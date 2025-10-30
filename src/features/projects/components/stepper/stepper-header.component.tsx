@@ -1,16 +1,37 @@
+"use client";
+
+import StepperIndicator from "./stepper-indicator.component";
+
 interface StepperHeaderComponentProps {
   title: string;
   description: string;
+  currentStep?: number;
+  totalSteps?: number;
+  className?: string;
+  onStepChange?: (step: number) => void;
 }
 
 export default function StepperHeaderComponent({
   title,
   description,
+  currentStep,
+  totalSteps,
+  className,
+  onStepChange,
 }: StepperHeaderComponentProps) {
   return (
-    <div className="flex flex-col items-center">
-      <h2 className="mb-2 text-center text-3xl">{title}</h2>
-      <p className="mb-12 text-center text-sm text-black/70">{description}</p>
-    </div>
+    <>
+      <div className="flex min-w-xs flex-col">
+        <StepperIndicator
+          currentStep={currentStep || 0}
+          totalSteps={totalSteps || 0}
+          className={className}
+          onStepChange={onStepChange}
+        />
+      </div>
+      <div className="mx-auto flex flex-col">{/* Stepper Indicator */}</div>
+      <h2 className="mb-2 text-3xl">{title}</h2>
+      <p className="text-muted-foreground mb-4 text-sm">{description}</p>
+    </>
   );
 }

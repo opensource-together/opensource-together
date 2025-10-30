@@ -4,20 +4,21 @@ import GoogleButton from "./google-button.component";
 
 export default function LoginForm() {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center justify-center">
       <div className="w-full max-w-md">
         <div className="p-4">
-          <div className="mb-8 text-center">
-            <h1 className="mb-3 text-2xl">Bienvenue sur OpenSource Together</h1>
-            <p className="mt-6 text-black/50">
-              La plateforme qui connecte développeurs, designers et <br />
-              créateurs à travers des projets open source.
+          <div className="mb-7 text-center">
+            <h1 className="mb-2 text-xl sm:text-2xl">
+              Welcome to OpenSource Together
+            </h1>
+            <p className="mt-0 text-xs text-black/70 sm:text-sm">
+              New here or coming back? Choose how you want to continue
             </p>
           </div>
-          <div className="space-y-4">
-            <GitHubButton text="Se connecter avec Github" />
-            <GitlabButton text="Se connecter avec Gitlab" />
-            <GoogleButton variant="outline" text="Se connecter avec Google" />
+          <div className="flex flex-col items-center gap-3 sm:gap-4">
+            <GitHubButton />
+            <GitlabButton />
+            <GoogleButton variant="outline" />
           </div>
         </div>
       </div>

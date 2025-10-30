@@ -22,7 +22,7 @@ export default function ProfileEditView() {
   const { currentUser, isLoading, isError } = useAuth();
   const { updateProfile, isUpdating } = useProfileUpdate();
   const { updateProfileLogo, isUpdatingLogo } = useProfileLogoUpdate(
-    currentUser?.publicId || currentUser?.id || ""
+    currentUser?.id || ""
   );
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
@@ -34,6 +34,13 @@ export default function ProfileEditView() {
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
       userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      experiences:
+        currentUser?.userExperiences?.map((e) => ({
+          title: e.title,
+          startAt: e.startAt,
+          endAt: e.endAt ?? null,
+          url: e.url ?? undefined,
+        })) || [],
       githubUrl: currentUser?.githubUrl || "",
       gitlabUrl: currentUser?.gitlabUrl || "",
       discordUrl: currentUser?.discordUrl || "",
@@ -51,6 +58,13 @@ export default function ProfileEditView() {
       jobTitle: currentUser.jobTitle || "",
       bio: currentUser.bio || "",
       userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      experiences:
+        currentUser?.userExperiences?.map((e) => ({
+          title: e.title,
+          startAt: e.startAt,
+          endAt: e.endAt ?? null,
+          url: e.url ?? undefined,
+        })) || [],
       githubUrl: currentUser.githubUrl || "",
       gitlabUrl: currentUser.gitlabUrl || "",
       discordUrl: currentUser.discordUrl || "",
@@ -65,7 +79,7 @@ export default function ProfileEditView() {
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const id = currentUser?.publicId || currentUser?.id || "";
+    const id = currentUser?.id || "";
     updateProfile({ id, updateData: data });
     if (selectedImageFile) {
       updateProfileLogo(selectedImageFile);
@@ -77,9 +91,9 @@ export default function ProfileEditView() {
     return (
       <ErrorState
         message="An error has occurred while loading the profile edit. Please try again later."
-        queryKey={["user/me"]}
+        queryKey={["users", "me"]}
         className="mt-20 mb-28"
-        buttonText="Back to projects"
+        buttonText="Back to homepage"
         href="/"
       />
     );

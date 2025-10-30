@@ -15,11 +15,20 @@ export default function ProjectGrid({ projects }: ProjectGridProps) {
           projectId={project.id}
           title={project.title}
           description={project.description}
-          image={project.image}
-          techStacks={project.techStacks}
-          owner={project.owner}
-          projectStats={project.projectStats}
-          showViewProject={true}
+          logoUrl={project.logoUrl || ""}
+          projectTechStacks={project.projectTechStacks}
+          repositoryDetails={{
+            languages: project.repositoryDetails?.languages || {},
+            forksCount: project.repositoryDetails?.forksCount || 0,
+            stars: project.repositoryDetails?.stars || 0,
+            openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
+            pullRequestsCount:
+              project.repositoryDetails?.pullRequestsCount || 0,
+            owner: project.repositoryDetails?.owner || {
+              login: "",
+              avatar_url: "",
+            },
+          }}
         />
       ))}
     </div>

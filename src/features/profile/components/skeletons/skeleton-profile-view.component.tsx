@@ -3,7 +3,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 export default function SkeletonProfileView() {
   return (
     <div className="mx-7 mt-2 mb-20 flex max-w-[1007px] flex-col gap-8 md:mt-13.5 lg:mx-auto">
-      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-25">
+      <div className="flex flex-col gap-6 md:flex-row-reverse md:items-start md:gap-25">
         {/* Mobile header skeleton */}
         <div className="md:hidden">
           <div>

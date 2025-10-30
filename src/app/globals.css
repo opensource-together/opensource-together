@@ -73,8 +73,8 @@
   --ost-blue-two: #51a2ff;
   --ost-blue-three: #2b7fff;
   --ost-blue-four: #193cb8;
-  --destructive: #fb2c36; /* Alert color */
-  --destructive-foreground: #fef2f2;
+  --destructive: #d71959; /* Alert color */
+  --destructive-foreground: #fcebf1;
   --success: #05df72; /* Success color */
   --success-foreground: #f0fdf4;
   --border: oklch(0.922 0 0);

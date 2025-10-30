@@ -33,40 +33,22 @@ export function ProjectImportationConfirmDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-3">
-            Importer votre projet sur OpenSource Together
+            Create project
           </AlertDialogTitle>
           <AlertDialogDescription asChild>
-            <div className="space-y-3">
-              <p>
-                Votre projet <strong>"{projectTitle}"</strong> va être publié
-                sur OpenSource Together et sera visible par tous les
-                utilisateurs de la plateforme.
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-sm">
+                <strong>{projectTitle}</strong> will be created and added to
+                your <strong>dashboard</strong>. You’ll be able to publish it
+                later to make it visible on OpenSource Together.
               </p>
-              <div className="rounded-lg bg-blue-50 p-3">
-                <div className="flex items-start gap-2">
-                  <p className="text-sm text-blue-800">
-                    <strong>À savoir :</strong> Votre repository Github reste
-                    inchangé. Seules les informations du projet seront
-                    synchronisées avec la plateforme pour permettre aux
-                    contributeurs de vous découvrir.
-                  </p>
-                </div>
-              </div>
-              <div className="rounded-lg bg-green-50 p-3">
-                <div className="flex items-start gap-2">
-                  <p className="text-sm text-green-800">
-                    Vous pourrez modifier ou supprimer votre projet depuis la
-                    plateforme à tout moment.
-                  </p>
-                </div>
-              </div>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={isCreating}>
-            {isCreating ? "Publication en cours..." : "Publier le projet"}
+            {isCreating ? "Creating..." : "Create project"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

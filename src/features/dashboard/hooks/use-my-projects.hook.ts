@@ -1,33 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  getMyProjectDetails,
+  PaginatedProjectsResponse,
+  ProjectQueryParams,
   getMyProjects,
 } from "../services/my-projects.service";
-import { MyProjectType } from "../types/my-projects.type";
 
 /**
  * Fetches the list of projects for the current user.
  *
  * @returns A React Query result containing the list of projects.
  */
-export function useMyProjects() {
-  return useQuery<MyProjectType[]>({
-    queryKey: ["my-projects"],
-    queryFn: getMyProjects,
-  });
-}
-
-/**
- * Fetches the details of a specific project for the current user.
- *
- * @param projectId - The ID of the project to fetch.
- * @returns A React Query result containing the project details.
- */
-export function useMyProjectDetails(projectId: string) {
-  return useQuery<MyProjectType>({
-    queryKey: ["my-project", projectId],
-    queryFn: () => getMyProjectDetails(projectId),
-    enabled: !!projectId,
+export function useMyProjects(params: ProjectQueryParams = {}) {
+  const per_page = params.per_page ?? 7;
+  const page = params.page ?? 1;
+  const queryParams: ProjectQueryParams = { ...params, per_page, page };
+  return useQuery<PaginatedProjectsResponse>({
+    queryKey: ["user", "me", "projects", queryParams],
+    queryFn: () => getMyProjects(queryParams),
   });
 }

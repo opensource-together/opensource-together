@@ -1,30 +1,28 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { ProjectRole } from "../types/project-role.type";
-import {
-  Category,
-  ExternalLink,
-  GithubRepoType,
-  KeyFeature,
-  TechStack,
-} from "../types/project.type";
+import { UserGitRepository } from "@/shared/types/git-repository.type";
 
-export type ProjectCreateMethod = "scratch" | "github";
+export type provider = "github" | "gitlab";
 
 export interface ProjectFormData {
-  method: ProjectCreateMethod;
+  method: provider;
   title: string;
   description: string;
-  image: string;
-  coverImages: File[];
-  readme?: string;
-  externalLinks: ExternalLink[];
-  keyFeatures: KeyFeature[];
-  techStack: TechStack[];
-  categories: Category[];
-  selectedRepository: GithubRepoType | null;
-  roles: ProjectRole[];
+  imagesUrls: string[];
+  imageFiles?: File[];
+  logoUrl: string;
+  logoFile?: File | null;
+  repoUrl: string;
+  githubUrl: string;
+  gitlabUrl: string;
+  discordUrl: string;
+  twitterUrl: string;
+  linkedinUrl: string;
+  websiteUrl: string;
+  projectTechStacks: string[];
+  projectCategories: string[];
+  selectedRepository: UserGitRepository | null;
 }
 
 interface ProjectCreateStore {
@@ -32,26 +30,30 @@ interface ProjectCreateStore {
   currentStep: number;
   hasHydrated: boolean;
 
-  setMethod: (method: ProjectCreateMethod) => void;
+  setMethod: (method: provider) => void;
   updateProjectInfo: (
     info: Partial<
       Pick<
         ProjectFormData,
         | "title"
         | "description"
-        | "image"
-        | "coverImages"
-        | "readme"
-        | "keyFeatures"
-        | "techStack"
-        | "categories"
-        | "roles"
-        | "externalLinks"
+        | "imagesUrls"
+        | "imageFiles"
+        | "logoUrl"
+        | "logoFile"
+        | "repoUrl"
+        | "projectTechStacks"
+        | "projectCategories"
+        | "githubUrl"
+        | "gitlabUrl"
+        | "discordUrl"
+        | "twitterUrl"
+        | "linkedinUrl"
+        | "websiteUrl"
       >
     >
   ) => void;
-  selectRepository: (repo: GithubRepoType) => void;
-  updateRoles: (roles: ProjectFormData["roles"]) => void;
+  selectRepository: (repo: UserGitRepository) => void;
   nextStep: () => void;
   previousStep: () => void;
   resetForm: () => void;
@@ -59,18 +61,23 @@ interface ProjectCreateStore {
 }
 
 const initialFormData: ProjectFormData = {
-  method: "scratch",
+  method: "github",
   title: "",
   description: "",
-  image: "",
-  coverImages: [],
-  readme: "",
-  externalLinks: [],
-  keyFeatures: [],
+  imagesUrls: [],
+  imageFiles: [],
+  logoUrl: "",
+  logoFile: null,
+  repoUrl: "",
+  githubUrl: "",
+  gitlabUrl: "",
+  discordUrl: "",
+  twitterUrl: "",
+  linkedinUrl: "",
+  websiteUrl: "",
   selectedRepository: null,
-  techStack: [],
-  categories: [],
-  roles: [],
+  projectTechStacks: [],
+  projectCategories: [],
 };
 
 export const useProjectCreateStore = create<ProjectCreateStore>()(
@@ -90,17 +97,22 @@ export const useProjectCreateStore = create<ProjectCreateStore>()(
         updateProjectInfo: (info) =>
           set((state) => ({ formData: { ...state.formData, ...info } })),
 
-        selectRepository: (repo) =>
+        selectRepository: (repo) => {
           set((state) => ({
             formData: {
               ...state.formData,
               selectedRepository: repo,
-              readme: repo.readme || "",
+              title: "",
+              description: "",
+              imagesUrls: [],
+              logoUrl: "",
+              logoFile: null,
+              repoUrl: repo.html_url || "",
+              githubUrl: "",
+              gitlabUrl: "",
             },
-          })),
-
-        updateRoles: (roles) =>
-          set((state) => ({ formData: { ...state.formData, roles } })),
+          }));
+        },
 
         nextStep: () =>
           set((state) => ({ currentStep: state.currentStep + 1 })),

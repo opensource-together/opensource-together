@@ -1,46 +1,8 @@
-import { Project } from "@/features/projects/types/project.type";
+import { TechStackType } from "@/shared/types/tech-stack.type";
 
-export type ProfileTechStack = {
-  id: string;
-  name: string;
-  iconUrl: string;
-  type: "LANGUAGE" | "TECH";
-  createdAt: string;
-  updatedAt: string;
-};
+import { ContributionGraph, GithubStats } from "./github-graph.type";
 
-export type ContributionLevel =
-  | "NONE"
-  | "FIRST_QUARTILE"
-  | "SECOND_QUARTILE"
-  | "THIRD_QUARTILE"
-  | "FOURTH_QUARTILE";
-
-export type ContributionDay = {
-  date: string;
-  contributionCount: number;
-  contributionLevel: ContributionLevel;
-  color: string;
-};
-
-export type ContributionWeek = {
-  contributionDays: ContributionDay[];
-};
-
-export type ContributionGraph = {
-  weeks: ContributionWeek[];
-  totalContributions: number;
-  maxContributions?: number;
-};
-
-export type GithubStats = {
-  totalStars: number;
-  contributedRepos: number;
-  commitsThisYear: number;
-  contributionGraph: ContributionGraph;
-};
-
-export type Profile = {
+export interface Profile {
   id: string;
   publicId?: string;
   name: string;
@@ -53,15 +15,23 @@ export type Profile = {
   contributionsCount?: number;
   createdAt?: string;
   updatedAt?: string;
-  githubStats?: GithubStats;
-  contributionGraph?: ContributionGraph;
   githubUrl?: string;
   gitlabUrl?: string;
   discordUrl?: string;
   twitterUrl?: string;
   linkedinUrl?: string;
   websiteUrl?: string;
+  connectedProviders?: string[];
   userTechStacksIds?: string[];
-  userTechStacks?: ProfileTechStack[];
-  projects?: Project[];
-};
+  userTechStacks?: TechStackType[];
+  userExperiences?: UserExperience[];
+  githubStats?: GithubStats;
+  contributionGraph?: ContributionGraph;
+}
+
+export interface UserExperience {
+  title: string;
+  startAt: string;
+  endAt?: string | null;
+  url?: string | null;
+}

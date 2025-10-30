@@ -16,20 +16,18 @@ export default function SkeletonProjectGrid() {
         <ProjectCard key={i}>
           <ProjectCardHeader>
             <ProjectCardLeftGroup>
-              <Skeleton className="h-12.5 w-12.5 rounded-full" />
+              <Skeleton className="h-12.5 w-12.5 rounded-lg" />
               <div className="flex flex-col gap-1">
                 <Skeleton className="h-6 w-48" />
                 <Skeleton className="h-4 w-24" />
               </div>
             </ProjectCardLeftGroup>
-            <Skeleton className="h-4 w-[80px] rounded-full" />
           </ProjectCardHeader>
 
           <ProjectCardContent>
             <ProjectCardDescription>
               <div className="space-y-2">
                 <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-4/5" />
               </div>
             </ProjectCardDescription>
 

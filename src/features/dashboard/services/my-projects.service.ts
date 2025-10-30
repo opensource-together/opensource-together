@@ -1,60 +1,47 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { MyProjectType } from "../types/my-projects.type";
+import {
+  PaginatedResponse,
+  PaginationParams,
+} from "@/shared/types/pagination.type";
+
+import { Project } from "@/features/projects/types/project.type";
+
+export interface ProjectQueryParams extends PaginationParams {
+  published?: boolean;
+}
+
+export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
 
 /**
  * Fetches the list of projects for the current user.
  *
+ * @param params - Optional query parameters to filter user projects.
  * @returns A promise that resolves to an array of projects.
  */
-export const getMyProjects = async (): Promise<MyProjectType[]> => {
+export const getMyProjects = async (
+  params?: ProjectQueryParams
+): Promise<PaginatedProjectsResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/projects/me`, {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/users/me/projects${queryString ? `?${queryString}` : ""}`;
+    const response = await fetch(url, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
       credentials: "include",
     });
-
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to fetch my projects");
     }
-
-    return await response.json();
+    const apiResponse = await response.json();
+    return apiResponse;
   } catch (error) {
     console.error("Error fetching my projects:", error);
-    throw error;
-  }
-};
-
-/**
- * Fetches the details of a specific project for the current user.
- *
- * @param id - The ID of the project to fetch.
- * @returns A promise that resolves to the project details.
- */
-export const getMyProjectDetails = async (
-  id: string
-): Promise<MyProjectType> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/projects/me/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch my project");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching my project:", error);
     throw error;
   }
 };

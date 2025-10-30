@@ -1,8 +1,7 @@
 "use client";
 
-import { FiGitlab } from "react-icons/fi";
-
 import { Button } from "@/shared/components/ui/button";
+import { Icon } from "@/shared/components/ui/icon";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
@@ -13,7 +12,7 @@ interface GitlabButtonProps {
 }
 
 export default function GitlabButton({
-  text = "Continuer avec Gitlab",
+  text = "Sign in with Gitlab",
   isLoading = false,
   variant = "default",
 }: GitlabButtonProps) {
@@ -27,7 +26,7 @@ export default function GitlabButton({
       disabled={isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
-      className={`w-[420px] text-base ${
+      className={`w-[320px] text-xs sm:text-base md:w-[420px] ${
         isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
       }`}
     >
@@ -38,9 +37,9 @@ export default function GitlabButton({
           } border-t-transparent`}
         />
       ) : (
-        <FiGitlab size={16} />
+        <Icon name="gitlab" size="sm" variant="filled" />
       )}
-      <span className="ml-0">{text}</span>
+      <span className="ml-1">{text}</span>
     </Button>
   );
 }

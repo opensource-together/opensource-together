@@ -1,8 +1,8 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Metadata } from "next";
 
+import { FRONTEND_URL } from "@/config/config";
+
 import CTAFooter from "@/shared/components/layout/cta-footer";
-import { getQueryClient } from "@/shared/lib/query-client";
 
 import { getProjectDetails } from "@/features/projects/services/project.service";
 import ProjectDetailView from "@/features/projects/views/project-detail.view";
@@ -14,23 +14,40 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { projectId } = await params;
-  const project = await getProjectDetails(projectId);
+  try {
+    const project = await getProjectDetails(projectId);
 
-  return {
-    title: `${project.title} | OpenSource Together`,
-    description: project.description,
-    openGraph: {
+    const projectUrl = `${FRONTEND_URL.replace(/\/$/, "")}/projects/${projectId}`;
+
+    return {
       title: `${project.title} | OpenSource Together`,
       description: project.description,
-      images: [project.image || ""],
-      url: `https://opensourcetogether.com/projects/${projectId}`,
-      type: "website",
-      siteName: "OpenSource Together",
-      locale: "fr_FR",
-      countryName: "France",
-      emails: ["contact@opensourcetogether.com"],
-    },
-  };
+      openGraph: {
+        title: `${project.title} | OpenSource Together`,
+        description: project.description,
+        images: [
+          {
+            url: `${projectUrl}/opengraph-image`,
+            width: 1200,
+            height: 630,
+            alt: `${project.title} project preview`,
+          },
+        ],
+        url: projectUrl,
+        type: "website",
+        siteName: "OpenSource Together",
+        locale: "fr_FR",
+        countryName: "France",
+        emails: ["contact@opensourcetogether.com"],
+      },
+    };
+  } catch (error) {
+    console.error("generateMetadata project fetch failed:", error);
+    return {
+      title: "Project | OpenSource Together",
+      description: "Discover open source projects on OpenSource Together.",
+    };
+  }
 }
 
 export default async function ProjectPage({
@@ -42,19 +59,10 @@ export default async function ProjectPage({
 }) {
   const { projectId } = await params;
 
-  const queryClient = getQueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["project", projectId],
-    queryFn: () => getProjectDetails(projectId),
-  });
-
-  const dehydratedState = dehydrate(queryClient);
-
   return (
-    <HydrationBoundary state={dehydratedState}>
+    <>
       <ProjectDetailView projectId={projectId} />
-      <CTAFooter imageIllustration="/illustrations/man-walking.png" />
-    </HydrationBoundary>
+      <CTAFooter imageIllustration="/illustrations/winged-angel.png" />
+    </>
   );
 }

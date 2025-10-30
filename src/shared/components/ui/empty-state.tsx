@@ -1,45 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { HiChevronRight } from "react-icons/hi";
 import { IconType } from "react-icons/lib";
 
 import { Button } from "./button";
 
 interface EmptyStateProps {
-  text: string;
+  title: string;
+  description?: string;
   icon?: IconType | React.ComponentType;
   href?: string;
   buttonText?: string;
+  buttonIcon?: IconType | React.ComponentType;
   className?: string;
-  width?: string;
 }
 
 export function EmptyState({
-  text,
-  icon,
+  title,
+  description,
+  icon: Icon,
   href,
   buttonText,
+  buttonIcon: ButtonIcon,
   className = "",
-  width = "w-[400px]",
 }: EmptyStateProps) {
   return (
     <div
-      className={`mx-auto flex flex-col items-center justify-center py-12 text-center ${width} ${className}`}
+      className={`mx-auto flex max-w-46 flex-col items-center justify-center py-12 text-center ${className}`}
     >
-      {icon && (
-        <div className="text-neutral-200">
-          {(() => {
-            const IconComp = icon as IconType;
-            return <IconComp size={36} aria-hidden />;
-          })()}
+      {Icon ? (
+        <div className="flex items-center gap-2">
+          <Icon size={20} aria-hidden />
+          <p className="font-medium">{title}</p>
         </div>
+      ) : (
+        <p className="font-medium">{title}</p>
       )}
-      <p className="mt-1 mb-4 max-w-40 text-[#B1B1B1]">{text}</p>
-      {href && (
+
+      {description && (
+        <p className="text-muted-foreground my-4 mt-2 text-sm">{description}</p>
+      )}
+
+      {href && buttonText && (
         <Link href={href}>
           <Button>
-            {buttonText} <HiChevronRight />
+            {buttonText}
+            {ButtonIcon && <ButtonIcon size={20} aria-hidden />}
           </Button>
         </Link>
       )}

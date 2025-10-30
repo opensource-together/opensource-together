@@ -58,10 +58,10 @@ export default function ImageSlider({ images }: ImageSliderProps) {
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-2 flex flex-row gap-1">
+    <div className="mt-2 mb-8 flex flex-row gap-1">
       <div className="flex-1">
         <div
-          className="relative h-[207px] w-full overflow-hidden rounded-md select-none sm:h-[393px]"
+          className="relative h-[207px] w-full overflow-hidden rounded-2xl select-none sm:h-[370px]"
           onTouchStart={handleDragStart}
           onTouchMove={handleDragMove}
           onTouchEnd={handleDragEnd}
@@ -71,7 +71,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
           onMouseLeave={handleDragEnd}
         >
           <div
-            className={`flex h-full transition-transform duration-300 ${isDragging ? "transition-none" : ""}`}
+            className={`border-muted-black-stroke flex h-full rounded-2xl border transition-transform duration-300 ${isDragging ? "transition-none" : ""}`}
             style={{
               transform: `translateX(calc(${translateX}px - ${currentImageIndex * 100}%))`,
             }}
@@ -83,39 +83,40 @@ export default function ImageSlider({ images }: ImageSliderProps) {
                 alt={`Image ${idx + 1}`}
                 width={688}
                 height={393}
-                className="h-[207px] w-full shrink-0 object-cover sm:h-[393px]"
+                className="h-[207px] w-full shrink-0 rounded-2xl object-cover sm:h-[365px]"
+                unoptimized
                 priority={idx === currentImageIndex}
               />
             ))}
           </div>
         </div>
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <Button
               size="icon"
               variant="outline"
-              className="h-7 w-7"
+              className="size-7.5"
               onClick={handlePrevImage}
             >
-              <IoChevronBack className="size-[11px]" />
+              <IoChevronBack className="size-3" />
             </Button>
             <Button
               size="icon"
               variant="outline"
-              className="h-7 w-7"
+              className="size-7.5"
               onClick={handleNextImage}
             >
-              <IoChevronForward className="size-[11px]" />
+              <IoChevronForward className="size-3" />
             </Button>
           </div>
           <div className="mt-[-10px] flex gap-1">
             {images.map((_, idx) => (
               <IoEllipse
                 key={idx}
-                className={`size-1.5 hover:cursor-pointer hover:text-neutral-500 ${
+                className={`hover:text-muted-foreground size-1.5 hover:cursor-pointer ${
                   idx === currentImageIndex
-                    ? "text-neutral-500"
-                    : "text-neutral-200"
+                    ? "text-muted-foreground"
+                    : "text-muted-foreground/50"
                 }`}
                 onClick={() => setCurrentImageIndex(idx)}
               />
