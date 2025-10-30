@@ -1,27 +1,39 @@
 import { ImageResponse } from "next/og";
 import { ReactElement } from "react";
 
-const ORIGIN = process.env.NEXT_PUBLIC_FRONTEND_URL!;
+const FONT_BASE_URL =
+  "https://raw.githubusercontent.com/opensource-together/opensource-together/develop/public/fonts/Geist/static";
+
+const fontVariants = [
+  { name: "Geist-Thin.ttf", weight: 100 },
+  { name: "Geist-ExtraLight.ttf", weight: 200 },
+  { name: "Geist-Light.ttf", weight: 300 },
+  { name: "Geist-Regular.ttf", weight: 400 },
+  { name: "Geist-Medium.ttf", weight: 500 },
+  { name: "Geist-SemiBold.ttf", weight: 600 },
+  { name: "Geist-Bold.ttf", weight: 700 },
+  { name: "Geist-ExtraBold.ttf", weight: 800 },
+  { name: "Geist-Black.ttf", weight: 900 },
+];
 
 export async function Generator({ children }: { children: ReactElement }) {
-  const fontVariants = [
-    { name: "Geist-Thin.ttf", weight: 100 },
-    { name: "Geist-ExtraLight.ttf", weight: 200 },
-    { name: "Geist-Light.ttf", weight: 300 },
-    { name: "Geist-Regular.ttf", weight: 400 },
-    { name: "Geist-Medium.ttf", weight: 500 },
-    { name: "Geist-SemiBold.ttf", weight: 600 },
-    { name: "Geist-Bold.ttf", weight: 700 },
-    { name: "Geist-ExtraBold.ttf", weight: 800 },
-    { name: "Geist-Black.ttf", weight: 900 },
-  ];
-
   const fonts = await Promise.all(
     fontVariants.map(async (variant) => {
+      const url = `${FONT_BASE_URL}/${variant.name}`;
+
       try {
-        const fontData = await fetch(
-          `${ORIGIN.replace(/\/$/, "")}/fonts/Geist/static/${variant.name}`
-        ).then((res) => res.arrayBuffer());
+        const res = await fetch(url, {
+          cache: "no-store",
+        });
+
+        if (!res.ok) {
+          console.warn(
+            `Failed to fetch font ${variant.name} (${url}): ${res.status}`
+          );
+          return null;
+        }
+
+        const fontData = await res.arrayBuffer();
 
         return {
           name: "Geist",
@@ -52,6 +64,6 @@ export async function Generator({ children }: { children: ReactElement }) {
   return new ImageResponse(children, {
     width: 1200,
     height: 630,
-    fonts: loadedFonts,
+    ...(loadedFonts.length > 0 ? { fonts: loadedFonts } : {}),
   });
 }
