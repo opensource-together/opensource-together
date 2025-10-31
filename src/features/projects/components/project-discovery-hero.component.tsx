@@ -4,15 +4,10 @@ import { FadeIn } from "@/shared/components/motion/fade-in";
 import { FadeUp } from "@/shared/components/motion/fade-up";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 
-import FilterSearchBar from "./filter-search-bar.component";
+import FilterSearchBar, { ProjectFilters } from "./filter-search-bar.component";
 
 interface ProjectDiscoveryHeroProps {
-  onFilterChange?: (filters: {
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }) => void;
+  onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
 }
 

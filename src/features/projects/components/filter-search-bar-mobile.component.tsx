@@ -99,39 +99,27 @@ export default function FilterSearchBarMobile({
     switch (selectedSort) {
       case "most_popular":
         return {
-          orderBy: "createdAt" as const,
+          orderBy: "trending" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: true,
         };
       case "newest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: false,
         };
       case "oldest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "asc" as const,
-          orderByPopularity: false,
         };
       case "a-z":
-        return {
-          orderBy: "title" as const,
-          orderDirection: "asc" as const,
-          orderByPopularity: false,
-        };
+        return { orderBy: "title" as const, orderDirection: "asc" as const };
       case "z-a":
-        return {
-          orderBy: "title" as const,
-          orderDirection: "desc" as const,
-          orderByPopularity: false,
-        };
+        return { orderBy: "title" as const, orderDirection: "desc" as const };
       default:
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: false,
         };
     }
   };
@@ -144,7 +132,6 @@ export default function FilterSearchBarMobile({
       categories: selectedCategories,
       orderBy: sortParams.orderBy,
       orderDirection: sortParams.orderDirection,
-      orderByPopularity: sortParams.orderByPopularity,
     });
   };
 

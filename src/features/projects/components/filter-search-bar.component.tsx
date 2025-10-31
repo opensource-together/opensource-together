@@ -11,9 +11,8 @@ import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 export interface ProjectFilters {
   techStacks: string[];
   categories: string[];
-  orderBy: "createdAt" | "title";
+  orderBy: "createdAt" | "title" | "trending";
   orderDirection: "asc" | "desc";
-  orderByPopularity?: boolean;
 }
 
 interface FilterItemProps {
@@ -120,39 +119,33 @@ export default function FilterSearchBar({
     switch (selectedSort) {
       case "most_popular":
         return {
-          orderBy: "createdAt" as const,
+          orderBy: "trending" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: true,
         };
       case "newest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: false,
         };
       case "oldest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "asc" as const,
-          orderByPopularity: false,
         };
       case "a-z":
         return {
           orderBy: "title" as const,
           orderDirection: "asc" as const,
-          orderByPopularity: false,
         };
       case "z-a":
         return {
           orderBy: "title" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: false,
         };
       default:
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
-          orderByPopularity: false,
         };
     }
   };
@@ -165,7 +158,6 @@ export default function FilterSearchBar({
       categories: selectedCategories,
       orderBy: sortParams.orderBy,
       orderDirection: sortParams.orderDirection,
-      orderByPopularity: sortParams.orderByPopularity,
     });
   };
 

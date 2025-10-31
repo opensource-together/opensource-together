@@ -43,9 +43,8 @@ export default function HomepageView() {
   const [filters, setFilters] = useState<ProjectFilters>({
     techStacks: [],
     categories: [],
-    orderBy: "createdAt",
+    orderBy: "trending", // Most popular by default
     orderDirection: "desc",
-    orderByPopularity: true, // Most popular by default
   });
 
   // Infinite scroll
