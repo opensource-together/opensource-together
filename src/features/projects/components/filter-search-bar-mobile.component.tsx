@@ -149,7 +149,7 @@ export default function FilterSearchBarMobile({
               size="lg"
               className="w-full py-6 text-base shadow-lg"
             >
-              Start filtering
+              Filter Projects
             </Button>
           </SheetTrigger>
         </div>
