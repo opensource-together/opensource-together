@@ -101,16 +101,22 @@ export default function ProjectCardComponent({
               <>
                 <div className="flex gap-2.5">
                   {allTechStacks.length > 0
-                    ? allTechStacks
-                        .slice(0, 3)
-                        .map((tech, index) => (
+                    ? allTechStacks.slice(0, 3).map((tech, index) => (
+                        <span
+                          key={tech.id || index}
+                          className={
+                            index === 2
+                              ? "hidden md:inline-flex"
+                              : "inline-flex"
+                          }
+                        >
                           <StackLogo
-                            key={tech.id || index}
                             icon={tech.iconUrl || ""}
                             alt={tech.name}
                             name={tech.name}
                           />
-                        ))
+                        </span>
+                      ))
                     : isRepositoryLoading
                       ? Array.from({ length: 3 }).map((_, idx) => (
                           <div key={idx} className="flex items-center gap-1.5">
@@ -120,8 +126,15 @@ export default function ProjectCardComponent({
                         ))
                       : null}
                 </div>
+                {/* Mobile +N when > 2 */}
+                {allTechStacks.length > 2 && (
+                  <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:hidden">
+                    +{allTechStacks.length - 2}
+                  </span>
+                )}
+                {/* Desktop +N when > 3 */}
                 {allTechStacks.length > 3 && (
-                  <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                  <span className="ml-3 hidden h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:flex">
                     +{allTechStacks.length - 3}
                   </span>
                 )}

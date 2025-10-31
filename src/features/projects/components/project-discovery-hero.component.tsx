@@ -21,7 +21,7 @@ export default function ProjectDiscoveryHero({
   isLoading,
 }: ProjectDiscoveryHeroProps) {
   return (
-    <div className="relative mx-auto h-[361px] w-full md:h-auto">
+    <div className="relative mx-auto w-full">
       <FadeIn delay={0.1}>
         {/* Desktop / Tablet image */}
         <Image
@@ -50,7 +50,7 @@ export default function ProjectDiscoveryHero({
 
         <FadeUp delay={0.1}>
           <h1
-            className="mt-3 text-center text-3xl leading-none md:text-5xl"
+            className="mt-3 text-center text-4xl leading-none md:text-5xl"
             style={{ fontFamily: "Aspekta", fontWeight: 500 }}
           >
             Together, build our <br />
@@ -59,13 +59,13 @@ export default function ProjectDiscoveryHero({
         </FadeUp>
 
         <FadeUp delay={0.15}>
-          <p className="mt-5 max-w-[450px] text-center text-xs text-neutral-950 md:text-sm">
+          <p className="mt-5 max-w-[450px] px-2 text-center text-sm text-neutral-950">
             Empowering open source initiatives through effortless project
             discovery, collaboration, and contributor connection.
           </p>
         </FadeUp>
 
-        <div className="mt-8 hidden md:block">
+        <div className="mt-8 w-full px-6 md:w-auto">
           <FilterSearchBar
             onFilterChange={onFilterChange}
             isLoading={isLoading}
