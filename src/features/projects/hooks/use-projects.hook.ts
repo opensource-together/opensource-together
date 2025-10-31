@@ -8,6 +8,7 @@ import { getQueryClient } from "@/shared/lib/query-client";
 import {
   PaginatedProjectsResponse,
   ProjectQueryParams,
+  claimProject,
   createProject,
   deleteProject,
   deleteProjectImage,
@@ -368,5 +369,38 @@ export function useDeleteProjectImage() {
   return {
     deleteProjectImage: mutation.mutate,
     isDeleteProjectImageError: mutation.isError,
+  };
+}
+
+/**
+ * Handles claiming a project ownership.
+ */
+export function useClaimProject(projectId: string) {
+  const queryClient = getQueryClient();
+
+  const mutation = useToastMutation<Project, Error, void>({
+    mutationFn: () => claimProject(projectId),
+    loadingMessage: "Claiming project...",
+    successMessage: "Project claimed successfully",
+    errorMessage: "Failed to claim project",
+    options: {
+      onSuccess: (project) => {
+        const targetId = project?.publicId || projectId;
+        if (targetId) {
+          queryClient.setQueryData(["project", targetId], project);
+          queryClient.invalidateQueries({ queryKey: ["project", targetId] });
+        }
+        queryClient.invalidateQueries({ queryKey: ["projects"] });
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+      },
+    },
+  });
+
+  return {
+    claimProject: mutation.mutate,
+    claimProjectAsync: mutation.mutateAsync,
+    isClaiming: mutation.isPending,
+    isClaimError: mutation.isError,
   };
 }

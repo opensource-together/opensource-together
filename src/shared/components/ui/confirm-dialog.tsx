@@ -1,5 +1,7 @@
 "use client";
 
+import { RiLoader2Fill } from "react-icons/ri";
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -70,7 +72,14 @@ export function ConfirmDialog({
             disabled={isLoading}
             className="flex items-center gap-2"
           >
-            {isLoading ? "Loading..." : <>{confirmText}</>}
+            {isLoading ? (
+              <>
+                <RiLoader2Fill className="animate-spin" />
+                <span>Loading...</span>
+              </>
+            ) : (
+              <>{confirmText}</>
+            )}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

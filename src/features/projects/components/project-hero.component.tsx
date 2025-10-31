@@ -7,6 +7,7 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
+import { ClaimProjectButton } from "./claim-project-button.component";
 
 export function ProjectMobileHero({ project }: ProjectHeroProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -43,6 +44,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
       <div className="flex items-center gap-2">
         {published ? (
           <>
+            <ClaimProjectButton project={project} />
             <Link
               href={repoUrl || ""}
               target="_blank"
@@ -93,7 +95,6 @@ export default function ProjectHero({
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
   const { toggleProjectPublished, isTogglingPublished } =
     useToggleProjectPublished();
-
   const {
     id = "",
     title = "",
@@ -124,6 +125,7 @@ export default function ProjectHero({
             <div className="flex items-center gap-2">
               {published ? (
                 <>
+                  <ClaimProjectButton project={project} />
                   <Link
                     href={repoUrl || ""}
                     target="_blank"
