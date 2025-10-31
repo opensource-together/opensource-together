@@ -5,7 +5,7 @@ export default function AuthIllustration() {
     <div className="relative h-full w-full">
       {/* Mobile: background illustration as non-intrusive layer */}
       <Image
-        src="/illustrations/knight-background-2-mobile.png"
+        src="/illustrations/knight-background-mobile.png"
         alt=""
         aria-hidden
         priority
@@ -14,9 +14,9 @@ export default function AuthIllustration() {
         sizes="(max-width: 860px) 100vw"
         className="object-contain md:hidden"
       />
-      {/* Desktop+: cover full background */}
+      {/* Desktop: cover full background */}
       <Image
-        src="/illustrations/knight-background-2.png"
+        src="/illustrations/knight-background.png"
         alt="Background"
         aria-hidden
         fill
