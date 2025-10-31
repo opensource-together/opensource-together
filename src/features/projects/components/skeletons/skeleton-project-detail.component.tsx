@@ -5,31 +5,46 @@ export default function SkeletonProjectDetail() {
   // Sidebar skeleton
   const sidebar = (
     <div className="w-full space-y-6">
-      {/* Name */}
+      {/* Statistics */}
       <div>
-        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-4 w-32" />
       </div>
-      {/* Job title*/}
-      <Skeleton className="h-4 w-28" />
-      {/* Bio */}
       <div className="space-y-2">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-4/5" />
-        <Skeleton className="h-4 w-3/5" />
+        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-5 w-4/5" />
+        <Skeleton className="h-5 w-4/5" />
+        <Skeleton className="h-5 w-3/5" />
       </div>
-      {/* Social links */}
+      {/* Tech stacks */}
+      <div>
+        <Skeleton className="mt-10 h-4 w-32" />
+      </div>
       <div className="flex justify-start gap-3">
         <Skeleton className="h-8 w-8 rounded" />
         <Skeleton className="h-8 w-8 rounded" />
         <Skeleton className="h-8 w-8 rounded" />
         <Skeleton className="h-8 w-8 rounded" />
       </div>
-      {/* More */}
-      <div className="mt-14 space-y-2">
-        <Skeleton className="h-4 w-2/5" />
-        <Skeleton className="h-4 w-4/5" />
-        <Skeleton className="h-4 w-3/5" />
+      {/* Categories */}
+      <div>
+        <Skeleton className="mt-10 h-4 w-32" />
       </div>
+      <div className="flex justify-start gap-3">
+        <Skeleton className="h-5 w-2/5 rounded-full" />
+        <Skeleton className="h-5 w-2/5 rounded-full" />
+        <Skeleton className="h-5 w-2/5 rounded-full" />
+      </div>
+      {/* Contributors */}
+      <div>
+        <Skeleton className="mt-10 h-4 w-32" />
+      </div>
+      <div className="flex justify-start gap-3">
+        <Skeleton className="h-8 w-8 rounded-full" />
+        <Skeleton className="-ml-5 h-8 w-8 rounded-full" />
+        <Skeleton className="-ml-5 h-8 w-8 rounded-full" />
+        <Skeleton className="-ml-5 h-8 w-8 rounded-full" />
+      </div>
+      <Skeleton className="-mt-2 h-3 w-32" />
     </div>
   );
 
@@ -38,18 +53,16 @@ export default function SkeletonProjectDetail() {
     <div>
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
         <div className="flex items-center gap-3 sm:gap-4">
-          <Skeleton className="mr-4 h-16 w-16 rounded-xl" />
+          <Skeleton className="h-16 w-16 rounded-xl" />
           <div>
             <Skeleton className="mb-1 h-8 w-40" />
-            <Skeleton className="h-4 w-32" />
           </div>
         </div>
-        <Skeleton className="h-10 w-32" />
+        <Skeleton className="h-10 w-32 rounded-full" />
       </div>
       <div className="mt-4">
         <Skeleton className="mb-1 h-4 w-full" />
         <Skeleton className="mb-1 h-4 w-4/5" />
-        <Skeleton className="h-4 w-3/5" />
       </div>
     </div>
   );
@@ -59,16 +72,14 @@ export default function SkeletonProjectDetail() {
     <div>
       <div className="flex flex-col items-start">
         <div className="flex items-center">
-          <Skeleton className="mr-4 h-16 w-16 rounded-xl" />
+          <Skeleton className="mr-4 size-12 rounded-xl" />
           <div>
             <Skeleton className="mb-1 h-8 w-40" />
-            <Skeleton className="h-4 w-32" />
           </div>
         </div>
         <Skeleton className="mt-4 mb-1 h-4 w-full" />
         <Skeleton className="mb-1 h-4 w-4/5" />
-        <Skeleton className="h-4 w-3/5" />
-        <Skeleton className="mt-6 h-10 w-32" />
+        <Skeleton className="mt-6 h-10 w-32 rounded-full" />
       </div>
     </div>
   );
@@ -78,16 +89,16 @@ export default function SkeletonProjectDetail() {
       {/* Tab bar skeleton */}
       <div className="flex flex-col gap-6">
         <div className="border-border inline-flex items-center border-b">
-          <Skeleton className="mr-2 h-4 w-20" />
-          <Skeleton className="mr-2 h-4 w-16" />
-          <Skeleton className="mr-2 h-4 w-20" />
-          <Skeleton className="mr-2 h-4 w-24" />
-          <Skeleton className="mr-2 h-4 w-28" />
+          <Skeleton className="mr-6 h-5 w-20" />
+          <Skeleton className="mr-6 h-5 w-20" />
+          <Skeleton className="mr-6 h-5 w-24" />
+          <Skeleton className="mr-6 h-5 w-24" />
+          <Skeleton className="mr-6 h-5 w-24" />
         </div>
         {/* Overview tab content skeleton */}
-        <div className="mt-6 space-y-8">
+        <div className="mt-4 space-y-8">
           {/* Images slider skeleton */}
-          <Skeleton className="h-32 w-full rounded-lg" />
+          <Skeleton className="h-72 w-full rounded-lg" />
           {/* README skeleton */}
           <Skeleton className="mb-2 h-12 w-2/3 rounded" />
           <Skeleton className="mb-1 h-4 w-full" />

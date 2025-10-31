@@ -93,7 +93,7 @@ export default function ProfilePullRequests({
 
   const renderFilters = () => (
     <div className="flex items-center justify-between">
-      <h2 className="font-medium">Pull Requests</h2>
+      <h2 className="hidden font-medium md:block">Pull Requests</h2>
       <div className="flex items-center gap-2">
         <Select
           value={provider ?? "all"}

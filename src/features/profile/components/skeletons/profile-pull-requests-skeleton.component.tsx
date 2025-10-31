@@ -5,10 +5,10 @@ export function ProfilePullRequestsSkeleton() {
     <div className="flex w-full flex-col gap-4">
       {/* Filters skeleton */}
       <div className="flex items-center justify-between">
-        <Skeleton className="h-6 w-32" />
+        <Skeleton className="hidden h-6 w-32 md:block" />
         <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-[140px]" />
-          <Skeleton className="h-9 w-[100px]" />
+          <Skeleton className="h-9 w-[140px] rounded-full" />
+          <Skeleton className="h-9 w-[100px] rounded-full" />
         </div>
       </div>
 
