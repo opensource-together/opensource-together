@@ -16,6 +16,7 @@ export const projectSchema = z.object({
     .string()
     .min(10, "The description must contain at least 10 characters"),
   provider: z.enum(["GITHUB", "GITLAB"]),
+  published: z.boolean(),
   projectTechStacks: z
     .array(z.string())
     .min(1, "At least one technology is required")
@@ -100,10 +101,13 @@ export const updateProjectApiSchema = z.object({
     .min(2, "Title is required")
     .max(50, "Title cannot exceed 50 characters"),
   description: z.string().min(10, "Description is required"),
+  provider: z.enum(["GITHUB", "GITLAB"]),
   logoUrl: z.string().optional(),
   imagesUrls: z.array(z.string()).max(4).optional(),
+  published: z.boolean(),
   projectTechStacks: z.array(z.string()),
   projectCategories: z.array(z.string()),
+  repoUrl: urlWithDomainCheck([], "Invalid repository URL"),
   githubUrl: urlWithDomainCheck(
     ["github.com"],
     "Invalid GitHub URL (must contain github.com)"
