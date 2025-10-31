@@ -4,7 +4,7 @@ import GoogleButton from "./google-button.component";
 
 export default function LoginForm() {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center pb-5 md:pb-0">
       <div className="w-full max-w-md">
         <div className="p-4">
           <div className="mb-7 text-center">
