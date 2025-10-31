@@ -11,7 +11,7 @@ import LoginForm from "../components/login-form.component";
 export default function LoginView() {
   return (
     <>
-      <div className="relative mb-30 flex min-h-screen flex-col overflow-auto md:mb-0 md:overflow-hidden">
+      <div className="relative flex min-h-screen flex-col overflow-hidden">
         <Link
           href="/"
           className="absolute top-5 left-5 z-50 md:top-12 md:left-1/2 md:-translate-x-1/2"
