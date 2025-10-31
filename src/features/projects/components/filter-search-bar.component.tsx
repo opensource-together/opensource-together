@@ -5,6 +5,7 @@ import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
 import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
+import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
 interface FilterItemProps {
@@ -141,83 +142,97 @@ export default function FilterSearchBar({
     }
   };
 
+  const handleApply = () => {
+    if (!onFilterChange) return;
+    const sortParams = getSortParams();
+    onFilterChange({
+      techStacks: selectedTechStacks,
+      categories: selectedCategories,
+      orderBy: sortParams.orderBy,
+      orderDirection: sortParams.orderDirection,
+    });
+  };
+
   return (
-    <div
-      className="flex h-14 w-[700px] items-center justify-center"
-      role="search"
-    >
-      <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
-        <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
-          <div className="flex items-center">
-            <div className="relative pr-0">
-              <CustomCombobox
-                options={techStackOptions}
-                value={selectedTechStacks}
-                onChange={handleTechStacksChange}
-                placeholder={
-                  techStacksLoading
-                    ? "Loading technologies..."
-                    : "Add technologies..."
-                }
-                searchPlaceholder="Search technologies..."
-                emptyText="No technologies found."
-                trigger={<FilterItem label="Choose" value={techStacksValue} />}
-                onOpenChange={onTechStackOpenChange}
-                isLoading={techStacksLoading}
-              />
-            </div>
+    <>
+      {/* Desktop */}
+      <div
+        className="hidden h-14 w-[700px] items-center justify-center md:flex"
+        role="search"
+      >
+        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
+          <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
+            <div className="flex items-center">
+              <div className="relative pr-0">
+                <CustomCombobox
+                  options={techStackOptions}
+                  value={selectedTechStacks}
+                  onChange={handleTechStacksChange}
+                  placeholder={
+                    techStacksLoading
+                      ? "Loading technologies..."
+                      : "Add technologies..."
+                  }
+                  searchPlaceholder="Search technologies..."
+                  emptyText="No technologies found."
+                  trigger={
+                    <FilterItem label="Choose" value={techStacksValue} />
+                  }
+                  onOpenChange={onTechStackOpenChange}
+                  isLoading={techStacksLoading}
+                />
+              </div>
 
-            <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
+              <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
-            <div className="relative pr-0">
-              <CustomCombobox
-                options={categoryOptions}
-                value={selectedCategories}
-                onChange={handleCategoriesChange}
-                placeholder={
-                  categoryLoading
-                    ? "Loading categories..."
-                    : "Add categories..."
-                }
-                searchPlaceholder="Search categories..."
-                emptyText="No categories found."
-                trigger={<FilterItem label="Select" value={categoriesValue} />}
-                onOpenChange={onCategoryOpenChange}
-                isLoading={categoryLoading}
-              />
-            </div>
+              <div className="relative pr-0">
+                <CustomCombobox
+                  options={categoryOptions}
+                  value={selectedCategories}
+                  onChange={handleCategoriesChange}
+                  placeholder={
+                    categoryLoading
+                      ? "Loading categories..."
+                      : "Add categories..."
+                  }
+                  searchPlaceholder="Search categories..."
+                  emptyText="No categories found."
+                  trigger={
+                    <FilterItem label="Select" value={categoriesValue} />
+                  }
+                  onOpenChange={onCategoryOpenChange}
+                  isLoading={categoryLoading}
+                />
+              </div>
 
-            <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
+              <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
 
-            <div className="relative pr-0">
-              <SortSelect
-                options={SORT_OPTIONS}
-                value={selectedSort}
-                onChange={handleSortChange}
-                trigger={<FilterItem label="Sort" value={sortValue} />}
-              />
+              <div className="relative pr-0">
+                <SortSelect
+                  options={SORT_OPTIONS}
+                  value={selectedSort}
+                  onChange={handleSortChange}
+                  trigger={<FilterItem label="Sort" value={sortValue} />}
+                />
+              </div>
             </div>
           </div>
+          <Button
+            type="button"
+            className="absolute right-2 px-6 py-5"
+            disabled={isLoading}
+            onClick={handleApply}
+          >
+            Filter Projects
+          </Button>
         </div>
-        <Button
-          type="button"
-          className="absolute right-2 px-6 py-5"
-          disabled={isLoading}
-          onClick={() => {
-            if (onFilterChange) {
-              const sortParams = getSortParams();
-              onFilterChange({
-                techStacks: selectedTechStacks,
-                categories: selectedCategories,
-                orderBy: sortParams.orderBy,
-                orderDirection: sortParams.orderDirection,
-              });
-            }
-          }}
-        >
-          Filter Projects
-        </Button>
       </div>
-    </div>
+
+      {/* Mobile variant */}
+      <FilterSearchBarMobile
+        onFilterChange={onFilterChange}
+        isLoading={isLoading}
+      />
+    </>
   );
 }
