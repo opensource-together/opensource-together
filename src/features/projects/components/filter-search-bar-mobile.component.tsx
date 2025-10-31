@@ -15,7 +15,7 @@ import {
 import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
 import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
-import { ProjectFilters } from "./filter-search-bar.component";
+import { ProjectFilters } from "../types/project-filters.type";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
 interface FilterItemProps {

@@ -5,15 +5,9 @@ import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
 import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
+import { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
-
-export interface ProjectFilters {
-  techStacks: string[];
-  categories: string[];
-  orderBy: "createdAt" | "title" | "trending";
-  orderDirection: "asc" | "desc";
-}
 
 interface FilterItemProps {
   label: string;

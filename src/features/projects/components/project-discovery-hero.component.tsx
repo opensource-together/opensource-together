@@ -4,7 +4,8 @@ import { FadeIn } from "@/shared/components/motion/fade-in";
 import { FadeUp } from "@/shared/components/motion/fade-up";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 
-import FilterSearchBar, { ProjectFilters } from "./filter-search-bar.component";
+import { ProjectFilters } from "../types/project-filters.type";
+import FilterSearchBar from "./filter-search-bar.component";
 
 interface ProjectDiscoveryHeroProps {
   onFilterChange?: (filters: ProjectFilters) => void;

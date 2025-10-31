@@ -10,10 +10,10 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
-import { ProjectFilters } from "../components/filter-search-bar.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
+import { ProjectFilters } from "../types/project-filters.type";
 
 interface HomepageLayoutProps {
   children: React.ReactNode;

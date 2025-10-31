@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { IoChatbox } from "react-icons/io5";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -55,13 +54,14 @@ export default function ProfileHero({
   }
 
   const renderActionButton = () => {
-    if (variant === "public") {
-      return (
-        <Button className="gap-1 font-normal">
-          Contact <IoChatbox className="size-3.5" />
-        </Button>
-      );
-    }
+    // Feature post-launch
+    // if (variant === "public") {
+    //   return (
+    //     <Button className="gap-1 font-normal">
+    //       Contact <IoChatbox className="size-3.5" />
+    //     </Button>
+    //   );
+    // }
 
     return (
       <Link href="/profile/me/edit">
