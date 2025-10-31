@@ -43,8 +43,6 @@ export default function ProfileView() {
       />
     );
 
-  const shouldShowGithubCalendar = currentUser.provider !== "google";
-
   return (
     <TwoColumnLayout
       sidebar={<ProfileSidebar profile={currentUser} />}
@@ -59,16 +57,14 @@ export default function ProfileView() {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          {shouldShowGithubCalendar && (
-            <div className="mb-2 w-full">
-              <GithubGraph
-                contributionGraph={currentUser.contributionGraph}
-                contributionsCount={
-                  currentUser.contributionGraph?.totalContributions || 0
-                }
-              />
-            </div>
-          )}
+          <div className="mb-2 w-full">
+            <GithubGraph
+              contributionGraph={currentUser.contributionGraph}
+              contributionsCount={
+                currentUser.contributionGraph?.totalContributions || 0
+              }
+            />
+          </div>
 
           <div className="mt-12 flex w-full">
             <ProfileExperiences experiences={currentUser.userExperiences} />

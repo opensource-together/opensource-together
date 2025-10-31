@@ -52,8 +52,6 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
 
   if (!profile) return null;
 
-  const shouldShowGithubData = profile.provider !== "google";
-
   return (
     <TwoColumnLayout
       sidebar={<ProfileSidebar profile={profile} />}
@@ -70,21 +68,18 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          {shouldShowGithubData && (
-            <div className="mb-2 w-full">
-              <GithubGraph
-                contributionGraph={profile.contributionGraph}
-                contributionsCount={
-                  profile.contributionGraph?.totalContributions || 0
-                }
-              />
-            </div>
-          )}
-
+          <div className="mb-2 w-full">
+            <GithubGraph
+              contributionGraph={profile.contributionGraph}
+              contributionsCount={
+                profile.contributionGraph?.totalContributions || 0
+              }
+            />
+          </div>
+          )
           <div className="mt-12 flex w-full">
             <ProfileExperiences experiences={profile.userExperiences} />
           </div>
-
           <div className="mt-12 flex w-full">
             <RecentProjects />
           </div>

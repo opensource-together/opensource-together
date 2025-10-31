@@ -130,7 +130,13 @@ export default function ProfilePullRequests({
     </div>
   );
 
-  if (isLoading) return <ProfilePullRequestsSkeleton />;
+  if (isLoading)
+    return (
+      <div className="flex w-full flex-col gap-4">
+        {renderFilters()}
+        <ProfilePullRequestsSkeleton />
+      </div>
+    );
 
   if (isError)
     return (
@@ -147,10 +153,19 @@ export default function ProfilePullRequests({
       </div>
     );
 
+  // Check if there's no data available
+  const githubData = data?.github?.data;
+  const gitlabData = data?.gitlab?.data;
+  const githubHasData =
+    githubData && Array.isArray(githubData) && githubData.length > 0;
+  const gitlabHasData =
+    gitlabData && Array.isArray(gitlabData) && gitlabData.length > 0;
+
   const hasNoData =
-    data === null ||
-    data?.github?.data.length === 0 ||
-    data?.gitlab?.data.length === 0;
+    !data ||
+    (provider === "github" && !githubHasData) ||
+    (provider === "gitlab" && !gitlabHasData) ||
+    (!provider && !githubHasData && !gitlabHasData);
 
   if (hasNoData)
     return (
