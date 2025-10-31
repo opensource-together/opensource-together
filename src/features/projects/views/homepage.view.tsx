@@ -10,18 +10,14 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
+import { ProjectFilters } from "../components/filter-search-bar.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
 
 interface HomepageLayoutProps {
   children: React.ReactNode;
-  onFilterChange?: (filters: {
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }) => void;
+  onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
 }
 
@@ -44,16 +40,12 @@ function HomepageLayout({
 }
 
 export default function HomepageView() {
-  const [filters, setFilters] = useState<{
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }>({
+  const [filters, setFilters] = useState<ProjectFilters>({
     techStacks: [],
     categories: [],
     orderBy: "createdAt",
     orderDirection: "desc",
+    orderByPopularity: true, // Most popular by default
   });
 
   // Infinite scroll

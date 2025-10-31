@@ -15,6 +15,7 @@ import {
 import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
 import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
+import { ProjectFilters } from "./filter-search-bar.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
 interface FilterItemProps {
@@ -34,12 +35,7 @@ function MobileFilterItem({ label, value }: FilterItemProps) {
 }
 
 interface FilterSearchBarMobileProps {
-  onFilterChange?: (filters: {
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }) => void;
+  onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
 }
 
@@ -105,25 +101,37 @@ export default function FilterSearchBarMobile({
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
+          orderByPopularity: true,
         };
       case "newest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
+          orderByPopularity: false,
         };
       case "oldest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "asc" as const,
+          orderByPopularity: false,
         };
       case "a-z":
-        return { orderBy: "title" as const, orderDirection: "asc" as const };
+        return {
+          orderBy: "title" as const,
+          orderDirection: "asc" as const,
+          orderByPopularity: false,
+        };
       case "z-a":
-        return { orderBy: "title" as const, orderDirection: "desc" as const };
+        return {
+          orderBy: "title" as const,
+          orderDirection: "desc" as const,
+          orderByPopularity: false,
+        };
       default:
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
+          orderByPopularity: false,
         };
     }
   };
@@ -136,6 +144,7 @@ export default function FilterSearchBarMobile({
       categories: selectedCategories,
       orderBy: sortParams.orderBy,
       orderDirection: sortParams.orderDirection,
+      orderByPopularity: sortParams.orderByPopularity,
     });
   };
 

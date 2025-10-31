@@ -8,6 +8,14 @@ import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
+export interface ProjectFilters {
+  techStacks: string[];
+  categories: string[];
+  orderBy: "createdAt" | "title";
+  orderDirection: "asc" | "desc";
+  orderByPopularity?: boolean;
+}
+
 interface FilterItemProps {
   label: string;
   value: string;
@@ -27,12 +35,7 @@ function FilterItem({ label, value }: FilterItemProps) {
 }
 
 interface FilterSearchBarProps {
-  onFilterChange?: (filters: {
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }) => void;
+  onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
 }
 
@@ -119,25 +122,37 @@ export default function FilterSearchBar({
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
+          orderByPopularity: true,
         };
       case "newest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
+          orderByPopularity: false,
         };
       case "oldest":
         return {
           orderBy: "createdAt" as const,
           orderDirection: "asc" as const,
+          orderByPopularity: false,
         };
       case "a-z":
-        return { orderBy: "title" as const, orderDirection: "asc" as const };
+        return {
+          orderBy: "title" as const,
+          orderDirection: "asc" as const,
+          orderByPopularity: false,
+        };
       case "z-a":
-        return { orderBy: "title" as const, orderDirection: "desc" as const };
+        return {
+          orderBy: "title" as const,
+          orderDirection: "desc" as const,
+          orderByPopularity: false,
+        };
       default:
         return {
           orderBy: "createdAt" as const,
           orderDirection: "desc" as const,
+          orderByPopularity: false,
         };
     }
   };
@@ -150,6 +165,7 @@ export default function FilterSearchBar({
       categories: selectedCategories,
       orderBy: sortParams.orderBy,
       orderDirection: sortParams.orderDirection,
+      orderByPopularity: sortParams.orderByPopularity,
     });
   };
 

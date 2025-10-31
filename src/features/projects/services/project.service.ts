@@ -18,6 +18,7 @@ export interface ProjectQueryParams extends PaginationParams {
   categories?: string | string[];
   orderBy?: "createdAt" | "title";
   orderDirection?: "asc" | "desc";
+  orderByPopularity?: boolean;
 }
 
 export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
