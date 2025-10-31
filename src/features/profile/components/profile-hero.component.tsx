@@ -45,7 +45,6 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
 export default function ProfileHero({
   profile,
   hideHeader = true,
-  variant = "private",
 }: ProfileHeroProps) {
   const { image = "", name = "", jobTitle = "", bio = "" } = profile;
 
