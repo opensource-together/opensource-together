@@ -180,7 +180,7 @@ const ProjectCardDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-primary my-3 line-clamp-1 text-sm leading-5 font-normal",
+      "text-primary my-3 line-clamp-2 text-sm leading-5 font-normal md:line-clamp-1",
       className
     )}
     {...props}
