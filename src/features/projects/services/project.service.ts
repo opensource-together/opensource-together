@@ -13,6 +13,7 @@ import {
 import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
 export interface ProjectQueryParams extends PaginationParams {
+  published?: boolean;
   techStacks?: string | string[];
   categories?: string | string[];
   orderBy?: "createdAt" | "title";

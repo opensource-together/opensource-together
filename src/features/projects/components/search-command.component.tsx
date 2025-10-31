@@ -21,7 +21,7 @@ export default function SearchCommand() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { data: projectsResponse, isLoading } = useProjects(
-    {},
+    { published: true },
     { enabled: open }
   );
 

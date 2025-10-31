@@ -66,7 +66,7 @@ export default function HomepageView() {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteProjects(filters);
+  } = useInfiniteProjects({ ...filters, published: true });
 
   // Merge all pages of projects
   const projects = data?.pages.flatMap((page) => page.data) || [];
@@ -91,7 +91,7 @@ export default function HomepageView() {
       <HomepageLayout onFilterChange={setFilters} isLoading={false}>
         <ErrorState
           message="An error has occurred while loading the projects. Please try again later."
-          queryKey={["projects-infinite", filters]}
+          queryKey={["projects-infinite", { ...filters, published: true }]}
         />
       </HomepageLayout>
     );
