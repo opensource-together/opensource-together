@@ -1,11 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { Icon } from "@/shared/components/ui/icon";
 import { Modal } from "@/shared/components/ui/modal";
+
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import { useClaimProject } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
@@ -31,6 +34,8 @@ function extractRepoPath(repoUrl: string | null): string | null {
 
 export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
   const [isClaimOpen, setIsClaimOpen] = useState(false);
+  const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const projectId = project.id || project.publicId || "";
 
   const { claimProject, isClaiming } = useClaimProject(projectId);
@@ -38,6 +43,16 @@ export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
   if (project.owner && project.owner.id) {
     return null;
   }
+
+  const handleVerifyAndClaim = () => {
+    if (!isAuthenticated) {
+      router.push("/auth/login");
+      return;
+    }
+    claimProject(undefined, {
+      onSuccess: () => setIsClaimOpen(false),
+    });
+  };
 
   const repoPath = extractRepoPath(project.repoUrl);
   const providerIcon = project.provider === "GITHUB" ? "github" : "gitlab";
@@ -54,11 +69,7 @@ export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
         description={`Take ownership of ${project.title} to help manage this project and grow the open source community.`}
         onCancel={() => setIsClaimOpen(false)}
         cancelText="Cancel"
-        onConfirm={() =>
-          claimProject(undefined, {
-            onSuccess: () => setIsClaimOpen(false),
-          })
-        }
+        onConfirm={handleVerifyAndClaim}
         confirmText="Verify & Claim"
         isLoading={isClaiming}
       >
