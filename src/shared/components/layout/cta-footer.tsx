@@ -51,8 +51,9 @@ export default function CTAFooter({
           find your contributors
         </h1>
         <p className="mx-auto mt-2 max-w-[600px] text-sm text-black md:max-w-[650px]">
-          Highlighting ambitious open source projects to offer them an <br />{" "}
-          initial wave of visibility, committed contributors and support.
+          Highlighting ambitious open source projects to offer them an{" "}
+          <br className="hidden md:block" /> initial wave of visibility,
+          committed contributors and support.
         </p>
         <div className="mt-6 flex flex-row justify-center gap-3 md:justify-center">
           <Link
