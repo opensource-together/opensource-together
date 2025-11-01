@@ -66,7 +66,7 @@ export default function ProfileSidebarEditForm({
             name="userCategories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel tooltip="Select your interests so the platform can recommend projects that match your interests. ">
+                <FormLabel tooltip="AI-suggested categories may not be perfectly accurate yet and will improve over time.">
                   Interests (6 max)
                 </FormLabel>
                 <FormControl>

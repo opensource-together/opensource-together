@@ -2,12 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { HiInformationCircle } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -123,6 +125,13 @@ export default function OnboardingForm() {
                         maxSelections={6}
                       />
                     </FormControl>
+                    <FormDescription className="mt-1.5 flex items-start gap-1.5 text-xs">
+                      <HiInformationCircle className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0" />
+                      <span>
+                        AI-suggested categories may not be perfectly accurate
+                        yet and will improve over time.
+                      </span>
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

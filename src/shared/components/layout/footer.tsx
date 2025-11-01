@@ -28,6 +28,12 @@ const footerLinks: {
       href: "/oss-guide",
       id: "resources-oss-guide",
     },
+    {
+      label: "OST AI Engine",
+      href: "https://github.com/opensource-together/ost-ai-engine",
+      external: true,
+      id: "developers-ai-engine",
+    },
   ],
   company: [
     {
@@ -43,7 +49,7 @@ const footerLinks: {
       id: "company-discord",
     },
     {
-      label: "X",
+      label: "Twitter",
       href: "https://x.com/OpenSTogether",
       external: true,
       id: "company-x",

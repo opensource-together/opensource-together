@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { Modal } from "@/shared/components/ui/modal";
 
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
@@ -65,7 +65,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
               <Button>Edit Project</Button>
             </Link>
 
-            <ConfirmDialog
+            <Modal
               open={isPublishDialogOpen}
               onOpenChange={setPublishDialogOpen}
               title="Publish project?"
@@ -146,7 +146,7 @@ export default function ProjectHero({
                     <Button>Edit Project</Button>
                   </Link>
 
-                  <ConfirmDialog
+                  <Modal
                     open={isPublishDialogOpen}
                     onOpenChange={setPublishDialogOpen}
                     title="Publish project?"
