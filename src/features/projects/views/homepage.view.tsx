@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
 import { useInView } from "react-intersection-observer";
 
@@ -19,12 +20,14 @@ interface HomepageLayoutProps {
   children: React.ReactNode;
   onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
+  initialFilters?: ProjectFilters;
 }
 
 function HomepageLayout({
   children,
   onFilterChange,
   isLoading,
+  initialFilters,
 }: HomepageLayoutProps) {
   return (
     <>
@@ -32,6 +35,7 @@ function HomepageLayout({
         <ProjectDiscoveryHero
           onFilterChange={onFilterChange}
           isLoading={isLoading}
+          initialFilters={initialFilters}
         />
       </div>
       <div className="mx-6 max-w-6xl pb-4 md:pb-8 lg:mx-auto">{children}</div>
@@ -39,13 +43,82 @@ function HomepageLayout({
   );
 }
 
+/**
+ * Converts URL search params to ProjectFilters
+ */
+function parseFiltersFromURL(searchParams: URLSearchParams): ProjectFilters {
+  const techStacksParam = searchParams.get("techStacks");
+  const categoriesParam = searchParams.get("categories");
+  const orderByParam = searchParams.get("orderBy");
+  const orderDirectionParam = searchParams.get("orderDirection");
+
+  // Validate orderBy
+  const validOrderBy: ProjectFilters["orderBy"] =
+    orderByParam === "createdAt" ||
+    orderByParam === "title" ||
+    orderByParam === "trending"
+      ? orderByParam
+      : "trending";
+
+  const validOrderDirection: ProjectFilters["orderDirection"] =
+    orderDirectionParam === "asc" || orderDirectionParam === "desc"
+      ? orderDirectionParam
+      : "desc";
+
+  return {
+    techStacks: techStacksParam
+      ? techStacksParam.split(",").filter(Boolean)
+      : [],
+    categories: categoriesParam
+      ? categoriesParam.split(",").filter(Boolean)
+      : [],
+    orderBy: validOrderBy,
+    orderDirection: validOrderDirection,
+  };
+}
+
+/**
+ * Converts ProjectFilters to URL search params
+ */
+function filtersToURLParams(filters: ProjectFilters): URLSearchParams {
+  const params = new URLSearchParams();
+
+  if (filters.techStacks.length > 0) {
+    params.set("techStacks", filters.techStacks.join(","));
+  }
+
+  if (filters.categories.length > 0) {
+    params.set("categories", filters.categories.join(","));
+  }
+
+  if (filters.orderBy !== "trending") {
+    params.set("orderBy", filters.orderBy);
+  }
+
+  if (filters.orderDirection !== "desc") {
+    params.set("orderDirection", filters.orderDirection);
+  }
+
+  return params;
+}
+
 export default function HomepageView() {
-  const [filters, setFilters] = useState<ProjectFilters>({
-    techStacks: [],
-    categories: [],
-    orderBy: "trending", // Most popular by default
-    orderDirection: "desc",
-  });
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const filters = useMemo(
+    () => parseFiltersFromURL(searchParams),
+    [searchParams]
+  );
+
+  const handleFilterChange = (newFilters: ProjectFilters) => {
+    const params = filtersToURLParams(newFilters);
+    const queryString = params.toString();
+    router.replace(`${pathname}${queryString ? `?${queryString}` : ""}`, {
+      scroll: false,
+    });
+  };
 
   // Infinite scroll
   const { ref, inView } = useInView();
@@ -71,7 +144,11 @@ export default function HomepageView() {
 
   if (isLoading) {
     return (
-      <HomepageLayout onFilterChange={setFilters} isLoading={isLoading}>
+      <HomepageLayout
+        onFilterChange={handleFilterChange}
+        isLoading={isLoading}
+        initialFilters={filters}
+      >
         <SkeletonProjectGrid />
       </HomepageLayout>
     );
@@ -79,7 +156,11 @@ export default function HomepageView() {
 
   if (isError) {
     return (
-      <HomepageLayout onFilterChange={setFilters} isLoading={false}>
+      <HomepageLayout
+        onFilterChange={handleFilterChange}
+        isLoading={false}
+        initialFilters={filters}
+      >
         <ErrorState
           message="An error has occurred while loading the projects. Please try again later."
           queryKey={["projects-infinite", { ...filters, published: true }]}
@@ -90,7 +171,11 @@ export default function HomepageView() {
 
   if (!projects || projects.length === 0) {
     return (
-      <HomepageLayout onFilterChange={setFilters} isLoading={false}>
+      <HomepageLayout
+        onFilterChange={handleFilterChange}
+        isLoading={false}
+        initialFilters={filters}
+      >
         <EmptyState
           title="No projects"
           description="No projects founded here"
@@ -102,7 +187,11 @@ export default function HomepageView() {
   }
 
   return (
-    <HomepageLayout onFilterChange={setFilters} isLoading={isLoading}>
+    <HomepageLayout
+      onFilterChange={handleFilterChange}
+      isLoading={isLoading}
+      initialFilters={filters}
+    >
       <ProjectGrid projects={projects} />
       {hasNextPage && (
         <div ref={ref}>
