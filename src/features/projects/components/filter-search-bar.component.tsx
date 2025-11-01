@@ -5,6 +5,7 @@ import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
 import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
+import { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
@@ -27,12 +28,7 @@ function FilterItem({ label, value }: FilterItemProps) {
 }
 
 interface FilterSearchBarProps {
-  onFilterChange?: (filters: {
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }) => void;
+  onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
 }
 
@@ -117,7 +113,7 @@ export default function FilterSearchBar({
     switch (selectedSort) {
       case "most_popular":
         return {
-          orderBy: "createdAt" as const,
+          orderBy: "trending" as const,
           orderDirection: "desc" as const,
         };
       case "newest":
@@ -131,9 +127,15 @@ export default function FilterSearchBar({
           orderDirection: "asc" as const,
         };
       case "a-z":
-        return { orderBy: "title" as const, orderDirection: "asc" as const };
+        return {
+          orderBy: "title" as const,
+          orderDirection: "asc" as const,
+        };
       case "z-a":
-        return { orderBy: "title" as const, orderDirection: "desc" as const };
+        return {
+          orderBy: "title" as const,
+          orderDirection: "desc" as const,
+        };
       default:
         return {
           orderBy: "createdAt" as const,

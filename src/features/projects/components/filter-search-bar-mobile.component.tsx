@@ -15,6 +15,7 @@ import {
 import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
 import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
 
+import { ProjectFilters } from "../types/project-filters.type";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
 interface FilterItemProps {
@@ -34,12 +35,7 @@ function MobileFilterItem({ label, value }: FilterItemProps) {
 }
 
 interface FilterSearchBarMobileProps {
-  onFilterChange?: (filters: {
-    techStacks: string[];
-    categories: string[];
-    orderBy: "createdAt" | "title";
-    orderDirection: "asc" | "desc";
-  }) => void;
+  onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
 }
 
@@ -103,7 +99,7 @@ export default function FilterSearchBarMobile({
     switch (selectedSort) {
       case "most_popular":
         return {
-          orderBy: "createdAt" as const,
+          orderBy: "trending" as const,
           orderDirection: "desc" as const,
         };
       case "newest":

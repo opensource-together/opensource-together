@@ -16,7 +16,7 @@ export interface ProjectQueryParams extends PaginationParams {
   published?: boolean;
   techStacks?: string | string[];
   categories?: string | string[];
-  orderBy?: "createdAt" | "title";
+  orderBy?: "createdAt" | "title" | "trending";
   orderDirection?: "asc" | "desc";
 }
 
