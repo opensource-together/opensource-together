@@ -10,11 +10,13 @@ import FilterSearchBar from "./filter-search-bar.component";
 interface ProjectDiscoveryHeroProps {
   onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
+  initialFilters?: ProjectFilters;
 }
 
 export default function ProjectDiscoveryHero({
   onFilterChange,
   isLoading,
+  initialFilters,
 }: ProjectDiscoveryHeroProps) {
   return (
     <div className="relative mx-auto w-full">
@@ -65,6 +67,7 @@ export default function ProjectDiscoveryHero({
           <FilterSearchBar
             onFilterChange={onFilterChange}
             isLoading={isLoading}
+            initialFilters={initialFilters}
           />
         </div>
       </div>
