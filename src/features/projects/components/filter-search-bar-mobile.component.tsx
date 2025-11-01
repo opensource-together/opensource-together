@@ -213,7 +213,7 @@ export default function FilterSearchBarMobile({
               size="lg"
               asChild
             >
-              <SheetTrigger>Apply</SheetTrigger>
+              <SheetTrigger>Filter Projects</SheetTrigger>
             </Button>
           </div>
         </SheetContent>

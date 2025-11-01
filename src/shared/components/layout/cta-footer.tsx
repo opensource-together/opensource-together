@@ -43,14 +43,14 @@ export default function CTAFooter({
 
       <div className="relative z-10 min-w-0 flex-shrink-0 text-center md:text-center">
         <h1
-          className="text-3xl leading-tight font-medium tracking-tighter md:text-3xl lg:text-5xl"
+          className="mt-3 text-center text-4xl leading-none md:text-5xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
           Build your projects,
           <br />
           find your contributors
         </h1>
-        <p className="mx-auto mt-2 max-w-[600px] text-sm text-black md:max-w-[650px]">
+        <p className="mt-5 max-w-[450px] px-2 text-center text-sm text-neutral-950">
           Highlighting ambitious open source projects to offer them an{" "}
           <br className="hidden md:block" /> initial wave of visibility,
           committed contributors and support.
