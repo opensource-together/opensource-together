@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { FRONTEND_URL } from "@/config/config";
+
 import Footer from "@/shared/components/layout/footer";
 import Header from "@/shared/components/layout/header";
 import { Toaster } from "@/shared/components/ui/sonner";
@@ -23,6 +25,15 @@ const GeistMono = Geist_Mono({
   display: "swap",
 });
 
+// Get the base URL for images - fallback to production URL if not set
+const getImageBaseUrl = (): string => {
+  const baseUrl = FRONTEND_URL.trim();
+  return baseUrl.replace(/\/+$/, "");
+};
+
+const imageBaseUrl = getImageBaseUrl();
+const metadataImageUrl = `${imageBaseUrl}/illustrations/ost-metadata.png`;
+
 export const metadata: Metadata = {
   title: "OpenSource Together",
   description: "Find and collaborate on open source projects",
@@ -42,7 +53,14 @@ export const metadata: Metadata = {
     title: "OpenSource Together",
     description:
       "OpenSource Together highlights ambitious open source projects to offer them an initial wave of visibility, committed contributors and support.",
-    images: "/illustrations/ost-metadata.png",
+    images: [
+      {
+        url: metadataImageUrl,
+        width: 1200,
+        height: 630,
+        alt: "OpenSource Together - Find and collaborate on open source projects",
+      },
+    ],
     url: "https://opensource-together.com",
     siteName: "OpenSource Together",
     locale: "fr_FR",
@@ -53,7 +71,7 @@ export const metadata: Metadata = {
     title: "OpenSource Together",
     description:
       "OpenSource Together highlights ambitious open source projects to offer them an initial wave of visibility, committed contributors and support.",
-    images: "/illustrations/ost-metadata.png",
+    images: [metadataImageUrl],
   },
 
   keywords: [
