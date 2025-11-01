@@ -1,6 +1,5 @@
 import GitHubButton from "./github-button.component";
 import GitlabButton from "./gitlab-button.component";
-import GoogleButton from "./google-button.component";
 
 export default function LoginForm() {
   return (
@@ -18,7 +17,6 @@ export default function LoginForm() {
           <div className="flex flex-col items-center gap-3 sm:gap-4">
             <GitHubButton />
             <GitlabButton />
-            <GoogleButton variant="outline" />
           </div>
         </div>
       </div>

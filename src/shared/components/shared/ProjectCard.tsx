@@ -105,9 +105,11 @@ export default function ProjectCardComponent({
                         <span
                           key={tech.id || index}
                           className={
-                            index === 2
-                              ? "hidden md:inline-flex"
-                              : "inline-flex"
+                            index === 0
+                              ? "inline-flex"
+                              : index === 1
+                                ? "hidden md:inline-flex"
+                                : "hidden md:inline-flex"
                           }
                         >
                           <StackLogo
@@ -119,17 +121,24 @@ export default function ProjectCardComponent({
                       ))
                     : isRepositoryLoading
                       ? Array.from({ length: 3 }).map((_, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5">
+                          <div
+                            key={idx}
+                            className={
+                              idx === 0
+                                ? "flex items-center gap-1.5"
+                                : "hidden items-center gap-1.5 md:flex"
+                            }
+                          >
                             <Skeleton className="size-5.5 rounded-full" />
                             <Skeleton className="h-5.5 w-16 rounded-md" />
                           </div>
                         ))
                       : null}
                 </div>
-                {/* Mobile +N when > 2 */}
-                {allTechStacks.length > 2 && (
+                {/* Mobile +N when > 1 */}
+                {allTechStacks.length > 1 && (
                   <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:hidden">
-                    +{allTechStacks.length - 2}
+                    +{allTechStacks.length - 1}
                   </span>
                 )}
                 {/* Desktop +N when > 3 */}
