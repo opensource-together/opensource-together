@@ -3,6 +3,9 @@ name = "opensource-together"
 compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
 
-  [assets]
+[assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
+
+[limits]
+cpu_ms = 60_000
