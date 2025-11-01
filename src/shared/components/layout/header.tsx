@@ -74,7 +74,7 @@ export default function Header() {
                   className="flex items-center gap-2 px-3"
                 >
                   Create Project
-                  <HiPlus className="h-4 w-4" />
+                  <HiPlus size={16} />
                 </Button>
               </Link>
               <UserDropdown />
