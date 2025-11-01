@@ -12,10 +12,10 @@ export function OstMetadataLogo() {
       }}
     >
       <img
-        src={`${FALLBACK_LOGO_HOST.replace(/\/$/, "")}/ostogether-logo.svg`}
+        src={`${FALLBACK_LOGO_HOST.replace(/\/$/, "")}/ostogether-logo.png`}
         alt="OpenSource Together logo"
         style={{
-          width: "80%",
+          width: "85%",
           objectFit: "contain",
         }}
       />
