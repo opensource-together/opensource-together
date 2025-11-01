@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
@@ -27,18 +27,62 @@ function FilterItem({ label, value }: FilterItemProps) {
   );
 }
 
+/**
+ * Converts ProjectFilters to sort option ID
+ */
+function filtersToSortId(filters?: ProjectFilters): string {
+  if (!filters) return "most_popular";
+
+  const { orderBy, orderDirection } = filters;
+
+  if (orderBy === "trending" && orderDirection === "desc") {
+    return "most_popular";
+  }
+  if (orderBy === "createdAt" && orderDirection === "desc") {
+    return "newest";
+  }
+  if (orderBy === "createdAt" && orderDirection === "asc") {
+    return "oldest";
+  }
+  if (orderBy === "title" && orderDirection === "asc") {
+    return "a-z";
+  }
+  if (orderBy === "title" && orderDirection === "desc") {
+    return "z-a";
+  }
+
+  return "most_popular";
+}
+
 interface FilterSearchBarProps {
   onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
+  initialFilters?: ProjectFilters;
 }
 
 export default function FilterSearchBar({
   onFilterChange,
   isLoading = false,
+  initialFilters,
 }: FilterSearchBarProps) {
-  const [selectedTechStacks, setSelectedTechStacks] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedSort, setSelectedSort] = useState<string>("most_popular");
+  const [selectedTechStacks, setSelectedTechStacks] = useState<string[]>(
+    initialFilters?.techStacks || []
+  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    initialFilters?.categories || []
+  );
+  const [selectedSort, setSelectedSort] = useState<string>(
+    filtersToSortId(initialFilters)
+  );
+
+  // Update state when initialFilters change (e.g., from URL)
+  useEffect(() => {
+    if (initialFilters) {
+      setSelectedTechStacks(initialFilters.techStacks || []);
+      setSelectedCategories(initialFilters.categories || []);
+      setSelectedSort(filtersToSortId(initialFilters));
+    }
+  }, [initialFilters]);
 
   const {
     techStackOptions,
@@ -234,6 +278,7 @@ export default function FilterSearchBar({
       <FilterSearchBarMobile
         onFilterChange={onFilterChange}
         isLoading={isLoading}
+        initialFilters={initialFilters}
       />
     </>
   );

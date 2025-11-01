@@ -29,7 +29,7 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
         alt="Beta Tester"
         width={24}
         height={24}
-        className="-mt-1 ml-0.5"
+        className="-mt-0.5 ml-0.5"
       />
     );
   };
@@ -90,7 +90,7 @@ export default function ProfileHero({
         alt="Beta Tester"
         width={24}
         height={24}
-        className="-mt-1 ml-0.5"
+        className="-mt-0.5 ml-0.5"
       />
     );
   };
