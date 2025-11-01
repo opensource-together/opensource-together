@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { HiPlus } from "react-icons/hi2";
 
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
 import { MobileHeader } from "@/shared/components/layout/mobile-header.component";
@@ -67,6 +68,15 @@ export default function Header() {
             </>
           ) : isAuthenticated ? (
             <>
+              <Link href="/projects/create">
+                <Button
+                  variant="default"
+                  className="flex items-center gap-2 px-3"
+                >
+                  Create Project
+                  <HiPlus className="h-4 w-4" />
+                </Button>
+              </Link>
               <UserDropdown />
             </>
           ) : (
