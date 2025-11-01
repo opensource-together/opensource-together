@@ -9,7 +9,10 @@ import StepperHeaderComponent from "@/features/projects/components/stepper/stepp
 import { StepperWrapper } from "@/features/projects/components/stepper/stepper-wrapper.component";
 
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
-import { useProject, useToggleProjectPublished } from "../../../hooks/use-projects.hook";
+import {
+  useProject,
+  useToggleProjectPublished,
+} from "../../../hooks/use-projects.hook";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 export default function StepSuccessView() {
