@@ -34,7 +34,7 @@ function HomepageLayout({
           isLoading={isLoading}
         />
       </div>
-      <div className="mx-6 max-w-6xl mb-20 md:mb-36 lg:mx-auto">{children}</div>
+      <div className="mx-6 mb-20 max-w-6xl md:mb-36 lg:mx-auto">{children}</div>
     </>
   );
 }

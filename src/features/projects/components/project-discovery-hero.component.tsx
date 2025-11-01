@@ -39,7 +39,7 @@ export default function ProjectDiscoveryHero({
         />
       </FadeIn>
 
-      <div className="relative z-10 mx-auto mb-5 mt-16 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:mt-0 md:min-h-[320px] lg:min-h-[400px]">
+      <div className="relative z-10 mx-auto mt-16 mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:mt-0 md:min-h-[320px] lg:min-h-[400px]">
         <FadeUp delay={0.05}>
           <HeroBadge className="mb-3" />
         </FadeUp>
