@@ -9,7 +9,7 @@ interface BadgeProps {
 const HeroBadge: React.FC<BadgeProps> = ({ className = "" }) => {
   return (
     <Link
-      href="https://discord.gg/u4y6y5KC"
+      href="https://discord.gg/PV7wCVpM"
       target="_blank"
       rel="noopener noreferrer"
     >
