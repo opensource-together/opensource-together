@@ -6,7 +6,14 @@ const isServer = typeof window === "undefined";
 
 const resolvedApiUrl = isServer ? serverApiUrl : publicApiUrl;
 
-if (!resolvedApiUrl) {
+const normalizeApiUrl = (url: string): string => {
+  if (!url) return url;
+  return url.replace(/\/+$/, "");
+};
+
+const normalizedApiUrl = normalizeApiUrl(resolvedApiUrl);
+
+if (!normalizedApiUrl) {
   const missingEnv = isServer
     ? "INTERNAL_SERVER_API_URL"
     : "NEXT_PUBLIC_API_URL";
@@ -19,5 +26,5 @@ if (!frontendUrl) {
   );
 }
 
-export const API_BASE_URL: string = resolvedApiUrl;
+export const API_BASE_URL: string = normalizedApiUrl;
 export const FRONTEND_URL: string = frontendUrl;
