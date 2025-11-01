@@ -103,8 +103,8 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
       <div>
         <h2 className="mb-2">Contribution Activity</h2>
 
-        <div className="w-full overflow-x-auto">
-          <div className="relative w-max">
+        <div className="w-full overflow-x-auto md:overflow-x-hidden">
+          <div className="relative w-max md:origin-left md:scale-x-[0.99]">
             <div className="mb-0.5 flex pr-2.5">
               {months.map((month, index) => (
                 <div key={index} className="flex-1 text-left">
