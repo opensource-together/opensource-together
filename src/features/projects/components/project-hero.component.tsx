@@ -3,11 +3,11 @@ import { useState } from "react";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
-import Icon from "@/shared/components/ui/icon";
+import { Modal } from "@/shared/components/ui/modal";
 
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
+import { ClaimProjectButton } from "./claim-project-button.component";
 
 export function ProjectMobileHero({ project }: ProjectHeroProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -44,16 +44,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
       <div className="flex items-center gap-2">
         {published ? (
           <>
-            <Link
-              href={repoUrl || ""}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="outline">
-                <Icon name="star" size="sm" />
-                Star
-              </Button>
-            </Link>
+            <ClaimProjectButton project={project} />
             <Link
               href={repoUrl || ""}
               target="_blank"
@@ -74,7 +65,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
               <Button>Edit Project</Button>
             </Link>
 
-            <ConfirmDialog
+            <Modal
               open={isPublishDialogOpen}
               onOpenChange={setPublishDialogOpen}
               title="Publish project?"
@@ -104,7 +95,6 @@ export default function ProjectHero({
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
   const { toggleProjectPublished, isTogglingPublished } =
     useToggleProjectPublished();
-
   const {
     id = "",
     title = "",
@@ -135,16 +125,7 @@ export default function ProjectHero({
             <div className="flex items-center gap-2">
               {published ? (
                 <>
-                  <Link
-                    href={repoUrl || ""}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="outline">
-                      <Icon name="star" size="sm" />
-                      Star
-                    </Button>
-                  </Link>
+                  <ClaimProjectButton project={project} />
                   <Link
                     href={repoUrl || ""}
                     target="_blank"
@@ -165,7 +146,7 @@ export default function ProjectHero({
                     <Button>Edit Project</Button>
                   </Link>
 
-                  <ConfirmDialog
+                  <Modal
                     open={isPublishDialogOpen}
                     onOpenChange={setPublishDialogOpen}
                     title="Publish project?"

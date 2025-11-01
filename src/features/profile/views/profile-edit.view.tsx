@@ -34,6 +34,8 @@ export default function ProfileEditView() {
       jobTitle: currentUser?.jobTitle || "",
       bio: currentUser?.bio || "",
       userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      userCategories:
+        currentUser?.userCategories?.map((category) => category.id) || [],
       experiences:
         currentUser?.userExperiences?.map((e) => ({
           title: e.title,
@@ -58,6 +60,8 @@ export default function ProfileEditView() {
       jobTitle: currentUser.jobTitle || "",
       bio: currentUser.bio || "",
       userTechStacks: currentUser?.userTechStacks?.map((tech) => tech.id) || [],
+      userCategories:
+        currentUser?.userCategories?.map((category) => category.id) || [],
       experiences:
         currentUser?.userExperiences?.map((e) => ({
           title: e.title,

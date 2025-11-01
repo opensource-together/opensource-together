@@ -6,64 +6,81 @@ import { usePathname } from "next/navigation";
 
 import { Separator } from "@/shared/components/ui/separator";
 
-const footerLinks = {
+type FooterLink = {
+  label: string;
+  href: string;
+  id: string;
+  external?: boolean;
+};
+
+const footerLinks: {
+  developers: FooterLink[];
+  resources: FooterLink[];
+  company: FooterLink[];
+  legal: FooterLink[];
+} = {
   developers: [
-    {
-      label: "Documentation",
-      href: "#",
-      id: "developers-documentation",
-    },
-    {
-      label: "Github",
-      href: "https://github.com/opensource-together/opensource-together",
-      external: true,
-      id: "developers-github",
-    },
+    // kept for typing shape, not rendered
   ],
   resources: [
     {
-      label: "Changelog",
-      href: "#",
-      id: "resources-changelog",
+      label: "OSS Guide",
+      href: "/oss-guide",
+      id: "resources-oss-guide",
     },
     {
-      label: "Press Kit",
-      href: "#",
-      id: "resources-presskit",
-    },
-    {
-      label: "Blog",
-      href: "#",
-      id: "resources-blog",
+      label: "OST AI Engine",
+      href: "https://github.com/opensource-together/ost-ai-engine",
+      external: true,
+      id: "developers-ai-engine",
     },
   ],
   company: [
     {
-      label: "Contact",
-      href: "#",
-      id: "company-contact",
+      label: "GitHub",
+      href: "https://github.com/opensource-together",
+      external: true,
+      id: "company-github",
     },
     {
-      label: "X (Twitter)",
+      label: "Discord",
+      href: "https://discord.gg/4ZDhm3dQAC",
+      external: true,
+      id: "company-discord",
+    },
+    {
+      label: "Twitter",
       href: "https://x.com/OpenSTogether",
       external: true,
       id: "company-x",
     },
     {
-      label: "Legal",
-      href: "#",
-      id: "company-legal",
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/company/opensource-together",
+      external: true,
+      id: "company-linkedin",
+    },
+  ],
+  legal: [
+    {
+      label: "Terms and Conditions",
+      href: "/terms-and-conditions",
+      id: "legal-terms",
+    },
+    {
+      label: "Privacy Policy",
+      href: "/privacy-policy",
+      id: "legal-privacy",
     },
   ],
 };
 
-const renderLinkSection = (
-  title: string,
-  links: typeof footerLinks.developers
-) => (
+const renderLinkSection = (title: string, links: FooterLink[]) => (
   <div>
-    <h4 className="text-foreground mb-5 font-medium md:mb-6">{title}</h4>
-    <ul className="text-muted-foreground space-y-5">
+    <h4 className="text-foreground mb-5 text-xs font-medium md:mb-6 md:text-sm">
+      {title}
+    </h4>
+    <ul className="text-muted-foreground space-y-5 text-xs md:text-sm">
       {links.map((link) => (
         <li key={link.id}>
           <Link
@@ -114,11 +131,11 @@ export default function Footer() {
               </div>
 
               {/* Right: Link sections */}
-              <div className="gap- grid w-full grid-cols-2 md:ml-auto md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
-                {renderLinkSection("Developers", footerLinks.developers)}
-                {renderLinkSection("Ressources", footerLinks.resources)}
+              <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+                {renderLinkSection("Resources", footerLinks.resources)}
+                {renderLinkSection("Company", footerLinks.company)}
                 <div className="mb-5 md:mb-5">
-                  {renderLinkSection("Company", footerLinks.company)}
+                  {renderLinkSection("Legal", footerLinks.legal)}
                 </div>
               </div>
             </div>

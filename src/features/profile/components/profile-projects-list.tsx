@@ -1,13 +1,15 @@
 import { useSearchParams } from "next/navigation";
-import { HiMiniSquare2Stack } from "react-icons/hi2";
+import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
 import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 import { ProjectQueryParams } from "@/features/dashboard/services/my-projects.service";
+import type { Project } from "@/features/projects/types/project.type";
 
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
@@ -16,6 +18,39 @@ const parseNumber = (value: string | null, fallback: number) => {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? n : fallback;
 };
+
+function ProfileProjectItem({ project }: { project: Project }) {
+  const { data: repoSummary, isLoading } = useProjectRepositorySummary(
+    project.id
+  );
+
+  const repositoryDetails = {
+    languages:
+      repoSummary?.languages ?? project.repositoryDetails?.languages ?? {},
+    forksCount:
+      repoSummary?.forksCount ?? project.repositoryDetails?.forksCount ?? 0,
+    stars: repoSummary?.stars ?? project.repositoryDetails?.stars ?? 0,
+    openIssuesCount:
+      repoSummary?.openIssuesCount ??
+      project.repositoryDetails?.openIssuesCount ??
+      0,
+  };
+
+  return (
+    <ProjectCardComponent
+      key={project.id}
+      projectId={project.id}
+      title={project.title}
+      description={project.description}
+      logoUrl={project.logoUrl || ""}
+      projectTechStacks={project.projectTechStacks}
+      repoUrl={project.repoUrl || ""}
+      repositoryDetails={repositoryDetails}
+      isRepositoryLoading={isLoading}
+      className="w-full"
+    />
+  );
+}
 
 export default function ProfileProjectsList() {
   const searchParams = useSearchParams();
@@ -51,33 +86,16 @@ export default function ProfileProjectsList() {
         title="No projects"
         description="No projects have been joined yet"
         icon={HiMiniSquare2Stack}
+        buttonText="Create a project"
+        href="/projects/create"
+        buttonIcon={HiPlus}
       />
     );
 
   return (
     <div className="flex w-full flex-col gap-6">
       {projects.map((project) => (
-        <ProjectCardComponent
-          key={project.id}
-          projectId={project.id}
-          title={project.title}
-          description={project.description}
-          logoUrl={project.logoUrl || ""}
-          projectTechStacks={project.projectTechStacks}
-          repositoryDetails={{
-            languages: project.repositoryDetails?.languages || {},
-            forksCount: project.repositoryDetails?.forksCount || 0,
-            stars: project.repositoryDetails?.stars || 0,
-            openIssuesCount: project.repositoryDetails?.openIssuesCount || 0,
-            pullRequestsCount:
-              project.repositoryDetails?.pullRequestsCount || 0,
-            owner: project.repositoryDetails?.owner || {
-              login: "",
-              avatar_url: "",
-            },
-          }}
-          className="w-full"
-        />
+        <ProfileProjectItem key={project.id} project={project} />
       ))}
 
       {pagination && (

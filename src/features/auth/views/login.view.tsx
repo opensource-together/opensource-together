@@ -14,7 +14,7 @@ export default function LoginView() {
       <div className="relative flex min-h-screen flex-col overflow-hidden">
         <Link
           href="/"
-          className="absolute top-7 left-0 z-50 md:top-12 md:left-1/2 md:-translate-x-1/2"
+          className="absolute top-5 left-5 z-50 md:top-12 md:left-1/2 md:-translate-x-1/2"
         >
           <Image
             src="/ostogether-logo.svg"
@@ -24,13 +24,7 @@ export default function LoginView() {
           />
         </Link>
 
-        {/* Mobile: show a dedicated top section with centered illustration */}
-        <div className="relative top-30 z-0 w-full md:hidden">
-          <AuthIllustration />
-        </div>
-
-        {/* Desktop+: background illustration covers behind content */}
-        <div className="pointer-events-none absolute inset-0 z-0 hidden pb-10 md:block">
+        <div className="pointer-events-none absolute inset-0 z-0 md:pb-10">
           <AuthIllustration />
         </div>
 

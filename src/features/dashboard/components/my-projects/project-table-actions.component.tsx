@@ -17,7 +17,7 @@ import {
 
 import { Project } from "@/features/projects/types/project.type";
 
-interface ProjectActionsProps {
+interface ProjectTableActionsProps {
   project: Project;
   onTogglePublish: (project: Project) => void;
   onDelete: (project: { id: string; title: string }) => void;
@@ -25,13 +25,13 @@ interface ProjectActionsProps {
   togglingProjectId: string | null;
 }
 
-export function ProjectActions({
+export function ProjectTableActions({
   project,
   onTogglePublish,
   onDelete,
   isTogglingPublished,
   togglingProjectId,
-}: ProjectActionsProps) {
+}: ProjectTableActionsProps) {
   const router = useRouter();
 
   const handleTogglePublish = () => {

@@ -48,15 +48,17 @@ export const profileSchema = z.object({
     .max(50, "Username cannot exceed 50 characters"),
   jobTitle: z
     .string()
-    // .min(1, "Job title is required")
-    .max(50, "Job title cannot exceed 50 characters")
-    .optional(),
+    .min(1, "Job title is required")
+    .max(50, "Job title cannot exceed 50 characters"),
   bio: z.string().max(500, "Bio cannot exceed 500 characters").optional(),
   userTechStacks: z
     .array(z.string())
-    // .min(1, "At least one technology is required")
-    .max(10, "Maximum 10 technologies allowed")
-    .optional(),
+    .min(1, "At least one technology is required")
+    .max(10, "Maximum 10 technologies allowed"),
+  userCategories: z
+    .array(z.string())
+    .min(1, "At least one category is required")
+    .max(6, "Maximum 6 categories allowed"),
   experiences: z
     .array(experienceSchema)
     .max(10, "Maximum 10 experiences allowed")

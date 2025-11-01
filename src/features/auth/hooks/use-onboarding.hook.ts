@@ -23,6 +23,7 @@ export function useOnboarding() {
         name: currentUser?.name || "",
         jobTitle: data.jobTitle,
         userTechStacks: data.techStacks,
+        userCategories: data.userCategories,
       });
       return data;
     },

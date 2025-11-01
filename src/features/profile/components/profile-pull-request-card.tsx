@@ -85,11 +85,11 @@ export function PullRequestCard({
             <Separator className="my-4" />
 
             <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4">
                 {provider === "github" ? (
                   <span className="flex items-center gap-1.5 text-sm font-medium">
                     <FaGithub size={20} />
-                    GitHub
+                    <span className="hidden md:inline">GitHub</span>
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5 text-sm font-medium">
@@ -97,12 +97,12 @@ export function PullRequestCard({
                     Gitlab
                   </span>
                 )}
-                <div className="flex items-center gap-1 text-sm tracking-tight">
+                <div className="flex items-center gap-1 text-sm tracking-tight whitespace-nowrap">
                   <LuClock3 size={12} />
                   <span>{formatTimeAgo(pr.updated_at || pr.created_at)}</span>
                 </div>
               </div>
-              <span className="text-muted-foreground truncate text-xs">
+              <span className="text-muted-foreground truncate pl-4 text-xs md:pl-0">
                 {repoPath}
               </span>
             </div>

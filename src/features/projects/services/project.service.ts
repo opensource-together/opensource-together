@@ -13,9 +13,10 @@ import {
 import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
 export interface ProjectQueryParams extends PaginationParams {
+  published?: boolean;
   techStacks?: string | string[];
   categories?: string | string[];
-  orderBy?: "createdAt" | "title";
+  orderBy?: "createdAt" | "title" | "trending";
   orderDirection?: "asc" | "desc";
 }
 
@@ -260,4 +261,33 @@ export const deleteProjectImage = async (
   }
 
   return response.json();
+};
+
+/**
+ * Claims ownership of a project for the current authenticated user.
+ *
+ * @param projectId - The public ID of the project to claim.
+ * @returns A promise that resolves to the updated project.
+ */
+export const claimProject = async (projectId: string): Promise<Project> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/projects/${projectId}/claims`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error while claiming project");
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse?.data || apiResponse;
+  } catch (error) {
+    console.error("Error claiming project:", error);
+    throw error;
+  }
 };

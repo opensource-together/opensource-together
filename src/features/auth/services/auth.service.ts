@@ -8,7 +8,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
   try {
     await authClient.signIn.social({
       provider,
-      callbackURL: window.location.origin,
+      callbackURL: `${window.location.origin}/onboarding`,
     });
   } catch (error) {
     console.error("signInWithProvider error:", error);

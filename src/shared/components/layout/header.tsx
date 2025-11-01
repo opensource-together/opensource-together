@@ -50,10 +50,10 @@ export default function Header() {
                 Dashboard
               </Button>
             </Link>
-            <Link href="/guide">
+            <Link href="/oss-guide">
               <Button
                 variant="ghost"
-                className={pathname.startsWith("/guide") ? "bg-accent" : ""}
+                className={pathname.startsWith("/oss-guide") ? "bg-accent" : ""}
                 size="sm"
               >
                 Guide

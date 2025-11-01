@@ -18,7 +18,9 @@ export function PaginationInfo({ pagination, className }: PaginationInfoProps) {
   const endItem = Math.min(currentPage * size, total);
 
   return (
-    <div className={cn("text-muted-foreground text-sm", className)}>
+    <div
+      className={cn("text-muted-foreground hidden text-sm md:block", className)}
+    >
       Showing {startItem} to {endItem} of {total} results
     </div>
   );

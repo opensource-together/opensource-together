@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
-import { useGitRepository } from "@/shared/hooks/use-git-repository.hook";
-import { UserGitRepository } from "@/shared/types/git-repository.type";
+import { useInfiniteGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
+import { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
@@ -27,22 +27,32 @@ export default function StepGitImportForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(320);
-  const [selectedRepo, setSelectedRepo] = useState<UserGitRepository | null>(
-    null
-  );
+  const [selectedRepo, setSelectedRepo] =
+    useState<GitUserRepositoryType | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const { selectRepository } = useProjectCreateStore();
   const { linkSocialAccount, isLinkingSocialAccount } = useAuth();
 
-  const { data: gitRepos, isLoading, isError } = useGitRepository({ provider });
+  const {
+    data: gitReposPages,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteGitUserRepositories({ provider });
 
   const itemHeight = 64;
-  const repos = (gitRepos?.[provider]?.data || []).sort((a, b) => {
-    if (!a.updated_at || !b.updated_at) return 0;
-    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-  });
+  const repos = (gitReposPages?.pages || [])
+    .flatMap((p) => p?.[provider]?.data || [])
+    .sort((a, b) => {
+      if (!a.updated_at || !b.updated_at) return 0;
+      return (
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+    });
   const totalCount = repos.length;
   const totalHeight = itemHeight * totalCount;
   const visibleHeight = containerHeight;
@@ -62,7 +72,7 @@ export default function StepGitImportForm({
     };
   }, []);
 
-  const handleRepositorySelect = (repo: UserGitRepository) => {
+  const handleRepositorySelect = (repo: GitUserRepositoryType) => {
     setSelectedRepo(repo);
   };
 
@@ -106,16 +116,25 @@ export default function StepGitImportForm({
           className={`mb-4 h-[350px] w-full rounded-md border border-black/4 ${
             hasOverflow ? "overflow-y-auto" : "overflow-hidden"
           }`}
-          onScroll={(e) =>
-            hasOverflow && setScrollTop((e.target as HTMLDivElement).scrollTop)
-          }
+          onScroll={(e) => {
+            if (!hasOverflow) return;
+            const el = e.target as HTMLDivElement;
+            const nextTop = el.scrollTop;
+            setScrollTop(nextTop);
+            const threshold = 200; // px before bottom
+            const reachedBottom =
+              el.scrollTop + el.clientHeight >= el.scrollHeight - threshold;
+            if (reachedBottom && hasNextPage && !isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
           style={{ scrollbarWidth: "none" }}
         >
           <div className="flex flex-col divide-y divide-black/4">
             {isLoading ? (
               <RepositorySkeleton />
             ) : (
-              repos?.map((repo: UserGitRepository, idx: number) => (
+              repos?.map((repo: GitUserRepositoryType, idx: number) => (
                 <div
                   key={idx}
                   className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
@@ -149,6 +168,7 @@ export default function StepGitImportForm({
                 </div>
               ))
             )}
+            {isFetchingNextPage && <RepositorySkeleton />}
           </div>
         </div>
         <CustomScrollbar

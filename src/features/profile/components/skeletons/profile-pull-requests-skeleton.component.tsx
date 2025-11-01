@@ -3,15 +3,6 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 export function ProfilePullRequestsSkeleton() {
   return (
     <div className="flex w-full flex-col gap-4">
-      {/* Filters skeleton */}
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-6 w-32" />
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-9 w-[140px]" />
-          <Skeleton className="h-9 w-[100px]" />
-        </div>
-      </div>
-
       {/* Pull requests skeleton */}
       <div className="flex flex-col gap-4">
         {Array.from({ length: 3 }).map((_, index) => (

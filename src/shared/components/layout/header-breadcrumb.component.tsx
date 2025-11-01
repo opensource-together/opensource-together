@@ -23,7 +23,7 @@ export default function HeaderBreadcrumb() {
       { label: "Profile", href: "/profile/me" },
       { label: "Edit", href: "/profile/me/edit" },
     ],
-    "/guide": () => [{ label: "Guide", href: "/guide" }],
+    "/oss-guide": () => [{ label: "Guide", href: "/oss-guide" }],
   };
 
   const getData = () => {

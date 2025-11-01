@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { RiLoader2Fill } from "react-icons/ri";
 
 import { Button } from "./button";
 import {
@@ -56,8 +57,8 @@ function Modal({
   className,
   size = "lg",
   showCloseButton = true,
-  confirmText = "Confirmer",
-  cancelText = "Annuler",
+  confirmText = "Confirm",
+  cancelText = "Cancel",
   onConfirm,
   onCancel,
   isLoading = false,
@@ -120,7 +121,14 @@ function Modal({
                       : ""
                   }`}
                 >
-                  {isLoading ? "En cours..." : <>{confirmText}</>}
+                  {isLoading ? (
+                    <>
+                      <RiLoader2Fill className="animate-spin" />
+                      <span>Loading...</span>
+                    </>
+                  ) : (
+                    <>{confirmText}</>
+                  )}
                 </Button>
               )}
             </DialogFooter>

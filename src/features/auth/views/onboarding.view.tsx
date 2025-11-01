@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import FooterLogin from "@/shared/components/layout/footer-login";
 
@@ -12,10 +14,21 @@ import OnboardingForm from "../components/onboarding-form.component";
 
 export default function OnboardingView() {
   const { currentUser, isLoading } = useAuth();
+  const router = useRouter();
+
+  const isOnboardingCompleted =
+    !!currentUser &&
+    (!!currentUser.jobTitle ||
+      (currentUser.userTechStacks?.length ?? 0) > 0 ||
+      (currentUser.userCategories?.length ?? 0) > 0);
+
+  useEffect(() => {
+    if (isOnboardingCompleted) {
+      router.replace("/");
+    }
+  }, [isOnboardingCompleted, router]);
 
   if (isLoading || !currentUser) return null;
-  const isOnboardingCompleted =
-    !!currentUser.jobTitle || (currentUser.userTechStacks?.length ?? 0) > 0;
   if (isOnboardingCompleted) return null;
 
   return (

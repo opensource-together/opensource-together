@@ -15,6 +15,7 @@ import {
   ProjectCardTitle,
 } from "@/shared/components/ui/project-card";
 import { languagesToTechStacks } from "@/shared/lib/language-icons";
+import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repo-owner";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import { TechStackType } from "@/shared/types/tech-stack.type";
 
@@ -22,6 +23,7 @@ import { RepositoryWithDetails } from "@/features/projects/types/project.type";
 
 import { Avatar } from "../ui/avatar";
 import { Icon } from "../ui/icon";
+import { Skeleton } from "../ui/skeleton";
 import StackLogo from "../ui/stack-logo";
 
 interface ProjectCardProps {
@@ -30,23 +32,21 @@ interface ProjectCardProps {
   description: string;
   projectTechStacks?: TechStackType[];
   showTechStack?: boolean;
+  repoUrl?: string;
   className?: string;
   logoUrl?: string;
   repositoryDetails?: Pick<
     RepositoryWithDetails,
-    | "stars"
-    | "forksCount"
-    | "openIssuesCount"
-    | "pullRequestsCount"
-    | "languages"
-    | "owner"
+    "stars" | "forksCount" | "openIssuesCount" | "languages"
   >;
+  isRepositoryLoading?: boolean;
 }
 
 export default function ProjectCardComponent({
   projectId,
   title = "",
   description = "",
+  repoUrl = "",
   projectTechStacks = [],
   showTechStack = true,
   className = "",
@@ -56,13 +56,9 @@ export default function ProjectCardComponent({
     forksCount: 0,
     stars: 0,
     openIssuesCount: 0,
-    pullRequestsCount: 0,
     languages: {},
-    owner: {
-      login: "",
-      avatar_url: "",
-    },
   },
+  isRepositoryLoading = false,
 }: ProjectCardProps) {
   const languagesTechStacks = useMemo(() => {
     return languagesToTechStacks(repositoryDetails.languages);
@@ -91,11 +87,9 @@ export default function ProjectCardComponent({
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
-              {repositoryDetails.owner?.login && (
-                <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
-                  by {repositoryDetails.owner.login}
-                </p>
-              )}
+              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+                by {extractRepositoryOwner(repoUrl)}
+              </p>
             </ProjectCardInfo>
           </ProjectCardLeftGroup>
         </ProjectCardHeader>
@@ -106,17 +100,41 @@ export default function ProjectCardComponent({
             <ProjectCardFooter>
               <>
                 <div className="flex gap-2.5">
-                  {allTechStacks.slice(0, 3).map((tech, index) => (
-                    <StackLogo
-                      key={tech.id || index}
-                      icon={tech.iconUrl || ""}
-                      alt={tech.name}
-                      name={tech.name}
-                    />
-                  ))}
+                  {allTechStacks.length > 0
+                    ? allTechStacks.slice(0, 3).map((tech, index) => (
+                        <span
+                          key={tech.id || index}
+                          className={
+                            index === 2
+                              ? "hidden md:inline-flex"
+                              : "inline-flex"
+                          }
+                        >
+                          <StackLogo
+                            icon={tech.iconUrl || ""}
+                            alt={tech.name}
+                            name={tech.name}
+                          />
+                        </span>
+                      ))
+                    : isRepositoryLoading
+                      ? Array.from({ length: 3 }).map((_, idx) => (
+                          <div key={idx} className="flex items-center gap-1.5">
+                            <Skeleton className="size-5.5 rounded-full" />
+                            <Skeleton className="h-5.5 w-16 rounded-md" />
+                          </div>
+                        ))
+                      : null}
                 </div>
+                {/* Mobile +N when > 2 */}
+                {allTechStacks.length > 2 && (
+                  <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:hidden">
+                    +{allTechStacks.length - 2}
+                  </span>
+                )}
+                {/* Desktop +N when > 3 */}
                 {allTechStacks.length > 3 && (
-                  <span className="ml-3 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20">
+                  <span className="ml-3 hidden h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:flex">
                     +{allTechStacks.length - 3}
                   </span>
                 )}
@@ -124,15 +142,27 @@ export default function ProjectCardComponent({
               <div className="ml-auto flex items-center justify-between space-x-2">
                 <div className="flex items-center justify-center text-xs">
                   <Icon name="fork" size="xxs" className="mr-0.5" />
-                  {formatNumberShort(repositoryDetails.forksCount || 0)}
+                  {isRepositoryLoading ? (
+                    <Skeleton className="h-3 w-6" />
+                  ) : (
+                    formatNumberShort(repositoryDetails.forksCount || 0)
+                  )}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-xs">
                   <VscIssues className="mr-0.5 size-3 text-black" />
-                  {formatNumberShort(repositoryDetails.openIssuesCount || 0)}
+                  {isRepositoryLoading ? (
+                    <Skeleton className="h-3 w-6" />
+                  ) : (
+                    formatNumberShort(repositoryDetails.openIssuesCount || 0)
+                  )}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-xs">
                   <FaStar className="text-primary mr-0.5 size-2.5" />
-                  {formatNumberShort(repositoryDetails.stars || 0)}
+                  {isRepositoryLoading ? (
+                    <Skeleton className="h-3 w-6" />
+                  ) : (
+                    formatNumberShort(repositoryDetails.stars || 0)
+                  )}
                 </div>
               </div>
             </ProjectCardFooter>
