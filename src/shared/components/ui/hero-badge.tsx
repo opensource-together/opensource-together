@@ -9,7 +9,7 @@ interface BadgeProps {
 const HeroBadge: React.FC<BadgeProps> = ({ className = "" }) => {
   return (
     <Link
-      href="https://discord.gg/u4y6y5KC"
+      href="https://discord.gg/PV7wCVpM"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -18,7 +18,7 @@ const HeroBadge: React.FC<BadgeProps> = ({ className = "" }) => {
       >
         <div className="flex items-center gap-2">
           <span className="text-ost-blue-three bg-ost-blue-one/10 ml-0.5 rounded-full px-3 py-1 text-[10px] leading-tight font-medium md:text-xs">
-            Update
+            Discord
           </span>
           <span className="text-muted-foreground text-[10px] leading-tight font-medium text-nowrap md:text-xs">
             Join a community of active contributers

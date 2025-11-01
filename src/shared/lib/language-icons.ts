@@ -64,10 +64,17 @@ export const languageIconMap: Record<string, string> = {
   MDX: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg",
 };
 
+// Languages that should be ignored/hidden in UI representations
+const LANGUAGE_BLACKLIST = new Set<string>(
+  ["Batchfile"].map((s) => s.toLowerCase())
+);
+
 /**
  * Get icon URL for a language name
  */
 export function getLanguageIcon(languageName: string): string | null {
+  if (!languageName) return null;
+  if (LANGUAGE_BLACKLIST.has(languageName.toLowerCase())) return null;
   return languageIconMap[languageName] || null;
 }
 
@@ -78,6 +85,7 @@ export function languagesToTechStacks(languages: Record<string, number>) {
   if (!languages || typeof languages !== "object") return [];
 
   return Object.keys(languages)
+    .filter((langName) => !LANGUAGE_BLACKLIST.has(langName.toLowerCase()))
     .slice(0, 10)
     .map((langName) => ({
       id: langName,

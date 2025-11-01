@@ -5,7 +5,7 @@
 
 [OpenSource Together](https://opensource-together.com) helps you to find and grow open‑source projects with your community.
 
-- Authentication with GitHub, Gitlab and Google
+- Authentication with GitHub and Gitlab
 - AI-powered project discovery and recommendation system
 - Import repositories from Github or Gitlab
 - Dashboard for projects and activity

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RiGithubFill, RiGitlabFill, RiGoogleFill } from "react-icons/ri";
+import { RiGithubFill, RiGitlabFill } from "react-icons/ri";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
@@ -78,17 +78,6 @@ export function SettingsContent() {
       connected: currentUser.connectedProviders?.includes("gitlab") || false,
       url: currentUser.gitlabUrl,
       icon: RiGitlabFill,
-    },
-    {
-      id: "google",
-      name: "Google",
-      description: "Connect Google to sign in to your account.",
-      connected:
-        currentUser.provider === "google" ||
-        currentUser.connectedProviders?.includes("google") ||
-        false,
-      url: currentUser.provider === "google" ? currentUser.provider : undefined,
-      icon: RiGoogleFill,
     },
   ] as const;
 
