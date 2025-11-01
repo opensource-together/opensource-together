@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -12,7 +13,26 @@ interface ProfileHeroProps {
 }
 
 export function ProfileMobileHero({ profile }: ProfileHeroProps) {
-  const { image = "", name = "", jobTitle = "", bio = "" } = profile;
+  const {
+    image = "",
+    name = "",
+    jobTitle = "",
+    bio = "",
+    betaTester = false,
+  } = profile;
+
+  const renderBetaTesterBadge = () => {
+    if (!betaTester) return null;
+    return (
+      <Image
+        src="/early-badge.svg"
+        alt="Beta Tester"
+        width={24}
+        height={24}
+        className="-mt-1 ml-0.5"
+      />
+    );
+  };
 
   return (
     <div>
@@ -22,14 +42,18 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
             <Avatar src={image} name={name} alt={name} size="xl" />
           </div>
           <div className="min-w-0">
-            <h2 className="max-w-[65vw] truncate text-start text-2xl font-medium">
-              {name}
-            </h2>
+            <div className="flex items-center">
+              <h2 className="max-w-[65vw] truncate text-start text-2xl font-medium">
+                {name}
+              </h2>
+              {renderBetaTesterBadge()}
+            </div>
             <p className="text-muted-foreground max-w-[65vw] truncate text-sm tracking-tighter">
               {jobTitle}
             </p>
           </div>
         </div>
+
         <p className="mt-4 mb-8 line-clamp-5 text-sm font-normal break-words">
           {bio}
         </p>
@@ -46,11 +70,30 @@ export default function ProfileHero({
   profile,
   hideHeader = true,
 }: ProfileHeroProps) {
-  const { image = "", name = "", jobTitle = "", bio = "" } = profile;
+  const {
+    image = "",
+    name = "",
+    jobTitle = "",
+    bio = "",
+    betaTester = false,
+  } = profile;
 
   if (hideHeader) {
     return <></>;
   }
+
+  const renderBetaTesterBadge = () => {
+    if (!betaTester) return null;
+    return (
+      <Image
+        src="/early-badge.svg"
+        alt="Beta Tester"
+        width={24}
+        height={24}
+        className="-mt-1 ml-0.5"
+      />
+    );
+  };
 
   const renderActionButton = () => {
     // Feature post-launch
@@ -77,7 +120,12 @@ export default function ProfileHero({
             <Avatar src={image} name={name} alt={name} size="xl" />
           </div>
           <div className="min-w-0">
-            <h2 className="truncate text-2xl">{name}</h2>
+            <div className="flex items-center">
+              <h2 className="max-w-[65vw] truncate text-start text-2xl font-medium">
+                {name}
+              </h2>
+              {renderBetaTesterBadge()}
+            </div>
             <p className="truncate text-sm tracking-tighter text-black/50">
               {jobTitle}
             </p>
