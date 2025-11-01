@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -44,11 +44,8 @@ export default function useAuth() {
     }
   }, [currentUser, isLoading, pathname, router]);
 
-  const signInMutation = useToastMutation<unknown, Error, string>({
+  const signInMutation = useMutation<unknown, Error, string>({
     mutationFn: async (provider) => await signInWithProvider(provider),
-    loadingMessage: "Logging in...",
-    successMessage: "Logged in successfully!",
-    errorMessage: "An error occurred while logging in",
   });
 
   const linkSocialAccountMutation = useToastMutation<

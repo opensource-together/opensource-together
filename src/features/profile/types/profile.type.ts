@@ -24,6 +24,7 @@ export interface Profile {
   websiteUrl?: string;
   connectedProviders?: string[];
   userTechStacksIds?: string[];
+  betaTester: boolean;
   userTechStacks?: TechStackType[];
   userCategories?: CategoryType[];
   userExperiences?: UserExperience[];
