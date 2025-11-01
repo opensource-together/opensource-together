@@ -69,10 +69,7 @@ export default function Header() {
           ) : isAuthenticated ? (
             <>
               <Link href="/projects/create">
-                <Button
-                  variant="default"
-                  className="flex items-center gap-2 px-3"
-                >
+                <Button>
                   Create Project
                   <HiPlus size={16} />
                 </Button>
