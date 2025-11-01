@@ -4,4 +4,3 @@ export interface ProjectFilters {
   orderBy: "createdAt" | "title" | "trending";
   orderDirection: "asc" | "desc";
 }
-
