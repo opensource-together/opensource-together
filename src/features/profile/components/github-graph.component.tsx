@@ -69,7 +69,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
     contributionGraph.weeks.length === 0
   ) {
     return (
-      <div className="w-full max-w-full overflow-hidden">
+      <div className="h-full w-full">
         <div>
           <h3 className="mb-2">Contribution Activity</h3>
           <div className="flex h-[87px] w-full items-center justify-center rounded-lg border border-black/5 p-2">
@@ -99,66 +99,63 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
   const days = ["Mon", "Wed", "Fri"];
 
   return (
-    <div className="w-full max-w-full overflow-hidden">
+    <div className="h-full w-full">
       <div>
         <h2 className="mb-2">Contribution Activity</h2>
 
-        <div className="relative">
-          <div className="mb-0.5 flex pr-2.5">
-            {months.map((month, index) => (
-              <div key={index} className="flex-1 text-left">
-                <span className="text-[6px] text-neutral-400 md:text-[8px]">
-                  {month}
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="w-full overflow-x-auto md:overflow-x-hidden">
+          <div className="relative w-max md:origin-left md:scale-x-[0.99]">
+            <div className="mb-0.5 flex pr-2.5">
+              {months.map((month, index) => (
+                <div key={index} className="flex-1 text-left">
+                  <span className="text-[8px] text-neutral-400">{month}</span>
+                </div>
+              ))}
+            </div>
 
-          <div className="flex">
-            <div
-              className="h-[60px] w-full rounded-md border border-black/5 p-1 md:h-[93px] md:p-2"
-              onMouseMove={handleMouseMove}
-            >
-              <div className="flex h-full gap-[1px] md:gap-0.5">
-                {contributionGraph.weeks.map((week, weekIndex) => (
-                  <div
-                    key={weekIndex}
-                    className="flex flex-col gap-[1px] md:gap-0.5"
+            <div className="flex">
+              <div
+                className="h-[93px] w-max rounded-md border border-black/5 p-2"
+                onMouseMove={handleMouseMove}
+              >
+                <div className="flex h-full gap-0.5">
+                  {contributionGraph.weeks.map((week, weekIndex) => (
+                    <div key={weekIndex} className="flex flex-col gap-0.5">
+                      {week.contributionDays.map((day, dayIndex) => (
+                        <div
+                          key={dayIndex}
+                          className={`size-[9.5px] rounded-xs ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
+                          onMouseEnter={(e) => handleMouseEnter(day, e)}
+                          onMouseLeave={handleMouseLeave}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="ml-2 flex flex-col justify-between py-1">
+                {days.map((day, index) => (
+                  <span
+                    key={index}
+                    className="text-[8px] text-[var(--neutral-400)]"
                   >
-                    {week.contributionDays.map((day, dayIndex) => (
-                      <div
-                        key={dayIndex}
-                        className={`size-[5px] rounded-xs md:size-[9.5px] ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
-                        onMouseEnter={(e) => handleMouseEnter(day, e)}
-                        onMouseLeave={handleMouseLeave}
-                      />
-                    ))}
-                  </div>
+                    {day}
+                  </span>
                 ))}
               </div>
             </div>
-            <div className="ml-1 flex flex-col justify-between py-1 md:ml-2">
-              {days.map((day, index) => (
-                <span
-                  key={index}
-                  className="text-[6px] text-[var(--neutral-400)] md:text-[8px]"
-                >
-                  {day}
-                </span>
-              ))}
-            </div>
           </div>
-          <div className="mt-2.5 flex items-center gap-2">
-            <span className="text-[10px] text-[var(--neutral-400)]">Less</span>
-            <div className="flex gap-0.5">
-              <div className="size-[9px] rounded-xs bg-[#E8EAEE]" />
-              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-one)]" />
-              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-two)]" />
-              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-three)]" />
-              <div className="size-[9px] rounded-xs bg-[var(--ost-blue-four)]" />
-            </div>
-            <span className="text-[10px] text-[var(--neutral-400)]">More</span>
+        </div>
+        <div className="mt-2.5 flex items-center gap-2">
+          <span className="text-[10px] text-[var(--neutral-400)]">Less</span>
+          <div className="flex gap-0.5">
+            <div className="size-[9px] rounded-xs bg-[#E8EAEE]" />
+            <div className="size-[9px] rounded-xs bg-[var(--ost-blue-one)]" />
+            <div className="size-[9px] rounded-xs bg-[var(--ost-blue-two)]" />
+            <div className="size-[9px] rounded-xs bg-[var(--ost-blue-three)]" />
+            <div className="size-[9px] rounded-xs bg-[var(--ost-blue-four)]" />
           </div>
+          <span className="text-[10px] text-[var(--neutral-400)]">More</span>
         </div>
       </div>
 
