@@ -31,8 +31,8 @@ export default function StepSuccessView() {
     return () => resetForm();
   }, [resetForm]);
 
-  const handleReturnToDashboard = () => {
-    router.replace("/dashboard/my-projects");
+  const handleViewProject = () => {
+    router.replace(`/projects/${projectId}`);
   };
 
   const handlePublishProject = () => {
@@ -64,8 +64,8 @@ export default function StepSuccessView() {
         description="You can now find your projects in your dashboard and contributer will be able to see your project."
       />
       <FormNavigationButtons
-        onPrevious={handleReturnToDashboard}
-        previousLabel="Return to dashboard"
+        onPrevious={handleViewProject}
+        previousLabel="View Project"
         onNext={handlePublishProject}
         nextLabel="Publish Project"
         isNextDisabled={false}
