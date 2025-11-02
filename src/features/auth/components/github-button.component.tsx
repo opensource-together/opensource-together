@@ -1,7 +1,8 @@
 "use client";
 
+import { RiGithubFill } from "react-icons/ri";
+
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
@@ -37,7 +38,11 @@ export default function GitHubButton({
           } border-t-transparent`}
         />
       ) : (
-        <Icon name="github" size="sm" variant="white" />
+        <RiGithubFill
+          className={
+            isOutlineVariant ? "text-foreground size-4" : "size-4 text-white"
+          }
+        />
       )}
       <span className="ml-1">{text}</span>
     </Button>

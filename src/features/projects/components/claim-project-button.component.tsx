@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
+import { RiGithubFill, RiGitlabFill } from "react-icons/ri";
 
 import { Button } from "@/shared/components/ui/button";
-import { Icon } from "@/shared/components/ui/icon";
 import { Modal } from "@/shared/components/ui/modal";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
@@ -55,7 +55,8 @@ export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
   };
 
   const repoPath = extractRepoPath(project.repoUrl);
-  const providerIcon = project.provider === "GITHUB" ? "github" : "gitlab";
+  const ProviderIcon =
+    project.provider === "GITHUB" ? RiGithubFill : RiGitlabFill;
 
   return (
     <>
@@ -78,12 +79,7 @@ export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
           {project.repoUrl && (
             <div className="border-muted-black-stroke rounded-2xl border p-4">
               <div className="mb-2 flex items-center gap-2">
-                <Icon
-                  name={providerIcon}
-                  size="sm"
-                  variant="default"
-                  className="shrink-0"
-                />
+                <ProviderIcon size={20} className="shrink-0" />
                 <span className="text-sm font-medium">Source Repository</span>
               </div>
               <span className="bg-accent rounded-md px-2 py-1 font-mono text-sm break-all">
