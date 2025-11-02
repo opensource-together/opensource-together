@@ -49,23 +49,29 @@ export default function SkeletonProjectDetail() {
   );
 
   // Main desktop hero/header skeleton
-  const hero = (
+  const HeroSkeleton = ({ hideHeader }: { hideHeader?: boolean }) => (
     <div>
-      <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <Skeleton className="h-16 w-16 rounded-xl" />
-          <div>
-            <Skeleton className="mb-1 h-8 w-40" />
+      {!hideHeader && (
+        <>
+          <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Skeleton className="h-16 w-16 rounded-xl" />
+              <div>
+                <Skeleton className="mb-1 h-8 w-40" />
+              </div>
+            </div>
+            <Skeleton className="h-10 w-32 rounded-full" />
           </div>
-        </div>
-        <Skeleton className="h-10 w-32 rounded-full" />
-      </div>
-      <div className="mt-4">
-        <Skeleton className="mb-1 h-4 w-full" />
-        <Skeleton className="mb-1 h-4 w-4/5" />
-      </div>
+          <div className="mt-4">
+            <Skeleton className="mb-1 h-4 w-full" />
+            <Skeleton className="mb-1 h-4 w-4/5" />
+          </div>
+        </>
+      )}
     </div>
   );
+
+  const hero = <HeroSkeleton />;
 
   // Mobile header skeleton
   const mobileHeader = (

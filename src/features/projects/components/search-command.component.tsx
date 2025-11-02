@@ -15,13 +15,16 @@ import {
   CommandList,
 } from "@/shared/components/ui/command";
 
-import { useProjects } from "../hooks/use-projects.hook";
+import { useInfiniteProjects } from "../hooks/use-projects.hook";
 
 export default function SearchCommand() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { data: projectsResponse, isLoading } = useProjects(
-    { published: true },
+  const { data: projectsPages, isLoading } = useInfiniteProjects(
+    {
+      published: true,
+      per_page: 20,
+    },
     { enabled: open }
   );
 
@@ -41,7 +44,11 @@ export default function SearchCommand() {
     setOpen(false);
   };
 
-  const suggestions = projectsResponse?.data?.map((project) => ({
+  // Flatten all pages into a single array
+  const allProjects =
+    projectsPages?.pages?.flatMap((page) => page.data || []) ?? [];
+
+  const suggestions = allProjects.map((project) => ({
     id: project.id,
     name: project.title,
     description: project.description,

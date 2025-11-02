@@ -30,34 +30,13 @@ import {
 } from "../validations/publish-toggle.validation";
 
 /**
- * Fetches the list of all projects.
- *
- * @param params - Optional query parameters to filter projects.
- * @param options - Optional React Query options (e.g., enabled).
- * @returns A React Query result containing the list of projects with pagination.
- */
-export function useProjects(
-  params: ProjectQueryParams = {},
-  options?: { enabled?: boolean }
-) {
-  const per_page = params.per_page ?? 50;
-  const page = params.page ?? 1;
-  const queryParams: ProjectQueryParams = { ...params, per_page, page };
-
-  return useQuery<PaginatedProjectsResponse>({
-    queryKey: ["projects", queryParams],
-    queryFn: () => getProjects(queryParams),
-    enabled: options?.enabled ?? true,
-  });
-}
-
-/**
  * Get projects in a paginated way in infinite scroll mode.
  * @param params - Filters (except page, which is controlled by useInfiniteQuery)
- * @param options - Options React Query
+ * @param options - Options React Query (e.g., enabled)
  */
 export function useInfiniteProjects(
-  params: Omit<ProjectQueryParams, "page"> = {}
+  params: Omit<ProjectQueryParams, "page"> = {},
+  options?: { enabled?: boolean }
 ) {
   const per_page = params.per_page ?? 20;
   const queryParams = { ...params, per_page };
@@ -70,6 +49,7 @@ export function useInfiniteProjects(
         page: typeof pageParam === "number" ? pageParam : 1,
       }),
     initialPageParam: 1,
+    enabled: options?.enabled ?? true,
     getNextPageParam: (lastPage) => {
       const { pagination } = lastPage;
       if (!pagination) return undefined;
@@ -113,8 +93,17 @@ export function useCreateProject() {
     errorMessage: "Error while creating project",
     options: {
       onSuccess: (project) => {
+        const ownerId = project.owner?.id;
+
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
+
+        if (ownerId) {
+          queryClient.invalidateQueries({
+            queryKey: ["users", ownerId, "projects"],
+          });
+        }
+
+        queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         router.push(`/projects/create/success?projectId=${project.id}`);
@@ -155,11 +144,20 @@ export function useUpdateProject() {
     options: {
       onSuccess: (project, variables) => {
         const targetId = project?.publicId || variables?.id;
+        const ownerId = project?.owner?.id;
+
         if (targetId) {
           queryClient.invalidateQueries({
             queryKey: ["user", "me", "projects"],
           });
-          queryClient.invalidateQueries({ queryKey: ["projects"] });
+
+          if (ownerId) {
+            queryClient.invalidateQueries({
+              queryKey: ["users", ownerId, "projects"],
+            });
+          }
+
+          queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
           queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
           router.push(`/projects/${targetId}`);
@@ -193,10 +191,12 @@ export function useDeleteProject() {
     successMessage: "Project deleted successfully",
     errorMessage: "Error while deleting project",
     options: {
-      onSuccess: () => {
+      onSuccess: (_, projectId) => {
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
+
+        queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
         router.push("/dashboard/my-projects");
       },
     },
@@ -231,11 +231,21 @@ export function useToggleProjectPublished() {
     options: {
       onSuccess: (_, variables) => {
         const targetId = variables.project.id || "";
+        const ownerId = variables.project.owner?.id;
+
         if (targetId) {
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
         }
+
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
+
+        if (ownerId) {
+          queryClient.invalidateQueries({
+            queryKey: ["users", ownerId, "projects"],
+          });
+        }
+
+        queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       },
     },
@@ -325,9 +335,9 @@ export function useUpdateProjectCover() {
       projectId: string;
       coverFile: File;
     }) => updateProjectCover(projectId, coverFile),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    onSuccess: (_, projectId) => {
       queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
     },
   });
 
@@ -356,7 +366,6 @@ export function useDeleteProjectImage() {
       imageUrl: string;
     }) => deleteProjectImage(projectId, imageUrl),
     onSuccess: (_project, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       if (variables?.projectId) {
         queryClient.invalidateQueries({
@@ -390,7 +399,6 @@ export function useClaimProject(projectId: string) {
           queryClient.setQueryData(["project", targetId], project);
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
         }
-        queryClient.invalidateQueries({ queryKey: ["projects"] });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
       },

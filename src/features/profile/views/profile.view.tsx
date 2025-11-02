@@ -77,7 +77,7 @@ export default function ProfileView() {
 
         <TabsContent value="projects" className="mt-6">
           <Suspense fallback={<ProfileProjectsSkeleton />}>
-            <ProfileProjectsList />
+            <ProfileProjectsList userId={currentUser.id} />
           </Suspense>
         </TabsContent>
 

@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
 import {
+  UserProjectsQueryParams,
   getUserById,
+  getUserProjects,
   updateProfile,
   updateProfileLogo,
 } from "../services/profile.service";
@@ -103,4 +105,28 @@ export const useProfileLogoUpdate = (id: string) => {
     isUpdatingLogo: mutation.isPending,
     isUpdateErrorLogo: mutation.isError,
   };
+};
+
+/**
+ * Hook to fetch the projects of a user by their ID.
+ *
+ * @param userId - The ID of the user to fetch projects for.
+ * @param params - Optional query parameters for pagination and filtering.
+ * @param options - Optional React Query options (e.g., enabled).
+ * @returns A React Query result containing the paginated projects data.
+ */
+export const useUserProjects = (
+  userId: string,
+  params: UserProjectsQueryParams = {},
+  options?: { enabled?: boolean }
+) => {
+  const per_page = params.per_page ?? 10;
+  const page = params.page ?? 1;
+  const queryParams: UserProjectsQueryParams = { ...params, per_page, page };
+
+  return useQuery({
+    queryKey: ["users", userId, "projects", queryParams],
+    queryFn: () => getUserProjects(userId, queryParams),
+    enabled: (options?.enabled ?? true) && !!userId,
+  });
 };
