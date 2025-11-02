@@ -19,8 +19,6 @@ interface CategoryListProps {
   dense?: boolean;
   badgeVariant?: ComponentProps<typeof Badge>["variant"];
   badgeClassName?: string;
-  showTooltip?: boolean;
-  tooltipText?: string;
 }
 
 export function CategoryList({
@@ -31,19 +29,10 @@ export function CategoryList({
   dense = false,
   badgeVariant = "gray",
   badgeClassName,
-  showTooltip = false,
-  tooltipText = "AI-suggested categories may not be perfectly accurate yet and will improve over time.",
 }: CategoryListProps) {
   return (
     <div className={className}>
-      {title && (
-        <Label
-          className="mb-3 text-sm tracking-tight"
-          tooltip={showTooltip ? tooltipText : undefined}
-        >
-          {title}
-        </Label>
-      )}
+      {title && <Label className="mb-3 text-sm tracking-tight">{title}</Label>}
       {categories?.length ? (
         <div
           className={dense ? "flex flex-wrap gap-1" : "flex flex-wrap gap-2"}

@@ -115,7 +115,6 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         title={projectCategories.length > 0 ? "Categories" : "Tags"}
         categories={allCategories}
         emptyText="No tags added"
-        showTooltip={true}
       />
 
       <ContributorsSidebarList
