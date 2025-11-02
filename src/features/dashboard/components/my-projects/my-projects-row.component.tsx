@@ -60,7 +60,7 @@ export default function MyProjectRow({
       <TableCell>
         <div className="flex items-center gap-1.5">
           <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
-          <h2 className="text-muted-foreground inline-flex items-center gap-1 text-sm">
+          <h2 className="text-muted-foreground inline-flex items-center gap-1 text-sm whitespace-nowrap">
             <span className="text-primary font-medium">
               {isRepoLoading ? (
                 <Skeleton className="h-4 w-8" />

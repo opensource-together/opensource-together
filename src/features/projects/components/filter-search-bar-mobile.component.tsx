@@ -8,12 +8,10 @@ import { Separator } from "@/shared/components/ui/separator";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
-import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
-import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
+import { useCategories } from "@/shared/hooks/use-category.hook";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { ProjectFilters } from "../types/project-filters.type";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
@@ -90,27 +88,38 @@ export default function FilterSearchBarMobile({
     }
   }, [initialFilters]);
 
-  const {
-    techStackOptions,
-    isLoading: techStacksLoading,
-    onOpenChange: onTechStackOpenChange,
-  } = useLazyTechStack();
-  const {
-    categoryOptions,
-    isLoading: categoryLoading,
-    onOpenChange: onCategoryOpenChange,
-  } = useLazyCategory();
+  const [isTechStackOpen, setIsTechStackOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  const hasSelectedFilters = useMemo(() => {
+    return (
+      (initialFilters?.techStacks && initialFilters.techStacks.length > 0) ||
+      (initialFilters?.categories && initialFilters.categories.length > 0)
+    );
+  }, [initialFilters]);
+
+  const { techStackOptions, isLoading: techStacksLoading } = useTechStack({
+    enabled: isTechStackOpen || hasSelectedFilters,
+  });
+  const { categoryOptions, isLoading: categoryLoading } = useCategories({
+    enabled: isCategoryOpen || hasSelectedFilters,
+  });
 
   const formatSelectedValues = (
     selectedIds: string[],
     options: Array<{ id: string; name: string }>,
     defaultText: string,
+    isLoading: boolean,
     maxLength: number = 30
   ): string => {
     if (selectedIds.length === 0) return defaultText;
+
     const selectedNames = selectedIds
       .map((id) => options.find((opt) => opt.id === id)?.name)
       .filter((name): name is string => !!name);
+
+    if (selectedNames.length === 0) return defaultText;
+
     const namesText = selectedNames.join(", ");
     return namesText.length > maxLength
       ? namesText.substring(0, maxLength - 3) + "..."
@@ -122,14 +131,20 @@ export default function FilterSearchBarMobile({
       formatSelectedValues(
         selectedTechStacks,
         techStackOptions,
-        "Technologies"
+        "Technologies",
+        techStacksLoading
       ),
-    [selectedTechStacks, techStackOptions]
+    [selectedTechStacks, techStackOptions, techStacksLoading]
   );
   const categoriesValue = useMemo(
     () =>
-      formatSelectedValues(selectedCategories, categoryOptions, "Categories"),
-    [selectedCategories, categoryOptions]
+      formatSelectedValues(
+        selectedCategories,
+        categoryOptions,
+        "Categories",
+        categoryLoading
+      ),
+    [selectedCategories, categoryOptions, categoryLoading]
   );
   const sortValue = useMemo(() => {
     return (
@@ -198,9 +213,6 @@ export default function FilterSearchBarMobile({
           responsiveWidth={{ mobile: "w-full", desktop: "w-[420px]" }}
           className="rounded-t-2xl p-4"
         >
-          <SheetHeader>
-            <SheetTitle className="mx-auto h-1.5 w-12 rounded-full bg-black/10" />
-          </SheetHeader>
           <div className="mt-4 flex flex-col gap-3 overflow-y-auto overscroll-contain pb-20">
             <CustomCombobox
               options={techStackOptions}
@@ -219,7 +231,7 @@ export default function FilterSearchBarMobile({
                   value={techStacksValue}
                 />
               }
-              onOpenChange={onTechStackOpenChange}
+              onOpenChange={setIsTechStackOpen}
               isLoading={techStacksLoading}
             />
             <CustomCombobox
@@ -234,7 +246,7 @@ export default function FilterSearchBarMobile({
               trigger={
                 <MobileFilterItem label="Categories" value={categoriesValue} />
               }
-              onOpenChange={onCategoryOpenChange}
+              onOpenChange={setIsCategoryOpen}
               isLoading={categoryLoading}
             />
             <SortSelect
