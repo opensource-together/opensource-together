@@ -58,7 +58,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
       hero={
         <ProfileHero profile={profile} variant="public" hideHeader={false} />
       }
-      mobileHeader={<ProfileMobileHero profile={profile} />}
+      mobileHeader={<ProfileMobileHero variant="public" profile={profile} />}
     >
       <Tabs defaultValue={tab} onValueChange={handleTabChange}>
         <TabsList>
