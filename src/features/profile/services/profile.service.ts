@@ -1,7 +1,21 @@
 import { API_BASE_URL } from "@/config/config";
 
+import {
+  PaginatedResponse,
+  PaginationParams,
+} from "@/shared/types/pagination.type";
+
+import { Project } from "@/features/projects/types/project.type";
+
 import { Profile } from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
+
+export interface UserProjectsQueryParams extends PaginationParams {
+  published?: boolean;
+}
+
+export interface PaginatedUserProjectsResponse
+  extends PaginatedResponse<Project> {}
 
 /**
  * Gets a public user by ID.
@@ -89,6 +103,43 @@ export const updateProfileLogo = async (
     return apiResponse.data;
   } catch (error) {
     console.error("Error updating profile logo:", error);
+    throw error;
+  }
+};
+
+/**
+ * Gets the projects for a specific user by their ID.
+ *
+ * @param userId - The user ID to fetch projects for.
+ * @param params - Optional query parameters for pagination and filtering.
+ * @returns A promise that resolves to the paginated projects data.
+ */
+export const getUserProjects = async (
+  userId: string,
+  params?: UserProjectsQueryParams
+): Promise<PaginatedUserProjectsResponse> => {
+  try {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/users/${userId}/projects${queryString ? `?${queryString}` : ""}`;
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch user projects");
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error("Error fetching user projects:", error);
     throw error;
   }
 };

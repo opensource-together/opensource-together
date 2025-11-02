@@ -71,7 +71,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
           onMouseLeave={handleDragEnd}
         >
           <div
-            className={`border-muted-black-stroke flex h-full rounded-2xl border transition-transform duration-300 ${isDragging ? "transition-none" : ""}`}
+            className={`flex h-full transition-transform duration-300 ${isDragging ? "transition-none" : ""}`}
             style={{
               transform: `translateX(calc(${translateX}px - ${currentImageIndex * 100}%))`,
             }}
@@ -83,7 +83,7 @@ export default function ImageSlider({ images }: ImageSliderProps) {
                 alt={`Image ${idx + 1}`}
                 width={688}
                 height={393}
-                className="h-[207px] w-full shrink-0 rounded-2xl object-cover sm:h-[365px]"
+                className="border-muted-black-stroke h-[207px] w-full shrink-0 rounded-2xl border object-cover sm:h-[365px]"
                 unoptimized
                 priority={idx === currentImageIndex}
               />

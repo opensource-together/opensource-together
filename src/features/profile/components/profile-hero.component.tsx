@@ -3,6 +3,11 @@ import Link from "next/link";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import {
+  TooltipContent,
+  TooltipRoot,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip";
 
 import { Profile } from "../types/profile.type";
 
@@ -12,7 +17,10 @@ interface ProfileHeroProps {
   variant?: "private" | "public";
 }
 
-export function ProfileMobileHero({ profile }: ProfileHeroProps) {
+export function ProfileMobileHero({
+  profile,
+  variant = "private",
+}: ProfileHeroProps) {
   const {
     image = "",
     name = "",
@@ -24,13 +32,33 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
   const renderBetaTesterBadge = () => {
     if (!betaTester) return null;
     return (
-      <Image
-        src="/early-badge.svg"
-        alt="Beta Tester"
-        width={24}
-        height={24}
-        className="-mt-0.5 ml-0.5"
-      />
+      <TooltipRoot>
+        <TooltipTrigger asChild>
+          <Image
+            src="/early-badge.svg"
+            alt="Beta Tester"
+            width={24}
+            height={24}
+            className="-mt-0.5 ml-0.5"
+          />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Early Adopter</p>
+        </TooltipContent>
+      </TooltipRoot>
+    );
+  };
+
+  const renderActionButton = () => {
+    // Feature post-launch
+    if (variant === "public") {
+      return null;
+    }
+
+    return (
+      <Link href="/profile/me/edit">
+        <Button>Edit Profile</Button>
+      </Link>
     );
   };
 
@@ -57,10 +85,7 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
         <p className="mt-4 mb-8 line-clamp-5 text-sm font-normal break-words">
           {bio}
         </p>
-
-        <Link href="/profile/me/edit" className="mt-6">
-          <Button>Edit Profile</Button>
-        </Link>
+        {renderActionButton()}
       </div>
     </div>
   );
@@ -68,6 +93,7 @@ export function ProfileMobileHero({ profile }: ProfileHeroProps) {
 
 export default function ProfileHero({
   profile,
+  variant = "private",
   hideHeader = true,
 }: ProfileHeroProps) {
   const {
@@ -85,25 +111,27 @@ export default function ProfileHero({
   const renderBetaTesterBadge = () => {
     if (!betaTester) return null;
     return (
-      <Image
-        src="/early-badge.svg"
-        alt="Beta Tester"
-        width={24}
-        height={24}
-        className="-mt-0.5 ml-0.5"
-      />
+      <TooltipRoot>
+        <TooltipTrigger asChild>
+          <Image
+            src="/early-badge.svg"
+            alt="Beta Tester"
+            width={24}
+            height={24}
+            className="-mt-0.5 ml-0.5"
+          />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Early Adopter</p>
+        </TooltipContent>
+      </TooltipRoot>
     );
   };
-
   const renderActionButton = () => {
     // Feature post-launch
-    // if (variant === "public") {
-    //   return (
-    //     <Button className="gap-1 font-normal">
-    //       Contact <IoChatbox className="size-3.5" />
-    //     </Button>
-    //   );
-    // }
+    if (variant === "public") {
+      return null;
+    }
 
     return (
       <Link href="/profile/me/edit">

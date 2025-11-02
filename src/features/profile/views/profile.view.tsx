@@ -66,18 +66,13 @@ export default function ProfileView() {
             />
           </div>
 
-          <div className="mt-12 flex w-full">
-            <ProfileExperiences experiences={currentUser.userExperiences} />
-          </div>
-
-          <div className="mt-12 flex w-full">
-            <RecentProjects />
-          </div>
+          <ProfileExperiences experiences={currentUser.userExperiences} />
+          <RecentProjects />
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">
           <Suspense fallback={<ProfileProjectsSkeleton />}>
-            <ProfileProjectsList />
+            <ProfileProjectsList userId={currentUser.id} />
           </Suspense>
         </TabsContent>
 

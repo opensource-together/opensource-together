@@ -58,7 +58,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
       hero={
         <ProfileHero profile={profile} variant="public" hideHeader={false} />
       }
-      mobileHeader={<ProfileMobileHero profile={profile} />}
+      mobileHeader={<ProfileMobileHero variant="public" profile={profile} />}
     >
       <Tabs defaultValue={tab} onValueChange={handleTabChange}>
         <TabsList>
@@ -76,19 +76,14 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
               }
             />
           </div>
-          )
-          <div className="mt-12 flex w-full">
-            <ProfileExperiences experiences={profile.userExperiences} />
-          </div>
-          <div className="mt-12 flex w-full">
-            <RecentProjects />
-          </div>
+          <ProfileExperiences experiences={profile.userExperiences} />
+          <RecentProjects userId={userId} />
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">
           <div className="flex w-full">
             <Suspense fallback={<ProfileProjectsSkeleton />}>
-              <ProfileProjectsList />
+              <ProfileProjectsList userId={userId} />
             </Suspense>
           </div>
         </TabsContent>

@@ -7,10 +7,9 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
-import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
-import { ProjectQueryParams } from "@/features/dashboard/services/my-projects.service";
 import type { Project } from "@/features/projects/types/project.type";
 
+import { useUserProjects } from "../hooks/use-profile.hook";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
 const parseNumber = (value: string | null, fallback: number) => {
@@ -52,22 +51,31 @@ function ProfileProjectItem({ project }: { project: Project }) {
   );
 }
 
-export default function ProfileProjectsList() {
+interface ProfileProjectsListProps {
+  userId: string;
+}
+
+export default function ProfileProjectsList({
+  userId,
+}: ProfileProjectsListProps) {
   const searchParams = useSearchParams();
 
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 6);
-  const queryParams: ProjectQueryParams = {
-    page,
-    per_page: perPage,
-    published: true,
-  };
 
   const {
     data: projectsResponse,
     isLoading,
     isError,
-  } = useMyProjects(queryParams);
+  } = useUserProjects(
+    userId,
+    {
+      page,
+      per_page: perPage,
+      published: true,
+    },
+    { enabled: !!userId }
+  );
   const projects = projectsResponse?.data || [];
   const pagination = projectsResponse?.pagination;
 
@@ -76,7 +84,7 @@ export default function ProfileProjectsList() {
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["user", "me", "projects"]}
+        queryKey={["users", userId, "projects"]}
       />
     );
 

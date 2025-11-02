@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
-import { useLazyCategory } from "@/shared/hooks/use-lazy-category.hook";
-import { useLazyTechStack } from "@/shared/hooks/use-lazy-tech-stack.hook";
+import { useCategories } from "@/shared/hooks/use-category.hook";
+import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
@@ -84,16 +84,22 @@ export default function FilterSearchBar({
     }
   }, [initialFilters]);
 
-  const {
-    techStackOptions,
-    isLoading: techStacksLoading,
-    onOpenChange: onTechStackOpenChange,
-  } = useLazyTechStack();
-  const {
-    categoryOptions,
-    isLoading: categoryLoading,
-    onOpenChange: onCategoryOpenChange,
-  } = useLazyCategory();
+  const [isTechStackOpen, setIsTechStackOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  const hasSelectedFilters = useMemo(() => {
+    return (
+      (initialFilters?.techStacks && initialFilters.techStacks.length > 0) ||
+      (initialFilters?.categories && initialFilters.categories.length > 0)
+    );
+  }, [initialFilters]);
+
+  const { techStackOptions, isLoading: techStacksLoading } = useTechStack({
+    enabled: isTechStackOpen || hasSelectedFilters,
+  });
+  const { categoryOptions, isLoading: categoryLoading } = useCategories({
+    enabled: isCategoryOpen || hasSelectedFilters,
+  });
 
   const handleTechStacksChange = (ids: string[]) => {
     setSelectedTechStacks(ids);
@@ -111,17 +117,23 @@ export default function FilterSearchBar({
     selectedIds: string[],
     options: Array<{ id: string; name: string }>,
     defaultText: string,
+    isLoading: boolean,
     maxLength: number = 30
   ): string => {
     if (selectedIds.length === 0) return defaultText;
+
+    if (isLoading) {
+      return "Loading...";
+    }
 
     const selectedNames = selectedIds
       .map((id) => options.find((opt) => opt.id === id)?.name)
       .filter((name): name is string => !!name);
 
+    if (selectedNames.length === 0) return defaultText;
+
     const namesText = selectedNames.join(", ");
 
-    // Truncate if too long
     if (namesText.length > maxLength) {
       return namesText.substring(0, maxLength - 3) + "...";
     }
@@ -134,15 +146,21 @@ export default function FilterSearchBar({
       formatSelectedValues(
         selectedTechStacks,
         techStackOptions,
-        "Technologies"
+        "Technologies",
+        techStacksLoading
       ),
-    [selectedTechStacks, techStackOptions]
+    [selectedTechStacks, techStackOptions, techStacksLoading]
   );
 
   const categoriesValue = useMemo(
     () =>
-      formatSelectedValues(selectedCategories, categoryOptions, "Categories"),
-    [selectedCategories, categoryOptions]
+      formatSelectedValues(
+        selectedCategories,
+        categoryOptions,
+        "Categories",
+        categoryLoading
+      ),
+    [selectedCategories, categoryOptions, categoryLoading]
   );
 
   const sortValue = useMemo(() => {
@@ -224,7 +242,7 @@ export default function FilterSearchBar({
                   trigger={
                     <FilterItem label="Choose" value={techStacksValue} />
                   }
-                  onOpenChange={onTechStackOpenChange}
+                  onOpenChange={setIsTechStackOpen}
                   isLoading={techStacksLoading}
                 />
               </div>
@@ -246,7 +264,7 @@ export default function FilterSearchBar({
                   trigger={
                     <FilterItem label="Select" value={categoriesValue} />
                   }
-                  onOpenChange={onCategoryOpenChange}
+                  onOpenChange={setIsCategoryOpen}
                   isLoading={categoryLoading}
                 />
               </div>

@@ -7,9 +7,9 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
-import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 import type { Project } from "@/features/projects/types/project.type";
 
+import { useUserProjects } from "../hooks/use-profile.hook";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
 function RecentProjectItem({ project }: { project: Project }) {
@@ -45,22 +45,35 @@ function RecentProjectItem({ project }: { project: Project }) {
   );
 }
 
-export default function RecentProjects() {
+interface RecentProjectsProps {
+  userId?: string;
+}
+
+export default function RecentProjects({ userId }: RecentProjectsProps) {
+  // If userId is provided, use the user's projects endpoint, otherwise use "me"
+  const effectiveUserId = userId || "me";
+
   const {
-    data: myProjectsResponse,
+    data: projectsResponse,
     isLoading,
     isError,
-  } = useMyProjects({
-    published: true,
-  });
-  const myProjects = myProjectsResponse?.data || [];
+  } = useUserProjects(
+    effectiveUserId,
+    {
+      page: 1,
+      per_page: 3,
+      published: true,
+    },
+    { enabled: !!effectiveUserId }
+  );
+  const myProjects = projectsResponse?.data || [];
 
   if (isLoading) return <ProfileProjectsSkeleton />;
   if (isError)
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["user", "me", "projects"]}
+        queryKey={["users", effectiveUserId, "projects"]}
       />
     );
 
