@@ -31,7 +31,7 @@ export default function ProfileExperiences({
   if (!experiences || experiences.length === 0) return null;
 
   return (
-    <section className={cn("w-full", className)}>
+    <section className={cn("mt-12 w-full", className)}>
       <h3 className="font-medium">{title}</h3>
       <div className="flex w-full flex-col">
         {experiences.map((exp, idx) => (

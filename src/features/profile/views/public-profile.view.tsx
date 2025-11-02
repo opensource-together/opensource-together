@@ -76,12 +76,8 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
               }
             />
           </div>
-          <div className="mt-12 flex w-full">
-            <ProfileExperiences experiences={profile.userExperiences} />
-          </div>
-          <div className="mt-12 flex w-full">
-            <RecentProjects userId={userId} />
-          </div>
+          <ProfileExperiences experiences={profile.userExperiences} />
+          <RecentProjects userId={userId} />
         </TabsContent>
 
         <TabsContent value="projects" className="mt-6">
