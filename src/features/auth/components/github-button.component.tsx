@@ -40,7 +40,9 @@ export default function GitHubButton({
       ) : (
         <RiGithubFill
           className={
-            isOutlineVariant ? "text-foreground size-4" : "size-4 text-white"
+            isOutlineVariant
+              ? "text-foreground size-4.5"
+              : "size-4.5 text-white"
           }
         />
       )}
