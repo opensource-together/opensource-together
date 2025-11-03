@@ -93,9 +93,28 @@ export function CustomCombobox({
           </div>
         </PopoverTrigger>
         <PopoverContent
-          className="border-muted-black-stroke p-1 shadow-xs"
+          className="border-muted-black-stroke relative p-1 shadow-xs"
           align="start"
         >
+          <div className="absolute top-2.5 right-4 z-10">
+            {value.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  onChange([]);
+                  setOpen(false);
+                }}
+                className={cn(
+                  "cursor-pointer text-xs underline",
+                  disabled
+                    ? "opacity-50"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Clear All
+              </button>
+            )}
+          </div>
           <Command>
             <CommandInput placeholder={searchPlaceholder} className="h-9" />
             <CommandList>
