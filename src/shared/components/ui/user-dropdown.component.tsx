@@ -38,7 +38,7 @@ export default function UserDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="text-muted-foreground w-48 px-2"
+        className="text-muted-foreground w-48 p-2"
       >
         <div className="flex flex-col truncate p-2 text-sm">
           <p className="text-primary font-medium">{currentUser?.name}</p>

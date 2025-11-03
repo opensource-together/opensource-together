@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
+import { HiXMark } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -196,7 +197,7 @@ export function MultipleImageUpload({
                     className="absolute -top-1 -right-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
                     disabled={disabled}
                   >
-                    <Icon name="trash" size="xs" />
+                    <HiXMark />
                   </button>
                 ) : (
                   <button
@@ -205,7 +206,7 @@ export function MultipleImageUpload({
                     className="absolute -top-1 -right-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
                     disabled={disabled}
                   >
-                    <Icon name="cross" size="xs" />
+                    <HiXMark />
                   </button>
                 )}
               </div>

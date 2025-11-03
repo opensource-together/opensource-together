@@ -49,7 +49,7 @@ const footerLinks: {
       id: "company-discord",
     },
     {
-      label: "Twitter",
+      label: "X (Twitter)",
       href: "https://x.com/OpenSTogether",
       external: true,
       id: "company-x",

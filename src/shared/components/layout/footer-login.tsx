@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -7,9 +5,9 @@ import { Separator } from "@/shared/components/ui/separator";
 
 export default function FooterLogin() {
   const navigationLinks = [
-    { name: "Privacy", href: "/privacy-policy" },
     { name: "Guide", href: "/oss-guide" },
-    { name: "X / Twitter", href: "https://x.com/OpenSTogether" },
+    { name: "X (Twitter)", href: "https://x.com/OpenSTogether" },
+    { name: "Discord", href: "https://discord.gg/4ZDhm3dQAC" },
     {
       name: "LinkedIn",
       href: "https://www.linkedin.com/company/opensource-together",
@@ -23,7 +21,7 @@ export default function FooterLogin() {
         <div className="flex w-full items-center justify-center gap-4 md:w-auto md:justify-start md:gap-6">
           <Link href="/" className="flex items-center">
             <Image
-              src="/icons/ost-logo-rounded.svg"
+              src="/ost-logo.svg"
               alt="ost-logo"
               width={39}
               height={39}
@@ -36,7 +34,7 @@ export default function FooterLogin() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="tracking-tight text-neutral-500 transition hover:text-neutral-700"
+                className="text-muted-foreground hover:text-foreground tracking-tight transition"
               >
                 {link.name}
               </Link>

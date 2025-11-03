@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { HiCheck } from "react-icons/hi2";
+import { HiCheck, HiChevronDown, HiXMark } from "react-icons/hi2";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -19,8 +19,6 @@ import {
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
-
-import Icon from "./icon";
 
 export interface ComboboxOption {
   id: string;
@@ -110,7 +108,7 @@ export function Combobox({
                 className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
                 disabled={disabled}
               >
-                <Icon name="cross" size="xxs" />
+                <HiXMark />
               </button>
             </Badge>
           ))}
@@ -135,8 +133,7 @@ export function Combobox({
                 ? selectedOptions.map((opt) => opt.name).join(", ")
                 : placeholder}
             </span>
-
-            <Icon name="chevron-down" />
+            <HiChevronDown />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full rounded-lg p-0" align="start">
