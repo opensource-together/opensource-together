@@ -20,25 +20,31 @@
 git clone https://github.com/opensource-together/opensource-together.git
 ```
 
-2. Make sure you have pnpm installed
+2. Navigate into the project directory
+
+```bash
+cd opensource-together
+```
+
+3. Make sure you have pnpm installed
 
 ```bash
 npm install -g pnpm
 ```
 
-3. Set up environment variables
+4. Set up environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-4. Install the project dependencies
+5. Install the project dependencies
 
 ```bash
 pnpm install
 ```
 
-5. Start the development server
+6. Start the development server
 
 ```bash
 pnpm dev
