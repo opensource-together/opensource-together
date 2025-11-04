@@ -25,18 +25,12 @@ const GeistMono = Geist_Mono({
   display: "swap",
 });
 
-// Get the base URL for images - fallback to production URL if not set
-const getImageBaseUrl = (): string => {
-  const baseUrl = FRONTEND_URL.trim();
-  return baseUrl.replace(/\/+$/, "");
-};
-
-const imageBaseUrl = getImageBaseUrl();
-const metadataImageUrl = `${imageBaseUrl}/illustrations/ost-metadata.png`;
+const metadataImageUrl = `${FRONTEND_URL}/illustrations/ost-metadata.png`;
 
 export const metadata: Metadata = {
   title: "OpenSource Together",
-  description: "Find and collaborate on open source projects",
+  description:
+    "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
   icons: {
     icon: "/favicon.ico",
   },
@@ -52,7 +46,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "OpenSource Together",
     description:
-      "OpenSource Together highlights ambitious open source projects to offer them an initial wave of visibility, committed contributors and support.",
+      "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
     images: [
       {
         url: metadataImageUrl,
@@ -61,7 +55,7 @@ export const metadata: Metadata = {
         alt: "OpenSource Together - Find and collaborate on open source projects",
       },
     ],
-    url: "https://opensource-together.com",
+    url: FRONTEND_URL,
     siteName: "OpenSource Together",
     locale: "fr_FR",
     type: "website",
@@ -69,9 +63,10 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "OpenSource Together",
-    description:
-      "OpenSource Together highlights ambitious open source projects to offer them an initial wave of visibility, committed contributors and support.",
+    creator: "@OpenSTogether",
     images: [metadataImageUrl],
+    description:
+      "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
   },
 
   keywords: [
@@ -82,6 +77,15 @@ export const metadata: Metadata = {
     "Together",
     "Beta OSS",
     "Maintainers",
+    "Developers",
+    "Learning",
+    "Growth",
+    "Contribution",
+    "Collaboration",
+    "Community",
+    "Development",
+    "Projects",
+    "Collaboration",
     "Open Source Projects",
     "Open Source Collaboration",
     "Open Source Community",
