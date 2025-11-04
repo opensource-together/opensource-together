@@ -17,7 +17,10 @@ const fontVariants = [
 ];
 
 export async function Generator({ children }: { children: ReactElement }) {
+  console.log("[Generator] Starting image generation");
+
   try {
+    console.log("[Generator] Loading fonts...");
     const fontPromises = fontVariants.map(async (variant) => {
       const url = `${FONT_BASE_URL}/${variant.name}`;
 
@@ -28,12 +31,13 @@ export async function Generator({ children }: { children: ReactElement }) {
 
         if (!res.ok) {
           console.warn(
-            `Failed to fetch font ${variant.name} (${url}): ${res.status}`
+            `[Generator] Failed to fetch font ${variant.name} (${url}): ${res.status}`
           );
           return null;
         }
 
         const fontData = await res.arrayBuffer();
+        console.log(`[Generator] Font ${variant.name} loaded successfully`);
 
         return {
           name: "Geist",
@@ -51,7 +55,7 @@ export async function Generator({ children }: { children: ReactElement }) {
             | 900,
         };
       } catch (error) {
-        console.warn(`Failed to load font ${variant.name}:`, error);
+        console.warn(`[Generator] Failed to load font ${variant.name}:`, error);
         return null;
       }
     });
@@ -66,13 +70,25 @@ export async function Generator({ children }: { children: ReactElement }) {
       (font): font is NonNullable<typeof font> => font !== null
     );
 
-    return new ImageResponse(children, {
+    console.log(
+      `[Generator] Loaded ${loadedFonts.length} fonts out of ${fontVariants.length}`
+    );
+
+    console.log("[Generator] Creating ImageResponse...");
+    const imageResponse = new ImageResponse(children, {
       width: 1200,
       height: 630,
       ...(loadedFonts.length > 0 ? { fonts: loadedFonts } : {}),
     });
+
+    console.log("[Generator] ImageResponse created successfully");
+    return imageResponse;
   } catch (error) {
-    console.error("Failed to generate ImageResponse:", error);
+    console.error("[Generator] Failed to generate ImageResponse:", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : typeof error,
+    });
     throw error;
   }
 }

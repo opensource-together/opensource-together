@@ -50,9 +50,13 @@ export async function resolveOgImageSource(
     fallbackLabel
   )}&background=f8fafc&color=0f172a&bold=true&size=${size}`;
 
-  if (!source) return fallback;
+  if (!source) {
+    console.log("[resolveOgImageSource] No source provided, using fallback");
+    return fallback;
+  }
 
   try {
+    console.log(`[resolveOgImageSource] Fetching image from: ${source}`);
     const response = await fetch(source, {
       method: "GET",
       cache: "force-cache",
@@ -67,11 +71,18 @@ export async function resolveOgImageSource(
       throw new Error("Source is not an image");
     }
 
+    console.log(
+      "[resolveOgImageSource] Image fetched, converting to base64..."
+    );
     const arrayBuffer = await response.arrayBuffer();
     const base64 = arrayBufferToBase64(arrayBuffer);
+    console.log("[resolveOgImageSource] Base64 conversion complete");
     return `data:${contentType};base64,${base64}`;
   } catch (error) {
-    console.warn("Failed to resolve OG image source:", error);
+    console.warn("[resolveOgImageSource] Failed to resolve OG image source:", {
+      error: error instanceof Error ? error.message : String(error),
+      source,
+    });
     return fallback;
   }
 }

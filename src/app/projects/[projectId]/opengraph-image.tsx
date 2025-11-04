@@ -17,25 +17,34 @@ export default async function Image({
 }: {
   params: Promise<{ projectId: string }>;
 }) {
+  // Log entry point for debugging
+  console.log("[OG Image] Starting image generation");
+
   try {
     const { projectId } = await params;
+    console.log("[OG Image] Project ID:", projectId);
 
     if (!projectId) {
       throw new Error("Project ID is required");
     }
 
+    console.log("[OG Image] Fetching project details...");
     const project = await getProjectDetails(projectId);
+    console.log("[OG Image] Project fetched:", project?.title);
 
     if (!project) {
       throw new Error("Project not found");
     }
 
+    console.log("[OG Image] Resolving logo...");
     const safeLogo = await resolveOgImageSource(
       project.logoUrl,
       project.title || "Project"
     );
+    console.log("[OG Image] Logo resolved");
 
-    return await Generator({
+    console.log("[OG Image] Generating image response...");
+    const imageResponse = await Generator({
       children: (
         <ProjectImageMetadata
           name={project.title || "OpenSource Together"}
@@ -47,11 +56,18 @@ export default async function Image({
         />
       ),
     });
+    console.log("[OG Image] Image response generated successfully");
+    return imageResponse;
   } catch (error) {
-    console.error("Failed to generate project metadata image:", error);
+    console.error("[OG Image] Error in main try block:", {
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : typeof error,
+    });
 
     try {
-      return await Generator({
+      console.log("[OG Image] Attempting fallback image...");
+      const fallbackResponse = await Generator({
         children: (
           <ProjectImageMetadata
             name="OpenSource Together"
@@ -59,10 +75,31 @@ export default async function Image({
           />
         ),
       });
+      console.log("[OG Image] Fallback image generated");
+      return fallbackResponse;
     } catch (fallbackError) {
-      console.error("Failed to generate fallback image:", fallbackError);
+      console.error("[OG Image] Fallback image generation failed:", {
+        error:
+          fallbackError instanceof Error
+            ? fallbackError.message
+            : String(fallbackError),
+        stack: fallbackError instanceof Error ? fallbackError.stack : undefined,
+        name:
+          fallbackError instanceof Error
+            ? fallbackError.name
+            : typeof fallbackError,
+      });
+
+      // Re-throw with more context for Cloudflare logs
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      const fallbackErrorMessage =
+        fallbackError instanceof Error
+          ? fallbackError.message
+          : String(fallbackError);
+
       throw new Error(
-        `Failed to generate OpenGraph image: ${error instanceof Error ? error.message : String(error)}`
+        `OpenGraph image generation failed. Original: ${errorMessage}. Fallback: ${fallbackErrorMessage}`
       );
     }
   }
