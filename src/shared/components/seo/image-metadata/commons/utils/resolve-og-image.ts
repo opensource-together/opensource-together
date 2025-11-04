@@ -1,14 +1,43 @@
 const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
-  let binary = "";
+  // Edge runtime compatible base64 encoding (btoa is not available in Edge)
   const bytes = new Uint8Array(buffer);
+  let binary = "";
   const chunk = 0x8000;
 
   for (let i = 0; i < bytes.length; i += chunk) {
     const slice = bytes.subarray(i, i + chunk);
-    binary += String.fromCharCode(...slice);
+    // Convert bytes to binary string chunk by chunk to avoid stack overflow
+    for (let j = 0; j < slice.length; j++) {
+      binary += String.fromCharCode(slice[j]);
+    }
   }
 
-  return btoa(binary);
+  // Use btoa if available (Node.js), otherwise use manual encoding
+  if (typeof btoa !== "undefined") {
+    return btoa(binary);
+  }
+
+  // Manual base64 encoding for Edge runtime
+  const base64Chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  let result = "";
+  let i = 0;
+
+  while (i < binary.length) {
+    const a = binary.charCodeAt(i++);
+    const b = i < binary.length ? binary.charCodeAt(i++) : 0;
+    const c = i < binary.length ? binary.charCodeAt(i++) : 0;
+
+    const bitmap = (a << 16) | (b << 8) | c;
+
+    result +=
+      base64Chars.charAt((bitmap >> 18) & 63) +
+      base64Chars.charAt((bitmap >> 12) & 63) +
+      (i - 2 < binary.length ? base64Chars.charAt((bitmap >> 6) & 63) : "=") +
+      (i - 1 < binary.length ? base64Chars.charAt(bitmap & 63) : "=");
+  }
+
+  return result;
 };
 
 export async function resolveOgImageSource(

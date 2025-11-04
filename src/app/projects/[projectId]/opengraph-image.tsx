@@ -3,7 +3,6 @@ import { resolveOgImageSource } from "@/shared/components/seo/image-metadata/com
 import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/projects/project/project-image-metadata";
 
 import { getProjectDetails } from "@/features/projects/services/project.service";
-import { Project } from "@/features/projects/types/project.type";
 
 //export const runtime = "edge";
 export const contentType = "image/png";
@@ -20,15 +19,27 @@ export default async function Image({
 }) {
   try {
     const { projectId } = await params;
-    const project = (await getProjectDetails(projectId)) as Project;
 
-    const safeLogo = await resolveOgImageSource(project.logoUrl, project.title);
+    if (!projectId) {
+      throw new Error("Project ID is required");
+    }
 
-    return Generator({
+    const project = await getProjectDetails(projectId);
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    const safeLogo = await resolveOgImageSource(
+      project.logoUrl,
+      project.title || "Project"
+    );
+
+    return await Generator({
       children: (
         <ProjectImageMetadata
-          name={project.title}
-          description={project.description}
+          name={project.title || "OpenSource Together"}
+          description={project.description || ""}
           imageUrl={safeLogo}
           forksCount={project.repositoryDetails?.forksCount}
           openIssuesCount={project.repositoryDetails?.openIssuesCount}
@@ -39,13 +50,20 @@ export default async function Image({
   } catch (error) {
     console.error("Failed to generate project metadata image:", error);
 
-    return Generator({
-      children: (
-        <ProjectImageMetadata
-          name="OpenSource Together"
-          description="Discover and contribute to open-source projects that make a difference."
-        />
-      ),
-    });
+    try {
+      return await Generator({
+        children: (
+          <ProjectImageMetadata
+            name="OpenSource Together"
+            description="Discover and contribute to open-source projects that make a difference."
+          />
+        ),
+      });
+    } catch (fallbackError) {
+      console.error("Failed to generate fallback image:", fallbackError);
+      throw new Error(
+        `Failed to generate OpenGraph image: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
   }
 }

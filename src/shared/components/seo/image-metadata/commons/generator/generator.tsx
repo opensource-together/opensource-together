@@ -17,8 +17,8 @@ const fontVariants = [
 ];
 
 export async function Generator({ children }: { children: ReactElement }) {
-  const fonts = await Promise.all(
-    fontVariants.map(async (variant) => {
+  try {
+    const fontPromises = fontVariants.map(async (variant) => {
       const url = `${FONT_BASE_URL}/${variant.name}`;
 
       try {
@@ -54,16 +54,25 @@ export async function Generator({ children }: { children: ReactElement }) {
         console.warn(`Failed to load font ${variant.name}:`, error);
         return null;
       }
-    })
-  );
+    });
 
-  const loadedFonts = fonts.filter(
-    (font): font is NonNullable<typeof font> => font !== null
-  );
+    const fonts = await Promise.allSettled(fontPromises).then((results) =>
+      results.map((result) =>
+        result.status === "fulfilled" ? result.value : null
+      )
+    );
 
-  return new ImageResponse(children, {
-    width: 1200,
-    height: 630,
-    ...(loadedFonts.length > 0 ? { fonts: loadedFonts } : {}),
-  });
+    const loadedFonts = fonts.filter(
+      (font): font is NonNullable<typeof font> => font !== null
+    );
+
+    return new ImageResponse(children, {
+      width: 1200,
+      height: 630,
+      ...(loadedFonts.length > 0 ? { fonts: loadedFonts } : {}),
+    });
+  } catch (error) {
+    console.error("Failed to generate ImageResponse:", error);
+    throw error;
+  }
 }
