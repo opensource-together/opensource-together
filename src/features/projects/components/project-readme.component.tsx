@@ -30,12 +30,83 @@ interface ProjectReadmeProps {
   };
 }
 
+function resolveReadmeImageUrl(
+  src: string | undefined,
+  repoUrl: string | null
+): string | undefined {
+  if (!src) return src;
+  // Keep absolute and data URIs as-is
+  if (/^(https?:)?\/\//i.test(src) || src.startsWith("data:")) return src;
+
+  if (!repoUrl) return src;
+
+  let owner = "";
+  let repo = "";
+  try {
+    const url = new URL(repoUrl);
+    const parts = url.pathname
+      .replace(/\.git$/i, "")
+      .split("/")
+      .filter(Boolean);
+    // pathname: /owner/repo
+    owner = parts[0] ?? "";
+    repo = parts[1] ?? "";
+
+    // Normalize src (remove leading ./)
+    const normalized = src.replace(/^\.\//, "").replace(/^\//, "");
+
+    if (/github\.com$/i.test(url.hostname)) {
+      // https://raw.githubusercontent.com/{owner}/{repo}/HEAD/{path}
+      return `https://raw.githubusercontent.com/${owner}/${repo}/HEAD/${normalized}`;
+    }
+    if (/gitlab\.com$/i.test(url.hostname)) {
+      // https://gitlab.com/{owner}/{repo}/-/raw/HEAD/{path}
+      return `${url.origin}/${owner}/${repo}/-/raw/HEAD/${normalized}`;
+    }
+    return src;
+  } catch {
+    return src;
+  }
+}
+
 export default function ProjectReadme({
   readme,
   projectTitle,
   project,
 }: ProjectReadmeProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const previewComponents: Components = {
+    ...(readmePreviewMarkdownComponents as unknown as Components),
+    img: ({ src, alt, width, height }) => (
+      <img
+        src={resolveReadmeImageUrl(
+          typeof src === "string" ? src : undefined,
+          project?.repoUrl
+        )}
+        alt={alt}
+        width={width}
+        height={height}
+        className="border-border my-3 inline-block h-auto max-w-full rounded"
+      />
+    ),
+  };
+
+  const fullComponents: Components = {
+    ...(readmeFullMarkdownComponents as unknown as Components),
+    img: ({ src, alt, width, height }) => (
+      <img
+        src={resolveReadmeImageUrl(
+          typeof src === "string" ? src : undefined,
+          project?.repoUrl
+        )}
+        alt={alt}
+        width={width}
+        height={height}
+        className="border-border my-3 inline-block h-auto max-w-full rounded"
+      />
+    ),
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -45,7 +116,7 @@ export default function ProjectReadme({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw]}
-              components={readmePreviewMarkdownComponents as Components}
+              components={previewComponents}
             >
               {readme}
             </ReactMarkdown>
@@ -89,7 +160,7 @@ export default function ProjectReadme({
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}
-                components={readmeFullMarkdownComponents as Components}
+                components={fullComponents}
               >
                 {readme}
               </ReactMarkdown>
