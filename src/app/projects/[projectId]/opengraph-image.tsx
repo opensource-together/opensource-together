@@ -16,10 +16,11 @@ export const alt = "OpenSource Together project preview";
 export default async function Image({
   params,
 }: {
-  params: { projectId: string };
+  params: Promise<{ projectId: string }>;
 }) {
   try {
-    const project = (await getProjectDetails(params.projectId)) as Project;
+    const { projectId } = await params;
+    const project = (await getProjectDetails(projectId)) as Project;
 
     const safeLogo = await resolveOgImageSource(project.logoUrl, project.title);
 
