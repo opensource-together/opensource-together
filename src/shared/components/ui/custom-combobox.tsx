@@ -83,14 +83,17 @@ export function CustomCombobox({
     <div className={cn("flex w-full flex-col gap-3", className)}>
       <Popover modal={true} open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
-          <div
+          <button
+            type="button"
             className={cn(
-              "inline-flex w-full",
+              "inline-flex w-full text-start",
               disabled && "pointer-events-none opacity-50"
             )}
+            disabled={disabled}
+            aria-disabled={disabled}
           >
             {trigger}
-          </div>
+          </button>
         </PopoverTrigger>
         <PopoverContent
           className="border-muted-black-stroke relative p-1 shadow-xs"

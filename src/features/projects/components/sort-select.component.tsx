@@ -51,7 +51,12 @@ export function SortSelect({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="inline-flex w-full cursor-pointer">{trigger}</div>
+        <button
+          type="button"
+          className="inline-flex w-full cursor-pointer text-start"
+        >
+          {trigger}
+        </button>
       </PopoverTrigger>
       <PopoverContent
         className="border-muted-black-stroke p-1 shadow-xs"

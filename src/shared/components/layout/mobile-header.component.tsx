@@ -122,7 +122,10 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                 {isLoading ? null : isAuthenticated ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <div className="hover:bg-accent relative flex w-full cursor-pointer items-center gap-3 py-4 transition">
+                      <button
+                        type="button"
+                        className="hover:bg-accent relative flex w-full cursor-pointer items-center gap-3 py-4 text-start transition"
+                      >
                         <div className="pl-4">
                           <Avatar
                             src={currentUser?.image}
@@ -142,7 +145,7 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                         <div className="absolute top-6 right-4">
                           <RxDotsVertical className="size-4" />
                         </div>
-                      </div>
+                      </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"

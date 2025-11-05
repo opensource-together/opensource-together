@@ -18,9 +18,13 @@ export default function GuidePage() {
       <div className="relative mx-auto w-full">
         <Image
           src="/illustrations/traveler.png"
-          alt="Journey illustration"
+          alt="Traveler illustration"
           width={1441}
           height={400}
+          priority
+          fetchPriority="high"
+          quality={85}
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 95vw, (max-width: 1024px) 100vw, 1441px"
           className="absolute bottom-10 left-1/2 z-[-1] h-auto w-[100%] -translate-x-1/2 object-contain sm:bottom-0 sm:w-[95%] md:bottom-6 md:w-[100%] lg:bottom-3 lg:w-[105%]"
         />
 

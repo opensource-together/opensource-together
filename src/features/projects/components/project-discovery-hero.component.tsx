@@ -27,7 +27,10 @@ export default function ProjectDiscoveryHero({
           alt="Bible gauche"
           width={1441}
           height={400}
-          quality={100}
+          quality={85}
+          priority
+          fetchPriority="high"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 95vw, 1441px"
           className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-[100%] -translate-x-1/2 object-contain md:block lg:bottom-3 lg:w-[105%]"
         />
         {/* Mobile image (no props change, same src, tailored sizing) */}

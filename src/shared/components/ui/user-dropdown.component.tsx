@@ -28,13 +28,14 @@ export default function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar
-          src={currentUser?.image}
-          name={currentUser?.name}
-          alt={currentUser?.name}
-          size="md"
-          className="cursor-pointer"
-        />
+        <button type="button" className="cursor-pointer">
+          <Avatar
+            src={currentUser?.image}
+            name={currentUser?.name}
+            alt={currentUser?.name}
+            size="md"
+          />
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
