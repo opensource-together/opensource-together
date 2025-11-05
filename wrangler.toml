@@ -1,5 +1,5 @@
 main = ".open-next/worker.js"
-name = "opensource-together"
+name = "ost-opengragph"
 compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
 
