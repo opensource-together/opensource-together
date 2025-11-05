@@ -23,7 +23,7 @@ export function ImageMetadataContent({
         zIndex: 1,
       }}
     >
-      <OstMetadataLogo />
+      {/* <OstMetadataLogo /> */}
 
       <div
         style={{
