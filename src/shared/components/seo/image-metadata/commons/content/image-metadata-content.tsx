@@ -32,6 +32,10 @@ export function ImageMetadataContent({
           fontWeight: 500,
           lineHeight: 1.02,
           letterSpacing: "-0.03em",
+          lineClamp: 1,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {title}

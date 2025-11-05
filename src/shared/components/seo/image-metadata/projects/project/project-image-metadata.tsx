@@ -120,8 +120,6 @@ export function ProjectImageMetadata({
               height: `${logoSize}px`,
               borderRadius: "65px",
               overflow: "hidden",
-              background: "#ffffff",
-              backgroundColor: "#f8fafc",
             }}
             aria-label={`${name} logo`}
           >
