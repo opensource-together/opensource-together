@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const projectUrl = `${FRONTEND_URL.replace(/\/$/, "")}/projects/${projectId}`;
 
     return {
-      title: `${project.title}`,
+      title: `${project.title} | OpenSource Together`,
       description: project.description,
       openGraph: {
-        title: `${project.title}`,
+        title: `${project.title} | OpenSource Together`,
         description: project.description,
         images: [
           {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: "summary_large_image",
-        title: `${project.title}`,
+        title: `${project.title} | OpenSource Together`,
         description: project.description,
         images: [`${projectUrl}/opengraph-image`],
       },
