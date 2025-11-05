@@ -1,5 +1,4 @@
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
-import { resolveOgImageSource } from "@/shared/components/seo/image-metadata/commons/utils/resolve-og-image";
 import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/projects/project/project-image-metadata";
 
 import { getProjectDetails } from "@/features/projects/services/project.service";
@@ -22,14 +21,12 @@ export default async function Image({
 
     const project = await getProjectDetails(projectId);
 
-    const safeLogo = await resolveOgImageSource(project.logoUrl, project.title);
-
     const imageResponse = await Generator({
       children: (
         <ProjectImageMetadata
           name={project.title}
           description={project.description}
-          imageUrl={safeLogo}
+          imageUrl={project.logoUrl}
           forksCount={project.repositoryDetails?.forksCount}
           openIssuesCount={project.repositoryDetails?.openIssuesCount}
           pullRequestsCount={project.repositoryDetails?.pullRequestsCount}
