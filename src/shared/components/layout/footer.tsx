@@ -77,9 +77,9 @@ const footerLinks: {
 
 const renderLinkSection = (title: string, links: FooterLink[]) => (
   <div>
-    <h4 className="text-foreground mb-5 text-sm font-medium md:mb-6 md:text-sm">
+    <h2 className="text-foreground mb-5 text-sm font-medium md:mb-6 md:text-sm">
       {title}
-    </h4>
+    </h2>
     <ul className="text-muted-foreground space-y-5 text-sm md:text-sm">
       {links.map((link) => (
         <li key={link.id}>

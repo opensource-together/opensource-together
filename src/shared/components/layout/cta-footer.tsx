@@ -34,10 +34,11 @@ export default function CTAFooter({
           src={imageIllustration || ""}
           alt=""
           fill
-          quality={100}
+          quality={85}
           sizes="(min-width: 1024px) 1120px, 100vw"
           className="object-cover object-right-top md:object-right"
           priority
+          fetchPriority="high"
         />
       </div>
 

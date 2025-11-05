@@ -1,6 +1,6 @@
 "use client";
 
-import { HiMiniExclamationTriangle } from "react-icons/hi2";
+import { HiMiniExclamationTriangle, HiUsers } from "react-icons/hi2";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -132,16 +132,34 @@ export default function ProjectDetailView({
         </TabsContent>
 
         <TabsContent value="contributing" className="mt-6">
-          <ContributingComponent contributionFile={contributionFile ?? ""} />
-          {codeOfConduct && (
-            <ProjectCodeOfConduct
-              codeOfConduct={codeOfConduct}
-              projectTitle={project.title}
-              project={{
-                repoUrl: project.repoUrl,
-              }}
-            />
-          )}
+          {(() => {
+            if (!contributionFile && !codeOfConduct) {
+              return (
+                <EmptyState
+                  title="No guidelines"
+                  description="This project does not have a CONTRIBUTING.md or Code of Conduct file."
+                  icon={HiUsers}
+                />
+              );
+            }
+
+            return (
+              <>
+                {contributionFile && (
+                  <ContributingComponent contributionFile={contributionFile} />
+                )}
+                {codeOfConduct && (
+                  <ProjectCodeOfConduct
+                    codeOfConduct={codeOfConduct}
+                    projectTitle={project.title}
+                    project={{
+                      repoUrl: project.repoUrl,
+                    }}
+                  />
+                )}
+              </>
+            );
+          })()}
         </TabsContent>
 
         <TabsContent value="open-issues" className="mt-6">
