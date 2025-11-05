@@ -40,6 +40,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         countryName: "France",
         emails: ["contact@opensourcetogether.com"],
       },
+      twitter: {
+        card: "summary_large_image",
+        title: `${project.title} | OpenSource Together`,
+        description: project.description,
+        images: [`${projectUrl}/opengraph-image`],
+      },
     };
   } catch (error) {
     console.error("generateMetadata project fetch failed:", error);
