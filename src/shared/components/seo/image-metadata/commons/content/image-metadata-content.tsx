@@ -1,5 +1,3 @@
-import { OstMetadataLogo } from "@/shared/components/seo/image-metadata/commons/logo/ost-metadata-logo";
-
 interface ContentProps {
   title: string;
   subtitle?: string;
