@@ -20,7 +20,6 @@ export function ImageMetadataContent({
         justifyContent: "center",
         maxWidth: "630px",
         gap: "20px",
-        zIndex: 1,
       }}
     >
       <OstMetadataLogo />
