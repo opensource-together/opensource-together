@@ -70,7 +70,7 @@ export function ProjectImageMetadata({
             <div
               style={{
                 display: "flex",
-                gap: "32px",
+                gap: "56px",
                 marginTop: "48px",
               }}
             >
@@ -120,8 +120,6 @@ export function ProjectImageMetadata({
               height: `${logoSize}px`,
               borderRadius: "65px",
               overflow: "hidden",
-              background: "#ffffff",
-              backgroundColor: "#f8fafc",
             }}
             aria-label={`${name} logo`}
           >

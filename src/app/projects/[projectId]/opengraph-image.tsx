@@ -1,9 +1,7 @@
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
-import { resolveOgImageSource } from "@/shared/components/seo/image-metadata/commons/utils/resolve-og-image";
 import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/projects/project/project-image-metadata";
 
 import { getProjectDetails } from "@/features/projects/services/project.service";
-import { Project } from "@/features/projects/types/project.type";
 
 //export const runtime = "edge";
 export const contentType = "image/png";
@@ -16,25 +14,26 @@ export const alt = "OpenSource Together project preview";
 export default async function Image({
   params,
 }: {
-  params: { projectId: string };
+  params: Promise<{ projectId: string }>;
 }) {
   try {
-    const project = (await getProjectDetails(params.projectId)) as Project;
+    const { projectId } = await params;
 
-    const safeLogo = await resolveOgImageSource(project.logoUrl, project.title);
+    const project = await getProjectDetails(projectId);
 
-    return Generator({
+    const imageResponse = await Generator({
       children: (
         <ProjectImageMetadata
           name={project.title}
           description={project.description}
-          imageUrl={safeLogo}
+          imageUrl={project.logoUrl}
           forksCount={project.repositoryDetails?.forksCount}
           openIssuesCount={project.repositoryDetails?.openIssuesCount}
           pullRequestsCount={project.repositoryDetails?.pullRequestsCount}
         />
       ),
     });
+    return imageResponse;
   } catch (error) {
     console.error("Failed to generate project metadata image:", error);
 
