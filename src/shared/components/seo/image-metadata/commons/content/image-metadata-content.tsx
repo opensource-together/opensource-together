@@ -1,3 +1,5 @@
+import { OstMetadataLogo } from "../logo/ost-metadata-logo";
+
 interface ContentProps {
   title: string;
   subtitle?: string;
@@ -21,7 +23,7 @@ export function ImageMetadataContent({
         zIndex: 1,
       }}
     >
-      {/* <OstMetadataLogo /> */}
+      <OstMetadataLogo />
 
       <div
         style={{
