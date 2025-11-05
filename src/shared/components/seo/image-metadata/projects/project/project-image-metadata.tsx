@@ -70,7 +70,7 @@ export function ProjectImageMetadata({
             <div
               style={{
                 display: "flex",
-                gap: "32px",
+                gap: "56px",
                 marginTop: "48px",
               }}
             >
