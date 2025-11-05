@@ -11,6 +11,7 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
+import FilterSearchBar from "../components/filter-search-bar.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
@@ -32,7 +33,10 @@ function HomepageLayout({
   return (
     <>
       <div className="flex flex-col items-center">
-        <ProjectDiscoveryHero
+        <ProjectDiscoveryHero />
+      </div>
+      <div className="sticky top-17 z-20 w-full px-6 md:w-auto">
+        <FilterSearchBar
           onFilterChange={onFilterChange}
           isLoading={isLoading}
           initialFilters={initialFilters}

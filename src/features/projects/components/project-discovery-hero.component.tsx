@@ -4,20 +4,7 @@ import { FadeIn } from "@/shared/components/motion/fade-in";
 import { FadeUp } from "@/shared/components/motion/fade-up";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 
-import { ProjectFilters } from "../types/project-filters.type";
-import FilterSearchBar from "./filter-search-bar.component";
-
-interface ProjectDiscoveryHeroProps {
-  onFilterChange?: (filters: ProjectFilters) => void;
-  isLoading?: boolean;
-  initialFilters?: ProjectFilters;
-}
-
-export default function ProjectDiscoveryHero({
-  onFilterChange,
-  isLoading,
-  initialFilters,
-}: ProjectDiscoveryHeroProps) {
+export default function ProjectDiscoveryHero() {
   return (
     <div className="relative mx-auto w-full">
       <FadeIn delay={0.1}>
@@ -41,7 +28,7 @@ export default function ProjectDiscoveryHero({
         />
       </FadeIn>
 
-      <div className="relative z-10 mx-auto mt-16 mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:mt-0 md:min-h-[320px] lg:min-h-[400px]">
+      <div className="relative z-10 mx-auto mt-16 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:mt-0 md:min-h-[320px] lg:min-h-[400px]">
         <FadeUp delay={0.05}>
           <HeroBadge className="mb-3" />
         </FadeUp>
@@ -62,14 +49,6 @@ export default function ProjectDiscoveryHero({
             discovery, collaboration, and contributor connection.
           </p>
         </FadeUp>
-
-        <div className="mt-8 w-full px-6 md:w-auto">
-          <FilterSearchBar
-            onFilterChange={onFilterChange}
-            isLoading={isLoading}
-            initialFilters={initialFilters}
-          />
-        </div>
       </div>
     </div>
   );

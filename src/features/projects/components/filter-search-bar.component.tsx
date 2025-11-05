@@ -221,7 +221,7 @@ export default function FilterSearchBar({
     <>
       {/* Desktop */}
       <div
-        className="hidden h-14 w-[700px] items-center justify-center md:flex"
+        className="m-auto hidden h-14 w-[700px] items-center justify-center md:flex"
         role="search"
       >
         <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
