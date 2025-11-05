@@ -35,7 +35,7 @@ export async function generateMetadata({
             url: `${userUrl}/opengraph-image`,
             width: 1200,
             height: 630,
-            alt: `${user.name} profile preview`,
+            alt: `${user.name} user preview`,
           },
         ],
         url: userUrl,
@@ -43,6 +43,12 @@ export async function generateMetadata({
         siteName: "OpenSource Together",
         locale: "fr_FR",
         countryName: "France",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${user.name} | OpenSource Together`,
+        description: user.bio,
+        images: [`${userUrl}/opengraph-image`],
       },
     };
   } catch (error) {

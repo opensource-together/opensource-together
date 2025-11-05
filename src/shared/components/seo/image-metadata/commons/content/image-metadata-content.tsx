@@ -1,4 +1,4 @@
-import { OstMetadataLogo } from "@/shared/components/seo/image-metadata/commons/logo/ost-metadata-logo";
+import { OstMetadataLogo } from "../logo/ost-metadata-logo";
 
 interface ContentProps {
   title: string;
@@ -20,7 +20,6 @@ export function ImageMetadataContent({
         justifyContent: "center",
         maxWidth: "630px",
         gap: "20px",
-        zIndex: 1,
       }}
     >
       <OstMetadataLogo />
@@ -32,6 +31,10 @@ export function ImageMetadataContent({
           fontWeight: 500,
           lineHeight: 1.02,
           letterSpacing: "-0.03em",
+          lineClamp: 1,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {title}

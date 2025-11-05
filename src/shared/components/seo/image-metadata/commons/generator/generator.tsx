@@ -1,8 +1,7 @@
 import { ImageResponse } from "next/og";
 import { ReactElement } from "react";
 
-const FONT_BASE_URL =
-  "https://raw.githubusercontent.com/opensource-together/opensource-together/develop/public/fonts/Geist/static";
+const FONT_BASE_URL = `${process.env.NEXT_PUBLIC_METADATA_ASSETS_S3_BUCKET}/fonts`;
 
 const fontVariants = [
   { name: "Geist-Thin.ttf", weight: 100 },
