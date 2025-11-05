@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { FRONTEND_URL } from "@/config/config";
@@ -33,11 +33,6 @@ export const metadata: Metadata = {
     "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
   icons: {
     icon: "/favicon.ico",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
   },
   robots: {
     index: true,
@@ -95,6 +90,12 @@ export const metadata: Metadata = {
     "Open Source Community",
     "Open Source Development",
   ],
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
