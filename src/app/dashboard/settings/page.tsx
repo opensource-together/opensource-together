@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import SettingsView from "@/features/dashboard/views/settings/settings.view";
 
 export const metadata: Metadata = {
-  title: "Settings | Dashboard | OpenSource Together",
+  title: "Settings",
   description: "Manage your account settings and connected integrations.",
 };
 

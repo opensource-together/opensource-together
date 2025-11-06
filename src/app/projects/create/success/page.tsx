@@ -5,7 +5,7 @@ import { LuLoaderCircle } from "react-icons/lu";
 import StepSuccessView from "@/features/projects/views/stepper-views/common/step-succes.view";
 
 export const metadata: Metadata = {
-  title: "Project created successfully | OpenSource Together",
+  title: "Project created successfully",
   description: "Project created successfully on OpenSource Together",
 };
 

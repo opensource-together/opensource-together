@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions - OpenSource Together",
+  title: "Terms and Conditions",
   description:
     "Legal terms and conditions governing the use of the OpenSource Together website and services.",
 };

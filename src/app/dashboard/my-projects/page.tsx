@@ -4,7 +4,7 @@ import MyProjectsView from "@/features/dashboard/views/projects/my-projects.view
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "My Projects | OpenSource Together",
+    title: "My Projects",
     description: "Manage your projects on OpenSource Together",
   };
 }

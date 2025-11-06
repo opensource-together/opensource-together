@@ -16,8 +16,8 @@ export async function generateMetadata({
   const { provider } = await params;
 
   const titles = {
-    github: "Import Github Repository | OpenSource Together",
-    gitlab: "Import GitLab Repository | OpenSource Together",
+    github: "Import Github Repository",
+    gitlab: "Import GitLab Repository",
   };
 
   const descriptions = {
@@ -26,9 +26,7 @@ export async function generateMetadata({
   };
 
   return {
-    title:
-      titles[provider as keyof typeof titles] ||
-      "Create Project | OpenSource Together",
+    title: titles[provider as keyof typeof titles] || "Create Project",
     description:
       descriptions[provider as keyof typeof descriptions] ||
       "Create Project on OpenSource Together",

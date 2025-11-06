@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - OpenSource Together",
+  title: "Privacy Policy",
   description:
     "Privacy Policy describing how OpenSource Together collects, uses, and protects your information.",
 };

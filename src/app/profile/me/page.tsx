@@ -7,7 +7,7 @@ import ProfileView from "@/features/profile/views/profile.view";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "My Profile | OpenSource Together",
+    title: "My Profile",
     description: "My profile on OpenSource Together",
   };
 }

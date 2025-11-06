@@ -20,10 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const projectUrl = `${FRONTEND_URL.replace(/\/$/, "")}/projects/${projectId}`;
 
     return {
-      title: `${project.title} | OpenSource Together`,
+      title: `${project.title}`,
       description: project.description,
       openGraph: {
-        title: `${project.title} | OpenSource Together`,
+        title: `${project.title}`,
         description: project.description,
         images: [
           {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: "summary_large_image",
-        title: `${project.title} | OpenSource Together`,
+        title: `${project.title}`,
         description: project.description,
         images: [`${projectUrl}/opengraph-image`],
       },
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   } catch (error) {
     console.error("generateMetadata project fetch failed:", error);
     return {
-      title: "Project | OpenSource Together",
+      title: "Project",
       description: "Discover open source projects on OpenSource Together.",
     };
   }
