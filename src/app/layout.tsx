@@ -28,6 +28,7 @@ const GeistMono = Geist_Mono({
 const metadataImageUrl = `${FRONTEND_URL}/illustrations/ost-metadata.png`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(FRONTEND_URL),
   title: {
     default: "OpenSource Together",
     template: "%s | OpenSource Together",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   alternates: {
-    canonical: FRONTEND_URL,
+    canonical: "/",
   },
   category: "technology",
   openGraph: {
