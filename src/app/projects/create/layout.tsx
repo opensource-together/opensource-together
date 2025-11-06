@@ -8,7 +8,7 @@ interface ProjectCreateLayoutProps {
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Create Project | OpenSource Together",
+    title: "Create Project",
     description: "Create Project on OpenSource Together",
   };
 }

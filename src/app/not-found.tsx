@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "404 - Page Not Found | OpenSource Together",
+  title: "404 - Page Not Found",
   description:
     "The page you are looking for doesn't exist or has been moved. Return to OpenSource Together to discover open source projects.",
 };

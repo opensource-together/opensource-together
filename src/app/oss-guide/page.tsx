@@ -6,7 +6,7 @@ import { LuCheck, LuCircle } from "react-icons/lu";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 
 export const metadata: Metadata = {
-  title: "Guide - OpenSource Together",
+  title: "Guide",
   description:
     "Understand the fundamentals, prepare your project, and release it publicly with confidence.",
 };
