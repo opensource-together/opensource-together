@@ -8,6 +8,10 @@ import ProfileView from "@/features/profile/views/profile.view";
 export const metadata: Metadata = {
   title: "My Profile",
   description: "My profile on OpenSource Together",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ProfilePage() {

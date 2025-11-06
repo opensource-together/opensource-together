@@ -9,6 +9,10 @@ interface ProjectCreateLayoutProps {
 export const metadata: Metadata = {
   title: "Create Project",
   description: "Create a new project on OpenSource Together",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ProjectCreateLayout({

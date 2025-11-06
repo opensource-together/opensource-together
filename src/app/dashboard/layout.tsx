@@ -9,6 +9,10 @@ export const metadata: Metadata = {
     default: "Dashboard | OpenSource Together",
   },
   description: "Dashboard for OpenSource Together",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
