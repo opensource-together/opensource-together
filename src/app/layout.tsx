@@ -28,16 +28,28 @@ const GeistMono = Geist_Mono({
 const metadataImageUrl = `${FRONTEND_URL}/illustrations/ost-metadata.png`;
 
 export const metadata: Metadata = {
-  title: "OpenSource Together",
+  title: {
+    default: "OpenSource Together",
+    template: "%s | OpenSource Together",
+  },
   description:
     "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
   icons: {
     icon: "/favicon.ico",
   },
-  robots: {
-    index: true,
-    follow: true,
+  authors: [{ name: "OpenSource Together Team" }],
+  creator: "OpenSource Together",
+  publisher: "OpenSource Together",
+  applicationName: "OpenSource Together",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
+  alternates: {
+    canonical: FRONTEND_URL,
+  },
+  category: "technology",
   openGraph: {
     title: "OpenSource Together",
     description:
@@ -63,15 +75,22 @@ export const metadata: Metadata = {
     description:
       "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
   },
-
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   keywords: [
     "OpenSource Together",
     "OpenSourceTogether",
     "Open Source Together",
-    "OpenSource",
-    "Together",
-    "Beta OSS",
-    "Maintainers",
+    "Open Source",
     "Developers",
     "Learning",
     "Growth",
@@ -79,14 +98,9 @@ export const metadata: Metadata = {
     "Collaboration",
     "Community",
     "Development",
+    "Maintainers",
     "Projects",
-    "Collaboration",
     "Open Source Projects",
-    "Open Source Collaboration",
-    "Open Source Community",
-    "Open Source Development",
-    "Open Source Projects",
-    "Open Source Collaboration",
     "Open Source Community",
     "Open Source Development",
   ],
