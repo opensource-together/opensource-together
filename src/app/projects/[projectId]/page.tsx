@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: `${project.title}`,
       description: project.description,
+      alternates: { canonical: projectUrl },
       openGraph: {
         title: `${project.title}`,
         description: project.description,
@@ -36,8 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url: projectUrl,
         type: "website",
         siteName: "OpenSource Together",
-        locale: "fr_FR",
-        countryName: "France",
+        locale: "en_US",
         emails: ["contact@opensourcetogether.com"],
       },
       twitter: {

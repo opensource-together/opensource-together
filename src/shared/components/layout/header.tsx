@@ -29,7 +29,7 @@ export default function Header() {
 
       <header className="sticky top-0 z-40 hidden justify-between bg-white/50 px-10 py-4 backdrop-blur-2xl md:flex">
         <div className="flex items-center gap-4">
-          <Link href="/">
+          <Link href="/" aria-label="OpenSource Together Home">
             <Image
               src="/ostogether-logo.svg"
               alt="ost-logo"
@@ -39,7 +39,7 @@ export default function Header() {
           </Link>
           <HeaderBreadcrumb />
         </div>
-        <div className="flex items-center gap-2">
+        <nav className="flex items-center gap-2" aria-label="Main navigation">
           <div className="flex items-center gap-1 md:mr-2">
             <SearchCommand />
             <Link href="/dashboard/my-projects">
@@ -81,7 +81,7 @@ export default function Header() {
               <Button variant="default">Sign In</Button>
             </Link>
           )}
-        </div>
+        </nav>
       </header>
     </>
   );

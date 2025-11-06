@@ -5,12 +5,10 @@ import CTAFooter from "@/shared/components/layout/cta-footer";
 
 import ProfileView from "@/features/profile/views/profile.view";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "My Profile",
-    description: "My profile on OpenSource Together",
-  };
-}
+export const metadata: Metadata = {
+  title: "My Profile",
+  description: "My profile on OpenSource Together",
+};
 
 export default function ProfilePage() {
   return (

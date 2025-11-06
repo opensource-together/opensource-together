@@ -4,11 +4,12 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "Privacy Policy describing how OpenSource Together collects, uses, and protects your information.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="w-full max-w-4xl px-6 md:mx-auto">
+    <main className="w-full max-w-4xl px-6 md:mx-auto">
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center">
         <h1 className="mt-3 text-center text-3xl">Privacy Policy</h1>
@@ -132,6 +133,6 @@ export default function PrivacyPolicyPage() {
           </p>
         </section>
       </div>
-    </div>
+    </main>
   );
 }

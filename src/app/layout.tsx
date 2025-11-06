@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     ],
     url: FRONTEND_URL,
     siteName: "OpenSource Together",
-    locale: "fr_FR",
+    locale: "en_US",
     type: "website",
   },
   twitter: {

@@ -1,7 +1,15 @@
+import { Metadata } from "next";
 import { ReactNode } from "react";
 
 import DashboardSidebar from "@/features/dashboard/components/layout/dashboard-sidebar.component";
 
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Dashboard | OpenSource Together",
+    default: "Dashboard | OpenSource Together",
+  },
+  description: "Dashboard for OpenSource Together",
+};
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-[calc(100vh-80px)] flex-col">

@@ -27,6 +27,7 @@ export async function generateMetadata({
     return {
       title: `${user.name}`,
       description: user.bio,
+      alternates: { canonical: userUrl },
       openGraph: {
         title: `${user.name}`,
         description: user.bio,
@@ -41,8 +42,7 @@ export async function generateMetadata({
         url: userUrl,
         type: "website",
         siteName: "OpenSource Together",
-        locale: "fr_FR",
-        countryName: "France",
+        locale: "en_US",
       },
       twitter: {
         card: "summary_large_image",
