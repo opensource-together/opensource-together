@@ -6,12 +6,14 @@ interface ProjectCreateLayoutProps {
   children: React.ReactNode;
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Create Project",
-    description: "Create Project on OpenSource Together",
-  };
-}
+export const metadata: Metadata = {
+  title: "Create Project",
+  description: "Create a new project on OpenSource Together",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function ProjectCreateLayout({
   children,

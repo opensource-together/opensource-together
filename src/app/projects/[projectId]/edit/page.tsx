@@ -2,12 +2,14 @@ import { Metadata } from "next";
 
 import ProjectEditView from "@/features/projects/views/project-edit.view";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Edit Project",
-    description: "Edit your project details",
-  };
-}
+export const metadata: Metadata = {
+  title: "Edit Project",
+  description: "Edit your project details",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function ProjectEditPage({
   params,

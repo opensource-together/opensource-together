@@ -9,6 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     lang: "en-US",
     display: "standalone",
+    orientation: "portrait-primary",
     background_color: "#ffffff",
     theme_color: "#2b7fff",
     icons: [
@@ -19,14 +20,15 @@ export default function manifest(): MetadataRoute.Manifest {
       },
       {
         src: "/ost-logo.svg",
-        sizes: "512x512",
+        sizes: "192x192",
         type: "image/svg+xml",
-        purpose: "maskable",
+        purpose: "any",
       },
       {
         src: "/ost-logo.svg",
-        sizes: "192x192",
+        sizes: "512x512",
         type: "image/svg+xml",
+        purpose: "maskable",
       },
     ],
   };
