@@ -90,6 +90,27 @@ export default function ProjectReadme({
         className="border-border my-3 inline-block h-auto max-w-full rounded"
       />
     ),
+    picture: ({ children }) => (
+      <picture className="border-border my-3 inline-block h-auto max-w-full rounded">
+        {children}
+      </picture>
+    ),
+    source: ({ srcSet, media, ...props }) => {
+      const resolvedSrcSet = srcSet
+        ? srcSet
+            .split(",")
+            .map((src) => {
+              const parts = src.trim().split(/\s+/);
+              const url = parts[0];
+              const descriptor = parts.slice(1).join(" ");
+              const resolvedUrl = resolveReadmeImageUrl(url, project?.repoUrl);
+              return descriptor ? `${resolvedUrl} ${descriptor}` : resolvedUrl;
+            })
+            .join(", ")
+        : undefined;
+
+      return <source srcSet={resolvedSrcSet} media={media} {...props} />;
+    },
   };
 
   const fullComponents: Components = {
@@ -106,6 +127,27 @@ export default function ProjectReadme({
         className="border-border my-3 inline-block h-auto max-w-full rounded"
       />
     ),
+    picture: ({ children }) => (
+      <picture className="border-border my-3 inline-block h-auto max-w-full rounded">
+        {children}
+      </picture>
+    ),
+    source: ({ srcSet, media, ...props }) => {
+      const resolvedSrcSet = srcSet
+        ? srcSet
+            .split(",")
+            .map((src) => {
+              const parts = src.trim().split(/\s+/);
+              const url = parts[0];
+              const descriptor = parts.slice(1).join(" ");
+              const resolvedUrl = resolveReadmeImageUrl(url, project?.repoUrl);
+              return descriptor ? `${resolvedUrl} ${descriptor}` : resolvedUrl;
+            })
+            .join(", ")
+        : undefined;
+
+      return <source srcSet={resolvedSrcSet} media={media} {...props} />;
+    },
   };
 
   return (
