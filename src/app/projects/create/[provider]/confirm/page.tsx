@@ -16,14 +16,12 @@ export async function generateMetadata({
   const { provider } = await params;
 
   const titles = {
-    github: "Configure GitHub Project | OpenSource Together",
-    gitlab: "Configure GitLab Project | OpenSource Together",
+    github: "Configure GitHub Project",
+    gitlab: "Configure GitLab Project",
   };
 
   return {
-    title:
-      titles[provider as keyof typeof titles] ||
-      "Configure Project | OpenSource Together",
+    title: titles[provider as keyof typeof titles] || "Configure Project",
     description: "Configure the details of your project",
   };
 }

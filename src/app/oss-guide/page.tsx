@@ -6,14 +6,15 @@ import { LuCheck, LuCircle } from "react-icons/lu";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 
 export const metadata: Metadata = {
-  title: "Guide - OpenSource Together",
+  title: "Guide",
   description:
     "Understand the fundamentals, prepare your project, and release it publicly with confidence.",
+  alternates: { canonical: "/oss-guide" },
 };
 
 export default function GuidePage() {
   return (
-    <div className="mx-auto w-full">
+    <main className="mx-auto w-full">
       {/* Hero Section */}
       <div className="relative mx-auto w-full">
         <Image
@@ -405,6 +406,6 @@ export default function GuidePage() {
         imageIllustration="/illustrations/winged-angel.png"
         imageIllustrationMobile="/illustrations/winged-angel-mobile.png"
       />
-    </div>
+    </main>
   );
 }

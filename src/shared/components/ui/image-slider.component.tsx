@@ -90,39 +90,41 @@ export default function ImageSlider({ images }: ImageSliderProps) {
             ))}
           </div>
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex gap-3">
-            <Button
-              size="icon"
-              variant="outline"
-              className="size-7.5"
-              onClick={handlePrevImage}
-            >
-              <IoChevronBack className="size-3" />
-            </Button>
-            <Button
-              size="icon"
-              variant="outline"
-              className="size-7.5"
-              onClick={handleNextImage}
-            >
-              <IoChevronForward className="size-3" />
-            </Button>
+        {images.length > 1 && (
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex gap-3">
+              <Button
+                size="icon"
+                variant="outline"
+                className="size-7.5"
+                onClick={handlePrevImage}
+              >
+                <IoChevronBack className="size-3" />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                className="size-7.5"
+                onClick={handleNextImage}
+              >
+                <IoChevronForward className="size-3" />
+              </Button>
+            </div>
+            <div className="mt-[-10px] flex gap-1">
+              {images.map((_, idx) => (
+                <IoEllipse
+                  key={idx}
+                  className={`hover:text-muted-foreground size-1.5 hover:cursor-pointer ${
+                    idx === currentImageIndex
+                      ? "text-muted-foreground"
+                      : "text-muted-foreground/50"
+                  }`}
+                  onClick={() => setCurrentImageIndex(idx)}
+                />
+              ))}
+            </div>
           </div>
-          <div className="mt-[-10px] flex gap-1">
-            {images.map((_, idx) => (
-              <IoEllipse
-                key={idx}
-                className={`hover:text-muted-foreground size-1.5 hover:cursor-pointer ${
-                  idx === currentImageIndex
-                    ? "text-muted-foreground"
-                    : "text-muted-foreground/50"
-                }`}
-                onClick={() => setCurrentImageIndex(idx)}
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

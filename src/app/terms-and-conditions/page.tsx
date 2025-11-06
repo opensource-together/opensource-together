@@ -1,14 +1,15 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions - OpenSource Together",
+  title: "Terms and Conditions",
   description:
     "Legal terms and conditions governing the use of the OpenSource Together website and services.",
+  alternates: { canonical: "/terms-and-conditions" },
 };
 
 export default function TermsAndConditionsPage() {
   return (
-    <div className="w-full max-w-4xl px-6 md:mx-auto">
+    <main className="w-full max-w-4xl px-6 md:mx-auto">
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center">
         <h1 className="mt-3 text-center text-3xl">Terms and Conditions</h1>
@@ -170,6 +171,6 @@ export default function TermsAndConditionsPage() {
           </p>
         </section>
       </div>
-    </div>
+    </main>
   );
 }

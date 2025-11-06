@@ -25,10 +25,11 @@ export async function generateMetadata({
     const userUrl = `${FRONTEND_URL.replace(/\/$/, "")}/profile/${userId}`;
 
     return {
-      title: `${user.name} | OpenSource Together`,
+      title: `${user.name}`,
       description: user.bio,
+      alternates: { canonical: userUrl },
       openGraph: {
-        title: `${user.name} | OpenSource Together`,
+        title: `${user.name}`,
         description: user.bio,
         images: [
           {
@@ -41,12 +42,11 @@ export async function generateMetadata({
         url: userUrl,
         type: "website",
         siteName: "OpenSource Together",
-        locale: "fr_FR",
-        countryName: "France",
+        locale: "en_US",
       },
       twitter: {
         card: "summary_large_image",
-        title: `${user.name} | OpenSource Together`,
+        title: `${user.name}`,
         description: user.bio,
         images: [`${userUrl}/opengraph-image`],
       },
@@ -54,7 +54,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("generateMetadata user fetch failed:", error);
     return {
-      title: "User | OpenSource Together",
+      title: "User",
       description: "Discover open source users on OpenSource Together.",
     };
   }
