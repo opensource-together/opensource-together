@@ -66,7 +66,7 @@ export default function Header() {
             <>
               <SkeletonUserDropdown />
             </>
-          ) : isAuthenticated ? (
+          ) : (
             <>
               <Link href="/projects/create">
                 <Button>
@@ -74,12 +74,8 @@ export default function Header() {
                   <HiPlus size={16} />
                 </Button>
               </Link>
-              <UserDropdown />
+              {isAuthenticated && <UserDropdown />}
             </>
-          ) : (
-            <Link href="/auth/login">
-              <Button variant="default">Sign In</Button>
-            </Link>
           )}
         </nav>
       </header>
