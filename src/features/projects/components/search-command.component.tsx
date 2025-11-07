@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
+import { useInView } from "react-intersection-observer";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -20,13 +21,33 @@ import { useInfiniteProjects } from "../hooks/use-projects.hook";
 export default function SearchCommand() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { data: projectsPages, isLoading } = useInfiniteProjects(
+
+  const {
+    data: projectsPages,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteProjects(
     {
       published: true,
       per_page: 20,
     },
     { enabled: open }
   );
+
+  // Infinite scroll
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "100px",
+  });
+
+  // Load next page when scrolling to the bottom
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage && open) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage, open]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -81,38 +102,61 @@ export default function SearchCommand() {
             </CommandGroup>
           ) : (
             <>
-              <CommandEmpty>No projects found.</CommandEmpty>
-              <CommandGroup
-                heading="Suggestions"
-                className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
-              >
-                {suggestions?.map((s) => (
-                  <CommandItem
-                    key={s.id}
-                    onSelect={() => handleSelect(s.href)}
-                    className="mb-3 h-8 px-3 py-0"
-                  >
-                    {s.iconSrc ? (
-                      <Avatar
-                        src={s.iconSrc}
-                        name={s.name}
-                        alt={s.name}
-                        size="xs"
-                        shape="sharp"
-                      />
-                    ) : (
-                      <span className="text-muted-foreground">●</span>
-                    )}
+              {suggestions.length === 0 ? (
+                <CommandEmpty>No projects found.</CommandEmpty>
+              ) : (
+                <CommandGroup
+                  heading="Suggestions"
+                  className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
+                >
+                  {suggestions.map((s) => (
+                    <CommandItem
+                      key={s.id}
+                      value={`${s.name} ${s.description}`}
+                      onSelect={() => handleSelect(s.href)}
+                      className="mb-3 h-8 px-3 py-0"
+                    >
+                      {s.iconSrc ? (
+                        <Avatar
+                          src={s.iconSrc}
+                          name={s.name}
+                          alt={s.name}
+                          size="xs"
+                          shape="sharp"
+                        />
+                      ) : (
+                        <span className="text-muted-foreground">●</span>
+                      )}
 
-                    <span className="min-w-0 flex-1 truncate font-medium">
-                      {s.name}
-                    </span>
-                    <span className="text-muted-foreground hidden max-w-[60%] truncate text-xs sm:block">
-                      {s.description}
-                    </span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+                      <span className="min-w-0 flex-1 truncate font-medium">
+                        {s.name}
+                      </span>
+                      <span className="text-muted-foreground hidden max-w-[60%] truncate text-xs sm:block">
+                        {s.description}
+                      </span>
+                    </CommandItem>
+                  ))}
+                  {hasNextPage && (
+                    <div ref={ref} className="py-2">
+                      {isFetchingNextPage && (
+                        <div className="flex items-center justify-center px-3">
+                          <div className="flex gap-2">
+                            {[...Array(3)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="bg-muted h-2 w-2 animate-pulse rounded-full"
+                                style={{
+                                  animationDelay: `${i * 0.2}s`,
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CommandGroup>
+              )}
             </>
           )}
         </CommandList>
