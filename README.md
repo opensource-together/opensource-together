@@ -1,6 +1,6 @@
 # OpenSource Together
 
-![OpenSource Together](https://github.com/opensource-together/opensource-together/blob/develop/public/illustrations/ost-banner.png?raw=true)
+![OpenSource Together](https://github.com/opensource-together/opensource-together/blob/develop/public/illustrations/ost-readme.png)
 [![Discord](https://img.shields.io/badge/Join%20Community-5865F2?logo=discord&logoColor=white)](https://discord.com/invite/4ZDhm3dQAC)
 [![Follow](https://img.shields.io/twitter/follow/OpenSTogether?style=social)](https://x.com/OpenSTogether)
 [![CI](https://github.com/opensource-together/opensource-together/actions/workflows/ci.yml/badge.svg)](https://github.com/opensource-together/opensource-together/actions/workflows/ci.yml)
