@@ -22,33 +22,9 @@ const iconSizes: Record<IconSize, string> = {
   "2xl": "w-10 h-10", // 40px
 };
 
-export type IconName = "last-commit" | "star" | "fork" | "people" | "download";
+export type IconName = "download";
 
 const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
-  star: {
-    default: "/icons/empty-star.svg",
-    gray: "/icons/star-gray.svg",
-    white: "/icons/star-white.svg",
-    black: "/icons/star.svg",
-    filled: "icons/white-star-filled.svg",
-    outline: "/icons/empty-star.svg",
-  },
-  fork: {
-    default: "/icons/fork.svg",
-    gray: "/icons/fork-gray.svg",
-    white: "/icons/fork.svg",
-    black: "/icons/fork.svg",
-    filled: "/icons/fork.svg",
-    outline: "/icons/fork.svg",
-  },
-  people: {
-    default: "/icons/people-contributor-icon.svg",
-    gray: "/icons/people-gray.svg",
-    white: "/icons/people.svg",
-    black: "/icons/people.svg",
-    filled: "/icons/people-filled.svg",
-    outline: "/icons/people.svg",
-  },
   download: {
     default: "/icons/download.svg",
     gray: "/icons/download-gray.svg",
@@ -56,14 +32,6 @@ const iconFiles: Record<IconName, Record<IconVariant, string | null>> = {
     black: "/icons/download.svg",
     filled: "/icons/download.svg",
     outline: "/icons/download.svg",
-  },
-  "last-commit": {
-    default: "/icons/last-commit.svg",
-    gray: "/icons/last-commit-gray.svg",
-    white: "/icons/last-commit-white.svg",
-    black: "/icons/last-commit.svg",
-    filled: "/icons/last-commit.svg",
-    outline: "/icons/last-commit.svg",
   },
 };
 

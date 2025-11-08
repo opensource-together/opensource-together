@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
+import { HiMiniClock, HiMiniUserGroup, HiStar } from "react-icons/hi2";
 import { LiaBalanceScaleSolid } from "react-icons/lia";
+import { RiGitForkFill } from "react-icons/ri";
 
 import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
@@ -81,22 +83,22 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
         title="Statistics"
         items={[
           {
-            icon: "star",
+            icon: HiStar,
             label: "Stars",
             value: formatNumberShort(repositoryDetails?.stars ?? 0),
           },
           {
-            icon: "fork",
+            icon: RiGitForkFill,
             label: "Forks",
             value: formatNumberShort(repositoryDetails?.forksCount ?? 0),
           },
           {
-            icon: "people",
+            icon: HiMiniUserGroup,
             label: "Contributors",
             value: allContributors.length > 99 ? "99+" : allContributors.length,
           },
           {
-            icon: "last-commit",
+            icon: HiMiniClock,
             label: "Last Commit",
             value: repositoryDetails?.pushed_at
               ? formatTimeAgo(repositoryDetails?.pushed_at)

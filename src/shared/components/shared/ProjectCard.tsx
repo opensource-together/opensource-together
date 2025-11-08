@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 import { FaStar } from "react-icons/fa6";
+import { RiGitForkFill } from "react-icons/ri";
 import { VscIssues } from "react-icons/vsc";
 
 import {
@@ -22,7 +23,6 @@ import { TechStackType } from "@/shared/types/tech-stack.type";
 import { RepositoryWithDetails } from "@/features/projects/types/project.type";
 
 import { Avatar } from "../ui/avatar";
-import { Icon } from "../ui/icon";
 import { Skeleton } from "../ui/skeleton";
 import StackLogo from "../ui/stack-logo";
 
@@ -150,7 +150,7 @@ export default function ProjectCardComponent({
               </>
               <div className="ml-auto flex items-center justify-between space-x-2">
                 <div className="flex items-center justify-center text-xs">
-                  <Icon name="fork" size="xxs" className="mr-0.5" />
+                  <RiGitForkFill className="mr-0.5 size-3" />
                   {isRepositoryLoading ? (
                     <Skeleton className="h-3 w-6" />
                   ) : (
@@ -158,7 +158,7 @@ export default function ProjectCardComponent({
                   )}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-xs">
-                  <VscIssues className="mr-0.5 size-3 text-black" />
+                  <VscIssues className="mr-0.5 size-3" />
                   {isRepositoryLoading ? (
                     <Skeleton className="h-3 w-6" />
                   ) : (
