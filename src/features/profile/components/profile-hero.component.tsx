@@ -154,7 +154,7 @@ export default function ProfileHero({
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="truncate text-sm tracking-tighter text-black/50">
+            <p className="text-muted-foreground truncate text-sm tracking-tighter">
               {jobTitle}
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function ProfileHero({
         {renderActionButton()}
       </div>
 
-      <p className="mt-4 text-sm leading-6 tracking-tighter">{bio}</p>
+      <p className="mt-4 text-sm leading-6">{bio}</p>
     </div>
   );
 }
