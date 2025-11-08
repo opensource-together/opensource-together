@@ -112,7 +112,7 @@ export default function SearchCommand() {
                   {suggestions.map((s) => (
                     <CommandItem
                       key={s.id}
-                      value={`${s.name} ${s.description}`}
+                      value={s.name}
                       onSelect={() => handleSelect(s.href)}
                       className="mb-3 h-8 px-3 py-0"
                     >
