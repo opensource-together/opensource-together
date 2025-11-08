@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { HiLogout } from "react-icons/hi";
 import {
@@ -9,6 +9,7 @@ import {
   HiMiniBars3,
   HiMiniPencilSquare,
   HiMiniSquare2Stack,
+  HiPlus,
   HiUserCircle,
 } from "react-icons/hi2";
 import { RxDotsVertical } from "react-icons/rx";
@@ -47,13 +48,11 @@ const DEFAULT_LINKS: MobileHeaderProps["links"] = [
 
 export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { isAuthenticated, isLoading, currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
-    router.push("/");
     setIsOpen(false);
   };
 
@@ -115,6 +114,14 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                       </Link>
                     );
                   })}
+                <Link
+                  href="/projects/create"
+                  onClick={handleLinkClick}
+                  className="bg-primary text-primary-foreground flex items-center gap-2 rounded-full py-2 pl-4 text-sm font-medium transition"
+                >
+                  <HiPlus className="size-4" />
+                  Create Project
+                </Link>
               </nav>
 
               {/* User Section - Fixed at bottom */}
@@ -182,17 +189,7 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                ) : (
-                  <Link
-                    href="/auth/login"
-                    onClick={handleLinkClick}
-                    className="block w-full"
-                  >
-                    <div className="hover:bg-accent flex w-full items-center justify-center py-4 transition">
-                      <span className="text-sm font-medium">Sign In</span>
-                    </div>
-                  </Link>
-                )}
+                ) : null}
               </div>
             </div>
           </SheetContent>
