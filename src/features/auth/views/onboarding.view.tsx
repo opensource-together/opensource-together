@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import FooterLogin from "@/shared/components/layout/footer-login";
+import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
@@ -57,7 +57,7 @@ export default function OnboardingView() {
           </div>
         </div>
         <div className="mt-auto px-4 md:px-10">
-          <FooterLogin />
+          <FooterMinimal />
         </div>
       </div>
     </>

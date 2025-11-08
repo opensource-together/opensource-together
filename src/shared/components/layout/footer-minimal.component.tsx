@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Separator } from "@/shared/components/ui/separator";
 
-export default function FooterLogin() {
+export default function FooterMinimal() {
   const navigationLinks = [
     { name: "Guide", href: "/oss-guide" },
     { name: "X (Twitter)", href: "https://x.com/OpenSTogether" },
@@ -15,9 +15,9 @@ export default function FooterLogin() {
   ];
 
   return (
-    <footer className="relative z-20 hidden h-16 w-full bg-white pt-0 pb-4 md:block md:pb-3">
-      <Separator className="mb-3 w-full md:mb-3 lg:mb-3" />
-      <div className="flex w-full flex-col items-center gap-3 md:flex-row md:items-center md:justify-between md:gap-6">
+    <footer className="relative z-20 hidden w-full bg-white md:block">
+      <Separator className="w-full" />
+      <div className="flex w-full flex-col items-center gap-3 pt-4 pb-4 md:flex-row md:items-center md:justify-between md:gap-6">
         <div className="flex w-full items-center justify-center gap-4 md:w-auto md:justify-start md:gap-6">
           <Link href="/" className="flex items-center">
             <Image
@@ -25,7 +25,7 @@ export default function FooterLogin() {
               alt="ost-logo"
               width={39}
               height={39}
-              className="h-auto max-h-[39px] w-auto md:max-h-[39px]"
+              className="h-auto max-h-[39px] w-auto"
             />
           </Link>
 
