@@ -67,15 +67,18 @@ export default function Header() {
               <SkeletonUserDropdown />
             </>
           ) : (
-            <>
+            <div className="flex items-center gap-2">
               <Link href="/projects/create">
                 <Button>
                   Create Project
                   <HiPlus size={16} />
                 </Button>
               </Link>
+              <Link href="/auth/login">
+                <Button variant="outline">Sign In</Button>
+              </Link>
               {isAuthenticated && <UserDropdown />}
-            </>
+            </div>
           )}
         </nav>
       </header>
