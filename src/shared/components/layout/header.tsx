@@ -74,9 +74,11 @@ export default function Header() {
                   <HiPlus size={16} />
                 </Button>
               </Link>
-              <Link href="/auth/login">
-                <Button variant="outline">Sign In</Button>
-              </Link>
+              {!isAuthenticated && (
+                <Link href="/auth/login">
+                  <Button variant="outline">Sign In</Button>
+                </Link>
+              )}
               {isAuthenticated && <UserDropdown />}
             </div>
           )}
