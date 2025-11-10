@@ -10,6 +10,7 @@ import {
   HiMiniPencilSquare,
   HiMiniSquare2Stack,
   HiPlus,
+  HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
 import { RxDotsVertical } from "react-icons/rx";
@@ -114,6 +115,16 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                       </Link>
                     );
                   })}
+                {!isAuthenticated && (
+                  <Link
+                    href="/auth/login"
+                    onClick={handleLinkClick}
+                    className="border-border text-secondary-foreground flex items-center gap-2 rounded-full border py-2 pl-4 text-sm font-medium transition"
+                  >
+                    <HiUser className="size-4" />
+                    Sign In
+                  </Link>
+                )}
                 <Link
                   href="/projects/create"
                   onClick={handleLinkClick}

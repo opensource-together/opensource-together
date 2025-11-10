@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import FooterLogin from "@/shared/components/layout/footer-login";
+import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
 
 import AuthIllustration from "../components/auth-illustration.component";
 import LoginForm from "../components/login-form.component";
@@ -34,7 +34,7 @@ export default function LoginView() {
           </div>
         </div>
         <div className="mt-auto px-4 md:px-10">
-          <FooterLogin />
+          <FooterMinimal />
         </div>
       </div>
     </>

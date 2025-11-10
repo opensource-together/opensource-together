@@ -49,7 +49,7 @@ export default function MyProjectRow({
           />
           <div className="flex min-w-0 flex-col">
             <div className="flex min-w-0 items-center gap-2">
-              <h4 className="max-w-[60vw] truncate font-medium md:max-w-[16rem]">
+              <h4 className="max-w-[60vw] truncate font-medium md:max-w-[14rem]">
                 {project.title}
               </h4>
             </div>

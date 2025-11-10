@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Separator } from "@/shared/components/ui/separator";
 
@@ -101,9 +102,27 @@ const renderLinkSection = (title: string, links: FooterLink[]) => (
 
 export default function Footer() {
   const pathname = usePathname();
+  const [is404Page, setIs404Page] = useState(false);
+
+  useEffect(() => {
+    const checkFor404 = () => {
+      if (typeof window !== "undefined") {
+        const h1Element = document.querySelector("main h1");
+        const is404 =
+          h1Element?.textContent?.trim() === "404" ||
+          document.title.includes("404 - Page Not Found");
+        setIs404Page(is404);
+      }
+    };
+    checkFor404();
+    requestAnimationFrame(checkFor404);
+  }, [pathname]);
+
   const hideFooter =
+    is404Page ||
     pathname.startsWith("/projects/create") ||
     pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/not-found") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/onboarding");
 
