@@ -38,7 +38,7 @@ export function BlurredSigninCtaGrid({
           <h3 className="text-xl font-medium text-balance">{message}</h3>
           <p className="text-muted-foreground mx-auto mt-1.5 max-w-xs text-sm">
             Create an account or sign in to browse{" "}
-            <br className="hidden md:inline" /> the full list and load more.
+            <br className="hidden md:inline" /> the full list.
           </p>
           <Link
             href={ctaHref}
