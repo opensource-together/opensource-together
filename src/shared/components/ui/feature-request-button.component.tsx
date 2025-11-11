@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { FRONTEND_URL } from "@/config/config";
+
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
@@ -16,10 +18,13 @@ import {
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useFeatureRequest } from "@/shared/hooks/use-feature-request.hook";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [request, setRequest] = useState("");
 
+  const { currentUser } = useAuth();
   const { mutate: submitFeatureRequest, isPending } = useFeatureRequest();
 
   const handleSubmit = () => {
@@ -28,8 +33,15 @@ export function FeatureRequestButton() {
       return;
     }
 
+    const userInfo = currentUser
+      ? {
+          userName: currentUser.name,
+          userProfileUrl: `${FRONTEND_URL}/profile/${currentUser.id}`,
+        }
+      : undefined;
+
     submitFeatureRequest(
-      { request },
+      { request, userInfo },
       {
         onSuccess: () => {
           setRequest("");

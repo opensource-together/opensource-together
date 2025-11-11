@@ -3,6 +3,10 @@ const DISCORD_WEBHOOK_URL =
 
 interface FeatureRequestPayload {
   request: string;
+  userInfo?: {
+    userName: string;
+    userProfileUrl: string;
+  };
 }
 
 /**
@@ -14,6 +18,25 @@ interface FeatureRequestPayload {
 export const sendFeatureRequest = async (
   payload: FeatureRequestPayload
 ): Promise<void> => {
+  const fields = [
+    {
+      name: "Date",
+      value: new Date().toLocaleString("en-US", {
+        dateStyle: "full",
+        timeStyle: "short",
+      }),
+      inline: false,
+    },
+  ];
+
+  if (payload.userInfo) {
+    fields.push({
+      name: "User",
+      value: `[${payload.userInfo.userName}](${payload.userInfo.userProfileUrl})`,
+      inline: false,
+    });
+  }
+
   const response = await fetch(DISCORD_WEBHOOK_URL, {
     method: "POST",
     headers: {
@@ -25,16 +48,7 @@ export const sendFeatureRequest = async (
           title: "New Feature Request",
           description: payload.request,
           color: 5814783,
-          fields: [
-            {
-              name: "Date",
-              value: new Date().toLocaleString("en-US", {
-                dateStyle: "full",
-                timeStyle: "short",
-              }),
-              inline: false,
-            },
-          ],
+          fields,
           footer: {
             text: "OpenSource Together",
           },

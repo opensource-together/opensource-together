@@ -3,6 +3,10 @@ import { useToastMutation } from "./use-toast-mutation";
 
 interface FeatureRequestVariables {
   request: string;
+  userInfo?: {
+    userName: string;
+    userProfileUrl: string;
+  };
 }
 
 /**
