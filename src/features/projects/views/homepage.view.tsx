@@ -109,7 +109,7 @@ export default function HomepageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { isAuthenticated } = useAuth();
-  const MAX_FREE_PROJECTS = 50;
+  const MAX_FREE_PROJECTS = 60;
 
   const filters = useMemo(
     () => parseFiltersFromURL(searchParams),
