@@ -24,10 +24,7 @@ export function useFeatureRequest() {
 
   return {
     submitFeatureRequest: mutation.mutate,
-    submitFeatureRequestAsync: mutation.mutateAsync,
     isSubmitting: mutation.isPending,
     isSubmitError: mutation.isError,
-    isSubmitSuccess: mutation.isSuccess,
-    submitError: mutation.error,
   };
 }
