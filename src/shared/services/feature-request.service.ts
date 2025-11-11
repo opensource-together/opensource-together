@@ -1,5 +1,3 @@
-const DISCORD_WEBHOOK_URL = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL;
-
 interface FeatureRequestPayload {
   request: string;
   userInfo?: {
@@ -9,7 +7,7 @@ interface FeatureRequestPayload {
 }
 
 /**
- * Send a feature request to Discord webhook
+ * Send a feature request via Next.js API route
  *
  * @param payload - The feature request data
  * @returns A promise that resolves when the request is sent
@@ -17,51 +15,16 @@ interface FeatureRequestPayload {
 export const sendFeatureRequest = async (
   payload: FeatureRequestPayload
 ): Promise<void> => {
-  if (!DISCORD_WEBHOOK_URL) {
-    throw new Error("DISCORD_WEBHOOK_URL is not configured");
-  }
-
-  const fields = [
-    {
-      name: "Date",
-      value: new Date().toLocaleString("en-US", {
-        dateStyle: "full",
-        timeStyle: "short",
-      }),
-      inline: false,
-    },
-  ];
-
-  if (payload.userInfo) {
-    fields.push({
-      name: "User",
-      value: `[${payload.userInfo.userName}](${payload.userInfo.userProfileUrl})`,
-      inline: false,
-    });
-  }
-
-  const response = await fetch(DISCORD_WEBHOOK_URL, {
+  const response = await fetch("/api/feature-request", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      embeds: [
-        {
-          title: "New Feature Request",
-          description: payload.request,
-          color: 5814783,
-          fields,
-          footer: {
-            text: "OpenSource Together",
-          },
-          timestamp: new Date().toISOString(),
-        },
-      ],
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
-    throw new Error("Failed to send feature request");
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || "Failed to send feature request");
   }
 };
