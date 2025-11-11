@@ -5,6 +5,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
 
+import { useCacheBustingImage } from "../../../shared/hooks/use-cache-busting-image.hook";
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
 import { ClaimProjectButton } from "./claim-project-button.component";
@@ -21,13 +22,16 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
     logoUrl,
     repoUrl = "",
     published = false,
+    updatedAt,
   } = project;
+
+  const logoUrlWithCacheBusting = useCacheBustingImage(logoUrl, updatedAt);
 
   return (
     <div className="flex flex-col bg-white">
       <div className="flex min-w-0 items-center gap-4">
         <Avatar
-          src={logoUrl}
+          src={logoUrlWithCacheBusting}
           name={title}
           alt={title}
           size="lg"
@@ -102,7 +106,10 @@ export default function ProjectHero({
     logoUrl,
     repoUrl = "",
     published = false,
+    updatedAt,
   } = project;
+
+  const logoUrlWithCacheBusting = useCacheBustingImage(logoUrl, updatedAt);
 
   return (
     <div className="flex flex-col bg-white">
@@ -111,7 +118,7 @@ export default function ProjectHero({
           <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
             <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <Avatar
-                src={logoUrl}
+                src={logoUrlWithCacheBusting}
                 name={title}
                 alt={title}
                 size="xl"

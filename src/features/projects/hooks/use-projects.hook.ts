@@ -301,21 +301,12 @@ export function useUpdateProjectLogo() {
       logoFile: File;
     }) => updateProjectLogo(projectId, logoFile),
 
-    onSuccess: (project, variables) => {
-      const targetId = variables?.projectId;
-      if (targetId) {
-        const versionSuffix = `?t=${Date.now()}`;
-        const baseUrl = (project?.logoUrl || "").split("?")[0];
-        const versionedLogo = baseUrl ? `${baseUrl}${versionSuffix}` : null;
-
-        const updateProjectLogoUrl = (
-          old: Project | undefined
-        ): Project | undefined =>
-          old ? { ...old, logoUrl: versionedLogo } : old;
-
-        queryClient.setQueryData(["project", targetId], updateProjectLogoUrl);
-        queryClient.invalidateQueries({ queryKey: ["project", targetId] });
-      }
+    onSuccess: (projectId) => {
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "me", "projects"],
+      });
     },
   });
 

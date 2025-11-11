@@ -8,6 +8,7 @@ import {
   TooltipRoot,
   TooltipTrigger,
 } from "@/shared/components/ui/tooltip";
+import { useCacheBustingImage } from "@/shared/hooks/use-cache-busting-image.hook";
 
 import { Profile } from "../types/profile.type";
 
@@ -27,7 +28,10 @@ export function ProfileMobileHero({
     jobTitle = "",
     bio = "",
     betaTester = false,
+    updatedAt,
   } = profile;
+
+  const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
 
   const renderBetaTesterBadge = () => {
     if (!betaTester) return null;
@@ -67,7 +71,12 @@ export function ProfileMobileHero({
       <div className="flex flex-col items-start">
         <div className="flex min-w-0 items-center">
           <div className="mr-4">
-            <Avatar src={image} name={name} alt={name} size="xl" />
+            <Avatar
+              src={imageUrlWithCacheBusting}
+              name={name}
+              alt={name}
+              size="xl"
+            />
           </div>
           <div className="min-w-0">
             <div className="flex items-center">
@@ -102,7 +111,10 @@ export default function ProfileHero({
     jobTitle = "",
     bio = "",
     betaTester = false,
+    updatedAt,
   } = profile;
+
+  const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
 
   if (hideHeader) {
     return <></>;
@@ -145,7 +157,12 @@ export default function ProfileHero({
       <div className="flex items-center justify-between">
         <div className="flex min-w-0 items-center">
           <div className="mr-4">
-            <Avatar src={image} name={name} alt={name} size="xl" />
+            <Avatar
+              src={imageUrlWithCacheBusting}
+              name={name}
+              alt={name}
+              size="xl"
+            />
           </div>
           <div className="min-w-0">
             <div className="flex items-center">
