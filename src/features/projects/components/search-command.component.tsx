@@ -16,11 +16,16 @@ import {
   CommandList,
 } from "@/shared/components/ui/command";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
+
+const MAX_FREE_PROJECTS = 60;
 
 export default function SearchCommand() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const {
     data: projectsPages,
@@ -33,7 +38,10 @@ export default function SearchCommand() {
       published: true,
       per_page: 20,
     },
-    { enabled: open }
+    {
+      enabled: open,
+      maxTotalItems: isAuthenticated ? undefined : MAX_FREE_PROJECTS,
+    }
   );
 
   // Infinite scroll
@@ -42,12 +50,37 @@ export default function SearchCommand() {
     rootMargin: "100px",
   });
 
+  // Flatten all pages into a single array
+  const allProjects =
+    projectsPages?.pages?.flatMap((page) => page.data || []) ?? [];
+
+  // Limit projects for non-authenticated users
+  const reachedFreeCap =
+    !isAuthenticated && allProjects.length >= MAX_FREE_PROJECTS;
+  const projects = reachedFreeCap
+    ? allProjects.slice(0, MAX_FREE_PROJECTS)
+    : allProjects;
+
   // Load next page when scrolling to the bottom
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage && open) {
+    if (
+      inView &&
+      hasNextPage &&
+      !isFetchingNextPage &&
+      open &&
+      (isAuthenticated || !reachedFreeCap)
+    ) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage, open]);
+  }, [
+    inView,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    open,
+    isAuthenticated,
+    reachedFreeCap,
+  ]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -65,11 +98,7 @@ export default function SearchCommand() {
     setOpen(false);
   };
 
-  // Flatten all pages into a single array
-  const allProjects =
-    projectsPages?.pages?.flatMap((page) => page.data || []) ?? [];
-
-  const suggestions = allProjects.map((project) => ({
+  const suggestions = projects.map((project) => ({
     id: project.id,
     name: project.title,
     description: project.description,
@@ -136,7 +165,7 @@ export default function SearchCommand() {
                       </span>
                     </CommandItem>
                   ))}
-                  {hasNextPage && (
+                  {hasNextPage && (isAuthenticated || !reachedFreeCap) && (
                     <div ref={ref} className="py-2">
                       {isFetchingNextPage && (
                         <div className="flex items-center justify-center px-3">
@@ -154,6 +183,19 @@ export default function SearchCommand() {
                         </div>
                       )}
                     </div>
+                  )}
+                  {!isAuthenticated && reachedFreeCap && (
+                    <CommandItem
+                      onSelect={() => {
+                        router.push("/auth/login");
+                        setOpen(false);
+                      }}
+                      className="mb-3 border-t px-3 py-3"
+                    >
+                      <span className="text-muted-foreground text-xs font-medium">
+                        Sign in to see more projects
+                      </span>
+                    </CommandItem>
                   )}
                 </CommandGroup>
               )}
