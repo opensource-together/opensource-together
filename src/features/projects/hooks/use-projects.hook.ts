@@ -36,10 +36,14 @@ import {
  */
 export function useInfiniteProjects(
   params: Omit<ProjectQueryParams, "page"> = {},
-  options?: { enabled?: boolean }
+  options?: { enabled?: boolean; maxTotalItems?: number }
 ) {
   const per_page = params.per_page ?? 20;
   const queryParams = { ...params, per_page };
+  const maxPageLimit =
+    options?.maxTotalItems && options.maxTotalItems > 0
+      ? Math.ceil(options.maxTotalItems / per_page)
+      : undefined;
 
   return useInfiniteQuery<PaginatedProjectsResponse>({
     queryKey: ["projects-infinite", queryParams],
@@ -53,7 +57,11 @@ export function useInfiniteProjects(
     getNextPageParam: (lastPage) => {
       const { pagination } = lastPage;
       if (!pagination) return undefined;
-      return pagination.currentPage < pagination.lastPage
+      const canHaveMoreByServer = pagination.currentPage < pagination.lastPage;
+      const canHaveMoreByLimit = maxPageLimit
+        ? pagination.currentPage < maxPageLimit
+        : true;
+      return canHaveMoreByServer && canHaveMoreByLimit
         ? pagination.currentPage + 1
         : undefined;
     },
