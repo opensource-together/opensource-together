@@ -9,8 +9,10 @@ import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
+import { BlurredSigninCtaGrid } from "../components/blurred-signin-cta-grid.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
@@ -106,6 +108,8 @@ export default function HomepageView() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { isAuthenticated } = useAuth();
+  const MAX_FREE_PROJECTS = 50;
 
   const filters = useMemo(
     () => parseFiltersFromURL(searchParams),
@@ -130,17 +134,37 @@ export default function HomepageView() {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteProjects({ ...filters, published: true });
+  } = useInfiniteProjects(
+    { ...filters, published: true },
+    { maxTotalItems: isAuthenticated ? undefined : MAX_FREE_PROJECTS }
+  );
 
   // Merge all pages of projects
-  const projects = data?.pages.flatMap((page) => page.data) || [];
+  const allProjects = data?.pages.flatMap((page) => page.data) || [];
+  const reachedFreeCap =
+    !isAuthenticated && allProjects.length >= MAX_FREE_PROJECTS;
+  const projects = reachedFreeCap
+    ? allProjects.slice(0, MAX_FREE_PROJECTS)
+    : allProjects;
 
   // Load next page on scroll
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
+    if (
+      inView &&
+      hasNextPage &&
+      !isFetchingNextPage &&
+      (isAuthenticated || !reachedFreeCap)
+    ) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [
+    inView,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    isAuthenticated,
+    reachedFreeCap,
+  ]);
 
   if (isLoading) {
     return (
@@ -193,7 +217,7 @@ export default function HomepageView() {
       initialFilters={filters}
     >
       <ProjectGrid projects={projects} />
-      {hasNextPage && (
+      {hasNextPage && (isAuthenticated || !reachedFreeCap) && (
         <div ref={ref}>
           {isFetchingNextPage ? (
             <div className="my-4 sm:my-5 md:my-6">
@@ -211,6 +235,13 @@ export default function HomepageView() {
             </div>
           )}
         </div>
+      )}
+      {!isAuthenticated && reachedFreeCap && (
+        <BlurredSigninCtaGrid
+          projects={projects}
+          maxShown={MAX_FREE_PROJECTS}
+          ctaHref="/auth/login"
+        />
       )}
     </HomepageLayout>
   );
