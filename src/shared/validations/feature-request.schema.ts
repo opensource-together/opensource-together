@@ -9,4 +9,3 @@ export const featureRequestSchema = z.object({
 });
 
 export type FeatureRequestFormData = z.infer<typeof featureRequestSchema>;
-
