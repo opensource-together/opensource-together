@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -42,10 +43,16 @@ export function FeatureRequestButton() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed right-6 bottom-6 z-50 rounded-full shadow-lg"
+        className="fixed right-6 bottom-6 z-50 size-14 rounded-full bg-black p-2 shadow-lg hover:bg-black/90"
         aria-label="Request a feature"
       >
-        Feature Request
+        <Image
+          src="/ost-logo.svg"
+          alt="OST"
+          width={40}
+          height={40}
+          className="invert"
+        />
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -62,8 +69,8 @@ export function FeatureRequestButton() {
               placeholder="Describe your feature idea..."
               value={request}
               onChange={(e) => setRequest(e.target.value)}
-              rows={6}
-              className="resize-none"
+              rows={10}
+              className="min-h-[200px] resize-none"
             />
           </div>
 
