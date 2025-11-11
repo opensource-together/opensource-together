@@ -1,5 +1,4 @@
-const DISCORD_WEBHOOK_URL =
-  "https://discord.com/api/webhooks/1437814355851874437/Vp2QtHx5iqtKV1r7SA2oJ6p3fPqex5DPFC-_0xDcMIqml1XIUG_NlikAxqm1KvB29RWo";
+const DISCORD_WEBHOOK_URL = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL;
 
 interface FeatureRequestPayload {
   request: string;
@@ -18,6 +17,10 @@ interface FeatureRequestPayload {
 export const sendFeatureRequest = async (
   payload: FeatureRequestPayload
 ): Promise<void> => {
+  if (!DISCORD_WEBHOOK_URL) {
+    throw new Error("DISCORD_WEBHOOK_URL is not configured");
+  }
+
   const fields = [
     {
       name: "Date",
