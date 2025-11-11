@@ -38,13 +38,15 @@ export function FeatureRequestButton() {
     },
   });
 
+  if (!currentUser) {
+    return null;
+  }
+
   const handleSubmit = (data: FeatureRequestFormData) => {
-    const userInfo = currentUser
-      ? {
-          userName: currentUser.name,
-          userProfileUrl: `${FRONTEND_URL}/profile/${currentUser.id}`,
-        }
-      : undefined;
+    const userInfo = {
+      userName: currentUser.name,
+      userProfileUrl: `${FRONTEND_URL}/profile/${currentUser.id}`,
+    };
 
     submitFeatureRequest(
       { request: data.request, userInfo },
