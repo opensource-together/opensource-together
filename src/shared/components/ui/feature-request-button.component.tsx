@@ -1,38 +1,44 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useState } from "react";
-import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
 import { FRONTEND_URL } from "@/config/config";
 
 import { Button } from "@/shared/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/components/ui/dialog";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/shared/components/ui/form";
+import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useFeatureRequest } from "@/shared/hooks/use-feature-request.hook";
+import {
+  type FeatureRequestFormData,
+  featureRequestSchema,
+} from "@/shared/validations/feature-request.schema";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [request, setRequest] = useState("");
 
   const { currentUser } = useAuth();
   const { mutate: submitFeatureRequest, isPending } = useFeatureRequest();
 
-  const handleSubmit = () => {
-    if (!request.trim()) {
-      toast.error("Please enter a feature request");
-      return;
-    }
+  const form = useForm<FeatureRequestFormData>({
+    resolver: zodResolver(featureRequestSchema),
+    defaultValues: {
+      request: "",
+    },
+  });
 
+  const handleSubmit = (data: FeatureRequestFormData) => {
     const userInfo = currentUser
       ? {
           userName: currentUser.name,
@@ -41,14 +47,19 @@ export function FeatureRequestButton() {
       : undefined;
 
     submitFeatureRequest(
-      { request, userInfo },
+      { request: data.request, userInfo },
       {
         onSuccess: () => {
-          setRequest("");
+          form.reset();
           setIsOpen(false);
         },
       }
     );
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    setIsOpen(false);
   };
 
   return (
@@ -67,39 +78,41 @@ export function FeatureRequestButton() {
         />
       </Button>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Request a Feature</DialogTitle>
-            <DialogDescription>
-              Have an idea to improve OpenSource Together? Share it with us!
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
-            <Textarea
-              placeholder="Describe your feature idea..."
-              value={request}
-              onChange={(e) => setRequest(e.target.value)}
-              rows={10}
-              className="min-h-[200px] resize-none"
+      <Modal
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        title="Request a Feature"
+        description="Have an idea to improve OpenSource Together? Share it with us!"
+        confirmText={isPending ? "Sending..." : "Send"}
+        cancelText="Cancel"
+        onConfirm={form.handleSubmit(handleSubmit)}
+        onCancel={handleCancel}
+        isLoading={isPending}
+        size="lg"
+      >
+        <Form {...form}>
+          <form className="space-y-2 py-4">
+            <FormField
+              control={form.control}
+              name="request"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Décrivez votre idée de fonctionnalité..."
+                      {...field}
+                      rows={10}
+                      className="min-h-[200px] resize-none"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-              disabled={isPending}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} disabled={isPending}>
-              {isPending ? "Sending..." : "Send"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </form>
+        </Form>
+      </Modal>
     </>
   );
 }
