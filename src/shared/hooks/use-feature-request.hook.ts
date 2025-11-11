@@ -15,10 +15,19 @@ interface FeatureRequestVariables {
  * @returns Mutation object with mutate function and status
  */
 export function useFeatureRequest() {
-  return useToastMutation<void, Error, FeatureRequestVariables>({
+  const mutation = useToastMutation<void, Error, FeatureRequestVariables>({
     mutationFn: sendFeatureRequest,
     loadingMessage: "Sending your request...",
     successMessage: "Thank you! Your request has been sent successfully",
     errorMessage: "An error occurred. Please try again.",
   });
+
+  return {
+    submitFeatureRequest: mutation.mutate,
+    submitFeatureRequestAsync: mutation.mutateAsync,
+    isSubmitting: mutation.isPending,
+    isSubmitError: mutation.isError,
+    isSubmitSuccess: mutation.isSuccess,
+    submitError: mutation.error,
+  };
 }

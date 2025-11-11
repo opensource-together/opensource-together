@@ -29,7 +29,7 @@ export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   const { currentUser } = useAuth();
-  const { mutate: submitFeatureRequest, isPending } = useFeatureRequest();
+  const { submitFeatureRequest, isSubmitting } = useFeatureRequest();
 
   const form = useForm<FeatureRequestFormData>({
     resolver: zodResolver(featureRequestSchema),
@@ -85,11 +85,11 @@ export function FeatureRequestButton() {
         onOpenChange={setIsOpen}
         title="Request a Feature"
         description="Have an idea to improve OpenSource Together? Share it with us!"
-        confirmText={isPending ? "Sending..." : "Send"}
+        confirmText={isSubmitting ? "Sending..." : "Send"}
         cancelText="Cancel"
         onConfirm={form.handleSubmit(handleSubmit)}
         onCancel={handleCancel}
-        isLoading={isPending}
+        isLoading={isSubmitting}
         size="lg"
       >
         <Form {...form}>
@@ -105,7 +105,7 @@ export function FeatureRequestButton() {
                       {...field}
                       rows={10}
                       className="min-h-[200px] resize-none"
-                      disabled={isPending}
+                      disabled={isSubmitting}
                     />
                   </FormControl>
                   <FormMessage />
