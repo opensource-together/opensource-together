@@ -2,13 +2,42 @@ import Image from "next/image";
 import { useState } from "react";
 import { IoChevronBack, IoChevronForward, IoEllipse } from "react-icons/io5";
 
+import { useCacheBustingImage } from "@/shared/hooks/use-cache-busting-image.hook";
+
 import { Button } from "./button";
 
 interface ImageSliderProps {
   images: string[];
+  updatedAt?: Date | string | null;
 }
 
-export default function ImageSlider({ images }: ImageSliderProps) {
+// Component for individual image with cache-busting
+function CachedImage({
+  src,
+  alt,
+  updatedAt,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  updatedAt?: Date | string | null;
+  priority?: boolean;
+}) {
+  const imageWithCacheBusting = useCacheBustingImage(src, updatedAt);
+  return (
+    <Image
+      src={imageWithCacheBusting || src}
+      alt={alt}
+      width={688}
+      height={393}
+      className="border-muted-black-stroke h-[207px] w-full shrink-0 rounded-2xl border object-cover sm:h-[365px]"
+      unoptimized
+      priority={priority}
+    />
+  );
+}
+
+export default function ImageSlider({ images, updatedAt }: ImageSliderProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -77,14 +106,11 @@ export default function ImageSlider({ images }: ImageSliderProps) {
             }}
           >
             {images.map((img, idx) => (
-              <Image
+              <CachedImage
                 key={idx}
                 src={img}
                 alt={`Image ${idx + 1}`}
-                width={688}
-                height={393}
-                className="border-muted-black-stroke h-[207px] w-full shrink-0 rounded-2xl border object-cover sm:h-[365px]"
-                unoptimized
+                updatedAt={updatedAt}
                 priority={idx === currentImageIndex}
               />
             ))}

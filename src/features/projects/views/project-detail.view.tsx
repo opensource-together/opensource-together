@@ -111,7 +111,10 @@ export default function ProjectDetailView({
             return (
               <>
                 {project.imagesUrls.length > 0 && (
-                  <ImageSlider images={project.imagesUrls} />
+                  <ImageSlider
+                    images={project.imagesUrls}
+                    updatedAt={project.updatedAt}
+                  />
                 )}
                 {readme && (
                   <ProjectReadme
