@@ -10,7 +10,6 @@ import {
   updateProfile,
   updateProfileLogo,
 } from "../services/profile.service";
-import { Profile } from "../types/profile.type";
 import { ProfileSchema } from "../validations/profile.schema";
 
 /**
@@ -51,8 +50,9 @@ export const useProfileUpdate = () => {
     successMessage: "Profil updated with success",
     errorMessage: "Error updating your profile",
     options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+      onSuccess: (profileId) => {
+        queryClient.invalidateQueries({ queryKey: ["users", profileId] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
         router.push("/profile/me");
       },
     },
@@ -84,17 +84,8 @@ export const useProfileLogoUpdate = (id: string) => {
     successMessage: "Avatar updated successfully",
     errorMessage: "Error updating your avatar",
     options: {
-      onSuccess: (data) => {
-        const versionSuffix = `?t=${Date.now()}`;
-        const baseUrl = data.image.split("?")[0];
-        const versionedImage = `${baseUrl}${versionSuffix}`;
-
-        // Busting the cache for the image url
-        const updateImage = (old: Profile | undefined): Profile | undefined =>
-          old ? { ...old, image: versionedImage } : old;
-
-        queryClient.setQueryData(["user", "me"], updateImage);
-
+      onSuccess: (profileId) => {
+        queryClient.invalidateQueries({ queryKey: ["users", profileId] });
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },

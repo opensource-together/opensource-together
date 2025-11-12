@@ -5,6 +5,7 @@ import { FRONTEND_URL } from "@/config/config";
 
 import Footer from "@/shared/components/layout/footer";
 import Header from "@/shared/components/layout/header";
+import { FeatureRequestButton } from "@/shared/components/ui/feature-request-button.component";
 import { Toaster } from "@/shared/components/ui/sonner";
 
 import "../../public/fonts/font-face.css";
@@ -130,6 +131,7 @@ export default function RootLayout({
           {children}
           <Footer />
           <Toaster />
+          <FeatureRequestButton />
         </Providers>
       </body>
     </html>
