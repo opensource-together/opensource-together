@@ -101,7 +101,7 @@ export function FeatureRequestButton() {
                 <FormItem>
                   <FormControl>
                     <Textarea
-                      placeholder="Décrivez votre idée de fonctionnalité..."
+                      placeholder="Describe your feature idea..."
                       {...field}
                       rows={10}
                       className="min-h-[200px] resize-none"
