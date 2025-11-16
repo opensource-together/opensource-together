@@ -1,3 +1,7 @@
+import { HiStar } from "react-icons/hi2";
+import { RiGitForkFill } from "react-icons/ri";
+import { VscGitPullRequest, VscIssues } from "react-icons/vsc";
+
 import { ImageMetadataBackground } from "@/shared/components/seo/image-metadata/commons/background/image-metadata-background";
 import { ImageMetadataContent } from "@/shared/components/seo/image-metadata/commons/content/image-metadata-content";
 
@@ -8,6 +12,7 @@ interface ProjectImageMetadataProps {
   forksCount?: number | null;
   openIssuesCount?: number | null;
   pullRequestsCount?: number | null;
+  starsCount?: number | null;
 }
 
 export function ProjectImageMetadata({
@@ -17,6 +22,7 @@ export function ProjectImageMetadata({
   forksCount,
   openIssuesCount,
   pullRequestsCount,
+  starsCount,
 }: ProjectImageMetadataProps) {
   const logoSize = 300;
   const summary = (() => {
@@ -30,15 +36,24 @@ export function ProjectImageMetadata({
   })();
 
   const stats = [
-    { label: "Forks", value: forksCount },
-    { label: "Open issues", value: openIssuesCount },
-    { label: "Pull requests", value: pullRequestsCount },
+    { label: "Stars", value: starsCount, icon: HiStar },
+    { label: "Forks", value: forksCount, icon: RiGitForkFill },
+    { label: "Open issues", value: openIssuesCount, icon: VscIssues },
+    {
+      label: "Pull requests",
+      value: pullRequestsCount,
+      icon: VscGitPullRequest,
+    },
   ].filter(
     (stat) =>
       typeof stat.value === "number" &&
       stat.value !== null &&
       stat.value !== undefined
-  ) as Array<{ label: string; value: number }>;
+  ) as Array<{
+    label: string;
+    value: number;
+    icon: React.ComponentType<{ size?: number; className?: string }>;
+  }>;
   const numberFormatter = new Intl.NumberFormat("en-US");
 
   return (
@@ -52,7 +67,6 @@ export function ProjectImageMetadata({
           height: "100%",
           position: "relative",
           paddingInline: "36px",
-          paddingTop: "48px",
         }}
       >
         <div
@@ -71,41 +85,48 @@ export function ProjectImageMetadata({
               style={{
                 display: "flex",
                 gap: "56px",
-                marginTop: "48px",
               }}
             >
-              {stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <span
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
                     style={{
-                      fontSize: "40px",
-                      fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
-                      fontWeight: 500,
-                      letterSpacing: "-0.02em",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      marginBottom: "20px",
                     }}
                   >
-                    {numberFormatter.format(stat.value)}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "20px",
-                      fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
-                      fontWeight: 400,
-                      letterSpacing: "-0.01em",
-                      color: "#475569",
-                    }}
-                  >
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
+                    <span
+                      style={{
+                        fontSize: "48px",
+                        fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
+                        fontWeight: 500,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {numberFormatter.format(stat.value)}
+                    </span>
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        fontSize: "20px",
+                        fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
+                        fontWeight: 400,
+                        letterSpacing: "-0.01em",
+                        color: "#737373",
+                      }}
+                    >
+                      <Icon size={20} />
+                      {stat.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           ) : null}
         </div>
@@ -120,6 +141,7 @@ export function ProjectImageMetadata({
               height: `${logoSize}px`,
               borderRadius: "65px",
               overflow: "hidden",
+              marginTop: "52px",
             }}
             aria-label={`${name} logo`}
           >
