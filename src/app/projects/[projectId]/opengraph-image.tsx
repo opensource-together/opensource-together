@@ -27,6 +27,7 @@ export default async function Image({
           name={project.title}
           description={project.description}
           imageUrl={project.logoUrl}
+          starsCount={project.repositoryDetails?.stars}
           forksCount={project.repositoryDetails?.forksCount}
           openIssuesCount={project.repositoryDetails?.openIssuesCount}
           pullRequestsCount={project.repositoryDetails?.pullRequestsCount}
