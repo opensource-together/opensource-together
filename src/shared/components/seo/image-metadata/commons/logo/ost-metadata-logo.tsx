@@ -18,7 +18,7 @@ function OstLogo() {
   return (
     <svg
       style={{
-        width: "85%",
+        width: "60%",
         objectFit: "contain",
       }}
       width="560"
