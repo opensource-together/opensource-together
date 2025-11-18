@@ -54,6 +54,7 @@ export default function ProfileView() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="pull-request">Pull Requests</TabsTrigger>
+          <TabsTrigger value="saved-projects">Saved Projects</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -80,6 +81,9 @@ export default function ProfileView() {
           <Suspense fallback={<ProfilePullRequestsSkeleton />}>
             <ProfilePullRequests />
           </Suspense>
+        </TabsContent>
+        <TabsContent value="saved-projects" className="mt-6">
+          {/* TODO: Implement saved projects list */}
         </TabsContent>
       </Tabs>
     </TwoColumnLayout>

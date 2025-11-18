@@ -8,6 +8,7 @@ import { Modal } from "@/shared/components/ui/modal";
 import { useCacheBustingImage } from "../../../shared/hooks/use-cache-busting-image.hook";
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
 import { Project } from "../types/project.type";
+import { BookmarkButton } from "./bookmark-button.component";
 import { ClaimProjectButton } from "./claim-project-button.component";
 
 export function ProjectMobileHero({ project }: ProjectHeroProps) {
@@ -48,6 +49,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
       <div className="flex items-center gap-2">
         {published ? (
           <>
+            <BookmarkButton projectId={id} />
             <ClaimProjectButton project={project} />
             <Link
               href={repoUrl || ""}
@@ -132,6 +134,7 @@ export default function ProjectHero({
             <div className="flex items-center gap-2">
               {published ? (
                 <>
+                  <BookmarkButton projectId={id} />
                   <ClaimProjectButton project={project} />
                   <Link
                     href={repoUrl || ""}
