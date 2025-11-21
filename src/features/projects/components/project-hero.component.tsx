@@ -24,6 +24,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
     repoUrl = "",
     published = false,
     updatedAt,
+    isBookmarked = false,
   } = project;
 
   const logoUrlWithCacheBusting = useCacheBustingImage(logoUrl, updatedAt);
@@ -49,7 +50,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
       <div className="flex items-center gap-2">
         {published ? (
           <>
-            <BookmarkButton projectId={id} />
+            <BookmarkButton projectId={id} initialIsBookmarked={isBookmarked} />
             <ClaimProjectButton project={project} />
             <Link
               href={repoUrl || ""}
@@ -109,6 +110,7 @@ export default function ProjectHero({
     repoUrl = "",
     published = false,
     updatedAt,
+    isBookmarked = false,
   } = project;
 
   const logoUrlWithCacheBusting = useCacheBustingImage(logoUrl, updatedAt);
@@ -134,7 +136,10 @@ export default function ProjectHero({
             <div className="flex items-center gap-2">
               {published ? (
                 <>
-                  <BookmarkButton projectId={id} />
+                  <BookmarkButton
+                    projectId={id}
+                    initialIsBookmarked={isBookmarked}
+                  />
                   <ClaimProjectButton project={project} />
                   <Link
                     href={repoUrl || ""}
