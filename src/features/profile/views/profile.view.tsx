@@ -20,6 +20,7 @@ import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
 import ProfileProjectsList from "../components/profile-projects-list";
+import ProfileSavedProjectsList from "../components/profile-saved-projects-list";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import RecentProjects from "../components/recent-projects.component";
 import ProfileProjectsSkeleton from "../components/skeletons/profile-projects-skeleton.component";
@@ -83,7 +84,9 @@ export default function ProfileView() {
           </Suspense>
         </TabsContent>
         <TabsContent value="saved-projects" className="mt-6">
-          {/* TODO: Implement saved projects list */}
+          <Suspense fallback={<ProfileProjectsSkeleton />}>
+            <ProfileSavedProjectsList />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </TwoColumnLayout>

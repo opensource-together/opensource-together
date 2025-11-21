@@ -17,6 +17,11 @@ export interface UserProjectsQueryParams extends PaginationParams {
 export interface PaginatedUserProjectsResponse
   extends PaginatedResponse<Project> {}
 
+export interface UserBookmarksQueryParams extends PaginationParams {}
+
+export interface PaginatedUserBookmarksResponse
+  extends PaginatedResponse<Project> {}
+
 /**
  * Gets a public user by ID.
  *
@@ -140,6 +145,37 @@ export const getUserProjects = async (
     return apiResponse;
   } catch (error) {
     console.error("Error fetching user projects:", error);
+    throw error;
+  }
+};
+
+export const getUserBookmarks = async (
+  params?: UserBookmarksQueryParams
+): Promise<PaginatedUserBookmarksResponse> => {
+  try {
+    const queryParams = new URLSearchParams(
+      Object.entries(params ?? {})
+        .filter(([_, v]) => v !== undefined && v !== null)
+        .map(([k, v]) => [k, String(v)])
+    );
+    const queryString = queryParams.toString();
+    const url = `${API_BASE_URL}/users/me/bookmarks${
+      queryString ? `?${queryString}` : ""
+    }`;
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch user bookmarks");
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error("Error fetching user bookmarks:", error);
     throw error;
   }
 };
