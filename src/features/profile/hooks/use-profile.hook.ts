@@ -2,9 +2,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
+import { PaginationParams } from "@/shared/types/pagination.type";
 
 import {
+  UserBookmarksQueryParams,
   UserProjectsQueryParams,
+  getUserBookmarks,
   getUserById,
   getUserProjects,
   updateProfile,
@@ -119,5 +122,20 @@ export const useUserProjects = (
     queryKey: ["users", userId, "projects", queryParams],
     queryFn: () => getUserProjects(userId, queryParams),
     enabled: (options?.enabled ?? true) && !!userId,
+  });
+};
+
+export const useUserBookmarks = (
+  params: PaginationParams = {},
+  options?: { enabled?: boolean }
+) => {
+  const per_page = params.per_page ?? 10;
+  const page = params.page ?? 1;
+  const queryParams: UserBookmarksQueryParams = { ...params, per_page, page };
+
+  return useQuery({
+    queryFn: () => getUserBookmarks(queryParams),
+    queryKey: ["user", "me", "bookmarks", queryParams],
+    enabled: options?.enabled ?? true,
   });
 };

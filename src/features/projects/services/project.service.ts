@@ -291,3 +291,48 @@ export const claimProject = async (projectId: string): Promise<Project> => {
     throw error;
   }
 };
+
+export const bookmarkProject = async (projectId: string): Promise<Project> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/projects/${projectId}/bookmarks`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error while bookmarking project");
+    }
+
+    const apiResponse = await response.json();
+    return apiResponse;
+  } catch (error) {
+    console.error("Error bookmarking project:", error);
+    throw error;
+  }
+};
+
+export const removeProjectBookmark = async (
+  projectId: string
+): Promise<void> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/projects/${projectId}/bookmarks`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error while removing bookmark");
+    }
+  } catch (error) {
+    console.error("Error removing bookmark:", error);
+    throw error;
+  }
+};
