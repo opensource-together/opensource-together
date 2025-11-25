@@ -20,6 +20,7 @@ import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
 import ProfileProjectsList from "../components/profile-projects-list";
+import ProfileSavedProjectsList from "../components/profile-saved-projects-list";
 import ProfileSidebar from "../components/profile-sidebar.component";
 import RecentProjects from "../components/recent-projects.component";
 import ProfileProjectsSkeleton from "../components/skeletons/profile-projects-skeleton.component";
@@ -54,6 +55,7 @@ export default function ProfileView() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="pull-request">Pull Requests</TabsTrigger>
+          <TabsTrigger value="saved-projects">Saved Projects</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
@@ -79,6 +81,11 @@ export default function ProfileView() {
         <TabsContent value="pull-request" className="mt-6">
           <Suspense fallback={<ProfilePullRequestsSkeleton />}>
             <ProfilePullRequests />
+          </Suspense>
+        </TabsContent>
+        <TabsContent value="saved-projects" className="mt-6">
+          <Suspense fallback={<ProfileProjectsSkeleton />}>
+            <ProfileSavedProjectsList />
           </Suspense>
         </TabsContent>
       </Tabs>

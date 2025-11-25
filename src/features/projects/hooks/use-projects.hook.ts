@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
@@ -8,12 +9,14 @@ import { getQueryClient } from "@/shared/lib/query-client";
 import {
   PaginatedProjectsResponse,
   ProjectQueryParams,
+  bookmarkProject,
   claimProject,
   createProject,
   deleteProject,
   deleteProjectImage,
   getProjectDetails,
   getProjects,
+  removeProjectBookmark,
   updateProject,
   updateProjectCover,
   updateProjectLogo,
@@ -343,6 +346,87 @@ export function useUpdateProjectCover() {
   return {
     updateProjectCover: mutation.mutate,
     isUpdateErrorCover: mutation.isError,
+  };
+}
+
+interface UseProjectBookmarkOptions {
+  projectId: string;
+  initialIsBookmarked?: boolean;
+}
+
+export function useProjectBookmark({
+  projectId,
+  initialIsBookmarked = false,
+}: UseProjectBookmarkOptions) {
+  const queryClient = getQueryClient();
+  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
+
+  useEffect(() => {
+    setIsBookmarked(initialIsBookmarked);
+  }, [initialIsBookmarked]);
+
+  const bookmarkMutation = useToastMutation({
+    mutationFn: (projectId: string) => bookmarkProject(projectId),
+    loadingMessage: "Adding bookmark...",
+    successMessage: "Project bookmarked",
+    errorMessage: "Failed to bookmark project",
+    options: {
+      onSuccess: () => {
+        setIsBookmarked(true);
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "bookmarks"],
+        });
+      },
+    },
+  });
+
+  const removeBookmarkMutation = useToastMutation({
+    mutationFn: (projectId: string) => removeProjectBookmark(projectId),
+    loadingMessage: "Removing bookmark...",
+    successMessage: "Bookmark removed",
+    errorMessage: "Failed to remove bookmark",
+    options: {
+      onSuccess: () => {
+        setIsBookmarked(false);
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "bookmarks"],
+        });
+      },
+    },
+  });
+
+  const { mutate: addBookmarkMutate, isPending: isAddingBookmark } =
+    bookmarkMutation;
+  const { mutate: removeBookmarkMutate, isPending: isRemovingBookmark } =
+    removeBookmarkMutation;
+
+  const toggleBookmark = useCallback(() => {
+    if (!projectId || isAddingBookmark || isRemovingBookmark) {
+      return;
+    }
+
+    if (isBookmarked) {
+      removeBookmarkMutate(projectId);
+    } else {
+      addBookmarkMutate(projectId);
+    }
+  }, [
+    addBookmarkMutate,
+    isBookmarked,
+    isAddingBookmark,
+    projectId,
+    removeBookmarkMutate,
+    isRemovingBookmark,
+  ]);
+
+  const isBookmarking = isAddingBookmark || isRemovingBookmark;
+
+  return {
+    toggleBookmark,
+    isBookmarked,
+    isBookmarking,
   };
 }
 

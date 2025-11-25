@@ -27,6 +27,7 @@ export interface Project {
   projectCategories: CategoryType[];
   owner: ProjectOwner;
   repositoryDetails: RepositoryWithDetails;
+  isBookmarked?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
