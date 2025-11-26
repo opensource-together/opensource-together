@@ -24,9 +24,12 @@ export function ContributorsSidebarList({
   emptyText,
   totalCount,
 }: ContributorsSidebarListProps) {
-  const visible = contributors.slice(0, maxVisible);
+  const filteredContributors = contributors.filter(
+    (contributor) => contributor.login !== "github-actions[bot]"
+  );
+  const visible = filteredContributors.slice(0, maxVisible);
   const total =
-    typeof totalCount === "number" ? totalCount : contributors.length;
+    typeof totalCount === "number" ? totalCount : filteredContributors.length;
   const remaining = Math.max(total - 2, 0);
   const remainingDisplay = total >= 100 || remaining > 99 ? "99+" : remaining;
   return (
@@ -50,7 +53,7 @@ export function ContributorsSidebarList({
           </div>
         ))}
       </div>
-      {contributors.length === 0 && (
+      {filteredContributors.length === 0 && (
         <p className="text-muted-foreground text-sm">{emptyText}</p>
       )}
       <div className="text-muted-foreground mt-3 text-xs">
