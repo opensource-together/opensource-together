@@ -180,7 +180,7 @@ export function ShareProfileModal({
                 <Button
                   key={social.name}
                   variant="outline"
-                  className="flex h-auto items-center justify-start gap-3"
+                  className="flex h-auto items-center justify-start gap-2"
                   onClick={() => handleShare(social.href)}
                 >
                   <Icon className={`size-4 ${social.color}`} />
