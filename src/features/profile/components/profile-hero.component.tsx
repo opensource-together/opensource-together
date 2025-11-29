@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RiLinkM } from "react-icons/ri";
+
+import { FRONTEND_URL } from "@/config/config";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
+import { ShareProfileModal } from "@/shared/components/ui/share-profile-modal.component";
 import {
   TooltipContent,
   TooltipRoot,
@@ -23,6 +27,7 @@ export function ProfileMobileHero({
   variant = "private",
 }: ProfileHeroProps) {
   const {
+    id,
     image = "",
     name = "",
     jobTitle = "",
@@ -31,6 +36,7 @@ export function ProfileMobileHero({
     updatedAt,
   } = profile;
 
+  const publicProfileUrl = `${FRONTEND_URL}/profile/${id}`;
   const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
 
   const renderBetaTesterBadge = () => {
@@ -60,9 +66,20 @@ export function ProfileMobileHero({
     }
 
     return (
-      <Link href="/profile/me/edit">
-        <Button>Edit Profile</Button>
-      </Link>
+      <div className="flex items-center gap-2">
+        <ShareProfileModal
+          url={publicProfileUrl}
+          title={name}
+          description="Share your profile with your friends and followers."
+          triggerIcon={RiLinkM}
+          triggerVariant="outline"
+          triggerSize="icon"
+          triggerClassName="size-9"
+        />
+        <Link href="/profile/me/edit">
+          <Button>Edit Profile</Button>
+        </Link>
+      </div>
     );
   };
 
@@ -106,6 +123,7 @@ export default function ProfileHero({
   hideHeader = true,
 }: ProfileHeroProps) {
   const {
+    id,
     image = "",
     name = "",
     jobTitle = "",
@@ -114,6 +132,7 @@ export default function ProfileHero({
     updatedAt,
   } = profile;
 
+  const publicProfileUrl = `${FRONTEND_URL}/profile/${id}`;
   const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
 
   if (hideHeader) {
@@ -146,9 +165,20 @@ export default function ProfileHero({
     }
 
     return (
-      <Link href="/profile/me/edit">
-        <Button>Edit Profile</Button>
-      </Link>
+      <div className="flex items-center gap-2">
+        <ShareProfileModal
+          url={publicProfileUrl}
+          title={name}
+          description="Share your profile with your friends and followers."
+          triggerIcon={RiLinkM}
+          triggerVariant="outline"
+          triggerSize="icon"
+          triggerClassName="size-9"
+        />
+        <Link href="/profile/me/edit">
+          <Button>Edit Profile</Button>
+        </Link>
+      </div>
     );
   };
 
