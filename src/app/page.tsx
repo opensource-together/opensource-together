@@ -6,7 +6,7 @@ import CTAFooter from "@/shared/components/layout/cta-footer";
 import HomepageViews from "@/features/projects/views/homepage.view";
 
 export const metadata: Metadata = {
-  title: "Discover open source projects",
+  title: "OpenSource Together - Find and discover open source projects",
   description:
     "Platform that helps developers find the right open-source projects to learn, grow, and contribute",
   alternates: { canonical: "/" },

@@ -2,8 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HiLogout } from "react-icons/hi";
-import { HiCog6Tooth, HiMiniPencilSquare, HiUserCircle } from "react-icons/hi2";
+import {
+  RiBookmarkLine,
+  RiLogoutBoxLine,
+  RiPencilLine,
+  RiSettingsLine,
+  RiUser3Line,
+} from "react-icons/ri";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import {
@@ -37,10 +42,7 @@ export default function UserDropdown() {
           />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="text-muted-foreground w-48 p-2"
-      >
+      <DropdownMenuContent align="end" className="w-[200px] p-2">
         <div className="flex flex-col truncate p-2 text-sm">
           <p className="text-primary font-medium">{currentUser?.name}</p>
           <p className="text-muted-foreground">{currentUser?.email}</p>
@@ -48,25 +50,31 @@ export default function UserDropdown() {
         <DropdownMenuSeparator />
         <Link href="/profile/me">
           <DropdownMenuItem>
-            <HiUserCircle className="size-4" />
+            <RiUser3Line className="text-primary size-4" />
             View profile
           </DropdownMenuItem>
         </Link>
         <Link href="/profile/me/edit">
           <DropdownMenuItem>
-            <HiMiniPencilSquare className="size-4" />
+            <RiPencilLine className="text-primary size-4" />
             Edit profile
+          </DropdownMenuItem>
+        </Link>
+        <Link href="/profile/me?tab=saved-projects">
+          <DropdownMenuItem>
+            <RiBookmarkLine className="text-primary size-4" />
+            View Bookmarks
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
         <Link href="/dashboard/settings">
           <DropdownMenuItem>
-            <HiCog6Tooth className="size-4" />
+            <RiSettingsLine className="text-primary size-4" />
             Settings
           </DropdownMenuItem>
         </Link>
         <DropdownMenuItem onClick={handleLogout} variant="destructive">
-          <HiLogout className="size-4" />
+          <RiLogoutBoxLine className="text-primary size-4" />
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
