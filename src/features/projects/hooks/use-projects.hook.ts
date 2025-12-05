@@ -106,15 +106,17 @@ export function useCreateProject() {
       onSuccess: (project) => {
         const ownerId = project.owner?.id;
 
-        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "projects"],
+        });
 
         if (ownerId) {
           queryClient.invalidateQueries({
-            queryKey: ["users", ownerId, "projects"],
+            queryKey: ["user", ownerId, "projects"],
           });
         }
 
-        queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         queryClient.invalidateQueries({ queryKey: ["project", project.id] });
         router.push(`/projects/create/success?projectId=${project.id}`);
@@ -164,11 +166,11 @@ export function useUpdateProject() {
 
           if (ownerId) {
             queryClient.invalidateQueries({
-              queryKey: ["users", ownerId, "projects"],
+              queryKey: ["user", ownerId, "projects"],
             });
           }
 
-          queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
+          queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
           queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
           router.push(`/projects/${targetId}`);
@@ -203,9 +205,11 @@ export function useDeleteProject() {
     errorMessage: "Error while deleting project",
     options: {
       onSuccess: (_, projectId) => {
-        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "projects"],
+        });
 
-        queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
         queryClient.invalidateQueries({ queryKey: ["project", projectId] });
         router.push("/dashboard/my-projects");
@@ -248,15 +252,17 @@ export function useToggleProjectPublished() {
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
         }
 
-        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "projects"],
+        });
 
         if (ownerId) {
           queryClient.invalidateQueries({
-            queryKey: ["users", ownerId, "projects"],
+            queryKey: ["user", ownerId, "projects"],
           });
         }
 
-        queryClient.invalidateQueries({ queryKey: ["users"], exact: false });
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
       },
     },
@@ -483,7 +489,9 @@ export function useClaimProject(projectId: string) {
           queryClient.invalidateQueries({ queryKey: ["project", targetId] });
         }
         queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-        queryClient.invalidateQueries({ queryKey: ["user", "me", "projects"] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "projects"],
+        });
       },
     },
   });

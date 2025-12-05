@@ -23,7 +23,7 @@ import { ProfileSchema } from "../validations/profile.schema";
  */
 export const useProfile = (id: string) => {
   return useQuery({
-    queryKey: ["users", id],
+    queryKey: ["user", id],
     queryFn: () => getUserById(id),
     enabled: !!id,
   });
@@ -54,7 +54,7 @@ export const useProfileUpdate = () => {
     errorMessage: "Error updating your profile",
     options: {
       onSuccess: (profileId) => {
-        queryClient.invalidateQueries({ queryKey: ["users", profileId] });
+        queryClient.invalidateQueries({ queryKey: ["user", profileId] });
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
         router.push("/profile/me");
       },
@@ -88,7 +88,7 @@ export const useProfileLogoUpdate = (id: string) => {
     errorMessage: "Error updating your avatar",
     options: {
       onSuccess: (profileId) => {
-        queryClient.invalidateQueries({ queryKey: ["users", profileId] });
+        queryClient.invalidateQueries({ queryKey: ["user", profileId] });
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
@@ -119,7 +119,7 @@ export const useUserProjects = (
   const queryParams: UserProjectsQueryParams = { ...params, per_page, page };
 
   return useQuery({
-    queryKey: ["users", userId, "projects", queryParams],
+    queryKey: ["user", userId, "projects", queryParams],
     queryFn: () => getUserProjects(userId, queryParams),
     enabled: (options?.enabled ?? true) && !!userId,
   });

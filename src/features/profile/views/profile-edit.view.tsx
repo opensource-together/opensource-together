@@ -95,7 +95,7 @@ export default function ProfileEditView() {
     return (
       <ErrorState
         message="An error has occurred while loading the profile edit. Please try again later."
-        queryKey={["users", "me"]}
+        queryKey={["user", "me"]}
         className="mt-20 mb-28"
         buttonText="Back to homepage"
         href="/"
