@@ -37,7 +37,7 @@ export function SettingsContent() {
     return (
       <ErrorState
         message="We couldn't load your settings. Please sign in again."
-        queryKey={["users", "me"]}
+        queryKey={["user", "me"]}
         className="mt-20 mb-28"
         buttonText="Go to login"
         href="/auth/login"

@@ -84,7 +84,7 @@ export default function ProfileProjectsList({
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["users", userId, "projects"]}
+        queryKey={["user", userId, "projects"]}
       />
     );
 

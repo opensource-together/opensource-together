@@ -23,7 +23,7 @@ export default function useAuth() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["users", "me"],
+    queryKey: ["user", "me"],
     queryFn: getCurrentUser,
     retry: 0,
   });
@@ -64,7 +64,7 @@ export default function useAuth() {
     errorMessage: "An error occurred while linking social account",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
   });
@@ -76,7 +76,7 @@ export default function useAuth() {
     errorMessage: "An error occurred while unlinking social account",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
   });
@@ -88,7 +88,7 @@ export default function useAuth() {
     errorMessage: "An error occurred while logging out",
     options: {
       onSuccess: () => {
-        queryClient.setQueryData(["users", "me"], null);
+        queryClient.setQueryData(["user", "me"], null);
         router.push("/");
       },
     },

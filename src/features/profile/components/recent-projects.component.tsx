@@ -73,7 +73,7 @@ export default function RecentProjects({ userId }: RecentProjectsProps) {
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["users", effectiveUserId, "projects"]}
+        queryKey={["user", effectiveUserId, "projects"]}
       />
     );
 
