@@ -33,7 +33,7 @@ export default function Header() {
             <Image
               src="/ostogether-logo.svg"
               alt="ost-logo"
-              width={200}
+              width={210}
               height={50}
             />
           </Link>

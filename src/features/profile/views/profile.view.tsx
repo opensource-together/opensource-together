@@ -37,7 +37,7 @@ export default function ProfileView() {
     return (
       <ErrorState
         message="An error has occurred while loading the profile. Please try again later."
-        queryKey={["users", "me"]}
+        queryKey={["user", "me"]}
         className="mt-20 mb-28"
         buttonText="Back to homepage"
         href="/"

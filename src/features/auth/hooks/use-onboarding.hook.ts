@@ -32,7 +32,7 @@ export function useOnboarding() {
     errorMessage: "Failed to complete onboarding. Please try again.",
     options: {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["users", "me"] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
         router.push("/");
       },
     },
