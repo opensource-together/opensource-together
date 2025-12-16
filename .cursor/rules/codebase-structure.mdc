@@ -41,7 +41,7 @@ src/
 ├── config/ # Global app configuration (e.g., TanStack Query)
 ├── styles/ # Global styles and Tailwind setup
 ├── types/ # Global app-level types (e.g., User, ApiResponse, MiddlewareMeta)
-└── middleware.ts # Next.js middleware (e.g., auth routing logic)
+└── proxy.ts # Next.js proxy (e.g., auth routing logic)
 
 ## Hybrid State Management
 
@@ -85,7 +85,7 @@ src/
 - Centralize TanStack Query configuration in config/query.config.ts.
 - Favor full type safety by always defining and importing types from \*.type.ts.
 - Never duplicate data between TanStack Query and Zustand — synchronize via events or optimistic updates only.
-- Use DevTools (TanStack Query DevTools, Zustand middleware) to debug and monitor state.
+- Use DevTools (TanStack Query DevTools, Zustand proxy) to debug and monitor state.
 
 ## Validation & Testing
 
