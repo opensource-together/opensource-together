@@ -1,3 +1,4 @@
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 import Link from "next/link";
 import React from "react";
 import { HiChevronRight } from "react-icons/hi2";
@@ -9,7 +10,7 @@ interface BadgeProps {
 const HeroBadge: React.FC<BadgeProps> = ({ className = "" }) => {
   return (
     <Link
-      href="https://discord.gg/PV7wCVpM"
+      href={EXTERNAL_LINKS.DISCORD}
       target="_blank"
       rel="noopener noreferrer"
     >

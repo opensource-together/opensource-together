@@ -2,15 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Separator } from "@/shared/components/ui/separator";
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
 export default function FooterMinimal() {
   const navigationLinks = [
     { name: "Guide", href: "/oss-guide" },
-    { name: "X (Twitter)", href: "https://x.com/OpenSTogether" },
-    { name: "Discord", href: "https://discord.gg/4ZDhm3dQAC" },
+    { name: "X (Twitter)", href: EXTERNAL_LINKS.TWITTER },
+    { name: "Discord", href: EXTERNAL_LINKS.DISCORD },
     {
       name: "LinkedIn",
-      href: "https://www.linkedin.com/company/opensource-together",
+      href: EXTERNAL_LINKS.LINKEDIN,
     },
   ];
 
