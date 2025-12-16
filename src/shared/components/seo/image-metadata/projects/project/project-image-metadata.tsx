@@ -44,10 +44,7 @@ export function ProjectImageMetadata({
       value: pullRequestsCount,
       icon: VscGitPullRequest,
     },
-  ].filter(
-    (stat) =>
-      typeof stat.value === "number" && true && true
-  ) as Array<{
+  ].filter((stat) => typeof stat.value === "number" && true && true) as Array<{
     label: string;
     value: number;
     icon: React.ComponentType<{ size?: number; className?: string }>;
