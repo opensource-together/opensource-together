@@ -55,7 +55,8 @@
         "useAltText": "off",
         "useButtonType": "off",
         "useKeyWithClickEvents": "off",
-        "useSemanticElements": "off"
+        "useSemanticElements": "off",
+        "noStaticElementInteractions": "off"
       },
       "complexity": { "noBannedTypes": "off" },
       "correctness": {

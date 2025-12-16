@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { GoArrowUpRight } from "react-icons/go";
@@ -7,7 +8,6 @@ import { RxCross2 } from "react-icons/rx";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
-
 import { Button } from "@/shared/components/ui/button";
 import {
   readmeFullMarkdownComponents,
@@ -79,14 +79,16 @@ export default function ProjectReadme({
   const previewComponents: Components = {
     ...(readmePreviewMarkdownComponents as unknown as Components),
     img: ({ src, alt, width, height }) => (
-      <img
-        src={resolveReadmeImageUrl(
-          typeof src === "string" ? src : undefined,
-          project?.repoUrl
-        )}
-        alt={alt}
-        width={width}
-        height={height}
+      <Image
+        src={
+          resolveReadmeImageUrl(
+            typeof src === "string" ? src : undefined,
+            project?.repoUrl
+          ) as string
+        }
+        alt={alt as string}
+        width={width as number}
+        height={height as number}
         className="my-3 inline-block h-auto max-w-full rounded border-border"
       />
     ),
@@ -116,14 +118,16 @@ export default function ProjectReadme({
   const fullComponents: Components = {
     ...(readmeFullMarkdownComponents as unknown as Components),
     img: ({ src, alt, width, height }) => (
-      <img
-        src={resolveReadmeImageUrl(
-          typeof src === "string" ? src : undefined,
-          project?.repoUrl
-        )}
-        alt={alt}
-        width={width}
-        height={height}
+      <Image
+        src={
+          resolveReadmeImageUrl(
+            typeof src === "string" ? src : undefined,
+            project?.repoUrl
+          ) as string
+        }
+        alt={alt as string}
+        width={width as number}
+        height={height as number}
         className="my-3 inline-block h-auto max-w-full rounded border-border"
       />
     ),

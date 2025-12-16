@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 import { HiCheck, HiChevronDown, HiXMark } from "react-icons/hi2";
-
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -170,7 +170,7 @@ export function Combobox({
                               )}
                             />
                             {option.iconUrl && (
-                              <img
+                              <Image
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"
@@ -211,7 +211,7 @@ export function Combobox({
                               )}
                             />
                             {option.iconUrl && (
-                              <img
+                              <Image
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"
@@ -254,7 +254,7 @@ export function Combobox({
                           )}
                         />
                         {option.iconUrl && (
-                          <img
+                          <Image
                             src={option.iconUrl}
                             alt={option.name}
                             className="size-3.5 flex-shrink-0"

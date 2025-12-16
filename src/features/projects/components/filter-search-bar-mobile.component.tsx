@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: needed */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";

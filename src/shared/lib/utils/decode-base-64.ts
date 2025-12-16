@@ -5,7 +5,7 @@ export function decodeBase64Safe(input?: string | null): string | undefined {
   try {
     const normalized = input.replace(/\s+/g, "");
     if (typeof window !== "undefined" && typeof window.atob === "function") {
-      const decoded = decodeURIComponent(
+      return decodeURIComponent(
         Array.prototype.map
           .call(
             window.atob(normalized),
@@ -13,7 +13,6 @@ export function decodeBase64Safe(input?: string | null): string | undefined {
           )
           .join("")
       );
-      return decoded;
     }
     // SSR fallback
     return Buffer.from(normalized, "base64").toString("utf-8");

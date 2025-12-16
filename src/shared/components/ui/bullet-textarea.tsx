@@ -1,5 +1,5 @@
 import type React from "react";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -15,7 +15,7 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const internalRef = ref || textareaRef;
 
-    const transformToBulletPoints = (text: string) => {
+    const transformToBulletPoints = useCallback((text: string) => {
       if (!text) return "";
 
       return text
@@ -24,22 +24,23 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
         .filter((line) => line.length > 0)
         .map((line) => (line.startsWith("• ") ? line : `• ${line}`))
         .join("\n");
-    };
+    }, []);
 
-    const extractPlainText = (text: string) => {
+    const extractPlainText = useCallback((text: string) => {
       return text
         .split("\n")
         .map((line) => line.replace(/^• /, "").trim())
         .filter((line) => line.length > 0)
         .join("\n");
-    };
+    }, []);
 
     useEffect(() => {
-      if (value) {
-        setDisplayValue(transformToBulletPoints(value));
-      } else {
+      if (!value) {
         setDisplayValue("");
+        return;
       }
+
+      setDisplayValue(transformToBulletPoints(value));
     }, [value, transformToBulletPoints]);
 
     const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -48,21 +49,23 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
 
       setDisplayValue(transformToBulletPoints(plainText));
 
-      if (onChange) {
-        const syntheticEvent = {
-          ...event,
-          target: {
-            ...event.target,
-            value: plainText,
-          },
-        };
-        onChange(syntheticEvent as React.ChangeEvent<HTMLTextAreaElement>);
-      }
+      if (!onChange) return;
+
+      const syntheticEvent = {
+        ...event,
+        target: {
+          ...event.target,
+          value: plainText,
+        },
+      };
+
+      onChange(syntheticEvent as React.ChangeEvent<HTMLTextAreaElement>);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === "Enter") {
         event.preventDefault();
+
         const textarea = event.currentTarget;
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
@@ -83,28 +86,25 @@ const BulletTextarea = forwardRef<HTMLTextAreaElement, BulletTextareaProps>(
         setDisplayValue(newValue);
 
         if (onChange) {
-          const syntheticEvent = {
+          onChange({
             target: {
               ...textarea,
               value: plainText,
             },
-          } as React.ChangeEvent<HTMLTextAreaElement>;
-          onChange(syntheticEvent);
+          } as React.ChangeEvent<HTMLTextAreaElement>);
         }
       }
 
-      if (props.onKeyDown) {
-        props.onKeyDown(event);
-      }
+      props.onKeyDown?.(event);
     };
 
     return (
       <textarea
+        ref={internalRef}
         className={cn(
           "field-sizing-content flex min-h-16 w-full rounded-md border border-black/5 bg-[#F9FAFB] px-3 py-2 text-sm leading-loose shadow-xs outline-none transition-[color,box-shadow] placeholder:text-black/70 focus-visible:border-ring focus-visible:ring-[1px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
           className
         )}
-        ref={internalRef}
         value={displayValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

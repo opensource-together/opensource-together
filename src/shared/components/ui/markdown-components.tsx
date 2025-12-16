@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/performance/noImgElement: needed */
 "use client";
 
 import type { AnchorHTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";

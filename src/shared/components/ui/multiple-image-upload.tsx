@@ -40,7 +40,9 @@ export function MultipleImageUpload({
 
   useEffect(() => {
     return () => {
-      previews.forEach((preview) => URL.revokeObjectURL(preview));
+      previews.forEach((preview) => {
+        URL.revokeObjectURL(preview);
+      });
     };
   }, [previews]);
 

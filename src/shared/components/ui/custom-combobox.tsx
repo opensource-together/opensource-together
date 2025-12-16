@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 import { HiCheck } from "react-icons/hi2";
-
 import {
   Command,
   CommandEmpty,
@@ -166,7 +166,7 @@ export function CustomCombobox({
                                   )}
                                 />
                                 {option.iconUrl && (
-                                  <img
+                                  <Image
                                     src={option.iconUrl}
                                     alt={option.name}
                                     className="size-3.5 flex-shrink-0"
@@ -207,7 +207,7 @@ export function CustomCombobox({
                                   )}
                                 />
                                 {option.iconUrl && (
-                                  <img
+                                  <Image
                                     src={option.iconUrl}
                                     alt={option.name}
                                     className="size-3.5 flex-shrink-0"
@@ -250,7 +250,7 @@ export function CustomCombobox({
                               )}
                             />
                             {option.iconUrl && (
-                              <img
+                              <Image
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"

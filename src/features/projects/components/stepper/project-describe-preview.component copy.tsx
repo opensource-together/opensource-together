@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import { memo, useMemo } from "react";
-
 import { Avatar } from "@/shared/components/ui/avatar";
 
 const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
@@ -12,7 +12,7 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
       {imagesUrls.length === 1 ? (
         <div className="w-full">
           <div className="relative h-[207px] overflow-hidden rounded-md">
-            <img
+            <Image
               src={imagesUrls[0]}
               alt="Project screenshot"
               className="h-full w-full object-cover"
@@ -23,7 +23,7 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
         <>
           <div className="w-3/4">
             <div className="relative h-[207px] w-full overflow-hidden rounded-md">
-              <img
+              <Image
                 src={imagesUrls[0]}
                 alt="Project screenshot 1"
                 className="h-full w-full object-cover"
@@ -36,7 +36,7 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
                 key={idx}
                 className="relative h-[67px] w-full overflow-hidden rounded-md"
               >
-                <img
+                <Image
                   src={url}
                   alt={`Project screenshot ${idx + 2}`}
                   className="h-full w-full object-cover"

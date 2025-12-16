@@ -270,6 +270,7 @@ export function useToggleProjectPublished() {
 
   const toggleProjectPublished = (
     variables: { project: Project; published: boolean },
+    // biome-ignore lint/suspicious/noExplicitAny: necessary
     options?: any
   ) => {
     if (variables.published) {
@@ -471,7 +472,7 @@ export function useDeleteProjectImage() {
 }
 
 /**
- * Handles claiming a project ownership.
+ * Handles claiming project ownership.
  */
 export function useClaimProject(projectId: string) {
   const queryClient = getQueryClient();

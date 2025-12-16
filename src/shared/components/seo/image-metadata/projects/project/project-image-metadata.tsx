@@ -46,9 +46,7 @@ export function ProjectImageMetadata({
     },
   ].filter(
     (stat) =>
-      typeof stat.value === "number" &&
-      stat.value !== null &&
-      stat.value !== undefined
+      typeof stat.value === "number" && true && true
   ) as Array<{
     label: string;
     value: number;
@@ -143,8 +141,8 @@ export function ProjectImageMetadata({
               overflow: "hidden",
               marginTop: "52px",
             }}
-            aria-label={`${name} logo`}
           >
+            {/** biome-ignore lint/performance/noImgElement: required for og image */}
             <img
               src={imageUrl}
               alt={`${name} logo`}
