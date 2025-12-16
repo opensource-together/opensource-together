@@ -28,7 +28,7 @@ async function getTrendingProjects(): Promise<Project[]> {
           headers: {
             "Content-Type": "application/json",
           },
-          cache: "no-store",
+          next: { revalidate: 3600 },
         }
       );
 

@@ -1,4 +1,5 @@
-import { Buffer } from "node:buffer";
+// biome-ignore lint/style/useNodejsImportProtocol: cause deployment failure
+import { Buffer } from "buffer";
 
 export function decodeBase64Safe(input?: string | null): string | undefined {
   if (!input) return undefined;
