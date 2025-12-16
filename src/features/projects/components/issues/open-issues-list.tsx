@@ -11,7 +11,7 @@ import {
 } from "@/shared/lib/utils/good-first-issue";
 
 import IssueCard from "../../../../shared/components/ui/issue-card";
-import { Issue } from "../../types/project.type";
+import type { Issue } from "../../types/project.type";
 
 interface OpenIssuesProps {
   issues: Issue[];
@@ -38,7 +38,7 @@ export default function OpenIssuesList({
 
   useEffect(() => {
     setVisibleCount(10);
-  }, [filter]);
+  }, []);
 
   useEffect(() => {
     if (goodFirstIssues.length === 0 && filter === "good-first") {
@@ -76,9 +76,9 @@ export default function OpenIssuesList({
       {goodFirstCount > 0 && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-1.5">
-            <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
+            <span className="flex size-1.5 rounded-full bg-ost-blue-three"></span>
             <h2 className="text-muted-foreground text-sm">
-              <span className="text-primary font-medium">{goodFirstCount}</span>{" "}
+              <span className="font-medium text-primary">{goodFirstCount}</span>{" "}
               Good first {goodFirstCount === 1 ? "issue" : "issues"}
             </h2>
           </div>

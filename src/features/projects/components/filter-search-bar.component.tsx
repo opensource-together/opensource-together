@@ -5,7 +5,7 @@ import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { ProjectFilters } from "../types/project-filters.type";
+import type { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
@@ -17,10 +17,10 @@ interface FilterItemProps {
 function FilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="group flex h-14 w-44 cursor-pointer flex-col rounded-full px-8 py-2.5 transition-all duration-200 hover:rounded-full hover:bg-white">
-      <span className="text-xs font-normal text-black/40 transition-colors duration-200">
+      <span className="font-normal text-black/40 text-xs transition-colors duration-200">
         {label}
       </span>
-      <span className="truncate text-sm font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
+      <span className="truncate font-medium text-sm tracking-tight transition-colors duration-200 group-hover:text-black">
         {value}
       </span>
     </div>
@@ -118,7 +118,7 @@ export default function FilterSearchBar({
     options: Array<{ id: string; name: string }>,
     defaultText: string,
     isLoading: boolean,
-    maxLength: number = 30
+    maxLength = 30
   ): string => {
     if (selectedIds.length === 0) return defaultText;
 
@@ -135,7 +135,7 @@ export default function FilterSearchBar({
     const namesText = selectedNames.join(", ");
 
     if (namesText.length > maxLength) {
-      return namesText.substring(0, maxLength - 3) + "...";
+      return `${namesText.substring(0, maxLength - 3)}...`;
     }
 
     return namesText;
@@ -149,7 +149,12 @@ export default function FilterSearchBar({
         "Technologies",
         techStacksLoading
       ),
-    [selectedTechStacks, techStackOptions, techStacksLoading]
+    [
+      selectedTechStacks,
+      techStackOptions,
+      techStacksLoading,
+      formatSelectedValues,
+    ]
   );
 
   const categoriesValue = useMemo(
@@ -160,7 +165,7 @@ export default function FilterSearchBar({
         "Categories",
         categoryLoading
       ),
-    [selectedCategories, categoryOptions, categoryLoading]
+    [selectedCategories, categoryOptions, categoryLoading, formatSelectedValues]
   );
 
   const sortValue = useMemo(() => {
@@ -224,7 +229,7 @@ export default function FilterSearchBar({
         className="hidden h-14 w-[700px] items-center justify-center md:flex"
         role="search"
       >
-        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
+        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-black/3 shadow-md backdrop-blur-lg hover:rounded-full">
           <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
             <div className="flex items-center">
               <div className="relative pr-0">

@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import MyProjectsView from "@/features/dashboard/views/projects/my-projects.view";
 

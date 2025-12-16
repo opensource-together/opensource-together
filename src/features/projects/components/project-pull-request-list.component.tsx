@@ -5,7 +5,7 @@ import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import PullRequestCard from "@/shared/components/ui/pull-request-card";
 
-import { PullRequest } from "../types/project.type";
+import type { PullRequest } from "../types/project.type";
 
 interface ProjectPullRequestListProps {
   pullRequests: PullRequest[];

@@ -4,11 +4,9 @@ import Link from "next/link";
 import { HiArrowUpRight } from "react-icons/hi2";
 import { LuClock3 } from "react-icons/lu";
 import { VscGitPullRequest } from "react-icons/vsc";
-
+import type { PullRequest } from "@/features/projects/types/project.type";
 import { cn } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
-
-import { PullRequest } from "@/features/projects/types/project.type";
 
 import { Avatar } from "./avatar";
 import { Badge } from "./badge";
@@ -28,7 +26,7 @@ export default function PullRequestCard({
     <Link href={pullRequest.url} target="_blank" rel="noreferrer">
       <article
         className={cn(
-          "border-muted-black-stroke rounded-[20px] border px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+          "rounded-[20px] border border-muted-black-stroke px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
           className
         )}
       >
@@ -42,7 +40,7 @@ export default function PullRequestCard({
               >
                 #{pullRequest.number}
               </BadgeWithIcon>
-              <span className="line-clamp-1 text-sm font-medium tracking-tight">
+              <span className="line-clamp-1 font-medium text-sm tracking-tight">
                 {pullRequest.title}
               </span>
             </div>

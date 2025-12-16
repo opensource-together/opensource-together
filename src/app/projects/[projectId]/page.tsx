@@ -1,11 +1,9 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import { FRONTEND_URL } from "@/config/config";
-
-import CTAFooter from "@/shared/components/layout/cta-footer";
-
 import { getProjectDetails } from "@/features/projects/services/project.service";
 import ProjectDetailView from "@/features/projects/views/project-detail.view";
+import CTAFooter from "@/shared/components/layout/cta-footer";
 
 type Props = {
   params: Promise<{ projectId: string }>;

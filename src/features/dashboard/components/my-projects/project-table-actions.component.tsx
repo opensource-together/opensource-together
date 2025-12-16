@@ -6,7 +6,7 @@ import {
   HiMiniPencilSquare,
   HiMiniTrash,
 } from "react-icons/hi2";
-
+import type { Project } from "@/features/projects/types/project.type";
 import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,
@@ -14,8 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-
-import { Project } from "@/features/projects/types/project.type";
 
 interface ProjectTableActionsProps {
   project: Project;
@@ -91,7 +89,7 @@ export function ProjectTableActions({
             e.stopPropagation();
             handleDelete();
           }}
-          className="text-destructive focus:text-destructive flex cursor-pointer items-center justify-between"
+          className="flex cursor-pointer items-center justify-between text-destructive focus:text-destructive"
         >
           <span>Delete Project</span>
           <HiMiniTrash className="size-4" />

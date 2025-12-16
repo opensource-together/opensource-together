@@ -1,13 +1,11 @@
 import Link from "next/link";
-
+import type { Issue } from "@/features/projects/types/project.type";
 import { Button } from "@/shared/components/ui/button";
 import IssueCard from "@/shared/components/ui/issue-card";
 import {
   GOOD_FIRST_BADGE_LABEL,
   isGoodFirstIssue,
 } from "@/shared/lib/utils/good-first-issue";
-
-import { Issue } from "@/features/projects/types/project.type";
 
 interface RecentOpenIssuesProps {
   issues: Issue[];
@@ -30,9 +28,9 @@ export default function RecentOpenIssues({
     <section className={className}>
       <div className="mb-8 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
+          <span className="flex size-1.5 rounded-full bg-ost-blue-three"></span>
           <h2 className="text-muted-foreground text-sm">
-            <span className="text-primary font-medium">
+            <span className="font-medium text-primary">
               {recentIssues.length}
             </span>{" "}
             {recentIssues.length === 1 ? "Recent Issue" : "Recent Issues"}

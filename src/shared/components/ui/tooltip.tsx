@@ -1,8 +1,8 @@
 "use client";
 
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { Tooltip as TooltipPrimitive } from "radix-ui";
-import * as React from "react";
+import type * as React from "react";
 import { HiInformationCircle } from "react-icons/hi";
 
 import { cn } from "@/shared/lib/utils";
@@ -44,13 +44,13 @@ function TooltipTrigger({
 }
 
 const tooltipVariants = cva(
-  "z-50 overflow-hidden rounded-md px-3 py-1.5 text-sm animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+  "fade-in-0 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 animate-in overflow-hidden rounded-md px-3 py-1.5 text-sm data-[state=closed]:animate-out",
   {
     variants: {
       variant: {
         light:
-          "border border-border bg-background text-foreground shadow-md shadow-black/5",
-        dark: "dark:border dark:border-border bg-zinc-950 text-white dark:bg-zinc-300 dark:text-black shadow-md shadow-black/5",
+          "border border-border bg-background text-foreground shadow-black/5 shadow-md",
+        dark: "bg-zinc-950 text-white shadow-black/5 shadow-md dark:border dark:border-border dark:bg-zinc-300 dark:text-black",
       },
     },
     defaultVariants: {

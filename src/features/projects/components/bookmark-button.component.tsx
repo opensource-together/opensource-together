@@ -2,10 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { HiBookmark, HiOutlineBookmark } from "react-icons/hi2";
-
-import { Button } from "@/shared/components/ui/button";
-
 import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { Button } from "@/shared/components/ui/button";
 
 import { useProjectBookmark } from "../hooks/use-projects.hook";
 

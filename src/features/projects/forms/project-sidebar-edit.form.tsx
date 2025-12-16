@@ -1,4 +1,4 @@
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
@@ -13,8 +13,8 @@ import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { Project } from "../types/project.type";
-import { UpdateProjectApiData } from "../validations/project.schema";
+import type { Project } from "../types/project.type";
+import type { UpdateProjectApiData } from "../validations/project.schema";
 
 interface ProjectSidebarEditFormProps {
   project: Project;

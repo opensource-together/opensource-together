@@ -4,7 +4,7 @@ import StepperHeaderComponent from "@/features/projects/components/stepper/stepp
 
 import { StepperWrapper } from "../../../components/stepper/stepper-wrapper.component";
 import StepGitConfirmForm from "../../../forms/stepper/git/step-git-confirm.form";
-import { provider } from "../../../stores/project-create.store";
+import type { provider } from "../../../stores/project-create.store";
 
 interface StepGitConfirmViewProps {
   provider: provider;

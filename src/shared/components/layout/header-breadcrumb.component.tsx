@@ -78,7 +78,7 @@ export default function HeaderBreadcrumb() {
         const label =
           segmentLabels[segment as keyof typeof segmentLabels] || segment;
 
-        const href = "/" + segments.slice(0, i + 1).join("/");
+        const href = `/${segments.slice(0, i + 1).join("/")}`;
         breadcrumbItems.push({ label, href });
       }
 
@@ -95,19 +95,19 @@ export default function HeaderBreadcrumb() {
   }
 
   return (
-    <nav className="text-muted-foreground flex min-w-0 items-center space-x-1 overflow-hidden text-sm">
+    <nav className="flex min-w-0 items-center space-x-1 overflow-hidden text-muted-foreground text-sm">
       {breadcrumbItems.map((item, index) => (
         <div key={item.href} className="flex min-w-0 items-center">
-          <HiChevronRight size={12} className="text-muted-foreground mr-2" />
+          <HiChevronRight size={12} className="mr-2 text-muted-foreground" />
 
           {index === breadcrumbItems.length - 1 ? (
-            <span className="text-foreground max-w-[50vw] truncate font-medium md:max-w-[32rem] lg:max-w-[48rem]">
+            <span className="max-w-[50vw] truncate font-medium text-foreground md:max-w-[32rem] lg:max-w-[48rem]">
               {item.label}
             </span>
           ) : (
             <Link
               href={item.href}
-              className="hover:text-foreground max-w-[20vw] truncate transition-colors duration-200 md:max-w-[12rem] lg:max-w-[16rem]"
+              className="max-w-[20vw] truncate transition-colors duration-200 hover:text-foreground md:max-w-[12rem] lg:max-w-[16rem]"
             >
               {item.label}
             </Link>

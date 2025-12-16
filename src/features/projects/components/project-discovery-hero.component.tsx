@@ -4,7 +4,7 @@ import { FadeIn } from "@/shared/components/motion/fade-in";
 import { FadeUp } from "@/shared/components/motion/fade-up";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 
-import { ProjectFilters } from "../types/project-filters.type";
+import type { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBar from "./filter-search-bar.component";
 
 interface ProjectDiscoveryHeroProps {
@@ -60,7 +60,7 @@ export default function ProjectDiscoveryHero({
         </FadeUp>
 
         <FadeUp delay={0.15}>
-          <p className="mt-5 max-w-[450px] px-2 text-center text-sm text-neutral-950">
+          <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
             Empowering open source initiatives through effortless project
             discovery, collaboration, and contributor connection.
           </p>

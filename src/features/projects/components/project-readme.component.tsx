@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
-import ReactMarkdown, { Components } from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
@@ -87,11 +87,11 @@ export default function ProjectReadme({
         alt={alt}
         width={width}
         height={height}
-        className="border-border my-3 inline-block h-auto max-w-full rounded"
+        className="my-3 inline-block h-auto max-w-full rounded border-border"
       />
     ),
     picture: ({ children }) => (
-      <picture className="border-border my-3 inline-block h-auto max-w-full rounded">
+      <picture className="my-3 inline-block h-auto max-w-full rounded border-border">
         {children}
       </picture>
     ),
@@ -124,11 +124,11 @@ export default function ProjectReadme({
         alt={alt}
         width={width}
         height={height}
-        className="border-border my-3 inline-block h-auto max-w-full rounded"
+        className="my-3 inline-block h-auto max-w-full rounded border-border"
       />
     ),
     picture: ({ children }) => (
-      <picture className="border-border my-3 inline-block h-auto max-w-full rounded">
+      <picture className="my-3 inline-block h-auto max-w-full rounded border-border">
         {children}
       </picture>
     ),
@@ -153,7 +153,7 @@ export default function ProjectReadme({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <div className="font-geist relative mb-14 flex h-[322px] cursor-pointer flex-col rounded-[22px] border border-black/5 bg-white p-5 transition-colors duration-300 hover:bg-black/5">
+        <div className="relative mb-14 flex h-[322px] cursor-pointer flex-col rounded-[22px] border border-black/5 bg-white p-5 font-geist transition-colors duration-300 hover:bg-black/5">
           <div className="flex-1 overflow-hidden leading-7">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -165,7 +165,7 @@ export default function ProjectReadme({
           </div>
           <div className="mt-auto">
             <Separator className="mb-6" />
-            <span className="flex items-center text-sm font-medium">
+            <span className="flex items-center font-medium text-sm">
               View README
               <GoArrowUpRight className="mt-0.5 ml-1 size-4" />
             </span>
@@ -198,7 +198,7 @@ export default function ProjectReadme({
             </div>
           </SheetHeader>
           <div className="flex-1 overflow-y-auto">
-            <div className="font-geist my-6 max-w-none text-sm leading-relaxed">
+            <div className="my-6 max-w-none font-geist text-sm leading-relaxed">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeRaw]}

@@ -1,4 +1,4 @@
-import { Buffer } from "buffer";
+import { Buffer } from "node:buffer";
 
 export function decodeBase64Safe(input?: string | null): string | undefined {
   if (!input) return undefined;
@@ -9,7 +9,7 @@ export function decodeBase64Safe(input?: string | null): string | undefined {
         Array.prototype.map
           .call(
             window.atob(normalized),
-            (c: string) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+            (c: string) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`
           )
           .join("")
       );

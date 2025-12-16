@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { ComboboxOption } from "@/shared/components/ui/combobox";
+import type { ComboboxOption } from "@/shared/components/ui/combobox";
 
 import { fetchTechStacks } from "../services/tech-stack.service";
-import { TechStackType } from "../types/tech-stack.type";
+import type { TechStackType } from "../types/tech-stack.type";
 
 export type TechStackOption = ComboboxOption;
 

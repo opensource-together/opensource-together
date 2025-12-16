@@ -7,8 +7,6 @@ import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import { getQueryClient } from "@/shared/lib/query-client";
 
 import {
-  PaginatedProjectsResponse,
-  ProjectQueryParams,
   bookmarkProject,
   claimProject,
   createProject,
@@ -16,14 +14,16 @@ import {
   deleteProjectImage,
   getProjectDetails,
   getProjects,
+  type PaginatedProjectsResponse,
+  type ProjectQueryParams,
   removeProjectBookmark,
   updateProject,
   updateProjectCover,
   updateProjectLogo,
   updateProjectPublishedStatus,
 } from "../services/project.service";
-import { Project } from "../types/project.type";
-import {
+import type { Project } from "../types/project.type";
+import type {
   ProjectSchema,
   UpdateProjectData,
 } from "../validations/project.schema";

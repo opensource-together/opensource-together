@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
-import { TechStackType } from "@/shared/types/tech-stack.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
 export interface CustomComboboxOption {
   id: string;
@@ -96,7 +96,7 @@ export function CustomCombobox({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="border-muted-black-stroke relative p-1 shadow-xs"
+          className="relative border-muted-black-stroke p-1 shadow-xs"
           align="start"
         >
           <div className="absolute top-2.5 right-4 z-10">
@@ -129,7 +129,7 @@ export function CustomCombobox({
                       className="flex items-center gap-2 px-2 py-1.5"
                     >
                       <div className="flex-1 space-y-1">
-                        <div className="bg-muted h-7 w-full animate-pulse rounded-lg" />
+                        <div className="h-7 w-full animate-pulse rounded-lg bg-muted" />
                       </div>
                     </div>
                   ))}

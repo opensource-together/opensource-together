@@ -78,14 +78,14 @@ const footerLinks: {
 
 const renderLinkSection = (title: string, links: FooterLink[]) => (
   <div>
-    <h2 className="text-foreground mb-5 text-sm font-medium md:mb-6 md:text-sm">
+    <h2 className="mb-5 font-medium text-foreground text-sm md:mb-6 md:text-sm">
       {title}
     </h2>
-    <ul className="text-muted-foreground space-y-5 text-sm md:text-sm">
+    <ul className="space-y-5 text-muted-foreground text-sm md:text-sm">
       {links.map((link) => (
         <li key={link.id}>
           <Link
-            className="hover:text-foreground transition"
+            className="transition hover:text-foreground"
             href={link.href}
             {...(link.external && {
               target: "_blank",
@@ -116,7 +116,7 @@ export default function Footer() {
     };
     checkFor404();
     requestAnimationFrame(checkFor404);
-  }, [pathname]);
+  }, []);
 
   const hideFooter =
     is404Page ||
@@ -129,37 +129,35 @@ export default function Footer() {
   return (
     <>
       {!hideFooter && (
-        <>
-          <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
-            <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
-            <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
-              {/* Left: Logo + copyright */}
-              <div className="flex w-full flex-col items-start gap-4 md:w-auto">
-                <Link href="/" className="flex items-center">
-                  <Image
-                    src="/ostogether-logo.svg"
-                    alt="ost-logo"
-                    width={50}
-                    height={50}
-                    className="h-auto max-h-[50px] w-auto md:max-h-[50px]"
-                  />
-                </Link>
-                <span className="text-muted-foreground text-sm">
-                  © OpenSource Together • 2025
-                </span>
-              </div>
+        <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
+          <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
+          <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
+            {/* Left: Logo + copyright */}
+            <div className="flex w-full flex-col items-start gap-4 md:w-auto">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/ostogether-logo.svg"
+                  alt="ost-logo"
+                  width={50}
+                  height={50}
+                  className="h-auto max-h-[50px] w-auto md:max-h-[50px]"
+                />
+              </Link>
+              <span className="text-muted-foreground text-sm">
+                © OpenSource Together • 2025
+              </span>
+            </div>
 
-              {/* Right: Link sections */}
-              <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
-                {renderLinkSection("Resources", footerLinks.resources)}
-                {renderLinkSection("Company", footerLinks.company)}
-                <div className="mb-5 md:mb-5">
-                  {renderLinkSection("Legal", footerLinks.legal)}
-                </div>
+            {/* Right: Link sections */}
+            <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+              {renderLinkSection("Resources", footerLinks.resources)}
+              {renderLinkSection("Company", footerLinks.company)}
+              <div className="mb-5 md:mb-5">
+                {renderLinkSection("Legal", footerLinks.legal)}
               </div>
             </div>
-          </footer>
-        </>
+          </div>
+        </footer>
       )}
     </>
   );

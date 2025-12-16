@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
@@ -16,8 +16,8 @@ import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-uploa
 import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
-import { Project } from "../types/project.type";
-import { UpdateProjectApiData } from "../validations/project.schema";
+import type { Project } from "../types/project.type";
+import type { UpdateProjectApiData } from "../validations/project.schema";
 
 interface ProjectMainEditFormProps {
   project: Project;
@@ -51,7 +51,7 @@ export default function ProjectMainEditForm({
             name="logoUrl"
             render={() => (
               <FormItem>
-                <FormLabel className="text-primary text-sm font-medium">
+                <FormLabel className="font-medium text-primary text-sm">
                   Choose a logo
                 </FormLabel>
                 <FormControl>
@@ -79,7 +79,7 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel
                   required
-                  className="text-primary mb-2 text-sm font-medium"
+                  className="mb-2 font-medium text-primary text-sm"
                 >
                   Title
                 </FormLabel>
@@ -87,7 +87,7 @@ export default function ProjectMainEditForm({
                   <Input
                     {...field}
                     placeholder="Project name"
-                    className="text-primary bg-white text-sm"
+                    className="bg-white text-primary text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -102,7 +102,7 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel
                   required
-                  className="text-primary mb-2 text-sm font-medium"
+                  className="mb-2 font-medium text-primary text-sm"
                 >
                   Description
                 </FormLabel>
@@ -110,7 +110,7 @@ export default function ProjectMainEditForm({
                   <Textarea
                     {...field}
                     placeholder="Project description"
-                    className="text-primary min-h-[120px] w-full resize-none bg-white text-sm"
+                    className="min-h-[120px] w-full resize-none bg-white text-primary text-sm"
                   />
                 </FormControl>
                 <FormMessage />
@@ -127,7 +127,7 @@ export default function ProjectMainEditForm({
               <FormItem>
                 <FormLabel
                   tooltip="Add up to 4 cover images."
-                  className="text-primary mb-2 text-sm font-medium"
+                  className="mb-2 font-medium text-primary text-sm"
                 >
                   Cover images
                 </FormLabel>

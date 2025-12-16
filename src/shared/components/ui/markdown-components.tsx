@@ -49,7 +49,7 @@ function CopyButton({ text }: CopyButtonProps) {
   return (
     <button
       onClick={handleCopy}
-      className="bg-accent text-muted-foreground hover:bg-muted hover:text-ost-blue-three rounded p-1.5 transition-colors"
+      className="rounded bg-accent p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-ost-blue-three"
       aria-label={copied ? "Copied!" : "Copy to clipboard"}
       title={copied ? "Copied!" : "Copy to clipboard"}
     >
@@ -69,13 +69,13 @@ function CodeBlock({ children, className, ...props }: CodeBlockProps) {
 
   if (language) {
     return (
-      <div className="bg-accent relative rounded-md pr-2">
+      <div className="relative rounded-md bg-accent pr-2">
         <div className="flex flex-row">
           <SyntaxHighlighter
             style={oneLight}
             language={language}
             PreTag="div"
-            className="m-0 w-full overflow-x-auto pr-10 whitespace-pre"
+            className="m-0 w-full overflow-x-auto whitespace-pre pr-10"
             customStyle={{
               margin: "0",
               fontSize: "0.875rem",
@@ -97,7 +97,7 @@ function CodeBlock({ children, className, ...props }: CodeBlockProps) {
   }
 
   return (
-    <code className="bg-accent text-accent-foreground rounded px-1 py-0.5 font-mono text-sm">
+    <code className="rounded bg-accent px-1 py-0.5 font-mono text-accent-foreground text-sm">
       {children}
     </code>
   );
@@ -105,13 +105,13 @@ function CodeBlock({ children, className, ...props }: CodeBlockProps) {
 
 export const issueMarkdownComponents = {
   h1: ({ children }: MarkdownElementProps) => (
-    <h1 className="mb-4 text-xl font-semibold">{children}</h1>
+    <h1 className="mb-4 font-semibold text-xl">{children}</h1>
   ),
   h2: ({ children }: MarkdownElementProps) => (
-    <h2 className="mt-6 mb-3 text-lg font-semibold">{children}</h2>
+    <h2 className="mt-6 mb-3 font-semibold text-lg">{children}</h2>
   ),
   h3: ({ children }: MarkdownElementProps) => (
-    <h3 className="mt-4 mb-2 text-base font-medium">{children}</h3>
+    <h3 className="mt-4 mb-2 font-medium text-base">{children}</h3>
   ),
   p: ({ children }: MarkdownElementProps) => (
     <p className="mb-3 leading-relaxed">{children}</p>
@@ -128,14 +128,14 @@ export const issueMarkdownComponents = {
   code: CodeBlock,
   pre: ({ children }: MarkdownElementProps) => <>{children}</>,
   blockquote: ({ children }: MarkdownElementProps) => (
-    <blockquote className="border-border text-muted-foreground mb-3 border-l-4 pl-4 italic">
+    <blockquote className="mb-3 border-border border-l-4 pl-4 text-muted-foreground italic">
       {children}
     </blockquote>
   ),
   a: ({ children, href }: LinkProps) => (
     <a
       href={href}
-      className="text-ost-blue-three hover:text-ost-blue-four underline"
+      className="text-ost-blue-three underline hover:text-ost-blue-four"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -148,46 +148,46 @@ export const issueMarkdownComponents = {
       alt={alt}
       width={width}
       height={height}
-      className="border-border my-3 inline-block h-auto max-w-full rounded"
+      className="my-3 inline-block h-auto max-w-full rounded border-border"
     />
   ),
   table: ({ children }: MarkdownElementProps) => (
     <div className="mb-3 overflow-x-auto">
-      <table className="border-border min-w-full border-collapse border">
+      <table className="min-w-full border-collapse border border-border">
         {children}
       </table>
     </div>
   ),
   th: ({ children }: MarkdownElementProps) => (
-    <th className="bg-accent text-accent-foreground border-border border px-3 py-2 text-left text-sm font-medium">
+    <th className="border border-border bg-accent px-3 py-2 text-left font-medium text-accent-foreground text-sm">
       {children}
     </th>
   ),
   td: ({ children }: MarkdownElementProps) => (
-    <td className="border-border border px-3 py-2 text-sm">{children}</td>
+    <td className="border border-border px-3 py-2 text-sm">{children}</td>
   ),
 };
 
 export const readmePreviewMarkdownComponents = {
   h1: ({ children }: MarkdownElementProps) => (
-    <h1 className="mb-2 text-lg font-medium">{children}</h1>
+    <h1 className="mb-2 font-medium text-lg">{children}</h1>
   ),
   h2: ({ children }: MarkdownElementProps) => (
-    <h2 className="mb-1 text-base font-medium">{children}</h2>
+    <h2 className="mb-1 font-medium text-base">{children}</h2>
   ),
   h3: ({ children }: MarkdownElementProps) => (
-    <h3 className="mb-1 text-base font-medium">{children}</h3>
+    <h3 className="mb-1 font-medium text-base">{children}</h3>
   ),
   p: ({ children }: MarkdownElementProps) => (
-    <p className="text-muted-foreground mb-2 text-sm">{children}</p>
+    <p className="mb-2 text-muted-foreground text-sm">{children}</p>
   ),
   ul: ({ children }: MarkdownElementProps) => (
-    <ul className="text-muted-foreground mb-2 list-disc space-y-1 pl-5 text-sm">
+    <ul className="mb-2 list-disc space-y-1 pl-5 text-muted-foreground text-sm">
       {children}
     </ul>
   ),
   ol: ({ children }: MarkdownElementProps) => (
-    <ol className="text-muted-foreground mb-2 list-decimal space-y-1 pl-5 text-sm">
+    <ol className="mb-2 list-decimal space-y-1 pl-5 text-muted-foreground text-sm">
       {children}
     </ol>
   ),
@@ -196,18 +196,18 @@ export const readmePreviewMarkdownComponents = {
   ),
   code: CodeBlock,
   pre: ({ children }: MarkdownElementProps) => (
-    <pre className="bg-accent text-accent-foreground mb-2 overflow-x-auto rounded-lg p-3 text-xs">
+    <pre className="mb-2 overflow-x-auto rounded-lg bg-accent p-3 text-accent-foreground text-xs">
       {children}
     </pre>
   ),
   blockquote: ({ children }: MarkdownElementProps) => (
-    <blockquote className="border-border text-muted-foreground mb-2 border-l-4 pl-3 italic">
+    <blockquote className="mb-2 border-border border-l-4 pl-3 text-muted-foreground italic">
       {children}
     </blockquote>
   ),
   a: ({ children }: MarkdownElementProps) => (
     <span
-      className="text-muted-foreground pointer-events-none cursor-default text-sm font-medium select-text"
+      className="pointer-events-none cursor-default select-text font-medium text-muted-foreground text-sm"
       aria-disabled
     >
       {children}
@@ -219,23 +219,23 @@ export const readmePreviewMarkdownComponents = {
       alt={alt}
       width={width}
       height={height}
-      className="border-border my-3 inline-block h-auto max-w-full rounded"
+      className="my-3 inline-block h-auto max-w-full rounded border-border"
     />
   ),
   table: ({ children }: MarkdownElementProps) => (
     <div className="mb-2 overflow-x-auto">
-      <table className="border-border min-w-full border-collapse border">
+      <table className="min-w-full border-collapse border border-border">
         {children}
       </table>
     </div>
   ),
   th: ({ children }: MarkdownElementProps) => (
-    <th className="bg-accent text-accent-foreground border-border border px-3 py-2 text-left text-sm font-medium">
+    <th className="border border-border bg-accent px-3 py-2 text-left font-medium text-accent-foreground text-sm">
       {children}
     </th>
   ),
   td: ({ children }: MarkdownElementProps) => (
-    <td className="border-border text-muted-foreground border px-3 py-2 text-sm">
+    <td className="border border-border px-3 py-2 text-muted-foreground text-sm">
       {children}
     </td>
   ),
@@ -243,13 +243,13 @@ export const readmePreviewMarkdownComponents = {
 
 export const readmeFullMarkdownComponents = {
   h1: ({ children }: MarkdownElementProps) => (
-    <h1 className="mb-4 text-2xl font-semibold">{children}</h1>
+    <h1 className="mb-4 font-semibold text-2xl">{children}</h1>
   ),
   h2: ({ children }: MarkdownElementProps) => (
-    <h2 className="mt-6 mb-3 text-xl font-semibold">{children}</h2>
+    <h2 className="mt-6 mb-3 font-semibold text-xl">{children}</h2>
   ),
   h3: ({ children }: MarkdownElementProps) => (
-    <h3 className="mt-4 mb-2 text-lg font-medium">{children}</h3>
+    <h3 className="mt-4 mb-2 font-medium text-lg">{children}</h3>
   ),
   p: ({ children }: MarkdownElementProps) => (
     <p className="mb-3 leading-relaxed">{children}</p>
@@ -266,14 +266,14 @@ export const readmeFullMarkdownComponents = {
   code: CodeBlock,
   pre: ({ children }: MarkdownElementProps) => <>{children}</>,
   blockquote: ({ children }: MarkdownElementProps) => (
-    <blockquote className="border-border text-muted-foreground mb-3 border-l-4 pl-4 italic">
+    <blockquote className="mb-3 border-border border-l-4 pl-4 text-muted-foreground italic">
       {children}
     </blockquote>
   ),
   a: ({ children, href }: LinkProps) => (
     <a
       href={href}
-      className="text-ost-blue-three hover:text-ost-blue-four underline"
+      className="text-ost-blue-three underline hover:text-ost-blue-four"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -286,22 +286,22 @@ export const readmeFullMarkdownComponents = {
       alt={alt}
       width={width}
       height={height}
-      className="border-border my-3 inline-block h-auto max-w-full rounded"
+      className="my-3 inline-block h-auto max-w-full rounded border-border"
     />
   ),
   table: ({ children }: MarkdownElementProps) => (
     <div className="mb-3 overflow-x-auto">
-      <table className="border-border min-w-full border-collapse border">
+      <table className="min-w-full border-collapse border border-border">
         {children}
       </table>
     </div>
   ),
   th: ({ children }: MarkdownElementProps) => (
-    <th className="bg-accent text-accent-foreground border-border border px-3 py-2 text-left text-sm font-medium">
+    <th className="border border-border bg-accent px-3 py-2 text-left font-medium text-accent-foreground text-sm">
       {children}
     </th>
   ),
   td: ({ children }: MarkdownElementProps) => (
-    <td className="border-border border px-3 py-2 text-sm">{children}</td>
+    <td className="border border-border px-3 py-2 text-sm">{children}</td>
   ),
 };

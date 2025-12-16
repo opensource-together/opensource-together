@@ -19,7 +19,7 @@ const InputWithIcon = React.forwardRef<HTMLInputElement, InputWithIconProps>(
         {(icon || iconNode) && (
           <div
             className={cn(
-              "text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2",
+              "pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground",
               iconClassName
             )}
           >
@@ -35,9 +35,9 @@ const InputWithIcon = React.forwardRef<HTMLInputElement, InputWithIconProps>(
           ref={ref}
           data-slot="input"
           className={cn(
-            "file:text-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input text-primary placeholder:text-muted-foreground flex h-10 w-full min-w-0 rounded-md border bg-white py-1 text-sm transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-            "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[1px]",
-            "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+            "flex h-10 w-full min-w-0 rounded-md border border-input bg-white py-1 text-primary text-sm outline-none transition-[color,box-shadow] selection:bg-primary selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30",
+            "focus-visible:border-ring focus-visible:ring-[1px] focus-visible:ring-ring/50",
+            "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
             icon || iconNode ? "pr-3 pl-10" : "px-3",
             className
           )}

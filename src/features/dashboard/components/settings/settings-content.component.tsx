@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { RiGithubFill, RiGitlabFill } from "react-icons/ri";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { formatExternalUrl } from "@/shared/lib/utils/format-external-url";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import { SettingsSkeleton } from "../skeletons/settings-skeletons.component";
 
@@ -94,7 +92,7 @@ export function SettingsContent() {
               size="xl"
             />
             <div className="flex-1">
-              <h3 className="text-2xl font-medium">{currentUser.name}</h3>
+              <h3 className="font-medium text-2xl">{currentUser.name}</h3>
               <p className="text-muted-foreground text-sm">
                 {currentUser.email}
               </p>
@@ -109,7 +107,7 @@ export function SettingsContent() {
             {providers.map((provider) => (
               <div
                 key={provider.id}
-                className="border-muted-black-stroke flex items-center justify-between rounded-3xl border p-5 md:max-w-2/3"
+                className="flex items-center justify-between rounded-3xl border border-muted-black-stroke p-5 md:max-w-2/3"
               >
                 <div className="flex-1">
                   <div className="mb-1 flex items-center gap-2">
@@ -121,12 +119,12 @@ export function SettingsContent() {
                     </Badge>
                   </div>
                   {!provider.connected && (
-                    <p className="text-muted-foreground mt-2 ml-1 text-sm">
+                    <p className="mt-2 ml-1 text-muted-foreground text-sm">
                       {provider.description}
                     </p>
                   )}
                   {provider.connected && provider.url && (
-                    <p className="text-muted-foreground mt-2 ml-1 text-sm">
+                    <p className="mt-2 ml-1 text-muted-foreground text-sm">
                       Linked as&nbsp;
                       {formatExternalUrl(
                         provider.url,
@@ -180,8 +178,8 @@ export function SettingsContent() {
 
         {/* Danger Zone */}
         <section className="my-10">
-          <h3 className="text-destructive mb-2 font-medium">Danger Zone</h3>
-          <p className="text-destructive/80 mb-6 text-sm">
+          <h3 className="mb-2 font-medium text-destructive">Danger Zone</h3>
+          <p className="mb-6 text-destructive/80 text-sm">
             Sign out of your current session. Contact support to request account
             deletion if needed.
           </p>

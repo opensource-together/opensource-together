@@ -30,7 +30,7 @@ function CachedImage({
       alt={alt}
       width={688}
       height={393}
-      className="border-muted-black-stroke h-[207px] w-full shrink-0 rounded-2xl border object-cover sm:h-[365px]"
+      className="h-[207px] w-full shrink-0 rounded-2xl border border-muted-black-stroke object-cover sm:h-[365px]"
       unoptimized
       priority={priority}
     />
@@ -90,7 +90,7 @@ export default function ImageSlider({ images, updatedAt }: ImageSliderProps) {
     <div className="mt-2 mb-8 flex flex-row gap-1">
       <div className="flex-1">
         <div
-          className="relative h-[207px] w-full overflow-hidden rounded-2xl select-none sm:h-[370px]"
+          className="relative h-[207px] w-full select-none overflow-hidden rounded-2xl sm:h-[370px]"
           onTouchStart={handleDragStart}
           onTouchMove={handleDragMove}
           onTouchEnd={handleDragEnd}
@@ -140,7 +140,7 @@ export default function ImageSlider({ images, updatedAt }: ImageSliderProps) {
               {images.map((_, idx) => (
                 <IoEllipse
                   key={idx}
-                  className={`hover:text-muted-foreground size-1.5 hover:cursor-pointer ${
+                  className={`size-1.5 hover:cursor-pointer hover:text-muted-foreground ${
                     idx === currentImageIndex
                       ? "text-muted-foreground"
                       : "text-muted-foreground/50"

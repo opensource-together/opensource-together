@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 import { HiXMark } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
@@ -144,7 +144,7 @@ export function MultipleImageUpload({
           <div className="flex flex-col items-center gap-3">
             <Icon name="download" size="2xl" className="text-gray-400" />
             <div>
-              <p className="text-sm font-medium text-gray-700">
+              <p className="font-medium text-gray-700 text-sm">
                 {isDragActive
                   ? "Drop your images here..."
                   : "Drag and drop your images here or click to browse"}
@@ -160,13 +160,13 @@ export function MultipleImageUpload({
                 </Button>
               )}
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-gray-500 text-xs">
               JPG, PNG, GIF up to {maxSize}MB • Maximum {maxFiles} images
             </p>
           </div>
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-red-600 text-sm">{error}</p>}
 
         {allImages.length > 0 && (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -184,7 +184,7 @@ export function MultipleImageUpload({
                     unoptimized
                   />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
-                    <p className="text-xs font-medium text-white">
+                    <p className="font-medium text-white text-xs">
                       Image {index + 1}
                     </p>
                   </div>
@@ -214,7 +214,7 @@ export function MultipleImageUpload({
           </div>
         )}
 
-        <div className="text-center text-sm text-gray-600">
+        <div className="text-center text-gray-600 text-sm">
           {totalCount} / {maxFiles} images
         </div>
       </div>

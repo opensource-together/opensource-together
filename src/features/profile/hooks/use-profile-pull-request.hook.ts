@@ -4,7 +4,7 @@ import {
   getUserMyPullRequests,
   getUserPullRequestsById,
 } from "../services/profile-pull-request.service";
-import {
+import type {
   PullRequestQueryParams,
   PullRequestsResponse,
 } from "../types/profile.pull-request.type";

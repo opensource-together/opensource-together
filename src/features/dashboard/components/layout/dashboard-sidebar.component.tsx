@@ -72,13 +72,13 @@ function SidebarLink({
   if (item.disabled) {
     return (
       <div className="group hidden cursor-not-allowed items-center justify-between gap-3 rounded-full px-4 py-2 opacity-50 transition-all duration-200 lg:flex">
-        <span className="text-muted-foreground flex items-center gap-2 text-sm">
+        <span className="flex items-center gap-2 text-muted-foreground text-sm">
           <span>{item.label}</span>
-          <span className="text-muted-foreground translate-x-1 text-xs opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-hover:delay-75">
+          <span className="translate-x-1 text-muted-foreground text-xs opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-hover:delay-75">
             Coming soon
           </span>
         </span>
-        <item.icon className="text-muted-foreground size-4" />
+        <item.icon className="size-4 text-muted-foreground" />
       </div>
     );
   }
@@ -89,7 +89,7 @@ function SidebarLink({
       className={`hidden items-center justify-between gap-3 rounded-full px-4 py-2 transition-colors lg:flex ${
         isActive
           ? "bg-secondary font-medium"
-          : "hover:bg-secondary text-muted-foreground"
+          : "text-muted-foreground hover:bg-secondary"
       }`}
     >
       <span className="text-sm">{item.label}</span>
@@ -109,7 +109,7 @@ export default function DashboardSidebar() {
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
-    <aside className="border-muted-black-stroke hidden w-16 flex-col px-2 pt-5 lg:ml-5 lg:flex lg:h-full lg:w-72">
+    <aside className="hidden w-16 flex-col border-muted-black-stroke px-2 pt-5 lg:ml-5 lg:flex lg:h-full lg:w-72">
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-col gap-6">
           {sidebarSections.map((section, sectionIndex) => (
@@ -127,8 +127,8 @@ export default function DashboardSidebar() {
         </div>
 
         <div>
-          <div className="bg-secondary rounded-xl p-4">
-            <div className="text-muted-foreground mb-3 text-start text-xs">
+          <div className="rounded-xl bg-secondary p-4">
+            <div className="mb-3 text-start text-muted-foreground text-xs">
               Create a project for OpenSource Together. <br /> Import a
               repository from Github or Gitlab.
             </div>

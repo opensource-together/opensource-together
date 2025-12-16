@@ -1,4 +1,4 @@
-import { Issue } from "../types/project.type";
+import type { Issue } from "../types/project.type";
 
 export const getGitOpenIssueDetails = async (
   projectId: string,

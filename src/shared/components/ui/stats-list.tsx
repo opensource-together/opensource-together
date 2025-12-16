@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/lib/utils";
@@ -40,14 +40,14 @@ export function StatsList({ title, items, className }: StatsListProps) {
                   iconSizeClasses[iconSize]
                 )}
               />
-              <span className="text-muted-foreground text-sm font-normal">
+              <span className="font-normal text-muted-foreground text-sm">
                 {item.label}
               </span>
             </div>
             <div className="mx-4 flex flex-1 items-center">
               <Separator />
             </div>
-            <span className="text-primary text-sm font-medium">
+            <span className="font-medium text-primary text-sm">
               {item.value}
             </span>
           </div>

@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import ProfileEditView from "@/features/profile/views/profile-edit.view";
 

@@ -9,7 +9,10 @@ import {
 import { cn } from "@/shared/lib/utils";
 
 import { usePagination } from "../../hooks/use-pagination.hook";
-import { PaginationConfig, PaginationMeta } from "../../types/pagination.type";
+import type {
+  PaginationConfig,
+  PaginationMeta,
+} from "../../types/pagination.type";
 
 interface DataTablePaginationProps extends PaginationConfig {
   pagination: PaginationMeta;

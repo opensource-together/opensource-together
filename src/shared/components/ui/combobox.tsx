@@ -99,7 +99,7 @@ export function Combobox({
             <Badge
               key={option.id}
               variant="outline"
-              className="text-primary flex items-center gap-1 border border-black/5 bg-white pr-1 text-xs font-medium"
+              className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
             >
               {option.name}
               <button
@@ -120,7 +120,7 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="text-primary border-input h-10 w-full min-w-0 justify-start rounded-md bg-white text-start text-sm font-normal"
+            className="h-10 w-full min-w-0 justify-start rounded-md border-input bg-white text-start font-normal text-primary text-sm"
             disabled={disabled}
           >
             <span

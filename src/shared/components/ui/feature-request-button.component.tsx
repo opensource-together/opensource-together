@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { FRONTEND_URL } from "@/config/config";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
 import {
   Form,
@@ -22,8 +22,6 @@ import {
   type FeatureRequestFormData,
   featureRequestSchema,
 } from "@/shared/validations/feature-request.schema";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);

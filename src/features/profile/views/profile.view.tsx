@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -11,8 +11,6 @@ import {
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
 import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import GithubGraph from "../components/github-graph.component";
 import ProfileExperiences from "../components/profile-experiences.component";

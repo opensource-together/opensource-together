@@ -56,7 +56,7 @@ export default function SkeletonProfileView() {
         </div>
 
         {/* Main content skeleton */}
-        <div className="flex w-full flex-col gap-8 md:max-w-[677px] md:min-w-0 md:flex-1">
+        <div className="flex w-full flex-col gap-8 md:min-w-0 md:max-w-[677px] md:flex-1">
           {/* Hero skeleton */}
           <div className="hidden md:block">
             <div>
@@ -82,7 +82,7 @@ export default function SkeletonProfileView() {
           {/* Tabs skeleton */}
           <div className="flex flex-col gap-6">
             {/* Tabs skeleton */}
-            <div className="border-border inline-flex items-center border-b">
+            <div className="inline-flex items-center border-border border-b">
               <Skeleton className="mr-6 h-5 w-20" />
               <Skeleton className="mr-6 h-5 w-20" />
               <Skeleton className="mr-6 h-5 w-24" />
