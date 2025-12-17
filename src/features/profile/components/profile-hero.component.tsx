@@ -47,8 +47,8 @@ export function ProfileMobileHero({
           <Image
             src="/early-badge.svg"
             alt="Beta Tester"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
             className="-mt-0.5 ml-0.5"
           />
         </TooltipTrigger>
@@ -147,8 +147,8 @@ export default function ProfileHero({
           <Image
             src="/early-badge.svg"
             alt="Beta Tester"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
             className="-mt-0.5 ml-0.5"
           />
         </TooltipTrigger>

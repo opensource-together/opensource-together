@@ -90,14 +90,17 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     if (!project) return;
 
     const id = project.id || project.publicId || "";
-    
+
     const updatedImagesUrls = (data.imagesUrls || []).filter(
       (url: string) => !removedCoverImages.includes(url)
     );
-    
-    updateProject({ 
-      id, 
-      updateData: { ...data, imagesUrls: updatedImagesUrls } as UpdateProjectData 
+
+    updateProject({
+      id,
+      updateData: {
+        ...data,
+        imagesUrls: updatedImagesUrls,
+      } as UpdateProjectData,
     });
 
     if (removedCoverImages.length > 0) {

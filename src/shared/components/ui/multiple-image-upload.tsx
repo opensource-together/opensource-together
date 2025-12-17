@@ -17,7 +17,6 @@ interface MultipleImageUploadProps {
   onRemoveCurrentImage?: (imageUrl: string, index: number) => void;
 }
 
-
 function formatFileSize(bytes: number): string {
   const mb = bytes / (1024 * 1024);
   return `${mb.toFixed(1)} MB`;
@@ -160,7 +159,8 @@ export function MultipleImageUpload({
           <div className="space-y-2">
             {/* Current Images */}
             {currentImages.map((imageUrl, index) => {
-              const fileName = imageUrl.split("/").pop() || `cover-${index + 1}`;
+              const fileName =
+                imageUrl.split("/").pop() || `cover-${index + 1}`;
               return (
                 <div
                   key={`current-${imageUrl}`}
@@ -177,14 +177,10 @@ export function MultipleImageUpload({
                   </div>
 
                   {/* File Info */}
-                  <div className="flex flex-1 flex-col gap-1 min-w-0">
-                    <p className="truncate font-medium text-sm">
-                      {fileName}
-                    </p>
+                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <p className="truncate font-medium text-sm">{fileName}</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-green-600 text-xs">
-                        Uploaded
-                      </span>
+                      <span className="text-green-600 text-xs">Uploaded</span>
                     </div>
                   </div>
 
@@ -193,7 +189,7 @@ export function MultipleImageUpload({
                     <button
                       type="button"
                       onClick={() => onRemoveCurrentImage?.(imageUrl, index)}
-                      className="flex cursor-pointer mr-2 h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10"
+                      className="mr-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10"
                       disabled={disabled}
                       aria-label="Remove image"
                     >
@@ -221,17 +217,13 @@ export function MultipleImageUpload({
                 </div>
 
                 {/* File Info */}
-                <div className="flex flex-1 flex-col gap-1 min-w-0">
-                  <p className="truncate font-medium text-sm">
-                    {file.name}
-                  </p>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <p className="truncate font-medium text-sm">{file.name}</p>
                   <div className="flex items-center gap-2">
                     <span className="text-muted-foreground text-xs">
                       {formatFileSize(file.size)}
                     </span>
-                    <span className="text-green-600 text-xs">
-                      Uploaded
-                    </span>
+                    <span className="text-green-600 text-xs">Uploaded</span>
                   </div>
                 </div>
 
@@ -240,7 +232,7 @@ export function MultipleImageUpload({
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
-                    className="flex cursor-pointer mr-2 h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10"
+                    className="mr-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10"
                     disabled={disabled}
                     aria-label="Remove image"
                   >
