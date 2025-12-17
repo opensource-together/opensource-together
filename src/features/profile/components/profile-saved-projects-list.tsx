@@ -2,7 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { HiBookmark } from "react-icons/hi2";
-import { BookmarkButton } from "@/features/projects/components/bookmark-button.component";
 import type { Project } from "@/features/projects/types/project.type";
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
@@ -37,29 +36,18 @@ function SavedProjectItem({ project }: { project: Project }) {
   };
 
   return (
-    <div className="relative w-full">
-      <ProjectCardComponent
-        key={projectId}
-        projectId={projectId}
-        title={project.title}
-        description={project.description}
-        logoUrl={project.logoUrl || ""}
-        projectTechStacks={project.projectTechStacks}
-        repoUrl={project.repoUrl || ""}
-        repositoryDetails={repositoryDetails}
-        isRepositoryLoading={isLoading}
-        className="w-full"
-      />
-      <div
-        className="absolute top-4 right-4 z-10"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <BookmarkButton
-          projectId={projectId}
-          initialIsBookmarked={project.isBookmarked ?? true}
-        />
-      </div>
-    </div>
+    <ProjectCardComponent
+      key={projectId}
+      projectId={projectId}
+      title={project.title}
+      description={project.description}
+      logoUrl={project.logoUrl || ""}
+      projectTechStacks={project.projectTechStacks}
+      repoUrl={project.repoUrl || ""}
+      repositoryDetails={repositoryDetails}
+      isRepositoryLoading={isLoading}
+      className="w-full"
+    />
   );
 }
 

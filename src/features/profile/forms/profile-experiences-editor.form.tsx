@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { HiOutlineTrash } from "react-icons/hi";
 import { HiMiniPencilSquare } from "react-icons/hi2";
+import { RiDraggable } from "react-icons/ri";
 
 import { Button } from "@/shared/components/ui/button";
+import { DraggableList } from "@/shared/components/ui/draggable-list";
 import { cn } from "@/shared/lib/utils";
 
 interface ExperienceItem {
@@ -19,6 +21,7 @@ interface ProfileExperiencesEditorProps {
   onAdd: () => void;
   onEdit: (index: number) => void;
   onRemove: (index: number) => void;
+  onReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
 function formatRange(exp: ExperienceItem): string {
@@ -41,7 +44,10 @@ export default function ProfileExperiencesEditor({
   onAdd,
   onEdit,
   onRemove,
+  onReorder,
 }: ProfileExperiencesEditorProps) {
+  const canReorder = experiences.length > 1 && !!onReorder;
+
   return (
     <section className={cn("w-full", className)}>
       <div className="mb-4 flex items-center justify-between">
@@ -57,19 +63,50 @@ export default function ProfileExperiencesEditor({
         </p>
       )}
 
-      <div className="flex w-full flex-col">
-        {experiences.map((exp, idx) => (
-          <div
-            key={`${exp.title}-${idx}`}
-            className="mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-12"
-          >
+      <DraggableList
+        items={experiences}
+        onReorder={onReorder}
+        keyExtractor={(exp, idx) => `${exp.title}-${idx}`}
+        enabled={canReorder}
+        className="flex w-full flex-col"
+        itemClassName={() =>
+          "mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-12"
+        }
+        renderDragHandle={() => null}
+        renderItem={(exp, idx) => (
+          <>
+            {canReorder && (
+              <div className="hidden items-center md:col-span-1 md:flex">
+                <button
+                  type="button"
+                  className="flex h-6 w-6 cursor-grab items-center justify-center text-muted-foreground transition-colors hover:text-foreground active:cursor-grabbing"
+                  aria-label="Drag to reorder"
+                >
+                  <RiDraggable className="h-4 w-4" />
+                </button>
+              </div>
+            )}
             <div className="text-muted-foreground md:col-span-3">
               <span className="whitespace-nowrap text-[15px]">
                 {formatRange(exp)}
               </span>
             </div>
             <div className="relative hidden h-px w-full bg-muted md:col-span-4 md:block" />
-            <div className="flex min-w-0 items-center gap-2 md:col-span-5">
+            <div
+              className={cn(
+                "flex min-w-0 items-center gap-2",
+                canReorder ? "md:col-span-4" : "md:col-span-5"
+              )}
+            >
+              {canReorder && (
+                <button
+                  type="button"
+                  className="flex h-6 w-6 shrink-0 cursor-grab items-center justify-center text-muted-foreground transition-colors hover:text-foreground active:cursor-grabbing md:hidden"
+                  aria-label="Drag to reorder"
+                >
+                  <RiDraggable className="h-4 w-4" />
+                </button>
+              )}
               <div className="min-w-0">
                 {exp.url ? (
                   <Link
@@ -109,9 +146,9 @@ export default function ProfileExperiencesEditor({
                 </Button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          </>
+        )}
+      />
     </section>
   );
 }
