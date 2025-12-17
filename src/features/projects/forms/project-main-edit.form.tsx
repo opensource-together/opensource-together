@@ -27,6 +27,7 @@ interface ProjectMainEditFormProps {
   isUpdating: boolean;
   onCoverFilesChange?: (files: File[]) => void;
   onRemoveExistingCover?: (imageUrl: string, index: number) => void;
+  onReorderCoverImages?: (reorderedImages: string[]) => void;
   currentCoverImages?: string[];
 }
 
@@ -38,9 +39,10 @@ export default function ProjectMainEditForm({
   isUpdating,
   onCoverFilesChange,
   onRemoveExistingCover,
+  onReorderCoverImages,
   currentCoverImages,
 }: ProjectMainEditFormProps) {
-  const { control } = form;
+  const { control, setValue } = form;
 
   return (
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
@@ -143,6 +145,10 @@ export default function ProjectMainEditForm({
                     onRemoveCurrentImage={(imageUrl, index) =>
                       onRemoveExistingCover?.(imageUrl, index)
                     }
+                    onReorderCurrentImages={(reorderedImages) => {
+                      setValue("imagesUrls", reorderedImages);
+                      onReorderCoverImages?.(reorderedImages);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

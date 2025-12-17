@@ -122,11 +122,7 @@ export const updateProject = async (
   projectId: string,
   projectData: UpdateProjectData
 ): Promise<Project> => {
-  const {
-    logoUrl: _omitLogoUrl,
-    imagesUrls: _omitImagesUrls,
-    ...payload
-  } = projectData;
+  const { logoUrl: _omitLogoUrl, ...payload } = projectData;
   const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
     method: "PATCH",
     headers: {
