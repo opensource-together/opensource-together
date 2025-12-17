@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HiStar } from "react-icons/hi";
 
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 import { Button } from "../ui/button";
 
 interface CTAFooterProps {
@@ -58,7 +59,7 @@ export default function CTAFooter({
         </p>
         <div className="mt-6 flex flex-row justify-center gap-3 md:justify-center">
           <Link
-            href="https://github.com/opensource-together/opensource-together"
+            href={EXTERNAL_LINKS.GITHUB_REPO}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -68,7 +69,7 @@ export default function CTAFooter({
             </Button>
           </Link>
           <Link
-            href="https://x.com/OpenSTogether"
+            href={EXTERNAL_LINKS.TWITTER}
             target="_blank"
             rel="noopener noreferrer"
           >
