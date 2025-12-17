@@ -53,7 +53,7 @@ export function ContributorsSidebarList({
       {contributors.length === 0 && (
         <p className="text-muted-foreground text-sm">{emptyText}</p>
       )}
-      <div className="text-muted-foreground mt-3 text-xs">
+      <div className="mt-3 text-muted-foreground text-xs">
         {visible
           .slice(0, 2)
           .map((contributor) => contributor.login)

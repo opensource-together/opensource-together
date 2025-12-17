@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import {
+import type {
   ContributionGraph,
   ContributionLevel,
 } from "../types/github-graph.type";
@@ -73,7 +73,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
         <div>
           <h3 className="mb-2">Contribution Activity</h3>
           <div className="flex h-[87px] w-full items-center justify-center rounded-lg border border-black/5 p-2">
-            <p className="text-sm text-gray-500">
+            <p className="text-gray-500 text-sm">
               No contribution data available
             </p>
           </div>
@@ -162,7 +162,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
       {tooltip && (
         <div
           ref={tooltipRef}
-          className="fixed z-50 rounded-lg border border-black/5 bg-white px-3 py-2 text-sm text-black shadow-lg"
+          className="fixed z-50 rounded-lg border border-black/5 bg-white px-3 py-2 text-black text-sm shadow-lg"
           style={{
             left: tooltipPosition.x,
             top: tooltipPosition.y,

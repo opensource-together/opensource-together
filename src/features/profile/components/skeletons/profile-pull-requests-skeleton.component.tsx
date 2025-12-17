@@ -22,7 +22,7 @@ export function ProfilePullRequestsSkeleton() {
 
 function PullRequestCardSkeleton() {
   return (
-    <div className="border-muted-black-stroke rounded-[20px] border px-5 py-5">
+    <div className="rounded-[20px] border border-muted-black-stroke px-5 py-5">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {/* Badge and title skeleton */}

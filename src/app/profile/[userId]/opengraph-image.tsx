@@ -1,8 +1,7 @@
+import { getUserById } from "@/features/profile/services/profile.service";
+import type { Profile } from "@/features/profile/types/profile.type";
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
 import { UserImageMetadata } from "@/shared/components/seo/image-metadata/user/user-image-metadata";
-
-import { getUserById } from "@/features/profile/services/profile.service";
-import { Profile } from "@/features/profile/types/profile.type";
 
 //export const runtime = "edge";
 export const contentType = "image/png";

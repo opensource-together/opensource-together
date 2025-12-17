@@ -17,7 +17,7 @@ function matches(route: string | RegExp, pathname: string) {
     : route.test(pathname);
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const hasSessionCookies = request.cookies

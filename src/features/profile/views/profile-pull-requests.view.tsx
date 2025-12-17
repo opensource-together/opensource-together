@@ -26,7 +26,7 @@ import {
   useUserMyPullRequests,
   useUserPullRequestsById,
 } from "../hooks/use-profile-pull-request.hook";
-import { PullRequestQueryParams } from "../types/profile.pull-request.type";
+import type { PullRequestQueryParams } from "../types/profile.pull-request.type";
 
 const parseNumber = (value: string | null, fallback: number) => {
   if (!value) return fallback;

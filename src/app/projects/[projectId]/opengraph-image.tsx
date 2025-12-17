@@ -1,7 +1,6 @@
+import { getProjectDetails } from "@/features/projects/services/project.service";
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
 import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/projects/project/project-image-metadata";
-
-import { getProjectDetails } from "@/features/projects/services/project.service";
 
 //export const runtime = "edge";
 export const contentType = "image/png";

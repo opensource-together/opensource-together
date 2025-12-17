@@ -1,7 +1,7 @@
-import { CategoryType } from "@/shared/types/category.type";
-import { TechStackType } from "@/shared/types/tech-stack.type";
+import type { CategoryType } from "@/shared/types/category.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
-import { ContributionGraph, GithubStats } from "./github-graph.type";
+import type { ContributionGraph, GithubStats } from "./github-graph.type";
 
 export interface Profile {
   id: string;

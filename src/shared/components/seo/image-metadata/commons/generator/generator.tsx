@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 
 const FONT_BASE_URL = `${process.env.NEXT_PUBLIC_METADATA_ASSETS_S3_BUCKET}/fonts`;
 

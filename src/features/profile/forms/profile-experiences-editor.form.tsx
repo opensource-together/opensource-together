@@ -24,7 +24,7 @@ interface ProfileExperiencesEditorProps {
 function formatRange(exp: ExperienceItem): string {
   const formatDate = (dateStr?: string | null): string => {
     if (!dateStr) return "Current";
-    const date = new Date(dateStr + "T00:00:00");
+    const date = new Date(`${dateStr}T00:00:00`);
     return date.toLocaleString("en-US", { month: "short", year: "numeric" });
   };
 
@@ -52,7 +52,7 @@ export default function ProfileExperiencesEditor({
       </div>
 
       {(!experiences || experiences.length === 0) && (
-        <p className="text-muted-foreground mt-3 text-sm">
+        <p className="mt-3 text-muted-foreground text-sm">
           No experiences added.
         </p>
       )}
@@ -64,17 +64,17 @@ export default function ProfileExperiencesEditor({
             className="mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-12"
           >
             <div className="text-muted-foreground md:col-span-3">
-              <span className="text-[15px] whitespace-nowrap">
+              <span className="whitespace-nowrap text-[15px]">
                 {formatRange(exp)}
               </span>
             </div>
-            <div className="bg-muted relative hidden h-px w-full md:col-span-4 md:block" />
+            <div className="relative hidden h-px w-full bg-muted md:col-span-4 md:block" />
             <div className="flex min-w-0 items-center gap-2 md:col-span-5">
               <div className="min-w-0">
                 {exp.url ? (
                   <Link
                     href={exp.url}
-                    className="block overflow-hidden text-[15px] font-medium text-ellipsis whitespace-nowrap hover:underline"
+                    className="block overflow-hidden text-ellipsis whitespace-nowrap font-medium text-[15px] hover:underline"
                     target="_blank"
                     rel="noopener noreferrer"
                     title={exp.title || undefined}
@@ -83,7 +83,7 @@ export default function ProfileExperiencesEditor({
                   </Link>
                 ) : (
                   <span
-                    className="block overflow-hidden text-[15px] font-medium text-ellipsis whitespace-nowrap"
+                    className="block overflow-hidden text-ellipsis whitespace-nowrap font-medium text-[15px]"
                     title={exp.title || undefined}
                   >
                     {exp.title}

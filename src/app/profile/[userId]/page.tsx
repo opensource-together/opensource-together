@@ -1,13 +1,11 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { FRONTEND_URL } from "@/config/config";
-
-import CTAFooter from "@/shared/components/layout/cta-footer";
-
 import { getCurrentUser } from "@/features/auth/services/auth.service";
 import { getUserById } from "@/features/profile/services/profile.service";
 import { PublicProfileView } from "@/features/profile/views/public-profile.view";
+import CTAFooter from "@/shared/components/layout/cta-footer";
 
 interface PublicProfilePageProps {
   params: Promise<{

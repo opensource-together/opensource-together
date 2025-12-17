@@ -2,18 +2,16 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useInfiniteGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
-import { GitUserRepositoryType } from "@/shared/types/git-repository.type";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import type { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 import CustomScrollbar from "../../../components/stepper/custom-scrollbar.component";
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
 import {
-  provider,
+  type provider,
   useProjectCreateStore,
 } from "../../../stores/project-create.store";
 
@@ -144,7 +142,7 @@ export default function StepGitImportForm({
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-black">
+                    <span className="font-medium text-black text-sm">
                       {repo.name}
                     </span>
                   </div>

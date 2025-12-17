@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { TechStackType } from "../types/tech-stack.type";
+import type { TechStackType } from "../types/tech-stack.type";
 
 interface TechStackApiResponse {
   data: TechStackType[];

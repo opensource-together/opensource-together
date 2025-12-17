@@ -1,11 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
+import { updateProfile } from "@/features/profile/services/profile.service";
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 
-import { updateProfile } from "@/features/profile/services/profile.service";
-
-import { OnboardingSchema } from "../validations/onboarding.schema";
+import type { OnboardingSchema } from "../validations/onboarding.schema";
 import useAuth from "./use-auth.hook";
 
 export function useOnboarding() {

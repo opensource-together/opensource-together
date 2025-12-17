@@ -1,13 +1,11 @@
 import { useSearchParams } from "next/navigation";
 import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
-
+import type { Project } from "@/features/projects/types/project.type";
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
-
-import type { Project } from "@/features/projects/types/project.type";
 
 import { useUserProjects } from "../hooks/use-profile.hook";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";

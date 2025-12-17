@@ -10,7 +10,7 @@ export default function LoginForm() {
             <h1 className="mb-2 text-xl sm:text-2xl">
               Welcome to OpenSource Together
             </h1>
-            <p className="text-muted-foreground mt-0 text-sm">
+            <p className="mt-0 text-muted-foreground text-sm">
               New here or coming back? Choose how you want to continue
             </p>
           </div>

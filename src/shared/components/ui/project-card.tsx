@@ -3,7 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
-import { TechStackType } from "@/shared/types/tech-stack.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
 /* ---------------------------------- Root ---------------------------------- */
 const ProjectCard = React.forwardRef<
@@ -13,7 +13,7 @@ const ProjectCard = React.forwardRef<
   <section
     ref={ref}
     className={cn(
-      "font-geist border-muted-black-stroke rounded-[20px] border px-6.5 pt-6.5 pb-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+      "rounded-[20px] border border-muted-black-stroke px-6.5 pt-6.5 pb-5 font-geist transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
       className
     )}
     {...props}
@@ -104,7 +104,7 @@ const ProjectCardTitle = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "line-clamp-1 text-lg font-medium tracking-tighter",
+      "line-clamp-1 font-medium text-lg tracking-tighter",
       className
     )}
     {...props}
@@ -180,7 +180,7 @@ const ProjectCardDescription = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-primary my-3 line-clamp-2 text-sm leading-5 font-normal md:line-clamp-1",
+      "my-3 line-clamp-2 font-normal text-primary text-sm leading-5 md:line-clamp-1",
       className
     )}
     {...props}
@@ -195,7 +195,7 @@ const ProjectCardDivider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("mb-4 border-t border-black/3", className)}
+    className={cn("mb-4 border-black/3 border-t", className)}
     {...props}
   />
 ));
@@ -234,7 +234,7 @@ const ProjectCardViewLink = React.forwardRef<
     ref={linkRef || ref}
     href={`/projects/${projectId}`}
     className={cn(
-      "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 text-xs font-medium tracking-tighter text-black/30 transition-opacity hover:opacity-80",
+      "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 font-medium text-black/30 text-xs tracking-tighter transition-opacity hover:opacity-80",
       className
     )}
     {...props}
@@ -262,7 +262,7 @@ const ProjectCardViewText = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 text-xs font-medium tracking-tighter text-black/30",
+      "ml-auto flex flex-shrink-0 items-center gap-1 pt-1 font-medium text-black/30 text-xs tracking-tighter",
       className
     )}
     {...props}

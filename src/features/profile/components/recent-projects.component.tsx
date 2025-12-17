@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
-
+import type { Project } from "@/features/projects/types/project.type";
 import ProjectCardComponent from "@/shared/components/shared/ProjectCard";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
-
-import type { Project } from "@/features/projects/types/project.type";
 
 import { useUserProjects } from "../hooks/use-profile.hook";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
@@ -92,9 +90,9 @@ export default function RecentProjects({ userId }: RecentProjectsProps) {
     <div className="flex w-full flex-col gap-6">
       <div className="mt-14 mb-4 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
+          <span className="flex size-1.5 rounded-full bg-ost-blue-three"></span>
           <h2 className="text-muted-foreground">
-            <span className="text-primary font-medium">
+            <span className="font-medium text-primary">
               {recentProjects.length}
             </span>{" "}
             {recentProjects.length === 1 ? "Recent Project" : "Recent Projects"}

@@ -36,7 +36,7 @@ export function TechStackList({
           ))}
         </div>
       ) : emptyText ? (
-        <p className="text-sm text-black/50">{emptyText}</p>
+        <p className="text-black/50 text-sm">{emptyText}</p>
       ) : null}
     </div>
   );

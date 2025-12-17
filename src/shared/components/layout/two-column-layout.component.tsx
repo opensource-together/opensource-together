@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 
 interface TwoColumnLayoutProps {
   sidebar: ReactNode;
@@ -19,7 +19,7 @@ export default function TwoColumnLayout({
 
       <div className="flex flex-col gap-6 md:flex-row-reverse md:items-start md:gap-25">
         <div className="w-full md:w-[260px] md:shrink-0">{sidebar}</div>
-        <div className="flex w-full flex-col gap-8 md:max-w-[677px] md:min-w-0 md:flex-1">
+        <div className="flex w-full flex-col gap-8 md:min-w-0 md:max-w-[677px] md:flex-1">
           <div className="hidden md:block">{hero}</div>
 
           <div className="md:hidden">

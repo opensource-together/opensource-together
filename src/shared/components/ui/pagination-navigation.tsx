@@ -20,7 +20,7 @@ export default function PaginationComponent() {
           <PaginationItem>
             <PaginationLink
               href="#"
-              className="text-muted-foreground border-none text-xs"
+              className="border-none text-muted-foreground text-xs"
             >
               2
             </PaginationLink>
@@ -28,7 +28,7 @@ export default function PaginationComponent() {
           <PaginationItem>
             <PaginationLink
               href="#"
-              className="text-muted-foreground border-none text-xs"
+              className="border-none text-muted-foreground text-xs"
             >
               3
             </PaginationLink>

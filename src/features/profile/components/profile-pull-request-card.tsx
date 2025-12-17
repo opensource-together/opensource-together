@@ -6,7 +6,7 @@ import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
 import { Separator } from "@/shared/components/ui/separator";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
-import { UserPullRequest } from "../types/profile.pull-request.type";
+import type { UserPullRequest } from "../types/profile.pull-request.type";
 
 export default function PullRequestList({
   provider,
@@ -53,7 +53,7 @@ export function PullRequestCard({
 
   return (
     <Link href={pr.url} target="_blank" rel="noreferrer">
-      <article className="border-muted-black-stroke rounded-[20px] border px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
+      <article className="rounded-[20px] border border-muted-black-stroke px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2">
@@ -77,7 +77,7 @@ export function PullRequestCard({
                   Draft
                 </BadgeWithIcon>
               )}
-              <span className="line-clamp-1 text-sm font-medium tracking-tight">
+              <span className="line-clamp-1 font-medium text-sm tracking-tight">
                 {pr.title}
               </span>
             </div>
@@ -87,22 +87,22 @@ export function PullRequestCard({
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-2 md:gap-4">
                 {provider === "github" ? (
-                  <span className="flex items-center gap-1.5 text-sm font-medium">
+                  <span className="flex items-center gap-1.5 font-medium text-sm">
                     <FaGithub size={20} />
                     <span className="hidden md:inline">GitHub</span>
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1.5 text-sm font-medium">
+                  <span className="flex items-center gap-1.5 font-medium text-sm">
                     <FaGitlab size={16} />
                     Gitlab
                   </span>
                 )}
-                <div className="flex items-center gap-1 text-sm tracking-tight whitespace-nowrap">
+                <div className="flex items-center gap-1 whitespace-nowrap text-sm tracking-tight">
                   <LuClock3 size={12} />
                   <span>{formatTimeAgo(pr.updated_at || pr.created_at)}</span>
                 </div>
               </div>
-              <span className="text-muted-foreground truncate pl-4 text-xs md:pl-0">
+              <span className="truncate pl-4 text-muted-foreground text-xs md:pl-0">
                 {repoPath}
               </span>
             </div>

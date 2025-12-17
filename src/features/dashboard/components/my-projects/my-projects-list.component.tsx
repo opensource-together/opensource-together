@@ -3,7 +3,11 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
-
+import {
+  useDeleteProject,
+  useToggleProjectPublished,
+} from "@/features/projects/hooks/use-projects.hook";
+import type { Project } from "@/features/projects/types/project.type";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -11,14 +15,8 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 import { PaginationInfo } from "@/shared/components/ui/pagination-info.component";
 import { Table, TableBody } from "@/shared/components/ui/table";
 
-import {
-  useDeleteProject,
-  useToggleProjectPublished,
-} from "@/features/projects/hooks/use-projects.hook";
-import { Project } from "@/features/projects/types/project.type";
-
 import { useMyProjects } from "../../hooks/use-my-projects.hook";
-import { ProjectQueryParams } from "../../services/my-projects.service";
+import type { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 import MyProjectRow from "./my-projects-row.component";
 

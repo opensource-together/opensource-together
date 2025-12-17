@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { type FileRejection, useDropzone } from "react-dropzone";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -145,14 +145,14 @@ export function AvatarUpload({
           </div>
 
           {file ? (
-            <div className="text-sm tracking-tighter text-black/50">
+            <div className="text-black/50 text-sm tracking-tighter">
               {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
             </div>
           ) : (
-            <p className="text-xs tracking-tighter text-black/50">{subtitle}</p>
+            <p className="text-black/50 text-xs tracking-tighter">{subtitle}</p>
           )}
         </div>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
 
         <Button
           type="button"

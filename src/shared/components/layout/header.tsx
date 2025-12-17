@@ -8,12 +8,12 @@ import { HiPlus } from "react-icons/hi2";
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
 import { MobileHeader } from "@/shared/components/layout/mobile-header.component";
 import "@/shared/components/ui/breadcrumb-navigation";
-import { Button } from "@/shared/components/ui/button";
-import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
-import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import SearchCommand from "@/features/projects/components/search-command.component";
+import { Button } from "@/shared/components/ui/button";
+import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
+import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
 export default function Header() {
   const pathname = usePathname();
@@ -63,9 +63,7 @@ export default function Header() {
           </div>
 
           {isLoading ? (
-            <>
-              <SkeletonUserDropdown />
-            </>
+            <SkeletonUserDropdown />
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/projects/create">

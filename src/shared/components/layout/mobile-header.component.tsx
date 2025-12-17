@@ -14,7 +14,8 @@ import {
   HiUserCircle,
 } from "react-icons/hi2";
 import { RxDotsVertical } from "react-icons/rx";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+import SearchCommand from "@/features/projects/components/search-command.component";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -30,9 +31,6 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
-import SearchCommand from "@/features/projects/components/search-command.component";
 
 interface MobileHeaderProps {
   links?: Array<{ label: string; icon: React.ElementType; href: string }>;
@@ -94,32 +92,31 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
 
             <div className="flex flex-1 flex-col">
               <nav className="mt-6 flex flex-col gap-3 px-4">
-                {links &&
-                  links.map((link) => {
-                    const active =
-                      pathname === link.href ||
-                      pathname.startsWith(`${link.href}/`);
-                    return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={handleLinkClick}
-                        className={`hover:bg-accent flex items-center gap-2 rounded-lg py-2 pl-2 text-sm font-medium transition ${
-                          active
-                            ? "bg-accent text-black"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        <link.icon className="size-4" />
-                        {link.label}
-                      </Link>
-                    );
-                  })}
+                {links?.map((link) => {
+                  const active =
+                    pathname === link.href ||
+                    pathname.startsWith(`${link.href}/`);
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={handleLinkClick}
+                      className={`flex items-center gap-2 rounded-lg py-2 pl-2 font-medium text-sm transition hover:bg-accent ${
+                        active
+                          ? "bg-accent text-black"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      <link.icon className="size-4" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
                 {!isAuthenticated && (
                   <Link
                     href="/auth/login"
                     onClick={handleLinkClick}
-                    className="border-border text-secondary-foreground flex items-center gap-2 rounded-full border py-2 pl-4 text-sm font-medium transition"
+                    className="flex items-center gap-2 rounded-full border border-border py-2 pl-4 font-medium text-secondary-foreground text-sm transition"
                   >
                     <HiUser className="size-4" />
                     Sign In
@@ -128,7 +125,7 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                 <Link
                   href="/projects/create"
                   onClick={handleLinkClick}
-                  className="bg-primary text-primary-foreground flex items-center gap-2 rounded-full py-2 pl-4 text-sm font-medium transition"
+                  className="flex items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition"
                 >
                   <HiPlus className="size-4" />
                   Create Project
@@ -136,13 +133,13 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
               </nav>
 
               {/* User Section - Fixed at bottom */}
-              <div className="border-border mt-auto border-t">
+              <div className="mt-auto border-border border-t">
                 {isLoading ? null : isAuthenticated ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button
                         type="button"
-                        className="hover:bg-accent relative flex w-full cursor-pointer items-center gap-3 py-4 text-start transition"
+                        className="relative flex w-full cursor-pointer items-center gap-3 py-4 text-start transition hover:bg-accent"
                       >
                         <div className="pl-4">
                           <Avatar
@@ -153,10 +150,10 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                           />
                         </div>
                         <div className="flex flex-col truncate">
-                          <p className="mr-10 truncate text-sm font-medium text-black">
+                          <p className="mr-10 truncate font-medium text-black text-sm">
                             {currentUser?.name}
                           </p>
-                          <p className="text-muted-foreground mr-10 truncate text-xs">
+                          <p className="mr-10 truncate text-muted-foreground text-xs">
                             {currentUser?.email}
                           </p>
                         </div>
@@ -167,7 +164,7 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="text-muted-foreground mr-2 w-48"
+                      className="mr-2 w-48 text-muted-foreground"
                     >
                       <Link href="/profile/me" onClick={handleLinkClick}>
                         <DropdownMenuItem>

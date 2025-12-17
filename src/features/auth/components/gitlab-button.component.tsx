@@ -1,10 +1,8 @@
 "use client";
 
 import { RiGitlabFill } from "react-icons/ri";
-
-import { Button } from "@/shared/components/ui/button";
-
 import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { Button } from "@/shared/components/ui/button";
 
 interface GitlabButtonProps {
   text?: string;
@@ -40,7 +38,7 @@ export default function GitlabButton({
       ) : (
         <RiGitlabFill
           className={
-            isOutlineVariant ? "text-foreground size-4" : "size-4 text-white"
+            isOutlineVariant ? "size-4 text-foreground" : "size-4 text-white"
           }
         />
       )}

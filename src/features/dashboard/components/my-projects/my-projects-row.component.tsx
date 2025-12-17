@@ -1,13 +1,11 @@
 import { useRouter } from "next/navigation";
-
+import type { Project } from "@/features/projects/types/project.type";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
-
-import { Project } from "@/features/projects/types/project.type";
 
 import { ProjectTableActions } from "./project-table-actions.component";
 
@@ -59,9 +57,9 @@ export default function MyProjectRow({
 
       <TableCell>
         <div className="flex items-center gap-1.5">
-          <span className="bg-ost-blue-three flex size-1.5 rounded-full"></span>
-          <h2 className="text-muted-foreground inline-flex items-center gap-1 text-sm whitespace-nowrap">
-            <span className="text-primary font-medium">
+          <span className="flex size-1.5 rounded-full bg-ost-blue-three"></span>
+          <h2 className="inline-flex items-center gap-1 whitespace-nowrap text-muted-foreground text-sm">
+            <span className="font-medium text-primary">
               {isRepoLoading ? (
                 <Skeleton className="h-4 w-8" />
               ) : (
@@ -80,7 +78,7 @@ export default function MyProjectRow({
       </TableCell>
 
       <TableCell>
-        <span className="text-sm font-medium">
+        <span className="font-medium text-sm">
           {new Date(project.createdAt).toLocaleDateString()}
         </span>
       </TableCell>

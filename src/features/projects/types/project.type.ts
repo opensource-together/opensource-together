@@ -1,5 +1,5 @@
-import { CategoryType } from "@/shared/types/category.type";
-import { TechStackType } from "@/shared/types/tech-stack.type";
+import type { CategoryType } from "@/shared/types/category.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
 export interface ProjectOwner {
   id: string;

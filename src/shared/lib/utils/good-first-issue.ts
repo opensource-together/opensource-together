@@ -1,4 +1,4 @@
-import { Issue } from "../../../features/projects/types/project.type";
+import type { Issue } from "../../../features/projects/types/project.type";
 
 const RAW_GOOD_FIRST_LABELS = [
   "good first issue",

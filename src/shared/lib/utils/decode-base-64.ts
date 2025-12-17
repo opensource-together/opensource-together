@@ -1,3 +1,4 @@
+// biome-ignore lint/style/useNodejsImportProtocol: cause deployment failure
 import { Buffer } from "buffer";
 
 export function decodeBase64Safe(input?: string | null): string | undefined {
@@ -5,15 +6,14 @@ export function decodeBase64Safe(input?: string | null): string | undefined {
   try {
     const normalized = input.replace(/\s+/g, "");
     if (typeof window !== "undefined" && typeof window.atob === "function") {
-      const decoded = decodeURIComponent(
+      return decodeURIComponent(
         Array.prototype.map
           .call(
             window.atob(normalized),
-            (c: string) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+            (c: string) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`
           )
           .join("")
       );
-      return decoded;
     }
     // SSR fallback
     return Buffer.from(normalized, "base64").toString("utf-8");

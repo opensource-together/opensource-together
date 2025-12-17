@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import {
+import type {
   GitUserRepositoriesQueryParams,
   GitUserRepositoriesResponse,
 } from "../types/git-repository.type";

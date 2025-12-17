@@ -1,6 +1,6 @@
 "use client";
 
-import { IconType } from "react-icons/lib";
+import type { IconType } from "react-icons/lib";
 
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -34,11 +34,11 @@ export default function ChooseMethodCard({
       className={cn(
         "flex w-full flex-1 flex-col rounded-[20px] p-6 transition-all sm:w-64",
         isDisabled
-          ? "bg-muted/50 outline-muted-black-stroke cursor-not-allowed outline"
-          : "hover:bg-accent cursor-pointer",
+          ? "cursor-not-allowed bg-muted/50 outline outline-muted-black-stroke"
+          : "cursor-pointer hover:bg-accent",
         isSelected && !isDisabled
-          ? "outline-ost-blue-two outline-2"
-          : "outline-muted-black-stroke outline",
+          ? "outline-2 outline-ost-blue-two"
+          : "outline outline-muted-black-stroke",
         className
       )}
       onClick={!isDisabled ? onClick : undefined}
@@ -70,7 +70,7 @@ export default function ChooseMethodCard({
       </div>
       <p
         className={cn(
-          "text-muted-foreground mt-3 text-sm",
+          "mt-3 text-muted-foreground text-sm",
           isDisabled && "opacity-60"
         )}
       >

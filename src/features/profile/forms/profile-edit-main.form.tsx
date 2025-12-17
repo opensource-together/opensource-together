@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
-import { UseFormReturn, useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
+import type { z } from "zod";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import { Button } from "@/shared/components/ui/button";
@@ -20,8 +20,11 @@ import { Input } from "@/shared/components/ui/input";
 import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
-import { Profile } from "../types/profile.type";
-import { ProfileSchema, experienceSchema } from "../validations/profile.schema";
+import type { Profile } from "../types/profile.type";
+import {
+  experienceSchema,
+  type ProfileSchema,
+} from "../validations/profile.schema";
 import ExperienceModalForm from "./experience-modal.form";
 import ProfileExperiencesEditor from "./profile-experiences-editor.form";
 
@@ -187,7 +190,7 @@ export default function ProfileEditMainForm({
 
           <Separator className="mt-20" />
 
-          <div className="bg-background sticky bottom-0 z-50">
+          <div className="sticky bottom-0 z-50 bg-background">
             <div className="-mx-4.5">
               <div className="flex items-center justify-end gap-4 px-6 py-4">
                 <Link href="/profile/me">

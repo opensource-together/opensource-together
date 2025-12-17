@@ -1,4 +1,4 @@
-import { Project } from "../types/project.type";
+import type { Project } from "../types/project.type";
 
 export const validateProjectForPublishing = (project: Project) => {
   const required = {
