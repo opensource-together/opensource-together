@@ -1,6 +1,6 @@
+/** biome-ignore-all lint/performance/noImgElement: needed */
 "use client";
 
-import Image from "next/image";
 import { memo, useMemo } from "react";
 import { Avatar } from "@/shared/components/ui/avatar";
 
@@ -12,11 +12,10 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
       {imagesUrls.length === 1 ? (
         <div className="w-full">
           <div className="relative h-[207px] overflow-hidden rounded-md">
-            <Image
+            <img
               src={imagesUrls[0]}
               alt="Project screenshot"
-              fill
-              className="object-cover"
+              className="h-full w-full object-cover"
             />
           </div>
         </div>
@@ -24,25 +23,23 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
         <>
           <div className="w-3/4">
             <div className="relative h-[207px] w-full overflow-hidden rounded-md">
-              <Image
+              <img
                 src={imagesUrls[0]}
                 alt="Project screenshot 1"
-                fill
-                className="object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
           </div>
           <div className="w-1/4 space-y-1">
-            {imagesUrls.slice(1, 4).map((url, idx) => (
+            {imagesUrls.slice(1, 4).map((url) => (
               <div
-                key={idx}
+                key={url}
                 className="relative h-[67px] w-full overflow-hidden rounded-md"
               >
-                <Image
+                <img
                   src={url}
-                  alt={`Project screenshot ${idx + 2}`}
-                  fill
-                  className="object-cover"
+                  alt={`Project screenshot ${imagesUrls.indexOf(url) + 1}`}
+                  className="h-full w-full object-cover"
                 />
               </div>
             ))}

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { HiXMark } from "react-icons/hi2";
@@ -174,16 +173,15 @@ export function MultipleImageUpload({
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {allImages.map((image, index) => (
               <div
-                key={index}
+                key={image}
                 className="group relative aspect-video rounded-lg border border-gray-200"
               >
                 <div className="absolute inset-0 overflow-hidden rounded-lg">
-                  <Image
+                  {/* biome-ignore lint/performance/noImgElement: needed */}
+                  <img
                     src={image}
-                    alt={`Cover image ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    unoptimized
+                    alt={`Cover ${index + 1}`}
+                    className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
                     <p className="font-medium text-white text-xs">
