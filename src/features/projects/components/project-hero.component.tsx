@@ -62,6 +62,12 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
           </>
         ) : (
           <>
+            {isBookmarked && (
+              <BookmarkButton
+                projectId={id}
+                initialIsBookmarked={isBookmarked}
+              />
+            )}
             <Button
               variant="outline"
               onClick={() => setPublishDialogOpen(true)}
@@ -151,6 +157,12 @@ export default function ProjectHero({
                 </>
               ) : (
                 <>
+                  {isBookmarked && (
+                    <BookmarkButton
+                      projectId={id}
+                      initialIsBookmarked={isBookmarked}
+                    />
+                  )}
                   <Button
                     variant="outline"
                     onClick={() => setPublishDialogOpen(true)}
