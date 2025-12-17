@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+command -v pnpm >/dev/null 2>&1 || {
+  echo "pnpm is required for this repo (pre-commit). Install it, then retry."
+  exit 1
+}
+
+# 1) Auto-fix possible errors
+pnpm biome check --write --staged --files-ignore-unknown=true --no-errors-on-unmatched
+
+# 2) Restage files edited by Biome
+git update-index --again
