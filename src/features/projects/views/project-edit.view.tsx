@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
@@ -76,41 +76,24 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
       websiteUrl: project.websiteUrl || "",
     });
     setRemovedCoverImages([]);
-    setReorderedCoverImages(null);
   }, [project, form]);
 
   const handleImageSelect = (file: File | null) => {
     setSelectedImageFile(file);
   };
 
-  const [reorderedCoverImages, setReorderedCoverImages] = useState<
-    string[] | null
-  >(null);
-
-  const removedCoverImagesSet = useMemo(
-    () => new Set(removedCoverImages),
-    [removedCoverImages]
+  const visibleCoverImages = (project?.imagesUrls || []).filter(
+    (url: string) => !removedCoverImages.includes(url)
   );
-
-  const visibleCoverImages = useMemo(() => {
-    const baseImages = reorderedCoverImages ?? project?.imagesUrls ?? [];
-    return baseImages.filter((url: string) => !removedCoverImagesSet.has(url));
-  }, [reorderedCoverImages, project?.imagesUrls, removedCoverImagesSet]);
-
-  const handleReorderCoverImages = useCallback((reorderedImages: string[]) => {
-    setReorderedCoverImages(reorderedImages);
-  }, []);
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (!project) return;
 
     const id = project.id || project.publicId || "";
 
-    const updatedImagesUrls = (
-      reorderedCoverImages ??
-      data.imagesUrls ??
-      []
-    ).filter((url: string) => !removedCoverImagesSet.has(url));
+    const updatedImagesUrls = (data.imagesUrls || []).filter(
+      (url: string) => !removedCoverImages.includes(url)
+    );
 
     updateProject({
       id,
@@ -168,7 +151,6 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
               prev.includes(imageUrl) ? prev : [...prev, imageUrl]
             );
           }}
-          onReorderCoverImages={handleReorderCoverImages}
           currentCoverImages={visibleCoverImages}
         />
       }
