@@ -185,6 +185,9 @@ export default function ProfileEditMainForm({
               onAdd={handleOpenAddExperience}
               onEdit={handleOpenEditExperience}
               onRemove={(idx) => experiencesArray.remove(idx)}
+              onReorder={(fromIndex, toIndex) => {
+                experiencesArray.move(fromIndex, toIndex);
+              }}
             />
           </div>
 
