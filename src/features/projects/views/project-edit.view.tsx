@@ -75,6 +75,7 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
       linkedinUrl: project.linkedinUrl || "",
       websiteUrl: project.websiteUrl || "",
     });
+    setRemovedCoverImages([]);
   }, [project, form]);
 
   const handleImageSelect = (file: File | null) => {
@@ -89,7 +90,21 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     if (!project) return;
 
     const id = project.id || project.publicId || "";
-    updateProject({ id, updateData: data as UpdateProjectData });
+    
+    const updatedImagesUrls = (data.imagesUrls || []).filter(
+      (url: string) => !removedCoverImages.includes(url)
+    );
+    
+    updateProject({ 
+      id, 
+      updateData: { ...data, imagesUrls: updatedImagesUrls } as UpdateProjectData 
+    });
+
+    if (removedCoverImages.length > 0) {
+      removedCoverImages.forEach((imageUrl) => {
+        deleteProjectImage({ projectId: id, imageUrl });
+      });
+    }
 
     if (selectedImageFile) {
       updateProjectLogo({
@@ -129,12 +144,9 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
           isUpdating={isUpdating}
           onCoverFilesChange={setNewCoverFiles}
           onRemoveExistingCover={(imageUrl) => {
-            const id = project.publicId || project.id;
-            if (!id) return;
             setRemovedCoverImages((prev) =>
               prev.includes(imageUrl) ? prev : [...prev, imageUrl]
             );
-            deleteProjectImage({ projectId: id, imageUrl });
           }}
           currentCoverImages={visibleCoverImages}
         />

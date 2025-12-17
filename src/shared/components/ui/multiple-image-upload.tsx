@@ -4,10 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { type FileRejection, useDropzone } from "react-dropzone";
 import { HiXMark } from "react-icons/hi2";
 
-import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/utils";
-
-import Icon from "./icon";
 
 interface MultipleImageUploadProps {
   onFilesChange: (files: File[]) => void;
@@ -18,6 +15,12 @@ interface MultipleImageUploadProps {
   disabled?: boolean;
   currentImages?: string[];
   onRemoveCurrentImage?: (imageUrl: string, index: number) => void;
+}
+
+
+function formatFileSize(bytes: number): string {
+  const mb = bytes / (1024 * 1024);
+  return `${mb.toFixed(1)} MB`;
 }
 
 export function MultipleImageUpload({
@@ -45,10 +48,6 @@ export function MultipleImageUpload({
     };
   }, [previews]);
 
-  const allImages = useMemo(
-    () => [...currentImages, ...previews],
-    [currentImages, previews]
-  );
   const totalCount = useMemo(
     () => currentImages.length + files.length,
     [currentImages.length, files.length]
@@ -125,15 +124,16 @@ export function MultipleImageUpload({
   return (
     <div className={cn("w-full", className)}>
       <div className="space-y-4">
+        {/* Drop Zone */}
         <div
           {...getRootProps()}
           className={cn(
-            "relative rounded-lg border-2 border-dashed p-6 text-center transition-all duration-200",
-            !isDropzoneDisabled && "cursor-pointer",
+            "relative rounded-lg border-2 border-dashed p-8 text-center transition-all duration-200",
+            !isDropzoneDisabled && "cursor-pointer hover:border-border",
             isDragActive && !isDragReject
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-300",
-            isDragReject && "border-red-500 bg-red-50",
+              ? "border-ost-blue-three bg-ost-blue-one/10"
+              : "border-input bg-secondary",
+            isDragReject && "border-destructive bg-destructive/10",
             error && "border-red-400",
             isDropzoneDisabled &&
               "pointer-events-none cursor-not-allowed opacity-50"
@@ -142,81 +142,115 @@ export function MultipleImageUpload({
           aria-disabled={isDropzoneDisabled}
         >
           <input {...getInputProps()} />
-          <div className="flex flex-col items-center gap-3">
-            <Icon name="download" size="2xl" className="text-gray-400" />
-            <div>
-              <p className="font-medium text-gray-700 text-sm">
-                {isDragActive
-                  ? "Drop your images here..."
-                  : "Drag and drop your images here or click to browse"}
-              </p>
-              {!isDragActive && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="mt-2"
-                  disabled={isDropzoneDisabled}
-                >
-                  Browse
-                </Button>
-              )}
-            </div>
-            <p className="text-gray-500 text-xs">
-              JPG, PNG, GIF up to {maxSize}MB • Maximum {maxFiles} images
+          <div className="flex flex-col items-center gap-2">
+            <p className="font-medium text-foreground text-sm">
+              Drop your files here, or{" "}
+              <span className="text-ost-blue-three">click to browse</span>
+            </p>
+            <p className="text-muted-foreground text-xs">
+              Up to {maxFiles} files, {maxSize * maxFiles}MB total limit
             </p>
           </div>
         </div>
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
-        {allImages.length > 0 && (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {allImages.map((image, index) => (
+        {/* Uploaded Images List */}
+        {(currentImages.length > 0 || files.length > 0) && (
+          <div className="space-y-2">
+            {/* Current Images */}
+            {currentImages.map((imageUrl, index) => {
+              const fileName = imageUrl.split("/").pop() || `cover-${index + 1}`;
+              return (
+                <div
+                  key={`current-${imageUrl}`}
+                  className="group flex items-center gap-3 rounded-xl border border-border bg-secondary p-2"
+                >
+                  {/* Thumbnail */}
+                  <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border">
+                    {/* biome-ignore lint/performance/noImgElement: needed */}
+                    <img
+                      src={imageUrl}
+                      alt={fileName}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  {/* File Info */}
+                  <div className="flex flex-1 flex-col gap-1 min-w-0">
+                    <p className="truncate font-medium text-sm">
+                      {fileName}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-green-600 text-xs">
+                        Uploaded
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onRemoveCurrentImage?.(imageUrl, index)}
+                      className="flex cursor-pointer mr-2 h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10"
+                      disabled={disabled}
+                      aria-label="Remove image"
+                    >
+                      <HiXMark className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* New Files */}
+            {files.map((file, index) => (
               <div
-                key={image}
-                className="group relative aspect-video rounded-lg border border-gray-200"
+                key={`file-${file.name}-${file.size}-${file.lastModified}`}
+                className="group flex items-center gap-3 rounded-xl border border-border bg-secondary p-2"
               >
-                <div className="absolute inset-0 overflow-hidden rounded-lg">
+                {/* Thumbnail */}
+                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border">
                   {/* biome-ignore lint/performance/noImgElement: needed */}
                   <img
-                    src={image}
-                    alt={`Cover ${index + 1}`}
+                    src={previews[index]}
+                    alt={file.name}
                     className="h-full w-full object-cover"
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent p-2">
-                    <p className="font-medium text-white text-xs">
-                      Image {index + 1}
-                    </p>
+                </div>
+
+                {/* File Info */}
+                <div className="flex flex-1 flex-col gap-1 min-w-0">
+                  <p className="truncate font-medium text-sm">
+                    {file.name}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-xs">
+                      {formatFileSize(file.size)}
+                    </span>
+                    <span className="text-green-600 text-xs">
+                      Uploaded
+                    </span>
                   </div>
                 </div>
 
-                {index < currentImages.length ? (
+                {/* Actions */}
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => onRemoveCurrentImage?.(image, index)}
-                    className="absolute -top-1 -right-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+                    onClick={() => removeImage(index)}
+                    className="flex cursor-pointer mr-2 h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10"
                     disabled={disabled}
+                    aria-label="Remove image"
                   >
-                    <HiXMark />
+                    <HiXMark className="h-5 w-5" />
                   </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index - currentImages.length)}
-                    className="absolute -top-1 -right-1 z-10 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white p-1 opacity-0 shadow-md transition-opacity group-hover:opacity-100"
-                    disabled={disabled}
-                  >
-                    <HiXMark />
-                  </button>
-                )}
+                </div>
               </div>
             ))}
           </div>
         )}
-
-        <div className="text-center text-gray-600 text-sm">
-          {totalCount} / {maxFiles} images
-        </div>
       </div>
     </div>
   );
