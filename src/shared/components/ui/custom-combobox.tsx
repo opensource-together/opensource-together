@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import * as React from "react";
+import { useState } from "react";
 import { HiCheck } from "react-icons/hi2";
 import {
   Command,
@@ -55,7 +55,7 @@ export function CustomCombobox({
   onOpenChange,
   isLoading = false,
 }: ComboboxProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -170,6 +170,8 @@ export function CustomCombobox({
                                     src={option.iconUrl}
                                     alt={option.name}
                                     className="size-3.5 flex-shrink-0"
+                                    width={16}
+                                    height={16}
                                     onError={(e) => {
                                       e.currentTarget.style.display = "none";
                                     }}

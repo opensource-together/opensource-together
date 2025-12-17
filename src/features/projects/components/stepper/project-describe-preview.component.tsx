@@ -15,7 +15,8 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
             <Image
               src={imagesUrls[0]}
               alt="Project screenshot"
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         </div>
@@ -26,7 +27,8 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
               <Image
                 src={imagesUrls[0]}
                 alt="Project screenshot 1"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -39,7 +41,8 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
                 <Image
                   src={url}
                   alt={`Project screenshot ${idx + 2}`}
-                  className="h-full w-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
             ))}

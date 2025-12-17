@@ -174,6 +174,8 @@ export function Combobox({
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"
+                                width={16}
+                                height={16}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
                                 }}
@@ -215,6 +217,8 @@ export function Combobox({
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"
+                                width={16}
+                                height={16}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
                                 }}
@@ -258,6 +262,8 @@ export function Combobox({
                             src={option.iconUrl}
                             alt={option.name}
                             className="size-3.5 flex-shrink-0"
+                            width={16}
+                            height={16}
                             onError={(e) => {
                               e.currentTarget.style.display = "none";
                             }}

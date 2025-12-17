@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ProjectDescribePreview } from "@/features/projects/components/stepper/project-describe-preview.component copy";
+import { ProjectDescribePreview } from "@/features/projects/components/stepper/project-describe-preview.component";
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import {
   Form,
