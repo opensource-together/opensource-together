@@ -1,6 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
@@ -15,8 +15,8 @@ import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { Profile } from "../types/profile.type";
-import { ProfileSchema } from "../validations/profile.schema";
+import type { Profile } from "../types/profile.type";
+import type { ProfileSchema } from "../validations/profile.schema";
 
 interface ProfileSidebarEditProps {
   profile: Profile;

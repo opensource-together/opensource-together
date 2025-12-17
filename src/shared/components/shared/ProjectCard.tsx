@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { FaStar } from "react-icons/fa6";
 import { RiGitForkFill } from "react-icons/ri";
 import { VscIssues } from "react-icons/vsc";
-
+import type { RepositoryWithDetails } from "@/features/projects/types/project.type";
 import {
   ProjectCard,
   ProjectCardContent,
@@ -18,9 +18,7 @@ import {
 import { languagesToTechStacks } from "@/shared/lib/language-icons";
 import { extractRepositoryOwner } from "@/shared/lib/utils/extract-repo-owner";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
-import { TechStackType } from "@/shared/types/tech-stack.type";
-
-import { RepositoryWithDetails } from "@/features/projects/types/project.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
 import { Avatar } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
@@ -87,7 +85,7 @@ export default function ProjectCardComponent({
               <ProjectCardTitle className="text-primary">
                 {title}
               </ProjectCardTitle>
-              <p className="text-muted-foreground -mt-1 text-sm tracking-tighter">
+              <p className="-mt-1 text-muted-foreground text-sm tracking-tighter">
                 by {extractRepositoryOwner(repoUrl)}
               </p>
             </ProjectCardInfo>
@@ -98,56 +96,55 @@ export default function ProjectCardComponent({
           <ProjectCardDivider />
           {showTechStack && (
             <ProjectCardFooter>
-              <>
-                <div className="flex gap-2.5">
-                  {allTechStacks.length > 0
-                    ? allTechStacks.slice(0, 3).map((tech, index) => (
-                        <span
-                          key={tech.id || index}
+              <div className="flex gap-2.5">
+                {allTechStacks.length > 0
+                  ? allTechStacks.slice(0, 3).map((tech, index) => (
+                      <span
+                        key={tech.id || index}
+                        className={
+                          index === 0
+                            ? "inline-flex"
+                            : index === 1
+                              ? "hidden md:inline-flex"
+                              : "hidden md:inline-flex"
+                        }
+                      >
+                        <StackLogo
+                          icon={tech.iconUrl || ""}
+                          alt={tech.name}
+                          name={tech.name}
+                        />
+                      </span>
+                    ))
+                  : isRepositoryLoading
+                    ? Array.from({ length: 3 }).map((_, idx) => (
+                        <div
+                          key={idx}
                           className={
-                            index === 0
-                              ? "inline-flex"
-                              : index === 1
-                                ? "hidden md:inline-flex"
-                                : "hidden md:inline-flex"
+                            idx === 0
+                              ? "flex items-center gap-1.5"
+                              : "hidden items-center gap-1.5 md:flex"
                           }
                         >
-                          <StackLogo
-                            icon={tech.iconUrl || ""}
-                            alt={tech.name}
-                            name={tech.name}
-                          />
-                        </span>
+                          <Skeleton className="size-5.5 rounded-full" />
+                          <Skeleton className="h-5.5 w-16 rounded-md" />
+                        </div>
                       ))
-                    : isRepositoryLoading
-                      ? Array.from({ length: 3 }).map((_, idx) => (
-                          <div
-                            key={idx}
-                            className={
-                              idx === 0
-                                ? "flex items-center gap-1.5"
-                                : "hidden items-center gap-1.5 md:flex"
-                            }
-                          >
-                            <Skeleton className="size-5.5 rounded-full" />
-                            <Skeleton className="h-5.5 w-16 rounded-md" />
-                          </div>
-                        ))
-                      : null}
-                </div>
-                {/* Mobile +N when > 1 */}
-                {allTechStacks.length > 1 && (
-                  <span className="ml-1 flex h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:hidden">
-                    +{allTechStacks.length - 1}
-                  </span>
-                )}
-                {/* Desktop +N when > 3 */}
-                {allTechStacks.length > 3 && (
-                  <span className="ml-3 hidden h-5.5 flex-shrink-0 items-center rounded-full bg-transparent text-xs whitespace-nowrap text-black/20 md:flex">
-                    +{allTechStacks.length - 3}
-                  </span>
-                )}
-              </>
+                    : null}
+              </div>
+              {/* Mobile +N when > 1 */}
+              {allTechStacks.length > 1 && (
+                <span className="ml-1 flex h-5.5 flex-shrink-0 items-center whitespace-nowrap rounded-full bg-transparent text-black/20 text-xs md:hidden">
+                  +{allTechStacks.length - 1}
+                </span>
+              )}
+              {/* Desktop +N when > 3 */}
+              {allTechStacks.length > 3 && (
+                <span className="ml-3 hidden h-5.5 flex-shrink-0 items-center whitespace-nowrap rounded-full bg-transparent text-black/20 text-xs md:flex">
+                  +{allTechStacks.length - 3}
+                </span>
+              )}
+
               <div className="ml-auto flex items-center justify-between space-x-2">
                 <div className="flex items-center justify-center text-xs">
                   <RiGitForkFill className="mr-0.5 size-3" />
@@ -166,7 +163,7 @@ export default function ProjectCardComponent({
                   )}
                 </div>
                 <div className="flex items-center justify-center gap-0 text-xs">
-                  <FaStar className="text-primary mr-0.5 size-2.5" />
+                  <FaStar className="mr-0.5 size-2.5 text-primary" />
                   {isRepositoryLoading ? (
                     <Skeleton className="h-3 w-6" />
                   ) : (

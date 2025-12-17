@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { API_BASE_URL, FRONTEND_URL } from "@/config/config";
 
-import { Project } from "@/features/projects/types/project.type";
+import type { Project } from "@/features/projects/types/project.type";
 
 interface PaginatedProjectsResponse {
   data: Project[];
@@ -28,7 +28,7 @@ async function getTrendingProjects(): Promise<Project[]> {
           headers: {
             "Content-Type": "application/json",
           },
-          cache: "no-store",
+          next: { revalidate: 3600 },
         }
       );
 

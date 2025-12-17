@@ -4,19 +4,17 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
 import { useInView } from "react-intersection-observer";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
+import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
-import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 
 import { BlurredSigninCtaGrid } from "../components/blurred-signin-cta-grid.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
-import { ProjectFilters } from "../types/project-filters.type";
+import type { ProjectFilters } from "../types/project-filters.type";
 
 interface HomepageLayoutProps {
   children: React.ReactNode;

@@ -1,9 +1,7 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Suspense } from "react";
-
-import CTAFooter from "@/shared/components/layout/cta-footer";
-
 import HomepageViews from "@/features/projects/views/homepage.view";
+import CTAFooter from "@/shared/components/layout/cta-footer";
 
 export const metadata: Metadata = {
   title: "OpenSource Together - Find and discover open source projects",

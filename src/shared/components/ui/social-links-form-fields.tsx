@@ -1,6 +1,6 @@
 "use client";
 
-import { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { HiMiniLink } from "react-icons/hi2";
 import {
   RiGithubFill,

@@ -4,7 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
+import {
+  useCreateProject,
+  useUpdateProjectCover,
+  useUpdateProjectLogo,
+} from "@/features/projects/hooks/use-projects.hook";
+import type { ProjectSchema } from "@/features/projects/validations/project.schema";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -18,19 +24,11 @@ import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
-import {
-  useCreateProject,
-  useUpdateProjectCover,
-  useUpdateProjectLogo,
-} from "@/features/projects/hooks/use-projects.hook";
-import { ProjectSchema } from "@/features/projects/validations/project.schema";
-
 import { ProjectTechCategoriesPreview } from "../../../components/stepper/project-tech-categories-preview.component";
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 import {
-  StepTechCategoriesFormData,
+  type StepTechCategoriesFormData,
   stepTechCategoriesSchema,
 } from "../../../validations/project-stepper.schema";
 
@@ -334,7 +332,7 @@ export function StepTechCategoriesForm() {
 
       <div className="hidden w-[40%] lg:block">
         <div className="sticky top-8">
-          <h3 className="mt-7 mb-4 text-lg font-medium">Preview</h3>
+          <h3 className="mt-7 mb-4 font-medium text-lg">Preview</h3>
           <ProjectTechCategoriesPreview
             projectTechStacks={getTechStacksByIds(
               watched.projectTechStacks || []

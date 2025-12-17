@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
+import Image from "next/image";
+import { useState } from "react";
 import { HiCheck } from "react-icons/hi2";
-
 import {
   Command,
   CommandEmpty,
@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
-import { TechStackType } from "@/shared/types/tech-stack.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
 export interface CustomComboboxOption {
   id: string;
@@ -55,7 +55,7 @@ export function CustomCombobox({
   onOpenChange,
   isLoading = false,
 }: ComboboxProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -96,7 +96,7 @@ export function CustomCombobox({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="border-muted-black-stroke relative p-1 shadow-xs"
+          className="relative border-muted-black-stroke p-1 shadow-xs"
           align="start"
         >
           <div className="absolute top-2.5 right-4 z-10">
@@ -129,7 +129,7 @@ export function CustomCombobox({
                       className="flex items-center gap-2 px-2 py-1.5"
                     >
                       <div className="flex-1 space-y-1">
-                        <div className="bg-muted h-7 w-full animate-pulse rounded-lg" />
+                        <div className="h-7 w-full animate-pulse rounded-lg bg-muted" />
                       </div>
                     </div>
                   ))}
@@ -166,10 +166,12 @@ export function CustomCombobox({
                                   )}
                                 />
                                 {option.iconUrl && (
-                                  <img
+                                  <Image
                                     src={option.iconUrl}
                                     alt={option.name}
                                     className="size-3.5 flex-shrink-0"
+                                    width={16}
+                                    height={16}
                                     onError={(e) => {
                                       e.currentTarget.style.display = "none";
                                     }}
@@ -207,7 +209,7 @@ export function CustomCombobox({
                                   )}
                                 />
                                 {option.iconUrl && (
-                                  <img
+                                  <Image
                                     src={option.iconUrl}
                                     alt={option.name}
                                     className="size-3.5 flex-shrink-0"
@@ -250,7 +252,7 @@ export function CustomCombobox({
                               )}
                             />
                             {option.iconUrl && (
-                              <img
+                              <Image
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"

@@ -2,7 +2,7 @@ import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
 import { TechStackList } from "@/shared/components/ui/tech-stack-list";
 
-import { Profile } from "../types/profile.type";
+import type { Profile } from "../types/profile.type";
 
 interface ProfileSidebarProps {
   profile: Profile;

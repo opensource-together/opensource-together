@@ -1,4 +1,4 @@
-import { UseMutationOptions, useMutation } from "@tanstack/react-query";
+import { type UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 type ToastMutationOptions<TData, TError, TVariables> = {

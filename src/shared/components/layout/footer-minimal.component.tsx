@@ -34,7 +34,7 @@ export default function FooterMinimal() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-muted-foreground hover:text-foreground tracking-tight transition"
+                className="text-muted-foreground tracking-tight transition hover:text-foreground"
               >
                 {link.name}
               </Link>

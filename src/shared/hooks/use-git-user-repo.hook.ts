@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import { getGitUserRepositories } from "../services/git-user-repos.service";
-import {
+import type {
   GitUserRepositoriesQueryParams,
   GitUserRepositoriesResponse,
 } from "../types/git-repository.type";

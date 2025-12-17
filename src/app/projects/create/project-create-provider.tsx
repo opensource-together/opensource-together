@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { useProjectCreateNavigation } from "@/features/projects/hooks/use-project-create-navigation.hook";
 

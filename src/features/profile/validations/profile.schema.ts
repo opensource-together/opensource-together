@@ -28,8 +28,8 @@ export const experienceSchema = z
   })
   .superRefine((val, ctx) => {
     if (val.endAt && val.startAt) {
-      const start = new Date(val.startAt + "T00:00:00");
-      const end = new Date(val.endAt + "T00:00:00");
+      const start = new Date(`${val.startAt}T00:00:00`);
+      const end = new Date(`${val.endAt}T00:00:00`);
       if (end < start) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

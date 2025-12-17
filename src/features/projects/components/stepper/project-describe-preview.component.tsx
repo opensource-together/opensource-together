@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import { memo, useMemo } from "react";
-
 import { Avatar } from "@/shared/components/ui/avatar";
 
 const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
@@ -12,10 +12,11 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
       {imagesUrls.length === 1 ? (
         <div className="w-full">
           <div className="relative h-[207px] overflow-hidden rounded-md">
-            <img
+            <Image
               src={imagesUrls[0]}
               alt="Project screenshot"
-              className="h-full w-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         </div>
@@ -23,10 +24,11 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
         <>
           <div className="w-3/4">
             <div className="relative h-[207px] w-full overflow-hidden rounded-md">
-              <img
+              <Image
                 src={imagesUrls[0]}
                 alt="Project screenshot 1"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
@@ -36,10 +38,11 @@ const ProjectImages = memo(({ imagesUrls }: { imagesUrls: string[] }) => {
                 key={idx}
                 className="relative h-[67px] w-full overflow-hidden rounded-md"
               >
-                <img
+                <Image
                   src={url}
                   alt={`Project screenshot ${idx + 2}`}
-                  className="h-full w-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
             ))}
@@ -70,7 +73,7 @@ export function ProjectDescribePreview({
   }, [logoUrl]);
 
   return (
-    <div className="bg-accent flex flex-col rounded-2xl p-8">
+    <div className="flex flex-col rounded-2xl bg-accent p-8">
       <div className="mb-4 flex items-center gap-4">
         <Avatar
           src={logoPreview}
@@ -79,12 +82,12 @@ export function ProjectDescribePreview({
           size="xl"
           shape="rounded"
         />
-        <h1 className="line-clamp-2 flex-1 text-xl font-medium break-words">
+        <h1 className="line-clamp-2 flex-1 break-words font-medium text-xl">
           {title}
         </h1>
       </div>
 
-      <p className="mb-6 line-clamp-3 text-sm break-words">{description}</p>
+      <p className="mb-6 line-clamp-3 break-words text-sm">{description}</p>
 
       <ProjectImages imagesUrls={imagesUrls} />
     </div>

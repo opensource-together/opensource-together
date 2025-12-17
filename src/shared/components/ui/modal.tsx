@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import type * as React from "react";
 import { RiLoader2Fill } from "react-icons/ri";
 
 import { Button } from "./button";
@@ -127,7 +127,7 @@ function Modal({
                       <span>Loading...</span>
                     </>
                   ) : (
-                    <>{confirmText}</>
+                    confirmText
                   )}
                 </Button>
               )}

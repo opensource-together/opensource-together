@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { IconType } from "react-icons/lib";
+import type { IconType } from "react-icons/lib";
 
 import { Button } from "./button";
 
@@ -38,7 +38,7 @@ export function EmptyState({
       )}
 
       {description && (
-        <p className="text-muted-foreground my-4 mt-2 text-sm">{description}</p>
+        <p className="my-4 mt-2 text-muted-foreground text-sm">{description}</p>
       )}
 
       {href && buttonText && (

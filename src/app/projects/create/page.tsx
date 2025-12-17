@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import StepIntroductionView from "@/features/projects/views/stepper-views/common/step-introduction.view";
 

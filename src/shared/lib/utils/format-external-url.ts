@@ -45,13 +45,13 @@ export function formatExternalUrl(raw: string, type: ExternalLinkType): string {
       if (pathname.startsWith("users/")) {
         // discord.com/users/123456789 -> users/123456789
         return `users/${pathname.split("/").pop()}`;
-      } else if (pathname.startsWith("invite/")) {
+      }
+      if (pathname.startsWith("invite/")) {
         // discord.gg/invite/code -> invite/code
         return `invite/${pathname.split("/").pop()}`;
-      } else {
-        // discord.gg/code -> invite/code
-        return `invite/${pathname}`;
       }
+      // discord.gg/code -> invite/code
+      return `invite/${pathname}`;
     }
 
     // Special formatting for LinkedIn - extract profile/company name
@@ -61,13 +61,13 @@ export function formatExternalUrl(raw: string, type: ExternalLinkType): string {
       if (pathname.startsWith("in/")) {
         // linkedin.com/in/username -> in/username
         return pathname;
-      } else if (pathname.startsWith("company/")) {
+      }
+      if (pathname.startsWith("company/")) {
         // linkedin.com/company/companyname -> company/companyname
         return pathname;
-      } else {
-        // linkedin.com/username -> username
-        return pathname;
       }
+      // linkedin.com/username -> username
+      return pathname;
     }
 
     // Default formatting for website and other platforms

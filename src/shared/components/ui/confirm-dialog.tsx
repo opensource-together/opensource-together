@@ -78,7 +78,7 @@ export function ConfirmDialog({
                 <span>Loading...</span>
               </>
             ) : (
-              <>{confirmText}</>
+              confirmText
             )}
           </Button>
         </AlertDialogFooter>

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  RepositoryDetailsResponse,
   getProjectRepositorySummary,
+  type RepositoryDetailsResponse,
 } from "../services/git.repository-summary.service";
 
 /**

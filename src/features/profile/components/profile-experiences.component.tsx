@@ -3,7 +3,7 @@ import { LuExternalLink } from "react-icons/lu";
 
 import { cn } from "@/shared/lib/utils";
 
-import { UserExperience } from "../types/profile.type";
+import type { UserExperience } from "../types/profile.type";
 
 interface ProfileExperiencesProps {
   title?: string;
@@ -40,16 +40,16 @@ export default function ProfileExperiences({
             className="mt-4 grid grid-cols-1 items-center gap-4 py-1 md:grid-cols-[auto_1fr_auto]"
           >
             <div className="text-muted-foreground">
-              <span className="text-[15px] whitespace-nowrap">
+              <span className="whitespace-nowrap text-[15px]">
                 {formatRange(exp)}
               </span>
             </div>
-            <div className="bg-muted relative hidden h-px w-full md:block" />
+            <div className="relative hidden h-px w-full bg-muted md:block" />
             <div className="flex min-w-0 items-center justify-end gap-2">
               {exp.url ? (
                 <Link
                   href={exp.url}
-                  className="inline-flex max-w-full items-center gap-2 text-[15px] font-medium whitespace-nowrap hover:underline"
+                  className="inline-flex max-w-full items-center gap-2 whitespace-nowrap font-medium text-[15px] hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -57,7 +57,7 @@ export default function ProfileExperiences({
                   <LuExternalLink className="size-3.5 shrink-0" />
                 </Link>
               ) : (
-                <span className="truncate text-[15px] font-medium whitespace-nowrap">
+                <span className="truncate whitespace-nowrap font-medium text-[15px]">
                   {exp.title}
                 </span>
               )}

@@ -3,7 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { HiExclamationCircle } from "react-icons/hi";
-import { IconType } from "react-icons/lib";
+import type { IconType } from "react-icons/lib";
 
 import { Button } from "./button";
 
@@ -62,11 +62,11 @@ export function ErrorState({
         </div>
       )}
 
-      <h3 className="text-muted-foreground mt-4 mb-2 text-lg font-medium">
+      <h3 className="mt-4 mb-2 font-medium text-lg text-muted-foreground">
         {title}
       </h3>
 
-      <p className="text-muted-foreground mb-6 max-w-80">{message}</p>
+      <p className="mb-6 max-w-80 text-muted-foreground">{message}</p>
 
       <div className="flex gap-3 sm:flex-row">
         {href && (

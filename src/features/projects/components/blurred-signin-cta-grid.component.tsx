@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/shared/components/ui/button";
 
-import { Project } from "../types/project.type";
+import type { Project } from "../types/project.type";
 import ProjectGrid from "./project-grid.component";
 
 interface BlurredSigninCtaGridProps {
@@ -35,8 +35,8 @@ export function BlurredSigninCtaGrid({
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[80vh] bg-gradient-to-b from-transparent via-white/70 to-white backdrop-blur-sm md:h-[60vh]" />
       <div className="absolute inset-x-0 bottom-30 z-20 px-4">
         <div className="b90g-white/ mx-auto max-w-xl py-5 text-center">
-          <h3 className="text-xl font-medium text-balance">{message}</h3>
-          <p className="text-muted-foreground mx-auto mt-1.5 max-w-xs text-sm">
+          <h3 className="text-balance font-medium text-xl">{message}</h3>
+          <p className="mx-auto mt-1.5 max-w-xs text-muted-foreground text-sm">
             Create an account or sign in to browse{" "}
             <br className="hidden md:inline" /> the full list.
           </p>

@@ -46,8 +46,8 @@ export default function StepIntroductionView() {
     <div className="mx-7 mt-8 max-w-2xl sm:mx-auto">
       <div className="mt-[100px] flex flex-col items-center justify-center">
         <div className="flex flex-col sm:items-start">
-          <h2 className="text-3xl font-medium">Choose your Method</h2>
-          <p className="text-muted-foreground mt-2 text-sm">
+          <h2 className="font-medium text-3xl">Choose your Method</h2>
+          <p className="mt-2 text-muted-foreground text-sm">
             Import a repository from GitLab or GitHub to get started.
           </p>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import ReactMarkdown, { Components } from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
@@ -36,7 +36,7 @@ export default function ContributingComponent({
     const timeoutId = setTimeout(checkHeight, 0);
 
     return () => clearTimeout(timeoutId);
-  }, [contributionFile, isExpanded]);
+  }, [isExpanded]);
 
   return (
     <div className="relative mb-14">

@@ -3,11 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import ProfileEditMain from "../forms/profile-edit-main.form";
@@ -16,7 +14,10 @@ import {
   useProfileLogoUpdate,
   useProfileUpdate,
 } from "../hooks/use-profile.hook";
-import { ProfileSchema, profileSchema } from "../validations/profile.schema";
+import {
+  type ProfileSchema,
+  profileSchema,
+} from "../validations/profile.schema";
 
 export default function ProfileEditView() {
   const { currentUser, isLoading, isError } = useAuth();

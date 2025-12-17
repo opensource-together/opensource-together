@@ -8,7 +8,7 @@
  *  - 2_000_000 -> "2M"
  */
 export function formatNumberShort(value: number | null | undefined): string {
-  if (value == null || isNaN(value)) return "0";
+  if (value == null || Number.isNaN(value)) return "0";
 
   const absValue = Math.abs(value);
   const sign = value < 0 ? "-" : "";

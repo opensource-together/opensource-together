@@ -6,7 +6,7 @@ export function formatTimeAgo(dateInput: string | number | Date): string {
   if (!dateInput) return "N/A";
 
   const date = new Date(dateInput);
-  if (isNaN(date.getTime())) return "Invalid date";
+  if (Number.isNaN(date.getTime())) return "Invalid date";
 
   const now = new Date();
   const diffInSeconds = (date.getTime() - now.getTime()) / 1000;

@@ -1,7 +1,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-import { PageInfo, PaginationConfig } from "../types/pagination.type";
+import type { PageInfo, PaginationConfig } from "../types/pagination.type";
 
 interface UsePaginationProps extends PaginationConfig {
   pagination: {

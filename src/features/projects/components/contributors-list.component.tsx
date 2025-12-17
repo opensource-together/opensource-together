@@ -6,7 +6,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
-import { Contributor } from "../types/project.type";
+import type { Contributor } from "../types/project.type";
 
 interface ContributorsListProps {
   contributors: Contributor[];
@@ -65,7 +65,7 @@ function ContributorCard({ contributor }: { contributor: Contributor }) {
 
   return (
     <Link href={contributorUrl} target="_blank" rel="noreferrer">
-      <div className="border-muted-black-stroke flex items-center gap-4 rounded-[20px] border px-4 py-3.5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
+      <div className="flex items-center gap-4 rounded-[20px] border border-muted-black-stroke px-4 py-3.5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
         <Avatar
           src={contributor.avatar_url}
           name={contributor.login}
@@ -73,7 +73,7 @@ function ContributorCard({ contributor }: { contributor: Contributor }) {
           size="md"
         />
         <div className="flex flex-col gap-0.5 truncate text-nowrap">
-          <p className="text-sm font-medium">{contributor.login}</p>
+          <p className="font-medium text-sm">{contributor.login}</p>
           <p className="text-muted-foreground text-sm">
             {contributor.contributions}{" "}
             {contributor.contributions === 1 ? "Contribution" : "Contributions"}

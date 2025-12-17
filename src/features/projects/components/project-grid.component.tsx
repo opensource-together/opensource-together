@@ -1,7 +1,7 @@
 import ProjectCard from "@/shared/components/shared/ProjectCard";
 
 import { useProjectRepositorySummary } from "../../../shared/hooks/use-git-repo-summary.hook";
-import { Project } from "../types/project.type";
+import type { Project } from "../types/project.type";
 
 interface ProjectGridProps {
   projects: Project[];

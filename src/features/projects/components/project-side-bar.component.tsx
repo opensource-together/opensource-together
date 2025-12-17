@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { HiMiniClock, HiMiniUserGroup, HiStar } from "react-icons/hi2";
 import { LiaBalanceScaleSolid } from "react-icons/lia";
 import { RiGitForkFill } from "react-icons/ri";
-
+import { ContributorsSidebarList } from "@/features/projects/components/contributors-sidebar-list.component";
 import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
 import { StatsList } from "@/shared/components/ui/stats-list";
@@ -13,9 +13,7 @@ import { languagesToTechStacks } from "@/shared/lib/language-icons";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
-import { ContributorsSidebarList } from "@/features/projects/components/contributors-sidebar-list.component";
-
-import { Project } from "../types/project.type";
+import type { Project } from "../types/project.type";
 
 interface ProjectSideBarProps {
   project: Project;
@@ -129,7 +127,7 @@ export default function ProjectSideBar({ project }: ProjectSideBarProps) {
       {repositoryDetails?.license && repositoryDetails?.license !== "Other" && (
         <div className="mb-2 flex flex-col">
           <h2 className="mb-3 text-sm">License</h2>
-          <p className="text-muted-foreground flex items-center gap-1.5 text-sm">
+          <p className="flex items-center gap-1.5 text-muted-foreground text-sm">
             <LiaBalanceScaleSolid className="size-5" />
             {repositoryDetails?.license}
           </p>

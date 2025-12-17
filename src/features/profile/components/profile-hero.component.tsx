@@ -14,7 +14,7 @@ import {
 } from "@/shared/components/ui/tooltip";
 import { useCacheBustingImage } from "@/shared/hooks/use-cache-busting-image.hook";
 
-import { Profile } from "../types/profile.type";
+import type { Profile } from "../types/profile.type";
 
 interface ProfileHeroProps {
   profile: Profile;
@@ -97,18 +97,18 @@ export function ProfileMobileHero({
           </div>
           <div className="min-w-0">
             <div className="flex items-center">
-              <h2 className="max-w-[65vw] truncate text-start text-2xl font-medium">
+              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
                 {name}
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="text-muted-foreground max-w-[65vw] truncate text-sm tracking-tighter">
+            <p className="max-w-[65vw] truncate text-muted-foreground text-sm tracking-tighter">
               {jobTitle}
             </p>
           </div>
         </div>
 
-        <p className="mt-4 mb-8 line-clamp-5 text-sm font-normal break-words">
+        <p className="mt-4 mb-8 line-clamp-5 break-words font-normal text-sm">
           {bio}
         </p>
         {renderActionButton()}
@@ -136,7 +136,7 @@ export default function ProfileHero({
   const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
 
   if (hideHeader) {
-    return <></>;
+    return null;
   }
 
   const renderBetaTesterBadge = () => {
@@ -196,12 +196,12 @@ export default function ProfileHero({
           </div>
           <div className="min-w-0">
             <div className="flex items-center">
-              <h2 className="max-w-[65vw] truncate text-start text-2xl font-medium">
+              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
                 {name}
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="text-muted-foreground truncate text-sm tracking-tighter">
+            <p className="truncate text-muted-foreground text-sm tracking-tighter">
               {jobTitle}
             </p>
           </div>

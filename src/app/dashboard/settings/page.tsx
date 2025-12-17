@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 import SettingsView from "@/features/dashboard/views/settings/settings.view";
 
