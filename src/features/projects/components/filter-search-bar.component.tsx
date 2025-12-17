@@ -223,8 +223,8 @@ export default function FilterSearchBar({
         className="hidden h-14 w-[700px] items-center justify-center md:flex"
         role="search"
       >
-        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-black/3 shadow-md backdrop-blur-lg">
-          <div className="flex h-full w-full items-center rounded-full">
+        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-black/3 shadow-md backdrop-blur-lg hover:rounded-full">
+          <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
             <div className="flex items-center">
               <CustomCombobox
                 options={techStackOptions}
