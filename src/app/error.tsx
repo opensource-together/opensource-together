@@ -8,8 +8,8 @@ interface ErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
-// biome-ignore lint/suspicious/noShadowRestrictedNames: Next.js specific
-export default function Error({ error, reset }: ErrorProps) {
+
+export default function ErrorPage({ error, reset }: ErrorProps) {
   useEffect(() => {
     console.error(error);
   }, [error]);

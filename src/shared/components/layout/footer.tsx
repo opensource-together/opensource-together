@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Separator } from "@/shared/components/ui/separator";
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
 type FooterLink = {
   label: string;
@@ -30,34 +31,34 @@ const footerLinks: {
       id: "resources-oss-guide",
     },
     {
-      label: "OST AI Engine",
-      href: "https://github.com/opensource-together/ost-ai-engine",
+      label: "OST Linker",
+      href: EXTERNAL_LINKS.OST_Linker,
       external: true,
-      id: "developers-ai-engine",
+      id: "developers-ost-linker",
     },
   ],
   company: [
     {
       label: "GitHub",
-      href: "https://github.com/opensource-together",
+      href: EXTERNAL_LINKS.GITHUB_ORG,
       external: true,
       id: "company-github",
     },
     {
       label: "Discord",
-      href: "https://discord.gg/4ZDhm3dQAC",
+      href: EXTERNAL_LINKS.DISCORD,
       external: true,
       id: "company-discord",
     },
     {
       label: "X (Twitter)",
-      href: "https://x.com/OpenSTogether",
+      href: EXTERNAL_LINKS.TWITTER,
       external: true,
       id: "company-x",
     },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/company/opensource-together",
+      href: EXTERNAL_LINKS.LINKEDIN,
       external: true,
       id: "company-linkedin",
     },
