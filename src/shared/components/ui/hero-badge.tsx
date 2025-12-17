@@ -1,7 +1,7 @@
-import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 import Link from "next/link";
 import type React from "react";
 import { HiChevronRight } from "react-icons/hi2";
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
 interface BadgeProps {
   className?: string;
