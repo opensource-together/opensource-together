@@ -57,3 +57,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Build Cloudflare Workers
+        run: pnpm worker:build
