@@ -45,7 +45,7 @@ export function ProfileMobileHero({
       <TooltipRoot>
         <TooltipTrigger asChild>
           <Image
-            src="/early-badge.svg"
+            src="/icons/early-badge.svg"
             alt="Beta Tester"
             width={20}
             height={20}
@@ -145,7 +145,7 @@ export default function ProfileHero({
       <TooltipRoot>
         <TooltipTrigger asChild>
           <Image
-            src="/early-badge.svg"
+            src="/icons/early-badge.svg"
             alt="Beta Tester"
             width={20}
             height={20}
