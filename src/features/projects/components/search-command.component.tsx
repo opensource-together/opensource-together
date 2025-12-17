@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { useInView } from "react-intersection-observer";
-
+import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -15,8 +15,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/shared/components/ui/command";
-
-import useAuth from "@/features/auth/hooks/use-auth.hook";
 
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
 
@@ -122,84 +120,80 @@ export default function SearchCommand() {
             >
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="mb-3 flex h-8 items-center gap-3 px-3">
-                  <div className="bg-muted size-8 animate-pulse rounded-sm" />
+                  <div className="size-8 animate-pulse rounded-sm bg-muted" />
                   <div className="flex-1 space-y-1">
-                    <div className="bg-muted h-3 w-3/4 animate-pulse rounded" />
+                    <div className="h-3 w-3/4 animate-pulse rounded bg-muted" />
                   </div>
                 </div>
               ))}
             </CommandGroup>
+          ) : suggestions.length === 0 ? (
+            <CommandEmpty>No projects found.</CommandEmpty>
           ) : (
-            <>
-              {suggestions.length === 0 ? (
-                <CommandEmpty>No projects found.</CommandEmpty>
-              ) : (
-                <CommandGroup
-                  heading="Suggestions"
-                  className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
+            <CommandGroup
+              heading="Suggestions"
+              className="space-y-2 p-0 [&_[cmdk-group-heading]]:py-1"
+            >
+              {suggestions.map((s) => (
+                <CommandItem
+                  key={s.id}
+                  value={s.name}
+                  onSelect={() => handleSelect(s.href)}
+                  className="mb-3 h-8 px-3 py-0"
                 >
-                  {suggestions.map((s) => (
-                    <CommandItem
-                      key={s.id}
-                      value={s.name}
-                      onSelect={() => handleSelect(s.href)}
-                      className="mb-3 h-8 px-3 py-0"
-                    >
-                      {s.iconSrc ? (
-                        <Avatar
-                          src={s.iconSrc}
-                          name={s.name}
-                          alt={s.name}
-                          size="xs"
-                          shape="sharp"
-                        />
-                      ) : (
-                        <span className="text-muted-foreground">●</span>
-                      )}
+                  {s.iconSrc ? (
+                    <Avatar
+                      src={s.iconSrc}
+                      name={s.name}
+                      alt={s.name}
+                      size="xs"
+                      shape="sharp"
+                    />
+                  ) : (
+                    <span className="text-muted-foreground">●</span>
+                  )}
 
-                      <span className="min-w-0 flex-1 truncate font-medium">
-                        {s.name}
-                      </span>
-                      <span className="text-muted-foreground hidden max-w-[60%] truncate text-xs sm:block">
-                        {s.description}
-                      </span>
-                    </CommandItem>
-                  ))}
-                  {hasNextPage && (isAuthenticated || !reachedFreeCap) && (
-                    <div ref={ref} className="py-2">
-                      {isFetchingNextPage && (
-                        <div className="flex items-center justify-center px-3">
-                          <div className="flex gap-2">
-                            {[...Array(3)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="bg-muted h-2 w-2 animate-pulse rounded-full"
-                                style={{
-                                  animationDelay: `${i * 0.2}s`,
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                  <span className="min-w-0 flex-1 truncate font-medium">
+                    {s.name}
+                  </span>
+                  <span className="hidden max-w-[60%] truncate text-muted-foreground text-xs sm:block">
+                    {s.description}
+                  </span>
+                </CommandItem>
+              ))}
+              {hasNextPage && (isAuthenticated || !reachedFreeCap) && (
+                <div ref={ref} className="py-2">
+                  {isFetchingNextPage && (
+                    <div className="flex items-center justify-center px-3">
+                      <div className="flex gap-2">
+                        {[...Array(3)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="h-2 w-2 animate-pulse rounded-full bg-muted"
+                            style={{
+                              animationDelay: `${i * 0.2}s`,
+                            }}
+                          />
+                        ))}
+                      </div>
                     </div>
                   )}
-                  {!isAuthenticated && reachedFreeCap && (
-                    <CommandItem
-                      onSelect={() => {
-                        router.push("/auth/login");
-                        setOpen(false);
-                      }}
-                      className="mb-3 border-t px-3 py-3"
-                    >
-                      <span className="text-muted-foreground text-xs font-medium">
-                        Sign in to see more projects
-                      </span>
-                    </CommandItem>
-                  )}
-                </CommandGroup>
+                </div>
               )}
-            </>
+              {!isAuthenticated && reachedFreeCap && (
+                <CommandItem
+                  onSelect={() => {
+                    router.push("/auth/login");
+                    setOpen(false);
+                  }}
+                  className="mb-3 border-t px-3 py-3"
+                >
+                  <span className="font-medium text-muted-foreground text-xs">
+                    Sign in to see more projects
+                  </span>
+                </CommandItem>
+              )}
+            </CommandGroup>
           )}
         </CommandList>
       </CommandDialog>

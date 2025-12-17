@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 
 import { Button } from "@/shared/components/ui/button";
 import { Calendar } from "@/shared/components/ui/calendar";
@@ -132,11 +132,11 @@ export default function ExperienceModalForm({
               name="startAt"
               render={({ field }) => {
                 const selectedDate = field.value
-                  ? new Date(field.value + "T00:00:00")
+                  ? new Date(`${field.value}T00:00:00`)
                   : undefined;
                 const endVal = internalForm.getValues("endAt");
                 const endDate = endVal
-                  ? new Date(endVal + "T00:00:00")
+                  ? new Date(`${endVal}T00:00:00`)
                   : undefined;
                 return (
                   <FormItem>
@@ -179,11 +179,11 @@ export default function ExperienceModalForm({
               name="endAt"
               render={({ field }) => {
                 const selectedDate = field.value
-                  ? new Date((field.value as string) + "T00:00:00")
+                  ? new Date(`${field.value as string}T00:00:00`)
                   : undefined;
                 const startVal = internalForm.getValues("startAt");
                 const startDate = startVal
-                  ? new Date(startVal + "T00:00:00")
+                  ? new Date(`${startVal}T00:00:00`)
                   : undefined;
                 const isCurrent = internalForm.watch("endAt") === null;
                 return (

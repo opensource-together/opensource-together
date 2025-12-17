@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import { CategoryType } from "../types/category.type";
+import type { CategoryType } from "../types/category.type";
 
 interface CategoryApiResponse {
   data: CategoryType[];

@@ -3,8 +3,8 @@
 import { CategoryList } from "@/shared/components/ui/category-list";
 import { ExternalLinks } from "@/shared/components/ui/external-link";
 import { TechStackList } from "@/shared/components/ui/tech-stack-list";
-import { CategoryType } from "@/shared/types/category.type";
-import { TechStackType } from "@/shared/types/tech-stack.type";
+import type { CategoryType } from "@/shared/types/category.type";
+import type { TechStackType } from "@/shared/types/tech-stack.type";
 
 interface ProjectTechCategoriesPreviewProps {
   projectTechStacks: TechStackType[];
@@ -28,7 +28,7 @@ export function ProjectTechCategoriesPreview({
   websiteUrl,
 }: ProjectTechCategoriesPreviewProps) {
   return (
-    <div className="bg-accent flex flex-col rounded-2xl p-8">
+    <div className="flex flex-col rounded-2xl bg-accent p-8">
       <div className="mb-4 flex flex-col gap-6">
         <TechStackList
           title="Technical Stack"

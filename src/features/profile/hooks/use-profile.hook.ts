@@ -2,18 +2,18 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
-import { PaginationParams } from "@/shared/types/pagination.type";
+import type { PaginationParams } from "@/shared/types/pagination.type";
 
 import {
-  UserBookmarksQueryParams,
-  UserProjectsQueryParams,
   getUserBookmarks,
   getUserById,
   getUserProjects,
+  type UserBookmarksQueryParams,
+  type UserProjectsQueryParams,
   updateProfile,
   updateProfileLogo,
 } from "../services/profile.service";
-import { ProfileSchema } from "../validations/profile.schema";
+import type { ProfileSchema } from "../validations/profile.schema";
 
 /**
  * Hook to fetch the profile of a user by their ID.

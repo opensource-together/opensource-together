@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  PaginatedProjectsResponse,
-  ProjectQueryParams,
   getMyProjects,
+  type PaginatedProjectsResponse,
+  type ProjectQueryParams,
 } from "../services/my-projects.service";
 
 /**

@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import * as React from "react";
 import { HiCheck, HiChevronDown, HiXMark } from "react-icons/hi2";
-
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -99,7 +99,7 @@ export function Combobox({
             <Badge
               key={option.id}
               variant="outline"
-              className="text-primary flex items-center gap-1 border border-black/5 bg-white pr-1 text-xs font-medium"
+              className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
             >
               {option.name}
               <button
@@ -120,7 +120,7 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="text-primary border-input h-10 w-full min-w-0 justify-start rounded-md bg-white text-start text-sm font-normal"
+            className="h-10 w-full min-w-0 justify-start rounded-md border-input bg-white text-start font-normal text-primary text-sm"
             disabled={disabled}
           >
             <span
@@ -170,10 +170,12 @@ export function Combobox({
                               )}
                             />
                             {option.iconUrl && (
-                              <img
+                              <Image
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"
+                                width={16}
+                                height={16}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
                                 }}
@@ -211,10 +213,12 @@ export function Combobox({
                               )}
                             />
                             {option.iconUrl && (
-                              <img
+                              <Image
                                 src={option.iconUrl}
                                 alt={option.name}
                                 className="size-3.5 flex-shrink-0"
+                                width={16}
+                                height={16}
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
                                 }}
@@ -254,10 +258,12 @@ export function Combobox({
                           )}
                         />
                         {option.iconUrl && (
-                          <img
+                          <Image
                             src={option.iconUrl}
                             alt={option.name}
                             className="size-3.5 flex-shrink-0"
+                            width={16}
+                            height={16}
                             onError={(e) => {
                               e.currentTarget.style.display = "none";
                             }}

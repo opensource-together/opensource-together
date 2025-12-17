@@ -1,7 +1,7 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { provider } from "@/features/projects/stores/project-create.store";
+import type { provider } from "@/features/projects/stores/project-create.store";
 import StepGitConfirmView from "@/features/projects/views/stepper-views/git/step-git-confirm.view";
 
 interface StepConfirmPageProps {

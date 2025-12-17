@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { ProjectFilters } from "../types/project-filters.type";
+import type { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
@@ -17,10 +17,10 @@ interface FilterItemProps {
 function FilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="group flex h-14 w-44 cursor-pointer flex-col rounded-full px-8 py-2.5 transition-all duration-200 hover:rounded-full hover:bg-white">
-      <span className="text-xs font-normal text-black/40 transition-colors duration-200">
+      <span className="font-normal text-black/40 text-xs transition-colors duration-200">
         {label}
       </span>
-      <span className="truncate text-sm font-medium tracking-tight transition-colors duration-200 group-hover:text-black">
+      <span className="truncate font-medium text-sm tracking-tight transition-colors duration-200 group-hover:text-black">
         {value}
       </span>
     </div>
@@ -75,13 +75,12 @@ export default function FilterSearchBar({
     filtersToSortId(initialFilters)
   );
 
-  // Update state when initialFilters change (e.g., from URL)
   useEffect(() => {
-    if (initialFilters) {
-      setSelectedTechStacks(initialFilters.techStacks || []);
-      setSelectedCategories(initialFilters.categories || []);
-      setSelectedSort(filtersToSortId(initialFilters));
-    }
+    if (!initialFilters) return;
+
+    setSelectedTechStacks(initialFilters.techStacks || []);
+    setSelectedCategories(initialFilters.categories || []);
+    setSelectedSort(filtersToSortId(initialFilters));
   }, [initialFilters]);
 
   const [isTechStackOpen, setIsTechStackOpen] = useState(false);
@@ -89,14 +88,15 @@ export default function FilterSearchBar({
 
   const hasSelectedFilters = useMemo(() => {
     return (
-      (initialFilters?.techStacks && initialFilters.techStacks.length > 0) ||
-      (initialFilters?.categories && initialFilters.categories.length > 0)
+      (initialFilters?.techStacks?.length ?? 0) > 0 ||
+      (initialFilters?.categories?.length ?? 0) > 0
     );
   }, [initialFilters]);
 
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack({
     enabled: isTechStackOpen || hasSelectedFilters,
   });
+
   const { categoryOptions, isLoading: categoryLoading } = useCategories({
     enabled: isCategoryOpen || hasSelectedFilters,
   });
@@ -113,33 +113,33 @@ export default function FilterSearchBar({
     setSelectedSort(value);
   };
 
-  const formatSelectedValues = (
-    selectedIds: string[],
-    options: Array<{ id: string; name: string }>,
-    defaultText: string,
-    isLoading: boolean,
-    maxLength: number = 30
-  ): string => {
-    if (selectedIds.length === 0) return defaultText;
+  const formatSelectedValues = useCallback(
+    (
+      selectedIds: string[],
+      options: Array<{ id: string; name: string }>,
+      defaultText: string,
+      isLoading: boolean,
+      maxLength = 30
+    ): string => {
+      if (selectedIds.length === 0) return defaultText;
+      if (isLoading) return "Loading...";
 
-    if (isLoading) {
-      return "Loading...";
-    }
+      const selectedNames = selectedIds
+        .map((id) => options.find((opt) => opt.id === id)?.name)
+        .filter((name): name is string => Boolean(name));
 
-    const selectedNames = selectedIds
-      .map((id) => options.find((opt) => opt.id === id)?.name)
-      .filter((name): name is string => !!name);
+      if (selectedNames.length === 0) return defaultText;
 
-    if (selectedNames.length === 0) return defaultText;
+      const namesText = selectedNames.join(", ");
 
-    const namesText = selectedNames.join(", ");
+      if (namesText.length > maxLength) {
+        return `${namesText.slice(0, maxLength - 3)}...`;
+      }
 
-    if (namesText.length > maxLength) {
-      return namesText.substring(0, maxLength - 3) + "...";
-    }
-
-    return namesText;
-  };
+      return namesText;
+    },
+    []
+  );
 
   const techStacksValue = useMemo(
     () =>
@@ -149,7 +149,12 @@ export default function FilterSearchBar({
         "Technologies",
         techStacksLoading
       ),
-    [selectedTechStacks, techStackOptions, techStacksLoading]
+    [
+      selectedTechStacks,
+      techStackOptions,
+      techStacksLoading,
+      formatSelectedValues,
+    ]
   );
 
   const categoriesValue = useMemo(
@@ -160,7 +165,7 @@ export default function FilterSearchBar({
         "Categories",
         categoryLoading
       ),
-    [selectedCategories, categoryOptions, categoryLoading]
+    [selectedCategories, categoryOptions, categoryLoading, formatSelectedValues]
   );
 
   const sortValue = useMemo(() => {
@@ -170,7 +175,6 @@ export default function FilterSearchBar({
     );
   }, [selectedSort]);
 
-  // Helper function to convert sort option to API params
   const getSortParams = () => {
     switch (selectedSort) {
       case "most_popular":
@@ -189,15 +193,9 @@ export default function FilterSearchBar({
           orderDirection: "asc" as const,
         };
       case "a-z":
-        return {
-          orderBy: "title" as const,
-          orderDirection: "asc" as const,
-        };
+        return { orderBy: "title" as const, orderDirection: "asc" as const };
       case "z-a":
-        return {
-          orderBy: "title" as const,
-          orderDirection: "desc" as const,
-        };
+        return { orderBy: "title" as const, orderDirection: "desc" as const };
       default:
         return {
           orderBy: "createdAt" as const,
@@ -208,7 +206,9 @@ export default function FilterSearchBar({
 
   const handleApply = () => {
     if (!onFilterChange) return;
+
     const sortParams = getSortParams();
+
     onFilterChange({
       techStacks: selectedTechStacks,
       categories: selectedCategories,
@@ -219,68 +219,58 @@ export default function FilterSearchBar({
 
   return (
     <>
-      {/* Desktop */}
       <div
         className="hidden h-14 w-[700px] items-center justify-center md:flex"
         role="search"
       >
-        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-md shadow-black/3 backdrop-blur-lg hover:rounded-full">
-          <div className="flex h-full w-full items-center rounded-full transition-colors duration-200 hover:rounded-full hover:border-black/5 hover:bg-black/5">
+        <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-black/3 shadow-md backdrop-blur-lg">
+          <div className="flex h-full w-full items-center rounded-full">
             <div className="flex items-center">
-              <div className="relative pr-0">
-                <CustomCombobox
-                  options={techStackOptions}
-                  value={selectedTechStacks}
-                  onChange={handleTechStacksChange}
-                  placeholder={
-                    techStacksLoading
-                      ? "Loading technologies..."
-                      : "Add technologies..."
-                  }
-                  searchPlaceholder="Search technologies..."
-                  emptyText="No technologies found."
-                  trigger={
-                    <FilterItem label="Choose" value={techStacksValue} />
-                  }
-                  onOpenChange={setIsTechStackOpen}
-                  isLoading={techStacksLoading}
-                />
-              </div>
+              <CustomCombobox
+                options={techStackOptions}
+                value={selectedTechStacks}
+                onChange={handleTechStacksChange}
+                placeholder={
+                  techStacksLoading
+                    ? "Loading technologies..."
+                    : "Add technologies..."
+                }
+                searchPlaceholder="Search technologies..."
+                emptyText="No technologies found."
+                trigger={<FilterItem label="Choose" value={techStacksValue} />}
+                onOpenChange={setIsTechStackOpen}
+                isLoading={techStacksLoading}
+              />
 
-              <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
+              <div className="z-10 mx-1 h-7 w-px bg-black/10" />
 
-              <div className="relative pr-0">
-                <CustomCombobox
-                  options={categoryOptions}
-                  value={selectedCategories}
-                  onChange={handleCategoriesChange}
-                  placeholder={
-                    categoryLoading
-                      ? "Loading categories..."
-                      : "Add categories..."
-                  }
-                  searchPlaceholder="Search categories..."
-                  emptyText="No categories found."
-                  trigger={
-                    <FilterItem label="Select" value={categoriesValue} />
-                  }
-                  onOpenChange={setIsCategoryOpen}
-                  isLoading={categoryLoading}
-                />
-              </div>
+              <CustomCombobox
+                options={categoryOptions}
+                value={selectedCategories}
+                onChange={handleCategoriesChange}
+                placeholder={
+                  categoryLoading
+                    ? "Loading categories..."
+                    : "Add categories..."
+                }
+                searchPlaceholder="Search categories..."
+                emptyText="No categories found."
+                trigger={<FilterItem label="Select" value={categoriesValue} />}
+                onOpenChange={setIsCategoryOpen}
+                isLoading={categoryLoading}
+              />
 
-              <div className="z-10 mx-1 h-7 w-px self-center bg-black/10" />
+              <div className="z-10 mx-1 h-7 w-px bg-black/10" />
 
-              <div className="relative pr-0">
-                <SortSelect
-                  options={SORT_OPTIONS}
-                  value={selectedSort}
-                  onChange={handleSortChange}
-                  trigger={<FilterItem label="Sort" value={sortValue} />}
-                />
-              </div>
+              <SortSelect
+                options={SORT_OPTIONS}
+                value={selectedSort}
+                onChange={handleSortChange}
+                trigger={<FilterItem label="Sort" value={sortValue} />}
+              />
             </div>
           </div>
+
           <Button
             type="button"
             className="absolute right-2 px-6 py-5"
@@ -292,7 +282,6 @@ export default function FilterSearchBar({
         </div>
       </div>
 
-      {/* Mobile variant */}
       <FilterSearchBarMobile
         onFilterChange={onFilterChange}
         isLoading={isLoading}

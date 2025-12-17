@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useExhaustiveDependencies: needed */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -13,7 +14,7 @@ import {
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { ProjectFilters } from "../types/project-filters.type";
+import type { ProjectFilters } from "../types/project-filters.type";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
 interface FilterItemProps {
@@ -23,9 +24,9 @@ interface FilterItemProps {
 
 function MobileFilterItem({ label, value }: FilterItemProps) {
   return (
-    <div className="group border-muted-black-stroke flex w-full cursor-pointer flex-col rounded-full border px-6 py-3 shadow-xs">
-      <span className="text-xs font-normal text-black/40">{label}</span>
-      <span className="truncate text-sm font-medium tracking-tight">
+    <div className="group flex w-full cursor-pointer flex-col rounded-full border border-muted-black-stroke px-6 py-3 shadow-xs">
+      <span className="font-normal text-black/40 text-xs">{label}</span>
+      <span className="truncate font-medium text-sm tracking-tight">
         {value}
       </span>
     </div>
@@ -109,8 +110,8 @@ export default function FilterSearchBarMobile({
     selectedIds: string[],
     options: Array<{ id: string; name: string }>,
     defaultText: string,
-    isLoading: boolean,
-    maxLength: number = 30
+    _isLoading: boolean,
+    maxLength = 30
   ): string => {
     if (selectedIds.length === 0) return defaultText;
 
@@ -122,7 +123,7 @@ export default function FilterSearchBarMobile({
 
     const namesText = selectedNames.join(", ");
     return namesText.length > maxLength
-      ? namesText.substring(0, maxLength - 3) + "..."
+      ? `${namesText.substring(0, maxLength - 3)}...`
       : namesText;
   };
 
@@ -134,7 +135,12 @@ export default function FilterSearchBarMobile({
         "Technologies",
         techStacksLoading
       ),
-    [selectedTechStacks, techStackOptions, techStacksLoading]
+    [
+      selectedTechStacks,
+      techStackOptions,
+      techStacksLoading,
+      formatSelectedValues,
+    ]
   );
   const categoriesValue = useMemo(
     () =>
@@ -144,7 +150,7 @@ export default function FilterSearchBarMobile({
         "Categories",
         categoryLoading
       ),
-    [selectedCategories, categoryOptions, categoryLoading]
+    [selectedCategories, categoryOptions, categoryLoading, formatSelectedValues]
   );
   const sortValue = useMemo(() => {
     return (

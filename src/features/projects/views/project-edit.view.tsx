@@ -18,8 +18,8 @@ import {
   useUpdateProjectLogo,
 } from "../hooks/use-projects.hook";
 import {
-  UpdateProjectApiData,
-  UpdateProjectData,
+  type UpdateProjectApiData,
+  type UpdateProjectData,
   updateProjectApiSchema,
 } from "../validations/project.schema";
 

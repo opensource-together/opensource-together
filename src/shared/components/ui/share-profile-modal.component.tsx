@@ -57,7 +57,7 @@ function CopyButton({ text }: CopyButtonProps) {
   return (
     <button
       onClick={handleCopyLink}
-      className="bg-accent text-muted-foreground hover:bg-muted hover:text-ost-blue-three shrink-0 rounded p-1.5 transition-colors"
+      className="shrink-0 rounded bg-accent p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-ost-blue-three"
       aria-label={copied ? "Copied!" : "Copy to clipboard"}
       title={copied ? "Copied!" : "Copy to clipboard"}
     >
@@ -191,8 +191,8 @@ export function ShareProfileModal({
           </div>
 
           {/* Link copy section */}
-          <label className="text-sm font-medium">Copy URL</label>
-          <div className="bg-accent text-muted-foreground flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm">
+          <label className="font-medium text-sm">Copy URL</label>
+          <div className="flex items-center justify-between gap-2 rounded-md bg-accent px-3 py-2 text-muted-foreground text-sm">
             <span className="line-clamp-1 flex-1 break-all">{url}</span>
             <CopyButton text={url} />
           </div>

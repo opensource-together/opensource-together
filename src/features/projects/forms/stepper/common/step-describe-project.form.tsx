@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { ProjectDescribePreview } from "@/features/projects/components/stepper/project-describe-preview.component";
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
 import {
   Form,
@@ -18,12 +18,10 @@ import { Input } from "@/shared/components/ui/input";
 import { MultipleImageUpload } from "@/shared/components/ui/multiple-image-upload";
 import { Textarea } from "@/shared/components/ui/textarea";
 
-import { ProjectDescribePreview } from "@/features/projects/components/stepper/project-describe-preview.component copy";
-
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 import {
-  StepDescribeProjectFormData,
+  type StepDescribeProjectFormData,
   stepDescribeProjectSchema,
 } from "../../../validations/project-stepper.schema";
 
@@ -207,7 +205,7 @@ export function StepDescribeProjectForm() {
 
       <div className="hidden w-[55%] lg:block">
         <div className="sticky top-8">
-          <h3 className="mt-7 mb-4 text-lg font-medium">Preview</h3>
+          <h3 className="mt-7 mb-4 font-medium text-lg">Preview</h3>
           <ProjectDescribePreview
             title={watchedValues.title}
             description={watchedValues.description}

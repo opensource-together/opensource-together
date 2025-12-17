@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ComponentType } from "react";
+import type { ComponentType } from "react";
 import { HiMiniLink } from "react-icons/hi2";
 import {
   RiGithubFill,
@@ -71,7 +71,7 @@ export function ExternalLinks({
               aria-label={alt}
               className="min-w-0"
             >
-              <div className="text-muted-foreground hover:text-muted-foreground/80 flex items-center gap-1.5 rounded-full text-sm tracking-tight transition-colors">
+              <div className="flex items-center gap-1.5 rounded-full text-muted-foreground text-sm tracking-tight transition-colors hover:text-muted-foreground/80">
                 <span className="flex min-w-0 items-center gap-1 rounded-full border px-2 py-px">
                   <Icon size={14} />
                   <span className="truncate">

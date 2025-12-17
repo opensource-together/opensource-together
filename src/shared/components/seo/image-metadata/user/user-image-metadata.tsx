@@ -56,8 +56,8 @@ export function UserImageMetadata({
               background: "#ffffff",
               backgroundColor: "#f8fafc",
             }}
-            aria-label={`${name} logo`}
           >
+            {/** biome-ignore lint/performance/noImgElement: required for og image */}
             <img
               src={imageUrl}
               alt={`${name} logo`}

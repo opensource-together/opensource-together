@@ -44,12 +44,7 @@ export function ProjectImageMetadata({
       value: pullRequestsCount,
       icon: VscGitPullRequest,
     },
-  ].filter(
-    (stat) =>
-      typeof stat.value === "number" &&
-      stat.value !== null &&
-      stat.value !== undefined
-  ) as Array<{
+  ].filter((stat) => typeof stat.value === "number" && true && true) as Array<{
     label: string;
     value: number;
     icon: React.ComponentType<{ size?: number; className?: string }>;
@@ -143,8 +138,8 @@ export function ProjectImageMetadata({
               overflow: "hidden",
               marginTop: "52px",
             }}
-            aria-label={`${name} logo`}
           >
+            {/** biome-ignore lint/performance/noImgElement: required for og image */}
             <img
               src={imageUrl}
               alt={`${name} logo`}

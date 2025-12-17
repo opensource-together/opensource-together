@@ -83,7 +83,7 @@ function TabsList({
       ref={listRef as unknown as React.Ref<HTMLDivElement>}
       data-slot="tabs-list"
       className={cn(
-        "border-border relative inline-flex items-center overflow-x-auto border-b",
+        "relative inline-flex items-center overflow-x-auto border-border border-b",
         className
       )}
       {...props}
@@ -91,7 +91,7 @@ function TabsList({
       {props.children}
       {underlineStyle.visible ? (
         <div
-          className="bg-primary absolute bottom-0 z-10 h-0.5 transition-all duration-200"
+          className="absolute bottom-0 z-10 h-0.5 bg-primary transition-all duration-200"
           style={{ left: underlineStyle.left, width: underlineStyle.width }}
         />
       ) : null}
@@ -114,14 +114,14 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "text-muted-foreground data-[state=active]:text-primary data-[state=active]:border-primary focus-visible:ring-ring group mr-2 inline-flex cursor-pointer items-center justify-center gap-1.5 px-2 py-1.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "group mr-2 inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap px-2 py-1.5 font-medium text-muted-foreground text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary data-[state=active]:border-b data-[state=active]:text-primary [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
     >
       <span className="truncate">{children}</span>
       {count !== undefined && count !== null && (
-        <span className="text-muted-foreground group-data-[state=active]:text-primary bg-accent min-w-[18px] rounded-full px-1.5 py-0.5 text-center text-[10px] leading-4 font-medium">
+        <span className="min-w-[18px] rounded-full bg-accent px-1.5 py-0.5 text-center font-medium text-[10px] text-muted-foreground leading-4 group-data-[state=active]:text-primary">
           {count}
         </span>
       )}

@@ -26,7 +26,7 @@ export function SettingsSkeleton() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="border-muted-black-stroke flex items-center justify-between rounded-3xl border p-5 md:max-w-2/3"
+                className="flex items-center justify-between rounded-3xl border border-muted-black-stroke p-5 md:max-w-2/3"
               >
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2">

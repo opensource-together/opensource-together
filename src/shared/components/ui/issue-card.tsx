@@ -2,15 +2,13 @@
 
 import { GoIssueOpened } from "react-icons/go";
 import { LuClock3 } from "react-icons/lu";
-
+import IssueDetailSheet from "@/features/projects/components/issues/issue-detail-sheet.component";
+import type { Issue } from "@/features/projects/types/project.type";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
-
-import IssueDetailSheet from "@/features/projects/components/issues/issue-detail-sheet.component";
-import { Issue } from "@/features/projects/types/project.type";
 
 import { BadgeWithIcon } from "./badge-with-icon";
 
@@ -37,7 +35,7 @@ export default function IssueCard({
     <IssueDetailSheet issue={issue} projectId={projectId}>
       <article
         className={cn(
-          "border-muted-black-stroke rounded-[20px] border px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+          "rounded-[20px] border border-muted-black-stroke px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
           className
         )}
       >
@@ -54,7 +52,7 @@ export default function IssueCard({
                   #{number}
                 </BadgeWithIcon>
               )}
-              <span className="line-clamp-1 text-sm font-medium tracking-tight">
+              <span className="line-clamp-1 font-medium text-sm tracking-tight">
                 {issue.title}
               </span>
             </div>
@@ -90,7 +88,7 @@ export default function IssueCard({
                     </Badge>
                   )}
                   {issue.labels.length >= 2 && (
-                    <span className="text-muted-foreground flex h-5.5 flex-shrink-0 items-center text-xs font-medium whitespace-nowrap">
+                    <span className="flex h-5.5 flex-shrink-0 items-center whitespace-nowrap font-medium text-muted-foreground text-xs">
                       +{issue.labels.length - 1}
                     </span>
                   )}

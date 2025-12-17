@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { HiInformationCircle } from "react-icons/hi2";
-
+import { useOnboarding } from "@/features/auth/hooks/use-onboarding.hook";
 import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
@@ -19,10 +19,8 @@ import { Input } from "@/shared/components/ui/input";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
-import { useOnboarding } from "@/features/auth/hooks/use-onboarding.hook";
-
 import {
-  OnboardingSchema,
+  type OnboardingSchema,
   onboardingSchema,
 } from "../validations/onboarding.schema";
 
@@ -126,7 +124,7 @@ export default function OnboardingForm() {
                       />
                     </FormControl>
                     <FormDescription className="mt-1.5 flex items-start gap-1.5 text-xs">
-                      <HiInformationCircle className="text-muted-foreground mt-0.5 h-3 w-3 shrink-0" />
+                      <HiInformationCircle className="mt-0.5 h-3 w-3 shrink-0 text-muted-foreground" />
                       <span>
                         AI-suggested categories may not be perfectly accurate
                         yet and will improve over time.

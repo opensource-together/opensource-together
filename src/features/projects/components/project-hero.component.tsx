@@ -7,7 +7,7 @@ import { Modal } from "@/shared/components/ui/modal";
 
 import { useCacheBustingImage } from "../../../shared/hooks/use-cache-busting-image.hook";
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
-import { Project } from "../types/project.type";
+import type { Project } from "../types/project.type";
 import { BookmarkButton } from "./bookmark-button.component";
 import { ClaimProjectButton } from "./claim-project-button.component";
 
@@ -39,12 +39,12 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
           size="lg"
           shape="rounded"
         />
-        <h1 className="flex-1 truncate text-start text-xl font-medium">
+        <h1 className="flex-1 truncate text-start font-medium text-xl">
           {title}
         </h1>
       </div>
 
-      <p className="mt-4 mb-8 line-clamp-5 text-sm font-normal break-words">
+      <p className="mt-4 mb-8 line-clamp-5 break-words font-normal text-sm">
         {description}
       </p>
       <div className="flex items-center gap-2">
@@ -128,7 +128,7 @@ export default function ProjectHero({
                 size="xl"
                 shape="rounded"
               />
-              <h1 className="max-w-[70vw] truncate text-start text-2xl font-medium sm:max-w-[45vw] sm:text-2xl">
+              <h1 className="max-w-[70vw] truncate text-start font-medium text-2xl sm:max-w-[45vw] sm:text-2xl">
                 {title}
               </h1>
             </div>
@@ -178,7 +178,7 @@ export default function ProjectHero({
             </div>
           </div>
 
-          <p className="mt-4 line-clamp-6 text-sm break-words">{description}</p>
+          <p className="mt-4 line-clamp-6 break-words text-sm">{description}</p>
         </div>
       )}
     </div>

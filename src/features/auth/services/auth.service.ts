@@ -1,8 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
-
+import type { Profile } from "@/features/profile/types/profile.type";
 import { authClient } from "@/shared/lib/auth-client";
-
-import { Profile } from "@/features/profile/types/profile.type";
 
 export const signInWithProvider = async (provider: string): Promise<void> => {
   try {

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.9/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!**/src/generated"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto",
+    "useEditorconfig": true,
+    "includes": [
+      "**",
+      "!**/build",
+      "!**/coverage",
+      "!**/node_modules",
+      "!**/__generated",
+      "!**/.idea",
+      "!**/.next",
+      "!**/*.env",
+      "!**/*.log",
+      "!**/npm-debug.log*",
+      "!**/pnpm-lock.yaml",
+      "!**/CODE_OF_CONDUCT.md",
+      "!**/CONTRIBUTING.md",
+      "!**/LICENSE.md",
+      "!**/README.md",
+      "!**/SECURITY.md",
+      "!**/SUPPORT.md",
+      "!**/SUPPORT.md"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noLabelWithoutControl": "off",
+        "noSvgWithoutTitle": "off",
+        "useAltText": "off",
+        "useButtonType": "off",
+        "useKeyWithClickEvents": "off",
+        "useSemanticElements": "off",
+        "noStaticElementInteractions": "off"
+      },
+      "complexity": { "noBannedTypes": "off" },
+      "correctness": {
+        "noChildrenProp": "off",
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "warn"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "fix": "safe",
+          "options": {
+            "attributes": ["classList"],
+            "functions": ["clsx", "cva", "cn"]
+          }
+        }
+      },
+      "security": { "noDangerouslySetInnerHtml": "off" },
+      "style": {
+        "noEnum": "error",
+        "noInferrableTypes": "error",
+        "noParameterAssign": "error",
+        "noUnusedTemplateLiteral": "error",
+        "noUselessElse": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useNumberNamespace": "error",
+        "useSelfClosingElements": "off",
+        "useSingleVarDeclarator": "error"
+      },
+      "suspicious": { "noArrayIndexKey": "off", "noAssignInExpressions": "off" }
+    },
+    "domains": { "react": "recommended", "next": "recommended" }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "double",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "css": {
+    "parser": { "tailwindDirectives": true },
+    "formatter": null,
+    "linter": null,
+    "assist": null
+  },
+  "html": {
+    "formatter": {
+      "indentScriptAndStyle": false,
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "assist": {
+    "enabled": null,
+    "actions": { "source": { "organizeImports": "on" } }
+  }
+}

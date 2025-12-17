@@ -1,9 +1,7 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { Suspense } from "react";
-
-import CTAFooter from "@/shared/components/layout/cta-footer";
-
 import ProfileView from "@/features/profile/views/profile.view";
+import CTAFooter from "@/shared/components/layout/cta-footer";
 
 export const metadata: Metadata = {
   title: "My Profile",

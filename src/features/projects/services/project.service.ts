@@ -1,12 +1,12 @@
 import { API_BASE_URL } from "@/config/config";
 
-import {
+import type {
   PaginatedResponse,
   PaginationParams,
 } from "@/shared/types/pagination.type";
 
-import { Project } from "../types/project.type";
-import {
+import type { Project } from "../types/project.type";
+import type {
   ProjectSchema,
   UpdateProjectData,
 } from "../validations/project.schema";

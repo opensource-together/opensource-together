@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { ComboboxOption } from "@/shared/components/ui/combobox";
+import type { ComboboxOption } from "@/shared/components/ui/combobox";
 
 import { fetchCategories } from "../services/category.service";
-import { CategoryType } from "../types/category.type";
+import type { CategoryType } from "../types/category.type";
 
 export interface CategoryOption extends ComboboxOption {}
 

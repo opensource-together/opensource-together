@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 
-import { PaginationMeta } from "../../types/pagination.type";
+import type { PaginationMeta } from "../../types/pagination.type";
 
 interface PaginationInfoProps {
   pagination: PaginationMeta;
@@ -19,7 +19,7 @@ export function PaginationInfo({ pagination, className }: PaginationInfoProps) {
 
   return (
     <div
-      className={cn("text-muted-foreground hidden text-sm md:block", className)}
+      className={cn("hidden text-muted-foreground text-sm md:block", className)}
     >
       Showing {startItem} to {endItem} of {total} results
     </div>

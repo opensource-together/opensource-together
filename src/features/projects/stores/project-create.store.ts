@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
-import { GitUserRepositoryType } from "@/shared/types/git-repository.type";
+import type { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 export type provider = "github" | "gitlab";
 

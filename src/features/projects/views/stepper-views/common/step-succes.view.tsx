@@ -2,11 +2,9 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-import { Modal } from "@/shared/components/ui/modal";
-
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
 import { StepperWrapper } from "@/features/projects/components/stepper/stepper-wrapper.component";
+import { Modal } from "@/shared/components/ui/modal";
 
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
 import {

@@ -5,10 +5,10 @@ import { useState } from "react";
 import { GoArrowUpRight } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
 import { VscIssues } from "react-icons/vsc";
-import ReactMarkdown, { Components } from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
-
+import type { Issue } from "@/features/projects/types/project.type";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -25,8 +25,6 @@ import {
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
-
-import { Issue } from "@/features/projects/types/project.type";
 
 import { useOpenIssueDetail } from "../../hooks/use-open-issue-detail";
 
@@ -61,7 +59,7 @@ function SheetHeaderContent({
               <Badge variant="info" className="py-1 text-sm">
                 <VscIssues />#{number}
               </Badge>
-              <span className="line-clamp-1 text-sm font-medium tracking-tight">
+              <span className="line-clamp-1 font-medium text-sm tracking-tight">
                 {title}
               </span>
             </SheetTitle>
@@ -119,7 +117,7 @@ export default function IssueDetailSheet({
     data: issueDetails,
     isLoading,
     isError,
-  } = useOpenIssueDetail(projectId, parseInt(number || "0"), isOpen);
+  } = useOpenIssueDetail(projectId, Number.parseInt(number || "0", 10), isOpen);
 
   const displayIssue = issueDetails || issue;
 
@@ -171,7 +169,7 @@ export default function IssueDetailSheet({
                 queryKey={[
                   "open-issue-detail",
                   projectId,
-                  parseInt(number || "0"),
+                  Number.parseInt(number || "0", 10),
                 ]}
                 className="mt-28"
               />
@@ -214,7 +212,7 @@ export default function IssueDetailSheet({
                         size="lg"
                       />
                       <div>
-                        <div className="text-sm font-medium">
+                        <div className="font-medium text-sm">
                           {displayIssue.author?.login}
                         </div>
                         <div className="text-muted-foreground text-xs">
@@ -265,7 +263,7 @@ export default function IssueDetailSheet({
                     </Badge>
 
                     {displayIssue.labels.length >= 2 && (
-                      <span className="text-muted-foreground flex h-5.5 flex-shrink-0 items-center text-xs font-medium whitespace-nowrap">
+                      <span className="flex h-5.5 flex-shrink-0 items-center whitespace-nowrap font-medium text-muted-foreground text-xs">
                         +{displayIssue.labels.length - 1}
                       </span>
                     )}

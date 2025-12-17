@@ -1,14 +1,12 @@
 import { API_BASE_URL } from "@/config/config";
-
-import {
+import type { Project } from "@/features/projects/types/project.type";
+import type {
   PaginatedResponse,
   PaginationParams,
 } from "@/shared/types/pagination.type";
 
-import { Project } from "@/features/projects/types/project.type";
-
-import { Profile } from "../types/profile.type";
-import { ProfileSchema } from "../validations/profile.schema";
+import type { Profile } from "../types/profile.type";
+import type { ProfileSchema } from "../validations/profile.schema";
 
 export interface UserProjectsQueryParams extends PaginationParams {
   published?: boolean;

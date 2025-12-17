@@ -1,6 +1,6 @@
 import { API_BASE_URL } from "@/config/config";
 
-import {
+import type {
   PullRequestQueryParams,
   PullRequestsResponse,
 } from "../types/profile.pull-request.type";
