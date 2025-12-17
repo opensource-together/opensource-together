@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  type MutateOptions,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -270,8 +275,11 @@ export function useToggleProjectPublished() {
 
   const toggleProjectPublished = (
     variables: { project: Project; published: boolean },
-    // biome-ignore lint/suspicious/noExplicitAny: necessary
-    options?: any
+    options?: MutateOptions<
+      Project,
+      Error,
+      { project: Project; published: boolean }
+    >
   ) => {
     if (variables.published) {
       const validation = validateProjectForPublishing(variables.project);

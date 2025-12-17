@@ -1,7 +1,6 @@
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: needed */
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
@@ -106,26 +105,29 @@ export default function FilterSearchBarMobile({
     enabled: isCategoryOpen || hasSelectedFilters,
   });
 
-  const formatSelectedValues = (
-    selectedIds: string[],
-    options: Array<{ id: string; name: string }>,
-    defaultText: string,
-    _isLoading: boolean,
-    maxLength = 30
-  ): string => {
-    if (selectedIds.length === 0) return defaultText;
+  const formatSelectedValues = useCallback(
+    (
+      selectedIds: string[],
+      options: Array<{ id: string; name: string }>,
+      defaultText: string,
+      _isLoading: boolean,
+      maxLength = 30
+    ): string => {
+      if (selectedIds.length === 0) return defaultText;
 
-    const selectedNames = selectedIds
-      .map((id) => options.find((opt) => opt.id === id)?.name)
-      .filter((name): name is string => !!name);
+      const selectedNames = selectedIds
+        .map((id) => options.find((opt) => opt.id === id)?.name)
+        .filter((name): name is string => !!name);
 
-    if (selectedNames.length === 0) return defaultText;
+      if (selectedNames.length === 0) return defaultText;
 
-    const namesText = selectedNames.join(", ");
-    return namesText.length > maxLength
-      ? `${namesText.substring(0, maxLength - 3)}...`
-      : namesText;
-  };
+      const namesText = selectedNames.join(", ");
+      return namesText.length > maxLength
+        ? `${namesText.substring(0, maxLength - 3)}...`
+        : namesText;
+    },
+    []
+  );
 
   const techStacksValue = useMemo(
     () =>
