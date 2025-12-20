@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { HiChevronRight } from "react-icons/hi2";
 import { LuCheck, LuCircle } from "react-icons/lu";
-
 import CTAFooter from "@/shared/components/layout/cta-footer";
+import { Button } from "@/shared/components/ui/button";
+import HeroBadge from "@/shared/components/ui/hero-badge";
 
 export const metadata: Metadata = {
-  title: "Guide",
+  title: "Learn",
   description:
     "Understand the fundamentals, prepare your project, and release it publicly with confidence.",
-  alternates: { canonical: "/oss-guide" },
+  alternates: { canonical: "/learn" },
 };
 
-export default function GuidePage() {
+export default function LearnPage() {
   return (
     <main className="mx-auto w-full">
       {/* Hero Section */}
@@ -26,27 +28,31 @@ export default function GuidePage() {
           fetchPriority="high"
           quality={85}
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 95vw, (max-width: 1024px) 100vw, 1441px"
-          className="absolute bottom-10 left-1/2 z-[-1] h-auto w-[100%] -translate-x-1/2 object-contain sm:bottom-0 sm:w-[95%] md:bottom-6 md:w-[100%] lg:bottom-3 lg:w-[105%]"
+          className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-[100%] -translate-x-1/2 object-contain md:block lg:bottom-3 lg:w-[105%]"
         />
 
-        <div className="relative z-10 mx-auto mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:min-h-[320px] lg:min-h-[400px]">
+        <div className="relative z-10 mx-auto mt-12 flex w-full max-w-[1441px] flex-col items-center justify-center">
+          <HeroBadge className="mb-3" />
           <div className="mx-6">
             <h1
-              className="mt-3 text-center text-3xl leading-tight md:text-5xl"
+              className="mt-3 text-center text-3xl leading-none md:text-5xl"
               style={{ fontFamily: "Aspekta", fontWeight: 500 }}
             >
-              Getting Started with <br />
+              Learn and Practice <br />
               Open Source
             </h1>
-            <p className="mt-5 max-w-[650px] text-center text-sm md:text-base">
-              Your trusted partner for taking your project from{" "}
-              <strong>closed</strong> to <strong>open</strong>.
+            <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
+              Learn about open source, prepare your project, and release it
+              publicly with confidence.
             </p>
-
-            <p className="mt-3 max-w-[650px] text-center text-muted-foreground text-xs md:text-sm">
-              This guide will help you understand the fundamentals, prepare your
-              project, and release it publicly with confidence.
-            </p>
+            <div className="mt-8 flex justify-center gap-4">
+              <Button variant="default" size="lg">
+                Start Learning <HiChevronRight className="size-4" />
+              </Button>
+              <Button variant="secondary" size="lg">
+                Start Hands-On
+              </Button>
+            </div>
           </div>
         </div>
       </div>

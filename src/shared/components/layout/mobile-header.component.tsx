@@ -42,7 +42,7 @@ const DEFAULT_LINKS: MobileHeaderProps["links"] = [
     icon: HiMiniSquare2Stack,
     href: "/dashboard/my-projects",
   },
-  { label: "Guide", icon: HiBookOpen, href: "/oss-guide" },
+  { label: "Learn", icon: HiBookOpen, href: "/learn" },
 ];
 
 export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {

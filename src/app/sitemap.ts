@@ -66,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${FRONTEND_URL}/oss-guide`,
+      url: `${FRONTEND_URL}/learn`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,

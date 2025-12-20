@@ -26,9 +26,9 @@ const footerLinks: {
   ],
   resources: [
     {
-      label: "OSS Guide",
-      href: "/oss-guide",
-      id: "resources-oss-guide",
+      label: "Learn",
+      href: "/learn",
+      id: "resources-learn",
     },
     {
       label: "OST Linker",
