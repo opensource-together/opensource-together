@@ -306,3 +306,94 @@ export const readmeFullMarkdownComponents = {
     <td className="border border-border px-3 py-2 text-sm">{children}</td>
   ),
 };
+
+function generateId(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+export const learnMarkdownComponents = {
+  h1: ({ children }: MarkdownElementProps) => (
+    <h1 className="mb-6 font-medium text-lg">{children}</h1>
+  ),
+  h2: ({ children }: MarkdownElementProps) => {
+    const text = String(children);
+    const id = generateId(text);
+    return (
+      <h2 id={id} className="mt-8 mb-4 scroll-mt-20 font-medium">
+        {children}
+      </h2>
+    );
+  },
+  h3: ({ children }: MarkdownElementProps) => {
+    const text = String(children);
+    const id = generateId(text);
+    return (
+      <h3 id={id} className="mt-6 mb-3 scroll-mt-20 font-medium">
+        {children}
+      </h3>
+    );
+  },
+  p: ({ children }: MarkdownElementProps) => (
+    <p className="mb-4 text-sm leading-relaxed">{children}</p>
+  ),
+  ul: ({ children }: MarkdownElementProps) => (
+    <ul className="mb-4 list-disc space-y-2 pl-6">{children}</ul>
+  ),
+  ol: ({ children }: MarkdownElementProps) => (
+    <ol className="mb-4 list-decimal space-y-2 pl-6">{children}</ol>
+  ),
+  li: ({ children }: MarkdownElementProps) => (
+    <li className="relative flex gap-3 pl-6 leading-7">
+      <span className="absolute top-2.5 left-0 h-1.5 w-1.5 shrink-0 rounded-full bg-ost-blue-three" />
+      <span className="flex-1 text-sm">{children}</span>
+    </li>
+  ),
+  code: CodeBlock,
+  pre: ({ children }: MarkdownElementProps) => <>{children}</>,
+  blockquote: ({ children }: MarkdownElementProps) => (
+    <blockquote className="my-4 border-border border-l-4 pl-4 text-muted-foreground italic">
+      {children}
+    </blockquote>
+  ),
+  strong: ({ children }: MarkdownElementProps) => (
+    <strong className="font-medium">{children}</strong>
+  ),
+  a: ({ children, href }: LinkProps) => (
+    <a
+      href={href}
+      className="text-ost-blue-three underline hover:text-ost-blue-four"
+      target={href?.startsWith("http") ? "_blank" : undefined}
+      rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+    >
+      {children}
+    </a>
+  ),
+  img: ({ src, alt, width, height }: ImageProps) => (
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className="my-6 inline-block h-auto w-full max-w-full rounded-lg border border-border"
+    />
+  ),
+  table: ({ children }: MarkdownElementProps) => (
+    <div className="my-6 overflow-x-auto">
+      <table className="min-w-full border-collapse border border-border">
+        {children}
+      </table>
+    </div>
+  ),
+  th: ({ children }: MarkdownElementProps) => (
+    <th className="border border-border bg-accent px-4 py-3 text-left font-medium text-accent-foreground">
+      {children}
+    </th>
+  ),
+  td: ({ children }: MarkdownElementProps) => (
+    <td className="border border-border px-4 py-3">{children}</td>
+  ),
+};

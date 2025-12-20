@@ -6,6 +6,14 @@ import { HiChevronRight } from "react-icons/hi2";
 
 import { useProfile } from "@/features/profile/hooks/use-profile.hook";
 import { useProject } from "@/features/projects/hooks/use-projects.hook";
+import {
+  type Chapter as HandsOnChapter,
+  handsOnChapters,
+} from "../../../../content/hands-on/hands-on-chapters";
+import {
+  type Chapter as LearnChapter,
+  learnChapters,
+} from "../../../../content/learn/learn-chapters";
 
 export default function HeaderBreadcrumb() {
   const pathname = usePathname();
@@ -48,6 +56,25 @@ export default function HeaderBreadcrumb() {
   const getBreadcrumbItems = () => {
     if (routeConfig[pathname as keyof typeof routeConfig]) {
       return routeConfig[pathname as keyof typeof routeConfig]();
+    }
+
+    // Handle learn chapter pages
+    if (pathname.startsWith("/learn/") && segments.length === 2) {
+      const slug = segments[1];
+      const learnChapter = learnChapters.find(
+        (ch: LearnChapter) => ch.slug === slug
+      );
+      const handsOnChapter = handsOnChapters.find(
+        (ch: HandsOnChapter) => ch.slug === slug
+      );
+      const chapter = learnChapter || handsOnChapter;
+
+      if (chapter) {
+        return [
+          { label: "Learn", href: "/learn" },
+          { label: chapter.title, href: pathname },
+        ];
+      }
     }
 
     if (pathname.startsWith("/profile/") && userId && userId !== "me") {
