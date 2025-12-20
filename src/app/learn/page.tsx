@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { HiChevronRight } from "react-icons/hi2";
-import { LuCheck, LuCircle } from "react-icons/lu";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { Button } from "@/shared/components/ui/button";
 import HeroBadge from "@/shared/components/ui/hero-badge";
+import { handsOnChapters } from "../../../content/hands-on/hands-on-chapters";
+import { learnChapters } from "../../../content/learn/learn-chapters";
 
 export const metadata: Metadata = {
   title: "Learn",
@@ -17,7 +18,6 @@ export const metadata: Metadata = {
 export default function LearnPage() {
   return (
     <main className="mx-auto w-full">
-      {/* Hero Section */}
       <div className="relative mx-auto w-full">
         <Image
           src="/illustrations/traveler.png"
@@ -46,368 +46,84 @@ export default function LearnPage() {
               publicly with confidence.
             </p>
             <div className="mt-8 flex justify-center gap-4">
-              <Button variant="default" size="lg">
-                Start Learning <HiChevronRight className="size-4" />
-              </Button>
-              <Button variant="secondary" size="lg">
-                Start Hands-On
-              </Button>
+              <Link
+                href={`/learn/${learnChapters[0]?.slug || "getting-started"}`}
+              >
+                <Button variant="default" size="lg">
+                  Start Learning <HiChevronRight className="size-4" />
+                </Button>
+              </Link>
+              <Link
+                href={`/learn/${handsOnChapters[0]?.slug || "choose-right-license"}`}
+              >
+                <Button variant="secondary" size="lg">
+                  Start Hands-On
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="mx-auto max-w-4xl px-6 pb-28">
-        {/* Why Go Open Source */}
-        <section className="my-16">
-          <div className="mb-6 flex items-center gap-3">
-            <h2 className="font-medium text-2xl tracking-tight">
-              Why Go Open Source?
-            </h2>
-          </div>
-          <p className="mb-6 text-muted-foreground">
-            Open source is more than code — it's a mindset. When you make your
-            project open, you:
-          </p>
-          <div className="space-y-3">
-            {[
-              "Encourage transparency and collaboration",
-              "Attract contributors and grow a community",
-              "Build credibility for your work or product",
-              "Create opportunities for learning and visibility",
-            ].map((benefit) => (
-              <div key={benefit} className="flex items-start gap-3">
-                <LuCheck className="mt-0.5 h-5 w-5 shrink-0 text-ost-blue-three" />
-                <p className="text-sm leading-relaxed">{benefit}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Your Open Source Experience */}
-        <section className="mb-16">
-          <h2 className="mb-10 text-center font-medium text-2xl tracking-tight">
-            Your Open Source Experience
-          </h2>
-
-          <div className="space-y-10 md:space-y-20">
-            {/* Step 1 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 1
-                </span>
-                <h3 className="font-medium text-xl">Assess Readiness</h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                Before going public, review your repository and make sure it's
-                ready to be shared.
+      {/* Learn and Practice Cards */}
+      <div className="mx-auto my-20 w-full max-w-5xl px-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Learn Card */}
+          <div className="relative overflow-hidden rounded-[20px] border border-muted-black-stroke p-6">
+            <div className="flex flex-col gap-4">
+              <h2 className="font-medium text-xl">Learn About Open Source</h2>
+              <p className="text-muted-foreground text-sm">
+                Understand the fundamentals of open source, best practices, and
+                how to contribute effectively to projects.
               </p>
-              <h4 className="mb-3 font-medium">Quick checklist</h4>
-              <ul className="space-y-2">
-                {[
-                  "Your code is clean and free of sensitive data (API keys, credentials, etc.)",
-                  "You've removed all private or company-specific information",
-                  "The documentation is understandable by someone outside your team",
-                  "The project builds and runs without internal dependencies",
-                  "You've discussed ownership and licensing with your team",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <LuCircle className="mt-1 h-4 w-4 shrink-0 text-ost-blue-three" />
-                    <span className="text-sm">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 rounded-lg bg-accent p-3 text-sm">
-                <strong>Tip:</strong> A "clean repo" builds trust. Review your
-                commit history and configuration files before opening the
-                project.
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 2
-                </span>
-                <h3 className="font-medium text-xl">
-                  Choose the Right License
-                </h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                A license defines how others can use, modify, and distribute
-                your code. Without one, your project is not legally open source.
-              </p>
-              <h4 className="mb-3 font-medium">Popular choices</h4>
-              <div className="space-y-3">
-                <div>
-                  <h5 className="font-medium">MIT</h5>
-                  <p className="text-muted-foreground text-sm">
-                    Simple and permissive. Ideal for personal and startup
-                    projects.
-                  </p>
-                </div>
-                <div>
-                  <h5 className="font-medium">Apache 2.0</h5>
-                  <p className="text-muted-foreground text-sm">
-                    Adds patent protection. Common for corporate or large-scale
-                    use.
-                  </p>
-                </div>
-                <div>
-                  <h5 className="font-medium">GPLv3</h5>
-                  <p className="text-muted-foreground text-sm">
-                    Requires derivatives to remain open. Used for
-                    community-driven tools.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 text-muted-foreground text-sm">
-                <strong> Resource:</strong>{" "}
-                <Link
-                  href="https://choosealicense.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-ost-blue-three underline"
-                >
-                  choosealicense.com
-                </Link>
-              </div>
-              <p className="mt-2 text-muted-foreground text-sm">
-                Once selected, create a file named{" "}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                  LICENSE
-                </code>{" "}
-                at the root of your repository.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 3
-                </span>
-                <h3 className="font-medium text-xl">Document Everything</h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                Good documentation is the heart of a healthy open-source
-                project. It lowers the entry barrier for newcomers and
-                encourages contributions.
-              </p>
-              <h4 className="mb-3 font-medium">Essential files to include</h4>
-              <div className="space-y-3">
-                {[
-                  {
-                    file: "README.md",
-                    purpose:
-                      "The face of your project. Explains what it is, how to use it, and why it matters.",
-                  },
-                  {
-                    file: "CONTRIBUTING.md",
-                    purpose:
-                      "Guides people on how to propose changes or new features.",
-                  },
-                  {
-                    file: "CODE_OF_CONDUCT.md",
-                    purpose: "Defines acceptable behavior in your community.",
-                  },
-                  {
-                    file: "SECURITY.md",
-                    purpose:
-                      "Explains how to report vulnerabilities responsibly.",
-                  },
-                ].map((doc) => (
-                  <div key={doc.file}>
-                    <code className="font-medium text-sm">{doc.file}</code>
-                    <p className="mt-1 text-muted-foreground text-sm">
-                      {doc.purpose}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-muted-foreground text-sm">
-                Optional but recommended: add issue and pull request templates
-                in{" "}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                  .github/
-                </code>
-                .
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 4
-                </span>
-                <h3 className="font-medium text-xl">
-                  Structure Your Repository
-                </h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                A clear structure helps others explore and contribute
-                confidently.
-              </p>
-              <h4 className="mb-3 font-medium">Example layout</h4>
-              <pre className="overflow-x-auto rounded-lg border border-muted-black-stroke bg-accent p-4 text-xs">
-                <code>{`my-project/
-├── src/
-├── tests/
-├── docs/
-├── README.md
-├── LICENSE
-├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-└── SECURITY.md`}</code>
-              </pre>
-              <p className="mt-4 text-muted-foreground text-sm">
-                Keep it simple. The goal is clarity — not complexity.
-              </p>
-            </div>
-
-            {/* Step 5 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 5
-                </span>
-                <h3 className="font-medium text-xl">Build for Collaboration</h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                Once your project is public, you're not just sharing code —
-                you're inviting people to join your journey.
-              </p>
-              <h4 className="mb-3 font-medium">Best practices</h4>
-              <ul className="space-y-2">
-                {[
-                  "Use Issues and Pull Requests on GitHub to manage contributions",
-                  "Label beginner-friendly tasks with tags like 'good first issue'",
-                  "Automate checks (linting, tests) to maintain quality",
-                  "Be kind and responsive — community health starts with communication",
-                ].map((practice) => (
-                  <li key={practice} className="flex items-start gap-3">
-                    <LuCircle className="mt-1 h-4 w-4 shrink-0 text-ost-blue-three" />
-                    <span className="text-sm">{practice}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 rounded-lg bg-accent p-3 text-muted-foreground text-sm italic">
-                "Open source is not about perfection. It's about progress
-                through collaboration."
-              </div>
-            </div>
-
-            {/* Step 6 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 6
-                </span>
-                <h3 className="font-medium text-xl">
-                  Manage Security & Maintenance
-                </h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                Opening your code also means maintaining it responsibly.
-              </p>
-              <h4 className="mb-3 font-medium">Recommendations</h4>
-              <ul className="space-y-2">
-                {[
-                  "Add a SECURITY.md file with a private contact for disclosures",
-                  "Regularly review dependencies for vulnerabilities",
-                  "Automate tests and CI/CD if possible",
-                  "Communicate updates clearly through releases or changelogs",
-                ].map((rec) => (
-                  <li key={rec} className="flex items-start gap-3">
-                    <LuCircle className="mt-1 h-4 w-4 shrink-0 text-ost-blue-three" />
-                    <span className="text-sm">{rec}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 rounded-lg bg-accent p-3 text-sm">
-                <strong> </strong>Responsible open source means balancing
-                transparency with safety.
-              </div>
-            </div>
-
-            {/* Step 7 */}
-            <div>
-              <div className="mb-4">
-                <span className="mb-1 block font-medium text-ost-blue-three text-sm">
-                  Step 7
-                </span>
-                <h3 className="font-medium text-xl">Share and Grow</h3>
-              </div>
-              <p className="mb-4 text-muted-foreground">
-                Your open-source journey doesn't end with the release — it
-                starts there.
-              </p>
-              <ul className="space-y-2">
-                {[
-                  "Announce your project on social media and developer platforms",
-                  "Tag your repo with relevant topics (e.g., 'open-source', 'nextjs', 'community')",
-                  "Engage with early contributors — they are your first advocates",
-                  "Consider joining the OST Verified Program for visibility and recognition",
-                ].map((tip) => (
-                  <li key={tip} className="flex items-start gap-3">
-                    <LuCircle className="mt-1 h-4 w-4 shrink-0 text-ost-blue-three" />
-                    <span className="text-sm">{tip}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Additional Resources */}
-        <section className="mb-16">
-          <h2 className="mb-6 font-medium text-2xl tracking-tight">
-            Additional Resources
-          </h2>
-          <div className="space-y-3">
-            {[
-              {
-                topic: "Official Open Source Guides",
-                link: "https://opensource.guide",
-              },
-              {
-                topic: "Community Health Files",
-                link: "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions",
-              },
-              {
-                topic: "Choosing a License",
-                link: "https://choosealicense.com",
-              },
-              {
-                topic: "Accessibility Checklist",
-                link: "https://www.a11yproject.com/checklist/",
-              },
-              {
-                topic: "Contributor Covenant",
-                link: "https://www.contributor-covenant.org/",
-              },
-            ].map((resource) => (
+              <Image
+                src="/illustrations/lost-man-404.png"
+                alt="Learn"
+                width={500}
+                height={500}
+                className="h-auto w-full"
+              />
               <Link
-                key={resource.link}
-                href={resource.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block rounded-2xl border border-muted-black-stroke p-4 transition-shadow hover:shadow-xs"
+                href={`/learn/${learnChapters[0]?.slug || "getting-started"}`}
               >
-                <p className="font-medium">{resource.topic}</p>
-                <p className="mt-1 truncate text-muted-foreground text-sm">
-                  {resource.link}
-                </p>
+                <Button className="w-full">
+                  Start Learning
+                  <HiChevronRight />
+                </Button>
               </Link>
-            ))}
+              <Button variant="ghost">Browse Chapters</Button>
+            </div>
           </div>
-        </section>
+
+          {/* Practice Card */}
+          <div className="relative overflow-hidden rounded-[20px] border border-muted-black-stroke p-6">
+            <div className="flex flex-col gap-4">
+              <h2 className="font-medium text-xl">Get Hands-On Experience</h2>
+              <p className="text-muted-foreground text-sm">
+                Get hands-on experience by working on real open source projects,
+                contributing code, and building your portfolio.
+              </p>
+              <Image
+                src="/illustrations/lost-man-404.png"
+                alt="Practice"
+                width={500}
+                height={500}
+                className="h-auto w-full"
+              />
+              <Link
+                href={`/learn/${handsOnChapters[0]?.slug || "choose-right-license"}`}
+              >
+                <Button variant="default" className="w-full">
+                  Get Started
+                  <HiChevronRight />
+                </Button>
+              </Link>
+              <Button variant="ghost">Browse Chapters</Button>
+            </div>
+          </div>
+        </div>
       </div>
-      {/* CTA OST */}
+
       <CTAFooter
         imageIllustration="/illustrations/winged-angel.png"
         imageIllustrationMobile="/illustrations/winged-angel-mobile.png"
