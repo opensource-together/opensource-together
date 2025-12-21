@@ -8,17 +8,17 @@ export interface Chapter {
 export const learnChapters: Chapter[] = [
   {
     slug: "getting-started",
-    title: "Getting started with Open Source",
+    title: "Chapter 1: Getting started with Open Source",
     order: 1,
   },
   {
     slug: "oss-as-a-system",
-    title: "Open Source as a System",
+    title: "Chapter 2: Open Source as a System",
     order: 2,
   },
   {
     slug: "exploring-oss-ecosystem",
-    title: "Exploring the Open Source Ecosystem",
+    title: "Chapter 3: Exploring the Open Source Ecosystem",
     order: 3,
   },
 ];
@@ -26,17 +26,17 @@ export const learnChapters: Chapter[] = [
 export const handsOnChapters: Chapter[] = [
   {
     slug: "finding-first-oss-project",
-    title: "Finding your First Open Source Project",
+    title: "Chapter 1: Finding your First Open Source Project",
     order: 1,
   },
   {
     slug: "understanding-oss-repository",
-    title: "Understanding an Open Source Repository",
+    title: "Chapter 2: Understanding an Open Source Repository",
     order: 2,
   },
   {
     slug: "reading-and-understanding-issues",
-    title: "Reading and Understanding Issues",
+    title: "Chapter 3: Reading and Understanding Issues",
     order: 3,
   },
 ];

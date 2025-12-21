@@ -4,6 +4,7 @@ import Link from "next/link";
 import { HiChevronRight } from "react-icons/hi2";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { Button } from "@/shared/components/ui/button";
+import { ChapterProgressCard } from "@/shared/components/ui/chapter-progress-card";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 import {
   getHandsOnChapters,
@@ -71,58 +72,22 @@ export default function LearnPage() {
       <div className="mx-auto my-20 w-full max-w-5xl px-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Learn Card */}
-          <div className="relative overflow-hidden rounded-[20px] border border-muted-black-stroke p-6">
-            <div className="flex flex-col gap-4">
-              <h2 className="font-medium text-xl">Learn About Open Source</h2>
-              <p className="text-muted-foreground text-sm">
-                Understand the fundamentals of open source, best practices, and
-                how to contribute effectively to projects.
-              </p>
-              <Image
-                src="/illustrations/lost-man-404.png"
-                alt="Learn"
-                width={500}
-                height={500}
-                className="h-auto w-full"
-              />
-              <Link
-                href={`/learn/${getLearnChapters()[0]?.slug || "getting-started"}`}
-              >
-                <Button className="w-full">
-                  Start Learning
-                  <HiChevronRight />
-                </Button>
-              </Link>
-              <Button variant="ghost">Browse Chapters</Button>
-            </div>
-          </div>
+          <ChapterProgressCard
+            title="Learn About Open Source"
+            description="Understand the fundamentals of open source, best practices, and how to contribute effectively to projects."
+            chapters={getLearnChapters()}
+            firstChapterSlug={getLearnChapters()[0]?.slug || "getting-started"}
+          />
 
           {/* Practice Card */}
-          <div className="relative overflow-hidden rounded-[20px] border border-muted-black-stroke p-6">
-            <div className="flex flex-col gap-4">
-              <h2 className="font-medium text-xl">Get Hands-On Experience</h2>
-              <p className="text-muted-foreground text-sm">
-                Get hands-on experience by working on real open source projects,
-                contributing code, and building your portfolio.
-              </p>
-              <Image
-                src="/illustrations/lost-man-404.png"
-                alt="Practice"
-                width={500}
-                height={500}
-                className="h-auto w-full"
-              />
-              <Link
-                href={`/learn/${getHandsOnChapters()[0]?.slug || "choose-right-license"}`}
-              >
-                <Button variant="default" className="w-full">
-                  Get Started
-                  <HiChevronRight />
-                </Button>
-              </Link>
-              <Button variant="ghost">Browse Chapters</Button>
-            </div>
-          </div>
+          <ChapterProgressCard
+            title="Get Hands-On Experience"
+            description="Get hands-on experience by working on real open source projects, contributing code, and building your portfolio."
+            chapters={getHandsOnChapters()}
+            firstChapterSlug={
+              getHandsOnChapters()[0]?.slug || "finding-first-oss-project"
+            }
+          />
         </div>
       </div>
 

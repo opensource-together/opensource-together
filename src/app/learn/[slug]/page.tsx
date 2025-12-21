@@ -3,7 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { HiChevronLeft } from "react-icons/hi2";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import { TableOfContents } from "@/shared/components/ui/table-of-contents";
 import {
@@ -11,6 +11,7 @@ import {
   getHandsOnChapters,
   getLearnChapters,
 } from "../../../../content/chapters";
+import { NextChapterButton } from "./next-chapter-button";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -146,7 +147,7 @@ export default async function ChapterPage({ params }: PageProps) {
   const pageTitleId = pageTitle;
 
   return (
-    <div className="mx-auto flex w-full gap-8 px-6 py-8 md:px-10">
+    <div className="mx-auto flex w-full gap-8 px-6 pt-8 pb-28 md:px-10">
       {/* Sidebar */}
       <aside className="hidden w-64 shrink-0 lg:block">
         <TableOfContents content={content} chapterTitle={pageTitle} />
@@ -168,8 +169,15 @@ export default async function ChapterPage({ params }: PageProps) {
             <MarkdownRenderer content={content} />
           </div>
 
+          <div className="mt-12 flex justify-center border-border border-t pt-8">
+            <NextChapterButton
+              currentChapter={chapter}
+              nextChapter={nextChapter}
+            />
+          </div>
+
           {/* Navigation */}
-          <div className="mt-12 grid grid-cols-1 gap-4 border-border border-t pt-8 md:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             {prevChapter ? (
               <Link
                 href={`/learn/${prevChapter.slug}`}
@@ -180,28 +188,13 @@ export default async function ChapterPage({ params }: PageProps) {
                   <span className="text-muted-foreground text-xs">
                     Previous
                   </span>
-                  <span className="truncate font-medium">
+                  <span className="truncate font-medium text-sm">
                     {prevChapter.title}
                   </span>
                 </div>
               </Link>
             ) : (
               <div />
-            )}
-
-            {nextChapter && (
-              <Link
-                href={`/learn/${nextChapter.slug}`}
-                className="group flex items-center gap-4 p-4 transition-all hover:text-ost-blue-three"
-              >
-                <div className="flex flex-col text-right">
-                  <span className="text-muted-foreground text-xs">Next</span>
-                  <span className="truncate font-medium">
-                    {nextChapter.title}
-                  </span>
-                </div>
-                <HiChevronRight className="h-4 w-4" />
-              </Link>
             )}
           </div>
         </article>
