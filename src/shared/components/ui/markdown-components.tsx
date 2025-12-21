@@ -383,7 +383,7 @@ export const learnMarkdownComponents = {
   ),
   table: ({ children }: MarkdownElementProps) => (
     <div className="my-6 overflow-x-auto">
-      <table className="min-w-full border-collapse border border-border">
+      <table className="min-w-full border-collapse border border-border text-sm">
         {children}
       </table>
     </div>

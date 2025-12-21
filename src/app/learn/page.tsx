@@ -5,8 +5,10 @@ import { HiChevronRight } from "react-icons/hi2";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import { Button } from "@/shared/components/ui/button";
 import HeroBadge from "@/shared/components/ui/hero-badge";
-import { handsOnChapters } from "../../../content/hands-on/hands-on-chapters";
-import { learnChapters } from "../../../content/learn/learn-chapters";
+import {
+  getHandsOnChapters,
+  getLearnChapters,
+} from "../../../content/chapters";
 
 export const metadata: Metadata = {
   title: "Learn",
@@ -47,14 +49,14 @@ export default function LearnPage() {
             </p>
             <div className="mt-8 flex justify-center gap-4">
               <Link
-                href={`/learn/${learnChapters[0]?.slug || "getting-started"}`}
+                href={`/learn/${getLearnChapters()[0]?.slug || "getting-started"}`}
               >
                 <Button variant="default" size="lg">
                   Start Learning <HiChevronRight className="size-4" />
                 </Button>
               </Link>
               <Link
-                href={`/learn/${handsOnChapters[0]?.slug || "choose-right-license"}`}
+                href={`/learn/${getHandsOnChapters()[0]?.slug || "choose-right-license"}`}
               >
                 <Button variant="secondary" size="lg">
                   Start Hands-On
@@ -84,7 +86,7 @@ export default function LearnPage() {
                 className="h-auto w-full"
               />
               <Link
-                href={`/learn/${learnChapters[0]?.slug || "getting-started"}`}
+                href={`/learn/${getLearnChapters()[0]?.slug || "getting-started"}`}
               >
                 <Button className="w-full">
                   Start Learning
@@ -111,7 +113,7 @@ export default function LearnPage() {
                 className="h-auto w-full"
               />
               <Link
-                href={`/learn/${handsOnChapters[0]?.slug || "choose-right-license"}`}
+                href={`/learn/${getHandsOnChapters()[0]?.slug || "choose-right-license"}`}
               >
                 <Button variant="default" className="w-full">
                   Get Started

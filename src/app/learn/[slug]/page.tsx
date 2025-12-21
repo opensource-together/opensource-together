@@ -6,20 +6,29 @@ import { notFound } from "next/navigation";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import { TableOfContents } from "@/shared/components/ui/table-of-contents";
-import { handsOnChapters } from "../../../../content/hands-on/hands-on-chapters";
 import {
   type Chapter,
-  learnChapters,
-} from "../../../../content/learn/learn-chapters";
+  getHandsOnChapters,
+  getLearnChapters,
+} from "../../../../content/chapters";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+interface Frontmatter {
+  title?: string;
+  description?: string;
+}
+
 async function getChapterContent(
   slug: string,
   type: "learn" | "hands-on"
-): Promise<{ content: string; chapter: Chapter | undefined } | null> {
+): Promise<{
+  content: string;
+  frontmatter: Frontmatter;
+  chapter: Chapter | undefined;
+} | null> {
   try {
     const contentPath = path.join(
       process.cwd(),
@@ -29,14 +38,30 @@ async function getChapterContent(
     );
     const content = fs.readFileSync(contentPath, "utf-8");
 
-    // Extract frontmatter
     const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
     const markdownContent = frontmatterMatch ? frontmatterMatch[2] : content;
 
-    const chapters = type === "learn" ? learnChapters : handsOnChapters;
+    const frontmatter: Frontmatter = {};
+    if (frontmatterMatch) {
+      const frontmatterText = frontmatterMatch[1];
+      const titleMatch = frontmatterText.match(/^title:\s*["'](.+?)["']/m);
+      const descriptionMatch = frontmatterText.match(
+        /^description:\s*["'](.+?)["']/m
+      );
+
+      if (titleMatch) {
+        frontmatter.title = titleMatch[1];
+      }
+      if (descriptionMatch) {
+        frontmatter.description = descriptionMatch[1];
+      }
+    }
+
+    const chapters =
+      type === "learn" ? getLearnChapters() : getHandsOnChapters();
     const chapter = chapters.find((c: Chapter) => c.slug === slug);
 
-    return { content: markdownContent, chapter };
+    return { content: markdownContent, frontmatter, chapter };
   } catch {
     return null;
   }
@@ -46,7 +71,7 @@ function getNextChapter(
   currentSlug: string,
   type: "learn" | "hands-on"
 ): Chapter | null {
-  const chapters = type === "learn" ? learnChapters : handsOnChapters;
+  const chapters = type === "learn" ? getLearnChapters() : getHandsOnChapters();
   const currentIndex = chapters.findIndex(
     (c: Chapter) => c.slug === currentSlug
   );
@@ -60,7 +85,7 @@ function getPrevChapter(
   currentSlug: string,
   type: "learn" | "hands-on"
 ): Chapter | null {
-  const chapters = type === "learn" ? learnChapters : handsOnChapters;
+  const chapters = type === "learn" ? getLearnChapters() : getHandsOnChapters();
   const currentIndex = chapters.findIndex(
     (c: Chapter) => c.slug === currentSlug
   );
@@ -87,17 +112,20 @@ export async function generateMetadata({
     };
   }
 
+  const pageTitle = result.frontmatter.title ?? result.chapter.title;
+
   return {
-    title: `${result.chapter.title} | Learn`,
+    title: pageTitle,
     description:
-      result.chapter.description || `Learn about ${result.chapter.title}`,
+      result.frontmatter.description ||
+      result.chapter.description ||
+      `Learn about ${pageTitle}`,
   };
 }
 
 export default async function ChapterPage({ params }: PageProps) {
   const { slug } = await params;
 
-  // Try learn first, then hands-on
   let result = await getChapterContent(slug, "learn");
   let type: "learn" | "hands-on" = "learn";
 
@@ -110,65 +138,51 @@ export default async function ChapterPage({ params }: PageProps) {
     notFound();
   }
 
-  const { content, chapter } = result;
+  const { content, frontmatter, chapter } = result;
   const nextChapter = getNextChapter(slug, type);
   const prevChapter = getPrevChapter(slug, type);
+
+  const pageTitle = frontmatter.title ?? chapter.title;
+  const pageTitleId = pageTitle;
 
   return (
     <div className="mx-auto flex w-full gap-8 px-6 py-8 md:px-10">
       {/* Sidebar */}
       <aside className="hidden w-64 shrink-0 lg:block">
-        <TableOfContents content={content} chapterTitle={chapter.title} />
+        <TableOfContents content={content} chapterTitle={pageTitle} />
       </aside>
 
       {/* Main Content */}
       <main className="mx-auto min-w-0 max-w-[677px]">
         <article>
-          {/* Chapter Header */}
           <div className="mb-8">
-            <div className="mb-2 flex items-center gap-2 text-muted-foreground text-sm">
-              {chapter.difficulty && (
-                <>
-                  <span>{chapter.difficulty}</span>
-                  {chapter.readingTime && (
-                    <>
-                      <span>•</span>
-                      <span>{chapter.readingTime} min</span>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
             <h1
-              id={chapter.title
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, "")
-                .replace(/\s+/g, "-")
-                .replace(/-+/g, "-")}
+              id={pageTitleId}
               className="mb-4 scroll-mt-20 font-medium text-3xl"
             >
-              {chapter.title}
+              {pageTitle}
             </h1>
           </div>
 
-          {/* Content */}
           <div className="markdown-content">
             <MarkdownRenderer content={content} />
           </div>
 
           {/* Navigation */}
-          <div className="mt-12 flex items-center justify-between border-border border-t pt-8">
+          <div className="mt-12 grid grid-cols-1 gap-4 border-border border-t pt-8 md:grid-cols-2">
             {prevChapter ? (
               <Link
                 href={`/learn/${prevChapter.slug}`}
-                className="flex items-center gap-2 text-foreground transition-colors hover:text-ost-blue-three"
+                className="group flex items-center gap-4 p-4 transition-all hover:text-ost-blue-three"
               >
                 <HiChevronLeft className="h-4 w-4" />
                 <div className="flex flex-col">
                   <span className="text-muted-foreground text-xs">
                     Previous
                   </span>
-                  <span className="font-medium">{prevChapter.title}</span>
+                  <span className="truncate font-medium">
+                    {prevChapter.title}
+                  </span>
                 </div>
               </Link>
             ) : (
@@ -178,11 +192,13 @@ export default async function ChapterPage({ params }: PageProps) {
             {nextChapter && (
               <Link
                 href={`/learn/${nextChapter.slug}`}
-                className="ml-auto flex items-center gap-2 text-foreground transition-colors hover:text-ost-blue-three"
+                className="group flex items-center gap-4 p-4 transition-all hover:text-ost-blue-three"
               >
                 <div className="flex flex-col text-right">
                   <span className="text-muted-foreground text-xs">Next</span>
-                  <span className="font-medium">{nextChapter.title}</span>
+                  <span className="truncate font-medium">
+                    {nextChapter.title}
+                  </span>
                 </div>
                 <HiChevronRight className="h-4 w-4" />
               </Link>
