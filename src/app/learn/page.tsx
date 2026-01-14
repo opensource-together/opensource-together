@@ -22,18 +22,23 @@ export default function LearnPage() {
   return (
     <main className="mx-auto w-full">
       <div className="relative mx-auto w-full">
+        {/* Desktop image */}
         <Image
-          src="/illustrations/traveler.png"
-          alt="Traveler illustration"
+          src="/illustrations/lord.png"
+          alt="Lord illustration"
           width={1441}
           height={400}
-          priority
-          fetchPriority="high"
-          quality={85}
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 95vw, (max-width: 1024px) 100vw, 1441px"
-          className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-[100%] -translate-x-1/2 object-contain md:block lg:bottom-3 lg:w-[105%]"
+          className="absolute -bottom-14 left-1/2 z-[-1] hidden -translate-x-1/2 object-contain md:block"
         />
-
+        {/* Mobile image */}
+        <Image
+          src="/illustrations/lord-mobile.png"
+          alt="Lord illustration"
+          width={402}
+          height={361}
+          quality={100}
+          className="absolute -bottom-0 left-1/2 z-[-1] h-auto w-full -translate-x-1/2 object-contain md:hidden"
+        />
         <div className="relative z-10 mx-auto mt-12 flex w-full max-w-[1441px] flex-col items-center justify-center">
           <HeroBadge className="mb-3" />
           <div className="mx-6">
