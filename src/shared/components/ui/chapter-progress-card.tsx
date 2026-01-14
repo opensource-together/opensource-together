@@ -22,6 +22,8 @@ function CircularProgress({ percentage }: { percentage: number }) {
 
   return (
     <svg
+      aria-label="Circular progress bar"
+      role="img"
       width={size}
       height={size}
       className="-rotate-90 transform"
@@ -113,7 +115,11 @@ export function ChapterProgressCard({
             <HiChevronRight className="size-3" />
           </Button>
         </Link>
-        <Button variant="ghost">Browse Chapters</Button>
+        <Link href="/learn/chapters">
+          <Button variant="ghost" className="w-full">
+            Browse Chapters
+          </Button>
+        </Link>
       </div>
     </div>
   );
