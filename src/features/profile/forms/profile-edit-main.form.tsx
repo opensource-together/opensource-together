@@ -7,6 +7,7 @@ import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import type { z } from "zod";
 
 import { AvatarUpload } from "@/shared/components/ui/avatar-upload";
+import { BannerUpload } from "@/shared/components/ui/banner-upload";
 import { Button } from "@/shared/components/ui/button";
 import {
   Form,
@@ -33,6 +34,7 @@ interface ProfileEditMainFormProps {
   form: UseFormReturn<ProfileSchema>;
   onSubmit: () => void;
   onImageSelect: (file: File | null) => void;
+  onBannerSelect: (file: File | null) => void;
   isUpdating: boolean;
 }
 
@@ -43,6 +45,7 @@ export default function ProfileEditMainForm({
   form,
   onSubmit,
   onImageSelect,
+  onBannerSelect,
   isUpdating,
 }: ProfileEditMainFormProps) {
   const { control } = form;
@@ -97,6 +100,26 @@ export default function ProfileEditMainForm({
     <div className="mb-30 flex w-full flex-col gap-8 lg:max-w-xl">
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-8 lg:w-[648px]">
+          <FormField
+            control={control}
+            name="banner"
+            render={() => (
+              <FormItem>
+                <FormLabel className="font-medium text-sm">Banner</FormLabel>
+                <FormControl>
+                  <BannerUpload
+                    currentImageUrl={profile.banner}
+                    onFileSelect={onBannerSelect}
+                    accept="image/*"
+                    maxSize={5}
+                    updatedAt={profile.updatedAt}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={control}
             name="image"
