@@ -15,7 +15,7 @@
     "preview": "next build && next start",
     "type-check": "tsc --noEmit",
     "prepare": "husky",
-    "worker:build": "opennextjs-cloudflare build",
+    "worker:build": "opennextjs-cloudflare build && node scripts/copy-learn-html.js",
     "worker:preview": "opennextjs-cloudflare preview",
     "worker:deploy": "opennextjs-cloudflare deploy"
   },
