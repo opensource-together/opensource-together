@@ -21,6 +21,11 @@ export const learnChapters: Chapter[] = [
     title: "Chapter 3: Exploring the Open Source Ecosystem",
     order: 3,
   },
+  {
+    slug: "preparing-project-for-open-source",
+    title: "Chapter 4: Preparing a Project for Open Source",
+    order: 4,
+  },
 ];
 
 export const handsOnChapters: Chapter[] = [
@@ -38,6 +43,11 @@ export const handsOnChapters: Chapter[] = [
     slug: "reading-and-understanding-issues",
     title: "Chapter 3: Reading and Understanding Issues",
     order: 3,
+  },
+  {
+    slug: "creating-your-first-issue",
+    title: "Chapter 4: Creating Your First Issue",
+    order: 4,
   },
 ];
 
