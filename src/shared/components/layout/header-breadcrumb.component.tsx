@@ -6,6 +6,11 @@ import { HiChevronRight } from "react-icons/hi2";
 
 import { useProfile } from "@/features/profile/hooks/use-profile.hook";
 import { useProject } from "@/features/projects/hooks/use-projects.hook";
+import {
+  type Chapter,
+  getHandsOnChapters,
+  getLearnChapters,
+} from "../../../../content/chapters";
 
 export default function HeaderBreadcrumb() {
   const pathname = usePathname();
@@ -23,7 +28,11 @@ export default function HeaderBreadcrumb() {
       { label: "Profile", href: "/profile/me" },
       { label: "Edit", href: "/profile/me/edit" },
     ],
-    "/oss-guide": () => [{ label: "Guide", href: "/oss-guide" }],
+    "/learn": () => [{ label: "Learn", href: "/learn" }],
+    "/learn/chapters": () => [
+      { label: "Learn", href: "/learn" },
+      { label: "Chapters", href: "/learn/chapters" },
+    ],
   };
 
   const getData = () => {
@@ -48,6 +57,25 @@ export default function HeaderBreadcrumb() {
   const getBreadcrumbItems = () => {
     if (routeConfig[pathname as keyof typeof routeConfig]) {
       return routeConfig[pathname as keyof typeof routeConfig]();
+    }
+
+    // Handle learn chapter pages
+    if (pathname.startsWith("/learn/") && segments.length === 2) {
+      const slug = segments[1];
+      const learnChapter = getLearnChapters().find(
+        (ch: Chapter) => ch.slug === slug
+      );
+      const handsOnChapter = getHandsOnChapters().find(
+        (ch: Chapter) => ch.slug === slug
+      );
+      const chapter = learnChapter || handsOnChapter;
+
+      if (chapter) {
+        return [
+          { label: "Learn", href: "/learn" },
+          { label: chapter.title, href: pathname },
+        ];
+      }
     }
 
     if (pathname.startsWith("/profile/") && userId && userId !== "me") {
