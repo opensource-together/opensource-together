@@ -111,6 +111,38 @@ export const updateProfileLogo = async (
 };
 
 /**
+ * Updates the profile banner of a user.
+ *
+ * @param id - The user ID to update.
+ * @param bannerFile - The banner file to upload.
+ * @returns A promise that resolves to the updated banner data.
+ */
+export const updateProfileBanner = async (
+  id: string,
+  bannerFile: File
+): Promise<Pick<Profile, "banner">> => {
+  try {
+    const formData = new FormData();
+    formData.append("file", bannerFile);
+
+    const response = await fetch(`${API_BASE_URL}/users/${id}/banner`, {
+      method: "PATCH",
+      credentials: "include",
+      body: formData,
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to upload banner");
+    }
+    const apiResponse = await response.json();
+    return apiResponse.data;
+  } catch (error) {
+    console.error("Error updating profile banner:", error);
+    throw error;
+  }
+};
+
+/**
  * Gets the projects for a specific user by their ID.
  *
  * @param userId - The user ID to fetch projects for.

@@ -10,6 +10,7 @@ export interface Profile {
   email?: string;
   emailVerified?: boolean;
   image: string;
+  banner?: string | null;
   jobTitle?: string;
   bio?: string;
   provider?: string;

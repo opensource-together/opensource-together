@@ -11,6 +11,7 @@ import {
   type UserBookmarksQueryParams,
   type UserProjectsQueryParams,
   updateProfile,
+  updateProfileBanner,
   updateProfileLogo,
 } from "../services/profile.service";
 import type { ProfileSchema } from "../validations/profile.schema";
@@ -98,6 +99,39 @@ export const useProfileLogoUpdate = (id: string) => {
     updateProfileLogo: mutation.mutate,
     isUpdatingLogo: mutation.isPending,
     isUpdateErrorLogo: mutation.isError,
+  };
+};
+
+/**
+ * Hook to update the banner of a user by their ID.
+ *
+ * @param id - The ID of the user to update.
+ * @param file - The file to update the banner with.
+ * @returns An object containing:
+ * - updateProfileBanner: function to trigger the banner update
+ * - isUpdatingBanner: boolean indicating if the update is in progress
+ * - isUpdateErrorBanner: boolean indicating if an error occurred
+ */
+export const useProfileBannerUpdate = (id: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useToastMutation({
+    mutationFn: (file: File) => updateProfileBanner(id, file),
+    loadingMessage: "Updating your banner...",
+    successMessage: "Banner updated successfully",
+    errorMessage: "Error updating your banner",
+    options: {
+      onSuccess: (profileId) => {
+        queryClient.invalidateQueries({ queryKey: ["user", profileId] });
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+      },
+    },
+  });
+
+  return {
+    updateProfileBanner: mutation.mutate,
+    isUpdatingBanner: mutation.isPending,
+    isUpdateErrorBanner: mutation.isError,
   };
 };
 
