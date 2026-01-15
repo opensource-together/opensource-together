@@ -1,0 +1,238 @@
+---
+title: "Chapter 4: Preparing a Project for Open Source"
+description: "Making a project open source is not just a technical action. It is a decision that impacts your code, your communication, and your long-term responsibilities."
+---
+
+Making a project open source is not just a technical action.
+
+It is a **decision** that impacts your code, your communication, and your long-term responsibilities.
+
+This chapter focuses on **preparation**:
+
+what to check, what to clean, and what to clarify *before* making a project public.
+
+---
+
+## Open Source Is a Point of No Return
+
+Once a project is public:
+
+- people can inspect it
+- fork it
+- discuss it
+- form opinions about it
+
+Preparation is not about perfection.
+
+It is about **intentional exposure**.
+
+---
+
+## Clarifying Intent Before Going Public
+
+Before touching the repository, clarify the intent of the project.
+
+Ask yourself:
+
+- Why am I open-sourcing this?
+- What do I expect from others?
+- Am I open to external influence?
+- How much time can I realistically invest?
+
+Unclear intent leads to unclear decisions later.
+
+---
+
+## Ownership and Rights
+
+Before publishing anything, ensure you have the right to do so.
+
+Confirm that:
+
+- you own the code
+- you are allowed to publish all dependencies
+- no employer or client has claims on the project
+- no proprietary assets are included
+
+Open source without ownership clarity creates legal risk.
+
+---
+
+## Security and Sensitive Information
+
+Public repositories must never contain secrets.
+
+Audit your project for:
+
+- API keys
+- tokens
+- passwords
+- private URLs
+- internal identifiers
+- credentials in commit history
+
+This includes:
+
+- configuration files
+- environment variables
+- documentation examples
+
+Once public, secrets should be considered compromised.
+
+---
+
+## Code Readiness
+
+Your code does not need to be perfect.
+
+It needs to be **understandable**.
+
+Focus on:
+
+- clear naming
+- consistent structure
+- minimal dead code
+- obvious entry points
+- predictable behavior
+
+If something is experimental or incomplete, say so explicitly.
+
+---
+
+## Build and Setup Reliability
+
+A public project should be reproducible.
+
+Check that:
+
+- the project builds without internal dependencies
+- setup instructions actually work
+- versions are specified
+- errors are understandable
+
+If users cannot run the project, they cannot contribute.
+
+---
+
+## Documentation as a Gatekeeper
+
+Documentation is the first line of interaction.
+
+At minimum, your project should explain:
+
+- what it does
+- why it exists
+- how to run it
+- who it is for
+- what is out of scope
+
+Documentation sets expectations before code is ever read.
+
+---
+
+## Defining Scope Explicitly
+
+Many open source projects fail due to unclear scope.
+
+Clarify:
+
+- what the project aims to solve
+- what it intentionally does not solve
+- what kind of contributions are welcome
+- what kind are not
+
+Explicit boundaries reduce conflict.
+
+---
+
+## Repository Hygiene
+
+A clean repository builds trust.
+
+Check for:
+
+- unused files
+- experimental branches
+- unclear folders
+- outdated scripts
+- inconsistent formatting
+
+Clarity matters more than cleverness.
+
+---
+
+## Commit History and Signals
+
+Public commit history is part of the project’s narrative.
+
+It communicates:
+
+- how the project evolved
+- how decisions were made
+- how disciplined the workflow is
+
+You do not need a perfect history, but you should be comfortable standing behind it.
+
+---
+
+## Preparing for Questions and Feedback
+
+Once public, your project will invite:
+
+- questions
+- suggestions
+- criticism
+- feature requests
+
+Preparation includes mental readiness:
+
+- not all feedback will align with your vision
+- not all contributions should be accepted
+- silence is sometimes better than rushed responses
+
+You are allowed to say no.
+
+---
+
+## Maintenance Expectations
+
+Open source does not mean:
+
+- instant responses
+- unlimited support
+- roadmap commitments
+
+Before publishing, decide:
+
+- how often you want to engage
+- how you will handle inactivity
+- how you will communicate limitations
+
+Clear expectations protect both you and contributors.
+
+---
+
+## A Pre-Release Checklist
+
+Before making a project public, verify that:
+
+- ownership is clear
+- secrets are removed
+- setup works
+- scope is documented
+- expectations are explicit
+- you are comfortable with public visibility
+
+Preparation is a form of respect for future contributors.
+
+---
+
+## Reflection
+
+Consider a project you might open-source:
+
+- what parts are unclear?
+- what assumptions are implicit?
+- what would confuse a stranger?
+
+These questions guide meaningful preparation.
