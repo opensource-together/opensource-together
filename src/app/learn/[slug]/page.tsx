@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,61 +9,34 @@ import {
   getHandsOnChapters,
   getLearnChapters,
 } from "../../../../content/chapters";
+import { getChapterContent } from "../../../../content/content-loader";
 import { NextChapterButton } from "./next-chapter-button";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-interface Frontmatter {
-  title?: string;
-  description?: string;
-}
-
-async function getChapterContent(
+function getChapterContentWithMetadata(
   slug: string,
   type: "learn" | "hands-on"
-): Promise<{
+): {
   content: string;
-  frontmatter: Frontmatter;
+  frontmatter: { title?: string; description?: string };
   chapter: Chapter | undefined;
-} | null> {
-  try {
-    const contentPath = path.join(
-      process.cwd(),
-      "content",
-      type === "learn" ? "learn" : "hands-on",
-      `${slug}.mdx`
-    );
-    const content = fs.readFileSync(contentPath, "utf-8");
-
-    const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-    const markdownContent = frontmatterMatch ? frontmatterMatch[2] : content;
-
-    const frontmatter: Frontmatter = {};
-    if (frontmatterMatch) {
-      const frontmatterText = frontmatterMatch[1];
-      const titleMatch = frontmatterText.match(/^title:\s*["'](.+?)["']/m);
-      const descriptionMatch = frontmatterText.match(
-        /^description:\s*["'](.+?)["']/m
-      );
-
-      if (titleMatch) {
-        frontmatter.title = titleMatch[1];
-      }
-      if (descriptionMatch) {
-        frontmatter.description = descriptionMatch[1];
-      }
-    }
-
-    const chapters =
-      type === "learn" ? getLearnChapters() : getHandsOnChapters();
-    const chapter = chapters.find((c: Chapter) => c.slug === slug);
-
-    return { content: markdownContent, frontmatter, chapter };
-  } catch {
+} | null {
+  const contentData = getChapterContent(slug, type);
+  if (!contentData) {
     return null;
   }
+
+  const chapters = type === "learn" ? getLearnChapters() : getHandsOnChapters();
+  const chapter = chapters.find((c: Chapter) => c.slug === slug);
+
+  return {
+    content: contentData.content,
+    frontmatter: contentData.frontmatter,
+    chapter,
+  };
 }
 
 function getNextChapter(
@@ -96,15 +67,25 @@ function getPrevChapter(
   return null;
 }
 
+export async function generateStaticParams() {
+  const learnChapters = getLearnChapters();
+  const handsOnChapters = getHandsOnChapters();
+
+  return [
+    ...learnChapters.map((chapter) => ({ slug: chapter.slug })),
+    ...handsOnChapters.map((chapter) => ({ slug: chapter.slug })),
+  ];
+}
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  let result = await getChapterContent(slug, "learn");
+  let result = getChapterContentWithMetadata(slug, "learn");
 
   if (!result) {
-    result = await getChapterContent(slug, "hands-on");
+    result = getChapterContentWithMetadata(slug, "hands-on");
   }
 
   if (!result || !result.chapter) {
@@ -127,11 +108,11 @@ export async function generateMetadata({
 export default async function ChapterPage({ params }: PageProps) {
   const { slug } = await params;
 
-  let result = await getChapterContent(slug, "learn");
+  let result = getChapterContentWithMetadata(slug, "learn");
   let type: "learn" | "hands-on" = "learn";
 
   if (!result) {
-    result = await getChapterContent(slug, "hands-on");
+    result = getChapterContentWithMetadata(slug, "hands-on");
     type = "hands-on";
   }
 
