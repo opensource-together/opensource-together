@@ -6,7 +6,7 @@ import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
 export default function FooterMinimal() {
   const navigationLinks = [
-    { name: "Guide", href: "/oss-guide" },
+    { name: "Learn", href: "/learn" },
     { name: "X (Twitter)", href: EXTERNAL_LINKS.TWITTER },
     { name: "Discord", href: EXTERNAL_LINKS.DISCORD },
     {
