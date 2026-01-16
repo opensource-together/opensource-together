@@ -42,6 +42,7 @@ export const experienceSchema = z
 
 export const profileSchema = z.object({
   image: z.string().optional(),
+  banner: z.string().optional(),
   name: z
     .string()
     .min(1, "Username is required")
