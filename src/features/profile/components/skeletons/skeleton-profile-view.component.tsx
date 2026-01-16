@@ -7,11 +7,15 @@ export default function SkeletonProfileView() {
         {/* Mobile header skeleton */}
         <div className="md:hidden">
           <div>
+            {/* Mobile banner skeleton */}
+            <div className="relative mb-12 w-full overflow-visible rounded-lg">
+              <Skeleton className="h-36 w-full rounded-lg" />
+              <div className="absolute -bottom-10 z-20">
+                <Skeleton className="size-20 rounded-full" />
+              </div>
+            </div>
             <div className="flex flex-col items-start">
               <div className="flex items-center">
-                <div className="mr-4">
-                  <Skeleton className="h-16 w-16 rounded-full" />
-                </div>
                 <div>
                   <Skeleton className="mb-1 h-8 w-40" />
                   <Skeleton className="h-4 w-32" />
@@ -60,11 +64,17 @@ export default function SkeletonProfileView() {
           {/* Hero skeleton */}
           <div className="hidden md:block">
             <div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="mr-4">
-                    <Skeleton className="h-16 w-16 rounded-full" />
-                  </div>
+              {/* Desktop banner skeleton */}
+              <div className="relative w-full overflow-visible rounded-[20px] border border-muted-black-stroke/10">
+                <div className="relative w-full overflow-hidden rounded-[20px]">
+                  <Skeleton className="h-36 w-full rounded-[20px]" />
+                </div>
+                <div className="absolute -bottom-10 z-20">
+                  <Skeleton className="h-20 w-20 rounded-full" />
+                </div>
+              </div>
+              <div className="flex items-start justify-between pt-12">
+                <div className="flex min-w-0 flex-1 items-center">
                   <div>
                     <Skeleton className="mb-1 h-8 w-40" />
                     <Skeleton className="h-4 w-32" />

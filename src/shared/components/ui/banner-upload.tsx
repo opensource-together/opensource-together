@@ -190,11 +190,17 @@ export function BannerUpload({
         </div>
       </div>
 
-      {file && (
-        <div className="mt-2 text-black/50 text-sm tracking-tighter">
-          {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
-        </div>
-      )}
+      <div className="mt-2 flex flex-wrap items-center gap-2 text-muted-foreground text-xs">
+        {file && (
+          <>
+            <span className="truncate">
+              {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
+            </span>
+            <span className="text-muted-foreground/50">•</span>
+          </>
+        )}
+        <span>Recommended: 1986 × 420 px</span>
+      </div>
 
       {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}
     </div>
