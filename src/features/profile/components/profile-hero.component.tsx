@@ -208,7 +208,7 @@ export default function ProfileHero({
             alt={`${name}'s banner`}
             width={1500}
             height={150}
-            className="h-32 w-full object-cover"
+            className="h-36 w-full object-cover"
             priority
           />
         </div>
