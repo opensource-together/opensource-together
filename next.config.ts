@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "s3.opensource-together.com",
+      },
+      {
+        protocol: "https",
         hostname: "upload.wikimedia.org",
       },
     ],
