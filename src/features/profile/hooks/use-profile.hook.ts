@@ -88,8 +88,8 @@ export const useProfileLogoUpdate = (id: string) => {
     successMessage: "Avatar updated successfully",
     errorMessage: "Error updating your avatar",
     options: {
-      onSuccess: (profileId) => {
-        queryClient.invalidateQueries({ queryKey: ["user", profileId] });
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user", id] });
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
@@ -121,8 +121,8 @@ export const useProfileBannerUpdate = (id: string) => {
     successMessage: "Banner updated successfully",
     errorMessage: "Error updating your banner",
     options: {
-      onSuccess: (profileId) => {
-        queryClient.invalidateQueries({ queryKey: ["user", profileId] });
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["user", id] });
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
       },
     },
