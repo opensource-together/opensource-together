@@ -11,6 +11,7 @@ import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.c
 import ProfileEditMain from "../forms/profile-edit-main.form";
 import ProfileSidebarEditForm from "../forms/profile-sidebar-edit.form";
 import {
+  useProfileBannerUpdate,
   useProfileLogoUpdate,
   useProfileUpdate,
 } from "../hooks/use-profile.hook";
@@ -25,7 +26,13 @@ export default function ProfileEditView() {
   const { updateProfileLogo, isUpdatingLogo } = useProfileLogoUpdate(
     currentUser?.id || ""
   );
+  const { updateProfileBanner, isUpdatingBanner } = useProfileBannerUpdate(
+    currentUser?.id || ""
+  );
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [selectedBannerFile, setSelectedBannerFile] = useState<File | null>(
+    null
+  );
 
   const form = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
@@ -83,11 +90,18 @@ export default function ProfileEditView() {
     setSelectedImageFile(file);
   };
 
+  const handleBannerSelect = (file: File | null) => {
+    setSelectedBannerFile(file);
+  };
+
   const onSubmit = form.handleSubmit(async (data) => {
     const id = currentUser?.id || "";
     updateProfile({ id, updateData: data });
     if (selectedImageFile) {
       updateProfileLogo(selectedImageFile);
+    }
+    if (selectedBannerFile) {
+      updateProfileBanner(selectedBannerFile);
     }
   });
 
@@ -112,7 +126,8 @@ export default function ProfileEditView() {
           form={form}
           onSubmit={onSubmit}
           onImageSelect={handleImageSelect}
-          isUpdating={isUpdating || isUpdatingLogo}
+          onBannerSelect={handleBannerSelect}
+          isUpdating={isUpdating || isUpdatingLogo || isUpdatingBanner}
         />
       }
     />

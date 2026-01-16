@@ -29,6 +29,7 @@ export function ProfileMobileHero({
   const {
     id,
     image = "",
+    banner = "",
     name = "",
     jobTitle = "",
     bio = "",
@@ -38,6 +39,7 @@ export function ProfileMobileHero({
 
   const publicProfileUrl = `${FRONTEND_URL}/profile/${id}`;
   const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
+  const bannerUrlWithCacheBusting = useCacheBustingImage(banner, updatedAt);
 
   const renderBetaTesterBadge = () => {
     if (!betaTester) return null;
@@ -85,16 +87,29 @@ export function ProfileMobileHero({
 
   return (
     <div>
+      <div className="relative mb-12 w-full overflow-visible rounded-lg">
+        <div className="relative w-full overflow-hidden rounded-lg">
+          <Image
+            src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
+            alt={`${name}'s banner`}
+            width={677}
+            height={150}
+            className="h-full w-full object-cover"
+            priority
+          />
+        </div>
+        <div className="absolute -bottom-10 z-20">
+          <Avatar
+            src={imageUrlWithCacheBusting}
+            name={name}
+            alt={name}
+            size="xl"
+          />
+        </div>
+      </div>
+
       <div className="flex flex-col items-start">
         <div className="flex min-w-0 items-center">
-          <div className="mr-4">
-            <Avatar
-              src={imageUrlWithCacheBusting}
-              name={name}
-              alt={name}
-              size="xl"
-            />
-          </div>
           <div className="min-w-0">
             <div className="flex items-center">
               <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
@@ -125,6 +140,7 @@ export default function ProfileHero({
   const {
     id,
     image = "",
+    banner = "",
     name = "",
     jobTitle = "",
     bio = "",
@@ -134,6 +150,7 @@ export default function ProfileHero({
 
   const publicProfileUrl = `${FRONTEND_URL}/profile/${id}`;
   const imageUrlWithCacheBusting = useCacheBustingImage(image, updatedAt);
+  const bannerUrlWithCacheBusting = useCacheBustingImage(banner, updatedAt);
 
   if (hideHeader) {
     return null;
@@ -184,16 +201,29 @@ export default function ProfileHero({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div className="flex min-w-0 items-center">
-          <div className="mr-4">
-            <Avatar
-              src={imageUrlWithCacheBusting}
-              name={name}
-              alt={name}
-              size="xl"
-            />
-          </div>
+      <div className="relative w-full overflow-visible rounded-[20px] border border-muted-black-stroke/10">
+        <div className="relative w-full overflow-hidden rounded-[20px]">
+          <Image
+            src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
+            alt={`${name}'s banner`}
+            width={1500}
+            height={150}
+            className="h-32 w-full object-cover"
+            priority
+          />
+        </div>
+        <div className="absolute -bottom-10 z-20">
+          <Avatar
+            src={imageUrlWithCacheBusting}
+            name={name}
+            alt={name}
+            size="2xl"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-start justify-between pt-12">
+        <div className="flex min-w-0 flex-1 items-center">
           <div className="min-w-0">
             <div className="flex items-center">
               <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">

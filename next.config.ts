@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     qualities: [25, 50, 75, 85, 100],
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
         protocol: "https",
         hostname: "pbs.twimg.com",
       },
