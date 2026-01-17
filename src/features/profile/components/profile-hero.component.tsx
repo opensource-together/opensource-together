@@ -96,6 +96,7 @@ export function ProfileMobileHero({
             height={150}
             className="h-full w-full object-cover"
             priority
+            unoptimized
           />
         </div>
         <div className="absolute -bottom-10 z-20">
@@ -210,6 +211,7 @@ export default function ProfileHero({
             height={150}
             className="h-36 w-full object-cover"
             priority
+            unoptimized
           />
         </div>
         <div className="absolute -bottom-10 z-20">
