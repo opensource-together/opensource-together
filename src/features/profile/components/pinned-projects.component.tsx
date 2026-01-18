@@ -1,5 +1,6 @@
-import Link from "next/link";
+import { useState } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
+import { useMyProjects } from "@/features/dashboard/hooks/use-my-projects.hook";
 import type { Project } from "@/features/projects/types/project.type";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -7,6 +8,7 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
 import { useUserProjects } from "../hooks/use-profile.hook";
+import PinProjectsModal from "./pin-projects-modal.component";
 import PinnedProjectCard from "./pinned-project-card.component";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
@@ -41,6 +43,8 @@ interface PinnedProjectsProps {
 export default function PinnedProjects({ userId }: PinnedProjectsProps) {
   // If userId is provided, use the user's projects endpoint, otherwise use "me"
   const effectiveUserId = userId || "me";
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
 
   const {
     data: projectsResponse,
@@ -57,21 +61,20 @@ export default function PinnedProjects({ userId }: PinnedProjectsProps) {
   );
   const myProjects = projectsResponse?.data || [];
 
+  const { data: allProjectsResponse, isLoading: isLoadingAllProjects } =
+    useMyProjects({
+      published: true,
+      per_page: 100,
+      page: 1,
+    });
+  const allProjects = allProjectsResponse?.data || [];
+
   if (isLoading) return <ProfileProjectsSkeleton />;
   if (isError)
     return (
       <ErrorState
         message="Failed to fetch projects"
         queryKey={["user", effectiveUserId, "projects"]}
-      />
-    );
-
-  if (myProjects.length === 0)
-    return (
-      <EmptyState
-        title="No projects"
-        description="No projects have been joined yet"
-        icon={HiMiniSquare2Stack}
       />
     );
 
@@ -89,13 +92,30 @@ export default function PinnedProjects({ userId }: PinnedProjectsProps) {
             {pinnedProjects.length === 1 ? "Pinned Project" : "Pinned Projects"}
           </h2>
         </div>
-        <Link href="?tab=projects">
-          <Button variant="outline">View All Projects</Button>
-        </Link>
+        <Button variant="outline" onClick={() => setIsPinModalOpen(true)}>
+          Pin a Project
+        </Button>
       </div>
-      {pinnedProjects.map((project) => (
-        <PinnedProjectItem key={project.id} project={project} />
-      ))}
+      {pinnedProjects.length === 0 ? (
+        <EmptyState
+          title="No pinned projects"
+          description="Pin your published projects to showcase them here."
+          icon={HiMiniSquare2Stack}
+        />
+      ) : (
+        pinnedProjects.map((project) => (
+          <PinnedProjectItem key={project.id} project={project} />
+        ))
+      )}
+
+      <PinProjectsModal
+        open={isPinModalOpen}
+        onOpenChange={setIsPinModalOpen}
+        projects={allProjects}
+        selectedProjectIds={selectedProjectIds}
+        onSelectionChange={setSelectedProjectIds}
+        isLoading={isLoadingAllProjects}
+      />
     </div>
   );
 }
