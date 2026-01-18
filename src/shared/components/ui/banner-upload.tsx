@@ -149,12 +149,12 @@ export function BannerUpload({
         )}
       >
         <input {...getInputProps()} ref={fileInputRef} />
-        <div className="relative h-32 w-full">
+        <div className="relative h-36 w-full">
           <Image
             src={displayImage}
             alt="Banner preview"
             fill
-            className="object-cover"
+            className="rounded-[20px] object-cover"
             priority
           />
           <div className="absolute inset-0 flex items-center justify-center gap-2">
