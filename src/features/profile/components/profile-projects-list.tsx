@@ -90,11 +90,8 @@ export default function ProfileProjectsList({
     return (
       <EmptyState
         title="No projects"
-        description="No projects have been joined yet"
+        description="Publish your projects to make them visible here."
         icon={HiMiniSquare2Stack}
-        buttonText="Create a project"
-        href="/projects/create"
-        buttonIcon={HiPlus}
       />
     );
 
