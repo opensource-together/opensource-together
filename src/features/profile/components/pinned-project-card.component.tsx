@@ -96,11 +96,15 @@ export default function PinnedProjectCard({
             <div className="flex gap-2">
               {displayImages.map((imageUrl, index) => {
                 const isDesktopOnly = index >= 2;
+                const hasFourImages = displayImages.length === 4;
+                const widthClass = hasFourImages
+                  ? "flex-1"
+                  : "w-28 md:w-36 flex-shrink-0";
 
                 return (
                   <div
                     key={imageUrl}
-                    className={`relative h-16 w-28 flex-shrink-0 overflow-hidden rounded-md md:h-18 md:w-36 ${
+                    className={`relative h-16 md:h-18 ${widthClass} overflow-hidden rounded-md ${
                       isDesktopOnly ? "hidden lg:block" : ""
                     }`}
                   >
