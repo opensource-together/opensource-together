@@ -86,7 +86,7 @@ export default function PinnedProjects({ userId }: PinnedProjectsProps) {
             <span className="font-medium text-primary">
               {pinnedProjects.length}
             </span>{" "}
-            {pinnedProjects.length === 1 ? "Pinned Project" : "Pinned Projects"}
+            {pinnedProjects.length === 1 ? "Recent Project" : "Recent Projects"}
           </h2>
         </div>
         <Link href="?tab=projects">
