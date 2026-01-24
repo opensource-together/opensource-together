@@ -9,15 +9,15 @@ export default function SkeletonProfileView() {
           <div>
             {/* Mobile banner skeleton */}
             <div className="relative mb-12 w-full overflow-visible rounded-lg">
-              <Skeleton className="h-36 w-full rounded-lg" />
+              <Skeleton className="h-28 w-full rounded-lg" />
               <div className="absolute -bottom-10 z-20">
-                <Skeleton className="size-20 rounded-full" />
+                <Skeleton className="size-16 rounded-full" />
               </div>
             </div>
             <div className="flex flex-col items-start">
               <div className="flex items-center">
                 <div>
-                  <Skeleton className="mb-1 h-8 w-40" />
+                  <Skeleton className="mb-1 h-6 w-40" />
                   <Skeleton className="h-4 w-32" />
                 </div>
               </div>

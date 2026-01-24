@@ -6,6 +6,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
+import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import type { Contributor } from "../types/project.type";
 
 interface ContributorsListProps {
@@ -75,7 +76,7 @@ function ContributorCard({ contributor }: { contributor: Contributor }) {
         <div className="flex flex-col gap-0.5 truncate text-nowrap">
           <p className="font-medium text-sm">{contributor.login}</p>
           <p className="text-muted-foreground text-sm">
-            {contributor.contributions}{" "}
+            {formatNumberShort(contributor.contributions)}{" "}
             {contributor.contributions === 1 ? "Contribution" : "Contributions"}
           </p>
         </div>

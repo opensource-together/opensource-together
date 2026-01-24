@@ -13,13 +13,13 @@ import {
 import { useTabNavigation } from "@/shared/hooks/use-tab-navigation.hook";
 
 import GithubGraph from "../components/github-graph.component";
+import RecentProjects from "../components/pinned-projects.component";
 import ProfileExperiences from "../components/profile-experiences.component";
 import ProfileHero, {
   ProfileMobileHero,
 } from "../components/profile-hero.component";
 import ProfileProjectsList from "../components/profile-projects-list";
 import ProfileSidebar from "../components/profile-sidebar.component";
-import RecentProjects from "../components/recent-projects.component";
 import ProfileProjectsSkeleton from "../components/skeletons/profile-projects-skeleton.component";
 import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pull-requests-skeleton.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";

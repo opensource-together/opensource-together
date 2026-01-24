@@ -87,18 +87,19 @@ export function ProfileMobileHero({
 
   return (
     <div>
-      <div className="relative mb-12 w-full overflow-visible rounded-lg">
+      <div className="relative mb-10 w-full overflow-visible rounded-lg">
         <div className="relative w-full overflow-hidden rounded-lg">
           <Image
             src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
             alt={`${name}'s banner`}
             width={677}
             height={150}
-            className="h-full w-full object-cover"
+            className="h-28 w-full object-cover"
             priority
+            unoptimized
           />
         </div>
-        <div className="absolute -bottom-10 z-20">
+        <div className="absolute -bottom-8 z-20">
           <Avatar
             src={imageUrlWithCacheBusting}
             name={name}
@@ -210,6 +211,7 @@ export default function ProfileHero({
             height={150}
             className="h-36 w-full object-cover"
             priority
+            unoptimized
           />
         </div>
         <div className="absolute -bottom-10 z-20">
