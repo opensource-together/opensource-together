@@ -46,6 +46,31 @@ export const learnChapters: Chapter[] = [
     title: "Chapter 8: Contributing to Existing Projects",
     order: 8,
   },
+  {
+    slug: "designing-a-contributor-experience",
+    title: "Chapter 9: Designing a Contributor Experience",
+    order: 9,
+  },
+  {
+    slug: "community-governance-and-trust",
+    title: "Chapter 10: Community, Governance, and Trust",
+    order: 10,
+  },
+  {
+    slug: "security-maintenance-and-long-term-ownership",
+    title: "Chapter 11: Security, Maintenance, and Long-Term Ownership",
+    order: 11,
+  },
+  {
+    slug: "launching-and-growing-an-oss-project",
+    title: "Chapter 12: Launching and Growing an Open Source Project",
+    order: 12,
+  },
+  {
+    slug: "open-source-and-career-growth",
+    title: "Chapter 13: Open Source and Career Growth",
+    order: 13,
+  },
 ];
 
 export const handsOnChapters: Chapter[] = [
@@ -88,6 +113,31 @@ export const handsOnChapters: Chapter[] = [
     slug: "responding-to-code-reviews",
     title: "Chapter 8: Responding to Code Reviews",
     order: 8,
+  },
+  {
+    slug: "when-a-pull-request-is-not-accepted",
+    title: "Chapter 9: When a Pull Request Is Not Accepted",
+    order: 9,
+  },
+  {
+    slug: "contributing-without-writing-code",
+    title: "Chapter 10: Contributing Without Writing Code",
+    order: 10,
+  },
+  {
+    slug: "becoming-a-regular-contributor",
+    title: "Chapter 11: Becoming a Regular Contributor",
+    order: 11,
+  },
+  {
+    slug: "understanding-maintainer-responsibilities",
+    title: "Chapter 12: Understanding Maintainer Responsibilities",
+    order: 12,
+  },
+  {
+    slug: "maintaining-your-first-oss-project",
+    title: "Chapter 13: Maintaining Your First Open Source Project",
+    order: 13,
   },
 ];
 
