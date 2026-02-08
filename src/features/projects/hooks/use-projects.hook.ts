@@ -44,7 +44,10 @@ import {
  */
 export function useInfiniteProjects(
   params: Omit<ProjectQueryParams, "page"> = {},
-  options?: { enabled?: boolean; maxTotalItems?: number }
+  options?: {
+    enabled?: boolean;
+    maxTotalItems?: number;
+  }
 ) {
   const per_page = params.per_page ?? 20;
   const queryParams = { ...params, per_page };
