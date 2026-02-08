@@ -1,7 +1,7 @@
 "use client";
 
 import { Command as CommandPrimitive } from "cmdk";
-import type * as React from "react";
+import * as React from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 
 import {
@@ -12,6 +12,15 @@ import {
   DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { cn } from "@/shared/lib/utils";
+
+type CommandDialogProps = React.ComponentProps<typeof Dialog> & {
+  title?: string;
+  description?: string;
+  className?: string;
+  showCloseButton?: boolean;
+  commandProps?: React.ComponentProps<typeof CommandPrimitive>;
+  dialogContentProps?: React.ComponentProps<typeof DialogContent>;
+};
 
 function Command({
   className,
@@ -34,13 +43,15 @@ function CommandDialog({
   description = "Search for a command to run...",
   children,
   className,
+  commandProps,
+  dialogContentProps,
   ...props
-}: React.ComponentProps<typeof Dialog> & {
-  title?: string;
-  description?: string;
-  className?: string;
-  showCloseButton?: boolean;
-}) {
+}: CommandDialogProps) {
+  const { className: commandClassName, ...restCommandProps } =
+    commandProps ?? {};
+  const { className: contentClassName, ...restDialogContentProps } =
+    dialogContentProps ?? {};
+
   return (
     <Dialog {...props}>
       <DialogHeader className="sr-only">
@@ -48,10 +59,17 @@ function CommandDialog({
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <DialogContent
-        className={cn("overflow-hidden p-0", className)}
+        className={cn("overflow-hidden p-0", className, contentClassName)}
         showCloseButton={false}
+        {...restDialogContentProps}
       >
-        <Command className="**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+        <Command
+          className={cn(
+            "**:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5",
+            commandClassName
+          )}
+          {...restCommandProps}
+        >
           {children}
         </Command>
       </DialogContent>
@@ -81,12 +99,13 @@ function CommandInput({
   );
 }
 
-function CommandList({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+const CommandList = React.forwardRef<
+  React.ElementRef<typeof CommandPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
+>(({ className, ...props }, ref) => {
   return (
     <CommandPrimitive.List
+      ref={ref}
       data-slot="command-list"
       className={cn(
         "max-h-[300px] scroll-py-1 overflow-y-auto overflow-x-hidden",
@@ -95,7 +114,8 @@ function CommandList({
       {...props}
     />
   );
-}
+});
+CommandList.displayName = CommandPrimitive.List.displayName;
 
 function CommandEmpty({
   ...props
