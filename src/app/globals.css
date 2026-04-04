@@ -140,7 +140,7 @@
   h4,
   h5,
   h6 {
-    @apply tracking-[-0.03em];
+    @apply tracking-[-2%];
     @apply font-medium;
   }
 }

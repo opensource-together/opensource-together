@@ -60,7 +60,7 @@ function CommandDialog({
       </DialogHeader>
       <DialogContent
         className={cn(
-          "overflow-hidden px-0 pt-1.5 pb-2.5 sm:max-w-[532px]",
+          "overflow-hidden px-1.5 pt-1.5 pb-2.5 sm:max-w-[532px]",
           className,
           contentClassName
         )}

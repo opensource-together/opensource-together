@@ -16,6 +16,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
+import {
+  inlineFilterPanelEnterClass,
+  inlineFilterPanelExitClass,
+  useInlineFilterPanelPresence,
+} from "@/shared/hooks/use-inline-filter-panel-presence.hook";
 import { cn } from "@/shared/lib/utils";
 import type { TechStackType } from "@/shared/types/tech-stack.type";
 
@@ -265,6 +270,8 @@ export function CustomCombobox({
   );
 
   if (layout === "inline") {
+    const { showPanel, isExiting } = useInlineFilterPanelPresence(open);
+
     return (
       <div className={cn("flex w-full flex-col gap-2", className)}>
         <button
@@ -280,11 +287,13 @@ export function CustomCombobox({
         >
           {trigger}
         </button>
-        {open ? (
+        {showPanel ? (
           <div
             className={cn(
               "relative max-h-[min(50vh,22rem)] w-full origin-top overflow-y-auto overscroll-contain rounded-2xl border border-muted-black-stroke bg-popover p-1 text-popover-foreground shadow-xs",
-              "fade-in-0 zoom-in-95 slide-in-from-top-2 animate-in blur-in-[6px] duration-200 ease-out"
+              isExiting
+                ? inlineFilterPanelExitClass
+                : inlineFilterPanelEnterClass
             )}
           >
             <div className="absolute top-2.5 right-4 z-10">

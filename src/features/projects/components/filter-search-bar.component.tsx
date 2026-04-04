@@ -17,6 +17,9 @@ import type { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
+/** Muted bar lingers this long after all filter popovers close */
+const FILTER_SESSION_END_MS = 100;
+
 interface FilterItemProps {
   label: string;
   value: string;
@@ -28,7 +31,7 @@ function FilterItem({ label, value, isDimmed = false }: FilterItemProps) {
     <div
       className={cn(
         "relative z-10 flex h-14 w-44 cursor-pointer flex-col rounded-full px-8 py-2.5 transition-opacity duration-200",
-        isDimmed && "opacity-40"
+        isDimmed && "opacity-50"
       )}
     >
       <span className="font-normal text-xs text-zinc-400">{label}</span>
@@ -104,6 +107,41 @@ export default function FilterSearchBar({
   type ActiveFilter = "techStack" | "category" | "sort" | null;
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>(null);
   const [hoveredFilter, setHoveredFilter] = useState<ActiveFilter>(null);
+  /** Keeps the bar surface muted until all filter popovers are dismissed (not while switching). */
+  const [filterSessionActive, setFilterSessionActive] = useState(false);
+
+  /** Avoids a one-frame “all closed” flash when Radix closes A then opens B. */
+  const deferredActiveFilterClearRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+  const filterSessionEndTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (deferredActiveFilterClearRef.current !== null) {
+        clearTimeout(deferredActiveFilterClearRef.current);
+      }
+      if (filterSessionEndTimeoutRef.current !== null) {
+        clearTimeout(filterSessionEndTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const cancelDeferredActiveFilterClear = () => {
+    if (deferredActiveFilterClearRef.current !== null) {
+      clearTimeout(deferredActiveFilterClearRef.current);
+      deferredActiveFilterClearRef.current = null;
+    }
+  };
+
+  const cancelFilterSessionEndDelay = () => {
+    if (filterSessionEndTimeoutRef.current !== null) {
+      clearTimeout(filterSessionEndTimeoutRef.current);
+      filterSessionEndTimeoutRef.current = null;
+    }
+  };
 
   const isTechStackOpen = activeFilter === "techStack";
   const isCategoryOpen = activeFilter === "category";
@@ -125,7 +163,7 @@ export default function FilterSearchBar({
     (hoveredFilter !== null && hoveredFilter !== "sort") ||
     (hoveredFilter === null && anyOpen && activeFilter !== "sort");
 
-  const barMuted = anyOpen || hoveredFilter !== null;
+  const barMuted = filterSessionActive || anyOpen || hoveredFilter !== null;
 
   // Refs for measuring pill positions
   const pillsContainerRef = useRef<HTMLDivElement>(null);
@@ -186,19 +224,59 @@ export default function FilterSearchBar({
     setSelectedSort(value);
   };
 
+  const scheduleActiveFilterClose = (filter: NonNullable<ActiveFilter>) => {
+    deferredActiveFilterClearRef.current = setTimeout(() => {
+      deferredActiveFilterClearRef.current = null;
+      let closedFully = false;
+      setActiveFilter((current) => {
+        if (current === filter) {
+          closedFully = true;
+          return null;
+        }
+        return current;
+      });
+      setHoveredFilter(null);
+      if (closedFully) {
+        cancelFilterSessionEndDelay();
+        filterSessionEndTimeoutRef.current = setTimeout(() => {
+          filterSessionEndTimeoutRef.current = null;
+          setFilterSessionActive(false);
+        }, FILTER_SESSION_END_MS);
+      }
+    }, 0);
+  };
+
   const handleTechStackOpenChange = (open: boolean) => {
-    setActiveFilter(open ? "techStack" : null);
-    if (!open) setHoveredFilter(null);
+    if (open) {
+      cancelDeferredActiveFilterClear();
+      cancelFilterSessionEndDelay();
+      setFilterSessionActive(true);
+      setActiveFilter("techStack");
+      return;
+    }
+    scheduleActiveFilterClose("techStack");
   };
 
   const handleCategoryOpenChange = (open: boolean) => {
-    setActiveFilter(open ? "category" : null);
-    if (!open) setHoveredFilter(null);
+    if (open) {
+      cancelDeferredActiveFilterClear();
+      cancelFilterSessionEndDelay();
+      setFilterSessionActive(true);
+      setActiveFilter("category");
+      return;
+    }
+    scheduleActiveFilterClose("category");
   };
 
   const handleSortOpenChange = (open: boolean) => {
-    setActiveFilter(open ? "sort" : null);
-    if (!open) setHoveredFilter(null);
+    if (open) {
+      cancelDeferredActiveFilterClear();
+      cancelFilterSessionEndDelay();
+      setFilterSessionActive(true);
+      setActiveFilter("sort");
+      return;
+    }
+    scheduleActiveFilterClose("sort");
   };
 
   const formatSelectedValues = useCallback(
@@ -344,7 +422,7 @@ export default function FilterSearchBar({
           <div
             className={cn(
               "flex h-full w-full items-center rounded-full transition-colors duration-200",
-              barMuted && "rounded-full border-black/5 bg-black/5"
+              barMuted && "rounded-full border-black/[0.035] bg-black/[0.035]"
             )}
           >
             <div

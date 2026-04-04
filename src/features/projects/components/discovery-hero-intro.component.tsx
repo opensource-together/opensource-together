@@ -50,7 +50,7 @@ export function DiscoveryHeroIntro({
       </motion.div>
 
       <h1
-        className="mt-3 text-center text-4xl leading-none md:text-5xl"
+        className="mt-3 text-center text-4xl leading-none tracking-[-0.04em] md:text-5xl"
         style={{ fontFamily: "Aspekta", fontWeight: 500 }}
       >
         <motion.span

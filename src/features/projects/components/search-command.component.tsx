@@ -264,7 +264,7 @@ export default function SearchCommand() {
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
-        className="rounded-2xl"
+        className="rounded-[calc(1rem+2px)]"
         commandProps={{ shouldFilter: false }}
         dialogContentProps={{
           onCloseAutoFocus: (event) => {

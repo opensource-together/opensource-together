@@ -240,7 +240,7 @@ export default function FilterSearchBarMobile({
         >
           <div className="flex shrink-0 items-center justify-between gap-3 pt-2 pr-2 pb-2 pl-2">
             <p className="font-medium text-base text-foreground tracking-tight">
-              Filter Projects
+              Select Filters
             </p>
             <SheetClose asChild>
               <button
