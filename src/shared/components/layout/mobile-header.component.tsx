@@ -32,11 +32,17 @@ import {
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
 
+type MobileNavLink = {
+  label: string;
+  icon: React.ElementType;
+  href: string;
+};
+
 interface MobileHeaderProps {
-  links?: Array<{ label: string; icon: React.ElementType; href: string }>;
+  links?: MobileNavLink[];
 }
 
-const DEFAULT_LINKS: MobileHeaderProps["links"] = [
+const DEFAULT_LINKS: MobileNavLink[] = [
   {
     label: "Dashboard",
     icon: HiMiniSquare2Stack,

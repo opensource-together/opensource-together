@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HiStar } from "react-icons/hi";
+import { RiTwitterXFill } from "react-icons/ri";
 
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 import { Button } from "../ui/button";
@@ -64,7 +65,7 @@ export default function CTAFooter({
             rel="noopener noreferrer"
           >
             <Button>
-              Star Us on Github
+              Star on Github
               <HiStar size={16} />
             </Button>
           </Link>
@@ -73,7 +74,10 @@ export default function CTAFooter({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="outline">Follow Us</Button>
+            <Button variant="outline">
+              Follow
+              <RiTwitterXFill size={16} aria-hidden />
+            </Button>
           </Link>
         </div>
       </div>

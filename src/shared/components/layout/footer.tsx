@@ -7,6 +7,11 @@ import { useEffect, useState } from "react";
 
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
+import {
+  HOMEPAGE_PRIMARY_READY_EVENT,
+  isHomepagePrimaryReadySignaled,
+  resetHomepagePrimaryReadySignal,
+} from "@/shared/lib/homepage-primary-ready";
 import { cn } from "@/shared/lib/utils";
 
 type FooterLink = {
@@ -124,7 +129,20 @@ export default function Footer() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    setPageReady(false);
+
     const markReady = () => setPageReady(true);
+
+    if (pathname === "/") {
+      window.addEventListener(HOMEPAGE_PRIMARY_READY_EVENT, markReady);
+      if (isHomepagePrimaryReadySignaled()) {
+        markReady();
+      }
+      return () =>
+        window.removeEventListener(HOMEPAGE_PRIMARY_READY_EVENT, markReady);
+    }
+
+    resetHomepagePrimaryReadySignal();
 
     if (document.readyState === "complete") {
       markReady();
@@ -133,7 +151,7 @@ export default function Footer() {
 
     window.addEventListener("load", markReady, { once: true });
     return () => window.removeEventListener("load", markReady);
-  }, []);
+  }, [pathname]);
 
   const hideFooter =
     is404Page ||

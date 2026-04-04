@@ -11,7 +11,7 @@ import FilterSearchBar from "./filter-search-bar.component";
 const ease = cubicBezier(0.25, 0.1, 0.25, 1);
 
 /** One headline line duration; second line starts when first finishes */
-const LINE_DURATION = 0.36;
+const LINE_DURATION = 0.42;
 /** Start badge / subtitle / filter after last line has blurred in */
 const REST_DELAY = LINE_DURATION * 2 + 0.06;
 
@@ -44,7 +44,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.42, delay: REST_DELAY, ease }}
+        transition={{ duration: 0.5, delay: REST_DELAY, ease }}
       >
         <HeroBadge className="mb-3" />
       </motion.div>
@@ -81,7 +81,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.42, delay: REST_DELAY + 0.05, ease }}
+        transition={{ duration: 0.5, delay: REST_DELAY + 0.05, ease }}
       >
         <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
           Empowering open source initiatives through effortless project
@@ -94,7 +94,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.42, delay: REST_DELAY + 0.1, ease }}
+        transition={{ duration: 0.5, delay: REST_DELAY + 0.1, ease }}
       >
         <FilterSearchBar
           onFilterChange={onFilterChange}

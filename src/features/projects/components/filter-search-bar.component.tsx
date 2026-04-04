@@ -337,7 +337,7 @@ export default function FilterSearchBar({
   return (
     <>
       <div
-        className="hidden h-14 w-[700px] items-center justify-center md:flex"
+        className="hidden h-14 w-[700px] items-center justify-center md:flex [&_button]:focus-visible:border-transparent [&_button]:focus-visible:outline-none [&_button]:focus-visible:ring-0 [&_button]:focus-visible:ring-offset-0"
         role="search"
       >
         <div className="relative flex h-full w-full items-center rounded-full border border-black/5 bg-white shadow-black/3 shadow-md backdrop-blur-lg hover:rounded-full">

@@ -9,7 +9,7 @@ import ProjectDiscoveryHero from "@/features/projects/components/project-discove
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
-
+import { signalHomepagePrimaryReady } from "@/shared/lib/homepage-primary-ready";
 import { BlurredSigninCtaGrid } from "../components/blurred-signin-cta-grid.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
@@ -136,6 +136,11 @@ export default function HomepageView() {
     { ...filters, published: true },
     { maxTotalItems: isAuthenticated ? undefined : MAX_FREE_PROJECTS }
   );
+
+  useEffect(() => {
+    if (isLoading || typeof window === "undefined") return;
+    signalHomepagePrimaryReady();
+  }, [isLoading]);
 
   // Merge all pages of projects
   const allProjects = data?.pages.flatMap((page) => page.data) || [];
