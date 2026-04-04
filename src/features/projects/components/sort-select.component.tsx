@@ -36,6 +36,8 @@ interface SortSelectProps {
   trigger: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /** Inline accordion panel (e.g. mobile sheet) instead of floating popover */
+  layout?: "popover" | "inline";
 }
 
 export function SortSelect({
@@ -45,6 +47,7 @@ export function SortSelect({
   trigger,
   open: controlledOpen,
   onOpenChange,
+  layout = "popover",
 }: SortSelectProps) {
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
@@ -60,6 +63,60 @@ export function SortSelect({
     handleOpenChange(false);
   };
 
+  const sortCommand = (
+    <Command>
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup>
+          {options.map((option) => {
+            const isSelected = value === option.id;
+            return (
+              <CommandItem
+                key={option.id}
+                value={option.name}
+                onSelect={() => handleSelect(option.id)}
+                className="cursor-pointer"
+              >
+                <HiCheck
+                  size={16}
+                  className={cn(
+                    isSelected ? "text-ost-blue-three opacity-100" : "opacity-0"
+                  )}
+                />
+                {option.name}
+              </CommandItem>
+            );
+          })}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+
+  if (layout === "inline") {
+    return (
+      <div className="flex w-full flex-col gap-2">
+        <button
+          type="button"
+          className="group/trigger inline-flex w-full cursor-pointer text-start"
+          aria-expanded={open}
+          onClick={() => handleOpenChange(!open)}
+        >
+          {trigger}
+        </button>
+        {open ? (
+          <div
+            className={cn(
+              "relative max-h-[min(40vh,16rem)] w-full origin-top overflow-y-auto overscroll-contain rounded-2xl border border-muted-black-stroke bg-popover p-1 text-popover-foreground shadow-xs",
+              "fade-in-0 zoom-in-95 slide-in-from-top-2 animate-in blur-in-[6px] duration-200 ease-out"
+            )}
+          >
+            {sortCommand}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
@@ -74,34 +131,7 @@ export function SortSelect({
         className="border-muted-black-stroke p-1 shadow-xs"
         align="start"
       >
-        <Command>
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => {
-                const isSelected = value === option.id;
-                return (
-                  <CommandItem
-                    key={option.id}
-                    value={option.name}
-                    onSelect={() => handleSelect(option.id)}
-                    className="cursor-pointer"
-                  >
-                    <HiCheck
-                      size={16}
-                      className={cn(
-                        isSelected
-                          ? "text-ost-blue-three opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    {option.name}
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-          </CommandList>
-        </Command>
+        {sortCommand}
       </PopoverContent>
     </Popover>
   );

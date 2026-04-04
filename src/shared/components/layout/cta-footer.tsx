@@ -73,7 +73,7 @@ export default function CTAFooter({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button variant="secondary">Follow Us</Button>
+            <Button variant="outline">Follow Us</Button>
           </Link>
         </div>
       </div>

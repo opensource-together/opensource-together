@@ -128,6 +128,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  ::selection {
+    @apply bg-zinc-900 text-white;
+  }
   body {
     @apply bg-background text-foreground;
   }

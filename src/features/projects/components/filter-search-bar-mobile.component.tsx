@@ -1,20 +1,26 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { HiX } from "react-icons/hi";
+import { HiMagnifyingGlass } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { Separator } from "@/shared/components/ui/separator";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { cn } from "@/shared/lib/utils";
 
 import type { ProjectFilters } from "../types/project-filters.type";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
+
+type MobileExpandedSection = "tech" | "category" | "sort" | null;
 
 interface FilterItemProps {
   label: string;
@@ -88,8 +94,8 @@ export default function FilterSearchBarMobile({
     }
   }, [initialFilters]);
 
-  const [isTechStackOpen, setIsTechStackOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [expandedSection, setExpandedSection] =
+    useState<MobileExpandedSection>(null);
 
   const hasSelectedFilters = useMemo(() => {
     return (
@@ -99,10 +105,10 @@ export default function FilterSearchBarMobile({
   }, [initialFilters]);
 
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack({
-    enabled: isTechStackOpen || hasSelectedFilters,
+    enabled: expandedSection === "tech" || hasSelectedFilters,
   });
   const { categoryOptions, isLoading: categoryLoading } = useCategories({
-    enabled: isCategoryOpen || hasSelectedFilters,
+    enabled: expandedSection === "category" || hasSelectedFilters,
   });
 
   const formatSelectedValues = useCallback(
@@ -206,26 +212,58 @@ export default function FilterSearchBarMobile({
       <Sheet>
         <div className="mb-4 flex w-full items-center justify-between">
           <SheetTrigger asChild>
-            <Button
+            <button
               type="button"
-              size="lg"
-              className="w-full py-6 text-base shadow-lg"
+              className={cn(
+                "inline-flex h-14 w-full shrink-0 items-center justify-between gap-3 rounded-full border border-black/5 bg-white pr-1.5 pl-5 font-medium text-base text-foreground tracking-tight shadow-black/3 shadow-md outline-none backdrop-blur-lg transition-all",
+                "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                "disabled:pointer-events-none disabled:opacity-50"
+              )}
             >
-              Filter Projects
-            </Button>
+              <span className="min-w-0 truncate pl-1 text-start">
+                Filter Projects
+              </span>
+              <span
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-white"
+                aria-hidden
+              >
+                <HiMagnifyingGlass className="size-[18px]" />
+              </span>
+            </button>
           </SheetTrigger>
         </div>
         <SheetContent
           side="bottom"
           responsive
           responsiveWidth={{ mobile: "w-full", desktop: "w-[420px]" }}
-          className="rounded-t-2xl p-4"
+          className="flex min-h-0 flex-col gap-0 rounded-t-[22px] p-4"
         >
-          <div className="mt-4 flex flex-col gap-3 overflow-y-auto overscroll-contain pb-20">
+          <div className="flex shrink-0 items-center justify-between gap-3 pt-2 pr-2 pb-2 pl-2">
+            <p className="font-medium text-base text-foreground tracking-tight">
+              Filter Projects
+            </p>
+            <SheetClose asChild>
+              <button
+                type="button"
+                className={cn(
+                  "shrink-0 rounded-full border border-black/5 p-2 opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none",
+                  "[&_svg]:pointer-events-none [&_svg]:shrink-0"
+                )}
+                aria-label="Close"
+              >
+                <HiX className="size-4" />
+                <span className="sr-only">Close</span>
+              </button>
+            </SheetClose>
+          </div>
+          <div className="mt-2 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain">
             <CustomCombobox
+              layout="inline"
               options={techStackOptions}
               value={selectedTechStacks}
               onChange={setSelectedTechStacks}
+              open={expandedSection === "tech"}
+              onOpenChange={(next) => setExpandedSection(next ? "tech" : null)}
               placeholder={
                 techStacksLoading
                   ? "Loading technologies..."
@@ -234,38 +272,41 @@ export default function FilterSearchBarMobile({
               searchPlaceholder="Search technologies..."
               emptyText="No technologies found."
               trigger={
-                <MobileFilterItem
-                  label="Technologies"
-                  value={techStacksValue}
-                />
+                <MobileFilterItem label="Choose" value={techStacksValue} />
               }
-              onOpenChange={setIsTechStackOpen}
               isLoading={techStacksLoading}
             />
             <CustomCombobox
+              layout="inline"
               options={categoryOptions}
               value={selectedCategories}
               onChange={setSelectedCategories}
+              open={expandedSection === "category"}
+              onOpenChange={(next) =>
+                setExpandedSection(next ? "category" : null)
+              }
               placeholder={
                 categoryLoading ? "Loading categories..." : "Add categories..."
               }
               searchPlaceholder="Search categories..."
               emptyText="No categories found."
               trigger={
-                <MobileFilterItem label="Categories" value={categoriesValue} />
+                <MobileFilterItem label="Select" value={categoriesValue} />
               }
-              onOpenChange={setIsCategoryOpen}
               isLoading={categoryLoading}
             />
             <SortSelect
+              layout="inline"
               options={SORT_OPTIONS}
               value={selectedSort}
               onChange={setSelectedSort}
+              open={expandedSection === "sort"}
+              onOpenChange={(next) => setExpandedSection(next ? "sort" : null)}
               trigger={<MobileFilterItem label="Sort" value={sortValue} />}
             />
           </div>
-          <Separator className="my-4" />
-          <div className="mt-4 flex items-center justify-end gap-2">
+          <Separator className="mt-4 shrink-0" />
+          <div className="flex shrink-0 items-center justify-end gap-2 bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
             <Button type="button" variant="ghost" size="lg" asChild>
               <SheetTrigger>Cancel</SheetTrigger>
             </Button>

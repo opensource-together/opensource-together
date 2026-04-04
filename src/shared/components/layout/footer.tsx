@@ -156,7 +156,7 @@ export default function Footer() {
           aria-hidden={!pageReady}
         >
           <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
-          <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
+          <div className="flex w-full flex-col items-start gap-10 max-md:pl-3 md:flex-row md:items-start md:justify-between md:gap-12 md:pl-0">
             {/* Left: Logo + copyright */}
             <div className="flex w-full flex-col items-start gap-4 md:w-auto">
               <Link href="/" className="flex items-center">
@@ -174,12 +174,10 @@ export default function Footer() {
             </div>
 
             {/* Right: Link sections */}
-            <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+            <div className="grid w-full grid-cols-1 gap-y-8 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
               {renderLinkSection("Resources", footerLinks.resources)}
               {renderLinkSection("Company", footerLinks.company)}
-              <div className="mb-3 md:mb-3">
-                {renderLinkSection("Legal", footerLinks.legal)}
-              </div>
+              {renderLinkSection("Legal", footerLinks.legal)}
             </div>
           </div>
         </footer>

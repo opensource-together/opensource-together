@@ -21,7 +21,7 @@ const HeroBadge: React.FC<BadgeProps> = ({ className = "" }) => {
           <span className="ml-0.5 rounded-full bg-ost-blue-one/10 px-3 py-1 font-medium text-[10px] text-ost-blue-three leading-tight md:text-xs">
             Discord
           </span>
-          <span className="text-nowrap font-medium text-[10px] text-muted-foreground leading-tight md:text-xs">
+          <span className="text-nowrap font-medium text-[12px] text-muted-foreground leading-tight md:text-xs">
             Join a community of active contributers
           </span>
         </div>
