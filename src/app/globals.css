@@ -95,6 +95,35 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* FilterSearchBar apply CTA: slot-style roll + light blur at mid-motion */
+@keyframes filter-btn-label-roll-to-apply {
+  0% {
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  45% {
+    filter: blur(1.5px);
+  }
+  100% {
+    transform: translateY(-50%);
+    filter: blur(0);
+  }
+}
+
+@keyframes filter-btn-label-roll-to-idle {
+  0% {
+    transform: translateY(-50%);
+    filter: blur(0);
+  }
+  45% {
+    filter: blur(1.5px);
+  }
+  100% {
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

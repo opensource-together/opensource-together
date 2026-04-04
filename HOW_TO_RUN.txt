@@ -1,0 +1,27 @@
+HOW TO RUN - OpenSource Together
+=================================
+
+1. INSTALL DEPENDENCIES (first time only)
+   cd ~/Projects/opensource-together
+   pnpm install
+
+2. START THE DEV SERVER
+   pnpm dev
+   → Opens at http://localhost:3000
+
+3. STOP THE SERVER
+   Press Ctrl+C in the terminal
+
+---
+
+NOTES
+- Default branch is "develop" (not main)
+- The project list will be empty locally — it needs the backend API (port 4000)
+  which is a separate service the team runs. Frontend UI work is fully usable without it.
+- .env is already configured (copied from .env.example)
+
+OTHER USEFUL COMMANDS
+  pnpm lint          → check for lint errors
+  pnpm lint:write    → auto-fix lint errors
+  pnpm type-check    → TypeScript type checking
+  pnpm build         → production build

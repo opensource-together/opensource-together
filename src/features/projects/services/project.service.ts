@@ -4,7 +4,13 @@ import type {
   PaginatedResponse,
   PaginationParams,
 } from "@/shared/types/pagination.type";
-
+// Mock fallback for local development only.
+// When the backend API (port 4000) is not running, getProjects catches the
+// network error and returns mockPaginatedResponse instead of throwing, so
+// project cards are still visible in the browser for UI development.
+// This branch is gated behind NODE_ENV === "development", so Next.js removes
+// it entirely at build time — mock data never reaches production.
+import { mockPaginatedResponse } from "../mocks/project.mock";
 import type { Project } from "../types/project.type";
 import type {
   ProjectSchema,
@@ -52,6 +58,9 @@ export const getProjects = async (
     const apiResponse = await response.json();
     return apiResponse;
   } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      return mockPaginatedResponse;
+    }
     console.error("Error while sending the request to the API:", error);
     throw error;
   }

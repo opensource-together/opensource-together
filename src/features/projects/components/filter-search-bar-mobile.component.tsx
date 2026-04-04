@@ -24,7 +24,7 @@ interface FilterItemProps {
 function MobileFilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="group flex w-full cursor-pointer flex-col rounded-full border border-muted-black-stroke px-6 py-3 shadow-xs">
-      <span className="font-normal text-black/40 text-xs">{label}</span>
+      <span className="font-normal text-xs text-zinc-400">{label}</span>
       <span className="truncate font-medium text-sm tracking-tight">
         {value}
       </span>

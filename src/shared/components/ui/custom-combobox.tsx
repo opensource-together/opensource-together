@@ -38,8 +38,10 @@ interface ComboboxProps {
   className?: string;
   trigger?: React.ReactNode;
   disabled?: boolean;
+  open?: boolean;
   onOpenChange?: (open: boolean) => void;
   isLoading?: boolean;
+  modal?: boolean;
 }
 
 export function CustomCombobox({
@@ -52,13 +54,17 @@ export function CustomCombobox({
   className,
   trigger,
   disabled = false,
+  open: controlledOpen,
   onOpenChange,
   isLoading = false,
+  modal = true,
 }: ComboboxProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
 
   const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
+    if (!isControlled) setInternalOpen(newOpen);
     onOpenChange?.(newOpen);
   };
 
@@ -81,12 +87,12 @@ export function CustomCombobox({
 
   return (
     <div className={cn("flex w-full flex-col gap-3", className)}>
-      <Popover modal={true} open={open} onOpenChange={handleOpenChange}>
+      <Popover modal={modal} open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <button
             type="button"
             className={cn(
-              "inline-flex w-full text-start",
+              "group/trigger inline-flex w-full text-start",
               disabled && "pointer-events-none opacity-50"
             )}
             disabled={disabled}

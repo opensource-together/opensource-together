@@ -34,6 +34,8 @@ interface SortSelectProps {
   value: string;
   onChange: (value: string) => void;
   trigger: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function SortSelect({
@@ -41,20 +43,29 @@ export function SortSelect({
   value,
   onChange,
   trigger,
+  open: controlledOpen,
+  onOpenChange,
 }: SortSelectProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!isControlled) setInternalOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
 
   const handleSelect = (optionId: string) => {
     onChange(optionId);
-    setOpen(false);
+    handleOpenChange(false);
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="inline-flex w-full cursor-pointer text-start"
+          className="group/trigger inline-flex w-full cursor-pointer text-start"
         >
           {trigger}
         </button>

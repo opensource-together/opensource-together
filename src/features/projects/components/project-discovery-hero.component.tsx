@@ -1,11 +1,9 @@
 import Image from "next/image";
 
 import { FadeIn } from "@/shared/components/motion/fade-in";
-import { FadeUp } from "@/shared/components/motion/fade-up";
-import HeroBadge from "@/shared/components/ui/hero-badge";
 
 import type { ProjectFilters } from "../types/project-filters.type";
-import FilterSearchBar from "./filter-search-bar.component";
+import { DiscoveryHeroIntro } from "./discovery-hero-intro.component";
 
 interface ProjectDiscoveryHeroProps {
   onFilterChange?: (filters: ProjectFilters) => void;
@@ -44,35 +42,12 @@ export default function ProjectDiscoveryHero({
         />
       </FadeIn>
 
-      <div className="relative z-10 mx-auto mt-16 mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:mt-0 md:min-h-[320px] lg:min-h-[400px]">
-        <FadeUp delay={0.05}>
-          <HeroBadge className="mb-3" />
-        </FadeUp>
-
-        <FadeUp delay={0.1}>
-          <h1
-            className="mt-3 text-center text-4xl leading-none md:text-5xl"
-            style={{ fontFamily: "Aspekta", fontWeight: 500 }}
-          >
-            Together, build our <br />
-            future in open source
-          </h1>
-        </FadeUp>
-
-        <FadeUp delay={0.15}>
-          <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
-            Empowering open source initiatives through effortless project
-            discovery, collaboration, and contributor connection.
-          </p>
-        </FadeUp>
-
-        <div className="mt-8 w-full px-6 md:w-auto">
-          <FilterSearchBar
-            onFilterChange={onFilterChange}
-            isLoading={isLoading}
-            initialFilters={initialFilters}
-          />
-        </div>
+      <div className="relative z-10 mx-auto mt-11 mb-5 flex min-h-[260px] w-full max-w-[1441px] flex-col items-center justify-center md:-mt-5 md:min-h-[320px] lg:min-h-[400px]">
+        <DiscoveryHeroIntro
+          onFilterChange={onFilterChange}
+          isLoading={isLoading}
+          initialFilters={initialFilters}
+        />
       </div>
     </div>
   );

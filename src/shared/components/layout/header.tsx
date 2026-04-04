@@ -27,8 +27,16 @@ export default function Header() {
     <>
       <MobileHeader />
 
-      <header className="sticky top-0 z-40 hidden justify-between bg-white/50 px-10 py-4 backdrop-blur-2xl md:flex">
-        <div className="flex items-center gap-4">
+      <header className="relative sticky top-0 z-40 hidden justify-between px-10 pt-4 pb-9 md:flex">
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-white to-transparent"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 backdrop-blur-2xl [-webkit-mask-image:linear-gradient(to_bottom,black,transparent)] [mask-image:linear-gradient(to_bottom,black,transparent)]"
+          aria-hidden
+        />
+        <div className="relative z-10 flex items-center gap-4">
           <Link href="/" aria-label="OpenSource Together Home">
             <Image
               src="/ostogether-logo.svg"
@@ -39,7 +47,10 @@ export default function Header() {
           </Link>
           <HeaderBreadcrumb />
         </div>
-        <nav className="flex items-center gap-2" aria-label="Main navigation">
+        <nav
+          className="relative z-10 flex items-center gap-2"
+          aria-label="Main navigation"
+        >
           <div className="flex items-center gap-1 md:mr-2">
             <SearchCommand />
             <Link href="/dashboard/my-projects">

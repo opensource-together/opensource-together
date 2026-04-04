@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
+import { cn } from "@/shared/lib/utils";
 
 type FooterLink = {
   label: string;
@@ -79,10 +80,10 @@ const footerLinks: {
 
 const renderLinkSection = (title: string, links: FooterLink[]) => (
   <div>
-    <h2 className="mb-5 font-medium text-foreground text-sm md:mb-6 md:text-sm">
+    <h2 className="mb-3 font-medium text-foreground text-sm md:mb-4 md:text-sm">
       {title}
     </h2>
-    <ul className="space-y-5 text-muted-foreground text-sm md:text-sm">
+    <ul className="space-y-3 text-muted-foreground text-sm md:text-sm">
       {links.map((link) => (
         <li key={link.id}>
           <Link
@@ -104,6 +105,7 @@ const renderLinkSection = (title: string, links: FooterLink[]) => (
 export default function Footer() {
   const pathname = usePathname();
   const [is404Page, setIs404Page] = useState(false);
+  const [pageReady, setPageReady] = useState(false);
 
   useEffect(() => {
     const checkFor404 = () => {
@@ -119,6 +121,20 @@ export default function Footer() {
     requestAnimationFrame(checkFor404);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const markReady = () => setPageReady(true);
+
+    if (document.readyState === "complete") {
+      markReady();
+      return;
+    }
+
+    window.addEventListener("load", markReady, { once: true });
+    return () => window.removeEventListener("load", markReady);
+  }, []);
+
   const hideFooter =
     is404Page ||
     pathname.startsWith("/projects/create") ||
@@ -130,7 +146,15 @@ export default function Footer() {
   return (
     <>
       {!hideFooter && (
-        <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
+        <footer
+          className={cn(
+            "mx-4 mb-8 max-w-6xl bg-white transition-opacity duration-500 ease-out md:mx-auto",
+            pageReady
+              ? "opacity-100"
+              : "pointer-events-none select-none opacity-0"
+          )}
+          aria-hidden={!pageReady}
+        >
           <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
           <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
             {/* Left: Logo + copyright */}
@@ -153,7 +177,7 @@ export default function Footer() {
             <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
               {renderLinkSection("Resources", footerLinks.resources)}
               {renderLinkSection("Company", footerLinks.company)}
-              <div className="mb-5 md:mb-5">
+              <div className="mb-3 md:mb-3">
                 {renderLinkSection("Legal", footerLinks.legal)}
               </div>
             </div>
