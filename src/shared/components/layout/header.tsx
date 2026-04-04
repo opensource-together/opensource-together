@@ -53,24 +53,30 @@ export default function Header() {
         >
           <div className="flex items-center gap-1 md:mr-2">
             <SearchCommand />
-            <Link href="/dashboard/my-projects">
-              <Button
-                variant="ghost"
-                className={pathname.startsWith("/dashboard") ? "bg-accent" : ""}
-                size="sm"
-              >
-                Dashboard
-              </Button>
-            </Link>
-            <Link href="/learn">
-              <Button
-                variant="ghost"
-                className={pathname.startsWith("/learn") ? "bg-accent" : ""}
-                size="sm"
-              >
-                Learn
-              </Button>
-            </Link>
+            {isAuthenticated && (
+              <>
+                <Link href="/dashboard/my-projects">
+                  <Button
+                    variant="ghost"
+                    className={
+                      pathname.startsWith("/dashboard") ? "bg-accent" : ""
+                    }
+                    size="sm"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link href="/learn">
+                  <Button
+                    variant="ghost"
+                    className={pathname.startsWith("/learn") ? "bg-accent" : ""}
+                    size="sm"
+                  >
+                    Learn
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {isLoading ? (

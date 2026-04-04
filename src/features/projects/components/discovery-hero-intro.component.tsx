@@ -15,8 +15,6 @@ const LINE_DURATION = 0.36;
 /** Start badge / subtitle / filter after last line has blurred in */
 const REST_DELAY = LINE_DURATION * 2 + 0.06;
 
-const viewport = { once: true, amount: 0.45 } as const;
-
 const subtleBlurHidden = "blur(3px)";
 
 const lineVariants = {
@@ -44,8 +42,7 @@ export function DiscoveryHeroIntro({
     <>
       <motion.div
         initial="hidden"
-        whileInView="visible"
-        viewport={viewport}
+        animate="visible"
         variants={fromTopVariants}
         transition={{ duration: 0.42, delay: REST_DELAY, ease }}
       >
@@ -59,8 +56,7 @@ export function DiscoveryHeroIntro({
         <motion.span
           className="block"
           initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
+          animate="visible"
           variants={lineVariants}
           transition={{ duration: LINE_DURATION, ease }}
         >
@@ -69,8 +65,7 @@ export function DiscoveryHeroIntro({
         <motion.span
           className="block"
           initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
+          animate="visible"
           variants={lineVariants}
           transition={{
             duration: LINE_DURATION,
@@ -84,8 +79,7 @@ export function DiscoveryHeroIntro({
 
       <motion.div
         initial="hidden"
-        whileInView="visible"
-        viewport={viewport}
+        animate="visible"
         variants={fromTopVariants}
         transition={{ duration: 0.42, delay: REST_DELAY + 0.05, ease }}
       >
@@ -98,8 +92,7 @@ export function DiscoveryHeroIntro({
       <motion.div
         className="mt-8 w-full px-6 md:w-auto"
         initial="hidden"
-        whileInView="visible"
-        viewport={viewport}
+        animate="visible"
         variants={fromTopVariants}
         transition={{ duration: 0.42, delay: REST_DELAY + 0.1, ease }}
       >
