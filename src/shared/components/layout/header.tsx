@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { HiPlus } from "react-icons/hi2";
 
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
+import LogoDropdown from "@/shared/components/layout/logo-dropdown.component";
 import { MobileHeader } from "@/shared/components/layout/mobile-header.component";
 import "@/shared/components/ui/breadcrumb-navigation";
 
@@ -37,14 +38,18 @@ export default function Header() {
           aria-hidden
         />
         <div className="relative z-10 flex items-center gap-4">
-          <Link href="/" aria-label="OpenSource Together Home">
-            <Image
-              src="/ostogether-logo.svg"
-              alt="ost-logo"
-              width={210}
-              height={50}
-            />
-          </Link>
+          {pathname === "/" ? (
+            <LogoDropdown />
+          ) : (
+            <Link href="/" aria-label="OpenSource Together Home">
+              <Image
+                src="/ostogether-logo.svg"
+                alt="ost-logo"
+                width={210}
+                height={50}
+              />
+            </Link>
+          )}
           <HeaderBreadcrumb />
         </div>
         <nav

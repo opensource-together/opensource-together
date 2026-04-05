@@ -1,6 +1,3 @@
-/** Fired on `/` when the homepage projects list has finished its initial fetch (`!isLoading`). */
-export const HOMEPAGE_PRIMARY_READY_EVENT = "ost:homepage-primary-ready";
-
 export const EXTERNAL_LINKS = {
   GITHUB_ORG: "https://github.com/opensource-together",
   GITHUB_REPO: "https://github.com/opensource-together/opensource-together",

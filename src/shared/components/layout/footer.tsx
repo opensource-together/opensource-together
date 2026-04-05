@@ -7,12 +7,6 @@ import { useEffect, useState } from "react";
 
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
-import {
-  HOMEPAGE_PRIMARY_READY_EVENT,
-  isHomepagePrimaryReadySignaled,
-  resetHomepagePrimaryReadySignal,
-} from "@/shared/lib/homepage-primary-ready";
-import { cn } from "@/shared/lib/utils";
 
 type FooterLink = {
   label: string;
@@ -110,7 +104,6 @@ const renderLinkSection = (title: string, links: FooterLink[]) => (
 export default function Footer() {
   const pathname = usePathname();
   const [is404Page, setIs404Page] = useState(false);
-  const [pageReady, setPageReady] = useState(false);
 
   useEffect(() => {
     const checkFor404 = () => {
@@ -126,33 +119,6 @@ export default function Footer() {
     requestAnimationFrame(checkFor404);
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    setPageReady(false);
-
-    const markReady = () => setPageReady(true);
-
-    if (pathname === "/") {
-      window.addEventListener(HOMEPAGE_PRIMARY_READY_EVENT, markReady);
-      if (isHomepagePrimaryReadySignaled()) {
-        markReady();
-      }
-      return () =>
-        window.removeEventListener(HOMEPAGE_PRIMARY_READY_EVENT, markReady);
-    }
-
-    resetHomepagePrimaryReadySignal();
-
-    if (document.readyState === "complete") {
-      markReady();
-      return;
-    }
-
-    window.addEventListener("load", markReady, { once: true });
-    return () => window.removeEventListener("load", markReady);
-  }, [pathname]);
-
   const hideFooter =
     is404Page ||
     pathname.startsWith("/projects/create") ||
@@ -164,15 +130,7 @@ export default function Footer() {
   return (
     <>
       {!hideFooter && (
-        <footer
-          className={cn(
-            "mx-4 mb-8 max-w-6xl bg-white transition-opacity duration-500 ease-out md:mx-auto",
-            pageReady
-              ? "opacity-100"
-              : "pointer-events-none select-none opacity-0"
-          )}
-          aria-hidden={!pageReady}
-        >
+        <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
           <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
           <div className="flex w-full flex-col items-start gap-10 max-md:pl-3 md:flex-row md:items-start md:justify-between md:gap-12 md:pl-0">
             {/* Left: Logo + copyright */}

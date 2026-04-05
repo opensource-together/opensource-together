@@ -124,6 +124,17 @@
   }
 }
 
+/* Skeleton placeholders: light zinc tones (no opacity pulse on white) */
+@keyframes skeleton-zinc-pulse {
+  0%,
+  100% {
+    background-color: rgb(250 250 250); /* zinc-50 */
+  }
+  50% {
+    background-color: rgb(244 244 245); /* zinc-100 */
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
