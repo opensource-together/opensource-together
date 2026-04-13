@@ -1,6 +1,5 @@
 "use client";
 
-import { cubicBezier } from "motion";
 import { motion } from "motion/react";
 
 import HeroBadge from "@/shared/components/ui/hero-badge";
@@ -8,22 +7,23 @@ import HeroBadge from "@/shared/components/ui/hero-badge";
 import type { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBar from "./filter-search-bar.component";
 
-const ease = cubicBezier(0.25, 0.1, 0.25, 1);
+/** Smooth deceleration (flat transition + tuple ease — reliable with motion/react variants) */
+const ease = [0.22, 1, 0.32, 1] as const;
 
-/** One headline line duration; second line starts when first finishes */
-const LINE_DURATION = 0.42;
-/** Start badge / subtitle / filter after last line has blurred in */
-const REST_DELAY = LINE_DURATION * 2 + 0.06;
+/** One headline line; second line starts when this block finishes */
+const LINE_DURATION = 0.68;
+/** Start badge / subtitle / filter shortly after the headline lines (tight buffer) */
+const REST_DELAY = LINE_DURATION * 2 + 0.02;
 
-const subtleBlurHidden = "blur(3px)";
+const subtleBlurHidden = "blur(4px)";
 
 const lineVariants = {
-  hidden: { opacity: 0, filter: subtleBlurHidden, y: 6 },
+  hidden: { opacity: 0, filter: subtleBlurHidden, y: 4 },
   visible: { opacity: 1, filter: "blur(0px)", y: 0 },
 };
 
 const fromTopVariants = {
-  hidden: { opacity: 0, filter: subtleBlurHidden, y: -12 },
+  hidden: { opacity: 0, filter: subtleBlurHidden, y: -8 },
   visible: { opacity: 1, filter: "blur(0px)", y: 0 },
 };
 
@@ -44,7 +44,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.5, delay: REST_DELAY, ease }}
+        transition={{ duration: 0.72, delay: REST_DELAY, ease }}
       >
         <HeroBadge className="mb-3" />
       </motion.div>
@@ -81,7 +81,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.5, delay: REST_DELAY + 0.05, ease }}
+        transition={{ duration: 0.72, delay: REST_DELAY + 0.04, ease }}
       >
         <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
           Empowering open source initiatives through effortless project
@@ -94,7 +94,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.5, delay: REST_DELAY + 0.1, ease }}
+        transition={{ duration: 0.72, delay: REST_DELAY + 0.1, ease }}
       >
         <FilterSearchBar
           onFilterChange={onFilterChange}

@@ -79,7 +79,7 @@ export default function LogoDropdown() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="cursor-pointer rounded-md outline-none"
+          className="cursor-pointer rounded-md outline-none transition-opacity duration-200 ease-out hover:opacity-50"
           aria-label="OpenSource Together Home"
         >
           <Image
