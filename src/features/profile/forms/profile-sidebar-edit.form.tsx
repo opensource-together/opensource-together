@@ -39,7 +39,12 @@ export default function ProfileSidebarEditForm({
             name="userTechStacks"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (10 max)</FormLabel>
+                <FormLabel required className="gap-1.5">
+                  Technologies
+                  <span className="font-normal text-muted-foreground">
+                    • 10 max
+                  </span>
+                </FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}
@@ -66,8 +71,14 @@ export default function ProfileSidebarEditForm({
             name="userCategories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel tooltip="AI-suggested categories may not be perfectly accurate yet and will improve over time.">
-                  Interests (6 max)
+                <FormLabel
+                  className="gap-1.5"
+                  tooltip="AI-suggested categories may not be perfectly accurate yet and will improve over time."
+                >
+                  Interests
+                  <span className="font-normal text-muted-foreground">
+                    • 6 max
+                  </span>
                 </FormLabel>
                 <FormControl>
                   <Combobox

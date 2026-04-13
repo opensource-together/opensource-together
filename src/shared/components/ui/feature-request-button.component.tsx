@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -25,6 +26,7 @@ import {
 
 export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const { currentUser } = useAuth();
   const { submitFeatureRequest, isSubmitting } = useFeatureRequest();
@@ -36,7 +38,10 @@ export function FeatureRequestButton() {
     },
   });
 
-  if (!currentUser) {
+  const hideFloatingButton =
+    pathname?.startsWith("/auth") || pathname?.startsWith("/onboarding");
+
+  if (hideFloatingButton || !currentUser) {
     return null;
   }
 

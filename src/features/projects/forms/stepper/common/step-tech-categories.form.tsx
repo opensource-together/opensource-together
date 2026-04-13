@@ -264,7 +264,12 @@ export function StepTechCategoriesForm() {
               name="projectTechStacks"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Select technologies (10 max)</FormLabel>
+                  <FormLabel required className="gap-1.5">
+                    Select technologies
+                    <span className="font-normal text-muted-foreground">
+                      • 10 max
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Combobox
                       options={techStackOptions}
@@ -292,7 +297,12 @@ export function StepTechCategoriesForm() {
               name="projectCategories"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Select categories (6 max)</FormLabel>
+                  <FormLabel required className="gap-1.5">
+                    Select categories
+                    <span className="font-normal text-muted-foreground">
+                      • 6 max
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Combobox
                       options={categoryOptions}

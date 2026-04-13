@@ -210,7 +210,7 @@ export default function HomepageView() {
       >
         <EmptyState
           title="No projects"
-          description="No projects founded here"
+          description="No projects found here."
           icon={HiMiniSquare2Stack}
           className="mb-28"
         />

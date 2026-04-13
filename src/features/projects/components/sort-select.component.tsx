@@ -65,7 +65,7 @@ export function SortSelect({
 
   const sortCommand = (
     <Command>
-      <CommandList>
+      <CommandList className="max-h-[288px]">
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
           {options.map((option) => {
@@ -128,7 +128,7 @@ export function SortSelect({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="border-muted-black-stroke p-1 shadow-xs"
+        className="w-[276px] max-w-[276px] border-muted-black-stroke p-1 shadow-xs"
         align="start"
       >
         {sortCommand}

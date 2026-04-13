@@ -28,7 +28,7 @@ export function ProjectTechCategoriesPreview({
   websiteUrl,
 }: ProjectTechCategoriesPreviewProps) {
   return (
-    <div className="flex flex-col rounded-2xl bg-accent p-8">
+    <div className="flex flex-col rounded-2xl bg-accent/65 p-8">
       <div className="mb-4 flex flex-col gap-6">
         <TechStackList
           title="Technical Stack"

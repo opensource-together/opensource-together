@@ -37,7 +37,12 @@ export default function ProjectSidebarEditForm({
             name="projectTechStacks"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Technologies (10 max)</FormLabel>
+                <FormLabel required className="gap-1.5">
+                  Technologies
+                  <span className="font-normal text-muted-foreground">
+                    • 10 max
+                  </span>
+                </FormLabel>
                 <FormControl>
                   <Combobox
                     options={techStackOptions}
@@ -64,7 +69,12 @@ export default function ProjectSidebarEditForm({
             name="projectCategories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel required>Categories (6 max)</FormLabel>
+                <FormLabel required className="gap-1.5">
+                  Categories
+                  <span className="font-normal text-muted-foreground">
+                    • 6 max
+                  </span>
+                </FormLabel>
                 <FormControl>
                   <Combobox
                     options={categoryOptions}

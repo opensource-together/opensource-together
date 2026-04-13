@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import Image from "next/image";
 import * as React from "react";
 import { HiCheck, HiChevronDown, HiXMark } from "react-icons/hi2";
@@ -19,6 +20,9 @@ import {
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
 import { cn } from "@/shared/lib/utils";
+
+/** Smooth deceleration — matches other intro / badge motion in the app */
+const badgeAppearEase = [0.22, 1, 0.32, 1] as const;
 
 export interface ComboboxOption {
   id: string;
@@ -96,21 +100,29 @@ export function Combobox({
       {showTags && selectedOptions.length > 0 && (
         <div className="-mb-1 flex flex-wrap gap-2">
           {selectedOptions.map((option) => (
-            <Badge
+            <motion.span
               key={option.id}
-              variant="outline"
-              className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
+              layout
+              initial={{ opacity: 0, filter: "blur(8px)", y: 12 }}
+              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              transition={{ duration: 0.4, ease: badgeAppearEase }}
+              className="inline-flex"
             >
-              {option.name}
-              <button
-                type="button"
-                onClick={() => handleRemove(option.id)}
-                className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
-                disabled={disabled}
+              <Badge
+                variant="outline"
+                className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
               >
-                <HiXMark />
-              </button>
-            </Badge>
+                {option.name}
+                <button
+                  type="button"
+                  onClick={() => handleRemove(option.id)}
+                  className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
+                  disabled={disabled}
+                >
+                  <HiXMark />
+                </button>
+              </Badge>
+            </motion.span>
           ))}
         </div>
       )}
@@ -136,7 +148,10 @@ export function Combobox({
             <HiChevronDown />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full rounded-lg p-0" align="start">
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] rounded-lg p-0"
+          align="start"
+        >
           <Command>
             <CommandInput placeholder={searchPlaceholder} className="h-9" />
             <CommandList>

@@ -164,7 +164,7 @@ export function MultipleImageUpload({
               return (
                 <div
                   key={`current-${imageUrl}`}
-                  className="group flex items-center gap-3 rounded-xl border border-border bg-secondary p-2"
+                  className="group flex items-center gap-3 rounded-xl bg-secondary p-2"
                 >
                   {/* Thumbnail */}
                   <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border">
@@ -180,7 +180,9 @@ export function MultipleImageUpload({
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <p className="truncate font-medium text-sm">{fileName}</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-green-600 text-xs">Uploaded</span>
+                      <span className="text-ost-blue-three text-xs">
+                        Uploaded
+                      </span>
                     </div>
                   </div>
 
@@ -204,7 +206,7 @@ export function MultipleImageUpload({
             {files.map((file, index) => (
               <div
                 key={`file-${file.name}-${file.size}-${file.lastModified}`}
-                className="group flex items-center gap-3 rounded-xl border border-border bg-secondary p-2"
+                className="group flex items-center gap-3 rounded-xl bg-secondary p-2"
               >
                 {/* Thumbnail */}
                 <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border">
@@ -223,7 +225,9 @@ export function MultipleImageUpload({
                     <span className="text-muted-foreground text-xs">
                       {formatFileSize(file.size)}
                     </span>
-                    <span className="text-green-600 text-xs">Uploaded</span>
+                    <span className="text-ost-blue-three text-xs">
+                      Uploaded
+                    </span>
                   </div>
                 </div>
 

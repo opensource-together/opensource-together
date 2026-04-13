@@ -115,7 +115,7 @@ export function CustomCombobox({
   const commandTree = (
     <Command>
       <CommandInput placeholder={searchPlaceholder} className="h-9" />
-      <CommandList>
+      <CommandList className="max-h-[288px]">
         {isLoading ? (
           <CommandGroup>
             {[...Array(5)].map((_, i) => (
@@ -323,7 +323,7 @@ export function CustomCombobox({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="relative border-muted-black-stroke p-1 shadow-xs"
+          className="relative w-[276px] max-w-[276px] border-muted-black-stroke p-1 shadow-xs"
           align="start"
         >
           <div className="absolute top-2.5 right-4 z-10">{clearAllButton}</div>

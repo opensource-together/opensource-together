@@ -30,7 +30,7 @@ export default function StepperHeaderComponent({
         />
       </div>
       <div className="mx-auto flex flex-col">{/* Stepper Indicator */}</div>
-      <h2 className="mb-2 text-3xl">{title}</h2>
+      <h2 className="mb-2 text-2xl tracking-[-2%]">{title}</h2>
       <p className="mb-4 text-muted-foreground text-sm">{description}</p>
     </>
   );
