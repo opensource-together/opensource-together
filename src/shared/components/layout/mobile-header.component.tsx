@@ -77,7 +77,10 @@ export function MobileHeader({ links }: MobileHeaderProps) {
         aria-hidden
       />
       <div className="relative z-10 flex items-center justify-between gap-2 px-4 py-[calc(var(--spacing)*4+8px)]">
-        <Link href="/" className="flex items-center gap-2">
+        <Link
+          href="/"
+          className="flex items-center gap-2 transition-opacity duration-200 ease-out hover:opacity-50"
+        >
           <Image
             src="/ostogether-logo.svg"
             alt="OpenSource Together"

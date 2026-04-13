@@ -82,68 +82,43 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
     );
   }
 
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const days = ["Mon", "Wed", "Fri"];
+  const weekCount = contributionGraph.weeks.length;
+  const rowCount = Math.max(
+    7,
+    ...contributionGraph.weeks.map((w) => w.contributionDays.length)
+  );
 
   return (
     <div className="h-full w-full">
       <div>
         <h2 className="mb-2">Contribution Activity</h2>
 
-        <div className="w-full overflow-x-auto md:overflow-x-hidden">
-          <div className="relative w-max md:origin-left md:scale-x-[0.99]">
-            <div className="mb-0.5 flex pr-2.5">
-              {months.map((month, index) => (
-                <div key={index} className="flex-1 text-left">
-                  <span className="text-[8px] text-neutral-400">{month}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex">
-              <div
-                className="h-[93px] w-max rounded-md border border-black/5 p-2"
-                onMouseMove={handleMouseMove}
-              >
-                <div className="flex h-full gap-0.5">
-                  {contributionGraph.weeks.map((week, weekIndex) => (
-                    <div key={weekIndex} className="flex flex-col gap-0.5">
-                      {week.contributionDays.map((day, dayIndex) => (
-                        <div
-                          key={dayIndex}
-                          className={`size-[9.5px] rounded-xs ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
-                          onMouseEnter={(e) => handleMouseEnter(day, e)}
-                          onMouseLeave={handleMouseLeave}
-                        />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="ml-2 flex flex-col justify-between py-1">
-                {days.map((day, index) => (
-                  <span
-                    key={index}
-                    className="text-[8px] text-[var(--neutral-400)]"
-                  >
-                    {day}
-                  </span>
-                ))}
-              </div>
-            </div>
+        <div
+          className="w-full rounded-md border border-black/5 p-2"
+          onMouseMove={handleMouseMove}
+        >
+          <div
+            className="grid w-full min-w-0 gap-0.5"
+            style={{
+              aspectRatio: `${weekCount} / ${rowCount}`,
+              gridTemplateColumns: `repeat(${weekCount}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+            }}
+          >
+            {contributionGraph.weeks.map((week, weekIndex) =>
+              week.contributionDays.map((day, dayIndex) => (
+                <div
+                  key={`${weekIndex}-${dayIndex}`}
+                  style={{
+                    gridColumn: weekIndex + 1,
+                    gridRow: dayIndex + 1,
+                  }}
+                  className={`min-h-0 min-w-0 rounded-xs ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
+                  onMouseEnter={(e) => handleMouseEnter(day, e)}
+                  onMouseLeave={handleMouseLeave}
+                />
+              ))
+            )}
           </div>
         </div>
         <div className="mt-2.5 flex items-center gap-2">
@@ -170,7 +145,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
           }}
         >
           <div className="font-medium">{formatDate(tooltip.date)}</div>
-          <div className="text-gray-300">
+          <div className="text-neutral-400">
             {tooltip.contributionCount === 0
               ? "No contribution data available"
               : `${tooltip.contributionCount} Github contribution${tooltip.contributionCount > 1 ? "s" : ""}`}

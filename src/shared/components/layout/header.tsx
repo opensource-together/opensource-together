@@ -41,7 +41,11 @@ export default function Header() {
           {pathname === "/" ? (
             <LogoDropdown />
           ) : (
-            <Link href="/" aria-label="OpenSource Together Home">
+            <Link
+              href="/"
+              aria-label="OpenSource Together Home"
+              className="transition-opacity duration-200 ease-out hover:opacity-50"
+            >
               <Image
                 src="/ostogether-logo.svg"
                 alt="ost-logo"

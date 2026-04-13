@@ -94,7 +94,7 @@ export default function SkeletonProjectDetail() {
     <TwoColumnLayout sidebar={sidebar} hero={hero} mobileHeader={mobileHeader}>
       {/* Tab bar skeleton */}
       <div className="flex flex-col gap-6">
-        <div className="inline-flex items-center border-border border-b">
+        <div className="inline-flex items-center">
           <Skeleton className="mr-6 h-5 w-20" />
           <Skeleton className="mr-6 h-5 w-20" />
           <Skeleton className="mr-6 h-5 w-24" />
