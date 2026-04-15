@@ -83,7 +83,7 @@ function TabsList({
       ref={listRef as unknown as React.Ref<HTMLDivElement>}
       data-slot="tabs-list"
       className={cn(
-        "relative inline-flex items-center overflow-x-auto border-border border-b",
+        "relative inline-flex items-end overflow-x-auto border-border border-b",
         className
       )}
       {...props}
@@ -91,7 +91,7 @@ function TabsList({
       {props.children}
       {underlineStyle.visible ? (
         <div
-          className="absolute bottom-0 z-10 h-0.5 bg-primary transition-all duration-200"
+          className="absolute -bottom-px z-10 h-0.5 bg-primary transition-all duration-200"
           style={{ left: underlineStyle.left, width: underlineStyle.width }}
         />
       ) : null}
@@ -114,7 +114,7 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "group mr-2 inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap px-2 py-1.5 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-primary data-[state=active]:border-b data-[state=active]:text-primary [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "group mr-2 inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap px-2 py-1.5 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}

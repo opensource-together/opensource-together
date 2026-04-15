@@ -153,7 +153,7 @@ export default function ExperienceModalForm({
                               : "Select date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={selectedDate}
@@ -223,7 +223,7 @@ export default function ExperienceModalForm({
                                 : "Select date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={isCurrent ? undefined : selectedDate}

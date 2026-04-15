@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HiChevronLeft } from "react-icons/hi2";
+import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import { TableOfContents } from "@/shared/components/ui/table-of-contents";
 import {
@@ -162,19 +163,19 @@ export default async function ChapterPage({ params }: PageProps) {
   const pageTitleId = pageTitle;
 
   return (
-    <div className="mx-auto flex w-full gap-8 px-6 pt-8 pb-28 md:px-10">
+    <div className="mx-auto flex w-full gap-8 px-6 pt-8 pb-8 md:px-10">
       {/* Sidebar */}
-      <aside className="hidden w-64 shrink-0 lg:block">
+      <aside className="hidden min-h-0 w-64 shrink-0 lg:block">
         <TableOfContents content={content} chapterTitle={pageTitle} />
       </aside>
 
       {/* Main Content */}
-      <main className="mx-auto min-w-0 max-w-[677px]">
-        <article>
+      <main className="flex min-w-0 flex-1 flex-col items-center">
+        <article className="w-full max-w-[697px]">
           <div className="mb-8">
             <h1
               id={pageTitleId}
-              className="mb-4 scroll-mt-20 font-medium text-3xl"
+              className="mb-4 scroll-mt-20 font-medium text-[calc(1.875rem-6px)] leading-tight tracking-[-0.04em]"
             >
               {pageTitle}
             </h1>
@@ -184,7 +185,7 @@ export default async function ChapterPage({ params }: PageProps) {
             <MarkdownRenderer content={content} />
           </div>
 
-          <div className="mt-12 flex justify-center border-border border-t pt-8">
+          <div className="mt-12 flex justify-center pt-8">
             <NextChapterButton
               currentChapter={chapter}
               nextChapter={nextChapter}
@@ -213,6 +214,7 @@ export default async function ChapterPage({ params }: PageProps) {
             )}
           </div>
         </article>
+        <FooterMinimal className="mt-0 block w-full shrink-0 self-stretch" />
       </main>
     </div>
   );

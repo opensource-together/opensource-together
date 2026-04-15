@@ -92,14 +92,7 @@ function Modal({
 
         {(onConfirm || onCancel) && (
           <>
-            <Separator
-              className="mt-3 mb-1"
-              style={{
-                marginLeft: "-16px",
-                marginRight: "-16px",
-                width: "calc(100% + 32px)",
-              }}
-            />
+            <Separator className="mt-3 mb-1" contentPaddingX={6} />
             <DialogFooter>
               {onCancel && (
                 <Button

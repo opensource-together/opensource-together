@@ -88,7 +88,7 @@ export function ProfileMobileHero({
   return (
     <div>
       <div className="relative mb-10 w-full overflow-visible rounded-lg">
-        <div className="relative w-full overflow-hidden rounded-lg shadow-[inset_0_0_0_0.5px_rgb(0_0_0_/_0.06)]">
+        <div className="relative w-full overflow-hidden rounded-lg border border-black/5">
           <Image
             src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
             alt={`${name}'s banner`}
@@ -113,12 +113,12 @@ export function ProfileMobileHero({
         <div className="flex min-w-0 items-center pl-2">
           <div className="min-w-0">
             <div className="flex items-center">
-              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
+              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl tracking-[-0.04em]">
                 {name}
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="max-w-[65vw] truncate text-muted-foreground text-sm tracking-tighter">
+            <p className="max-w-[65vw] truncate text-muted-foreground text-sm tracking-[-0.02em]">
               {jobTitle}
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function ProfileHero({
   return (
     <div>
       <div className="relative w-full overflow-visible rounded-[20px]">
-        <div className="relative w-full overflow-hidden rounded-[20px] shadow-[inset_0_0_0_0.5px_rgb(0_0_0_/_0.06)]">
+        <div className="relative w-full overflow-hidden rounded-[20px] border border-black/5">
           <Image
             src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
             alt={`${name}'s banner`}
@@ -228,12 +228,12 @@ export default function ProfileHero({
         <div className="flex min-w-0 flex-1 items-center pl-2">
           <div className="min-w-0">
             <div className="flex items-center">
-              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
+              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl tracking-[-0.04em]">
                 {name}
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="truncate text-muted-foreground text-sm tracking-tighter">
+            <p className="truncate text-muted-foreground text-sm tracking-[-0.02em]">
               {jobTitle}
             </p>
           </div>

@@ -214,9 +214,8 @@ export default function ProfileEditMainForm({
             />
           </div>
 
-          <Separator className="mt-20" />
-
           <div className="sticky bottom-0 z-50 bg-background">
+            <Separator />
             <div className="-mx-4.5">
               <div className="flex items-center justify-end gap-4 px-6 py-4">
                 <Link href="/profile/me">

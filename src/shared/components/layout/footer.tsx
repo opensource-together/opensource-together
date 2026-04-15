@@ -119,13 +119,17 @@ export default function Footer() {
     requestAnimationFrame(checkFor404);
   }, []);
 
+  const isLearnChapterReader =
+    pathname.startsWith("/learn/") && !pathname.startsWith("/learn/chapters");
+
   const hideFooter =
     is404Page ||
     pathname.startsWith("/projects/create") ||
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/not-found") ||
     pathname.startsWith("/auth") ||
-    pathname.startsWith("/onboarding");
+    pathname.startsWith("/onboarding") ||
+    isLearnChapterReader;
 
   return (
     <>
@@ -135,7 +139,10 @@ export default function Footer() {
           <div className="flex w-full flex-col items-start gap-10 max-md:pl-3 md:flex-row md:items-start md:justify-between md:gap-12 md:pl-0">
             {/* Left: Logo + copyright */}
             <div className="flex w-full flex-col items-start gap-4 md:w-auto">
-              <Link href="/" className="flex items-center">
+              <Link
+                href="/"
+                className="flex items-center transition-opacity duration-200 hover:opacity-50"
+              >
                 <Image
                   src="/ostogether-logo.svg"
                   alt="ost-logo"

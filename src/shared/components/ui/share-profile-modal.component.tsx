@@ -12,6 +12,7 @@ import { Modal } from "@/shared/components/ui/modal";
 
 interface ShareProfileModalProps {
   url: string;
+  /** Used for share targets that need a title (e.g. Reddit), not the dialog heading */
   title?: string;
   description?: string;
   open?: boolean;
@@ -163,7 +164,7 @@ export function ShareProfileModal({
       <Modal
         open={modalOpen}
         onOpenChange={handleOpenChange}
-        title={title || "Share this content"}
+        title="Share profile"
         description={
           description ||
           "Choose a platform to share this content with your friends and followers."
@@ -190,9 +191,11 @@ export function ShareProfileModal({
             })}
           </div>
 
-          {/* Link copy section */}
-          <label className="font-medium text-sm">Copy URL</label>
-          <div className="flex items-center justify-between gap-2 rounded-md bg-accent px-3 py-2 text-muted-foreground text-sm">
+          <div
+            role="group"
+            aria-label="Profile link"
+            className="flex items-center justify-between gap-2 rounded-md bg-accent px-3 py-2 text-muted-foreground text-sm"
+          >
             <span className="line-clamp-1 flex-1 break-all">{url}</span>
             <CopyButton text={url} />
           </div>

@@ -123,9 +123,9 @@ export function TableOfContents({
   };
 
   return (
-    <nav className="sticky top-20">
-      <h3 className="mb-4 text-muted-foreground text-xs">On this page</h3>
-      <ul className="space-y-1">
+    <nav className="sticky top-28 flex max-h-[calc(100dvh-9rem)] flex-col gap-4 overscroll-contain">
+      <h3 className="shrink-0 text-muted-foreground text-xs">On this page</h3>
+      <ul className="min-h-0 flex-1 space-y-1 overflow-y-auto pr-0.5">
         {headings.map((heading) => (
           <li key={heading.id}>
             <button
@@ -136,8 +136,8 @@ export function TableOfContents({
                 heading.level === 2 && "pl-0",
                 heading.level === 3 && "pl-6",
                 activeId === heading.id
-                  ? "bg-accent font-medium text-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  ? "font-medium text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {activeId === heading.id && (

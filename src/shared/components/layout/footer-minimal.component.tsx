@@ -3,8 +3,16 @@ import Link from "next/link";
 
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
+import { cn } from "@/shared/lib/utils";
 
-export default function FooterMinimal() {
+export default function FooterMinimal({
+  className,
+  contentClassName,
+}: {
+  className?: string;
+  /** Merged into the inner bar (padding, gaps). */
+  contentClassName?: string;
+}) {
   const navigationLinks = [
     { name: "GitHub", href: EXTERNAL_LINKS.GITHUB_ORG },
     { name: "X (Twitter)", href: EXTERNAL_LINKS.TWITTER },
@@ -16,11 +24,21 @@ export default function FooterMinimal() {
   ];
 
   return (
-    <footer className="relative z-20 hidden w-full bg-white md:block">
+    <footer
+      className={cn("relative z-20 hidden w-full bg-white md:block", className)}
+    >
       <Separator className="w-full" />
-      <div className="flex w-full flex-col items-center gap-3 pt-4 pb-4 md:flex-row md:items-center md:justify-between md:gap-6">
+      <div
+        className={cn(
+          "flex w-full flex-col items-center gap-3 pt-4 pb-4 md:flex-row md:items-center md:justify-between md:gap-6",
+          contentClassName
+        )}
+      >
         <div className="flex w-full items-center justify-center gap-4 md:w-auto md:justify-start md:gap-6">
-          <Link href="/" className="flex items-center">
+          <Link
+            href="/"
+            className="flex items-center transition-opacity duration-200 hover:opacity-50"
+          >
             <Image
               src="/ost-logo.svg"
               alt="ost-logo"

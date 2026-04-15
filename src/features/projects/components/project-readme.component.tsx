@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { GoArrowUpRight } from "react-icons/go";
 import { HiChevronRight } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import ReactMarkdown, { type Components } from "react-markdown";
@@ -178,9 +177,9 @@ export default function ProjectReadme({
       <SheetContent
         responsive
         responsiveWidth={{ desktop: "w-[580px]" }}
-        className="mt-4 mr-4 overflow-y-auto rounded-t-[22px] shadow-none md:h-[97vh] md:rounded-[22px]"
+        className="mt-4 mr-4 overflow-hidden rounded-t-[22px] shadow-none md:h-[97vh] md:rounded-[22px]"
       >
-        <div className="flex h-full flex-col">
+        <div className="flex h-full min-h-0 flex-col">
           <SheetHeader className="sticky top-0 z-50 bg-white">
             <div className="-mx-6">
               <div className="px-6 pb-4">
@@ -200,7 +199,7 @@ export default function ProjectReadme({
               <div className="border-muted-black-stroke border-b" />
             </div>
           </SheetHeader>
-          <div className="flex-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="my-6 max-w-none font-geist text-sm leading-relaxed">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -232,7 +231,6 @@ export default function ProjectReadme({
                         rel="noopener noreferrer"
                       >
                         View on {label}
-                        <GoArrowUpRight className="mt-0.5 size-4" />
                       </Link>
                     </Button>
                   );

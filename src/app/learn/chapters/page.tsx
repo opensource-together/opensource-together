@@ -28,7 +28,9 @@ export default function ChaptersPage() {
 
         <div className="flex flex-col gap-12">
           <section>
-            <h2 className="mb-6 font-medium text-lg">Learn</h2>
+            <h2 className="mb-6 font-medium text-lg">
+              Learn About Open-Source
+            </h2>
             <ChaptersList chapters={learnChapters} />
           </section>
 

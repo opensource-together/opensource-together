@@ -5,7 +5,6 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
-import { cn } from "@/shared/lib/utils";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 
 import { ProjectTableActions } from "./project-table-actions.component";
@@ -74,11 +73,12 @@ export default function MyProjectRow({
 
       <TableCell>
         <Badge
-          variant="white"
-          className={cn(
-            "border-[0.5px] border-muted-black-stroke",
-            project.published && "text-ost-blue-three"
-          )}
+          variant={project.published ? "info" : "white"}
+          className={
+            project.published
+              ? undefined
+              : "border-[0.5px] border-muted-black-stroke"
+          }
         >
           {project.published ? "Published" : "Not published"}
         </Badge>

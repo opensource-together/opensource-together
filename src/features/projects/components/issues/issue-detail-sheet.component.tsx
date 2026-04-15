@@ -88,7 +88,7 @@ function IssueDetailSkeleton() {
         </div>
       </div>
 
-      <Separator className="my-4" />
+      <Separator className="my-4" contentPaddingX={6} />
 
       {/* Issue Body Skeleton */}
       <div className="space-y-3">
@@ -224,7 +224,7 @@ export default function IssueDetailSheet({
                   </Link>
                 </div>
 
-                <Separator className="my-4" />
+                <Separator className="my-4" contentPaddingX={6} />
               </div>
 
               {/* Issue Body */}

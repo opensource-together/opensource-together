@@ -75,7 +75,7 @@ export default function ProfileSavedProjectsList() {
   if (isError)
     return (
       <ErrorState
-        message="Failed to fetch saved projects"
+        message="Failed to fetch bookmarked projects"
         queryKey={["user", "me", "bookmarks"]}
       />
     );
@@ -83,7 +83,7 @@ export default function ProfileSavedProjectsList() {
   if (projects.length === 0)
     return (
       <EmptyState
-        title="No saved projects"
+        title="No bookmarked projects"
         description="Bookmark projects to keep them handy here."
         icon={HiBookmark}
       />

@@ -99,7 +99,10 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                 <HiMiniBars3 className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="flex w-3/4 flex-col p-0 pt-6">
+            <SheetContent
+              side="left"
+              className="flex w-3/4 flex-col rounded-tr-[22px] rounded-br-[22px] p-0 pt-6"
+            >
               <SheetHeader className="flex flex-col gap-2 px-4">
                 <Image
                   src="/ostogether-logo.svg"
@@ -111,6 +114,14 @@ export function MobileHeader({ links }: MobileHeaderProps) {
 
               <div className="flex flex-1 flex-col">
                 <nav className="mt-6 flex flex-col gap-3 px-4">
+                  <Link
+                    href="/projects/create"
+                    onClick={handleLinkClick}
+                    className="flex items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition"
+                  >
+                    <HiPlus className="size-4" />
+                    Create Project
+                  </Link>
                   {resolvedLinks.map((link) => {
                     const active =
                       pathname === link.href ||
@@ -141,24 +152,16 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                       Sign In
                     </Link>
                   )}
-                  <Link
-                    href="/projects/create"
-                    onClick={handleLinkClick}
-                    className="flex items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition"
-                  >
-                    <HiPlus className="size-4" />
-                    Create Project
-                  </Link>
                 </nav>
 
                 {/* User Section - Fixed at bottom */}
-                <div className="mt-auto border-border border-t">
+                <div className="mt-auto">
                   {isLoading ? null : isAuthenticated ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button
                           type="button"
-                          className="relative flex w-full cursor-pointer items-center gap-3 py-4 text-start transition hover:bg-accent"
+                          className="relative flex w-full cursor-pointer items-center gap-3 py-4 text-start"
                         >
                           <div className="pl-4">
                             <Avatar
@@ -182,8 +185,8 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                         </button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
-                        align="end"
-                        className="mr-2 w-48 text-muted-foreground"
+                        align="center"
+                        className="w-[252px] min-w-[252px] max-w-[252px] text-muted-foreground"
                       >
                         <Link href="/profile/me" onClick={handleLinkClick}>
                           <DropdownMenuItem>

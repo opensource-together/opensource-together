@@ -118,8 +118,6 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <Separator />
-
           <FormField
             control={control}
             name="imagesUrls"
@@ -150,15 +148,20 @@ export default function ProjectMainEditForm({
             )}
           />
 
-          <div className="flex w-full justify-end gap-4">
-            <Link href={`/projects/${project.id}`}>
-              <Button variant="secondary" disabled={isUpdating}>
-                Back
-              </Button>
-            </Link>
-            <Button onClick={onSubmit} disabled={isUpdating}>
-              {isUpdating ? "Saving..." : "Confirm"}
-            </Button>
+          <div className="sticky bottom-0 z-50 bg-background">
+            <Separator />
+            <div className="-mx-4.5">
+              <div className="flex w-full items-center justify-end gap-4 px-6 py-4">
+                <Link href={`/projects/${project.id}`}>
+                  <Button variant="secondary" disabled={isUpdating}>
+                    Back
+                  </Button>
+                </Link>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? "Saving..." : "Confirm"}
+                </Button>
+              </div>
+            </div>
           </div>
         </form>
       </Form>

@@ -10,10 +10,11 @@ import FilterSearchBar from "./filter-search-bar.component";
 /** Smooth deceleration (flat transition + tuple ease — reliable with motion/react variants) */
 const ease = [0.22, 1, 0.32, 1] as const;
 
-/** One headline line; second line starts when this block finishes */
-const LINE_DURATION = 0.68;
+/** One headline line; second line starts partway through for a quicker stagger */
+const LINE_DURATION = 0.56;
+const LINE_STAGGER = 0.88;
 /** Start badge / subtitle / filter shortly after the headline lines (tight buffer) */
-const REST_DELAY = LINE_DURATION * 2 + 0.02;
+const REST_DELAY = LINE_DURATION * (1 + LINE_STAGGER) - 0.06;
 
 const subtleBlurHidden = "blur(4px)";
 
@@ -44,7 +45,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.72, delay: REST_DELAY, ease }}
+        transition={{ duration: 0.6, delay: REST_DELAY, ease }}
       >
         <HeroBadge className="mb-3" />
       </motion.div>
@@ -69,7 +70,7 @@ export function DiscoveryHeroIntro({
           variants={lineVariants}
           transition={{
             duration: LINE_DURATION,
-            delay: LINE_DURATION,
+            delay: LINE_DURATION * LINE_STAGGER,
             ease,
           }}
         >
@@ -81,7 +82,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.72, delay: REST_DELAY + 0.04, ease }}
+        transition={{ duration: 0.6, delay: REST_DELAY + 0.02, ease }}
       >
         <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
           Empowering open source initiatives through effortless project
@@ -94,7 +95,7 @@ export function DiscoveryHeroIntro({
         initial="hidden"
         animate="visible"
         variants={fromTopVariants}
-        transition={{ duration: 0.72, delay: REST_DELAY + 0.1, ease }}
+        transition={{ duration: 0.6, delay: REST_DELAY + 0.06, ease }}
       >
         <FilterSearchBar
           onFilterChange={onFilterChange}

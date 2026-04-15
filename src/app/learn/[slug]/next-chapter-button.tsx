@@ -36,7 +36,7 @@ export function NextChapterButton({
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-8">
+    <div className="mb-11 flex w-full flex-col items-center gap-8">
       {/* Completion Section */}
       <div className="flex flex-col items-center gap-4 text-center">
         {/* Large circle with chapter number and checkmark */}

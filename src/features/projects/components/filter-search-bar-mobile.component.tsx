@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HiX } from "react-icons/hi";
-import { HiMagnifyingGlass } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
@@ -63,6 +62,12 @@ function filtersToSortId(filters?: ProjectFilters): string {
   }
 
   return "most_popular";
+}
+
+function haveSameMembers(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const setA = new Set(a);
+  return b.every((id) => setA.has(id));
 }
 
 interface FilterSearchBarMobileProps {
@@ -167,6 +172,35 @@ export default function FilterSearchBarMobile({
     );
   }, [selectedSort]);
 
+  const hasPendingChanges = useMemo(() => {
+    const appliedTech = initialFilters?.techStacks ?? [];
+    const appliedCat = initialFilters?.categories ?? [];
+    const appliedSortId = filtersToSortId(initialFilters);
+
+    return (
+      !haveSameMembers(selectedTechStacks, appliedTech) ||
+      !haveSameMembers(selectedCategories, appliedCat) ||
+      selectedSort !== appliedSortId
+    );
+  }, [selectedTechStacks, selectedCategories, selectedSort, initialFilters]);
+
+  const skipInitialLabelRoll = useRef(true);
+  const [labelRollAnimation, setLabelRollAnimation] = useState<
+    "to-apply" | "to-idle" | null
+  >(null);
+
+  useEffect(() => {
+    if (skipInitialLabelRoll.current) {
+      skipInitialLabelRoll.current = false;
+      return;
+    }
+    setLabelRollAnimation(hasPendingChanges ? "to-apply" : "to-idle");
+  }, [hasPendingChanges]);
+
+  const handleLabelRollEnd = () => {
+    setLabelRollAnimation(null);
+  };
+
   const getSortParams = () => {
     switch (selectedSort) {
       case "most_popular":
@@ -227,7 +261,21 @@ export default function FilterSearchBarMobile({
                 className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-white"
                 aria-hidden
               >
-                <HiMagnifyingGlass className="size-[18px]" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-[18px]"
+                  aria-hidden
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+                  />
+                </svg>
               </span>
             </button>
           </SheetTrigger>
@@ -305,9 +353,9 @@ export default function FilterSearchBarMobile({
               trigger={<MobileFilterItem label="Sort" value={sortValue} />}
             />
           </div>
-          <Separator className="mt-4 shrink-0" />
+          <Separator className="mt-4" contentPaddingX={4} />
           <div className="flex shrink-0 items-center justify-end gap-2 bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
-            <Button type="button" variant="ghost" size="lg" asChild>
+            <Button type="button" variant="outline" asChild>
               <SheetTrigger>Cancel</SheetTrigger>
             </Button>
             <Button
@@ -316,8 +364,58 @@ export default function FilterSearchBarMobile({
               disabled={isLoading}
               size="lg"
               asChild
+              aria-label={
+                hasPendingChanges ? "Apply Filters" : "Filter Projects"
+              }
             >
-              <SheetTrigger>Filter Projects</SheetTrigger>
+              <SheetTrigger>
+                <span className="grid [grid-template-areas:stack]">
+                  <span
+                    className="invisible col-start-1 row-start-1 whitespace-nowrap [grid-area:stack]"
+                    aria-hidden
+                  >
+                    Filter Projects
+                  </span>
+                  <span className="relative col-start-1 row-start-1 h-5 overflow-hidden [grid-area:stack]">
+                    <div
+                      className={cn(
+                        "flex flex-col will-change-[transform,filter]",
+                        labelRollAnimation === null &&
+                          (hasPendingChanges
+                            ? "-translate-y-1/2"
+                            : "translate-y-0")
+                      )}
+                      style={
+                        labelRollAnimation === "to-apply"
+                          ? {
+                              animation:
+                                "filter-btn-label-roll-to-apply 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) both",
+                            }
+                          : labelRollAnimation === "to-idle"
+                            ? {
+                                animation:
+                                  "filter-btn-label-roll-to-idle 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) both",
+                              }
+                            : undefined
+                      }
+                      onAnimationEnd={handleLabelRollEnd}
+                    >
+                      <span
+                        className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
+                        aria-hidden
+                      >
+                        Filter Projects
+                      </span>
+                      <span
+                        className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
+                        aria-hidden
+                      >
+                        Apply Filters
+                      </span>
+                    </div>
+                  </span>
+                </span>
+              </SheetTrigger>
             </Button>
           </div>
         </SheetContent>

@@ -1,4 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/shared/lib/utils";
 
 import type {
   ContributionGraph,
@@ -16,10 +18,23 @@ interface TooltipData {
   contributionLevel: ContributionLevel;
 }
 
+const MD_BREAKPOINT_QUERY = "(max-width: 767px)";
+const MOBILE_CELL_PX = 10;
+const MOBILE_GRID_GAP_PX = 2;
+
 export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MD_BREAKPOINT_QUERY);
+    const apply = () => setIsMobileLayout(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   const getSquareColor = (level: ContributionLevel): string => {
     switch (level) {
@@ -94,16 +109,31 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
         <h2 className="mb-2">Contribution Activity</h2>
 
         <div
-          className="w-full rounded-md border border-black/5 p-2"
+          className={cn(
+            "w-full rounded-md border border-black/5 p-2",
+            isMobileLayout &&
+              "touch-pan-x overflow-x-auto overflow-y-hidden overscroll-x-contain"
+          )}
           onMouseMove={handleMouseMove}
         >
           <div
-            className="grid w-full min-w-0 gap-0.5"
-            style={{
-              aspectRatio: `${weekCount} / ${rowCount}`,
-              gridTemplateColumns: `repeat(${weekCount}, minmax(0, 1fr))`,
-              gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
-            }}
+            className={cn(
+              "grid min-w-0",
+              isMobileLayout ? "w-max" : "w-full gap-0.5"
+            )}
+            style={
+              isMobileLayout
+                ? {
+                    gridTemplateColumns: `repeat(${weekCount}, ${MOBILE_CELL_PX}px)`,
+                    gridTemplateRows: `repeat(${rowCount}, ${MOBILE_CELL_PX}px)`,
+                    gap: `${MOBILE_GRID_GAP_PX}px`,
+                  }
+                : {
+                    aspectRatio: `${weekCount} / ${rowCount}`,
+                    gridTemplateColumns: `repeat(${weekCount}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+                  }
+            }
           >
             {contributionGraph.weeks.map((week, weekIndex) =>
               week.contributionDays.map((day, dayIndex) => (
@@ -122,7 +152,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
           </div>
         </div>
         <div className="mt-2.5 flex items-center gap-2">
-          <span className="text-[10px] text-[var(--neutral-400)]">Less</span>
+          <span className="text-[10px] text-neutral-500">Less</span>
           <div className="flex gap-0.5">
             <div className="size-[9px] rounded-xs bg-[#E8EAEE]" />
             <div className="size-[9px] rounded-xs bg-[var(--ost-blue-one)]" />
@@ -130,7 +160,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
             <div className="size-[9px] rounded-xs bg-[var(--ost-blue-three)]" />
             <div className="size-[9px] rounded-xs bg-[var(--ost-blue-four)]" />
           </div>
-          <span className="text-[10px] text-[var(--neutral-400)]">More</span>
+          <span className="text-[10px] text-neutral-500">More</span>
         </div>
       </div>
 
@@ -145,7 +175,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
           }}
         >
           <div className="font-medium">{formatDate(tooltip.date)}</div>
-          <div className="text-neutral-400">
+          <div className="text-neutral-500">
             {tooltip.contributionCount === 0
               ? "No contribution data available"
               : `${tooltip.contributionCount} Github contribution${tooltip.contributionCount > 1 ? "s" : ""}`}

@@ -72,11 +72,15 @@ export function ChapterProgressCard({
   const hasCompletedChapters = progress.completed > 0;
 
   return (
-    <div className="relative overflow-hidden rounded-[20px] border border-muted-black-stroke p-6">
+    <div className="relative overflow-hidden rounded-[20px] border border-muted-black-stroke px-6 pt-6 pb-4">
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-medium text-xl">{title}</h2>
-          <p className="mt-2 line-clamp-1 text-xs">{description}</p>
+        <div className="flex flex-col gap-2.5">
+          <h2 className="font-medium text-[calc(1.25rem-2px)] leading-snug">
+            {title}
+          </h2>
+          <p className="line-clamp-1 text-[calc(0.75rem+2px)] text-muted-foreground leading-normal">
+            {description}
+          </p>
         </div>
 
         {/* Progress Bar */}

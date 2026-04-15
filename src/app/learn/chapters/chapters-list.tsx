@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { HiCheckCircle } from "react-icons/hi2";
 import { useChapterProgress } from "@/shared/hooks/use-chapter-progress.hook";
+import { cn } from "@/shared/lib/utils";
 import type { Chapter } from "../../../../content/chapters";
+
+/** Same hover expansion as `ProjectCard` root (`project-card.tsx`). */
+const chapterCardClassName =
+  "box-border rounded-[22px] border border-muted-black-stroke bg-card p-4 font-geist transition-[margin,padding,box-shadow] duration-300 ease-out hover:-m-[2.5px] hover:cursor-pointer hover:p-[calc(1rem+2.5px)] hover:shadow-[0_4px_32px_-8px_rgb(0_0_0/0.03)]";
 
 interface ChaptersListProps {
   chapters: Chapter[];
@@ -25,7 +30,10 @@ export function ChaptersList({ chapters }: ChaptersListProps) {
           <Link
             key={chapter.slug}
             href={`/learn/${chapter.slug}`}
-            className="group flex items-center gap-2 rounded-[20px] border border-muted-black-stroke bg-card p-4 transition-all hover:bg-accent"
+            className={cn(
+              "group flex items-center gap-2",
+              chapterCardClassName
+            )}
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex size-8 shrink-0 items-center justify-center">
