@@ -341,8 +341,7 @@ export function StepTechCategoriesForm() {
       </div>
 
       <div className="hidden w-[40%] lg:block">
-        <div className="sticky top-8">
-          <h3 className="mt-7 mb-4 font-medium text-lg">Preview</h3>
+        <div className="sticky top-8 mt-7">
           <ProjectTechCategoriesPreview
             projectTechStacks={getTechStacksByIds(
               watched.projectTechStacks || []

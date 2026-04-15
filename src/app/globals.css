@@ -79,7 +79,8 @@
   --success-foreground: #f0fdf4;
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* Focus / keyboard ring — matches choose-method selected outline (ost-blue-two) */
+  --ring: var(--ost-blue-two);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -92,7 +93,7 @@
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: var(--ost-blue-two);
 }
 
 /* FilterSearchBar apply CTA: slot-style roll + light blur at mid-motion */
@@ -140,7 +141,12 @@
     @apply border-border outline-ring/50;
   }
   ::selection {
-    @apply bg-zinc-900 text-white;
+    background-color: color-mix(in srgb, var(--ost-blue-one) 10%, transparent);
+    color: var(--ost-blue-three);
+  }
+  ::-moz-selection {
+    background-color: color-mix(in srgb, var(--ost-blue-one) 10%, transparent);
+    color: var(--ost-blue-three);
   }
   body {
     @apply bg-background text-foreground;

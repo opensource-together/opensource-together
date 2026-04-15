@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
+import { cn } from "@/shared/lib/utils";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 
 import { ProjectTableActions } from "./project-table-actions.component";
@@ -47,7 +48,7 @@ export default function MyProjectRow({
           />
           <div className="flex min-w-0 flex-col">
             <div className="flex min-w-0 items-center gap-2">
-              <h4 className="max-w-[60vw] truncate font-medium md:max-w-[14rem]">
+              <h4 className="max-w-[60vw] truncate font-medium text-base md:max-w-[14rem]">
                 {project.title}
               </h4>
             </div>
@@ -66,14 +67,20 @@ export default function MyProjectRow({
                 formatNumberShort(openIssues)
               )}
             </span>{" "}
-            {openIssues > 1 ? "Open Issues" : "Open Issue"}
+            {openIssues === 1 ? "Open Issue" : "Open Issues"}
           </h2>
         </div>
       </TableCell>
 
       <TableCell>
-        <Badge variant={project.published ? "info" : "gray"}>
-          {project.published ? "Published" : "Unpublished"}
+        <Badge
+          variant="white"
+          className={cn(
+            "border-[0.5px] border-muted-black-stroke",
+            project.published && "text-ost-blue-three"
+          )}
+        >
+          {project.published ? "Published" : "Not published"}
         </Badge>
       </TableCell>
 

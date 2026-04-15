@@ -102,7 +102,7 @@ export function CustomCombobox({
           handleOpenChange(false);
         }}
         className={cn(
-          "cursor-pointer text-xs underline",
+          "cursor-pointer text-xs",
           disabled
             ? "opacity-50"
             : "text-muted-foreground hover:text-foreground"

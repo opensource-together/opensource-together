@@ -39,7 +39,9 @@ export function FeatureRequestButton() {
   });
 
   const hideFloatingButton =
-    pathname?.startsWith("/auth") || pathname?.startsWith("/onboarding");
+    pathname?.startsWith("/auth") ||
+    pathname?.startsWith("/onboarding") ||
+    pathname?.startsWith("/projects/create");
 
   if (hideFloatingButton || !currentUser) {
     return null;
@@ -71,7 +73,7 @@ export function FeatureRequestButton() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed right-6 bottom-6 z-50 flex size-14 items-center justify-center rounded-full bg-black p-0 shadow-lg hover:bg-black/90"
+        className="fixed right-6 bottom-6 z-50 flex size-[52px] items-center justify-center rounded-full bg-black p-0 shadow-lg transition-transform duration-200 ease-out hover:scale-[0.96] hover:bg-black/90"
         aria-label="Request a feature"
       >
         <Image src="/ost-logo-white.svg" alt="OST" width={35} height={35} />

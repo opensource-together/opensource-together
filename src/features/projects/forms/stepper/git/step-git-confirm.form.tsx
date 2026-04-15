@@ -34,10 +34,10 @@ export default function StepGitConfirmForm({
 
   return (
     <div className="w-full">
-      <div className="mb-9 w-full rounded-xl border border-muted-black-stroke px-6 pt-7 pb-8">
+      <div className="mb-9 w-full rounded-xl border border-muted-black-stroke px-6 pt-6 pb-7">
         <div className="mb-4">
           <div className="mb-1 flex items-center gap-1">
-            <Label className="text-lg">Repository Name</Label>
+            <Label className="text-base">Repository Name</Label>
           </div>
           <div className="mt-2 font-normal text-muted-foreground">
             {formData.selectedRepository?.name}
@@ -47,7 +47,7 @@ export default function StepGitConfirmForm({
         <div className="mb-4">
           <div className="mb-1 flex items-center justify-between">
             <div className="flex items-center gap-1">
-              <Label className="text-lg">Description</Label>
+              <Label className="text-base">Description</Label>
             </div>
           </div>
           <div className="mb-3 line-clamp-5 h-[100px] text-muted-foreground text-sm leading-6">
@@ -63,7 +63,7 @@ export default function StepGitConfirmForm({
         <div className="my-4 h-px border-muted-black-stroke border-t-2" />
         <div>
           <div className="mb-1 flex items-center gap-1">
-            <Label className="text-lg">Repository Link</Label>
+            <Label className="text-base">Repository Link</Label>
           </div>
           <div className="mt-2 flex items-center gap-2">
             <HiLink className="size-3.5 text-muted-foreground" />

@@ -70,7 +70,7 @@ export function ProjectDescribePreview({
   }, [logoUrl]);
 
   return (
-    <div className="flex flex-col rounded-2xl bg-accent/65 p-8">
+    <div className="flex flex-col rounded-2xl bg-accent/65 p-6">
       <div className="mb-4 flex items-center gap-4">
         <Avatar
           src={logoPreview}

@@ -31,7 +31,10 @@ export default function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="cursor-pointer">
+        <button
+          type="button"
+          className="cursor-pointer rounded-full outline-none focus-visible:outline-none focus-visible:ring-0"
+        >
           <Avatar
             src={currentUser?.image}
             name={currentUser?.name}
@@ -40,10 +43,17 @@ export default function UserDropdown() {
           />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[200px] p-2">
-        <div className="flex flex-col truncate p-2 text-sm">
-          <p className="font-medium text-primary">{currentUser?.name}</p>
-          <p className="text-muted-foreground">{currentUser?.email}</p>
+      <DropdownMenuContent
+        align="end"
+        className="w-max min-w-[200px] max-w-[min(calc(100vw-2rem),22rem)] p-2"
+      >
+        <div className="flex flex-col gap-0.5 p-2 text-sm">
+          <p className="truncate font-medium text-primary">
+            {currentUser?.name}
+          </p>
+          <p className="break-all text-muted-foreground">
+            {currentUser?.email}
+          </p>
         </div>
         <DropdownMenuSeparator />
         <Link href="/profile/me">

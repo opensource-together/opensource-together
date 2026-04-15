@@ -127,11 +127,11 @@ export function MultipleImageUpload({
         <div
           {...getRootProps()}
           className={cn(
-            "relative rounded-lg border-2 border-dashed p-8 text-center transition-all duration-200",
+            "relative rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200",
             !isDropzoneDisabled && "cursor-pointer hover:border-border",
             isDragActive && !isDragReject
               ? "border-ost-blue-three bg-ost-blue-one/10"
-              : "border-input bg-secondary",
+              : "border-muted-black-stroke bg-secondary",
             isDragReject && "border-destructive bg-destructive/10",
             error && "border-red-400",
             isDropzoneDisabled &&

@@ -4,17 +4,21 @@ import type * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+/** Bordered white surface — shared by outline + secondary (replaces grey secondary). */
+const buttonVariantBorderedSurface =
+  "border bg-background hover:bg-accent hover:text-accent-foreground";
+
 const buttonVariants = cva(
   "inline-flex shrink-0 cursor-pointer items-center justify-center gap-1 whitespace-nowrap rounded-full font-medium text-sm tracking-tight outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default:
+          "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:border-transparent focus-visible:ring-0",
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/15",
-        outline:
-          "border bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-muted",
+        outline: buttonVariantBorderedSurface,
+        secondary: buttonVariantBorderedSurface,
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },

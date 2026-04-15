@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import * as React from "react";
 import { HiCheck, HiChevronDown, HiXMark } from "react-icons/hi2";
@@ -19,10 +19,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
+import {
+  badgeItemAppearAnimate,
+  badgeItemAppearInitial,
+  badgeItemAppearTransition,
+  badgeItemExit,
+} from "@/shared/lib/motion/badge-item-appear";
 import { cn } from "@/shared/lib/utils";
-
-/** Smooth deceleration — matches other intro / badge motion in the app */
-const badgeAppearEase = [0.22, 1, 0.32, 1] as const;
 
 export interface ComboboxOption {
   id: string;
@@ -97,33 +100,36 @@ export function Combobox({
         className
       )}
     >
-      {showTags && selectedOptions.length > 0 && (
+      {showTags && (
         <div className="-mb-1 flex flex-wrap gap-2">
-          {selectedOptions.map((option) => (
-            <motion.span
-              key={option.id}
-              layout
-              initial={{ opacity: 0, filter: "blur(8px)", y: 12 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              transition={{ duration: 0.4, ease: badgeAppearEase }}
-              className="inline-flex"
-            >
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
+          <AnimatePresence mode="popLayout">
+            {selectedOptions.map((option) => (
+              <motion.span
+                key={option.id}
+                layout
+                initial={badgeItemAppearInitial}
+                animate={badgeItemAppearAnimate}
+                exit={badgeItemExit}
+                transition={badgeItemAppearTransition}
+                className="inline-flex"
               >
-                {option.name}
-                <button
-                  type="button"
-                  onClick={() => handleRemove(option.id)}
-                  className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
-                  disabled={disabled}
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
                 >
-                  <HiXMark />
-                </button>
-              </Badge>
-            </motion.span>
-          ))}
+                  {option.name}
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(option.id)}
+                    className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
+                    disabled={disabled}
+                  >
+                    <HiXMark />
+                  </button>
+                </Badge>
+              </motion.span>
+            ))}
+          </AnimatePresence>
         </div>
       )}
       <Popover modal={true} open={open} onOpenChange={handleOpenChange}>

@@ -18,7 +18,7 @@ export default function HeaderBreadcrumb() {
 
   const routeConfig = {
     "/dashboard": () => [
-      { label: "My Projects", href: "/dashboard/my-projects" },
+      { label: "Dashboard", href: "/dashboard/my-projects" },
     ],
     "/dashboard/settings": () => [
       { label: "Settings", href: "/dashboard/settings" },
@@ -108,7 +108,7 @@ export default function HeaderBreadcrumb() {
     if (segments[0] === "dashboard" && segments.length > 1) {
       const breadcrumbItems = [];
       const segmentLabels = {
-        "my-projects": "My Projects",
+        "my-projects": "Dashboard",
       };
 
       for (let i = 1; i < segments.length; i++) {
