@@ -41,13 +41,13 @@ export function NextChapterButton({
       <div className="flex flex-col items-center gap-4 text-center">
         {/* Large circle with chapter number and checkmark */}
         <div className="relative">
-          <div className="flex size-20 items-center justify-center rounded-full border border-muted-black-stroke">
+          <div className="flex size-20 items-center justify-center rounded-full">
             <span className="font-bold text-2xl text-ost-blue-three">
               <Image
                 src="/icons/early-badge.svg"
                 alt="Earl Grey Badge"
-                width={48}
-                height={48}
+                width={54}
+                height={54}
               />
             </span>
           </div>
