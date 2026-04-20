@@ -31,7 +31,7 @@ export function TechStackList({
 }: TechStackListProps) {
   return (
     <div className={className}>
-      {title && <h2 className="mb-3 text-sm">{title}</h2>}
+      {title && <h2 className="mb-3 text-sm tracking-[-0.02em]">{title}</h2>}
       <div className="flex w-full flex-wrap gap-2.5 gap-y-2">
         <AnimatePresence mode="popLayout">
           {(techs ?? []).map((tech, index) => (

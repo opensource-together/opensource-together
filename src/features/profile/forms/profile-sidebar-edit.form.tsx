@@ -40,7 +40,7 @@ export default function ProfileSidebarEditForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel required className="gap-1.5">
-                  Technologies
+                  Technical Skills
                   <span className="font-normal text-muted-foreground">
                     • 10 max
                   </span>

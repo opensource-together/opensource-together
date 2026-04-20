@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
@@ -122,6 +123,13 @@ export default function Footer() {
   const isLearnChapterReader =
     pathname.startsWith("/learn/") && !pathname.startsWith("/learn/chapters");
 
+  const isLearnHubShortFooter =
+    pathname === "/learn" || pathname.startsWith("/learn/chapters");
+
+  const isProfileEditPage = pathname === "/profile/me/edit";
+
+  const showShortFooter = isLearnHubShortFooter || isProfileEditPage;
+
   const hideFooter =
     is404Page ||
     pathname.startsWith("/projects/create") ||
@@ -129,10 +137,17 @@ export default function Footer() {
     pathname.startsWith("/not-found") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/onboarding") ||
-    isLearnChapterReader;
+    isLearnChapterReader ||
+    isLearnHubShortFooter ||
+    isProfileEditPage;
 
   return (
     <>
+      {showShortFooter && (
+        <div className="mx-4 mb-8 max-w-6xl md:mx-auto">
+          <FooterMinimal className="relative z-20 block w-full bg-white" />
+        </div>
+      )}
       {!hideFooter && (
         <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
           <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import CTAFooter from "@/shared/components/layout/cta-footer";
 import {
   getHandsOnChapters,
   getLearnChapters,
@@ -40,10 +39,6 @@ export default function ChaptersPage() {
           </section>
         </div>
       </main>
-      <CTAFooter
-        imageIllustration="/illustrations/winged-angel.png"
-        imageIllustrationMobile="/illustrations/winged-angel-mobile.png"
-      />
     </>
   );
 }

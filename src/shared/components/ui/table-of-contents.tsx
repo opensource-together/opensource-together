@@ -123,8 +123,7 @@ export function TableOfContents({
   };
 
   return (
-    <nav className="sticky top-28 flex max-h-[calc(100dvh-9rem)] flex-col gap-4 overscroll-contain">
-      <h3 className="shrink-0 text-muted-foreground text-xs">On this page</h3>
+    <nav className="sticky top-28 flex max-h-[calc(100dvh-9rem)] flex-col overscroll-contain">
       <ul className="min-h-0 flex-1 space-y-1 overflow-y-auto pr-0.5">
         {headings.map((heading) => (
           <li key={heading.id}>
@@ -132,18 +131,15 @@ export function TableOfContents({
               type="button"
               onClick={() => handleClick(heading.id)}
               className={cn(
-                "flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-sm transition-colors",
-                heading.level === 2 && "pl-0",
+                "flex w-full cursor-pointer items-center rounded-md py-1.5 pr-3 pl-0 text-left font-normal transition-colors duration-200 ease-out",
+                "text-xs",
                 heading.level === 3 && "pl-6",
                 activeId === heading.id
-                  ? "font-medium text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-foreground"
+                  : "text-neutral-500 hover:text-foreground"
               )}
             >
-              {activeId === heading.id && (
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ost-blue-three" />
-              )}
-              <span className="truncate">{heading.text}</span>
+              <span className="truncate tracking-normal">{heading.text}</span>
             </button>
           </li>
         ))}

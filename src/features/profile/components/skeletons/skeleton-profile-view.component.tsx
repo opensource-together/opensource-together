@@ -92,7 +92,7 @@ export default function SkeletonProfileView() {
           {/* Tabs skeleton */}
           <div className="flex flex-col gap-6">
             {/* Tabs skeleton */}
-            <div className="inline-flex items-center border-border border-b">
+            <div className="inline-flex items-center">
               <Skeleton className="mr-6 h-5 w-20" />
               <Skeleton className="mr-6 h-5 w-20" />
               <Skeleton className="mr-6 h-5 w-24" />

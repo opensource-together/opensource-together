@@ -1,9 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { HiChevronLeft } from "react-icons/hi2";
 import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
 import { MarkdownRenderer } from "@/shared/components/ui/markdown-renderer";
 import { TableOfContents } from "@/shared/components/ui/table-of-contents";
@@ -163,14 +161,14 @@ export default async function ChapterPage({ params }: PageProps) {
   const pageTitleId = pageTitle;
 
   return (
-    <div className="mx-auto flex w-full gap-8 px-6 pt-8 pb-8 md:px-10">
-      {/* Sidebar */}
+    <div className="mx-auto flex w-full gap-8 px-6 pb-8 md:px-10">
+      {/* Sidebar: no top padding so TOC aligns to top of column */}
       <aside className="hidden min-h-0 w-64 shrink-0 lg:block">
         <TableOfContents content={content} chapterTitle={pageTitle} />
       </aside>
 
       {/* Main Content */}
-      <main className="flex min-w-0 flex-1 flex-col items-center">
+      <main className="flex min-w-0 flex-1 flex-col items-center pt-8">
         <article className="w-full max-w-[697px]">
           <div className="mb-8">
             <h1
@@ -189,29 +187,11 @@ export default async function ChapterPage({ params }: PageProps) {
             <NextChapterButton
               currentChapter={chapter}
               nextChapter={nextChapter}
+              prevChapter={prevChapter}
+              chaptersForProgress={
+                type === "learn" ? getLearnChapters() : getHandsOnChapters()
+              }
             />
-          </div>
-
-          {/* Navigation */}
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            {prevChapter ? (
-              <Link
-                href={`/learn/${prevChapter.slug}`}
-                className="group flex items-center gap-4 p-4 transition-all hover:text-ost-blue-three"
-              >
-                <HiChevronLeft className="h-4 w-4" />
-                <div className="flex flex-col">
-                  <span className="text-muted-foreground text-xs">
-                    Previous
-                  </span>
-                  <span className="truncate font-medium text-sm">
-                    {prevChapter.title}
-                  </span>
-                </div>
-              </Link>
-            ) : (
-              <div />
-            )}
           </div>
         </article>
         <FooterMinimal className="mt-0 block w-full shrink-0 self-stretch" />

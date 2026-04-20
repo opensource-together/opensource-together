@@ -125,7 +125,7 @@ export default function ProfileEditMainForm({
             name="image"
             render={() => (
               <FormItem>
-                <FormLabel>Choose an avatar</FormLabel>
+                <FormLabel>Avatar</FormLabel>
                 <FormControl>
                   <AvatarUpload
                     currentImageUrl={profile.image}
@@ -135,7 +135,7 @@ export default function ProfileEditMainForm({
                     accept="image/*"
                     maxSize={5}
                     size="xl"
-                    className="mt-4"
+                    className="mt-3"
                   />
                 </FormControl>
                 <FormMessage />
@@ -148,7 +148,7 @@ export default function ProfileEditMainForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel required>Name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}

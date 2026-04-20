@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { LearnHeroIntro } from "@/features/learn/components/learn-hero-intro.component";
-import CTAFooter from "@/shared/components/layout/cta-footer";
 import { ChapterProgressCard } from "@/shared/components/ui/chapter-progress-card";
 import {
   getHandsOnChapters,
@@ -68,11 +67,6 @@ export default function LearnPage() {
           />
         </div>
       </div>
-
-      <CTAFooter
-        imageIllustration="/illustrations/winged-angel.png"
-        imageIllustrationMobile="/illustrations/winged-angel-mobile.png"
-      />
     </main>
   );
 }

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { HiOutlineTrash } from "react-icons/hi";
-import { HiMiniPencilSquare } from "react-icons/hi2";
+import { HiBriefcase, HiMiniPencilSquare, HiPlus } from "react-icons/hi2";
 import { RiDraggable } from "react-icons/ri";
 
 import { Button } from "@/shared/components/ui/button";
 import { DraggableList } from "@/shared/components/ui/draggable-list";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { cn } from "@/shared/lib/utils";
 
 interface ExperienceItem {
@@ -51,16 +52,19 @@ export default function ProfileExperiencesEditor({
   return (
     <section className={cn("w-full", className)}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-medium">{title}</h3>
-        <Button type="button" variant="outline" onClick={onAdd}>
-          Add experience
+        <h3 className="font-medium text-sm tracking-[-0.02em]">{title}</h3>
+        <Button type="button" onClick={onAdd}>
+          Add Experiences
+          <HiPlus className="size-4" />
         </Button>
       </div>
 
       {(!experiences || experiences.length === 0) && (
-        <p className="mt-3 text-muted-foreground text-sm">
-          No experiences added.
-        </p>
+        <EmptyState
+          title="No experiences"
+          description="No experiences have been added yet"
+          icon={HiBriefcase}
+        />
       )}
 
       <DraggableList

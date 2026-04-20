@@ -187,14 +187,14 @@ export function SettingsContent() {
           </p>
           <div className="flex gap-3">
             <Button
-              variant="destructive"
+              variant="default"
               onClick={handleLogout}
               disabled={isLoggingOut}
             >
               {isLoggingOut ? "Signing out..." : "Sign out"}
             </Button>
             <Button
-              variant="secondary"
+              variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
             >
               Delete account

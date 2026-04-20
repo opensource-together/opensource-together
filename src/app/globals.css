@@ -51,6 +51,19 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+
+  /* Softer elevation than Tailwind defaults — menus, popovers, dialogs */
+  --shadow-2xs: 0 1px rgb(0 0 0 / 0.025);
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.025);
+  --shadow-sm:
+    0 1px 3px 0 rgb(0 0 0 / 0.045), 0 1px 2px -1px rgb(0 0 0 / 0.035);
+  --shadow-md:
+    0 4px 18px -2px rgb(0 0 0 / 0.055), 0 2px 10px -3px rgb(0 0 0 / 0.038);
+  --shadow-lg:
+    0 10px 36px -4px rgb(0 0 0 / 0.065), 0 4px 14px -4px rgb(0 0 0 / 0.042);
+  --shadow-xl:
+    0 20px 40px -6px rgb(0 0 0 / 0.065), 0 8px 16px -6px rgb(0 0 0 / 0.048);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.14);
 }
 
 :root {

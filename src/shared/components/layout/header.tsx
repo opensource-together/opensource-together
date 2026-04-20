@@ -93,7 +93,7 @@ export default function Header() {
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/projects/create">
-                <Button>
+                <Button className="pr-[14px] pl-4 has-[>svg]:pr-[14px] has-[>svg]:pl-4">
                   Create Project
                   <HiPlus size={16} />
                 </Button>
