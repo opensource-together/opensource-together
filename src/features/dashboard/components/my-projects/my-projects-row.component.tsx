@@ -77,6 +77,12 @@ export default function MyProjectRow({
       </TableCell>
 
       <TableCell className={cellSurface}>
+        <span className="font-medium text-sm">
+          {new Date(project.createdAt).toLocaleDateString()}
+        </span>
+      </TableCell>
+
+      <TableCell className={cellSurface}>
         <Badge
           variant={project.published ? "info" : "white"}
           className={
@@ -87,12 +93,6 @@ export default function MyProjectRow({
         >
           {project.published ? "Published" : "Not Published"}
         </Badge>
-      </TableCell>
-
-      <TableCell className={cellSurface}>
-        <span className="font-medium text-sm">
-          {new Date(project.createdAt).toLocaleDateString()}
-        </span>
       </TableCell>
 
       <TableCell className={cn(cellSurface, "group-hover:rounded-r-xl")}>

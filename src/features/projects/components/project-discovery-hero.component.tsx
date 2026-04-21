@@ -23,13 +23,13 @@ export default function ProjectDiscoveryHero({
         <Image
           src="/illustrations/traveler.png"
           alt="Bible gauche"
-          width={1441}
-          height={400}
-          quality={85}
+          width={2882}
+          height={800}
+          quality={100}
           priority
           fetchPriority="high"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 95vw, 1441px"
-          className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-[100%] -translate-x-1/2 object-contain md:block lg:bottom-3 lg:w-[105%]"
+          sizes="(max-width: 768px) 0px, (max-width: 1441px) 100vw, 1441px"
+          className="absolute bottom-6 left-1/2 z-[-1] hidden h-auto w-full max-w-[1441px] -translate-x-1/2 object-contain md:block lg:bottom-3"
         />
         {/* Mobile image (no props change, same src, tailored sizing) */}
         <Image

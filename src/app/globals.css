@@ -175,3 +175,21 @@
     @apply font-medium;
   }
 }
+
+/* Sonner toasts: rounder corners, softer / lighter shadow (specificity beats injected sonner.css) */
+[data-sonner-toaster].toaster {
+  --border-radius: 14px;
+}
+
+[data-sonner-toaster] [data-sonner-toast][data-styled="true"] {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 10px 32px rgba(0, 0, 0, 0.06);
+}
+
+[data-sonner-toaster] [data-sonner-toast]:focus-visible {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 10px 32px rgba(0, 0, 0, 0.06),
+    0 0 0 2px rgba(0, 0, 0, 0.12);
+}

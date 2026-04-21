@@ -36,8 +36,8 @@ export default function CTAFooter({
           src={imageIllustration || ""}
           alt=""
           fill
-          quality={85}
-          sizes="(min-width: 1024px) 1120px, 100vw"
+          quality={100}
+          sizes="(min-width: 1280px) 1280px, 100vw"
           className="object-cover object-right-top md:object-right"
           priority
           fetchPriority="high"
@@ -69,7 +69,7 @@ export default function CTAFooter({
               <HiStar size={16} />
             </Link>
           </Button>
-          <Button asChild variant="outline" className="hover:scale-[0.98]">
+          <Button asChild variant="outline">
             <Link
               href={EXTERNAL_LINKS.TWITTER}
               target="_blank"

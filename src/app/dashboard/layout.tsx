@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <div className="flex h-[calc(100vh-6.5rem)] min-h-0 flex-col">
       <div className="flex min-h-0 flex-1 overflow-hidden">
         <DashboardSidebar />
-        <main className="mx-7 flex min-h-0 flex-1 flex-col overflow-hidden lg:mx-36">
+        <main className="mx-7 flex min-h-0 flex-1 flex-col overflow-hidden lg:mx-14">
           <div className="min-h-0 flex-1 overflow-y-auto">
             <div className="mt-2">{children}</div>
           </div>

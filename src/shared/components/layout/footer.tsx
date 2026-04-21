@@ -52,7 +52,7 @@ const footerLinks: {
       id: "company-discord",
     },
     {
-      label: "X (Twitter)",
+      label: "X.com",
       href: EXTERNAL_LINKS.TWITTER,
       external: true,
       id: "company-x",

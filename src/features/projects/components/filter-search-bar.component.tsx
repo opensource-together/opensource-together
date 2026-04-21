@@ -435,7 +435,7 @@ export default function FilterSearchBar({
               <div
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute top-0 h-full rounded-full bg-white transition-all duration-200 ease-out",
+                  "pointer-events-none absolute top-0 h-full rounded-full bg-white shadow-[0_2px_10px_-3px_rgba(0,0,0,0.03),0_12px_36px_-10px_rgba(0,0,0,0.04)] transition-[opacity,transform,box-shadow] duration-200 ease-out",
                   effectiveTarget !== null ? "opacity-100" : "opacity-0"
                 )}
                 style={{

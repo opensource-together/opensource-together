@@ -118,10 +118,6 @@ export function ChapterProgressCard({
               <span className="min-w-0 flex-1 truncate font-medium text-xs">
                 {currentChapter.title}
               </span>
-              <HiChevronRight
-                className="size-4 shrink-0 text-muted-foreground"
-                aria-hidden
-              />
             </div>
           </Link>
         ) : null}

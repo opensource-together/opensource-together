@@ -57,8 +57,9 @@ function CopyButton({ text }: CopyButtonProps) {
 
   return (
     <button
+      type="button"
       onClick={handleCopyLink}
-      className="shrink-0 rounded bg-accent p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-ost-blue-three"
+      className="shrink-0 origin-center rounded bg-accent p-1.5 text-muted-foreground transition-all hover:scale-[0.98] hover:bg-muted hover:text-ost-blue-three active:scale-[0.98]"
       aria-label={copied ? "Copied!" : "Copy to clipboard"}
       title={copied ? "Copied!" : "Copy to clipboard"}
     >
@@ -96,7 +97,7 @@ export function ShareProfileModal({
 
   const socialButtons: SocialShareButton[] = [
     {
-      name: "X (Twitter)",
+      name: "X.com",
       icon: RiTwitterXFill,
       color: "text-primary",
       href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`,

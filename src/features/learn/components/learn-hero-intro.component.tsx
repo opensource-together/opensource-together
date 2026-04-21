@@ -1,10 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import Link from "next/link";
-import { HiChevronRight } from "react-icons/hi2";
 
-import { Button } from "@/shared/components/ui/button";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 
 const ease = [0.22, 1, 0.32, 1] as const;
@@ -17,15 +14,7 @@ const variants = {
   visible: { opacity: 1, filter: "blur(0px)", y: 0 },
 };
 
-interface LearnHeroIntroProps {
-  startLearningHref: string;
-  startHandsOnHref: string;
-}
-
-export function LearnHeroIntro({
-  startLearningHref,
-  startHandsOnHref,
-}: LearnHeroIntroProps) {
+export function LearnHeroIntro() {
   return (
     <>
       {/* 1 — badge */}
@@ -76,26 +65,6 @@ export function LearnHeroIntro({
             Structured learning paths designed to take you from curious beginner
             to confident contributor, one concept at a time.
           </p>
-        </motion.div>
-
-        {/* 5 — CTAs */}
-        <motion.div
-          className="mt-8 flex flex-row justify-center gap-3"
-          initial="hidden"
-          animate="visible"
-          variants={variants}
-          transition={{ duration: DURATION, delay: STAGGER * 4, ease }}
-        >
-          <Link href={startLearningHref}>
-            <Button variant="default">
-              Start Learning <HiChevronRight className="size-4" />
-            </Button>
-          </Link>
-          <Link href={startHandsOnHref}>
-            <Button variant="secondary" className="hover:scale-[0.98]">
-              Start Hands-On
-            </Button>
-          </Link>
         </motion.div>
       </div>
     </>

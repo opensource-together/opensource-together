@@ -15,7 +15,7 @@ export default function FooterMinimal({
 }) {
   const navigationLinks = [
     { name: "GitHub", href: EXTERNAL_LINKS.GITHUB_ORG },
-    { name: "X (Twitter)", href: EXTERNAL_LINKS.TWITTER },
+    { name: "X.com", href: EXTERNAL_LINKS.TWITTER },
     { name: "Discord", href: EXTERNAL_LINKS.DISCORD },
     {
       name: "LinkedIn",

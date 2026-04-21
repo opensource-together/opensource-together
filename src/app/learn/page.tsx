@@ -40,15 +40,12 @@ export default function LearnPage() {
           className="absolute -bottom-0 left-1/2 z-[-1] h-auto w-full -translate-x-1/2 object-contain md:hidden"
         />
         <div className="relative z-10 mx-auto mt-12 flex w-full max-w-[1441px] flex-col items-center justify-center">
-          <LearnHeroIntro
-            startLearningHref={`/learn/${firstLearnSlug}`}
-            startHandsOnHref={`/learn/${firstHandsOnSlug}`}
-          />
+          <LearnHeroIntro />
         </div>
       </div>
 
       {/* Learn and Practice Cards */}
-      <div className="mx-auto my-20 w-full max-w-5xl px-6">
+      <div className="mx-auto mt-10 mb-[9rem] w-full max-w-5xl px-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Learn Card */}
           <ChapterProgressCard

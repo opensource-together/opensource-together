@@ -169,7 +169,7 @@ export default async function ChapterPage({ params }: PageProps) {
 
       {/* Main Content */}
       <main className="flex min-w-0 flex-1 flex-col items-center pt-8">
-        <article className="mb-[40px] w-full max-w-[697px]">
+        <article className="mb-[80px] w-full max-w-[697px]">
           <div className="mb-8">
             <h1
               id={pageTitleId}

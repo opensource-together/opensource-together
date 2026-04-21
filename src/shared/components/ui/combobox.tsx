@@ -135,10 +135,10 @@ export function Combobox({
       <Popover modal={true} open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
+            variant="input"
             role="combobox"
             aria-expanded={open}
-            className="h-10 w-full min-w-0 justify-start rounded-md border-input bg-white text-start font-normal text-primary text-sm"
+            className="h-10 w-full min-w-0 justify-start bg-white text-start text-primary text-sm"
             disabled={disabled}
           >
             <span
