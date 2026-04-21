@@ -56,7 +56,7 @@ export function ProjectTableActions({
         <Button
           variant="outline"
           size="icon"
-          className="border-[0.5px] hover:bg-muted"
+          className="size-[30px] border-[0.5px] p-1.5 hover:bg-muted"
         >
           <RiMoreFill className="size-4" />
         </Button>

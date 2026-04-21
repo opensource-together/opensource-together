@@ -51,7 +51,7 @@ export function LearnHeroIntro({
             variants={variants}
             transition={{ duration: DURATION, delay: STAGGER, ease }}
           >
-            Learn and Practice
+            Your open source
           </motion.span>
           {/* 3 — headline line 2 */}
           <motion.span
@@ -61,7 +61,7 @@ export function LearnHeroIntro({
             variants={variants}
             transition={{ duration: DURATION, delay: STAGGER * 2, ease }}
           >
-            Open Source
+            journey starts here
           </motion.span>
         </h1>
 
@@ -73,8 +73,8 @@ export function LearnHeroIntro({
           transition={{ duration: DURATION, delay: STAGGER * 3, ease }}
         >
           <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
-            Learn about open source, prepare your project, and release it
-            publicly with confidence.
+            Structured learning paths designed to take you from curious beginner
+            to confident contributor, one concept at a time.
           </p>
         </motion.div>
 
@@ -92,7 +92,9 @@ export function LearnHeroIntro({
             </Button>
           </Link>
           <Link href={startHandsOnHref}>
-            <Button variant="secondary">Start Hands-On</Button>
+            <Button variant="secondary" className="hover:scale-[0.98]">
+              Start Hands-On
+            </Button>
           </Link>
         </motion.div>
       </div>
