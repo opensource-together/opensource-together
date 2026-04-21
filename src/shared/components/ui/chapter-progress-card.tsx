@@ -126,9 +126,12 @@ export function ChapterProgressCard({
           </Link>
         ) : null}
         <Link href="/learn/chapters" className="block w-full">
-          <Button variant="default" className="w-full">
-            Browse Chapters
-            <HiChevronRight className="size-3" aria-hidden />
+          <Button
+            variant="default"
+            className="w-full justify-between gap-2 px-4"
+          >
+            <span className="min-w-0 truncate text-left">Browse Chapters</span>
+            <HiChevronRight className="size-3 shrink-0" aria-hidden />
           </Button>
         </Link>
       </div>

@@ -69,7 +69,7 @@ export default function CTAFooter({
               <HiStar size={16} />
             </Link>
           </Button>
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="hover:scale-[0.98]">
             <Link
               href={EXTERNAL_LINKS.TWITTER}
               target="_blank"

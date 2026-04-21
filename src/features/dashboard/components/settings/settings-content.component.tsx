@@ -84,7 +84,7 @@ export function SettingsContent() {
       <div className="space-y-6">
         {/* Profile Section */}
         <section>
-          <div className="flex items-center gap-4">
+          <div className="mt-[14px] flex items-center gap-4">
             <Avatar
               src={currentUser.image}
               alt={currentUser.name}

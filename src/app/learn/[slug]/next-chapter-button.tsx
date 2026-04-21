@@ -80,7 +80,7 @@ export function NextChapterButton({
                 <Button
                   variant="outline"
                   asChild
-                  className="min-w-0 flex-1 rounded-full border-black/5 bg-white shadow-none hover:bg-accent"
+                  className="min-w-0 flex-1 rounded-full border-black/5 bg-white shadow-none hover:scale-[0.98]"
                 >
                   <Link
                     href={`/learn/${prevChapter.slug}`}
@@ -109,7 +109,7 @@ export function NextChapterButton({
             <Button
               variant="outline"
               asChild
-              className="min-w-0 flex-1 rounded-full border-black/5 bg-white shadow-none hover:bg-accent"
+              className="min-w-0 flex-1 rounded-full border-black/5 bg-white shadow-none hover:scale-[0.98]"
             >
               <Link
                 href={`/learn/${prevChapter.slug}`}
