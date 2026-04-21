@@ -14,6 +14,7 @@ import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 import { cn } from "@/shared/lib/utils";
 
 import type { ProjectFilters } from "../types/project-filters.type";
+import { FilterAnimatedValue } from "./filter-animated-value.component";
 import FilterSearchBarMobile from "./filter-search-bar-mobile.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
@@ -35,9 +36,10 @@ function FilterItem({ label, value, isDimmed = false }: FilterItemProps) {
       )}
     >
       <span className="font-normal text-neutral-500/60 text-xs">{label}</span>
-      <span className="truncate font-medium text-sm tracking-tight transition-colors duration-200 group-hover/trigger:text-black group-data-[state=open]/trigger:text-black">
-        {value}
-      </span>
+      <FilterAnimatedValue
+        value={value}
+        className="font-medium text-sm tracking-tight transition-colors duration-200 group-hover/trigger:text-black group-data-[state=open]/trigger:text-black"
+      />
     </div>
   );
 }
@@ -546,15 +548,15 @@ export default function FilterSearchBar({
             className="absolute right-2 px-6 py-5"
             disabled={isLoading}
             onClick={handleApply}
-            aria-label={hasPendingChanges ? "Apply Filters" : "Filter Projects"}
+            aria-label={hasPendingChanges ? "Apply Filters" : "Select Filters"}
           >
             <span className="grid [grid-template-areas:stack]">
-              {/* Preserve original intrinsic width (same as plain “Filter Projects” + padding) */}
+              {/* Preserve original intrinsic width (same as plain “Select Filters” + padding) */}
               <span
                 className="invisible col-start-1 row-start-1 whitespace-nowrap [grid-area:stack]"
                 aria-hidden
               >
-                Filter Projects
+                Select Filters
               </span>
               <span className="relative col-start-1 row-start-1 h-5 overflow-hidden [grid-area:stack]">
                 <div
@@ -582,7 +584,7 @@ export default function FilterSearchBar({
                     className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
                     aria-hidden
                   >
-                    Filter Projects
+                    Select Filters
                   </span>
                   <span
                     className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"

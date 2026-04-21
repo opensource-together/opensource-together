@@ -11,7 +11,7 @@ export default function MyProjectsView() {
     <div>
       <DashboardHeading
         title="My Projects"
-        description="Organize, review, edit, manage members, track progress, and handle projects, all in one space."
+        description="Organize, review, edit, manage members, track progress, and handle projects."
       />
 
       <Suspense fallback={<MyProjectsSkeleton />}>

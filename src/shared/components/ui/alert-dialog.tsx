@@ -99,7 +99,7 @@ function AlertDialogTitle({
   return (
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
-      className={cn("font-semibold text-lg", className)}
+      className={cn("font-semibold text-lg tracking-[-0.02em]", className)}
       {...props}
     />
   );

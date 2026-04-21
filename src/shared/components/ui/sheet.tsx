@@ -7,6 +7,10 @@ import { useEffect, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
+/** Matches dialog built-in close — use on custom sheet header dismiss `Button`s */
+export const sheetManualCloseButtonClassName =
+  "border border-black/5 opacity-70 transition-opacity hover:opacity-100 focus-visible:border-transparent focus-visible:ring-0";
+
 const Sheet = SheetPrimitive.Root;
 
 const SheetTrigger = SheetPrimitive.Trigger;

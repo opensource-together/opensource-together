@@ -21,6 +21,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  sheetManualCloseButtonClassName,
 } from "@/shared/components/ui/sheet";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/lib/utils";
@@ -63,7 +64,13 @@ function SheetHeaderContent({
                 {title}
               </span>
             </SheetTitle>
-            <Button size="icon" variant="ghost" onClick={onClose}>
+            <Button
+              size="icon"
+              variant="ghost"
+              className={cn(sheetManualCloseButtonClassName)}
+              onClick={onClose}
+              aria-label="Close"
+            >
               <RxCross2 size={12} />
             </Button>
           </div>

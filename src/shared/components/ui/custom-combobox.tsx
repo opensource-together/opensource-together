@@ -98,24 +98,23 @@ export function CustomCombobox({
     <AnimatePresence>
       {value.length > 0 ? (
         <motion.button
-          key="clear-all"
+          key="clear"
           type="button"
           initial={{ opacity: 0, x: 14, filter: "blur(6px)" }}
           animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, x: 10, filter: "blur(4px)" }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          aria-label="Clear selected items"
           onClick={() => {
             onChange([]);
             handleOpenChange(false);
           }}
           className={cn(
-            "cursor-pointer text-xs",
-            disabled
-              ? "opacity-50"
-              : "text-muted-foreground hover:text-foreground"
+            "cursor-pointer rounded-full border border-black/5 bg-white px-2.5 py-1 font-medium text-foreground text-xs shadow-none transition-colors",
+            disabled ? "pointer-events-none opacity-50" : "hover:bg-muted/60"
           )}
         >
-          Clear All
+          Clear
         </motion.button>
       ) : null}
     </AnimatePresence>
@@ -183,7 +182,7 @@ export function CustomCombobox({
                       );
                     })}
                 </CommandGroup>
-                <CommandGroup heading="Technologies">
+                <CommandGroup heading="Frameworks / Others">
                   {options
                     .filter((opt) => opt.type === "TECH")
                     .map((option) => {

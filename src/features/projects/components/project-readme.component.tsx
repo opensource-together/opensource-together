@@ -20,7 +20,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  sheetManualCloseButtonClassName,
 } from "@/shared/components/ui/sheet";
+import { cn } from "@/shared/lib/utils";
 
 interface ProjectReadmeProps {
   readme: string;
@@ -190,7 +192,9 @@ export default function ProjectReadme({
                   <Button
                     size="icon"
                     variant="ghost"
+                    className={cn(sheetManualCloseButtonClassName)}
                     onClick={() => setIsOpen(false)}
+                    aria-label="Close"
                   >
                     <RxCross2 size={12} />
                   </Button>

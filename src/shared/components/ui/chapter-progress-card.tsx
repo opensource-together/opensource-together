@@ -107,7 +107,7 @@ export function ChapterProgressCard({
                 : `Start learning: ${currentChapter.title}`
             }
           >
-            <div className="flex cursor-pointer items-center gap-3 rounded-full bg-secondary px-3 py-2 transition-all hover:border-ost-blue-three hover:bg-accent">
+            <div className="flex origin-center cursor-pointer items-center gap-3 rounded-full bg-secondary px-3 py-2 transition-all hover:scale-[0.98] hover:bg-accent">
               <div className="flex size-8 shrink-0 items-center justify-center">
                 {isChapterComplete(currentChapter.slug) ? (
                   <HiCheckCircle className="size-8 text-ost-blue-three" />

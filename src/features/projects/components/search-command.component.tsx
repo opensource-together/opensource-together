@@ -24,6 +24,8 @@ import {
   CommandList,
 } from "@/shared/components/ui/command";
 
+import { cn } from "@/shared/lib/utils";
+
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
 
 const MAX_FREE_PROJECTS = 60;
@@ -43,7 +45,13 @@ type ProjectSuggestion = {
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
 
-export default function SearchCommand() {
+export default function SearchCommand({
+  noHoverBg,
+  onOpen,
+}: {
+  noHoverBg?: boolean;
+  onOpen?: () => void;
+}) {
   const router = useRouter();
   const triggerId = useId();
   const [open, setOpen] = useState(false);
@@ -256,10 +264,25 @@ export default function SearchCommand() {
         type="button"
         variant="ghost"
         size="sm"
-        onClick={() => setOpen(true)}
+        className={cn(
+          noHoverBg &&
+            "hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:bg-transparent"
+        )}
+        onClick={() => {
+          setOpen(true);
+          onOpen?.();
+        }}
       >
-        <HiOutlineSearch className="size-3" />
-        <span>Search </span>
+        <HiOutlineSearch className="size-[14px] sm:hidden" />
+        <span>Search</span>
+        <span className="hidden items-center gap-0.5 sm:flex">
+          <span className="rounded bg-neutral-50 px-1.5 py-0.5 font-mono text-[14px] text-muted-foreground">
+            ⌘
+          </span>
+          <span className="rounded bg-neutral-50 px-1.5 py-0.5 font-mono text-[12px] text-muted-foreground">
+            K
+          </span>
+        </span>
       </Button>
       <CommandDialog
         open={open}

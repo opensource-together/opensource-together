@@ -9,7 +9,6 @@ import {
   HiCog6Tooth,
   HiMiniSquare2Stack,
   HiPlus,
-  HiQuestionMarkCircle,
   HiUserGroup,
 } from "react-icons/hi2";
 
@@ -50,7 +49,6 @@ const sidebarNavItems: SidebarItem[] = [
 
 const bottomSidebarItems = [
   { label: "Settings", href: "/dashboard/settings", icon: HiCog6Tooth },
-  { label: "Need help", href: "/learn", icon: HiQuestionMarkCircle },
 ];
 
 function SidebarLink({

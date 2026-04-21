@@ -7,21 +7,13 @@ import { HiChevronRight } from "react-icons/hi2";
 import { Button } from "@/shared/components/ui/button";
 import HeroBadge from "@/shared/components/ui/hero-badge";
 
-/** Match `DiscoveryHeroIntro` timing */
 const ease = [0.22, 1, 0.32, 1] as const;
-const LINE_DURATION = 0.56;
-const LINE_STAGGER = 0.88;
-const REST_DELAY = LINE_DURATION * (1 + LINE_STAGGER) - 0.06;
 
-const subtleBlurHidden = "blur(4px)";
+const DURATION = 0.5;
+const STAGGER = 0.11;
 
-const lineVariants = {
-  hidden: { opacity: 0, filter: subtleBlurHidden, y: 4 },
-  visible: { opacity: 1, filter: "blur(0px)", y: 0 },
-};
-
-const fromTopVariants = {
-  hidden: { opacity: 0, filter: subtleBlurHidden, y: -8 },
+const variants = {
+  hidden: { opacity: 0, filter: "blur(10px)", y: 6 },
   visible: { opacity: 1, filter: "blur(0px)", y: 0 },
 };
 
@@ -36,11 +28,12 @@ export function LearnHeroIntro({
 }: LearnHeroIntroProps) {
   return (
     <>
+      {/* 1 — badge */}
       <motion.div
         initial="hidden"
         animate="visible"
-        variants={fromTopVariants}
-        transition={{ duration: 0.6, delay: REST_DELAY, ease }}
+        variants={variants}
+        transition={{ duration: DURATION, delay: 0, ease }}
       >
         <HeroBadge className="mb-3" />
       </motion.div>
@@ -50,35 +43,34 @@ export function LearnHeroIntro({
           className="mt-3 text-center text-4xl leading-none tracking-[-0.04em] md:text-5xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
+          {/* 2 — headline line 1 */}
           <motion.span
             className="block"
             initial="hidden"
             animate="visible"
-            variants={lineVariants}
-            transition={{ duration: LINE_DURATION, ease }}
+            variants={variants}
+            transition={{ duration: DURATION, delay: STAGGER, ease }}
           >
             Learn and Practice
           </motion.span>
+          {/* 3 — headline line 2 */}
           <motion.span
             className="block"
             initial="hidden"
             animate="visible"
-            variants={lineVariants}
-            transition={{
-              duration: LINE_DURATION,
-              delay: LINE_DURATION * LINE_STAGGER,
-              ease,
-            }}
+            variants={variants}
+            transition={{ duration: DURATION, delay: STAGGER * 2, ease }}
           >
             Open Source
           </motion.span>
         </h1>
 
+        {/* 4 — subtitle */}
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={fromTopVariants}
-          transition={{ duration: 0.6, delay: REST_DELAY + 0.02, ease }}
+          variants={variants}
+          transition={{ duration: DURATION, delay: STAGGER * 3, ease }}
         >
           <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
             Learn about open source, prepare your project, and release it
@@ -86,12 +78,13 @@ export function LearnHeroIntro({
           </p>
         </motion.div>
 
+        {/* 5 — CTAs */}
         <motion.div
           className="mt-8 flex flex-row justify-center gap-3"
           initial="hidden"
           animate="visible"
-          variants={fromTopVariants}
-          transition={{ duration: 0.6, delay: REST_DELAY + 0.06, ease }}
+          variants={variants}
+          transition={{ duration: DURATION, delay: STAGGER * 4, ease }}
         >
           <Link href={startLearningHref}>
             <Button variant="default">

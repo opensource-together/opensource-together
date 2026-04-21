@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRef, useState } from "react";
 import { HiPlus } from "react-icons/hi2";
 
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
@@ -15,10 +16,53 @@ import SearchCommand from "@/features/projects/components/search-command.compone
 import { Button } from "@/shared/components/ui/button";
 import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
 import UserDropdown from "@/shared/components/ui/user-dropdown.component";
+import { cn } from "@/shared/lib/utils";
 
 export default function Header() {
   const pathname = usePathname();
   const { isAuthenticated, isLoading } = useAuth();
+
+  const navContainerRef = useRef<HTMLDivElement>(null);
+  const [blobStyle, setBlobStyle] = useState<React.CSSProperties>({
+    opacity: 0,
+    width: 0,
+    transform: "translateX(0px)",
+  });
+  const isFirstEnterRef = useRef(true);
+
+  const handleNavItemEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    const container = navContainerRef.current;
+    if (!container) return;
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = e.currentTarget.getBoundingClientRect();
+    const x = targetRect.left - containerRect.left;
+    if (isFirstEnterRef.current) {
+      isFirstEnterRef.current = false;
+      setBlobStyle({
+        opacity: 1,
+        width: targetRect.width,
+        transform: `translateX(${x}px)`,
+        transition: "opacity 150ms ease-out",
+      });
+    } else {
+      setBlobStyle({
+        opacity: 1,
+        width: targetRect.width,
+        transform: `translateX(${x}px)`,
+        transition:
+          "transform 200ms ease-out, width 200ms ease-out, opacity 150ms ease-out",
+      });
+    }
+  };
+
+  const handleNavLeave = () => {
+    isFirstEnterRef.current = true;
+    setBlobStyle((prev) => ({
+      ...prev,
+      opacity: 0,
+      transition: "opacity 150ms ease-out",
+    }));
+  };
 
   if (pathname.startsWith("/auth") || pathname.startsWith("/onboarding")) {
     return null;
@@ -60,30 +104,53 @@ export default function Header() {
           className="relative z-10 flex items-center gap-2"
           aria-label="Main navigation"
         >
-          <div className="flex items-center gap-1 md:mr-2">
-            <SearchCommand />
+          <div
+            ref={navContainerRef}
+            className="relative flex items-center gap-1 md:mr-2"
+            onMouseLeave={handleNavLeave}
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute top-0 h-full rounded-full bg-accent"
+              style={blobStyle}
+            />
+            <div onMouseEnter={handleNavItemEnter} className="relative">
+              <SearchCommand noHoverBg onOpen={handleNavLeave} />
+            </div>
             {isAuthenticated && (
               <>
-                <Link href="/dashboard/my-projects">
-                  <Button
-                    variant="ghost"
-                    className={
-                      pathname.startsWith("/dashboard") ? "bg-accent" : ""
-                    }
-                    size="sm"
-                  >
-                    Dashboard
-                  </Button>
-                </Link>
-                <Link href="/learn">
-                  <Button
-                    variant="ghost"
-                    className={pathname.startsWith("/learn") ? "bg-accent" : ""}
-                    size="sm"
-                  >
-                    Learn
-                  </Button>
-                </Link>
+                <div onMouseEnter={handleNavItemEnter} className="relative">
+                  <Link href="/learn">
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "hover:bg-transparent",
+                        pathname.startsWith("/learn")
+                          ? "bg-accent hover:bg-accent"
+                          : ""
+                      )}
+                      size="sm"
+                    >
+                      Learn
+                    </Button>
+                  </Link>
+                </div>
+                <div onMouseEnter={handleNavItemEnter} className="relative">
+                  <Link href="/dashboard/my-projects">
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        "hover:bg-transparent",
+                        pathname.startsWith("/dashboard")
+                          ? "bg-accent hover:bg-accent"
+                          : ""
+                      )}
+                      size="sm"
+                    >
+                      My Projects
+                    </Button>
+                  </Link>
+                </div>
               </>
             )}
           </div>

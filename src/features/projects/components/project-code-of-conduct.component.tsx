@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { GoArrowUpRight } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -19,7 +20,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  sheetManualCloseButtonClassName,
 } from "@/shared/components/ui/sheet";
+import { cn } from "@/shared/lib/utils";
 
 interface ProjectCodeOfConductProps {
   codeOfConduct: string;
@@ -74,7 +77,9 @@ export default function ProjectCodeOfConduct({
                   <Button
                     size="icon"
                     variant="ghost"
+                    className={cn(sheetManualCloseButtonClassName)}
                     onClick={() => setIsOpen(false)}
+                    aria-label="Close"
                   >
                     <RxCross2 size={12} />
                   </Button>

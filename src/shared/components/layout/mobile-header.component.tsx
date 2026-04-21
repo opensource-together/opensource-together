@@ -13,7 +13,6 @@ import {
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
-import { RxDotsVertical } from "react-icons/rx";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import SearchCommand from "@/features/projects/components/search-command.component";
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -43,12 +42,12 @@ interface MobileHeaderProps {
 }
 
 const DEFAULT_LINKS: MobileNavLink[] = [
+  { label: "Learn", icon: HiBookOpen, href: "/learn" },
   {
-    label: "Dashboard",
+    label: "My Projects",
     icon: HiMiniSquare2Stack,
     href: "/dashboard/my-projects",
   },
-  { label: "Learn", icon: HiBookOpen, href: "/learn" },
 ];
 
 export function MobileHeader({ links }: MobileHeaderProps) {
@@ -178,9 +177,6 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                             <p className="mr-10 truncate text-muted-foreground text-xs">
                               {currentUser?.email}
                             </p>
-                          </div>
-                          <div className="absolute top-6 right-4">
-                            <RxDotsVertical className="size-4" />
                           </div>
                         </button>
                       </DropdownMenuTrigger>

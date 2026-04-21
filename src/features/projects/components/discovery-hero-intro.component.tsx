@@ -3,28 +3,20 @@
 import { motion } from "motion/react";
 
 import HeroBadge from "@/shared/components/ui/hero-badge";
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
 import type { ProjectFilters } from "../types/project-filters.type";
 import FilterSearchBar from "./filter-search-bar.component";
 
-/** Smooth deceleration (flat transition + tuple ease — reliable with motion/react variants) */
 const ease = [0.22, 1, 0.32, 1] as const;
 
-/** One headline line; second line starts partway through for a quicker stagger */
-const LINE_DURATION = 0.56;
-const LINE_STAGGER = 0.88;
-/** Start badge / subtitle / filter shortly after the headline lines (tight buffer) */
-const REST_DELAY = LINE_DURATION * (1 + LINE_STAGGER) - 0.06;
+/** Every element uses the same blur-up reveal */
+const DURATION = 0.5;
+/** Gap between each element starting */
+const STAGGER = 0.11;
 
-const subtleBlurHidden = "blur(4px)";
-
-const lineVariants = {
-  hidden: { opacity: 0, filter: subtleBlurHidden, y: 4 },
-  visible: { opacity: 1, filter: "blur(0px)", y: 0 },
-};
-
-const fromTopVariants = {
-  hidden: { opacity: 0, filter: subtleBlurHidden, y: -8 },
+const variants = {
+  hidden: { opacity: 0, filter: "blur(10px)", y: 6 },
   visible: { opacity: 1, filter: "blur(0px)", y: 0 },
 };
 
@@ -41,15 +33,22 @@ export function DiscoveryHeroIntro({
 }: DiscoveryHeroIntroProps) {
   return (
     <>
+      {/* 1 — badge */}
       <motion.div
         initial="hidden"
         animate="visible"
-        variants={fromTopVariants}
-        transition={{ duration: 0.6, delay: REST_DELAY, ease }}
+        variants={variants}
+        transition={{ duration: DURATION, delay: 0, ease }}
       >
-        <HeroBadge className="mb-3" />
+        <HeroBadge
+          className="mb-3"
+          pillLabel="GitHub"
+          description="Help support the founding team"
+          href={EXTERNAL_LINKS.GITHUB_REPO}
+        />
       </motion.div>
 
+      {/* 2 + 3 — headline lines */}
       <h1
         className="mt-3 text-center text-4xl leading-none tracking-[-0.04em] md:text-5xl"
         style={{ fontFamily: "Aspekta", fontWeight: 500 }}
@@ -58,8 +57,8 @@ export function DiscoveryHeroIntro({
           className="block"
           initial="hidden"
           animate="visible"
-          variants={lineVariants}
-          transition={{ duration: LINE_DURATION, ease }}
+          variants={variants}
+          transition={{ duration: DURATION, delay: STAGGER, ease }}
         >
           Together, build our
         </motion.span>
@@ -67,22 +66,19 @@ export function DiscoveryHeroIntro({
           className="block"
           initial="hidden"
           animate="visible"
-          variants={lineVariants}
-          transition={{
-            duration: LINE_DURATION,
-            delay: LINE_DURATION * LINE_STAGGER,
-            ease,
-          }}
+          variants={variants}
+          transition={{ duration: DURATION, delay: STAGGER * 2, ease }}
         >
           future in open source
         </motion.span>
       </h1>
 
+      {/* 4 — subtitle */}
       <motion.div
         initial="hidden"
         animate="visible"
-        variants={fromTopVariants}
-        transition={{ duration: 0.6, delay: REST_DELAY + 0.02, ease }}
+        variants={variants}
+        transition={{ duration: DURATION, delay: STAGGER * 3, ease }}
       >
         <p className="mt-5 max-w-[450px] px-2 text-center text-neutral-950 text-sm">
           Empowering open source initiatives through effortless project
@@ -90,12 +86,13 @@ export function DiscoveryHeroIntro({
         </p>
       </motion.div>
 
+      {/* 5 — filter bar */}
       <motion.div
         className="mt-8 w-full px-6 md:w-auto"
         initial="hidden"
         animate="visible"
-        variants={fromTopVariants}
-        transition={{ duration: 0.6, delay: REST_DELAY + 0.06, ease }}
+        variants={variants}
+        transition={{ duration: DURATION, delay: STAGGER * 4, ease }}
       >
         <FilterSearchBar
           onFilterChange={onFilterChange}

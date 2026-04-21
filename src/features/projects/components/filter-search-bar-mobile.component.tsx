@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HiX } from "react-icons/hi";
+import { HiChevronUp } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
@@ -17,6 +18,7 @@ import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 import { cn } from "@/shared/lib/utils";
 
 import type { ProjectFilters } from "../types/project-filters.type";
+import { FilterAnimatedValue } from "./filter-animated-value.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
 
 type MobileExpandedSection = "tech" | "category" | "sort" | null;
@@ -30,9 +32,10 @@ function MobileFilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="group flex w-full cursor-pointer flex-col rounded-full border border-muted-black-stroke px-6 py-3 shadow-xs">
       <span className="font-normal text-neutral-500/60 text-xs">{label}</span>
-      <span className="truncate font-medium text-sm tracking-tight">
-        {value}
-      </span>
+      <FilterAnimatedValue
+        value={value}
+        className="font-medium text-sm tracking-tight"
+      />
     </div>
   );
 }
@@ -255,27 +258,13 @@ export default function FilterSearchBarMobile({
               )}
             >
               <span className="min-w-0 truncate pl-1 text-start">
-                Filter Projects
+                Select Filters
               </span>
               <span
                 className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-white"
                 aria-hidden
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-[18px]"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
-                  />
-                </svg>
+                <HiChevronUp className="size-[18px]" strokeWidth={1.2} />
               </span>
             </button>
           </SheetTrigger>
@@ -365,7 +354,7 @@ export default function FilterSearchBarMobile({
               size="lg"
               asChild
               aria-label={
-                hasPendingChanges ? "Apply Filters" : "Filter Projects"
+                hasPendingChanges ? "Apply Filters" : "Select Filters"
               }
             >
               <SheetTrigger>
@@ -374,7 +363,7 @@ export default function FilterSearchBarMobile({
                     className="invisible col-start-1 row-start-1 whitespace-nowrap [grid-area:stack]"
                     aria-hidden
                   >
-                    Filter Projects
+                    Select Filters
                   </span>
                   <span className="relative col-start-1 row-start-1 h-5 overflow-hidden [grid-area:stack]">
                     <div
@@ -404,7 +393,7 @@ export default function FilterSearchBarMobile({
                         className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
                         aria-hidden
                       >
-                        Filter Projects
+                        Select Filters
                       </span>
                       <span
                         className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
