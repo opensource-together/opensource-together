@@ -8,13 +8,12 @@ import "react-icons/hi";
 import {
   HiChartBar,
   HiChatBubbleLeft,
-  HiChevronLeft,
-  HiChevronRight,
   HiCog6Tooth,
   HiMiniSquare2Stack,
   HiPlus,
   HiUserGroup,
 } from "react-icons/hi2";
+import { RiSideBarFill } from "react-icons/ri";
 
 import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -247,7 +246,7 @@ export default function DashboardSidebar() {
                     transition={blurTransition}
                     className="flex"
                   >
-                    <HiChevronRight className="size-4" />
+                    <RiSideBarFill className="size-4" aria-hidden />
                   </motion.span>
                 ) : (
                   <motion.span
@@ -257,7 +256,7 @@ export default function DashboardSidebar() {
                     className="flex w-full items-center justify-between gap-3"
                   >
                     <span className="text-sm">Hide Sidebar</span>
-                    <HiChevronLeft className="size-4" />
+                    <RiSideBarFill className="size-4" aria-hidden />
                   </motion.span>
                 )}
               </AnimatePresence>
