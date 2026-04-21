@@ -83,45 +83,52 @@ export function ChapterProgressCard({
           </p>
         </div>
 
-        {/* Progress Bar */}
-        <div className="space-y-2">
+        <div className="flex flex-col gap-3">
           <div className="my-1 h-1.5 w-full overflow-hidden rounded-full bg-accent">
             <div
               className="h-full bg-ost-blue-three transition-all duration-300"
               style={{ width: `${progress.percentage}%` }}
             />
           </div>
-        </div>
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">
-            {progress.completed} / {progress.total} completed
-          </span>
-        </div>
-
-        {/* Current Chapter Card */}
-        {currentChapter && (
-          <div className="flex items-center gap-3 rounded-full bg-secondary px-3 py-2 transition-all hover:border-ost-blue-three hover:bg-accent">
-            <div className="flex size-8 shrink-0 items-center justify-center">
-              {isChapterComplete(currentChapter.slug) ? (
-                <HiCheckCircle className="size-8 text-ost-blue-three" />
-              ) : (
-                <CircularProgress percentage={progress.percentage} />
-              )}
-            </div>
-            <span className="flex-1 truncate font-medium text-xs">
-              {currentChapter.title}
+          <div className="flex items-center justify-between pb-[2px] text-xs">
+            <span className="text-muted-foreground">
+              {progress.completed} / {progress.total} completed
             </span>
           </div>
-        )}
-        <Link href={`/learn/${currentChapter?.slug || firstChapterSlug}`}>
-          <Button className="w-full">
-            {hasCompletedChapters ? "Resume Learning" : "Start Learning"}
-            <HiChevronRight className="size-3" />
-          </Button>
-        </Link>
-        <Link href="/learn/chapters">
-          <Button variant="ghost" className="w-full">
+        </div>
+
+        {currentChapter ? (
+          <Link
+            href={`/learn/${currentChapter.slug || firstChapterSlug}`}
+            className="block w-full rounded-full focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            aria-label={
+              hasCompletedChapters
+                ? `Resume learning: ${currentChapter.title}`
+                : `Start learning: ${currentChapter.title}`
+            }
+          >
+            <div className="flex cursor-pointer items-center gap-3 rounded-full bg-secondary px-3 py-2 transition-all hover:border-ost-blue-three hover:bg-accent">
+              <div className="flex size-8 shrink-0 items-center justify-center">
+                {isChapterComplete(currentChapter.slug) ? (
+                  <HiCheckCircle className="size-8 text-ost-blue-three" />
+                ) : (
+                  <CircularProgress percentage={progress.percentage} />
+                )}
+              </div>
+              <span className="min-w-0 flex-1 truncate font-medium text-xs">
+                {currentChapter.title}
+              </span>
+              <HiChevronRight
+                className="size-4 shrink-0 text-muted-foreground"
+                aria-hidden
+              />
+            </div>
+          </Link>
+        ) : null}
+        <Link href="/learn/chapters" className="block w-full">
+          <Button variant="default" className="w-full">
             Browse Chapters
+            <HiChevronRight className="size-3" aria-hidden />
           </Button>
         </Link>
       </div>

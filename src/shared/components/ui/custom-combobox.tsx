@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useState } from "react";
 import { HiCheck } from "react-icons/hi2";
@@ -93,24 +94,32 @@ export function CustomCombobox({
 
   const isMaxReached = maxSelections && value.length >= maxSelections;
 
-  const clearAllButton =
-    value.length > 0 ? (
-      <button
-        type="button"
-        onClick={() => {
-          onChange([]);
-          handleOpenChange(false);
-        }}
-        className={cn(
-          "cursor-pointer text-xs",
-          disabled
-            ? "opacity-50"
-            : "text-muted-foreground hover:text-foreground"
-        )}
-      >
-        Clear All
-      </button>
-    ) : null;
+  const clearAllButton = (
+    <AnimatePresence>
+      {value.length > 0 ? (
+        <motion.button
+          key="clear-all"
+          type="button"
+          initial={{ opacity: 0, x: 14, filter: "blur(6px)" }}
+          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, x: 10, filter: "blur(4px)" }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+          onClick={() => {
+            onChange([]);
+            handleOpenChange(false);
+          }}
+          className={cn(
+            "cursor-pointer text-xs",
+            disabled
+              ? "opacity-50"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Clear All
+        </motion.button>
+      ) : null}
+    </AnimatePresence>
+  );
 
   const commandTree = (
     <Command>
@@ -131,7 +140,7 @@ export function CustomCombobox({
             <CommandEmpty>{emptyText}</CommandEmpty>
             {options.some((opt) => opt.type === "LANGUAGE") && (
               <>
-                <CommandGroup heading="Langages">
+                <CommandGroup>
                   {options
                     .filter((opt) => opt.type === "LANGUAGE")
                     .map((option) => {

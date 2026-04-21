@@ -164,7 +164,7 @@ export function Combobox({
               <CommandEmpty>{emptyText}</CommandEmpty>
               {options.some((opt) => opt.type === "LANGUAGE") && (
                 <>
-                  <CommandGroup heading="Langages">
+                  <CommandGroup>
                     {options
                       .filter((opt) => opt.type === "LANGUAGE")
                       .map((option) => {

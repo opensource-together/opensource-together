@@ -59,26 +59,26 @@ export default function CTAFooter({
           committed contributors and support.
         </p>
         <div className="mt-6 flex flex-row justify-center gap-3 md:justify-center">
-          <Link
-            href={EXTERNAL_LINKS.GITHUB_REPO}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button>
+          <Button asChild>
+            <Link
+              href={EXTERNAL_LINKS.GITHUB_REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Star on Github
               <HiStar size={16} />
-            </Button>
-          </Link>
-          <Link
-            href={EXTERNAL_LINKS.TWITTER}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="outline">
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link
+              href={EXTERNAL_LINKS.TWITTER}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Follow
               <RiTwitterXFill size={16} aria-hidden />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

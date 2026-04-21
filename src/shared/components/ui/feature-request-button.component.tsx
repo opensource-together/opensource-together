@@ -76,7 +76,7 @@ export function FeatureRequestButton() {
         className="fixed right-6 bottom-6 z-50 hidden size-[52px] items-center justify-center rounded-full bg-black p-0 shadow-lg transition-transform duration-200 ease-out hover:scale-[0.96] hover:bg-black/90 md:flex"
         aria-label="Request a feature"
       >
-        <Image src="/ost-logo-white.svg" alt="OST" width={35} height={35} />
+        <Image src="/ost-logo-white.svg" alt="OST" width={31} height={31} />
       </Button>
 
       <Modal

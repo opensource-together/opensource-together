@@ -131,12 +131,12 @@ export function TableOfContents({
               type="button"
               onClick={() => handleClick(heading.id)}
               className={cn(
-                "flex w-full cursor-pointer items-center rounded-md py-1.5 pr-3 pl-0 text-left font-normal transition-colors duration-200 ease-out",
+                "flex w-full cursor-pointer items-center rounded-md py-1.5 pr-3 pl-0 text-left transition-colors duration-200 ease-out",
                 "text-xs",
                 heading.level === 3 && "pl-6",
                 activeId === heading.id
-                  ? "text-foreground"
-                  : "text-neutral-500 hover:text-foreground"
+                  ? "font-medium text-foreground"
+                  : "font-normal text-neutral-500 hover:text-foreground"
               )}
             >
               <span className="truncate tracking-normal">{heading.text}</span>

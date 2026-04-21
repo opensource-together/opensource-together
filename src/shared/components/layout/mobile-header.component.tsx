@@ -117,7 +117,7 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                   <Link
                     href="/projects/create"
                     onClick={handleLinkClick}
-                    className="flex items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition"
+                    className="flex origin-center items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition hover:scale-[0.98]"
                   >
                     <HiPlus className="size-4" />
                     Create Project
