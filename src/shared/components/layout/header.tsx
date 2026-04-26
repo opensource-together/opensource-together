@@ -124,7 +124,7 @@ export default function Header() {
                     <Button
                       variant="ghost"
                       className={cn(
-                        "hover:bg-transparent",
+                        "hover:scale-100 hover:bg-transparent active:scale-100",
                         pathname.startsWith("/learn")
                           ? "bg-accent hover:bg-accent"
                           : ""
@@ -140,7 +140,7 @@ export default function Header() {
                     <Button
                       variant="ghost"
                       className={cn(
-                        "hover:bg-transparent",
+                        "hover:scale-100 hover:bg-transparent active:scale-100",
                         pathname.startsWith("/dashboard")
                           ? "bg-accent hover:bg-accent"
                           : ""
@@ -161,13 +161,18 @@ export default function Header() {
             <div className="flex items-center gap-2">
               <Link href="/projects/create">
                 <Button className="pr-[14px] pl-4 has-[>svg]:pr-[14px] has-[>svg]:pl-4">
-                  Create Project
+                  Submit Project
                   <HiPlus size={16} />
                 </Button>
               </Link>
               {!isAuthenticated && (
                 <Link href="/auth/login">
-                  <Button variant="outline">Sign In</Button>
+                  <Button
+                    variant="outline"
+                    className="hover:scale-100 active:scale-100"
+                  >
+                    Sign In
+                  </Button>
                 </Link>
               )}
               {isAuthenticated && <UserDropdown />}

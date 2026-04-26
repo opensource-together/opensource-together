@@ -30,7 +30,7 @@ const HeroBadge: React.FC<BadgeProps> = ({
           <span className="ml-0.5 rounded-full bg-ost-blue-one/10 px-3 py-1 font-medium text-[10px] text-ost-blue-three leading-tight md:text-xs">
             {pillLabel}
           </span>
-          <span className="text-nowrap font-medium text-[12px] text-muted-foreground leading-tight tracking-normal md:text-xs">
+          <span className="text-nowrap font-medium text-[12px] text-muted-foreground leading-tight tracking-[-0.02em] md:text-xs">
             {description}
           </span>
           <span className="flex w-0 items-center overflow-hidden transition-[width] duration-300 ease-in-out group-hover:w-[14px]">

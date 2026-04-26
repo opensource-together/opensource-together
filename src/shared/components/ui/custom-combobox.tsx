@@ -71,6 +71,7 @@ export function CustomCombobox({
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
+  const { showPanel, isExiting } = useInlineFilterPanelPresence(open);
 
   const handleOpenChange = (newOpen: boolean) => {
     if (!isControlled) setInternalOpen(newOpen);
@@ -123,7 +124,7 @@ export function CustomCombobox({
   const commandTree = (
     <Command>
       <CommandInput placeholder={searchPlaceholder} className="h-9" />
-      <CommandList className="max-h-[288px]">
+      <CommandList className="max-h-[272px]">
         {isLoading ? (
           <CommandGroup>
             {[...Array(5)].map((_, i) => (
@@ -182,7 +183,7 @@ export function CustomCombobox({
                       );
                     })}
                 </CommandGroup>
-                <CommandGroup heading="Frameworks / Others">
+                <CommandGroup heading="Frameworks & Others">
                   {options
                     .filter((opt) => opt.type === "TECH")
                     .map((option) => {
@@ -278,8 +279,6 @@ export function CustomCombobox({
   );
 
   if (layout === "inline") {
-    const { showPanel, isExiting } = useInlineFilterPanelPresence(open);
-
     return (
       <div className={cn("flex w-full flex-col gap-2", className)}>
         <button

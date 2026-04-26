@@ -35,7 +35,7 @@ function FilterItem({ label, value, isDimmed = false }: FilterItemProps) {
         isDimmed && "opacity-50"
       )}
     >
-      <span className="font-normal text-neutral-500/60 text-xs">{label}</span>
+      <span className="font-normal text-neutral-500 text-xs">{label}</span>
       <FilterAnimatedValue
         value={value}
         className="font-medium text-sm tracking-tight transition-colors duration-200 group-hover/trigger:text-black group-data-[state=open]/trigger:text-black"

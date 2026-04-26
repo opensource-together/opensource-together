@@ -74,7 +74,7 @@ export function FeatureRequestButton() {
       <Button
         onClick={() => setIsOpen(true)}
         className="fixed right-6 bottom-6 z-50 hidden size-[52px] items-center justify-center rounded-full bg-black p-0 shadow-lg transition-transform duration-200 ease-out hover:scale-[0.96] hover:bg-black/90 md:flex"
-        aria-label="Request a feature"
+        aria-label="Request feature"
       >
         <Image src="/ost-logo-white.svg" alt="OST" width={31} height={31} />
       </Button>
@@ -82,8 +82,8 @@ export function FeatureRequestButton() {
       <Modal
         open={isOpen}
         onOpenChange={setIsOpen}
-        title="Request a Feature"
-        description="Have an idea to improve OpenSource Together? Share it with us!"
+        title="Request Feature"
+        description="Have an idea to improve OpenSource Together?"
         confirmText={isSubmitting ? "Sending..." : "Send"}
         cancelText="Cancel"
         onConfirm={form.handleSubmit(handleSubmit)}

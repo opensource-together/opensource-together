@@ -187,7 +187,7 @@ export default function DashboardSidebar() {
         </div>
 
         <div className="shrink-0">
-          {/* Create Project card — blurs out/in on collapse */}
+          {/* Submit Project card — blurs out/in on collapse */}
           <AnimatePresence initial={false}>
             {!collapsed && (
               <motion.div
@@ -200,7 +200,7 @@ export default function DashboardSidebar() {
               >
                 <div className="rounded-xl bg-secondary p-4">
                   <div className="mb-3 text-start text-muted-foreground text-xs">
-                    Create a project for OpenSource Together. <br /> Import a
+                    Submit a project for OpenSource Together. <br /> Import a
                     repository from Github or Gitlab.
                   </div>
                   <Button
@@ -209,7 +209,7 @@ export default function DashboardSidebar() {
                     className="hidden w-full justify-between px-6 lg:flex"
                   >
                     <Link href="/projects/create">
-                      Create Project
+                      Submit Project
                       <HiPlus size={16} />
                     </Link>
                   </Button>

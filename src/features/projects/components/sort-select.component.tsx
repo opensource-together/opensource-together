@@ -65,7 +65,7 @@ export function SortSelect({
 
   const sortCommand = (
     <Command>
-      <CommandList className="max-h-[288px]">
+      <CommandList className="max-h-[272px]">
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
           {options.map((option) => {

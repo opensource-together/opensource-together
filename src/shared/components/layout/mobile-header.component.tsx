@@ -89,11 +89,16 @@ export function MobileHeader({ links }: MobileHeaderProps) {
         </Link>
 
         <div className="flex items-center gap-4">
-          <SearchCommand />
+          <SearchCommand triggerClassName="hover:scale-100 active:scale-100" />
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open navigation">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open navigation"
+                className="hover:scale-100 active:scale-100"
+              >
                 <span className="sr-only">Open navigation</span>
                 <HiMiniBars3 className="size-4" />
               </Button>
@@ -103,12 +108,19 @@ export function MobileHeader({ links }: MobileHeaderProps) {
               className="flex w-3/4 flex-col rounded-tr-[22px] rounded-br-[22px] p-0 pt-6"
             >
               <SheetHeader className="flex flex-col gap-2 px-4">
-                <Image
-                  src="/ostogether-logo.svg"
-                  alt="OpenSource Together"
-                  width={200}
-                  height={32}
-                />
+                <Link
+                  href="/"
+                  onClick={handleLinkClick}
+                  aria-label="OpenSource Together Home"
+                  className="inline-block w-fit shrink-0"
+                >
+                  <Image
+                    src="/ostogether-logo.svg"
+                    alt="OpenSource Together"
+                    width={200}
+                    height={32}
+                  />
+                </Link>
               </SheetHeader>
 
               <div className="flex flex-1 flex-col">
@@ -119,7 +131,7 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                     className="flex origin-center items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition hover:scale-[0.98]"
                   >
                     <HiPlus className="size-4" />
-                    Create Project
+                    Submit Project
                   </Link>
                   {resolvedLinks.map((link) => {
                     const active =

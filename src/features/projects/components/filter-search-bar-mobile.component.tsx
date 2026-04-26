@@ -31,7 +31,7 @@ interface FilterItemProps {
 function MobileFilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="group flex w-full cursor-pointer flex-col rounded-full border border-muted-black-stroke px-6 py-3 shadow-xs">
-      <span className="font-normal text-neutral-500/60 text-xs">{label}</span>
+      <span className="font-normal text-neutral-500 text-xs">{label}</span>
       <FilterAnimatedValue
         value={value}
         className="font-medium text-sm tracking-tight"
@@ -258,7 +258,7 @@ export default function FilterSearchBarMobile({
               )}
             >
               <span className="min-w-0 truncate pl-1 text-start">
-                Select Filters
+                Filter Projects
               </span>
               <span
                 className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-white"
@@ -277,7 +277,7 @@ export default function FilterSearchBarMobile({
         >
           <div className="flex shrink-0 items-center justify-between gap-3 pt-2 pr-2 pb-2 pl-2">
             <p className="font-medium text-base text-foreground tracking-tight">
-              Select Filters
+              Filter Projects
             </p>
             <SheetClose asChild>
               <button
@@ -354,7 +354,7 @@ export default function FilterSearchBarMobile({
               size="lg"
               asChild
               aria-label={
-                hasPendingChanges ? "Apply Filters" : "Select Filters"
+                hasPendingChanges ? "Apply Filters" : "Filter Projects"
               }
             >
               <SheetTrigger>
@@ -363,7 +363,7 @@ export default function FilterSearchBarMobile({
                     className="invisible col-start-1 row-start-1 whitespace-nowrap [grid-area:stack]"
                     aria-hidden
                   >
-                    Select Filters
+                    Filter Projects
                   </span>
                   <span className="relative col-start-1 row-start-1 h-5 overflow-hidden [grid-area:stack]">
                     <div
@@ -393,7 +393,7 @@ export default function FilterSearchBarMobile({
                         className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
                         aria-hidden
                       >
-                        Select Filters
+                        Filter Projects
                       </span>
                       <span
                         className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"

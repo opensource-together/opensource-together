@@ -48,9 +48,11 @@ const normalizeText = (value: string) => value.trim().toLowerCase();
 export default function SearchCommand({
   noHoverBg,
   onOpen,
+  triggerClassName,
 }: {
   noHoverBg?: boolean;
   onOpen?: () => void;
+  triggerClassName?: string;
 }) {
   const router = useRouter();
   const triggerId = useId();
@@ -266,23 +268,16 @@ export default function SearchCommand({
         size="sm"
         className={cn(
           noHoverBg &&
-            "hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:bg-transparent"
+            "hover:scale-100 hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:scale-100 active:bg-transparent",
+          triggerClassName
         )}
         onClick={() => {
           setOpen(true);
           onOpen?.();
         }}
       >
-        <HiOutlineSearch className="size-[14px] sm:hidden" />
+        <HiOutlineSearch className="size-[12px] shrink-0 sm:size-[14px]" />
         <span>Search</span>
-        <span className="hidden items-center gap-0.5 sm:flex">
-          <span className="rounded bg-neutral-50 px-1.5 py-0.5 font-mono text-[14px] text-muted-foreground">
-            ⌘
-          </span>
-          <span className="rounded bg-neutral-50 px-1.5 py-0.5 font-mono text-[12px] text-muted-foreground">
-            K
-          </span>
-        </span>
       </Button>
       <CommandDialog
         open={open}
