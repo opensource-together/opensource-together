@@ -145,7 +145,7 @@ export default function Footer() {
                 />
               </Link>
               <span className="text-muted-foreground text-sm">
-                © OpenSource Together • 2025
+                © OpenSource Together • 2026
               </span>
             </div>
 
