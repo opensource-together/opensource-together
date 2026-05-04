@@ -36,7 +36,6 @@ interface SortSelectProps {
   trigger: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Inline accordion panel (e.g. mobile sheet) instead of floating popover */
   layout?: "popover" | "inline";
 }
 

@@ -10,7 +10,6 @@ export default function FooterMinimal({
   contentClassName,
 }: {
   className?: string;
-  /** Merged into the inner bar (padding, gaps). */
   contentClassName?: string;
 }) {
   const navigationLinks = [

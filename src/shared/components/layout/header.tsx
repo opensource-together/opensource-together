@@ -16,7 +16,6 @@ import SearchCommand from "@/features/projects/components/search-command.compone
 import { Button } from "@/shared/components/ui/button";
 import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
 import UserDropdown from "@/shared/components/ui/user-dropdown.component";
-import { cn } from "@/shared/lib/utils";
 
 export default function Header() {
   const pathname = usePathname();
@@ -123,12 +122,11 @@ export default function Header() {
                   <Link href="/learn">
                     <Button
                       variant="ghost"
-                      className={cn(
-                        "hover:scale-100 hover:bg-transparent active:scale-100",
+                      className={
                         pathname.startsWith("/learn")
                           ? "bg-accent hover:bg-accent"
-                          : ""
-                      )}
+                          : undefined
+                      }
                       size="sm"
                     >
                       Learn
@@ -139,12 +137,11 @@ export default function Header() {
                   <Link href="/dashboard/my-projects">
                     <Button
                       variant="ghost"
-                      className={cn(
-                        "hover:scale-100 hover:bg-transparent active:scale-100",
+                      className={
                         pathname.startsWith("/dashboard")
                           ? "bg-accent hover:bg-accent"
-                          : ""
-                      )}
+                          : undefined
+                      }
                       size="sm"
                     >
                       My Projects

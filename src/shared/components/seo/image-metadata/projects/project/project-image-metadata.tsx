@@ -9,8 +9,6 @@ interface ProjectImageMetadataProps {
   name: string;
   description?: string;
   imageUrl?: string | null;
-  /** Full-area backdrop (e.g. data URL) for the OG canvas */
-  backdropImageSrc?: string;
   forksCount?: number | null;
   openIssuesCount?: number | null;
   pullRequestsCount?: number | null;
@@ -21,7 +19,6 @@ export function ProjectImageMetadata({
   name,
   description,
   imageUrl,
-  backdropImageSrc,
   forksCount,
   openIssuesCount,
   pullRequestsCount,
@@ -58,146 +55,104 @@ export function ProjectImageMetadata({
     <ImageMetadataBackground>
       <div
         style={{
-          position: "relative",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
           width: "100%",
           height: "100%",
+          position: "relative",
+          paddingInline: "36px",
         }}
       >
-        {backdropImageSrc ? (
-          <>
-            {/** biome-ignore lint/performance/noImgElement: required for og image */}
-            <img
-              src={backdropImageSrc}
-              alt=""
-              width={1200}
-              height={630}
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center",
-                zIndex: 0,
-              }}
-            />
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                zIndex: 1,
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.78) 45%, rgba(255,255,255,0.55) 100%)",
-              }}
-            />
-          </>
-        ) : null}
         <div
           style={{
-            position: "relative",
-            zIndex: 2,
             display: "flex",
-            alignItems: "flex-start",
+            flexDirection: "column",
             justifyContent: "space-between",
-            width: "100%",
+            alignItems: "flex-start",
             height: "100%",
-            paddingInline: "36px",
+            maxWidth: "640px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              height: "100%",
-              maxWidth: "640px",
-            }}
-          >
-            <ImageMetadataContent title={name} description={summary} />
-            {stats.length ? (
-              <div
-                style={{
-                  display: "flex",
-                  gap: "56px",
-                }}
-              >
-                {stats.map((stat) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div
-                      key={stat.label}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                        marginBottom: "20px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "48px",
-                          fontFamily:
-                            '"Geist", "Inter", "Segoe UI", sans-serif',
-                          fontWeight: 500,
-                          letterSpacing: "-0.02em",
-                        }}
-                      >
-                        {numberFormatter.format(stat.value)}
-                      </span>
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          fontSize: "20px",
-                          fontFamily:
-                            '"Geist", "Inter", "Segoe UI", sans-serif',
-                          fontWeight: 400,
-                          letterSpacing: "-0.01em",
-                          color: "#737373",
-                        }}
-                      >
-                        <Icon size={20} />
-                        {stat.label}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : null}
-          </div>
-          {imageUrl ? (
+          <ImageMetadataContent title={name} description={summary} />
+          {stats.length ? (
             <div
               style={{
-                position: "relative",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: `${logoSize}px`,
-                height: `${logoSize}px`,
-                borderRadius: "65px",
-                overflow: "hidden",
-                marginTop: "52px",
+                gap: "56px",
               }}
             >
-              {/** biome-ignore lint/performance/noImgElement: required for og image */}
-              <img
-                src={imageUrl}
-                alt={`${name} logo`}
-                width={logoSize}
-                height={logoSize}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: "48px",
+                        fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
+                        fontWeight: 500,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {numberFormatter.format(stat.value)}
+                    </span>
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        fontSize: "20px",
+                        fontFamily: '"Geist", "Inter", "Segoe UI", sans-serif',
+                        fontWeight: 400,
+                        letterSpacing: "-0.01em",
+                        color: "#737373",
+                      }}
+                    >
+                      <Icon size={20} />
+                      {stat.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           ) : null}
         </div>
+        {imageUrl ? (
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: `${logoSize}px`,
+              height: `${logoSize}px`,
+              borderRadius: "65px",
+              overflow: "hidden",
+              marginTop: "52px",
+            }}
+          >
+            {/** biome-ignore lint/performance/noImgElement: required for og image */}
+            <img
+              src={imageUrl}
+              alt={`${name} logo`}
+              width={logoSize}
+              height={logoSize}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+        ) : null}
       </div>
     </ImageMetadataBackground>
   );

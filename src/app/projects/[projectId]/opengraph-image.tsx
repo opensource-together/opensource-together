@@ -1,21 +1,6 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
 import { getProjectDetails } from "@/features/projects/services/project.service";
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
 import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/projects/project/project-image-metadata";
-
-function readProjectOgBackdropDataUrl(): string | undefined {
-  try {
-    const filePath = path.join(
-      process.cwd(),
-      "public/illustrations/ost-preview.png"
-    );
-    return `data:image/png;base64,${readFileSync(filePath).toString("base64")}`;
-  } catch {
-    return undefined;
-  }
-}
 
 //export const runtime = "edge";
 export const contentType = "image/png";
@@ -30,8 +15,6 @@ export default async function Image({
 }: {
   params: Promise<{ projectId: string }>;
 }) {
-  const backdropImageSrc = readProjectOgBackdropDataUrl();
-
   try {
     const { projectId } = await params;
 
@@ -43,7 +26,6 @@ export default async function Image({
           name={project.title}
           description={project.description}
           imageUrl={project.logoUrl}
-          backdropImageSrc={backdropImageSrc}
           starsCount={project.repositoryDetails?.stars}
           forksCount={project.repositoryDetails?.forksCount}
           openIssuesCount={project.repositoryDetails?.openIssuesCount}
@@ -60,7 +42,6 @@ export default async function Image({
         <ProjectImageMetadata
           name="OpenSource Together"
           description="Discover and contribute to open-source projects that make a difference."
-          backdropImageSrc={backdropImageSrc}
         />
       ),
     });

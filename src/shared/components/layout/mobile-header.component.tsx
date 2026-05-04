@@ -89,16 +89,11 @@ export function MobileHeader({ links }: MobileHeaderProps) {
         </Link>
 
         <div className="flex items-center gap-4">
-          <SearchCommand triggerClassName="hover:scale-100 active:scale-100" />
+          <SearchCommand />
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Open navigation"
-                className="hover:scale-100 active:scale-100"
-              >
+              <Button variant="ghost" size="icon" aria-label="Open navigation">
                 <span className="sr-only">Open navigation</span>
                 <HiMiniBars3 className="size-4" />
               </Button>

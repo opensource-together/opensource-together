@@ -13,7 +13,6 @@ function Separator({
   className,
   orientation = "horizontal",
   decorative = true,
-  /** Match parent horizontal padding so the rule spans edge-to-edge inside modals/sheets */
   contentPaddingX,
   ...props
 }: React.ComponentProps<typeof SeparatorPrimitive.Root> & {

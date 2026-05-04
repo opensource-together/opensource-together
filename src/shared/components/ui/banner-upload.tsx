@@ -110,11 +110,7 @@ export function BannerUpload({
   const displayImage = preview || bannerUrlWithCacheBusting || defaultBannerUrl;
   const isDefaultBanner = (url: string | null | undefined): boolean => {
     if (!url) return true;
-    return (
-      url === defaultBannerUrl ||
-      url.endsWith("new_profile_banner.png") ||
-      url.endsWith("ost-profile-banner.png")
-    );
+    return url === defaultBannerUrl || url.endsWith("new_profile_banner.png");
   };
   const hasCustomBanner =
     currentImageUrl && !preview && !isDefaultBanner(currentImageUrl);

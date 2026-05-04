@@ -48,7 +48,6 @@ interface ComboboxProps {
   onOpenChange?: (open: boolean) => void;
   isLoading?: boolean;
   modal?: boolean;
-  /** Inline accordion panel (e.g. mobile sheet) instead of floating popover */
   layout?: "popover" | "inline";
 }
 

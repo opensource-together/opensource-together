@@ -268,7 +268,7 @@ export default function SearchCommand({
         size="sm"
         className={cn(
           noHoverBg &&
-            "hover:scale-100 hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:scale-100 active:bg-transparent",
+            "hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:bg-transparent",
           triggerClassName
         )}
         onClick={() => {

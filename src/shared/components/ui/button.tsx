@@ -4,9 +4,6 @@ import type * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-/** Bordered white surface — shared by outline + secondary (replaces grey secondary). */
-const buttonVariantBorderedSurface = "border bg-background";
-
 const buttonVariants = cva(
   "inline-flex shrink-0 origin-center cursor-pointer items-center justify-center gap-1 whitespace-nowrap rounded-full font-medium text-sm tracking-tight outline-none transition-all hover:scale-[0.98] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
@@ -15,10 +12,11 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground focus-visible:border-transparent focus-visible:ring-0",
         destructive: "bg-destructive/10 text-destructive",
-        outline: buttonVariantBorderedSurface,
-        secondary: buttonVariantBorderedSurface,
-        ghost: "hover:bg-accent",
-        /** Rect field triggers (combobox, date popover): no press shrink — use `default` / `outline` pills for that. */
+        outline:
+          "border bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "border bg-background hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:scale-100 hover:bg-accent active:scale-100",
         input:
           "rounded-md border border-input bg-background font-normal shadow-none hover:scale-100 active:scale-100",
         link: "text-primary underline-offset-4 hover:scale-100 hover:underline active:scale-100",

@@ -12,7 +12,6 @@ import { Modal } from "@/shared/components/ui/modal";
 
 interface ShareProfileModalProps {
   url: string;
-  /** Used for share targets that need a title (e.g. Reddit), not the dialog heading */
   title?: string;
   description?: string;
   open?: boolean;
