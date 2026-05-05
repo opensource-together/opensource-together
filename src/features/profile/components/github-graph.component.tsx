@@ -1,4 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/shared/lib/utils";
 
 import type {
   ContributionGraph,
@@ -16,10 +18,23 @@ interface TooltipData {
   contributionLevel: ContributionLevel;
 }
 
+const MD_BREAKPOINT_QUERY = "(max-width: 767px)";
+const MOBILE_CELL_PX = 10;
+const MOBILE_GRID_GAP_PX = 2;
+
 export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(MD_BREAKPOINT_QUERY);
+    const apply = () => setIsMobileLayout(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   const getSquareColor = (level: ContributionLevel): string => {
     switch (level) {
@@ -82,72 +97,62 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
     );
   }
 
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const days = ["Mon", "Wed", "Fri"];
+  const weekCount = contributionGraph.weeks.length;
+  const rowCount = Math.max(
+    7,
+    ...contributionGraph.weeks.map((w) => w.contributionDays.length)
+  );
 
   return (
     <div className="h-full w-full">
       <div>
         <h2 className="mb-2">Contribution Activity</h2>
 
-        <div className="w-full overflow-x-auto md:overflow-x-hidden">
-          <div className="relative w-max md:origin-left md:scale-x-[0.99]">
-            <div className="mb-0.5 flex pr-2.5">
-              {months.map((month, index) => (
-                <div key={index} className="flex-1 text-left">
-                  <span className="text-[8px] text-neutral-400">{month}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex">
-              <div
-                className="h-[93px] w-max rounded-md border border-black/5 p-2"
-                onMouseMove={handleMouseMove}
-              >
-                <div className="flex h-full gap-0.5">
-                  {contributionGraph.weeks.map((week, weekIndex) => (
-                    <div key={weekIndex} className="flex flex-col gap-0.5">
-                      {week.contributionDays.map((day, dayIndex) => (
-                        <div
-                          key={dayIndex}
-                          className={`size-[9.5px] rounded-xs ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
-                          onMouseEnter={(e) => handleMouseEnter(day, e)}
-                          onMouseLeave={handleMouseLeave}
-                        />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="ml-2 flex flex-col justify-between py-1">
-                {days.map((day, index) => (
-                  <span
-                    key={index}
-                    className="text-[8px] text-[var(--neutral-400)]"
-                  >
-                    {day}
-                  </span>
-                ))}
-              </div>
-            </div>
+        <div
+          className={cn(
+            "w-full rounded-md border border-black/5 p-2",
+            isMobileLayout &&
+              "touch-pan-x overflow-x-auto overflow-y-hidden overscroll-x-contain"
+          )}
+          onMouseMove={handleMouseMove}
+        >
+          <div
+            className={cn(
+              "grid min-w-0",
+              isMobileLayout ? "w-max" : "w-full gap-0.5"
+            )}
+            style={
+              isMobileLayout
+                ? {
+                    gridTemplateColumns: `repeat(${weekCount}, ${MOBILE_CELL_PX}px)`,
+                    gridTemplateRows: `repeat(${rowCount}, ${MOBILE_CELL_PX}px)`,
+                    gap: `${MOBILE_GRID_GAP_PX}px`,
+                  }
+                : {
+                    aspectRatio: `${weekCount} / ${rowCount}`,
+                    gridTemplateColumns: `repeat(${weekCount}, minmax(0, 1fr))`,
+                    gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+                  }
+            }
+          >
+            {contributionGraph.weeks.map((week, weekIndex) =>
+              week.contributionDays.map((day, dayIndex) => (
+                <div
+                  key={`${weekIndex}-${dayIndex}`}
+                  style={{
+                    gridColumn: weekIndex + 1,
+                    gridRow: dayIndex + 1,
+                  }}
+                  className={`min-h-0 min-w-0 rounded-xs ${getSquareColor(day.contributionLevel)} cursor-pointer transition-colors hover:opacity-80`}
+                  onMouseEnter={(e) => handleMouseEnter(day, e)}
+                  onMouseLeave={handleMouseLeave}
+                />
+              ))
+            )}
           </div>
         </div>
         <div className="mt-2.5 flex items-center gap-2">
-          <span className="text-[10px] text-[var(--neutral-400)]">Less</span>
+          <span className="text-[10px] text-neutral-500">Less</span>
           <div className="flex gap-0.5">
             <div className="size-[9px] rounded-xs bg-[#E8EAEE]" />
             <div className="size-[9px] rounded-xs bg-[var(--ost-blue-one)]" />
@@ -155,7 +160,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
             <div className="size-[9px] rounded-xs bg-[var(--ost-blue-three)]" />
             <div className="size-[9px] rounded-xs bg-[var(--ost-blue-four)]" />
           </div>
-          <span className="text-[10px] text-[var(--neutral-400)]">More</span>
+          <span className="text-[10px] text-neutral-500">More</span>
         </div>
       </div>
 
@@ -170,7 +175,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
           }}
         >
           <div className="font-medium">{formatDate(tooltip.date)}</div>
-          <div className="text-gray-300">
+          <div className="text-neutral-500">
             {tooltip.contributionCount === 0
               ? "No contribution data available"
               : `${tooltip.contributionCount} Github contribution${tooltip.contributionCount > 1 ? "s" : ""}`}

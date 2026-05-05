@@ -113,8 +113,8 @@ export default function MyProjectsList() {
 
   return (
     <div>
-      <Table>
-        <TableBody>
+      <Table className="border-separate border-spacing-0">
+        <TableBody className="[&_tr]:border-0">
           {myProjects.map((project) => (
             <MyProjectRow
               key={project.id}

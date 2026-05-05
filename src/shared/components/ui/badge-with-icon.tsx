@@ -6,7 +6,7 @@ import { HiCheckCircle, HiXCircle } from "react-icons/hi2";
 import { cn } from "@/shared/lib/utils";
 
 const badgeWithIconVariants = cva(
-  "inline-flex h-5.5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border pr-2 pl-1 font-medium text-sm tracking-tighter transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+  "inline-flex h-5.5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border pr-2 pl-1 font-medium text-sm tracking-[-0.02em] transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
   {
     variants: {
       variant: {

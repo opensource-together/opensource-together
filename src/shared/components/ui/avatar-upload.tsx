@@ -145,11 +145,13 @@ export function AvatarUpload({
           </div>
 
           {file ? (
-            <div className="text-black/50 text-sm tracking-tighter">
+            <div className="text-[calc(0.875rem+2px)] text-black/50 tracking-normal">
               {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
             </div>
           ) : (
-            <p className="text-black/50 text-xs tracking-tighter">{subtitle}</p>
+            <p className="text-[calc(0.75rem+2px)] text-black/50 tracking-normal">
+              {subtitle}
+            </p>
           )}
         </div>
         {error && <p className="mt-2 text-red-600 text-sm">{error}</p>}

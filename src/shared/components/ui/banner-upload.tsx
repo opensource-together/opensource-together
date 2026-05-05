@@ -106,12 +106,11 @@ export function BannerUpload({
     currentImageUrl,
     updatedAt
   );
-  const displayImage =
-    preview || bannerUrlWithCacheBusting || "/ost-profile-banner.png";
-  const defaultBannerUrl = "/ost-profile-banner.png";
+  const defaultBannerUrl = "/new_profile_banner.png";
+  const displayImage = preview || bannerUrlWithCacheBusting || defaultBannerUrl;
   const isDefaultBanner = (url: string | null | undefined): boolean => {
     if (!url) return true;
-    return url === defaultBannerUrl || url.endsWith("ost-profile-banner.png");
+    return url === defaultBannerUrl || url.endsWith("new_profile_banner.png");
   };
   const hasCustomBanner =
     currentImageUrl && !preview && !isDefaultBanner(currentImageUrl);
@@ -124,9 +123,9 @@ export function BannerUpload({
   const handleRemove = async () => {
     try {
       setError(null);
-      const response = await fetch("/ost-profile-banner.png");
+      const response = await fetch(defaultBannerUrl);
       const blob = await response.blob();
-      const defaultBannerFile = new File([blob], "ost-profile-banner.png", {
+      const defaultBannerFile = new File([blob], "new_profile_banner.png", {
         type: blob.type || "image/png",
       });
       setFile(defaultBannerFile);
@@ -137,16 +136,16 @@ export function BannerUpload({
     }
   };
 
-  const { onClick: rootOnClick, ...rootProps } = getRootProps();
-
   return (
     <div className={cn("w-full", className)}>
       <div
-        {...rootProps}
-        className={cn(
-          "group relative w-full overflow-hidden rounded-lg transition-all duration-200",
-          disabled && "cursor-not-allowed opacity-50"
-        )}
+        {...getRootProps({
+          className: cn(
+            "group relative w-full overflow-hidden rounded-[20px] border border-black/5 transition-all duration-200",
+            !disabled && "cursor-pointer",
+            disabled && "cursor-not-allowed opacity-50"
+          ),
+        })}
       >
         <input {...getInputProps()} ref={fileInputRef} />
         <div className="relative h-36 w-full">
@@ -154,15 +153,15 @@ export function BannerUpload({
             src={displayImage}
             alt="Banner preview"
             fill
-            className="rounded-[20px] object-cover"
+            className="pointer-events-none object-cover"
             priority
           />
-          <div className="absolute inset-0 flex items-center justify-center gap-2">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-2">
             <Button
               type="button"
               size="icon"
               variant="secondary"
-              className="size-10 rounded-full bg-black/60 text-white hover:bg-black/80"
+              className="pointer-events-auto size-10 rounded-full bg-black/60 text-white hover:bg-black/80"
               disabled={disabled}
               onClick={(e) => {
                 e.stopPropagation();
@@ -176,7 +175,7 @@ export function BannerUpload({
                 type="button"
                 size="icon"
                 variant="secondary"
-                className="size-10 rounded-full bg-black/60 text-white hover:bg-black/80"
+                className="pointer-events-auto size-10 rounded-full bg-black/60 text-white hover:bg-black/80"
                 disabled={disabled}
                 onClick={(e) => {
                   e.stopPropagation();

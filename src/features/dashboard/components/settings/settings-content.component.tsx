@@ -84,7 +84,7 @@ export function SettingsContent() {
       <div className="space-y-6">
         {/* Profile Section */}
         <section>
-          <div className="flex items-center gap-4">
+          <div className="mt-[14px] flex items-center gap-4">
             <Avatar
               src={currentUser.image}
               alt={currentUser.name}
@@ -92,7 +92,7 @@ export function SettingsContent() {
               size="xl"
             />
             <div className="flex-1">
-              <h3 className="font-medium text-2xl">{currentUser.name}</h3>
+              <h3 className="font-medium text-[22px]">{currentUser.name}</h3>
               <p className="text-muted-foreground text-sm">
                 {currentUser.email}
               </p>
@@ -102,21 +102,18 @@ export function SettingsContent() {
 
         {/* Integrations Section */}
         <section className="mt-10">
-          <h3 className="mb-4 font-medium">Connected Integrations</h3>
+          <h3 className="mb-4 font-medium">Integrations</h3>
           <div className="space-y-4">
             {providers.map((provider) => (
               <div
                 key={provider.id}
-                className="flex items-center justify-between rounded-3xl border border-muted-black-stroke p-5 md:max-w-2/3"
+                className="flex w-full items-center justify-between rounded-3xl border border-muted-black-stroke p-5"
               >
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   <div className="mb-1 flex items-center gap-2">
                     <span className="flex items-center gap-2 font-medium">
                       <provider.icon size={24} /> {provider.name}
                     </span>
-                    <Badge variant={provider.connected ? "info" : "gray"}>
-                      {provider.connected ? "Connected" : "Not connected"}
-                    </Badge>
                   </div>
                   {!provider.connected && (
                     <p className="mt-2 ml-1 text-muted-foreground text-sm">
@@ -133,27 +130,32 @@ export function SettingsContent() {
                     </p>
                   )}
                 </div>
-                {!provider.connected && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={isLinkingSocialAccount}
-                    onClick={() => linkSocialAccount(provider.id)}
-                  >
-                    {isLinkingSocialAccount ? "Linking..." : "Link"}
-                  </Button>
-                )}
-                {provider.connected &&
-                  (currentUser.connectedProviders?.length ?? 0) > 1 && (
+                <div className="flex shrink-0 items-center gap-2">
+                  {provider.connected && (
+                    <Badge variant="info">Connected</Badge>
+                  )}
+                  {!provider.connected && (
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      disabled={isUnlinkingSocialAccount}
-                      onClick={() => setUnlinkProviderId(provider.id)}
+                      disabled={isLinkingSocialAccount}
+                      onClick={() => linkSocialAccount(provider.id)}
                     >
-                      {isUnlinkingSocialAccount ? "Unlinking..." : "Unlink"}
+                      {isLinkingSocialAccount ? "Linking..." : "Link"}
                     </Button>
                   )}
+                  {provider.connected &&
+                    (currentUser.connectedProviders?.length ?? 0) > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={isUnlinkingSocialAccount}
+                        onClick={() => setUnlinkProviderId(provider.id)}
+                      >
+                        {isUnlinkingSocialAccount ? "Unlinking..." : "Unlink"}
+                      </Button>
+                    )}
+                </div>
               </div>
             ))}
           </div>
@@ -178,21 +180,21 @@ export function SettingsContent() {
 
         {/* Danger Zone */}
         <section className="my-10">
-          <h3 className="mb-2 font-medium text-destructive">Danger Zone</h3>
-          <p className="mb-6 text-destructive/80 text-sm">
+          <h3 className="mb-2 font-medium text-foreground">Danger Zone</h3>
+          <p className="mb-6 text-muted-foreground text-sm">
             Sign out of your current session. Contact support to request account
             deletion if needed.
           </p>
           <div className="flex gap-3">
             <Button
-              variant="destructive"
+              variant="default"
               onClick={handleLogout}
               disabled={isLoggingOut}
             >
               {isLoggingOut ? "Signing out..." : "Sign out"}
             </Button>
             <Button
-              variant="secondary"
+              variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
             >
               Delete account

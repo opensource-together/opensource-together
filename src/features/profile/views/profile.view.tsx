@@ -53,7 +53,7 @@ export default function ProfileView() {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="pull-request">Pull Requests</TabsTrigger>
-          <TabsTrigger value="saved-projects">Saved Projects</TabsTrigger>
+          <TabsTrigger value="saved-projects">Bookmarked</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">

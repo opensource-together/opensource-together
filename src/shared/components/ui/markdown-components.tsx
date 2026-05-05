@@ -319,12 +319,17 @@ export const learnMarkdownComponents = {
   h1: ({ children }: MarkdownElementProps) => (
     <h1 className="mb-6 font-medium text-lg">{children}</h1>
   ),
+  hr: () => null,
   h2: ({ children }: MarkdownElementProps) => {
     const text = String(children);
     const id = generateId(text);
     return (
-      <h2 id={id} className="mt-8 mb-4 scroll-mt-20 font-medium">
-        {children}
+      <h2
+        id={id}
+        className="mt-8 mb-6 flex min-w-0 scroll-mt-20 items-center gap-3 font-medium"
+      >
+        <span className="min-w-0 shrink-0">{children}</span>
+        <span aria-hidden className="h-px min-w-0 flex-1 bg-border" />
       </h2>
     );
   },
@@ -332,8 +337,12 @@ export const learnMarkdownComponents = {
     const text = String(children);
     const id = generateId(text);
     return (
-      <h3 id={id} className="mt-6 mb-3 scroll-mt-20 font-medium">
-        {children}
+      <h3
+        id={id}
+        className="mt-6 mb-5 flex min-w-0 scroll-mt-20 items-center gap-3 font-medium"
+      >
+        <span className="min-w-0 shrink-0">{children}</span>
+        <span aria-hidden className="h-px min-w-0 flex-1 bg-border" />
       </h3>
     );
   },
@@ -348,7 +357,7 @@ export const learnMarkdownComponents = {
   ),
   li: ({ children }: MarkdownElementProps) => (
     <li className="relative flex gap-3 pl-6 leading-7">
-      <span className="absolute top-2.5 left-0 h-1.5 w-1.5 shrink-0 rounded-full bg-ost-blue-three" />
+      <span className="absolute top-2.5 left-0 h-1.5 w-1.5 shrink-0 rounded-full bg-neutral-400" />
       <span className="flex-1 text-sm">{children}</span>
     </li>
   ),

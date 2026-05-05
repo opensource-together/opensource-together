@@ -1,8 +1,15 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import type { ComponentProps } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
+import {
+  badgeItemAppearAnimate,
+  badgeItemAppearInitial,
+  badgeItemAppearTransition,
+  badgeItemExit,
+} from "@/shared/lib/motion/badge-item-appear";
 
 import { Label } from "./label";
 
@@ -33,21 +40,26 @@ export function CategoryList({
   return (
     <div className={className}>
       {title && <Label className="mb-3 text-sm tracking-tight">{title}</Label>}
-      {categories?.length ? (
-        <div
-          className={dense ? "flex flex-wrap gap-1" : "flex flex-wrap gap-2"}
-        >
-          {categories.map((category, index) => (
-            <Badge
-              variant={badgeVariant}
-              className={badgeClassName}
+      <div className={dense ? "flex flex-wrap gap-1" : "flex flex-wrap gap-2"}>
+        <AnimatePresence mode="popLayout">
+          {(categories ?? []).map((category, index) => (
+            <motion.span
               key={category.id || `${category.name}-${index}`}
+              layout
+              initial={badgeItemAppearInitial}
+              animate={badgeItemAppearAnimate}
+              exit={badgeItemExit}
+              transition={badgeItemAppearTransition}
+              className="inline-flex"
             >
-              {category.name}
-            </Badge>
+              <Badge variant={badgeVariant} className={badgeClassName}>
+                {category.name}
+              </Badge>
+            </motion.span>
           ))}
-        </div>
-      ) : emptyText ? (
+        </AnimatePresence>
+      </div>
+      {!categories?.length && emptyText ? (
         <p className="text-black/50 text-sm">{emptyText}</p>
       ) : null}
     </div>

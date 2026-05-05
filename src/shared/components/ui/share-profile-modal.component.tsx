@@ -56,8 +56,9 @@ function CopyButton({ text }: CopyButtonProps) {
 
   return (
     <button
+      type="button"
       onClick={handleCopyLink}
-      className="shrink-0 rounded bg-accent p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-ost-blue-three"
+      className="shrink-0 origin-center rounded bg-accent p-1.5 text-muted-foreground transition-all hover:scale-[0.98] hover:bg-muted hover:text-ost-blue-three active:scale-[0.98]"
       aria-label={copied ? "Copied!" : "Copy to clipboard"}
       title={copied ? "Copied!" : "Copy to clipboard"}
     >
@@ -95,7 +96,7 @@ export function ShareProfileModal({
 
   const socialButtons: SocialShareButton[] = [
     {
-      name: "X (Twitter)",
+      name: "X.com",
       icon: RiTwitterXFill,
       color: "text-primary",
       href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(shareText)}`,
@@ -163,7 +164,7 @@ export function ShareProfileModal({
       <Modal
         open={modalOpen}
         onOpenChange={handleOpenChange}
-        title={title || "Share this content"}
+        title="Share profile"
         description={
           description ||
           "Choose a platform to share this content with your friends and followers."
@@ -190,9 +191,11 @@ export function ShareProfileModal({
             })}
           </div>
 
-          {/* Link copy section */}
-          <label className="font-medium text-sm">Copy URL</label>
-          <div className="flex items-center justify-between gap-2 rounded-md bg-accent px-3 py-2 text-muted-foreground text-sm">
+          <div
+            role="group"
+            aria-label="Profile link"
+            className="flex items-center justify-between gap-2 rounded-md bg-accent px-3 py-2 text-muted-foreground text-sm"
+          >
             <span className="line-clamp-1 flex-1 break-all">{url}</span>
             <CopyButton text={url} />
           </div>

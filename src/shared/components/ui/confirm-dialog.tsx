@@ -56,14 +56,7 @@ export function ConfirmDialog({
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <Separator
-          className="mt-1 mb-1"
-          style={{
-            marginLeft: "-24px",
-            marginRight: "-24px",
-            width: "calc(100% + 48px)",
-          }}
-        />
+        <Separator className="mt-1 mb-1" contentPaddingX={6} />
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <Button

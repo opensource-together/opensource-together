@@ -1,11 +1,11 @@
 import { useRouter } from "next/navigation";
 import {
-  HiMiniEllipsisVertical,
-  HiMiniEye,
-  HiMiniEyeSlash,
-  HiMiniPencilSquare,
-  HiMiniTrash,
-} from "react-icons/hi2";
+  RiDeleteBinLine,
+  RiEyeLine,
+  RiEyeOffLine,
+  RiMoreFill,
+  RiPencilLine,
+} from "react-icons/ri";
 import type { Project } from "@/features/projects/types/project.type";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -53,8 +53,12 @@ export function ProjectTableActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="hover:bg-muted">
-          <HiMiniEllipsisVertical />
+        <Button
+          variant="outline"
+          size="icon"
+          className="size-[30px] border-[0.5px] p-1.5 hover:bg-muted"
+        >
+          <RiMoreFill className="size-4" />
         </Button>
       </DropdownMenuTrigger>
 
@@ -64,35 +68,33 @@ export function ProjectTableActions({
             e.stopPropagation();
             handleTogglePublish();
           }}
-          className="flex cursor-pointer items-center justify-between"
           disabled={isCurrentlyToggling}
         >
-          <span>{project.published ? "Unpublish" : "Publish"}</span>
           {project.published ? (
-            <HiMiniEyeSlash className="size-4" />
+            <RiEyeOffLine className="size-4 text-primary" />
           ) : (
-            <HiMiniEye className="size-4" />
+            <RiEyeLine className="size-4 text-primary" />
           )}
+          {project.published ? "Unpublish" : "Publish"}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={(e) => {
             e.stopPropagation();
             handleEdit();
           }}
-          className="flex cursor-pointer items-center justify-between"
         >
-          <span>Edit Project</span>
-          <HiMiniPencilSquare className="size-4" />
+          <RiPencilLine className="size-4 text-primary" />
+          Edit Project
         </DropdownMenuItem>
         <DropdownMenuItem
+          variant="destructive"
           onClick={(e) => {
             e.stopPropagation();
             handleDelete();
           }}
-          className="flex cursor-pointer items-center justify-between text-destructive focus:text-destructive"
         >
-          <span>Delete Project</span>
-          <HiMiniTrash className="size-4" />
+          <RiDeleteBinLine className="size-4" />
+          Delete Project
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -6,6 +6,7 @@ import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
+import { cn, contributorCardHoverClass } from "@/shared/lib/utils";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 import type { Contributor } from "../types/project.type";
 
@@ -66,7 +67,12 @@ function ContributorCard({ contributor }: { contributor: Contributor }) {
 
   return (
     <Link href={contributorUrl} target="_blank" rel="noreferrer">
-      <div className="flex items-center gap-4 rounded-[20px] border border-muted-black-stroke px-4 py-3.5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
+      <div
+        className={cn(
+          "flex items-center gap-4 rounded-[20px] border border-muted-black-stroke px-4 py-3.5",
+          contributorCardHoverClass
+        )}
+      >
         <Avatar
           src={contributor.avatar_url}
           name={contributor.login}

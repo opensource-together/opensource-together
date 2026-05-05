@@ -24,6 +24,8 @@ import {
   CommandList,
 } from "@/shared/components/ui/command";
 
+import { cn } from "@/shared/lib/utils";
+
 import { useInfiniteProjects } from "../hooks/use-projects.hook";
 
 const MAX_FREE_PROJECTS = 60;
@@ -43,7 +45,15 @@ type ProjectSuggestion = {
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
 
-export default function SearchCommand() {
+export default function SearchCommand({
+  noHoverBg,
+  onOpen,
+  triggerClassName,
+}: {
+  noHoverBg?: boolean;
+  onOpen?: () => void;
+  triggerClassName?: string;
+}) {
   const router = useRouter();
   const triggerId = useId();
   const [open, setOpen] = useState(false);
@@ -256,15 +266,23 @@ export default function SearchCommand() {
         type="button"
         variant="ghost"
         size="sm"
-        onClick={() => setOpen(true)}
+        className={cn(
+          noHoverBg &&
+            "hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:bg-transparent",
+          triggerClassName
+        )}
+        onClick={() => {
+          setOpen(true);
+          onOpen?.();
+        }}
       >
-        <HiOutlineSearch className="size-3" />
-        <span>Search </span>
+        <HiOutlineSearch className="size-[12px] shrink-0 sm:size-[14px]" />
+        <span>Search</span>
       </Button>
       <CommandDialog
         open={open}
         onOpenChange={setOpen}
-        className="rounded-2xl"
+        className="rounded-[calc(1rem+2px)]"
         commandProps={{ shouldFilter: false }}
         dialogContentProps={{
           onCloseAutoFocus: (event) => {

@@ -92,7 +92,7 @@ export default function ProfileProjectsList({
         title="No projects"
         description="No projects have been joined yet"
         icon={HiMiniSquare2Stack}
-        buttonText="Create a project"
+        buttonText="Create Project"
         href="/projects/create"
         buttonIcon={HiPlus}
       />

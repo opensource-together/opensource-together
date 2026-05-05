@@ -197,16 +197,18 @@ export default function StepGitImportForm({
 }
 
 export function RepositorySkeleton() {
+  const bar =
+    "rounded-md animate-[skeleton-zinc-pulse_2s_ease-in-out_infinite]";
   return Array.from({ length: 10 }).map((_, idx) => (
     <div
       key={`skeleton-${idx}`}
-      className="flex h-[64px] animate-pulse items-center justify-between px-6"
+      className="flex h-[64px] items-center justify-between px-6"
     >
       <div className="flex flex-1 flex-col gap-2">
-        <div className="h-4 w-48 rounded-md bg-gray-200"></div>
-        <div className="h-3 w-32 rounded-md bg-gray-200"></div>
+        <div className={`h-4 w-48 ${bar}`} />
+        <div className={`h-3 w-32 ${bar}`} />
       </div>
-      <div className="h-8 w-24 rounded-md bg-gray-200"></div>
+      <div className={`h-8 w-24 ${bar}`} />
     </div>
   ));
 }

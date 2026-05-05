@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useLayoutEffect, useMemo } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
 import { useInView } from "react-intersection-observer";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
@@ -9,7 +9,6 @@ import ProjectDiscoveryHero from "@/features/projects/components/project-discove
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
-
 import { BlurredSigninCtaGrid } from "../components/blurred-signin-cta-grid.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
@@ -109,6 +108,17 @@ export default function HomepageView() {
   const { isAuthenticated } = useAuth();
   const MAX_FREE_PROJECTS = 60;
 
+  /** Keep discovery hero at the top on full reload and client navigation to `/`. */
+  useLayoutEffect(() => {
+    const previousRestoration = history.scrollRestoration;
+    history.scrollRestoration = "manual";
+    window.scrollTo(0, 0);
+
+    return () => {
+      history.scrollRestoration = previousRestoration;
+    };
+  }, []);
+
   const filters = useMemo(
     () => parseFiltersFromURL(searchParams),
     [searchParams]
@@ -200,7 +210,7 @@ export default function HomepageView() {
       >
         <EmptyState
           title="No projects"
-          description="No projects founded here"
+          description="No projects found here."
           icon={HiMiniSquare2Stack}
           className="mb-28"
         />

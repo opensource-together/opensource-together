@@ -1,23 +1,30 @@
 "use client";
 
-import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { HiCheck, HiChevronRight } from "react-icons/hi2";
+import { HiCheck, HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { Button } from "@/shared/components/ui/button";
 import { useChapterProgress } from "@/shared/hooks/use-chapter-progress.hook";
+import { cn } from "@/shared/lib/utils";
 import type { Chapter } from "../../../../content/chapters";
 
 interface NextChapterButtonProps {
   currentChapter: Chapter;
   nextChapter: Chapter | null;
+  prevChapter: Chapter | null;
+  chaptersForProgress: Chapter[];
 }
 
 export function NextChapterButton({
   currentChapter,
   nextChapter,
+  prevChapter,
+  chaptersForProgress,
 }: NextChapterButtonProps) {
   const router = useRouter();
-  const { markChapterComplete, isChapterComplete } = useChapterProgress();
+  const { markChapterComplete, isChapterComplete, getProgressForChapters } =
+    useChapterProgress();
+  const chapterProgress = getProgressForChapters(chaptersForProgress);
   const isComplete = isChapterComplete(currentChapter.slug);
 
   const getChapterTitle = (chapter: Chapter) => {
@@ -36,67 +43,92 @@ export function NextChapterButton({
   };
 
   return (
-    <div className="flex w-full flex-col items-center gap-8">
-      {/* Completion Section */}
-      <div className="flex flex-col items-center gap-4 text-center">
-        {/* Large circle with chapter number and checkmark */}
-        <div className="relative">
-          <div className="flex size-20 items-center justify-center rounded-full border border-muted-black-stroke">
-            <span className="font-bold text-2xl text-ost-blue-three">
-              <Image
-                src="/icons/early-badge.svg"
-                alt="Earl Grey Badge"
-                width={48}
-                height={48}
-              />
-            </span>
-          </div>
-        </div>
-
-        {/* Completion message */}
-        <div className="flex flex-col gap-2">
-          <h2 className="font-medium text-2xl text-foreground">
-            You&apos;ve Completed Chapter {currentChapter.order}
-          </h2>
-          <p className="text-base text-muted-foreground">
-            Well done! You&apos;ve learned about{" "}
-            {currentChapter.description ||
-              getChapterTitle(currentChapter).toLowerCase()}
-            .
-          </p>
-        </div>
-      </div>
-
+    <div className="mb-11 flex w-full flex-col items-center">
       {/* Next Chapter Card or Mark Complete Button */}
       {nextChapter ? (
-        <div className="w-full max-w-md rounded-[20px] border border-muted-black-stroke bg-card p-6">
+        <div className="w-full rounded-[20px] border border-muted-black-stroke bg-card p-6">
           <div className="flex flex-col gap-6">
-            <span className="text-muted-foreground text-sm">Next Up</span>
-            <div className="flex flex-col gap-2">
-              <h3 className="font-medium text-foreground text-lg">
-                {nextChapter.order}: {getChapterTitle(nextChapter)}
-              </h3>
-              {nextChapter.description && (
-                <p className="text-muted-foreground text-sm">
-                  {nextChapter.description}
-                </p>
-              )}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-muted-foreground text-sm">Next Up</span>
+              <div className="flex flex-col gap-2">
+                <h3 className="font-medium text-foreground text-lg">
+                  Chapter {nextChapter.order}: {getChapterTitle(nextChapter)}
+                </h3>
+                {nextChapter.description && (
+                  <p className="text-muted-foreground text-sm">
+                    {nextChapter.description}
+                  </p>
+                )}
+              </div>
             </div>
-            <Button onClick={handleStartNextChapter} className="group w-full">
-              Start Chapter {nextChapter.order}
-              <HiChevronRight className="size-4" />
-            </Button>
+            <div className="flex flex-col gap-[18px]">
+              <div className="my-1 h-1.5 w-full overflow-hidden rounded-full bg-accent">
+                <div
+                  className="h-full bg-ost-blue-three transition-all duration-300"
+                  style={{ width: `${chapterProgress.percentage}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">
+                  {chapterProgress.completed} / {chapterProgress.total}{" "}
+                  completed
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-row items-stretch gap-3">
+              {prevChapter ? (
+                <Button
+                  variant="outline"
+                  asChild
+                  className="min-w-0 flex-1 rounded-full border-black/5 bg-white shadow-none hover:scale-[0.98]"
+                >
+                  <Link
+                    href={`/learn/${prevChapter.slug}`}
+                    className="!inline-flex !flex-row !items-center !justify-between w-full min-w-0 gap-2 px-3"
+                  >
+                    <HiChevronLeft className="size-4 shrink-0" />
+                    <span className="shrink-0">Previous</span>
+                  </Link>
+                </Button>
+              ) : null}
+              <Button
+                onClick={handleStartNextChapter}
+                className="group flex min-w-0 flex-1 justify-between gap-2 px-4"
+              >
+                <span className="min-w-0 truncate text-left">
+                  Start Chapter {nextChapter.order}
+                </span>
+                <HiChevronRight className="size-4 shrink-0" />
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
-        <Button
-          onClick={handleMarkComplete}
-          className="group flex items-center gap-2"
-          disabled={isComplete}
-        >
-          <HiCheck className="h-4 w-4" />
-          Mark as Complete
-        </Button>
+        <div className="flex w-full max-w-md flex-row items-stretch justify-center gap-3">
+          {prevChapter ? (
+            <Button
+              variant="outline"
+              asChild
+              className="min-w-0 flex-1 rounded-full border-black/5 bg-white shadow-none hover:scale-[0.98]"
+            >
+              <Link
+                href={`/learn/${prevChapter.slug}`}
+                className="!inline-flex !flex-row !items-center !justify-between w-full min-w-0 gap-2 px-3"
+              >
+                <HiChevronLeft className="size-4 shrink-0" />
+                <span className="shrink-0">Previous</span>
+              </Link>
+            </Button>
+          ) : null}
+          <Button
+            onClick={handleMarkComplete}
+            className={cn("group min-w-0", prevChapter ? "flex-1" : "w-full")}
+            disabled={isComplete}
+          >
+            <HiCheck className="h-4 w-4" />
+            Mark as Complete
+          </Button>
+        </div>
       )}
     </div>
   );

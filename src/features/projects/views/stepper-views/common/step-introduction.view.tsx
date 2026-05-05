@@ -46,9 +46,11 @@ export default function StepIntroductionView() {
     <div className="mx-7 mt-8 max-w-2xl sm:mx-auto">
       <div className="mt-[100px] flex flex-col items-center justify-center">
         <div className="flex flex-col sm:items-start">
-          <h2 className="font-medium text-3xl">Choose your Method</h2>
-          <p className="mt-2 text-muted-foreground text-sm">
-            Import a repository from GitLab or GitHub to get started.
+          <h2 className="mb-2 text-2xl tracking-[-0.04em]">
+            Choose your Method
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            Import a repository from GitHub or GitLab to get started.
           </p>
 
           <div className="my-8 grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
@@ -76,6 +78,7 @@ export default function StepIntroductionView() {
           <FormNavigationButtons
             onPrevious={() => router.push("/dashboard/my-projects")}
             onNext={handleNext}
+            previousLabel="Exit"
             nextLabel="Continue"
             isNextDisabled={!selectedMethod}
             nextType="button"

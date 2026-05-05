@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 
@@ -51,7 +52,7 @@ const footerLinks: {
       id: "company-discord",
     },
     {
-      label: "X (Twitter)",
+      label: "X.com",
       href: EXTERNAL_LINKS.TWITTER,
       external: true,
       id: "company-x",
@@ -79,10 +80,10 @@ const footerLinks: {
 
 const renderLinkSection = (title: string, links: FooterLink[]) => (
   <div>
-    <h2 className="mb-5 font-medium text-foreground text-sm md:mb-6 md:text-sm">
+    <h2 className="mb-3 font-medium text-foreground text-sm md:mb-4 md:text-sm">
       {title}
     </h2>
-    <ul className="space-y-5 text-muted-foreground text-sm md:text-sm">
+    <ul className="space-y-3 text-muted-foreground text-sm md:text-sm">
       {links.map((link) => (
         <li key={link.id}>
           <Link
@@ -119,23 +120,44 @@ export default function Footer() {
     requestAnimationFrame(checkFor404);
   }, []);
 
+  const isLearnChapterReader =
+    pathname.startsWith("/learn/") && !pathname.startsWith("/learn/chapters");
+
+  const isLearnHubShortFooter =
+    pathname === "/learn" || pathname.startsWith("/learn/chapters");
+
+  const isProfileEditPage = pathname === "/profile/me/edit";
+
+  const showShortFooter = isLearnHubShortFooter || isProfileEditPage;
+
   const hideFooter =
     is404Page ||
     pathname.startsWith("/projects/create") ||
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/not-found") ||
     pathname.startsWith("/auth") ||
-    pathname.startsWith("/onboarding");
+    pathname.startsWith("/onboarding") ||
+    isLearnChapterReader ||
+    isLearnHubShortFooter ||
+    isProfileEditPage;
 
   return (
     <>
+      {showShortFooter && (
+        <div className="mx-4 mb-8 max-w-6xl md:mx-auto">
+          <FooterMinimal className="relative z-20 block w-full bg-white" />
+        </div>
+      )}
       {!hideFooter && (
         <footer className="mx-4 mb-8 max-w-6xl bg-white md:mx-auto">
           <Separator className="mx-auto mb-8 w-11/12 lg:w-full" />
-          <div className="flex w-full flex-col items-start gap-10 md:flex-row md:items-start md:justify-between md:gap-12">
+          <div className="flex w-full flex-col items-start gap-10 max-md:pl-3 md:flex-row md:items-start md:justify-between md:gap-12 md:pl-0">
             {/* Left: Logo + copyright */}
             <div className="flex w-full flex-col items-start gap-4 md:w-auto">
-              <Link href="/" className="flex items-center">
+              <Link
+                href="/"
+                className="flex items-center transition-opacity duration-200 hover:opacity-50"
+              >
                 <Image
                   src="/ostogether-logo.svg"
                   alt="ost-logo"
@@ -150,12 +172,10 @@ export default function Footer() {
             </div>
 
             {/* Right: Link sections */}
-            <div className="grid w-full grid-cols-2 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
+            <div className="grid w-full grid-cols-1 gap-y-8 md:w-auto md:grid-cols-3 md:gap-14 md:text-sm">
               {renderLinkSection("Resources", footerLinks.resources)}
               {renderLinkSection("Company", footerLinks.company)}
-              <div className="mb-5 md:mb-5">
-                {renderLinkSection("Legal", footerLinks.legal)}
-              </div>
+              {renderLinkSection("Legal", footerLinks.legal)}
             </div>
           </div>
         </footer>

@@ -72,7 +72,7 @@ export function ExternalLinks({
               className="min-w-0"
             >
               <div className="flex items-center gap-1.5 rounded-full text-muted-foreground text-sm tracking-tight transition-colors hover:text-muted-foreground/80">
-                <span className="flex min-w-0 items-center gap-1 rounded-full border px-2 py-px">
+                <span className="flex min-w-0 origin-center items-center gap-1 rounded-full border px-2 py-px transition-all hover:scale-[0.98]">
                   <Icon size={14} />
                   <span className="truncate">
                     {formatExternalUrl(raw as string, key as ExternalLinkType)}

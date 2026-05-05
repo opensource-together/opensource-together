@@ -13,7 +13,6 @@ import {
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
-import { RxDotsVertical } from "react-icons/rx";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import SearchCommand from "@/features/projects/components/search-command.component";
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -32,23 +31,30 @@ import {
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
 
+type MobileNavLink = {
+  label: string;
+  icon: React.ElementType;
+  href: string;
+};
+
 interface MobileHeaderProps {
-  links?: Array<{ label: string; icon: React.ElementType; href: string }>;
+  links?: MobileNavLink[];
 }
 
-const DEFAULT_LINKS: MobileHeaderProps["links"] = [
+const DEFAULT_LINKS: MobileNavLink[] = [
+  { label: "Learn", icon: HiBookOpen, href: "/learn" },
   {
-    label: "Dashboard",
+    label: "My Projects",
     icon: HiMiniSquare2Stack,
     href: "/dashboard/my-projects",
   },
-  { label: "Learn", icon: HiBookOpen, href: "/learn" },
 ];
 
-export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
+export function MobileHeader({ links }: MobileHeaderProps) {
   const pathname = usePathname();
   const { isAuthenticated, isLoading, currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const resolvedLinks = links ?? (isAuthenticated ? DEFAULT_LINKS : []);
 
   const handleLogout = () => {
     logout();
@@ -60,148 +66,168 @@ export function MobileHeader({ links = DEFAULT_LINKS }: MobileHeaderProps) {
   };
 
   return (
-    <div className="sticky top-0 z-40 flex items-center justify-between gap-2 bg-white/70 px-4 py-4 backdrop-blur-lg md:hidden">
-      <Link href="/" className="flex items-center gap-2">
-        <Image
-          src="/ostogether-logo.svg"
-          alt="OpenSource Together"
-          width={200}
-          height={32}
-        />
-      </Link>
+    <div className="relative sticky top-0 z-40 md:hidden">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-white to-transparent"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 backdrop-blur-2xl [-webkit-mask-image:linear-gradient(to_bottom,black,transparent)] [mask-image:linear-gradient(to_bottom,black,transparent)]"
+        aria-hidden
+      />
+      <div className="relative z-10 flex items-center justify-between gap-2 px-4 py-[calc(var(--spacing)*4+8px)]">
+        <Link
+          href="/"
+          className="flex items-center gap-2 transition-opacity duration-200 ease-out hover:opacity-50"
+        >
+          <Image
+            src="/ostogether-logo.svg"
+            alt="OpenSource Together"
+            width={200}
+            height={32}
+          />
+        </Link>
 
-      <div className="flex items-center gap-4">
-        <SearchCommand />
+        <div className="flex items-center gap-4">
+          <SearchCommand />
 
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Open navigation">
-              <span className="sr-only">Open navigation</span>
-              <HiMiniBars3 className="size-4" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="flex w-3/4 flex-col p-0 pt-6">
-            <SheetHeader className="flex flex-col gap-2 px-4">
-              <Image
-                src="/ostogether-logo.svg"
-                alt="OpenSource Together"
-                width={200}
-                height={32}
-              />
-            </SheetHeader>
-
-            <div className="flex flex-1 flex-col">
-              <nav className="mt-6 flex flex-col gap-3 px-4">
-                {links?.map((link) => {
-                  const active =
-                    pathname === link.href ||
-                    pathname.startsWith(`${link.href}/`);
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={handleLinkClick}
-                      className={`flex items-center gap-2 rounded-lg py-2 pl-2 font-medium text-sm transition hover:bg-accent ${
-                        active
-                          ? "bg-accent text-black"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      <link.icon className="size-4" />
-                      {link.label}
-                    </Link>
-                  );
-                })}
-                {!isAuthenticated && (
-                  <Link
-                    href="/auth/login"
-                    onClick={handleLinkClick}
-                    className="flex items-center gap-2 rounded-full border border-border py-2 pl-4 font-medium text-secondary-foreground text-sm transition"
-                  >
-                    <HiUser className="size-4" />
-                    Sign In
-                  </Link>
-                )}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Open navigation">
+                <span className="sr-only">Open navigation</span>
+                <HiMiniBars3 className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="flex w-3/4 flex-col rounded-tr-[22px] rounded-br-[22px] p-0 pt-6"
+            >
+              <SheetHeader className="flex flex-col gap-2 px-4">
                 <Link
-                  href="/projects/create"
+                  href="/"
                   onClick={handleLinkClick}
-                  className="flex items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition"
+                  aria-label="OpenSource Together Home"
+                  className="inline-block w-fit shrink-0"
                 >
-                  <HiPlus className="size-4" />
-                  Create Project
+                  <Image
+                    src="/ostogether-logo.svg"
+                    alt="OpenSource Together"
+                    width={200}
+                    height={32}
+                  />
                 </Link>
-              </nav>
+              </SheetHeader>
 
-              {/* User Section - Fixed at bottom */}
-              <div className="mt-auto border-border border-t">
-                {isLoading ? null : isAuthenticated ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        type="button"
-                        className="relative flex w-full cursor-pointer items-center gap-3 py-4 text-start transition hover:bg-accent"
-                      >
-                        <div className="pl-4">
-                          <Avatar
-                            src={currentUser?.image}
-                            name={currentUser?.name}
-                            alt={currentUser?.name}
-                            size="md"
-                          />
-                        </div>
-                        <div className="flex flex-col truncate">
-                          <p className="mr-10 truncate font-medium text-black text-sm">
-                            {currentUser?.name}
-                          </p>
-                          <p className="mr-10 truncate text-muted-foreground text-xs">
-                            {currentUser?.email}
-                          </p>
-                        </div>
-                        <div className="absolute top-6 right-4">
-                          <RxDotsVertical className="size-4" />
-                        </div>
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="mr-2 w-48 text-muted-foreground"
-                    >
-                      <Link href="/profile/me" onClick={handleLinkClick}>
-                        <DropdownMenuItem>
-                          <HiUserCircle className="size-4" />
-                          View profile
-                        </DropdownMenuItem>
-                      </Link>
-                      <Link href="/profile/me/edit" onClick={handleLinkClick}>
-                        <DropdownMenuItem>
-                          <HiMiniPencilSquare className="size-4" />
-                          Edit profile
-                        </DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuSeparator />
+              <div className="flex flex-1 flex-col">
+                <nav className="mt-6 flex flex-col gap-3 px-4">
+                  <Link
+                    href="/projects/create"
+                    onClick={handleLinkClick}
+                    className="flex origin-center items-center gap-2 rounded-full bg-primary py-2 pl-4 font-medium text-primary-foreground text-sm transition hover:scale-[0.98]"
+                  >
+                    <HiPlus className="size-4" />
+                    Submit Project
+                  </Link>
+                  {resolvedLinks.map((link) => {
+                    const active =
+                      pathname === link.href ||
+                      pathname.startsWith(`${link.href}/`);
+                    return (
                       <Link
-                        href="/dashboard/settings"
+                        key={link.href}
+                        href={link.href}
                         onClick={handleLinkClick}
+                        className={`flex items-center gap-2 rounded-lg py-2 pl-2 font-medium text-sm transition hover:bg-accent ${
+                          active
+                            ? "bg-accent text-black"
+                            : "text-muted-foreground"
+                        }`}
                       >
-                        <DropdownMenuItem>
-                          <HiCog6Tooth className="size-4" />
-                          Settings
-                        </DropdownMenuItem>
+                        <link.icon className="size-4" />
+                        {link.label}
                       </Link>
-                      <DropdownMenuItem
-                        onClick={handleLogout}
-                        variant="destructive"
+                    );
+                  })}
+                  {!isAuthenticated && (
+                    <Link
+                      href="/auth/login"
+                      onClick={handleLinkClick}
+                      className="flex items-center gap-2 rounded-full border border-border py-2 pl-4 font-medium text-secondary-foreground text-sm transition"
+                    >
+                      <HiUser className="size-4" />
+                      Sign In
+                    </Link>
+                  )}
+                </nav>
+
+                {/* User Section - Fixed at bottom */}
+                <div className="mt-auto">
+                  {isLoading ? null : isAuthenticated ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          className="relative flex w-full cursor-pointer items-center gap-3 py-4 text-start"
+                        >
+                          <div className="pl-4">
+                            <Avatar
+                              src={currentUser?.image}
+                              name={currentUser?.name}
+                              alt={currentUser?.name}
+                              size="md"
+                            />
+                          </div>
+                          <div className="flex flex-col truncate">
+                            <p className="mr-10 truncate font-medium text-black text-sm">
+                              {currentUser?.name}
+                            </p>
+                            <p className="mr-10 truncate text-muted-foreground text-xs">
+                              {currentUser?.email}
+                            </p>
+                          </div>
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="center"
+                        className="w-[252px] min-w-[252px] max-w-[252px] text-muted-foreground"
                       >
-                        <HiLogout className="size-4" />
-                        Sign out
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : null}
+                        <Link href="/profile/me" onClick={handleLinkClick}>
+                          <DropdownMenuItem>
+                            <HiUserCircle className="size-4" />
+                            View profile
+                          </DropdownMenuItem>
+                        </Link>
+                        <Link href="/profile/me/edit" onClick={handleLinkClick}>
+                          <DropdownMenuItem>
+                            <HiMiniPencilSquare className="size-4" />
+                            Edit profile
+                          </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuSeparator />
+                        <Link
+                          href="/dashboard/settings"
+                          onClick={handleLinkClick}
+                        >
+                          <DropdownMenuItem>
+                            <HiCog6Tooth className="size-4" />
+                            Settings
+                          </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem
+                          onClick={handleLogout}
+                          variant="destructive"
+                        >
+                          <HiLogout className="size-4" />
+                          Sign out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : null}
+                </div>
               </div>
-            </div>
-          </SheetContent>
-        </Sheet>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </div>
   );

@@ -19,7 +19,10 @@ export function PaginationInfo({ pagination, className }: PaginationInfoProps) {
 
   return (
     <div
-      className={cn("hidden text-muted-foreground text-sm md:block", className)}
+      className={cn(
+        "hidden text-muted-foreground/80 text-sm md:block",
+        className
+      )}
     >
       Showing {startItem} to {endItem} of {total} results
     </div>

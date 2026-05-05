@@ -34,6 +34,9 @@ interface SortSelectProps {
   value: string;
   onChange: (value: string) => void;
   trigger: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  layout?: "popover" | "inline";
 }
 
 export function SortSelect({
@@ -41,56 +44,93 @@ export function SortSelect({
   value,
   onChange,
   trigger,
+  open: controlledOpen,
+  onOpenChange,
+  layout = "popover",
 }: SortSelectProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!isControlled) setInternalOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
 
   const handleSelect = (optionId: string) => {
     onChange(optionId);
-    setOpen(false);
+    handleOpenChange(false);
   };
 
+  const sortCommand = (
+    <Command>
+      <CommandList className="max-h-[272px]">
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup>
+          {options.map((option) => {
+            const isSelected = value === option.id;
+            return (
+              <CommandItem
+                key={option.id}
+                value={option.name}
+                onSelect={() => handleSelect(option.id)}
+                className="cursor-pointer"
+              >
+                <HiCheck
+                  size={16}
+                  className={cn(
+                    isSelected ? "text-ost-blue-three opacity-100" : "opacity-0"
+                  )}
+                />
+                {option.name}
+              </CommandItem>
+            );
+          })}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+
+  if (layout === "inline") {
+    return (
+      <div className="flex w-full flex-col gap-2">
+        <button
+          type="button"
+          className="group/trigger inline-flex w-full cursor-pointer text-start"
+          aria-expanded={open}
+          onClick={() => handleOpenChange(!open)}
+        >
+          {trigger}
+        </button>
+        {open ? (
+          <div
+            className={cn(
+              "relative max-h-[min(40vh,16rem)] w-full origin-top overflow-y-auto overscroll-contain rounded-2xl border border-muted-black-stroke bg-popover p-1 text-popover-foreground shadow-xs",
+              "fade-in-0 zoom-in-95 slide-in-from-top-2 animate-in blur-in-[6px] duration-200 ease-out"
+            )}
+          >
+            {sortCommand}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="inline-flex w-full cursor-pointer text-start"
+          className="group/trigger inline-flex w-full cursor-pointer text-start"
         >
           {trigger}
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="border-muted-black-stroke p-1 shadow-xs"
+        className="w-[276px] max-w-[276px] border-muted-black-stroke p-1 shadow-xs"
         align="start"
       >
-        <Command>
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
-              {options.map((option) => {
-                const isSelected = value === option.id;
-                return (
-                  <CommandItem
-                    key={option.id}
-                    value={option.name}
-                    onSelect={() => handleSelect(option.id)}
-                    className="cursor-pointer"
-                  >
-                    <HiCheck
-                      size={16}
-                      className={cn(
-                        isSelected
-                          ? "text-ost-blue-three opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    {option.name}
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-          </CommandList>
-        </Command>
+        {sortCommand}
       </PopoverContent>
     </Popover>
   );

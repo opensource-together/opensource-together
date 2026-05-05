@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/shared/lib/utils";
 
 interface Heading {
@@ -40,11 +40,19 @@ export function TableOfContents({
 }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const navRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const itemRefs = useRef<Map<string, HTMLLIElement>>(new Map());
+  const [barStyle, setBarStyle] = useState<React.CSSProperties>({
+    opacity: 0,
+    height: 0,
+    transform: "translateY(0px)",
+  });
+  const isFirstActiveRef = useRef(true);
 
   useEffect(() => {
     const extractedHeadings = extractHeadings(content);
 
-    // Add chapter title as first heading if provided
     if (chapterTitle) {
       const titleId = chapterTitle
         .toLowerCase()
@@ -68,15 +76,12 @@ export function TableOfContents({
         element: document.getElementById(h.id),
       }));
 
-      // Find the current active heading based on scroll position
       let currentActiveId = "";
-      const scrollPosition = window.scrollY + 150; // Offset for sticky header
+      const scrollPosition = window.scrollY + 150;
 
-      // If at the top of the page, select the first heading (h1)
       if (window.scrollY < 100) {
         currentActiveId = headings[0]?.id || "";
       } else {
-        // Otherwise, find the heading that's currently in view
         for (let i = headingElements.length - 1; i >= 0; i--) {
           const { id, element } = headingElements[i];
           if (element && element.offsetTop <= scrollPosition) {
@@ -89,13 +94,11 @@ export function TableOfContents({
       setActiveId(currentActiveId);
     };
 
-    // Set initial active heading
     if (headings.length > 0) {
       setActiveId(headings[0].id);
     }
 
     window.addEventListener("scroll", handleScroll);
-    // Small delay to ensure DOM is ready
     const timeoutId = setTimeout(handleScroll, 100);
 
     return () => {
@@ -104,6 +107,38 @@ export function TableOfContents({
     };
   }, [headings]);
 
+  // Reposition the bar whenever the active item changes
+  useEffect(() => {
+    if (!activeId) return;
+    const nav = navRef.current;
+    const list = listRef.current;
+    const item = itemRefs.current.get(activeId);
+    if (!nav || !list || !item) return;
+
+    const navRect = nav.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    // Account for the list's scroll offset
+    const y = itemRect.top - navRect.top + list.scrollTop;
+
+    if (isFirstActiveRef.current) {
+      isFirstActiveRef.current = false;
+      setBarStyle({
+        opacity: 1,
+        height: itemRect.height,
+        transform: `translateY(${y}px)`,
+        transition: "opacity 150ms ease-out",
+      });
+    } else {
+      setBarStyle({
+        opacity: 1,
+        height: itemRect.height,
+        transform: `translateY(${y}px)`,
+        transition:
+          "transform 280ms cubic-bezier(0.22,1,0.36,1), height 280ms cubic-bezier(0.22,1,0.36,1), opacity 150ms ease-out",
+      });
+    }
+  }, [activeId]);
+
   if (headings.length === 0) {
     return null;
   }
@@ -111,7 +146,7 @@ export function TableOfContents({
   const handleClick = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; // Offset for sticky header
+      const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -123,27 +158,46 @@ export function TableOfContents({
   };
 
   return (
-    <nav className="sticky top-20">
-      <h3 className="mb-4 text-muted-foreground text-xs">On this page</h3>
-      <ul className="space-y-1">
+    <nav
+      ref={navRef}
+      className="relative sticky top-28 flex max-h-[calc(100dvh-9rem)] flex-col overscroll-contain"
+    >
+      {/* grey track */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 h-full w-[2px] rounded-full bg-neutral-100"
+      />
+      {/* sliding active indicator */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 w-[2px] rounded-full bg-foreground"
+        style={barStyle}
+      />
+      <ul
+        ref={listRef}
+        className="min-h-0 flex-1 space-y-1 overflow-y-auto pr-0.5 pl-3"
+      >
         {headings.map((heading) => (
-          <li key={heading.id}>
+          <li
+            key={heading.id}
+            ref={(el) => {
+              if (el) itemRefs.current.set(heading.id, el);
+              else itemRefs.current.delete(heading.id);
+            }}
+          >
             <button
               type="button"
               onClick={() => handleClick(heading.id)}
               className={cn(
-                "flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-sm transition-colors",
-                heading.level === 2 && "pl-0",
-                heading.level === 3 && "pl-6",
+                "flex w-full cursor-pointer items-center rounded-md py-1.5 pr-3 pl-0 text-left transition-colors duration-200 ease-out",
+                "text-xs",
+                heading.level === 3 && "pl-4",
                 activeId === heading.id
-                  ? "bg-accent font-medium text-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  ? "font-normal text-foreground"
+                  : "font-normal text-neutral-500 hover:text-foreground"
               )}
             >
-              {activeId === heading.id && (
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ost-blue-three" />
-              )}
-              <span className="truncate">{heading.text}</span>
+              <span className="truncate tracking-normal">{heading.text}</span>
             </button>
           </li>
         ))}

@@ -4,6 +4,7 @@ import { LuClock3 } from "react-icons/lu";
 
 import { BadgeWithIcon } from "@/shared/components/ui/badge-with-icon";
 import { Separator } from "@/shared/components/ui/separator";
+import { cn, detailCardHoverClass } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import type { UserPullRequest } from "../types/profile.pull-request.type";
@@ -53,7 +54,12 @@ export function PullRequestCard({
 
   return (
     <Link href={pr.url} target="_blank" rel="noreferrer">
-      <article className="rounded-[20px] border border-muted-black-stroke px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm">
+      <article
+        className={cn(
+          "rounded-[20px] border border-muted-black-stroke px-5 py-5",
+          detailCardHoverClass
+        )}
+      >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="mb-2 flex items-center gap-2">
