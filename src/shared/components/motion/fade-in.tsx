@@ -19,7 +19,7 @@ export function FadeIn({ children, delay = 0, className }: FadeInType) {
       initial="hidden"
       animate="visible"
       variants={variants}
-      transition={{ duration: 1.2, delay }}
+      transition={{ duration: 1.4, delay }}
       className={className}
     >
       {children}

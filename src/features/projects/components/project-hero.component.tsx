@@ -44,7 +44,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
         </h1>
       </div>
 
-      <p className="mt-4 mb-8 line-clamp-5 break-words font-normal text-sm">
+      <p className="mt-4 mb-8 line-clamp-5 break-words font-normal text-sm tracking-normal">
         {description}
       </p>
       <div className="flex items-center gap-2">
@@ -190,7 +190,9 @@ export default function ProjectHero({
             </div>
           </div>
 
-          <p className="mt-4 line-clamp-6 break-words text-sm">{description}</p>
+          <p className="mt-4 line-clamp-6 break-words text-sm tracking-normal">
+            {description}
+          </p>
         </div>
       )}
     </div>

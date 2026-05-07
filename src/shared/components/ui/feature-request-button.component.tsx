@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -25,6 +26,7 @@ import {
 
 export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const { currentUser } = useAuth();
   const { submitFeatureRequest, isSubmitting } = useFeatureRequest();
@@ -36,7 +38,12 @@ export function FeatureRequestButton() {
     },
   });
 
-  if (!currentUser) {
+  const hideFloatingButton =
+    pathname?.startsWith("/auth") ||
+    pathname?.startsWith("/onboarding") ||
+    pathname?.startsWith("/projects/create");
+
+  if (hideFloatingButton || !currentUser) {
     return null;
   }
 
@@ -66,17 +73,17 @@ export function FeatureRequestButton() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed right-6 bottom-6 z-50 flex size-14 items-center justify-center rounded-full bg-black p-0 shadow-lg hover:bg-black/90"
-        aria-label="Request a feature"
+        className="fixed right-6 bottom-6 z-50 hidden size-[52px] items-center justify-center rounded-full bg-black p-0 shadow-lg transition-transform duration-200 ease-out hover:scale-[0.96] hover:bg-black/90 md:flex"
+        aria-label="Request feature"
       >
-        <Image src="/ost-logo-white.svg" alt="OST" width={35} height={35} />
+        <Image src="/ost-logo-white.svg" alt="OST" width={31} height={31} />
       </Button>
 
       <Modal
         open={isOpen}
         onOpenChange={setIsOpen}
-        title="Request a Feature"
-        description="Have an idea to improve OpenSource Together? Share it with us!"
+        title="Request Feature"
+        description="Have an idea to improve OpenSource Together?"
         confirmText={isSubmitting ? "Sending..." : "Send"}
         cancelText="Cancel"
         onConfirm={form.handleSubmit(handleSubmit)}

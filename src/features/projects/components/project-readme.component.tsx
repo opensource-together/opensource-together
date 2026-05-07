@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { GoArrowUpRight } from "react-icons/go";
+import { HiChevronRight } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeRaw from "rehype-raw";
@@ -20,7 +20,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  sheetManualCloseButtonClassName,
 } from "@/shared/components/ui/sheet";
+import { cn } from "@/shared/lib/utils";
 
 interface ProjectReadmeProps {
   readme: string;
@@ -155,7 +157,7 @@ export default function ProjectReadme({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <div className="relative mb-14 flex h-[322px] cursor-pointer flex-col rounded-[22px] border border-black/5 bg-white p-5 font-geist transition-colors duration-300 hover:bg-black/5">
+        <div className="relative mb-14 flex h-[322px] cursor-pointer flex-col rounded-[22px] border border-black/5 bg-white p-5 font-geist transition-colors duration-200 ease-out hover:bg-neutral-50">
           <div className="flex-1 overflow-hidden leading-7">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -169,17 +171,17 @@ export default function ProjectReadme({
             <Separator className="mb-6" />
             <span className="flex items-center font-medium text-sm">
               View README
-              <GoArrowUpRight className="mt-0.5 ml-1 size-4" />
+              <HiChevronRight className="ml-0.5 size-4 shrink-0 text-muted-foreground" />
             </span>
           </div>
         </div>
       </SheetTrigger>
       <SheetContent
         responsive
-        responsiveWidth={{ desktop: "w-[540px]" }}
-        className="mt-4 mr-4 overflow-y-auto rounded-t-[22px] md:h-[97vh] md:rounded-[22px]"
+        responsiveWidth={{ desktop: "w-[580px]" }}
+        className="mt-4 mr-4 overflow-hidden rounded-t-[22px] shadow-none md:h-[97vh] md:rounded-[22px]"
       >
-        <div className="flex h-full flex-col">
+        <div className="flex h-full min-h-0 flex-col">
           <SheetHeader className="sticky top-0 z-50 bg-white">
             <div className="-mx-6">
               <div className="px-6 pb-4">
@@ -190,7 +192,9 @@ export default function ProjectReadme({
                   <Button
                     size="icon"
                     variant="ghost"
+                    className={cn(sheetManualCloseButtonClassName)}
                     onClick={() => setIsOpen(false)}
+                    aria-label="Close"
                   >
                     <RxCross2 size={12} />
                   </Button>
@@ -199,7 +203,7 @@ export default function ProjectReadme({
               <div className="border-muted-black-stroke border-b" />
             </div>
           </SheetHeader>
-          <div className="flex-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="my-6 max-w-none font-geist text-sm leading-relaxed">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -231,7 +235,6 @@ export default function ProjectReadme({
                         rel="noopener noreferrer"
                       >
                         View on {label}
-                        <GoArrowUpRight className="mt-0.5 size-4" />
                       </Link>
                     </Button>
                   );

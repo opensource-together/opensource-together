@@ -23,9 +23,9 @@ export default function HeaderBreadcrumb() {
     "/dashboard/settings": () => [
       { label: "Settings", href: "/dashboard/settings" },
     ],
-    "/profile/me": () => [{ label: "Profile", href: "/profile/me" }],
+    "/profile/me": () => [{ label: "My Profile", href: "/profile/me" }],
     "/profile/me/edit": () => [
-      { label: "Profile", href: "/profile/me" },
+      { label: "My Profile", href: "/profile/me" },
       { label: "Edit", href: "/profile/me/edit" },
     ],
     "/learn": () => [{ label: "Learn", href: "/learn" }],
@@ -51,12 +51,22 @@ export default function HeaderBreadcrumb() {
 
   const { publicProjectId, userId } = getData();
 
-  const { data: publicProject } = useProject(publicProjectId ?? "");
+  const projectIdForBreadcrumb =
+    publicProjectId && publicProjectId !== "create" ? publicProjectId : "";
+
+  const { data: publicProject } = useProject(projectIdForBreadcrumb);
   const { data: publicProfile } = useProfile(userId ?? "");
 
   const getBreadcrumbItems = () => {
     if (routeConfig[pathname as keyof typeof routeConfig]) {
       return routeConfig[pathname as keyof typeof routeConfig]();
+    }
+
+    if (
+      pathname === "/projects/create" ||
+      pathname.startsWith("/projects/create/")
+    ) {
+      return [{ label: "Create Project", href: pathname }];
     }
 
     // Handle learn chapter pages
@@ -82,12 +92,12 @@ export default function HeaderBreadcrumb() {
       return [{ label: publicProfile?.name || "Profile", href: pathname }];
     }
 
-    if (pathname.startsWith("/projects/") && publicProjectId) {
+    if (pathname.startsWith("/projects/") && projectIdForBreadcrumb) {
       if (pathname.endsWith("/edit")) {
         return [
           {
             label: publicProject?.title || "Project",
-            href: `/projects/${publicProjectId}`,
+            href: `/projects/${projectIdForBreadcrumb}`,
           },
           { label: "Edit", href: pathname },
         ];

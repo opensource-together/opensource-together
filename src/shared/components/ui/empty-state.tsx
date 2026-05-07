@@ -26,7 +26,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className={`mx-auto flex max-w-46 flex-col items-center justify-center py-12 text-center ${className}`}
+      className={`mx-auto flex max-w-md flex-col items-center justify-center py-12 text-center ${className}`}
     >
       {Icon ? (
         <div className="flex items-center gap-2">

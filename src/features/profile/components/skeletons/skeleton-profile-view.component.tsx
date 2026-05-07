@@ -2,7 +2,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export default function SkeletonProfileView() {
   return (
-    <div className="mx-7 mt-2 mb-20 flex max-w-[1007px] flex-col gap-8 md:mt-8 lg:mx-auto">
+    <div className="mx-7 mt-2 mb-20 flex max-w-[1047px] flex-col gap-8 md:mt-8 lg:mx-auto">
       <div className="flex flex-col gap-6 md:flex-row-reverse md:items-start md:gap-25">
         {/* Mobile header skeleton */}
         <div className="md:hidden">
@@ -60,7 +60,7 @@ export default function SkeletonProfileView() {
         </div>
 
         {/* Main content skeleton */}
-        <div className="flex w-full flex-col gap-8 md:min-w-0 md:max-w-[677px] md:flex-1">
+        <div className="flex w-full flex-col gap-8 md:min-w-0 md:max-w-[717px] md:flex-1">
           {/* Hero skeleton */}
           <div className="hidden md:block">
             <div>
@@ -92,7 +92,7 @@ export default function SkeletonProfileView() {
           {/* Tabs skeleton */}
           <div className="flex flex-col gap-6">
             {/* Tabs skeleton */}
-            <div className="inline-flex items-center border-border border-b">
+            <div className="inline-flex items-center">
               <Skeleton className="mr-6 h-5 w-20" />
               <Skeleton className="mr-6 h-5 w-20" />
               <Skeleton className="mr-6 h-5 w-24" />

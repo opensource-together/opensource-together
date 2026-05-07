@@ -13,9 +13,10 @@ export default function LoginView() {
     <div className="relative flex min-h-screen flex-col overflow-hidden">
       <Link
         href="/"
-        className="absolute top-8 left-1/2 z-50 -translate-x-1/2 md:top-12"
+        className="group absolute top-8 left-1/2 z-50 -translate-x-1/2 md:top-12"
       >
         <Image
+          className="opacity-100 transition-opacity duration-200 group-hover:opacity-50"
           src="/ostogether-logo.svg"
           alt="ost-logo"
           width={200}

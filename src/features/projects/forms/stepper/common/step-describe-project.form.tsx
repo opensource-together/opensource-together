@@ -204,8 +204,7 @@ export function StepDescribeProjectForm() {
       </div>
 
       <div className="hidden w-[55%] lg:block">
-        <div className="sticky top-8">
-          <h3 className="mt-7 mb-4 font-medium text-lg">Preview</h3>
+        <div className="sticky top-8 mt-7">
           <ProjectDescribePreview
             title={watchedValues.title}
             description={watchedValues.description}

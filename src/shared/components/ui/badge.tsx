@@ -5,7 +5,7 @@ import type * as React from "react";
 import { cn } from "@/shared/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border px-2 font-medium text-xs tracking-tighter transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
+  "inline-flex h-6 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border px-2 font-medium text-xs tracking-[-0.02em] transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
   {
     variants: {
       variant: {
@@ -26,7 +26,7 @@ const badgeVariants = cva(
         indigo:
           "border-transparent bg-[#E0E7FF80] text-[#7C86FF] [a&]:hover:bg-[#E0E7FF80]/90",
         white:
-          "border border-muted-black-stroke bg-white text-foreground [a&]:hover:bg-white/80",
+          "border-transparent bg-white text-neutral-500 [a&]:hover:bg-white/80",
       },
     },
     defaultVariants: {

@@ -3,11 +3,18 @@ import Link from "next/link";
 
 import { Separator } from "@/shared/components/ui/separator";
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
+import { cn } from "@/shared/lib/utils";
 
-export default function FooterMinimal() {
+export default function FooterMinimal({
+  className,
+  contentClassName,
+}: {
+  className?: string;
+  contentClassName?: string;
+}) {
   const navigationLinks = [
-    { name: "Learn", href: "/learn" },
-    { name: "X (Twitter)", href: EXTERNAL_LINKS.TWITTER },
+    { name: "GitHub", href: EXTERNAL_LINKS.GITHUB_ORG },
+    { name: "X.com", href: EXTERNAL_LINKS.TWITTER },
     { name: "Discord", href: EXTERNAL_LINKS.DISCORD },
     {
       name: "LinkedIn",
@@ -16,11 +23,21 @@ export default function FooterMinimal() {
   ];
 
   return (
-    <footer className="relative z-20 hidden w-full bg-white md:block">
+    <footer
+      className={cn("relative z-20 hidden w-full bg-white md:block", className)}
+    >
       <Separator className="w-full" />
-      <div className="flex w-full flex-col items-center gap-3 pt-4 pb-4 md:flex-row md:items-center md:justify-between md:gap-6">
+      <div
+        className={cn(
+          "flex w-full flex-col items-center gap-3 pt-4 pb-4 md:flex-row md:items-center md:justify-between md:gap-6",
+          contentClassName
+        )}
+      >
         <div className="flex w-full items-center justify-center gap-4 md:w-auto md:justify-start md:gap-6">
-          <Link href="/" className="flex items-center">
+          <Link
+            href="/"
+            className="flex items-center transition-opacity duration-200 hover:opacity-50"
+          >
             <Image
               src="/ost-logo.svg"
               alt="ost-logo"
@@ -35,7 +52,7 @@ export default function FooterMinimal() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-muted-foreground tracking-tight transition hover:text-foreground"
+                className="text-muted-foreground tracking-normal transition hover:text-foreground"
               >
                 {link.name}
               </Link>
@@ -45,7 +62,7 @@ export default function FooterMinimal() {
 
         <div className="flex items-center gap-4 text-xs md:text-sm">
           <span className="text-muted-foreground">
-            © OpenSource Together • 2025
+            © OpenSource Together • 2026
           </span>
         </div>
       </div>

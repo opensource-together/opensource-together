@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import * as React from "react";
 import { HiCheck, HiChevronDown, HiXMark } from "react-icons/hi2";
@@ -18,6 +19,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/shared/components/ui/popover";
+import {
+  badgeItemAppearAnimate,
+  badgeItemAppearInitial,
+  badgeItemAppearTransition,
+  badgeItemExit,
+} from "@/shared/lib/motion/badge-item-appear";
 import { cn } from "@/shared/lib/utils";
 
 export interface ComboboxOption {
@@ -93,34 +100,45 @@ export function Combobox({
         className
       )}
     >
-      {showTags && selectedOptions.length > 0 && (
+      {showTags && (
         <div className="-mb-1 flex flex-wrap gap-2">
-          {selectedOptions.map((option) => (
-            <Badge
-              key={option.id}
-              variant="outline"
-              className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
-            >
-              {option.name}
-              <button
-                type="button"
-                onClick={() => handleRemove(option.id)}
-                className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
-                disabled={disabled}
+          <AnimatePresence mode="popLayout">
+            {selectedOptions.map((option) => (
+              <motion.span
+                key={option.id}
+                layout
+                initial={badgeItemAppearInitial}
+                animate={badgeItemAppearAnimate}
+                exit={badgeItemExit}
+                transition={badgeItemAppearTransition}
+                className="inline-flex"
               >
-                <HiXMark />
-              </button>
-            </Badge>
-          ))}
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-1 border border-black/5 bg-white pr-1 font-medium text-primary text-xs"
+                >
+                  {option.name}
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(option.id)}
+                    className="flex size-3.5 cursor-pointer items-center justify-center rounded-full"
+                    disabled={disabled}
+                  >
+                    <HiXMark />
+                  </button>
+                </Badge>
+              </motion.span>
+            ))}
+          </AnimatePresence>
         </div>
       )}
       <Popover modal={true} open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
+            variant="input"
             role="combobox"
             aria-expanded={open}
-            className="h-10 w-full min-w-0 justify-start rounded-md border-input bg-white text-start font-normal text-primary text-sm"
+            className="h-10 w-full min-w-0 justify-start bg-white text-start text-primary text-sm"
             disabled={disabled}
           >
             <span
@@ -136,14 +154,17 @@ export function Combobox({
             <HiChevronDown />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full rounded-lg p-0" align="start">
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] rounded-lg p-0"
+          align="start"
+        >
           <Command>
             <CommandInput placeholder={searchPlaceholder} className="h-9" />
             <CommandList>
               <CommandEmpty>{emptyText}</CommandEmpty>
               {options.some((opt) => opt.type === "LANGUAGE") && (
                 <>
-                  <CommandGroup heading="Langages">
+                  <CommandGroup>
                     {options
                       .filter((opt) => opt.type === "LANGUAGE")
                       .map((option) => {

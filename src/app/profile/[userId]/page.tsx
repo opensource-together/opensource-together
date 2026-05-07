@@ -72,7 +72,10 @@ export default async function PublicProfilePage({
   return (
     <>
       <PublicProfileView userId={userId} />
-      <CTAFooter imageIllustration="/illustrations/magician.png" />
+      <CTAFooter
+        imageIllustration="/illustrations/footer-profile-desktop.png"
+        imageIllustrationMobile="/illustrations/footer-profile-mobile.png"
+      />
     </>
   );
 }

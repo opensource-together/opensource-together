@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { TableCell, TableRow } from "@/shared/components/ui/table";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
+import { cn } from "@/shared/lib/utils";
 import { formatNumberShort } from "@/shared/lib/utils/format-number";
 
 import { ProjectTableActions } from "./project-table-actions.component";
@@ -31,12 +32,16 @@ export default function MyProjectRow({
     project.repositoryDetails?.openIssuesCount ??
     0;
 
+  const cellSurface =
+    "group-hover:bg-muted/30 transition-[background-color,border-radius] duration-200";
+
   return (
     <TableRow
       key={project.id}
+      className="group border-0 hover:bg-transparent"
       onClick={() => router.push(`/projects/${project.id}`)}
     >
-      <TableCell>
+      <TableCell className={cn(cellSurface, "group-hover:rounded-l-xl")}>
         <div className="flex min-w-0 items-center gap-3">
           <Avatar
             src={project.logoUrl}
@@ -47,7 +52,7 @@ export default function MyProjectRow({
           />
           <div className="flex min-w-0 flex-col">
             <div className="flex min-w-0 items-center gap-2">
-              <h4 className="max-w-[60vw] truncate font-medium md:max-w-[14rem]">
+              <h4 className="max-w-[60vw] truncate font-medium text-base md:max-w-[14rem]">
                 {project.title}
               </h4>
             </div>
@@ -55,7 +60,7 @@ export default function MyProjectRow({
         </div>
       </TableCell>
 
-      <TableCell>
+      <TableCell className={cellSurface}>
         <div className="flex items-center gap-1.5">
           <span className="flex size-1.5 rounded-full bg-ost-blue-three"></span>
           <h2 className="inline-flex items-center gap-1 whitespace-nowrap text-muted-foreground text-sm">
@@ -66,24 +71,31 @@ export default function MyProjectRow({
                 formatNumberShort(openIssues)
               )}
             </span>{" "}
-            {openIssues > 1 ? "Open Issues" : "Open Issue"}
+            {openIssues === 1 ? "Open Issue" : "Open Issues"}
           </h2>
         </div>
       </TableCell>
 
-      <TableCell>
-        <Badge variant={project.published ? "info" : "gray"}>
-          {project.published ? "Published" : "Unpublished"}
-        </Badge>
-      </TableCell>
-
-      <TableCell>
+      <TableCell className={cellSurface}>
         <span className="font-medium text-sm">
           {new Date(project.createdAt).toLocaleDateString()}
         </span>
       </TableCell>
 
-      <TableCell>
+      <TableCell className={cellSurface}>
+        <Badge
+          variant={project.published ? "info" : "white"}
+          className={
+            project.published
+              ? undefined
+              : "border-[0.5px] border-muted-black-stroke"
+          }
+        >
+          {project.published ? "Published" : "Not Published"}
+        </Badge>
+      </TableCell>
+
+      <TableCell className={cn(cellSurface, "group-hover:rounded-r-xl")}>
         <ProjectTableActions
           project={project}
           onTogglePublish={onTogglePublish}

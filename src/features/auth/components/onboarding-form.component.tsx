@@ -50,9 +50,11 @@ export default function OnboardingForm() {
       <div className="w-full max-w-lg">
         <div className="p-4">
           <div className="mb-7 text-center">
-            <h1 className="mb-2 text-2xl">Let’s get you started</h1>
+            <h1 className="mb-2 text-2xl tracking-[-5%]">
+              Let’s get you started
+            </h1>
             <p className="text-muted-foreground text-sm">
-              Share a few details to get personalized project recommendations.
+              Share a few details to get personalized recommendations.
             </p>
           </div>
 
@@ -80,7 +82,12 @@ export default function OnboardingForm() {
                 name="techStacks"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Technical Skills (10 max)</FormLabel>
+                    <FormLabel className="gap-1.5">
+                      Technical Skills
+                      <span className="font-normal text-muted-foreground">
+                        • 10 max
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Combobox
                         options={techStackOptions}
@@ -106,7 +113,12 @@ export default function OnboardingForm() {
                 name="userCategories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Your Interests (6 max)</FormLabel>
+                    <FormLabel className="gap-1.5">
+                      Your Interests
+                      <span className="font-normal text-muted-foreground">
+                        • 6 max
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Combobox
                         options={categoryOptions}

@@ -91,6 +91,8 @@ export default function ProfilePullRequests({
     ? getHasNextPage(provider)
     : getHasNextPage("github") || getHasNextPage("gitlab");
 
+  const showPagination = hasPrevPage || hasNextPage;
+
   const renderFilters = () => (
     <div className="flex items-center justify-between">
       <h2 className="hidden font-medium md:block">Pull Requests</h2>
@@ -204,33 +206,35 @@ export default function ProfilePullRequests({
             }
           />
         )}
-        <Pagination className="mt-2">
-          <PaginationContent>
-            <PaginationItem>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handlePrev}
-                disabled={!hasPrevPage || isFetching}
-              >
-                <HiChevronLeft className="size-4" /> Previous
-              </Button>
-            </PaginationItem>
+        {showPagination ? (
+          <Pagination className="mt-2 justify-end">
+            <PaginationContent>
+              <PaginationItem>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handlePrev}
+                  disabled={!hasPrevPage || isFetching}
+                >
+                  <HiChevronLeft className="size-4" /> Previous
+                </Button>
+              </PaginationItem>
 
-            <span className="px-2 text-sm opacity-80"> {page}</span>
+              <span className="px-2 text-sm opacity-80"> {page}</span>
 
-            <PaginationItem>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleNext}
-                disabled={!hasNextPage || isFetching}
-              >
-                Next <HiChevronRight className="size-4" />
-              </Button>
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              <PaginationItem>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleNext}
+                  disabled={!hasNextPage || isFetching}
+                >
+                  Next <HiChevronRight className="size-4" />
+                </Button>
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        ) : null}
       </div>
     </div>
   );

@@ -58,8 +58,8 @@ export default function StepSuccessView() {
   return (
     <StepperWrapper>
       <StepperHeaderComponent
-        title="Your project has been created !"
-        description="You can now find your projects in your dashboard and contributer will be able to see your project."
+        title="Your project has been created"
+        description="You can now find your projects in your dashboard, and contributors will be able to see your project."
       />
       <FormNavigationButtons
         onPrevious={handleViewProject}

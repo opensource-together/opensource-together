@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HiStar } from "react-icons/hi";
+import { RiTwitterXFill } from "react-icons/ri";
 
 import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 import { Button } from "../ui/button";
@@ -35,8 +36,8 @@ export default function CTAFooter({
           src={imageIllustration || ""}
           alt=""
           fill
-          quality={85}
-          sizes="(min-width: 1024px) 1120px, 100vw"
+          quality={100}
+          sizes="(min-width: 1280px) 1280px, 100vw"
           className="object-cover object-right-top md:object-right"
           priority
           fetchPriority="high"
@@ -45,7 +46,7 @@ export default function CTAFooter({
 
       <div className="relative z-10 min-w-0 flex-shrink-0 text-center md:text-center">
         <h1
-          className="mt-3 text-center text-4xl leading-none md:text-5xl"
+          className="mt-3 text-center text-4xl leading-none tracking-[-0.04em] md:text-5xl"
           style={{ fontFamily: "Aspekta", fontWeight: 500 }}
         >
           Build your projects,
@@ -58,23 +59,26 @@ export default function CTAFooter({
           committed contributors and support.
         </p>
         <div className="mt-6 flex flex-row justify-center gap-3 md:justify-center">
-          <Link
-            href={EXTERNAL_LINKS.GITHUB_REPO}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button>
-              Star Us on Github
+          <Button asChild>
+            <Link
+              href={EXTERNAL_LINKS.GITHUB_REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Star on Github
               <HiStar size={16} />
-            </Button>
-          </Link>
-          <Link
-            href={EXTERNAL_LINKS.TWITTER}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="secondary">Follow Us</Button>
-          </Link>
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link
+              href={EXTERNAL_LINKS.TWITTER}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Follow
+              <RiTwitterXFill size={16} aria-hidden />
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

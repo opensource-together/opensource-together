@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { HiArrowUpRight } from "react-icons/hi2";
 import { LuClock3 } from "react-icons/lu";
 import { VscGitPullRequest } from "react-icons/vsc";
 import type { PullRequest } from "@/features/projects/types/project.type";
-import { cn } from "@/shared/lib/utils";
+import { cn, detailCardHoverClass } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { Avatar } from "./avatar";
@@ -26,7 +25,8 @@ export default function PullRequestCard({
     <Link href={pullRequest.url} target="_blank" rel="noreferrer">
       <article
         className={cn(
-          "rounded-[20px] border border-muted-black-stroke px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+          "rounded-[20px] border border-muted-black-stroke px-5 py-5",
+          detailCardHoverClass,
           className
         )}
       >
@@ -67,10 +67,11 @@ export default function PullRequestCard({
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {pullRequest.draft && <Badge variant="gray">Draft</Badge>}
-                <HiArrowUpRight className="size-3" />
-              </div>
+              {pullRequest.draft ? (
+                <div className="flex items-center gap-2">
+                  <Badge variant="gray">Draft</Badge>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

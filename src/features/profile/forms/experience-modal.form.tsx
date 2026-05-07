@@ -145,15 +145,15 @@ export default function ExperienceModalForm({
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            variant="outline"
-                            className="w-full justify-start rounded-md"
+                            variant="input"
+                            className="w-full justify-start"
                           >
                             {selectedDate
                               ? formatDateLocal(selectedDate)
                               : "Select date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={selectedDate}
@@ -212,8 +212,8 @@ export default function ExperienceModalForm({
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
-                            variant="outline"
-                            className="w-full justify-start rounded-md"
+                            variant="input"
+                            className="w-full justify-start"
                             disabled={isCurrent}
                           >
                             {isCurrent
@@ -223,7 +223,7 @@ export default function ExperienceModalForm({
                                 : "Select date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={isCurrent ? undefined : selectedDate}

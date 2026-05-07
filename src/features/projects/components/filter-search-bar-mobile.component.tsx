@@ -1,20 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { HiX } from "react-icons/hi";
+import { HiChevronUp } from "react-icons/hi2";
 
 import { Button } from "@/shared/components/ui/button";
 import { CustomCombobox } from "@/shared/components/ui/custom-combobox";
 import { Separator } from "@/shared/components/ui/separator";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { cn } from "@/shared/lib/utils";
 
 import type { ProjectFilters } from "../types/project-filters.type";
+import { FilterAnimatedValue } from "./filter-animated-value.component";
 import { SORT_OPTIONS, SortSelect } from "./sort-select.component";
+
+type MobileExpandedSection = "tech" | "category" | "sort" | null;
 
 interface FilterItemProps {
   label: string;
@@ -24,10 +31,11 @@ interface FilterItemProps {
 function MobileFilterItem({ label, value }: FilterItemProps) {
   return (
     <div className="group flex w-full cursor-pointer flex-col rounded-full border border-muted-black-stroke px-6 py-3 shadow-xs">
-      <span className="font-normal text-black/40 text-xs">{label}</span>
-      <span className="truncate font-medium text-sm tracking-tight">
-        {value}
-      </span>
+      <span className="font-normal text-neutral-500 text-xs">{label}</span>
+      <FilterAnimatedValue
+        value={value}
+        className="font-medium text-sm tracking-tight"
+      />
     </div>
   );
 }
@@ -59,6 +67,12 @@ function filtersToSortId(filters?: ProjectFilters): string {
   return "most_popular";
 }
 
+function haveSameMembers(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const setA = new Set(a);
+  return b.every((id) => setA.has(id));
+}
+
 interface FilterSearchBarMobileProps {
   onFilterChange?: (filters: ProjectFilters) => void;
   isLoading?: boolean;
@@ -88,8 +102,8 @@ export default function FilterSearchBarMobile({
     }
   }, [initialFilters]);
 
-  const [isTechStackOpen, setIsTechStackOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [expandedSection, setExpandedSection] =
+    useState<MobileExpandedSection>(null);
 
   const hasSelectedFilters = useMemo(() => {
     return (
@@ -99,10 +113,10 @@ export default function FilterSearchBarMobile({
   }, [initialFilters]);
 
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack({
-    enabled: isTechStackOpen || hasSelectedFilters,
+    enabled: expandedSection === "tech" || hasSelectedFilters,
   });
   const { categoryOptions, isLoading: categoryLoading } = useCategories({
-    enabled: isCategoryOpen || hasSelectedFilters,
+    enabled: expandedSection === "category" || hasSelectedFilters,
   });
 
   const formatSelectedValues = useCallback(
@@ -161,6 +175,35 @@ export default function FilterSearchBarMobile({
     );
   }, [selectedSort]);
 
+  const hasPendingChanges = useMemo(() => {
+    const appliedTech = initialFilters?.techStacks ?? [];
+    const appliedCat = initialFilters?.categories ?? [];
+    const appliedSortId = filtersToSortId(initialFilters);
+
+    return (
+      !haveSameMembers(selectedTechStacks, appliedTech) ||
+      !haveSameMembers(selectedCategories, appliedCat) ||
+      selectedSort !== appliedSortId
+    );
+  }, [selectedTechStacks, selectedCategories, selectedSort, initialFilters]);
+
+  const skipInitialLabelRoll = useRef(true);
+  const [labelRollAnimation, setLabelRollAnimation] = useState<
+    "to-apply" | "to-idle" | null
+  >(null);
+
+  useEffect(() => {
+    if (skipInitialLabelRoll.current) {
+      skipInitialLabelRoll.current = false;
+      return;
+    }
+    setLabelRollAnimation(hasPendingChanges ? "to-apply" : "to-idle");
+  }, [hasPendingChanges]);
+
+  const handleLabelRollEnd = () => {
+    setLabelRollAnimation(null);
+  };
+
   const getSortParams = () => {
     switch (selectedSort) {
       case "most_popular":
@@ -206,26 +249,58 @@ export default function FilterSearchBarMobile({
       <Sheet>
         <div className="mb-4 flex w-full items-center justify-between">
           <SheetTrigger asChild>
-            <Button
+            <button
               type="button"
-              size="lg"
-              className="w-full py-6 text-base shadow-lg"
+              className={cn(
+                "inline-flex h-14 w-full shrink-0 items-center justify-between gap-3 rounded-full border border-black/5 bg-white pr-1.5 pl-5 font-medium text-base text-foreground tracking-tight shadow-black/3 shadow-md outline-none backdrop-blur-lg transition-all",
+                "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                "disabled:pointer-events-none disabled:opacity-50"
+              )}
             >
-              Filter Projects
-            </Button>
+              <span className="min-w-0 truncate pl-1 text-start">
+                Filter Projects
+              </span>
+              <span
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-black text-white"
+                aria-hidden
+              >
+                <HiChevronUp className="size-[18px]" strokeWidth={1.2} />
+              </span>
+            </button>
           </SheetTrigger>
         </div>
         <SheetContent
           side="bottom"
           responsive
           responsiveWidth={{ mobile: "w-full", desktop: "w-[420px]" }}
-          className="rounded-t-2xl p-4"
+          className="flex min-h-0 flex-col gap-0 rounded-t-[22px] p-4"
         >
-          <div className="mt-4 flex flex-col gap-3 overflow-y-auto overscroll-contain pb-20">
+          <div className="flex shrink-0 items-center justify-between gap-3 pt-2 pr-2 pb-2 pl-2">
+            <p className="font-medium text-base text-foreground tracking-tight">
+              Filter Projects
+            </p>
+            <SheetClose asChild>
+              <button
+                type="button"
+                className={cn(
+                  "shrink-0 rounded-full border border-black/5 p-2 opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none",
+                  "[&_svg]:pointer-events-none [&_svg]:shrink-0"
+                )}
+                aria-label="Close"
+              >
+                <HiX className="size-4" />
+                <span className="sr-only">Close</span>
+              </button>
+            </SheetClose>
+          </div>
+          <div className="mt-2 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain">
             <CustomCombobox
+              layout="inline"
               options={techStackOptions}
               value={selectedTechStacks}
               onChange={setSelectedTechStacks}
+              open={expandedSection === "tech"}
+              onOpenChange={(next) => setExpandedSection(next ? "tech" : null)}
               placeholder={
                 techStacksLoading
                   ? "Loading technologies..."
@@ -234,39 +309,42 @@ export default function FilterSearchBarMobile({
               searchPlaceholder="Search technologies..."
               emptyText="No technologies found."
               trigger={
-                <MobileFilterItem
-                  label="Technologies"
-                  value={techStacksValue}
-                />
+                <MobileFilterItem label="Choose" value={techStacksValue} />
               }
-              onOpenChange={setIsTechStackOpen}
               isLoading={techStacksLoading}
             />
             <CustomCombobox
+              layout="inline"
               options={categoryOptions}
               value={selectedCategories}
               onChange={setSelectedCategories}
+              open={expandedSection === "category"}
+              onOpenChange={(next) =>
+                setExpandedSection(next ? "category" : null)
+              }
               placeholder={
                 categoryLoading ? "Loading categories..." : "Add categories..."
               }
               searchPlaceholder="Search categories..."
               emptyText="No categories found."
               trigger={
-                <MobileFilterItem label="Categories" value={categoriesValue} />
+                <MobileFilterItem label="Select" value={categoriesValue} />
               }
-              onOpenChange={setIsCategoryOpen}
               isLoading={categoryLoading}
             />
             <SortSelect
+              layout="inline"
               options={SORT_OPTIONS}
               value={selectedSort}
               onChange={setSelectedSort}
+              open={expandedSection === "sort"}
+              onOpenChange={(next) => setExpandedSection(next ? "sort" : null)}
               trigger={<MobileFilterItem label="Sort" value={sortValue} />}
             />
           </div>
-          <Separator className="my-4" />
-          <div className="mt-4 flex items-center justify-end gap-2">
-            <Button type="button" variant="ghost" size="lg" asChild>
+          <Separator className="mt-4" contentPaddingX={4} />
+          <div className="flex shrink-0 items-center justify-end gap-2 bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
+            <Button type="button" variant="outline" asChild>
               <SheetTrigger>Cancel</SheetTrigger>
             </Button>
             <Button
@@ -275,8 +353,58 @@ export default function FilterSearchBarMobile({
               disabled={isLoading}
               size="lg"
               asChild
+              aria-label={
+                hasPendingChanges ? "Apply Filters" : "Filter Projects"
+              }
             >
-              <SheetTrigger>Filter Projects</SheetTrigger>
+              <SheetTrigger>
+                <span className="grid [grid-template-areas:stack]">
+                  <span
+                    className="invisible col-start-1 row-start-1 whitespace-nowrap [grid-area:stack]"
+                    aria-hidden
+                  >
+                    Filter Projects
+                  </span>
+                  <span className="relative col-start-1 row-start-1 h-5 overflow-hidden [grid-area:stack]">
+                    <div
+                      className={cn(
+                        "flex flex-col will-change-[transform,filter]",
+                        labelRollAnimation === null &&
+                          (hasPendingChanges
+                            ? "-translate-y-1/2"
+                            : "translate-y-0")
+                      )}
+                      style={
+                        labelRollAnimation === "to-apply"
+                          ? {
+                              animation:
+                                "filter-btn-label-roll-to-apply 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) both",
+                            }
+                          : labelRollAnimation === "to-idle"
+                            ? {
+                                animation:
+                                  "filter-btn-label-roll-to-idle 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) both",
+                              }
+                            : undefined
+                      }
+                      onAnimationEnd={handleLabelRollEnd}
+                    >
+                      <span
+                        className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
+                        aria-hidden
+                      >
+                        Filter Projects
+                      </span>
+                      <span
+                        className="flex h-5 shrink-0 items-center justify-center whitespace-nowrap"
+                        aria-hidden
+                      >
+                        Apply Filters
+                      </span>
+                    </div>
+                  </span>
+                </span>
+              </SheetTrigger>
             </Button>
           </div>
         </SheetContent>

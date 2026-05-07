@@ -88,18 +88,18 @@ export function ProfileMobileHero({
   return (
     <div>
       <div className="relative mb-10 w-full overflow-visible rounded-lg">
-        <div className="relative w-full overflow-hidden rounded-lg">
+        <div className="relative w-full overflow-hidden rounded-lg border border-black/5">
           <Image
-            src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
+            src={bannerUrlWithCacheBusting || "/new_profile_banner.png"}
             alt={`${name}'s banner`}
             width={677}
             height={150}
-            className="h-28 w-full object-cover"
+            className="block h-28 w-full object-cover"
             priority
             unoptimized
           />
         </div>
-        <div className="absolute -bottom-8 z-20">
+        <div className="absolute -bottom-8 left-2 z-20">
           <Avatar
             src={imageUrlWithCacheBusting}
             name={name}
@@ -110,21 +110,21 @@ export function ProfileMobileHero({
       </div>
 
       <div className="flex flex-col items-start">
-        <div className="flex min-w-0 items-center">
+        <div className="flex min-w-0 items-center pl-2">
           <div className="min-w-0">
             <div className="flex items-center">
-              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
+              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl tracking-[-0.04em]">
                 {name}
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="max-w-[65vw] truncate text-muted-foreground text-sm tracking-tighter">
+            <p className="max-w-[65vw] truncate text-muted-foreground text-sm tracking-[-0.02em]">
               {jobTitle}
             </p>
           </div>
         </div>
 
-        <p className="mt-4 mb-8 line-clamp-5 break-words font-normal text-sm">
+        <p className="mt-4 mb-8 line-clamp-5 break-words pl-2 font-normal text-sm">
           {bio}
         </p>
         {renderActionButton()}
@@ -202,19 +202,19 @@ export default function ProfileHero({
 
   return (
     <div>
-      <div className="relative w-full overflow-visible rounded-[20px] border border-muted-black-stroke/10">
-        <div className="relative w-full overflow-hidden rounded-[20px]">
+      <div className="relative w-full overflow-visible rounded-xl">
+        <div className="relative w-full overflow-hidden rounded-xl border border-black/5">
           <Image
-            src={bannerUrlWithCacheBusting || "/ost-profile-banner.png"}
+            src={bannerUrlWithCacheBusting || "/new_profile_banner.png"}
             alt={`${name}'s banner`}
             width={1500}
             height={150}
-            className="h-36 w-full object-cover"
+            className="block h-36 w-full object-cover"
             priority
             unoptimized
           />
         </div>
-        <div className="absolute -bottom-10 z-20">
+        <div className="absolute -bottom-10 left-2 z-20">
           <Avatar
             src={imageUrlWithCacheBusting}
             name={name}
@@ -225,15 +225,15 @@ export default function ProfileHero({
       </div>
 
       <div className="flex items-start justify-between pt-12">
-        <div className="flex min-w-0 flex-1 items-center">
+        <div className="flex min-w-0 flex-1 items-center pl-2">
           <div className="min-w-0">
             <div className="flex items-center">
-              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl">
+              <h2 className="max-w-[65vw] truncate text-start font-medium text-2xl tracking-[-0.04em]">
                 {name}
               </h2>
               {renderBetaTesterBadge()}
             </div>
-            <p className="truncate text-muted-foreground text-sm tracking-tighter">
+            <p className="truncate text-muted-foreground text-sm tracking-[-0.02em]">
               {jobTitle}
             </p>
           </div>
@@ -242,7 +242,7 @@ export default function ProfileHero({
         {renderActionButton()}
       </div>
 
-      <p className="mt-4 text-sm leading-6">{bio}</p>
+      <p className="mt-4 pl-2 text-sm leading-6">{bio}</p>
     </div>
   );
 }

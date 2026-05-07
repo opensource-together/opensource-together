@@ -7,7 +7,7 @@ import type { Issue } from "@/features/projects/types/project.type";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Separator } from "@/shared/components/ui/separator";
-import { cn } from "@/shared/lib/utils";
+import { cn, detailCardHoverClass } from "@/shared/lib/utils";
 import { formatTimeAgo } from "@/shared/lib/utils/format-time-ago";
 
 import { BadgeWithIcon } from "./badge-with-icon";
@@ -35,7 +35,8 @@ export default function IssueCard({
     <IssueDetailSheet issue={issue} projectId={projectId}>
       <article
         className={cn(
-          "rounded-[20px] border border-muted-black-stroke px-5 py-5 transition-all duration-200 hover:cursor-pointer hover:shadow-sm",
+          "rounded-[20px] border border-muted-black-stroke px-5 py-5",
+          detailCardHoverClass,
           className
         )}
       >

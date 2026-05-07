@@ -9,10 +9,10 @@ import {
 export default function MyProjectsSkeleton() {
   return (
     <div>
-      <Table>
-        <TableBody>
+      <Table className="border-separate border-spacing-0">
+        <TableBody className="[&_tr]:border-0">
           {Array.from({ length: 7 }).map((_, index) => (
-            <TableRow key={index}>
+            <TableRow key={index} className="border-0 hover:bg-transparent">
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Skeleton className="h-10 w-10 rounded-lg" />

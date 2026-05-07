@@ -19,8 +19,8 @@ export default function ProfilePage() {
         <ProfileView />
       </Suspense>
       <CTAFooter
-        imageIllustrationMobile="/illustrations/magician-mobile.png"
-        imageIllustration="/illustrations/magician.png"
+        imageIllustration="/illustrations/footer-profile-desktop.png"
+        imageIllustrationMobile="/illustrations/footer-profile-mobile.png"
       />
     </>
   );
