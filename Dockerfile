@@ -4,7 +4,7 @@ FROM node:22-alpine AS base
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-RUN corepack enable pnpm
+RUN corepack enable pnpm && corepack prepare pnpm@10.33.4 --activate
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -15,7 +15,7 @@ RUN pnpm i --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM base AS builder
-RUN corepack enable pnpm
+RUN corepack enable pnpm && corepack prepare pnpm@10.33.4 --activate
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
@@ -25,6 +25,7 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_FRONTEND_URL
 ARG NEXT_PUBLIC_METADATA_ASSETS_S3_BUCKET
+ENV CI=true
 
 RUN pnpm run build;
 
