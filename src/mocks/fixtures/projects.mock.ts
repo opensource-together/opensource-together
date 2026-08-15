@@ -32,4 +32,5 @@ export const PROJECT_IDS = {
   react: projectId("https://github.com/facebook/react"),
   supabase: projectId("https://github.com/supabase/supabase"),
   svelte: projectId("https://github.com/sveltejs/svelte"),
+  codex: projectId("https://github.com/openai/codex"),
 } as const;

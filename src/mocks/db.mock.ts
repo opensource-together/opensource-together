@@ -16,6 +16,9 @@ function cloneProjects() {
   const draft = records.find((project) => project.id === PROJECT_IDS.svelte);
   if (draft) draft.published = false;
 
+  const claimable = records.find((project) => project.id === PROJECT_IDS.codex);
+  if (claimable) claimable.owner = null;
+
   return records;
 }
 const cloneUsers = () => structuredClone(users);

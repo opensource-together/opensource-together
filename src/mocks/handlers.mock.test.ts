@@ -90,10 +90,7 @@ test("returns pull requests in the provider envelope used by the UI", async () =
 
   assert.equal(response.status, 200);
   assert.equal(body.data.github?.data.length, 1);
-  assert.equal(
-    body.data.github?.data[0]?.repository,
-    "steel-dev/steel-browser"
-  );
+  assert.equal(body.data.github?.data[0]?.repository, "supabase/supabase");
   assert.deepEqual(body.data.github?.data[0]?.branch, {
     from: "fix/double-navigation",
     to: "main",
@@ -195,6 +192,77 @@ test("resets user mutations between tests", async () => {
   assert.equal(db.users.me().name, "Changed by a test");
   db.reset();
   assert.equal(db.users.me().name, currentUser.name);
+});
+
+test("normalizes profile relations and experiences after an update", async () => {
+  const experiences = [
+    {
+      title: "Staff Engineer @ OST",
+      startAt: "2026-01-01",
+      endAt: null,
+      url: "https://opensource-together.com",
+    },
+  ];
+  const response = await fetch(`${BASE_URL}/users/me`, {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      userTechStacks: [techStacks[0]?.id, "tst_unknown", techStacks[3]?.id],
+      userCategories: [categories[1]?.id, "cat_unknown"],
+      experiences,
+    }),
+  });
+  const body = (await response.json()) as {
+    data: typeof currentUser & Record<string, unknown>;
+  };
+  const refetchedResponse = await fetch(`${BASE_URL}/users/me`);
+  const refetched = (await refetchedResponse.json()) as {
+    data: typeof currentUser & Record<string, unknown>;
+  };
+
+  assert.equal(response.status, 200);
+  assert.equal(refetchedResponse.status, 200);
+  assert.deepEqual(refetched.data.userTechStacks, [
+    techStacks[0],
+    techStacks[3],
+  ]);
+  assert.deepEqual(refetched.data.userTechStacksIds, [
+    techStacks[0]?.id,
+    techStacks[3]?.id,
+  ]);
+  assert.deepEqual(refetched.data.userCategories, [categories[1]]);
+  assert.deepEqual(refetched.data.userExperiences, experiences);
+  assert.equal(refetched.data.experiences, undefined);
+  assert.deepEqual(body.data, refetched.data);
+});
+
+test("returns a renderable local banner after an upload", async () => {
+  const response = await fetch(`${BASE_URL}/users/me/banner`, {
+    method: "PATCH",
+  });
+  const body = (await response.json()) as { data: typeof currentUser };
+
+  assert.equal(response.status, 200);
+  assert.equal(body.data.banner, "/new_profile_banner.png");
+});
+
+test("allows an unowned seeded project to be claimed", async () => {
+  assert.equal(db.projects.find(PROJECT_IDS.codex)?.owner, null);
+
+  const response = await fetch(
+    `${BASE_URL}/projects/${PROJECT_IDS.codex}/claims`,
+    { method: "POST" }
+  );
+  const body = (await response.json()) as { data: Project };
+
+  assert.equal(response.status, 200);
+  assert.equal(body.data.owner?.id, currentUser.id);
+
+  const duplicate = await fetch(
+    `${BASE_URL}/projects/${PROJECT_IDS.codex}/claims`,
+    { method: "POST" }
+  );
+  assert.equal(duplicate.status, 400);
 });
 
 test("sign-out clears the session and opts out of automatic sign-in", async () => {

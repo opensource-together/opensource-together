@@ -89,6 +89,54 @@ function canManage(project: Project): boolean {
   return project.owner?.id === db.users.me().id;
 }
 
+function relationIds(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+
+  return value.flatMap((item) => {
+    if (typeof item === "string") return [item];
+    if (
+      item &&
+      typeof item === "object" &&
+      "id" in item &&
+      typeof item.id === "string"
+    ) {
+      return [item.id];
+    }
+    return [];
+  });
+}
+
+function normalizeProfileUpdate(body: Record<string, unknown>) {
+  const { experiences, userCategories, userTechStacks, ...profileFields } =
+    body;
+  const techStackIds = relationIds(userTechStacks);
+  const categoryIds = relationIds(userCategories);
+  const resolvedTechStacks = techStackIds?.flatMap((id) => {
+    const stack = techStacks.find((item) => item.id === id);
+    return stack ? [stack] : [];
+  });
+  const resolvedCategories = categoryIds?.flatMap((id) => {
+    const category = categories.find((item) => item.id === id);
+    return category ? [category] : [];
+  });
+
+  return {
+    ...profileFields,
+    ...(resolvedTechStacks
+      ? {
+          userTechStacks: resolvedTechStacks,
+          userTechStacksIds: resolvedTechStacks.map((stack) => stack.id),
+        }
+      : {}),
+    ...(resolvedCategories
+      ? {
+          userCategories: resolvedCategories,
+        }
+      : {}),
+    ...(Array.isArray(experiences) ? { userExperiences: experiences } : {}),
+  };
+}
+
 export const handlers = [
   http.get(api("/api/auth/get-session"), ({ request }) => {
     const currentUser = db.users.me();
@@ -199,7 +247,7 @@ export const handlers = [
     const userId = String(params.id);
     if (userId !== "me" && userId !== db.users.me().id) return unauthorized();
     const body = (await request.json()) as Record<string, unknown>;
-    const user = db.users.update(userId, body);
+    const user = db.users.update(userId, normalizeProfileUpdate(body));
     return user ? ok(user) : fail(404, "User not found");
   }),
 
@@ -218,7 +266,7 @@ export const handlers = [
     const userId = String(params.id);
     if (userId !== "me" && userId !== db.users.me().id) return unauthorized();
     const user = db.users.update(userId, {
-      banner: "https://images.unsplash.example/banner.jpg",
+      banner: "/new_profile_banner.png",
     });
     return user ? ok(user) : fail(404, "User not found");
   }),
