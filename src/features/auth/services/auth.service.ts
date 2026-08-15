@@ -71,6 +71,9 @@ export const getCurrentUser = async (): Promise<Profile | null> => {
       credentials: "include",
     });
 
+    // An anonymous session is a valid application state, not a query failure.
+    if (response.status === 401) return null;
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to fetch user profile");

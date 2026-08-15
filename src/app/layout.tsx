@@ -125,7 +125,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${GeistMono.variable} antialiased`}
     >
-      <body>
+      <body suppressHydrationWarning>
         <Providers>
           <Header />
           {children}

@@ -42,9 +42,13 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
       provider: project?.provider || undefined,
       published: project?.published || false,
       projectTechStacks:
-        project?.projectTechStacks?.map((tech) => tech.id) || [],
+        project?.projectTechStacks?.flatMap((tech) =>
+          tech?.id ? [tech.id] : []
+        ) || [],
       projectCategories:
-        project?.projectCategories?.map((category) => category.id) || [],
+        project?.projectCategories?.flatMap((category) =>
+          category?.id ? [category.id] : []
+        ) || [],
       imagesUrls: project?.imagesUrls || [],
       repoUrl: project?.repoUrl || "",
       githubUrl: project?.githubUrl || "",
@@ -64,8 +68,14 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
       description: project.description || "",
       provider: project.provider || undefined,
       published: project.published || false,
-      projectTechStacks: project.projectTechStacks?.map((t) => t.id) || [],
-      projectCategories: project.projectCategories?.map((c) => c.id) || [],
+      projectTechStacks:
+        project.projectTechStacks?.flatMap((tech) =>
+          tech?.id ? [tech.id] : []
+        ) || [],
+      projectCategories:
+        project.projectCategories?.flatMap((category) =>
+          category?.id ? [category.id] : []
+        ) || [],
       imagesUrls: project.imagesUrls || [],
       repoUrl: project.repoUrl || "",
       githubUrl: project.githubUrl || "",
