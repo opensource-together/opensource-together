@@ -25,7 +25,7 @@ export interface Project {
   websiteUrl: string | null;
   projectTechStacks: TechStackType[];
   projectCategories: CategoryType[];
-  owner: ProjectOwner;
+  owner: ProjectOwner | null;
   repositoryDetails: RepositoryWithDetails;
   isBookmarked?: boolean;
   createdAt: Date;

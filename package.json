@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:mock": "cross-env MOCK_API_PORT=4000 NEXT_PUBLIC_API_URL=http://localhost:4000 INTERNAL_SERVER_API_URL=http://localhost:4000 NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000 NEXT_PUBLIC_API_MOCKING=enabled concurrently --kill-others-on-fail -n api,web -c magenta,cyan \"pnpm exec tsx src/mocks/api.mock.ts\" \"next dev --turbopack\"",
     "build": "next build",
     "start": "next start",
     "lint": "biome check .",
@@ -17,7 +18,8 @@
     "prepare": "husky",
     "worker:build": "opennextjs-cloudflare build && node scripts/copy-learn-html.js",
     "worker:preview": "opennextjs-cloudflare preview",
-    "worker:deploy": "opennextjs-cloudflare deploy"
+    "worker:deploy": "opennextjs-cloudflare deploy",
+    "test:mock": "tsx --test src/mocks/handlers.mock.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -65,12 +67,21 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.14",
+    "@mswjs/http-middleware": "^0.10.3",
     "@tailwindcss/postcss": "^4.2.4",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/node": "^20.19.39",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "concurrently": "^10.0.4",
+    "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
+    "express": "^5.2.1",
     "husky": "^9.1.7",
+    "msw": "^2.15.0",
     "tailwindcss": "^4.2.4",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.3",
     "wrangler": "^4.88.0"
   },
