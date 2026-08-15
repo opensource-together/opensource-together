@@ -17,6 +17,7 @@ import {
   SESSION_COOKIE,
   SIGNED_OUT_COOKIE,
 } from "./session.mock";
+import { findMockUpload, storeMockImage } from "./uploads.mock";
 
 const timestamp = () => new Date().toISOString();
 
@@ -138,6 +139,18 @@ function normalizeProfileUpdate(body: Record<string, unknown>) {
 }
 
 export const handlers = [
+  http.get(api("/mock-uploads/:id"), ({ params }) => {
+    const upload = findMockUpload(String(params.id));
+    if (!upload) return fail(404, "Uploaded image not found");
+
+    return new HttpResponse(upload.bytes.slice(), {
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Type": upload.contentType,
+      },
+    });
+  }),
+
   http.get(api("/api/auth/get-session"), ({ request }) => {
     const currentUser = db.users.me();
     return isAuthenticated(request)
@@ -251,22 +264,26 @@ export const handlers = [
     return user ? ok(user) : fail(404, "User not found");
   }),
 
-  http.patch(api("/users/:id/logo"), ({ params, request }) => {
+  http.patch(api("/users/:id/logo"), async ({ params, request }) => {
     if (!isAuthenticated(request)) return unauthorized();
     const userId = String(params.id);
     if (userId !== "me" && userId !== db.users.me().id) return unauthorized();
+    const upload = await storeMockImage(request);
+    if (!upload.success) return fail(upload.status, upload.error);
     const user = db.users.update(userId, {
-      image: "https://avatars.githubusercontent.com/u/9919?v=4",
+      image: upload.url,
     });
     return user ? ok(user) : fail(404, "User not found");
   }),
 
-  http.patch(api("/users/:id/banner"), ({ params, request }) => {
+  http.patch(api("/users/:id/banner"), async ({ params, request }) => {
     if (!isAuthenticated(request)) return unauthorized();
     const userId = String(params.id);
     if (userId !== "me" && userId !== db.users.me().id) return unauthorized();
+    const upload = await storeMockImage(request);
+    if (!upload.success) return fail(upload.status, upload.error);
     const user = db.users.update(userId, {
-      banner: "/new_profile_banner.png",
+      banner: upload.url,
     });
     return user ? ok(user) : fail(404, "User not found");
   }),
@@ -428,27 +445,28 @@ export const handlers = [
     return project ? ok(project) : fail(404, "Project not found");
   }),
 
-  http.patch(api("/projects/:id/logo"), ({ params, request }) => {
+  http.patch(api("/projects/:id/logo"), async ({ params, request }) => {
     if (!isAuthenticated(request)) return unauthorized();
     const existing = db.projects.find(String(params.id));
     if (!existing) return fail(404, "Project not found");
     if (!canManage(existing)) return unauthorized();
+    const upload = await storeMockImage(request);
+    if (!upload.success) return fail(upload.status, upload.error);
     const project = db.projects.update(String(params.id), {
-      logoUrl: "https://avatars.githubusercontent.com/u/54469796?s=200&v=4",
+      logoUrl: upload.url,
     });
     return project ? ok(project) : fail(404, "Project not found");
   }),
 
-  http.post(api("/projects/:id/images"), ({ params, request }) => {
+  http.post(api("/projects/:id/images"), async ({ params, request }) => {
     if (!isAuthenticated(request)) return unauthorized();
     const project = db.projects.find(String(params.id));
     if (!project) return fail(404, "Project not found");
     if (!canManage(project)) return unauthorized();
+    const upload = await storeMockImage(request);
+    if (!upload.success) return fail(upload.status, upload.error);
     const updated = db.projects.update(String(params.id), {
-      imagesUrls: [
-        ...project.imagesUrls,
-        `https://picsum.photos/seed/${project.imagesUrls.length}/1200/630`,
-      ],
+      imagesUrls: [...project.imagesUrls, upload.url],
     });
     return ok(updated);
   }),

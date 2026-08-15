@@ -13,6 +13,7 @@ import { PROJECT_IDS, projectsResponse } from "./fixtures/projects.mock";
 import { categories, techStacks } from "./fixtures/taxonomy.mock";
 import { currentUser } from "./fixtures/user.mock";
 import { handlers } from "./handlers.mock";
+import { resetMockUploads } from "./uploads.mock";
 
 const BASE_URL = "http://mock.ost.local";
 const signedOut = { cookie: "mock_signed_out=1" };
@@ -23,6 +24,16 @@ after(() => server.close());
 beforeEach(() => {
   server.resetHandlers();
   db.reset();
+  resetMockUploads();
+});
+
+test("keeps seeded experiences compatible with the profile form", () => {
+  for (const experience of currentUser.userExperiences ?? []) {
+    assert.match(experience.startAt, /^\d{4}-\d{2}-\d{2}$/);
+    if (experience.endAt) {
+      assert.match(experience.endAt, /^\d{4}-\d{2}-\d{2}$/);
+    }
+  }
 });
 
 test("keeps the project catalogue valid and reasonably small", () => {
@@ -268,14 +279,74 @@ test("normalizes profile relations and experiences after an update", async () =>
   assert.deepEqual(body.data, refetched.data);
 });
 
-test("returns a renderable local banner after an upload", async () => {
+test("stores and serves uploaded profile images for the mock session", async () => {
+  const bytes = new Uint8Array([137, 80, 78, 71]);
+  const formData = new FormData();
+  formData.append(
+    "file",
+    new File([bytes], "banner.png", { type: "image/png" })
+  );
+
   const response = await fetch(`${BASE_URL}/users/me/banner`, {
     method: "PATCH",
+    body: formData,
   });
   const body = (await response.json()) as { data: typeof currentUser };
+  const imageResponse = await fetch(body.data.banner ?? "");
 
   assert.equal(response.status, 200);
-  assert.equal(body.data.banner, "/new_profile_banner.png");
+  assert.match(
+    body.data.banner ?? "",
+    /^http:\/\/mock\.ost\.local\/mock-uploads\//
+  );
+  assert.equal(imageResponse.status, 200);
+  assert.equal(imageResponse.headers.get("content-type"), "image/png");
+  assert.deepEqual(new Uint8Array(await imageResponse.arrayBuffer()), bytes);
+});
+
+test("stores uploaded project logos and covers", async () => {
+  const projectId = PROJECT_IDS.mistralCommon;
+  const logoData = new FormData();
+  logoData.append(
+    "file",
+    new File([new Uint8Array([1, 2, 3])], "logo.webp", {
+      type: "image/webp",
+    })
+  );
+  const coverData = new FormData();
+  coverData.append(
+    "file",
+    new File([new Uint8Array([4, 5, 6])], "cover.jpg", {
+      type: "image/jpeg",
+    })
+  );
+
+  const logoResponse = await fetch(`${BASE_URL}/projects/${projectId}/logo`, {
+    method: "PATCH",
+    body: logoData,
+  });
+  const coverResponse = await fetch(
+    `${BASE_URL}/projects/${projectId}/images`,
+    {
+      method: "POST",
+      body: coverData,
+    }
+  );
+  const logoUrl = db.projects.find(projectId)?.logoUrl ?? "";
+  const coverUrl = db.projects.find(projectId)?.imagesUrls.at(-1) ?? "";
+
+  assert.equal(logoResponse.status, 200);
+  assert.equal(coverResponse.status, 200);
+  assert.match(logoUrl, /\/mock-uploads\//);
+  assert.match(coverUrl, /\/mock-uploads\//);
+  assert.equal(
+    (await fetch(logoUrl)).headers.get("content-type"),
+    "image/webp"
+  );
+  assert.equal(
+    (await fetch(coverUrl)).headers.get("content-type"),
+    "image/jpeg"
+  );
 });
 
 test("allows an unowned seeded project to be claimed", async () => {
