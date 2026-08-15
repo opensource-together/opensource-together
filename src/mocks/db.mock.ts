@@ -6,7 +6,7 @@ import { currentUser, users } from "./fixtures/user.mock";
 function cloneProjects() {
   const records = structuredClone(projectsResponse);
 
-  for (const id of [PROJECT_IDS.next, PROJECT_IDS.svelte]) {
+  for (const id of [PROJECT_IDS.supabase, PROJECT_IDS.svelte]) {
     const project = records.find((candidate) => candidate.id === id);
     if (project) {
       project.owner = { id: currentUser.id, name: currentUser.name };

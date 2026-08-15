@@ -30,6 +30,6 @@ function projectId(repoUrl: string): string {
 
 export const PROJECT_IDS = {
   react: projectId("https://github.com/facebook/react"),
-  next: projectId("https://github.com/vercel/next.js"),
+  supabase: projectId("https://github.com/supabase/supabase"),
   svelte: projectId("https://github.com/sveltejs/svelte"),
 } as const;

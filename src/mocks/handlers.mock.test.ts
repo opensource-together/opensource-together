@@ -26,7 +26,7 @@ beforeEach(() => {
 });
 
 test("keeps the project catalogue valid and reasonably small", () => {
-  assert.ok(projectsResponse.length >= 20);
+  assert.ok(projectsResponse.length >= 80);
   assert.equal(
     new Set(projectsResponse.map((project) => project.id)).size,
     projectsResponse.length
@@ -42,6 +42,22 @@ test("keeps the project catalogue valid and reasonably small", () => {
     assert.ok(project.repositoryDetails.contributors.length <= 8);
     assert.ok(project.repositoryDetails.issues.length <= 6);
     assert.ok(project.repositoryDetails.pullRequests.length <= 6);
+  }
+
+  for (const category of categories) {
+    assert.ok(
+      projectsResponse.some((project) =>
+        project.projectCategories.some((item) => item.id === category.id)
+      )
+    );
+  }
+
+  for (const techStack of techStacks) {
+    assert.ok(
+      projectsResponse.some((project) =>
+        project.projectTechStacks.some((item) => item.id === techStack.id)
+      )
+    );
   }
 
   const snapshot = statSync(
@@ -97,6 +113,7 @@ test("protects current-user projects and applies their published filter", async 
   assert.ok(body.data.length > 0);
   assert.ok(body.data.every((project) => project.published));
   assert.ok(body.data.every((project) => project.owner?.id === currentUser.id));
+  assert.ok(body.data.some((project) => project.id === PROJECT_IDS.supabase));
 });
 
 test("persists project creation until the database is reset", async () => {
