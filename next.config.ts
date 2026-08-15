@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  devIndicators: false,
   images: {
     qualities: [25, 50, 75, 85, 100],
     remotePatterns: [

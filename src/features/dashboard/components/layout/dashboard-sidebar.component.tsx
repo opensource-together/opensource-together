@@ -99,9 +99,6 @@ function SidebarLink({
             >
               <span className="flex items-center gap-2 text-sm">
                 <span>{item.label}</span>
-                <span className="translate-x-1 text-xs opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-hover:delay-75">
-                  Coming soon
-                </span>
               </span>
               <item.icon className="size-4" />
             </motion.span>

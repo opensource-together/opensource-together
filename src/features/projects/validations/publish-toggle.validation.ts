@@ -29,8 +29,13 @@ export const transformProjectForPublishedToggle = (
   repoUrl: project.repoUrl || "",
   provider: project.provider,
   published,
-  projectTechStacks: project.projectTechStacks.map((tech) => tech.id),
-  projectCategories: project.projectCategories.map((cat) => cat.id),
+  projectTechStacks:
+    project.projectTechStacks?.flatMap((tech) => (tech?.id ? [tech.id] : [])) ??
+    [],
+  projectCategories:
+    project.projectCategories?.flatMap((category) =>
+      category?.id ? [category.id] : []
+    ) ?? [],
   logoUrl: project.logoUrl || undefined,
   imagesUrls: project.imagesUrls,
   githubUrl: project.githubUrl || "",

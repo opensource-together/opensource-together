@@ -63,10 +63,10 @@ export default function ProjectCardComponent({
   }, [repositoryDetails.languages]);
 
   const allTechStacks = useMemo(() => {
-    if (projectTechStacks.length > 0) {
-      return projectTechStacks;
-    }
-    return languagesTechStacks;
+    const stacks =
+      projectTechStacks.length > 0 ? projectTechStacks : languagesTechStacks;
+
+    return stacks.filter((tech): tech is TechStackType => Boolean(tech));
   }, [projectTechStacks, languagesTechStacks]);
 
   return (
