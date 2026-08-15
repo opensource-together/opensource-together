@@ -1,5 +1,666 @@
 [
   {
+    "id": "pjt_1720088c024db7d3db2df6e92e2792f2",
+    "title": "polar",
+    "description": "Polar — A billing platform for the intelligence era",
+    "provider": "GITHUB",
+    "logoUrl": "https://avatars.githubusercontent.com/u/105373340?v=4",
+    "published": true,
+    "trending": true,
+    "githubUrl": "https://github.com/polarsource/polar",
+    "gitlabUrl": null,
+    "twitterUrl": null,
+    "linkedinUrl": null,
+    "discordUrl": null,
+    "websiteUrl": "https://polar.sh",
+    "imagesUrls": [
+      "/mocks/projects/polar-cover.mock.jpg",
+      "/mocks/projects/polar-cover-2.mock.jpeg",
+      "/mocks/projects/polar-cover-3.mock.png"
+    ],
+    "repoUrl": "https://github.com/polarsource/polar",
+    "owner": {
+      "id": "usr_3eb4b3e4d0c4840a1b4538e63cb8e4d1",
+      "name": "polarsource"
+    },
+    "projectTechStacks": [
+      {
+        "id": "tst_00000000000000000000000000000003",
+        "name": "Python",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000001",
+        "name": "TypeScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000002",
+        "name": "JavaScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000008",
+        "name": "Next.js",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+        "type": "TECH",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_0000000000000000000000000000001c",
+        "name": "FastAPI",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg",
+        "type": "TECH",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "projectCategories": [
+      {
+        "id": "cat_00000000000000000000000000000001",
+        "name": "Web Development"
+      },
+      {
+        "id": "cat_00000000000000000000000000000002",
+        "name": "Developer Tools"
+      }
+    ],
+    "repositoryDetails": {
+      "name": "polar",
+      "description": "Polar — A billing platform for the intelligence era",
+      "url": "https://api.github.com/repos/polarsource/polar",
+      "html_url": "https://github.com/polarsource/polar",
+      "created_at": "2023-01-26T10:04:27Z",
+      "updated_at": "2026-08-15T01:12:47Z",
+      "pushed_at": "2026-08-15T07:27:10Z",
+      "stars": 10194,
+      "tags": [
+        "billing",
+        "payments",
+        "saas",
+        "subscriptions",
+        "usage-billing"
+      ],
+      "forksCount": 758,
+      "openIssuesCount": 95,
+      "pullRequestsCount": 42,
+      "subscribersCount": 26,
+      "license": "Apache-2.0",
+      "languages": {
+        "Python": 14547030,
+        "TypeScript": 5753939,
+        "MDX": 767894,
+        "HCL": 437715,
+        "JavaScript": 137011,
+        "Shell": 54666,
+        "Swift": 46293,
+        "CSS": 24975
+      },
+      "owner": {
+        "login": "polarsource",
+        "avatar_url": "https://avatars.githubusercontent.com/u/105373340?v=4"
+      },
+      "contributors": [
+        {
+          "login": "frankie567",
+          "avatar_url": "https://avatars.githubusercontent.com/u/1144727?v=4",
+          "contributions": 4672
+        },
+        {
+          "login": "emilwidlund",
+          "avatar_url": "https://avatars.githubusercontent.com/u/10053249?v=4",
+          "contributions": 3171
+        },
+        {
+          "login": "zegl",
+          "avatar_url": "https://avatars.githubusercontent.com/u/47952?v=4",
+          "contributions": 2461
+        }
+      ],
+      "issues": [],
+      "issueLabels": [],
+      "pullRequests": [
+        {
+          "title": "fix(subscription): honor multi-period meter lag guard when billing is also due",
+          "state": "open",
+          "draft": false,
+          "number": 13767,
+          "created_at": "2026-08-15T07:27:12Z",
+          "updated_at": "2026-08-15T07:33:34Z",
+          "closed_at": null,
+          "merged_at": null,
+          "url": "https://github.com/polarsource/polar/pull/13767",
+          "author": {
+            "login": "detail-app[bot]",
+            "avatar_url": "https://avatars.githubusercontent.com/in/987401?v=4"
+          }
+        }
+      ],
+      "readme": "IyBwb2xhcgoKQSBiaWxsaW5nIHBsYXRmb3JtIGZvciB0aGUgaW50ZWxsaWdlbmNlIGVyYS4KClNvdXJjZTogaHR0cHM6Ly9naXRodWIuY29tL3BvbGFyc291cmNlL3BvbGFyCgpUaGlzIGNvbXBhY3QgUkVBRE1FIGlzIHBhcnQgb2YgdGhlIG9mZmxpbmUgT1NUIG1vY2sgY2F0YWxvZ3VlLg=="
+    },
+    "createdAt": "2023-01-26T10:04:27.000Z",
+    "updatedAt": "2026-08-15T01:12:47.000Z"
+  },
+  {
+    "id": "pjt_23b8ba9f567ca1beeb76cd58fdb2fcdd",
+    "title": "mistral-common",
+    "description": "Official inference library for pre-processing of Mistral models",
+    "provider": "GITHUB",
+    "logoUrl": "https://avatars.githubusercontent.com/u/132372032?v=4",
+    "published": true,
+    "trending": true,
+    "githubUrl": "https://github.com/mistralai/mistral-common",
+    "gitlabUrl": null,
+    "twitterUrl": null,
+    "linkedinUrl": null,
+    "discordUrl": null,
+    "websiteUrl": null,
+    "imagesUrls": [
+      "/mocks/projects/mistral-cover.mock.webp",
+      "/mocks/projects/mistral-cover-2.mock.webp",
+      "/mocks/projects/mistral-cover-3.mock.webp"
+    ],
+    "repoUrl": "https://github.com/mistralai/mistral-common",
+    "owner": {
+      "id": "usr_4333ce685f7d0a8bb50784048b72cda0",
+      "name": "mistralai"
+    },
+    "projectTechStacks": [
+      {
+        "id": "tst_00000000000000000000000000000003",
+        "name": "Python",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "projectCategories": [
+      {
+        "id": "cat_00000000000000000000000000000003",
+        "name": "Artificial Intelligence"
+      },
+      {
+        "id": "cat_00000000000000000000000000000002",
+        "name": "Developer Tools"
+      }
+    ],
+    "repositoryDetails": {
+      "name": "mistral-common",
+      "description": "Official inference library for pre-processing of Mistral models",
+      "url": "https://api.github.com/repos/mistralai/mistral-common",
+      "html_url": "https://github.com/mistralai/mistral-common",
+      "created_at": "2024-04-15T08:43:59Z",
+      "updated_at": "2026-08-13T04:57:07Z",
+      "pushed_at": "2026-08-06T15:58:19Z",
+      "stars": 933,
+      "tags": [
+        "mistral",
+        "inference",
+        "tokenizers",
+        "python"
+      ],
+      "forksCount": 156,
+      "openIssuesCount": 11,
+      "pullRequestsCount": 9,
+      "subscribersCount": 28,
+      "license": "Apache-2.0",
+      "languages": {
+        "Python": 1163358,
+        "Jinja": 303049
+      },
+      "owner": {
+        "login": "mistralai",
+        "avatar_url": "https://avatars.githubusercontent.com/u/132372032?v=4"
+      },
+      "contributors": [
+        {
+          "login": "patrickvonplaten",
+          "avatar_url": "https://avatars.githubusercontent.com/u/23423619?v=4",
+          "contributions": 140
+        },
+        {
+          "login": "juliendenize",
+          "avatar_url": "https://avatars.githubusercontent.com/u/40604584?v=4",
+          "contributions": 115
+        },
+        {
+          "login": "jean-malo",
+          "avatar_url": "https://avatars.githubusercontent.com/u/56539593?v=4",
+          "contributions": 11
+        }
+      ],
+      "issues": [],
+      "issueLabels": [],
+      "pullRequests": [
+        {
+          "title": "Deprecate Tokenized.text in favor of tokenizer.decode",
+          "state": "open",
+          "draft": false,
+          "number": 282,
+          "created_at": "2026-07-30T13:32:54Z",
+          "updated_at": "2026-07-30T16:34:04Z",
+          "closed_at": null,
+          "merged_at": null,
+          "url": "https://github.com/mistralai/mistral-common/pull/282",
+          "author": {
+            "login": "juliendenize",
+            "avatar_url": "https://avatars.githubusercontent.com/u/40604584?v=4"
+          }
+        }
+      ],
+      "readme": "IyBtaXN0cmFsLWNvbW1vbgoKT2ZmaWNpYWwgaW5mZXJlbmNlIGxpYnJhcnkgZm9yIHByZS1wcm9jZXNzaW5nIG9mIE1pc3RyYWwgbW9kZWxzLgoKU291cmNlOiBodHRwczovL2dpdGh1Yi5jb20vbWlzdHJhbGFpL21pc3RyYWwtY29tbW9uCgpUaGlzIGNvbXBhY3QgUkVBRE1FIGlzIHBhcnQgb2YgdGhlIG9mZmxpbmUgT1NUIG1vY2sgY2F0YWxvZ3VlLg=="
+    },
+    "createdAt": "2024-04-15T08:43:59.000Z",
+    "updatedAt": "2026-08-13T04:57:07.000Z"
+  },
+  {
+    "id": "pjt_0fc8382ed5884ae9a44f81a7c6fb0646",
+    "title": "better-auth",
+    "description": "The most comprehensive authentication framework",
+    "provider": "GITHUB",
+    "logoUrl": "https://avatars.githubusercontent.com/u/163827765?v=4",
+    "published": true,
+    "trending": true,
+    "githubUrl": "https://github.com/better-auth/better-auth",
+    "gitlabUrl": null,
+    "twitterUrl": null,
+    "linkedinUrl": null,
+    "discordUrl": null,
+    "websiteUrl": "https://better-auth.com",
+    "imagesUrls": [],
+    "repoUrl": "https://github.com/better-auth/better-auth",
+    "owner": {
+      "id": "usr_cbd408fc5a8ff636351082649f91bb9b",
+      "name": "better-auth"
+    },
+    "projectTechStacks": [
+      {
+        "id": "tst_00000000000000000000000000000001",
+        "name": "TypeScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000002",
+        "name": "JavaScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_0000000000000000000000000000000a",
+        "name": "Node.js",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+        "type": "TECH",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "projectCategories": [
+      {
+        "id": "cat_00000000000000000000000000000007",
+        "name": "Security"
+      },
+      {
+        "id": "cat_00000000000000000000000000000002",
+        "name": "Developer Tools"
+      },
+      {
+        "id": "cat_00000000000000000000000000000001",
+        "name": "Web Development"
+      }
+    ],
+    "repositoryDetails": {
+      "name": "better-auth",
+      "description": "The most comprehensive authentication framework",
+      "url": "https://api.github.com/repos/better-auth/better-auth",
+      "html_url": "https://github.com/better-auth/better-auth",
+      "created_at": "2024-05-19T21:40:04Z",
+      "updated_at": "2026-08-15T07:49:04Z",
+      "pushed_at": "2026-08-14T18:19:36Z",
+      "stars": 29546,
+      "tags": [
+        "authentication",
+        "oauth",
+        "sso",
+        "typescript"
+      ],
+      "forksCount": 2801,
+      "openIssuesCount": 648,
+      "pullRequestsCount": 1,
+      "subscribersCount": 44,
+      "license": "MIT",
+      "languages": {
+        "TypeScript": 8199901,
+        "JavaScript": 1142,
+        "HTML": 295
+      },
+      "owner": {
+        "login": "better-auth",
+        "avatar_url": "https://avatars.githubusercontent.com/u/163827765?v=4"
+      },
+      "contributors": [
+        {
+          "login": "Bekacru",
+          "avatar_url": "https://avatars.githubusercontent.com/u/86073083?v=4",
+          "contributions": 3112
+        },
+        {
+          "login": "himself65",
+          "avatar_url": "https://avatars.githubusercontent.com/u/14026360?v=4",
+          "contributions": 714
+        },
+        {
+          "login": "bytaesu",
+          "avatar_url": "https://avatars.githubusercontent.com/u/166604494?v=4",
+          "contributions": 536
+        }
+      ],
+      "issues": [],
+      "issueLabels": [],
+      "pullRequests": [
+        {
+          "title": "fix(admin): reject bearer-authenticated impersonation",
+          "state": "open",
+          "draft": false,
+          "number": 10825,
+          "created_at": "2026-08-15T10:50:17Z",
+          "updated_at": "2026-08-15T11:21:46Z",
+          "closed_at": null,
+          "merged_at": null,
+          "url": "https://github.com/better-auth/better-auth/pull/10825",
+          "author": {
+            "login": "Oluwatobi-Mustapha",
+            "avatar_url": "https://avatars.githubusercontent.com/u/201377892?v=4"
+          }
+        }
+      ],
+      "readme": "IyBiZXR0ZXItYXV0aAoKVGhlIG1vc3QgY29tcHJlaGVuc2l2ZSBhdXRoZW50aWNhdGlvbiBmcmFtZXdvcmsuCgpTb3VyY2U6IGh0dHBzOi8vZ2l0aHViLmNvbS9iZXR0ZXItYXV0aC9iZXR0ZXItYXV0aAoKVGhpcyBjb21wYWN0IFJFQURNRSBpcyBwYXJ0IG9mIHRoZSBvZmZsaW5lIE9TVCBtb2NrIGNhdGFsb2d1ZS4="
+    },
+    "createdAt": "2024-05-19T21:40:04.000Z",
+    "updatedAt": "2026-08-15T07:49:04.000Z"
+  },
+  {
+    "id": "pjt_978e35c607178533f1fd8aa67a68a1a7",
+    "title": "hermes-agent",
+    "description": "The agent that grows with you",
+    "provider": "GITHUB",
+    "logoUrl": "https://avatars.githubusercontent.com/u/134168893?v=4",
+    "published": true,
+    "trending": true,
+    "githubUrl": "https://github.com/NousResearch/hermes-agent",
+    "gitlabUrl": null,
+    "twitterUrl": null,
+    "linkedinUrl": null,
+    "discordUrl": null,
+    "websiteUrl": "https://hermes-agent.nousresearch.com",
+    "imagesUrls": [],
+    "repoUrl": "https://github.com/NousResearch/hermes-agent",
+    "owner": {
+      "id": "usr_b4148e5651e5b87dcec50549b90ea32d",
+      "name": "NousResearch"
+    },
+    "projectTechStacks": [
+      {
+        "id": "tst_00000000000000000000000000000003",
+        "name": "Python",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000001",
+        "name": "TypeScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000017",
+        "name": "Shell",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "projectCategories": [
+      {
+        "id": "cat_00000000000000000000000000000003",
+        "name": "Artificial Intelligence"
+      },
+      {
+        "id": "cat_00000000000000000000000000000002",
+        "name": "Developer Tools"
+      }
+    ],
+    "repositoryDetails": {
+      "name": "hermes-agent",
+      "description": "The agent that grows with you",
+      "url": "https://api.github.com/repos/NousResearch/hermes-agent",
+      "html_url": "https://github.com/NousResearch/hermes-agent",
+      "created_at": "2025-07-22T22:22:28Z",
+      "updated_at": "2026-08-15T10:35:28Z",
+      "pushed_at": "2026-08-15T10:35:04Z",
+      "stars": 230832,
+      "tags": [
+        "ai-agent",
+        "agents",
+        "llm",
+        "skills"
+      ],
+      "forksCount": 45780,
+      "openIssuesCount": 31956,
+      "pullRequestsCount": 1,
+      "subscribersCount": 887,
+      "license": "MIT",
+      "languages": {
+        "Python": 67637550,
+        "TypeScript": 17822212,
+        "JavaScript": 639068,
+        "Shell": 419005,
+        "Rust": 173380
+      },
+      "owner": {
+        "login": "NousResearch",
+        "avatar_url": "https://avatars.githubusercontent.com/u/134168893?v=4"
+      },
+      "contributors": [
+        {
+          "login": "teknium1",
+          "avatar_url": "https://avatars.githubusercontent.com/u/127238744?v=4",
+          "contributions": 8181
+        },
+        {
+          "login": "OutThisLife",
+          "avatar_url": "https://avatars.githubusercontent.com/u/770929?v=4",
+          "contributions": 3001
+        },
+        {
+          "login": "kshitijk4poor",
+          "avatar_url": "https://avatars.githubusercontent.com/u/82637225?v=4",
+          "contributions": 1563
+        }
+      ],
+      "issues": [],
+      "issueLabels": [],
+      "pullRequests": [
+        {
+          "title": "fix(updater): stop Windows update retries from looping forever on a deferred install (#86780)",
+          "state": "open",
+          "draft": false,
+          "number": 86906,
+          "created_at": "2026-08-15T10:32:08Z",
+          "updated_at": "2026-08-15T10:36:33Z",
+          "closed_at": null,
+          "merged_at": null,
+          "url": "https://github.com/NousResearch/hermes-agent/pull/86906",
+          "author": {
+            "login": "teknium1",
+            "avatar_url": "https://avatars.githubusercontent.com/u/127238744?v=4"
+          }
+        }
+      ],
+      "readme": "IyBoZXJtZXMtYWdlbnQKClRoZSBhZ2VudCB0aGF0IGdyb3dzIHdpdGggeW91LgoKU291cmNlOiBodHRwczovL2dpdGh1Yi5jb20vTm91c1Jlc2VhcmNoL2hlcm1lcy1hZ2VudAoKVGhpcyBjb21wYWN0IFJFQURNRSBpcyBwYXJ0IG9mIHRoZSBvZmZsaW5lIE9TVCBtb2NrIGNhdGFsb2d1ZS4="
+    },
+    "createdAt": "2025-07-22T22:22:28.000Z",
+    "updatedAt": "2026-08-15T10:35:28.000Z"
+  },
+  {
+    "id": "pjt_e95b2220758d018796a5a98c7d15b604",
+    "title": "steel-browser",
+    "description": "Open Source Browser API for AI Agents & Apps",
+    "provider": "GITHUB",
+    "logoUrl": "https://avatars.githubusercontent.com/u/183960033?v=4",
+    "published": true,
+    "trending": true,
+    "githubUrl": "https://github.com/steel-dev/steel-browser",
+    "gitlabUrl": null,
+    "twitterUrl": null,
+    "linkedinUrl": null,
+    "discordUrl": null,
+    "websiteUrl": "https://steel.dev",
+    "imagesUrls": [
+      "/mocks/projects/steel-browser-cover.mock.webp",
+      "/mocks/projects/steel-browser-cover-2.mock.jpg",
+      "/mocks/projects/steel-browser-cover-3.mock.png"
+    ],
+    "repoUrl": "https://github.com/steel-dev/steel-browser",
+    "owner": {
+      "id": "usr_31265a9142f30f1d8423735c8c8ffbd4",
+      "name": "steel-dev"
+    },
+    "projectTechStacks": [
+      {
+        "id": "tst_00000000000000000000000000000001",
+        "name": "TypeScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_00000000000000000000000000000002",
+        "name": "JavaScript",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+        "type": "LANGUAGE",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "tst_0000000000000000000000000000000a",
+        "name": "Node.js",
+        "iconUrl": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+        "type": "TECH",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "updatedAt": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "projectCategories": [
+      {
+        "id": "cat_00000000000000000000000000000003",
+        "name": "Artificial Intelligence"
+      },
+      {
+        "id": "cat_00000000000000000000000000000002",
+        "name": "Developer Tools"
+      },
+      {
+        "id": "cat_00000000000000000000000000000001",
+        "name": "Web Development"
+      }
+    ],
+    "repositoryDetails": {
+      "name": "steel-browser",
+      "description": "Open Source Browser API for AI Agents & Apps",
+      "url": "https://api.github.com/repos/steel-dev/steel-browser",
+      "html_url": "https://github.com/steel-dev/steel-browser",
+      "created_at": "2024-11-01T18:15:29Z",
+      "updated_at": "2026-08-15T09:05:58Z",
+      "pushed_at": "2026-08-05T23:12:01Z",
+      "stars": 7485,
+      "tags": [
+        "ai-agents",
+        "browser-automation",
+        "browser-api",
+        "llm"
+      ],
+      "forksCount": 965,
+      "openIssuesCount": 57,
+      "pullRequestsCount": 1,
+      "subscribersCount": 20,
+      "license": "Apache-2.0",
+      "languages": {
+        "TypeScript": 647064,
+        "EJS": 67346,
+        "CSS": 13668,
+        "Dockerfile": 6544,
+        "HTML": 6504,
+        "JavaScript": 6337,
+        "Shell": 4258
+      },
+      "owner": {
+        "login": "steel-dev",
+        "avatar_url": "https://avatars.githubusercontent.com/u/183960033?v=4"
+      },
+      "contributors": [
+        {
+          "login": "fukouda",
+          "avatar_url": "https://avatars.githubusercontent.com/u/7598534?v=4",
+          "contributions": 120
+        },
+        {
+          "login": "danew",
+          "avatar_url": "https://avatars.githubusercontent.com/u/5265684?v=4",
+          "contributions": 38
+        },
+        {
+          "login": "junhsss",
+          "avatar_url": "https://avatars.githubusercontent.com/u/59686138?v=4",
+          "contributions": 23
+        }
+      ],
+      "issues": [],
+      "issueLabels": [],
+      "pullRequests": [
+        {
+          "title": "fix(ui): use height for live viewer default dimensions",
+          "state": "open",
+          "draft": false,
+          "number": 341,
+          "created_at": "2026-08-12T23:13:45Z",
+          "updated_at": "2026-08-12T23:25:52Z",
+          "closed_at": null,
+          "merged_at": null,
+          "url": "https://github.com/steel-dev/steel-browser/pull/341",
+          "author": {
+            "login": "y2-znt",
+            "avatar_url": "https://avatars.githubusercontent.com/u/152095147?v=4"
+          }
+        }
+      ],
+      "readme": "IyBzdGVlbC1icm93c2VyCgpPcGVuIHNvdXJjZSBicm93c2VyIEFQSSBmb3IgQUkgYWdlbnRzIGFuZCBhcHBzLgoKU291cmNlOiBodHRwczovL2dpdGh1Yi5jb20vc3RlZWwtZGV2L3N0ZWVsLWJyb3dzZXIKClRoaXMgY29tcGFjdCBSRUFETUUgaXMgcGFydCBvZiB0aGUgb2ZmbGluZSBPU1QgbW9jayBjYXRhbG9ndWUu"
+    },
+    "createdAt": "2024-11-01T18:15:29.000Z",
+    "updatedAt": "2026-08-15T09:05:58.000Z"
+  },
+  {
     "id": "pjt_b9a0988e7e70427ecdf9add6e3fe2db1",
     "title": "react",
     "description": "The library for web and native user interfaces.",

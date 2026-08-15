@@ -3,23 +3,34 @@ import type { Project } from "@/features/projects/types/project.type";
 import { PROJECT_IDS, projectsResponse } from "./fixtures/projects.mock";
 import { currentUser, users } from "./fixtures/user.mock";
 
+const currentUserProjectIds = [
+  PROJECT_IDS.mistralCommon,
+  PROJECT_IDS.polar,
+  PROJECT_IDS.steelBrowser,
+];
+
 function cloneProjects() {
   const records = structuredClone(projectsResponse);
 
-  for (const id of [PROJECT_IDS.supabase, PROJECT_IDS.svelte]) {
+  for (const id of currentUserProjectIds) {
     const project = records.find((candidate) => candidate.id === id);
     if (project) {
       project.owner = { id: currentUser.id, name: currentUser.name };
     }
   }
 
-  const draft = records.find((project) => project.id === PROJECT_IDS.svelte);
-  if (draft) draft.published = false;
-
-  const claimable = records.find((project) => project.id === PROJECT_IDS.codex);
+  const claimable = records.find(
+    (project) => project.id === PROJECT_IDS.supabase
+  );
   if (claimable) claimable.owner = null;
 
-  return records;
+  const currentUserProjects = new Set(currentUserProjectIds);
+  return [
+    ...currentUserProjectIds.flatMap((id) =>
+      records.filter((project) => project.id === id)
+    ),
+    ...records.filter((project) => !currentUserProjects.has(project.id ?? "")),
+  ];
 }
 const cloneUsers = () => structuredClone(users);
 

@@ -29,6 +29,11 @@ function projectId(repoUrl: string): string {
 }
 
 export const PROJECT_IDS = {
+  polar: projectId("https://github.com/polarsource/polar"),
+  mistralCommon: projectId("https://github.com/mistralai/mistral-common"),
+  betterAuth: projectId("https://github.com/better-auth/better-auth"),
+  hermesAgent: projectId("https://github.com/NousResearch/hermes-agent"),
+  steelBrowser: projectId("https://github.com/steel-dev/steel-browser"),
   react: projectId("https://github.com/facebook/react"),
   supabase: projectId("https://github.com/supabase/supabase"),
   svelte: projectId("https://github.com/sveltejs/svelte"),

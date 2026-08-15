@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { statSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { after, before, beforeEach, test } from "node:test";
 import { setupServer } from "msw/node";
@@ -64,6 +64,19 @@ test("keeps the project catalogue valid and reasonably small", () => {
     join(process.cwd(), "src/mocks/fixtures/projects.mock.json")
   );
   assert.ok(snapshot.size <= 5 * 1024 * 1024);
+
+  for (const project of projectsResponse) {
+    if (project.logoUrl?.startsWith("/")) {
+      assert.ok(
+        existsSync(join(process.cwd(), "public", project.logoUrl.slice(1)))
+      );
+    }
+
+    for (const imageUrl of project.imagesUrls) {
+      assert.ok(imageUrl.startsWith("/mocks/projects/"));
+      assert.ok(existsSync(join(process.cwd(), "public", imageUrl.slice(1))));
+    }
+  }
 });
 
 test("serves the project catalogue through list and detail routes", async () => {
@@ -84,16 +97,16 @@ test("serves the project catalogue through list and detail routes", async () => 
 
 test("returns pull requests in the provider envelope used by the UI", async () => {
   const response = await fetch(
-    `${BASE_URL}/users/me/pull-requests?provider=github&state=open`
+    `${BASE_URL}/users/me/pull-requests?provider=github&state=merged`
   );
   const body = (await response.json()) as { data: PullRequestsResponse };
 
   assert.equal(response.status, 200);
-  assert.equal(body.data.github?.data.length, 1);
-  assert.equal(body.data.github?.data[0]?.repository, "supabase/supabase");
+  assert.equal(body.data.github?.data.length, 2);
+  assert.equal(body.data.github?.data[0]?.repository, "libdc");
   assert.deepEqual(body.data.github?.data[0]?.branch, {
-    from: "fix/double-navigation",
-    to: "main",
+    from: "garmin-localtime",
+    to: "Subsurface-DS9",
   });
   assert.equal(body.data.gitlab, null);
 });
@@ -102,15 +115,34 @@ test("protects current-user projects and applies their published filter", async 
   const anonymous = await fetch(`${BASE_URL}/users/me/projects`, {
     headers: signedOut,
   });
+  const mine = await fetch(`${BASE_URL}/users/me/projects`);
   const published = await fetch(`${BASE_URL}/users/me/projects?published=true`);
+  const mineBody = (await mine.json()) as { data: Project[] };
   const body = (await published.json()) as { data: Project[] };
 
   assert.equal(anonymous.status, 401);
+  assert.equal(mine.status, 200);
   assert.equal(published.status, 200);
+  assert.equal(mineBody.data[0]?.id, PROJECT_IDS.mistralCommon);
+  assert.deepEqual(
+    mineBody.data.map((project) => project.id).sort(),
+    [
+      PROJECT_IDS.mistralCommon,
+      PROJECT_IDS.polar,
+      PROJECT_IDS.steelBrowser,
+    ].sort()
+  );
   assert.ok(body.data.length > 0);
   assert.ok(body.data.every((project) => project.published));
   assert.ok(body.data.every((project) => project.owner?.id === currentUser.id));
-  assert.ok(body.data.some((project) => project.id === PROJECT_IDS.supabase));
+  assert.equal(body.data.length, 3);
+  assert.ok(
+    body.data.some((project) => project.id === PROJECT_IDS.mistralCommon)
+  );
+  assert.ok(body.data.some((project) => project.id === PROJECT_IDS.polar));
+  assert.ok(
+    body.data.some((project) => project.id === PROJECT_IDS.steelBrowser)
+  );
 });
 
 test("persists project creation until the database is reset", async () => {
@@ -132,7 +164,7 @@ test("persists project creation until the database is reset", async () => {
 });
 
 test("populates project relations after an update", async () => {
-  const response = await fetch(`${BASE_URL}/projects/${PROJECT_IDS.svelte}`, {
+  const response = await fetch(`${BASE_URL}/projects/${PROJECT_IDS.polar}`, {
     method: "PATCH",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
@@ -150,7 +182,7 @@ test("populates project relations after an update", async () => {
 });
 
 test("ignores stale null relations when toggling project visibility", () => {
-  const project = structuredClone(db.projects.find(PROJECT_IDS.svelte));
+  const project = structuredClone(db.projects.find(PROJECT_IDS.codex));
   assert.ok(project);
   project.projectTechStacks = [null] as unknown as Project["projectTechStacks"];
   project.projectCategories = [null] as unknown as Project["projectCategories"];
@@ -247,10 +279,10 @@ test("returns a renderable local banner after an upload", async () => {
 });
 
 test("allows an unowned seeded project to be claimed", async () => {
-  assert.equal(db.projects.find(PROJECT_IDS.codex)?.owner, null);
+  assert.equal(db.projects.find(PROJECT_IDS.supabase)?.owner, null);
 
   const response = await fetch(
-    `${BASE_URL}/projects/${PROJECT_IDS.codex}/claims`,
+    `${BASE_URL}/projects/${PROJECT_IDS.supabase}/claims`,
     { method: "POST" }
   );
   const body = (await response.json()) as { data: Project };
@@ -259,7 +291,7 @@ test("allows an unowned seeded project to be claimed", async () => {
   assert.equal(body.data.owner?.id, currentUser.id);
 
   const duplicate = await fetch(
-    `${BASE_URL}/projects/${PROJECT_IDS.codex}/claims`,
+    `${BASE_URL}/projects/${PROJECT_IDS.supabase}/claims`,
     { method: "POST" }
   );
   assert.equal(duplicate.status, 400);
