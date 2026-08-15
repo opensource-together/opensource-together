@@ -55,6 +55,9 @@ jobs:
       - name: Type check
         run: pnpm type-check
 
+      - name: Test mock API
+        run: pnpm test:mock
+
       - name: Build
         run: pnpm build
 

@@ -9,7 +9,8 @@
       "!.next",
       "!dist",
       "!build",
-      "!**/src/generated"
+      "!**/src/generated",
+      "!src/mocks/fixtures/projects.mock.json"
     ]
   },
   "formatter": {
