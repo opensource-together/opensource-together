@@ -16,11 +16,11 @@ import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
 
 import type { Profile } from "../types/profile.type";
-import type { ProfileSchema } from "../validations/profile.schema";
+import type { ProfileFormValues } from "../validations/profile.schema";
 
 interface ProfileSidebarEditProps {
   profile: Profile;
-  form: UseFormReturn<ProfileSchema>;
+  form: UseFormReturn<ProfileFormValues>;
 }
 
 export default function ProfileSidebarEditForm({

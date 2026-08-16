@@ -6,7 +6,8 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
-import { useUserProjects } from "../hooks/use-profile.hook";
+import { profileKeys } from "../hooks/profile.keys";
+import { useUserProjectsQuery } from "../hooks/profile.queries";
 import PinnedProjectCard from "./pinned-project-card.component";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
@@ -46,7 +47,7 @@ export default function PinnedProjects({ userId }: PinnedProjectsProps) {
     data: projectsResponse,
     isLoading,
     isError,
-  } = useUserProjects(
+  } = useUserProjectsQuery(
     effectiveUserId,
     {
       page: 1,
@@ -62,7 +63,7 @@ export default function PinnedProjects({ userId }: PinnedProjectsProps) {
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["user", effectiveUserId, "projects"]}
+        queryKey={profileKeys.projects(effectiveUserId)}
       />
     );
 

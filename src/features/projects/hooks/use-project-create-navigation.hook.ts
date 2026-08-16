@@ -3,9 +3,6 @@ import { useEffect } from "react";
 
 import { useProjectCreateStore } from "../stores/project-create.store";
 
-/**
- * Handles navigation and redirection logic for the project creation flow.
- */
 export function useProjectCreateNavigation() {
   const router = useRouter();
   const pathname = usePathname();

@@ -12,7 +12,7 @@ import {
   useState,
 } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import {
 
 import { cn } from "@/shared/lib/utils";
 
-import { useInfiniteProjects } from "../hooks/use-projects.hook";
+import { useInfiniteProjectsQuery } from "../hooks/project.queries";
 
 const MAX_FREE_PROJECTS = 60;
 const ITEM_HEIGHT = 44;
@@ -60,7 +60,8 @@ export default function SearchCommand({
   const [search, setSearch] = useState("");
   const [scrollTop, setScrollTop] = useState(0);
   const [listHeight, setListHeight] = useState(DEFAULT_LIST_HEIGHT);
-  const { isAuthenticated } = useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const isAuthenticated = !!currentUserQuery.data;
   const deferredSearch = useDeferredValue(search);
   const listRef = useRef<HTMLDivElement>(null);
   const isNavigatingRef = useRef(false);
@@ -71,7 +72,7 @@ export default function SearchCommand({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteProjects(
+  } = useInfiniteProjectsQuery(
     {
       published: true,
       per_page: 20,

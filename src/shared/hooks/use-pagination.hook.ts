@@ -12,10 +12,6 @@ interface UsePaginationProps extends PaginationConfig {
   };
 }
 
-/**
- * Custom hook for pagination logic
- * Provides page generation, navigation, and URL synchronization
- */
 export function usePagination({ pagination }: UsePaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();

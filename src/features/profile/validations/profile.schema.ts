@@ -87,10 +87,15 @@ export const profileSchema = z.object({
   websiteUrl: urlWithDomainCheck([], "Invalid website URL").optional(),
 });
 
-export const CreateProfileSchema = profileSchema;
+export type ProfileFormValues = z.infer<typeof profileSchema>;
+export type UpdateProfileInput = Partial<
+  Omit<ProfileFormValues, "image" | "banner">
+>;
 
-export const UpdateProfileSchema = profileSchema;
-
-export type ProfileSchema = z.infer<typeof profileSchema>;
-export type CreateProfileData = z.infer<typeof CreateProfileSchema>;
-export type UpdateProfileData = z.infer<typeof UpdateProfileSchema>;
+export function toUpdateProfileInput({
+  image: _image,
+  banner: _banner,
+  ...input
+}: ProfileFormValues): UpdateProfileInput {
+  return input;
+}

@@ -1,7 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { authKeys } from "@/features/auth/hooks/auth.keys";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import TwoColumnLayout from "@/shared/components/layout/two-column-layout.component";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import {
@@ -27,15 +28,16 @@ import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.c
 import ProfilePullRequests from "./profile-pull-requests.view";
 
 export default function ProfileView() {
-  const { currentUser, isLoading, isError } = useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const currentUser = currentUserQuery.data;
   const { tab, handleTabChange } = useTabNavigation("overview");
 
-  if (isLoading) return <SkeletonProfileView />;
-  if (isError || !currentUser)
+  if (currentUserQuery.isLoading) return <SkeletonProfileView />;
+  if (currentUserQuery.isError || !currentUser)
     return (
       <ErrorState
         message="An error has occurred while loading the profile. Please try again later."
-        queryKey={["user", "me"]}
+        queryKey={authKeys.currentUser()}
         className="mt-20 mb-28"
         buttonText="Back to homepage"
         href="/"

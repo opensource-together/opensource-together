@@ -3,10 +3,13 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
+import { toast } from "sonner";
+import { profileKeys } from "@/features/profile/hooks/profile.keys";
 import {
-  useDeleteProject,
-  useToggleProjectPublished,
-} from "@/features/projects/hooks/use-projects.hook";
+  useDeleteProjectMutation,
+  useToggleProjectPublishedMutation,
+} from "@/features/projects/hooks/project.mutations";
+import type { UserProjectsQueryParams } from "@/features/projects/services/project.service";
 import type { Project } from "@/features/projects/types/project.type";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
@@ -14,9 +17,9 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { PaginationInfo } from "@/shared/components/ui/pagination-info.component";
 import { Table, TableBody } from "@/shared/components/ui/table";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
-import { useMyProjects } from "../../hooks/use-my-projects.hook";
-import type { ProjectQueryParams } from "../../services/my-projects.service";
+import { useMyProjectsQuery } from "../../hooks/my-projects.queries";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 import MyProjectRow from "./my-projects-row.component";
 
@@ -29,41 +32,45 @@ const parseNumber = (value: string | null, fallback: number) => {
 export default function MyProjectsList() {
   const searchParams = useSearchParams();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [togglingProjectId, setTogglingProjectId] = useState<string | null>(
     null
   );
 
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 7);
-  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+  const queryParams: UserProjectsQueryParams = { page, per_page: perPage };
 
   const {
     data: myProjectsResponse,
     isLoading,
     isError,
-  } = useMyProjects(queryParams);
+  } = useMyProjectsQuery(queryParams);
 
-  const { deleteProject, isDeleting } = useDeleteProject();
-  const { toggleProjectPublished, isTogglingPublished } =
-    useToggleProjectPublished();
+  const deleteProjectMutation = useDeleteProjectMutation();
+  const toggleProjectPublishedMutation = useToggleProjectPublishedMutation();
 
   const myProjects = myProjectsResponse?.data || [];
   const pagination = myProjectsResponse?.pagination;
 
-  const handleDeleteClick = (project: { id: string; title: string }) => {
+  const handleDeleteClick = (project: Project) => {
     setProjectToDelete(project);
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (projectToDelete?.id) {
-      deleteProject(projectToDelete.id);
+  const handleDeleteConfirm = async () => {
+    if (!projectToDelete?.id) return;
+
+    try {
+      await deleteProjectMutation.mutateAsync({
+        projectId: projectToDelete.id,
+        ownerId: projectToDelete.owner?.id,
+      });
+      toast.success("Project deleted successfully");
       setDeleteDialogOpen(false);
       setProjectToDelete(null);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Error while deleting project"));
     }
   };
 
@@ -72,20 +79,25 @@ export default function MyProjectsList() {
     setProjectToDelete(null);
   };
 
-  const handleTogglePublish = (project: Project) => {
+  const handleTogglePublish = async (project: Project) => {
     if (!project.id) return;
 
     setTogglingProjectId(project.id);
-    toggleProjectPublished(
-      { project, published: !project.published },
-      {
-        onSettled: () => {
-          setTogglingProjectId((current) =>
-            current === project.id ? null : current
-          );
-        },
-      }
-    );
+    try {
+      await toggleProjectPublishedMutation.mutateAsync({
+        project,
+        published: !project.published,
+      });
+      toast.success("Project visibility updated");
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "Failed to update project visibility")
+      );
+    } finally {
+      setTogglingProjectId((current) =>
+        current === project.id ? null : current
+      );
+    }
   };
 
   if (isLoading) return <MyProjectsSkeleton />;
@@ -94,7 +106,7 @@ export default function MyProjectsList() {
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["user", "me", "projects"]}
+        queryKey={profileKeys.projects("me")}
       />
     );
 
@@ -121,7 +133,7 @@ export default function MyProjectsList() {
               project={project}
               onTogglePublish={handleTogglePublish}
               onDelete={handleDeleteClick}
-              isTogglingPublished={isTogglingPublished}
+              isTogglingPublished={toggleProjectPublishedMutation.isPending}
               togglingProjectId={togglingProjectId}
             />
           ))}
@@ -140,7 +152,7 @@ export default function MyProjectsList() {
         onOpenChange={setDeleteDialogOpen}
         title="Delete project"
         description={`Are you sure you want to delete the project "${projectToDelete?.title}" ? This action is irreversible.`}
-        isLoading={isDeleting}
+        isLoading={deleteProjectMutation.isPending}
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         confirmText="Delete Project"

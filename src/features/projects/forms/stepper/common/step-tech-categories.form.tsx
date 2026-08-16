@@ -2,15 +2,16 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
 import {
-  useCreateProject,
-  useUpdateProjectCover,
-  useUpdateProjectLogo,
-} from "@/features/projects/hooks/use-projects.hook";
-import type { ProjectSchema } from "@/features/projects/validations/project.schema";
+  useAddProjectCoverMutation,
+  useCreateProjectMutation,
+  useUpdateProjectLogoMutation,
+} from "@/features/projects/hooks/project.mutations";
+import type { CreateProjectInput } from "@/features/projects/validations/project.schema";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -23,6 +24,7 @@ import {
 import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-fields";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { ProjectTechCategoriesPreview } from "../../../components/stepper/project-tech-categories-preview.component";
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
@@ -38,9 +40,11 @@ export function StepTechCategoriesForm() {
   const [pendingFormData, setPendingFormData] =
     useState<StepTechCategoriesFormData | null>(null);
 
-  const { createProjectAsync, isCreating } = useCreateProject();
-  const { updateProjectLogo } = useUpdateProjectLogo();
-  const { updateProjectCover } = useUpdateProjectCover();
+  const createProjectMutation = useCreateProjectMutation();
+  const updateProjectLogoMutation = useUpdateProjectLogoMutation();
+  const addProjectCoverMutation = useAddProjectCoverMutation();
+  const [isCreating, setIsCreating] = useState(false);
+  const createdProjectIdRef = useRef<string | null>(null);
 
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const {
@@ -98,7 +102,6 @@ export function StepTechCategoriesForm() {
     router.push("/projects/create/describe");
   };
 
-  // Helper function to prepare logo file
   const prepareLogoFile = async (): Promise<File | null> => {
     if (formData.logoFile) {
       return formData.logoFile;
@@ -116,7 +119,6 @@ export function StepTechCategoriesForm() {
     return null;
   };
 
-  // Helper function to prepare cover image files
   const prepareCoverFiles = async (): Promise<File[]> => {
     if (formData.imageFiles && formData.imageFiles.length > 0) {
       return formData.imageFiles;
@@ -144,43 +146,29 @@ export function StepTechCategoriesForm() {
     return coverFiles;
   };
 
-  // Helper function to upload project logo
   const uploadProjectLogo = (projectId: string, logoFile: File) => {
-    return updateProjectLogo({
+    return updateProjectLogoMutation.mutateAsync({
       projectId,
-      logoFile,
+      file: logoFile,
     });
   };
 
-  // Helper function to upload project cover images
   const uploadProjectCovers = async (projectId: string, imageFiles: File[]) => {
     const uploadPromises = imageFiles.map((file) =>
-      updateProjectCover({
+      addProjectCoverMutation.mutateAsync({
         projectId,
-        coverFile: file,
+        file,
       })
     );
     return Promise.all(uploadPromises);
   };
 
-  // Helper function to get project ID from response
-  const getProjectId = (
-    createdProject: { id?: string; data?: { id?: string } } | unknown
-  ): string | undefined => {
-    const anyProject = createdProject as {
-      data?: { id?: string };
-      id?: string;
-    };
-    return anyProject?.data?.id || anyProject?.id;
-  };
-
   const handleConfirmCreation = async () => {
     if (!pendingFormData) return;
 
-    setShowConfirmation(false);
+    setIsCreating(true);
 
-    // Prepare project data
-    const projectData: ProjectSchema = {
+    const projectData: CreateProjectInput = {
       title: formData.title,
       description: formData.description,
       provider: formData.method.toUpperCase() as "GITHUB" | "GITLAB",
@@ -195,7 +183,6 @@ export function StepTechCategoriesForm() {
       websiteUrl: pendingFormData.websiteUrl || "",
     };
 
-    // Update the store with form data
     updateProjectInfo({
       projectTechStacks: pendingFormData.projectTechStacks || [],
       projectCategories: pendingFormData.projectCategories || [],
@@ -208,12 +195,18 @@ export function StepTechCategoriesForm() {
     });
 
     try {
-      // Create project
-      const createdProject = await createProjectAsync(projectData);
-      const projectId = getProjectId(createdProject);
-
+      let projectId = createdProjectIdRef.current;
       if (!projectId) {
-        throw new Error("Failed to get project ID from response");
+        const createdProject = await createProjectMutation.mutateAsync({
+          data: projectData,
+        });
+        projectId = createdProject.id || createdProject.publicId || null;
+
+        if (!projectId) {
+          throw new Error("Failed to get project ID from response");
+        }
+
+        createdProjectIdRef.current = projectId;
       }
 
       const logoFile = await prepareLogoFile();
@@ -225,8 +218,15 @@ export function StepTechCategoriesForm() {
       if (coverFiles.length > 0) {
         await uploadProjectCovers(projectId, coverFiles);
       }
+
+      toast.success("Project created successfully");
+      setShowConfirmation(false);
+      router.push(`/projects/create/success?projectId=${projectId}`);
     } catch (error) {
       console.error("Error in project creation flow:", error);
+      toast.error(getErrorMessage(error, "Error while creating project"));
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -236,10 +236,8 @@ export function StepTechCategoriesForm() {
   };
 
   const onSubmit = handleSubmit((data) => {
-    // Store the form data for confirmation
     setPendingFormData(data);
 
-    // Update the store with form data
     updateProjectInfo({
       projectTechStacks: data.projectTechStacks,
       projectCategories: data.projectCategories,

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getGitOpenIssueDetails } from "../services/git-open-issue-details.service";
+import { getProjectIssue } from "../services/project-issue.service";
 import type { Issue } from "../types/project.type";
 
 export const useOpenIssueDetail = (
@@ -10,7 +10,8 @@ export const useOpenIssueDetail = (
 ) => {
   return useQuery<Issue>({
     queryKey: ["open-issue-detail", projectId, issueNumber],
-    queryFn: () => getGitOpenIssueDetails(projectId, issueNumber),
+    queryFn: ({ signal }) =>
+      getProjectIssue(projectId, issueNumber, { signal }),
     enabled: !!projectId && !!issueNumber && enabled,
   });
 };

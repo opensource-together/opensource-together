@@ -1,4 +1,4 @@
-import { getProjectDetails } from "@/features/projects/services/project.service";
+import { getProject } from "@/features/projects/services/project.service";
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
 import { ProjectImageMetadata } from "@/shared/components/seo/image-metadata/projects/project/project-image-metadata";
 
@@ -18,7 +18,7 @@ export default async function Image({
   try {
     const { projectId } = await params;
 
-    const project = await getProjectDetails(projectId);
+    const project = await getProject(projectId);
 
     const imageResponse = await Generator({
       children: (

@@ -19,7 +19,7 @@ export default function MyProjectRow({
 }: {
   project: Project;
   onTogglePublish: (project: Project) => void;
-  onDelete: (project: { id: string; title: string }) => void;
+  onDelete: (project: Project) => void;
   isTogglingPublished: boolean;
   togglingProjectId: string | null;
 }) {
