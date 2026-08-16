@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import { FRONTEND_URL } from "@/config/config";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
@@ -19,6 +20,7 @@ import {
 import { Modal } from "@/shared/components/ui/modal";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { useFeatureRequest } from "@/shared/hooks/use-feature-request.hook";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 import {
   type FeatureRequestFormData,
   featureRequestSchema,
@@ -29,7 +31,7 @@ export function FeatureRequestButton() {
   const pathname = usePathname();
 
   const { currentUser } = useAuth();
-  const { submitFeatureRequest, isSubmitting } = useFeatureRequest();
+  const featureRequestMutation = useFeatureRequest();
 
   const form = useForm<FeatureRequestFormData>({
     resolver: zodResolver(featureRequestSchema),
@@ -47,21 +49,25 @@ export function FeatureRequestButton() {
     return null;
   }
 
-  const handleSubmit = (data: FeatureRequestFormData) => {
+  const handleSubmit = async (data: FeatureRequestFormData) => {
     const userInfo = {
       userName: currentUser.name,
       userProfileUrl: `${FRONTEND_URL}/profile/${currentUser.id}`,
     };
 
-    submitFeatureRequest(
-      { request: data.request, userInfo },
-      {
-        onSuccess: () => {
-          form.reset();
-          setIsOpen(false);
-        },
-      }
-    );
+    try {
+      await featureRequestMutation.mutateAsync({
+        request: data.request,
+        userInfo,
+      });
+      toast.success("Thank you! Your request has been sent successfully");
+      form.reset();
+      setIsOpen(false);
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "An error occurred. Please try again.")
+      );
+    }
   };
 
   const handleCancel = () => {
@@ -84,11 +90,11 @@ export function FeatureRequestButton() {
         onOpenChange={setIsOpen}
         title="Request Feature"
         description="Have an idea to improve OpenSource Together?"
-        confirmText={isSubmitting ? "Sending..." : "Send"}
+        confirmText={featureRequestMutation.isPending ? "Sending..." : "Send"}
         cancelText="Cancel"
         onConfirm={form.handleSubmit(handleSubmit)}
         onCancel={handleCancel}
-        isLoading={isSubmitting}
+        isLoading={featureRequestMutation.isPending}
         size="lg"
       >
         <Form {...form}>
@@ -104,7 +110,7 @@ export function FeatureRequestButton() {
                       {...field}
                       rows={10}
                       className="min-h-[200px] resize-none"
-                      disabled={isSubmitting}
+                      disabled={featureRequestMutation.isPending}
                     />
                   </FormControl>
                   <FormMessage />

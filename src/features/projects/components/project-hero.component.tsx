@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { useCacheBustingImage } from "../../../shared/hooks/use-cache-busting-image.hook";
 import { useToggleProjectPublished } from "../hooks/use-projects.hook";
@@ -13,8 +15,7 @@ import { ClaimProjectButton } from "./claim-project-button.component";
 
 export function ProjectMobileHero({ project }: ProjectHeroProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
-  const { toggleProjectPublished, isTogglingPublished } =
-    useToggleProjectPublished();
+  const toggleProjectPublishedMutation = useToggleProjectPublished();
 
   const {
     id = "",
@@ -28,6 +29,19 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
   } = project;
 
   const logoUrlWithCacheBusting = useCacheBustingImage(logoUrl, updatedAt);
+
+  const handlePublish = async () => {
+    try {
+      await toggleProjectPublishedMutation.mutateAsync({
+        project,
+        published: true,
+      });
+      toast.success("Project published");
+      setPublishDialogOpen(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to publish project"));
+    }
+  };
 
   return (
     <div className="flex flex-col bg-white">
@@ -83,10 +97,8 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
               onOpenChange={setPublishDialogOpen}
               title="Publish project?"
               description="Once published, your project becomes visible to everyone. You can unpublish later."
-              isLoading={isTogglingPublished}
-              onConfirm={() =>
-                toggleProjectPublished({ project, published: true })
-              }
+              isLoading={toggleProjectPublishedMutation.isPending}
+              onConfirm={() => void handlePublish()}
               onCancel={() => setPublishDialogOpen(false)}
               confirmText="Publish"
             />
@@ -106,8 +118,7 @@ export default function ProjectHero({
   hideHeader = false,
 }: ProjectHeroProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
-  const { toggleProjectPublished, isTogglingPublished } =
-    useToggleProjectPublished();
+  const toggleProjectPublishedMutation = useToggleProjectPublished();
   const {
     id = "",
     title = "",
@@ -120,6 +131,19 @@ export default function ProjectHero({
   } = project;
 
   const logoUrlWithCacheBusting = useCacheBustingImage(logoUrl, updatedAt);
+
+  const handlePublish = async () => {
+    try {
+      await toggleProjectPublishedMutation.mutateAsync({
+        project,
+        published: true,
+      });
+      toast.success("Project published");
+      setPublishDialogOpen(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to publish project"));
+    }
+  };
 
   return (
     <div className="flex flex-col bg-white">
@@ -178,10 +202,8 @@ export default function ProjectHero({
                     onOpenChange={setPublishDialogOpen}
                     title="Publish project?"
                     description="Once published, your project becomes visible to everyone. You can unpublish later."
-                    isLoading={isTogglingPublished}
-                    onConfirm={() =>
-                      toggleProjectPublished({ project, published: true })
-                    }
+                    isLoading={toggleProjectPublishedMutation.isPending}
+                    onConfirm={() => void handlePublish()}
                     onCancel={() => setPublishDialogOpen(false)}
                     confirmText="Publish"
                   />

@@ -2,9 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import StepperHeaderComponent from "@/features/projects/components/stepper/stepper-header.component";
 import { StepperWrapper } from "@/features/projects/components/stepper/stepper-wrapper.component";
 import { Modal } from "@/shared/components/ui/modal";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
 import {
@@ -21,8 +23,7 @@ export default function StepSuccessView() {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
 
   const { data: project } = useProject(projectId);
-  const { toggleProjectPublished, isTogglingPublished } =
-    useToggleProjectPublished();
+  const toggleProjectPublishedMutation = useToggleProjectPublished();
 
   useEffect(() => {
     resetForm();
@@ -37,17 +38,19 @@ export default function StepSuccessView() {
     setPublishDialogOpen(true);
   };
 
-  const handleConfirmPublish = () => {
-    if (project) {
-      toggleProjectPublished(
-        { project, published: true },
-        {
-          onSuccess: () => {
-            setPublishDialogOpen(false);
-            router.replace(`/projects/${projectId}`);
-          },
-        }
-      );
+  const handleConfirmPublish = async () => {
+    if (!project) return;
+
+    try {
+      await toggleProjectPublishedMutation.mutateAsync({
+        project,
+        published: true,
+      });
+      toast.success("Project published");
+      setPublishDialogOpen(false);
+      router.replace(`/projects/${projectId}`);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to publish project"));
     }
   };
 
@@ -74,8 +77,8 @@ export default function StepSuccessView() {
         onOpenChange={setPublishDialogOpen}
         title="Publish project?"
         description="Once published, your project becomes visible to everyone. You can unpublish later."
-        isLoading={isTogglingPublished}
-        onConfirm={handleConfirmPublish}
+        isLoading={toggleProjectPublishedMutation.isPending}
+        onConfirm={() => void handleConfirmPublish()}
         onCancel={handleCancelPublish}
         confirmText="Publish"
       />

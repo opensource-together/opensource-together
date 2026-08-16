@@ -1,8 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { HiInformationCircle } from "react-icons/hi2";
+import { toast } from "sonner";
 import { useOnboarding } from "@/features/auth/hooks/use-onboarding.hook";
 import { Button } from "@/shared/components/ui/button";
 import { Combobox } from "@/shared/components/ui/combobox";
@@ -18,6 +20,7 @@ import {
 import { Input } from "@/shared/components/ui/input";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import {
   type OnboardingSchema,
@@ -25,6 +28,7 @@ import {
 } from "../validations/onboarding.schema";
 
 export default function OnboardingForm() {
+  const router = useRouter();
   const form = useForm<OnboardingSchema>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
@@ -37,12 +41,23 @@ export default function OnboardingForm() {
 
   const { techStackOptions, isLoading: techStacksLoading } = useTechStack();
   const { categoryOptions, isLoading: categoriesLoading } = useCategories();
-  const { completeOnboarding, isCompletingOnboarding } = useOnboarding();
+  const completeOnboardingMutation = useOnboarding();
 
   const { control, handleSubmit } = form;
 
   const onSubmit = handleSubmit(async (values) => {
-    completeOnboarding(values);
+    try {
+      await completeOnboardingMutation.mutateAsync(values);
+      toast.success("Profile completed. Welcome to OpenSource Together 🎉!");
+      router.push("/");
+    } catch (error) {
+      toast.error(
+        getErrorMessage(
+          error,
+          "Failed to complete onboarding. Please try again."
+        )
+      );
+    }
   });
 
   return (
@@ -151,9 +166,11 @@ export default function OnboardingForm() {
                 type="submit"
                 size="lg"
                 className="w-full"
-                disabled={isCompletingOnboarding}
+                disabled={completeOnboardingMutation.isPending}
               >
-                Continue
+                {completeOnboardingMutation.isPending
+                  ? "Completing..."
+                  : "Continue"}
               </Button>
             </form>
           </Form>

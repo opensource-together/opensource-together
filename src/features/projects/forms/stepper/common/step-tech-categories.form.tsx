@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
 import {
   useCreateProject,
@@ -23,6 +24,7 @@ import {
 import { SocialLinksFormFields } from "@/shared/components/ui/social-links-form-fields";
 import { useCategories } from "@/shared/hooks/use-category.hook";
 import { useTechStack } from "@/shared/hooks/use-tech-stack.hook";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { ProjectTechCategoriesPreview } from "../../../components/stepper/project-tech-categories-preview.component";
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
@@ -38,9 +40,10 @@ export function StepTechCategoriesForm() {
   const [pendingFormData, setPendingFormData] =
     useState<StepTechCategoriesFormData | null>(null);
 
-  const { createProjectAsync, isCreating } = useCreateProject();
-  const { updateProjectLogo } = useUpdateProjectLogo();
-  const { updateProjectCover } = useUpdateProjectCover();
+  const createProjectMutation = useCreateProject();
+  const updateProjectLogoMutation = useUpdateProjectLogo();
+  const updateProjectCoverMutation = useUpdateProjectCover();
+  const [isCreating, setIsCreating] = useState(false);
 
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const {
@@ -146,7 +149,7 @@ export function StepTechCategoriesForm() {
 
   // Helper function to upload project logo
   const uploadProjectLogo = (projectId: string, logoFile: File) => {
-    return updateProjectLogo({
+    return updateProjectLogoMutation.mutateAsync({
       projectId,
       logoFile,
     });
@@ -155,7 +158,7 @@ export function StepTechCategoriesForm() {
   // Helper function to upload project cover images
   const uploadProjectCovers = async (projectId: string, imageFiles: File[]) => {
     const uploadPromises = imageFiles.map((file) =>
-      updateProjectCover({
+      updateProjectCoverMutation.mutateAsync({
         projectId,
         coverFile: file,
       })
@@ -177,7 +180,7 @@ export function StepTechCategoriesForm() {
   const handleConfirmCreation = async () => {
     if (!pendingFormData) return;
 
-    setShowConfirmation(false);
+    setIsCreating(true);
 
     // Prepare project data
     const projectData: ProjectSchema = {
@@ -209,7 +212,8 @@ export function StepTechCategoriesForm() {
 
     try {
       // Create project
-      const createdProject = await createProjectAsync(projectData);
+      const createdProject =
+        await createProjectMutation.mutateAsync(projectData);
       const projectId = getProjectId(createdProject);
 
       if (!projectId) {
@@ -225,8 +229,15 @@ export function StepTechCategoriesForm() {
       if (coverFiles.length > 0) {
         await uploadProjectCovers(projectId, coverFiles);
       }
+
+      toast.success("Project created successfully");
+      setShowConfirmation(false);
+      router.push(`/projects/create/success?projectId=${projectId}`);
     } catch (error) {
       console.error("Error in project creation flow:", error);
+      toast.error(getErrorMessage(error, "Error while creating project"));
+    } finally {
+      setIsCreating(false);
     }
   };
 

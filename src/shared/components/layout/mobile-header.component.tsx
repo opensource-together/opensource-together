@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiLogout } from "react-icons/hi";
 import {
@@ -13,6 +13,7 @@ import {
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
+import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import SearchCommand from "@/features/projects/components/search-command.component";
 import { Avatar } from "@/shared/components/ui/avatar";
@@ -30,6 +31,7 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 type MobileNavLink = {
   label: string;
@@ -52,13 +54,19 @@ const DEFAULT_LINKS: MobileNavLink[] = [
 
 export function MobileHeader({ links }: MobileHeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { isAuthenticated, isLoading, currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const resolvedLinks = links ?? (isAuthenticated ? DEFAULT_LINKS : []);
 
-  const handleLogout = () => {
-    logout();
-    setIsOpen(false);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsOpen(false);
+      router.push("/");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to sign out"));
+    }
   };
 
   const handleLinkClick = () => {
@@ -214,7 +222,7 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                           </DropdownMenuItem>
                         </Link>
                         <DropdownMenuItem
-                          onClick={handleLogout}
+                          onClick={() => void handleLogout()}
                           variant="destructive"
                         >
                           <HiLogout className="size-4" />

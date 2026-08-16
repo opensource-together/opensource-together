@@ -1,15 +1,10 @@
 import {
-  type MutateOptions,
   useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
-
-import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
-import { getQueryClient } from "@/shared/lib/query-client";
 
 import {
   bookmarkProject,
@@ -95,63 +90,45 @@ export function useProject(projectId: string) {
 
 /**
  * Handles the creation of a new project.
- *
- * @returns An object containing:
- * - createProjectAsync: function to trigger the project creation
- * - isCreating: boolean indicating if the creation is in progress
- * - isCreateError: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export function useCreateProject() {
-  const router = useRouter();
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: (data: ProjectSchema) => createProject(data),
-    loadingMessage: "Creating project in progress...",
-    successMessage: "Project created successfully",
-    errorMessage: "Error while creating project",
-    options: {
-      onSuccess: (project) => {
-        const ownerId = project.owner?.id;
+    onSuccess: async (project) => {
+      const ownerId = project.owner?.id;
 
+      await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["user", "me", "projects"],
-        });
-
-        if (ownerId) {
-          queryClient.invalidateQueries({
-            queryKey: ["user", ownerId, "projects"],
-          });
-        }
-
-        queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
-        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-        queryClient.invalidateQueries({ queryKey: ["project", project.id] });
-        router.push(`/projects/create/success?projectId=${project.id}`);
-      },
+        }),
+        ...(ownerId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: ["user", ownerId, "projects"],
+              }),
+            ]
+          : []),
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false }),
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["project", project.id],
+        }),
+      ]);
     },
   });
-
-  return {
-    createProjectAsync: mutation.mutateAsync,
-    isCreating: mutation.isPending,
-    isCreateError: mutation.isError,
-  };
 }
 
 /**
  * Handles the update of an existing project.
- *
- * @returns An object containing:
- * - updateProject: function to trigger the project update
- * - isUpdating: boolean indicating if the update is in progress
- * - isUpdateError: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export function useUpdateProject() {
-  const router = useRouter();
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: ({
       id,
       updateData,
@@ -159,86 +136,58 @@ export function useUpdateProject() {
       id: string;
       updateData: UpdateProjectData;
     }) => updateProject(id, updateData),
-    loadingMessage: "Updating project in progress...",
-    successMessage: "Project updated successfully",
-    errorMessage: "Error while updating project",
-    options: {
-      onSuccess: (project, variables) => {
-        const targetId = project?.publicId || variables?.id;
-        const ownerId = project?.owner?.id;
+    onSuccess: async (project, variables) => {
+      const targetId = project?.publicId || variables.id;
+      const ownerId = project?.owner?.id;
 
-        if (targetId) {
-          queryClient.invalidateQueries({
-            queryKey: ["user", "me", "projects"],
-          });
-
-          if (ownerId) {
-            queryClient.invalidateQueries({
-              queryKey: ["user", ownerId, "projects"],
-            });
-          }
-
-          queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
-          queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["project", targetId] });
-          router.push(`/projects/${targetId}`);
-        }
-      },
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "projects"],
+        }),
+        ...(ownerId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: ["user", ownerId, "projects"],
+              }),
+            ]
+          : []),
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false }),
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
+        queryClient.invalidateQueries({ queryKey: ["project", targetId] }),
+      ]);
     },
   });
-
-  return {
-    updateProject: mutation.mutate,
-    isUpdating: mutation.isPending,
-    isUpdateError: mutation.isError,
-  };
 }
 
 /**
  * Handles the deletion of a project.
- *
- * @returns An object containing:
- * - deleteProject: function to trigger the project deletion
- * - isDeleting: boolean indicating if the deletion is in progress
- * - isDeleteError: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export function useDeleteProject() {
-  const router = useRouter();
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: (projectId: string) => deleteProject(projectId),
-    loadingMessage: "Deleting project in progress...",
-    successMessage: "Project deleted successfully",
-    errorMessage: "Error while deleting project",
-    options: {
-      onSuccess: (_, projectId) => {
+    onSuccess: async (_, projectId) => {
+      await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["user", "me", "projects"],
-        });
-
-        queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
-        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-        router.push("/dashboard/my-projects");
-      },
+        }),
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false }),
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] }),
+      ]);
     },
   });
-
-  return {
-    deleteProject: mutation.mutate,
-    isDeleting: mutation.isPending,
-    isDeleteError: mutation.isError,
-  };
 }
 
 /**
  * Toggles the published state of a project.
  */
 export function useToggleProjectPublished() {
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: ({
       project,
       published,
@@ -246,74 +195,52 @@ export function useToggleProjectPublished() {
       project: Project;
       published: boolean;
     }) => {
+      if (published) {
+        const validation = validateProjectForPublishing(project);
+        if (!validation.isValid) {
+          throw new Error(formatMissingFieldsMessage(validation.missingFields));
+        }
+      }
+
       return updateProjectPublishedStatus(project.id || "", project, published);
     },
-    loadingMessage: "Updating project visibility...",
-    successMessage: "Project visibility updated",
-    errorMessage: "Failed to update project visibility",
-    options: {
-      onSuccess: (_, variables) => {
-        const targetId = variables.project.id || "";
-        const ownerId = variables.project.owner?.id;
+    onSuccess: async (_, variables) => {
+      const targetId = variables.project.id || "";
+      const ownerId = variables.project.owner?.id;
 
-        if (targetId) {
-          queryClient.invalidateQueries({ queryKey: ["project", targetId] });
-        }
-
+      await Promise.all([
+        ...(targetId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: ["project", targetId],
+              }),
+            ]
+          : []),
         queryClient.invalidateQueries({
           queryKey: ["user", "me", "projects"],
-        });
-
-        if (ownerId) {
-          queryClient.invalidateQueries({
-            queryKey: ["user", ownerId, "projects"],
-          });
-        }
-
-        queryClient.invalidateQueries({ queryKey: ["user"], exact: false });
-        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-      },
+        }),
+        ...(ownerId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: ["user", ownerId, "projects"],
+              }),
+            ]
+          : []),
+        queryClient.invalidateQueries({ queryKey: ["user"], exact: false }),
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
+      ]);
     },
   });
-
-  const toggleProjectPublished = (
-    variables: { project: Project; published: boolean },
-    options?: MutateOptions<
-      Project,
-      Error,
-      { project: Project; published: boolean }
-    >
-  ) => {
-    if (variables.published) {
-      const validation = validateProjectForPublishing(variables.project);
-      if (!validation.isValid) {
-        toast.error(formatMissingFieldsMessage(validation.missingFields));
-        return;
-      }
-    }
-
-    mutation.mutate(variables, options);
-  };
-
-  return {
-    toggleProjectPublished,
-    toggleProjectPublishedAsync: mutation.mutateAsync,
-    isTogglingPublished: mutation.isPending,
-  };
 }
 
 /**
  * Handles the update of the logo of a project.
- *
- * @returns An object containing:
- * - updateProjectLogo: function to trigger the project logo update
- * - isUpdatingLogo: boolean indicating if the update is in progress
- * - isUpdateErrorLogo: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export function useUpdateProjectLogo() {
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: ({
       projectId,
       logoFile,
@@ -322,32 +249,28 @@ export function useUpdateProjectLogo() {
       logoFile: File;
     }) => updateProjectLogo(projectId, logoFile),
 
-    onSuccess: (projectId) => {
-      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "me", "projects"],
-      });
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        }),
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["user", "me", "projects"],
+        }),
+      ]);
     },
   });
-
-  return {
-    updateProjectLogo: mutation.mutate,
-    isUpdateErrorLogo: mutation.isError,
-  };
 }
 
 /**
  * Handles the update of the cover image of a project.
- *
- * @returns An object containing:
- * - updateProjectCover: function to trigger the project cover update
- * - isUpdateErrorCover: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export function useUpdateProjectCover() {
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: ({
       projectId,
       coverFile,
@@ -355,16 +278,15 @@ export function useUpdateProjectCover() {
       projectId: string;
       coverFile: File;
     }) => updateProjectCover(projectId, coverFile),
-    onSuccess: (_, projectId) => {
-      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["project", variables.projectId],
+        }),
+      ]);
     },
   });
-
-  return {
-    updateProjectCover: mutation.mutate,
-    isUpdateErrorCover: mutation.isError,
-  };
 }
 
 interface UseProjectBookmarkOptions {
@@ -376,73 +298,68 @@ export function useProjectBookmark({
   projectId,
   initialIsBookmarked = false,
 }: UseProjectBookmarkOptions) {
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
   const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
 
   useEffect(() => {
     setIsBookmarked(initialIsBookmarked);
   }, [initialIsBookmarked]);
 
-  const bookmarkMutation = useToastMutation({
+  const bookmarkMutation = useMutation({
     mutationFn: (projectId: string) => bookmarkProject(projectId),
-    loadingMessage: "Adding bookmark...",
-    successMessage: "Project bookmarked",
-    errorMessage: "Failed to bookmark project",
-    options: {
-      onSuccess: () => {
-        setIsBookmarked(true);
-        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+    onSuccess: async () => {
+      setIsBookmarked(true);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] }),
         queryClient.invalidateQueries({
           queryKey: ["user", "me", "bookmarks"],
-        });
-      },
+        }),
+      ]);
     },
   });
 
-  const removeBookmarkMutation = useToastMutation({
+  const removeBookmarkMutation = useMutation({
     mutationFn: (projectId: string) => removeProjectBookmark(projectId),
-    loadingMessage: "Removing bookmark...",
-    successMessage: "Bookmark removed",
-    errorMessage: "Failed to remove bookmark",
-    options: {
-      onSuccess: () => {
-        setIsBookmarked(false);
-        queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+    onSuccess: async () => {
+      setIsBookmarked(false);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["project", projectId] }),
         queryClient.invalidateQueries({
           queryKey: ["user", "me", "bookmarks"],
-        });
-      },
+        }),
+      ]);
     },
   });
 
-  const { mutate: addBookmarkMutate, isPending: isAddingBookmark } =
-    bookmarkMutation;
-  const { mutate: removeBookmarkMutate, isPending: isRemovingBookmark } =
-    removeBookmarkMutation;
-
-  const toggleBookmark = useCallback(() => {
-    if (!projectId || isAddingBookmark || isRemovingBookmark) {
-      return;
+  const toggleBookmarkAsync = useCallback(async () => {
+    if (
+      !projectId ||
+      bookmarkMutation.isPending ||
+      removeBookmarkMutation.isPending
+    ) {
+      return false;
     }
 
     if (isBookmarked) {
-      removeBookmarkMutate(projectId);
+      await removeBookmarkMutation.mutateAsync(projectId);
     } else {
-      addBookmarkMutate(projectId);
+      await bookmarkMutation.mutateAsync(projectId);
     }
+    return true;
   }, [
-    addBookmarkMutate,
+    bookmarkMutation.isPending,
+    bookmarkMutation.mutateAsync,
     isBookmarked,
-    isAddingBookmark,
     projectId,
-    removeBookmarkMutate,
-    isRemovingBookmark,
+    removeBookmarkMutation.isPending,
+    removeBookmarkMutation.mutateAsync,
   ]);
 
-  const isBookmarking = isAddingBookmark || isRemovingBookmark;
+  const isBookmarking =
+    bookmarkMutation.isPending || removeBookmarkMutation.isPending;
 
   return {
-    toggleBookmark,
+    toggleBookmarkAsync,
     isBookmarked,
     isBookmarking,
   };
@@ -450,15 +367,12 @@ export function useProjectBookmark({
 
 /**
  * Handles deletion of a specific project cover image by URL.
- *
- * @returns An object containing:
- * - deleteProjectImage: function to trigger the project cover image deletion
- * - isDeleteProjectImageError: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export function useDeleteProjectImage() {
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  return useMutation({
     mutationFn: ({
       projectId,
       imageUrl,
@@ -466,52 +380,35 @@ export function useDeleteProjectImage() {
       projectId: string;
       imageUrl: string;
     }) => deleteProjectImage(projectId, imageUrl),
-    onSuccess: (_project, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
-      if (variables?.projectId) {
+    onSuccess: async (_project, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
         queryClient.invalidateQueries({
           queryKey: ["project", variables.projectId],
-        });
-      }
+        }),
+      ]);
     },
   });
-
-  return {
-    deleteProjectImage: mutation.mutate,
-    isDeleteProjectImageError: mutation.isError,
-  };
 }
 
 /**
  * Handles claiming project ownership.
  */
 export function useClaimProject(projectId: string) {
-  const queryClient = getQueryClient();
+  const queryClient = useQueryClient();
 
-  const mutation = useToastMutation<Project, Error, void>({
+  return useMutation<Project, Error, void>({
     mutationFn: () => claimProject(projectId),
-    loadingMessage: "Claiming project...",
-    successMessage: "Project claimed successfully",
-    errorMessage: "Failed to claim project",
-    options: {
-      onSuccess: (project) => {
-        const targetId = project?.publicId || projectId;
-        if (targetId) {
-          queryClient.setQueryData(["project", targetId], project);
-          queryClient.invalidateQueries({ queryKey: ["project", targetId] });
-        }
-        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] });
+    onSuccess: async (project) => {
+      const targetId = project?.publicId || projectId;
+      queryClient.setQueryData(["project", targetId], project);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["project", targetId] }),
+        queryClient.invalidateQueries({ queryKey: ["projects-infinite"] }),
         queryClient.invalidateQueries({
           queryKey: ["user", "me", "projects"],
-        });
-      },
+        }),
+      ]);
     },
   });
-
-  return {
-    claimProject: mutation.mutate,
-    claimProjectAsync: mutation.mutateAsync,
-    isClaiming: mutation.isPending,
-    isClaimError: mutation.isError,
-  };
 }

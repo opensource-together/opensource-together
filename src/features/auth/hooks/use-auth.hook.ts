@@ -2,8 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
-
 import {
   deleteAccount,
   getCurrentUser,
@@ -48,7 +46,7 @@ export default function useAuth() {
     mutationFn: async (provider) => await signInWithProvider(provider),
   });
 
-  const linkSocialAccountMutation = useToastMutation<
+  const linkSocialAccountMutation = useMutation<
     unknown,
     Error,
     string | { provider: string; callbackURL?: string }
@@ -59,51 +57,29 @@ export default function useAuth() {
       }
       return await linkSocialAccount(arg.provider, arg.callbackURL);
     },
-    loadingMessage: "Linking social account...",
-    successMessage: "Social account linked successfully!",
-    errorMessage: "An error occurred while linking social account",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
-      },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user", "me"] });
     },
   });
 
-  const unlinkSocialAccountMutation = useToastMutation<unknown, Error, string>({
+  const unlinkSocialAccountMutation = useMutation<unknown, Error, string>({
     mutationFn: async (providerId) => await unlinkSocialAccount(providerId),
-    loadingMessage: "Unlinking social account...",
-    successMessage: "Social account unlinked successfully",
-    errorMessage: "An error occurred while unlinking social account",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
-      },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user", "me"] });
     },
   });
 
-  const logoutMutation = useToastMutation({
+  const logoutMutation = useMutation({
     mutationFn: logout,
-    loadingMessage: "Logging out...",
-    successMessage: "Logged out successfully!",
-    errorMessage: "An error occurred while logging out",
-    options: {
-      onSuccess: () => {
-        queryClient.setQueryData(["user", "me"], null);
-        router.push("/");
-      },
+    onSuccess: () => {
+      queryClient.setQueryData(["user", "me"], null);
     },
   });
 
-  const deleteAccountMutation = useToastMutation({
+  const deleteAccountMutation = useMutation({
     mutationFn: deleteAccount,
-    loadingMessage: "Deleting account...",
-    successMessage: "Your account has been deleted.",
-    errorMessage: "Failed to delete your account",
-    options: {
-      onSuccess: () => {
-        queryClient.clear();
-        router.push("/");
-      },
+    onSuccess: () => {
+      queryClient.clear();
     },
   });
 
@@ -114,10 +90,10 @@ export default function useAuth() {
     isError,
 
     signInWithProvider: signInMutation.mutate,
-    linkSocialAccount: linkSocialAccountMutation.mutate,
-    unlinkSocialAccount: unlinkSocialAccountMutation.mutate,
-    logout: logoutMutation.mutate,
-    deleteAccount: deleteAccountMutation.mutate,
+    linkSocialAccount: linkSocialAccountMutation.mutateAsync,
+    unlinkSocialAccount: unlinkSocialAccountMutation.mutateAsync,
+    logout: logoutMutation.mutateAsync,
+    deleteAccount: deleteAccountMutation.mutateAsync,
 
     isSigningIn: signInMutation.isPending,
     isLinkingSocialAccount: linkSocialAccountMutation.isPending,

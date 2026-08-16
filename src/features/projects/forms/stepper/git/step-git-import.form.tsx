@@ -2,10 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useInfiniteGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 import type { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 import CustomScrollbar from "../../../components/stepper/custom-scrollbar.component";
@@ -85,18 +87,24 @@ export default function StepGitImportForm({
   };
 
   if (isError) {
-    const handleLinkAccount = () => {
-      linkSocialAccount({
-        provider,
-        callbackURL: `${window.location.origin}${pathname}`,
-      });
+    const handleLinkAccount = async () => {
+      try {
+        await linkSocialAccount({
+          provider,
+          callbackURL: `${window.location.origin}${pathname}`,
+        });
+      } catch (error) {
+        toast.error(
+          getErrorMessage(error, `Unable to link your ${provider} account`)
+        );
+      }
     };
 
     return (
       <ErrorState
         title="Error loading repositories"
         message={`We couldn't load your ${provider} repositories. Please link your ${provider} account to continue.`}
-        onRetry={handleLinkAccount}
+        onRetry={() => void handleLinkAccount()}
         retryText={
           isLinkingSocialAccount
             ? `Linking ${provider}...`

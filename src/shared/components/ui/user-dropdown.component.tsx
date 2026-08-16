@@ -9,6 +9,7 @@ import {
   RiSettingsLine,
   RiUser3Line,
 } from "react-icons/ri";
+import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Avatar } from "@/shared/components/ui/avatar";
 import {
@@ -18,14 +19,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 export default function UserDropdown() {
   const { currentUser, logout } = useAuth();
   const router = useRouter();
 
-  const handleLogout = () => {
-    logout();
-    router.push("/");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to sign out"));
+    }
   };
 
   return (
@@ -81,7 +87,10 @@ export default function UserDropdown() {
             Settings
           </DropdownMenuItem>
         </Link>
-        <DropdownMenuItem onClick={handleLogout} variant="destructive">
+        <DropdownMenuItem
+          onClick={() => void handleLogout()}
+          variant="destructive"
+        >
           <RiLogoutBoxLine className="size-4 text-primary" />
           Sign out
         </DropdownMenuItem>

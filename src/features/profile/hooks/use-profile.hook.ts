@@ -1,7 +1,5 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { useToastMutation } from "@/shared/hooks/use-toast-mutation";
 import type { PaginationParams } from "@/shared/types/pagination.type";
 
 import {
@@ -32,17 +30,12 @@ export const useProfile = (id: string) => {
 
 /**
  * Hook to update the profile of the current user.
- *
- * @returns An object containing:
- * - updateProfile: function to trigger the profile update
- * - isUpdating: boolean indicating if the update is in progress
- * - isUpdateError: boolean indicating if an error occurred
+ * Returns the standard TanStack Query mutation result.
  */
 export const useProfileUpdate = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: ({
       id,
       updateData,
@@ -50,89 +43,53 @@ export const useProfileUpdate = () => {
       id: string;
       updateData: ProfileSchema;
     }) => updateProfile(id, updateData),
-    loadingMessage: "Updating your profile...",
-    successMessage: "Profil updated with success",
-    errorMessage: "Error updating your profile",
-    options: {
-      onSuccess: (profileId) => {
-        queryClient.invalidateQueries({ queryKey: ["user", profileId] });
-        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
-        router.push("/profile/me");
-      },
+    onSuccess: async (profile) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["user", profile.id] }),
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] }),
+      ]);
     },
   });
-
-  return {
-    updateProfile: mutation.mutate,
-    isUpdating: mutation.isPending,
-    isUpdateError: mutation.isError,
-  };
 };
 
 /**
- * * Hook to update the logo of a user by their ID.
+ * Hook to update the logo of a user by their ID.
  *
  * @param id - The ID of the user to update.
- * @param file - The file to update the logo with.
- * @returns An object containing:
- * - updateProfileLogo: function to trigger the logo update
- * - isUpdatingLogo: boolean indicating if the update is in progress
- * - isUpdateErrorLogo: boolean indicating if an error occurred
+ * @returns The standard TanStack Query mutation result.
  */
 export const useProfileLogoUpdate = (id: string) => {
   const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: (file: File) => updateProfileLogo(id, file),
-    loadingMessage: "Updating your avatar...",
-    successMessage: "Avatar updated successfully",
-    errorMessage: "Error updating your avatar",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user", id] });
-        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
-      },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["user", id] }),
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] }),
+      ]);
     },
   });
-
-  return {
-    updateProfileLogo: mutation.mutate,
-    isUpdatingLogo: mutation.isPending,
-    isUpdateErrorLogo: mutation.isError,
-  };
 };
 
 /**
  * Hook to update the banner of a user by their ID.
  *
  * @param id - The ID of the user to update.
- * @param file - The file to update the banner with.
- * @returns An object containing:
- * - updateProfileBanner: function to trigger the banner update
- * - isUpdatingBanner: boolean indicating if the update is in progress
- * - isUpdateErrorBanner: boolean indicating if an error occurred
+ * @returns The standard TanStack Query mutation result.
  */
 export const useProfileBannerUpdate = (id: string) => {
   const queryClient = useQueryClient();
 
-  const mutation = useToastMutation({
+  return useMutation({
     mutationFn: (file: File) => updateProfileBanner(id, file),
-    loadingMessage: "Updating your banner...",
-    successMessage: "Banner updated successfully",
-    errorMessage: "Error updating your banner",
-    options: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["user", id] });
-        queryClient.invalidateQueries({ queryKey: ["user", "me"] });
-      },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["user", id] }),
+        queryClient.invalidateQueries({ queryKey: ["user", "me"] }),
+      ]);
     },
   });
-
-  return {
-    updateProfileBanner: mutation.mutate,
-    isUpdatingBanner: mutation.isPending,
-    isUpdateErrorBanner: mutation.isError,
-  };
 };
 
 /**

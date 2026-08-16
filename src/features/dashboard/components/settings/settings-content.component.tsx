@@ -1,16 +1,20 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { RiGithubFill, RiGitlabFill } from "react-icons/ri";
+import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { ErrorState } from "@/shared/components/ui/error-state";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 import { formatExternalUrl } from "@/shared/lib/utils/format-external-url";
 
 import { SettingsSkeleton } from "../skeletons/settings-skeletons.component";
 
 export function SettingsContent() {
+  const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [unlinkProviderId, setUnlinkProviderId] = useState<string | null>(null);
   const {
@@ -43,18 +47,48 @@ export function SettingsContent() {
     );
   }
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to sign out"));
+    }
   };
 
-  const handleConfirmDelete = () => {
-    deleteAccount();
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteAccount();
+      toast.success("Your account has been deleted");
+      setIsDeleteDialogOpen(false);
+      router.push("/");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to delete your account"));
+    }
   };
 
-  const handleConfirmUnlink = () => {
-    if (unlinkProviderId) {
-      unlinkSocialAccount(unlinkProviderId);
+  const handleConfirmUnlink = async () => {
+    if (!unlinkProviderId) return;
+
+    try {
+      await unlinkSocialAccount(unlinkProviderId);
+      toast.success("Social account unlinked successfully");
       setUnlinkProviderId(null);
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "An error occurred while unlinking the account")
+      );
+    }
+  };
+
+  const handleLinkAccount = async (providerId: string) => {
+    try {
+      await linkSocialAccount(providerId);
+      toast.success("Social account linked successfully");
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "An error occurred while linking the account")
+      );
     }
   };
 
@@ -139,7 +173,7 @@ export function SettingsContent() {
                       variant="outline"
                       size="sm"
                       disabled={isLinkingSocialAccount}
-                      onClick={() => linkSocialAccount(provider.id)}
+                      onClick={() => void handleLinkAccount(provider.id)}
                     >
                       {isLinkingSocialAccount ? "Linking..." : "Link"}
                     </Button>
@@ -168,7 +202,7 @@ export function SettingsContent() {
               title={`Unlink ${providers.find((p) => p.id === unlinkProviderId)?.name}?`}
               description={`Are you sure you want to unlink your ${providers.find((p) => p.id === unlinkProviderId)?.name} account? You will no longer be able to sign in using this provider.`}
               isLoading={isUnlinkingSocialAccount}
-              onConfirm={handleConfirmUnlink}
+              onConfirm={() => void handleConfirmUnlink()}
               onCancel={() => setUnlinkProviderId(null)}
               confirmText={
                 isUnlinkingSocialAccount ? "Unlinking..." : "Confirm unlink"
@@ -188,7 +222,7 @@ export function SettingsContent() {
           <div className="flex gap-3">
             <Button
               variant="default"
-              onClick={handleLogout}
+              onClick={() => void handleLogout()}
               disabled={isLoggingOut}
             >
               {isLoggingOut ? "Signing out..." : "Sign out"}
@@ -205,7 +239,7 @@ export function SettingsContent() {
               title="Delete account?"
               description="This action is permanent and will remove your account and related data. Depending on your sign-in method, an email confirmation may be required."
               isLoading={isDeletingAccount}
-              onConfirm={handleConfirmDelete}
+              onConfirm={() => void handleConfirmDelete()}
               onCancel={() => setIsDeleteDialogOpen(false)}
               confirmText={isDeletingAccount ? "Deleting..." : "Confirm delete"}
               confirmVariant="destructive"

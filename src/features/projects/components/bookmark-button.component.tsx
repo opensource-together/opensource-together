@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { HiBookmark, HiOutlineBookmark } from "react-icons/hi2";
+import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { useProjectBookmark } from "../hooks/use-projects.hook";
 
@@ -18,17 +20,36 @@ export function BookmarkButton({
 }: BookmarkButtonProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
-  const { isBookmarked, toggleBookmark, isBookmarking } = useProjectBookmark({
-    projectId,
-    initialIsBookmarked,
-  });
+  const { isBookmarked, toggleBookmarkAsync, isBookmarking } =
+    useProjectBookmark({
+      projectId,
+      initialIsBookmarked,
+    });
 
-  const handleToggleBookmark = () => {
+  const handleToggleBookmark = async () => {
     if (!isAuthenticated) {
       router.push("/auth/login");
       return;
     }
-    toggleBookmark();
+
+    const wasBookmarked = isBookmarked;
+    try {
+      const changed = await toggleBookmarkAsync();
+      if (changed) {
+        toast.success(
+          wasBookmarked ? "Bookmark removed" : "Project bookmarked"
+        );
+      }
+    } catch (error) {
+      toast.error(
+        getErrorMessage(
+          error,
+          wasBookmarked
+            ? "Failed to remove bookmark"
+            : "Failed to bookmark project"
+        )
+      );
+    }
   };
 
   return (
@@ -36,7 +57,7 @@ export function BookmarkButton({
       size="icon"
       variant="outline"
       className="size-9"
-      onClick={handleToggleBookmark}
+      onClick={() => void handleToggleBookmark()}
       disabled={isBookmarking}
       aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
     >

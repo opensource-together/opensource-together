@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaGithub, FaGitlab } from "react-icons/fa6";
+import { toast } from "sonner";
 
 import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import ChooseMethodCard from "../../../components/stepper/choose-method-card.component";
 import { FormNavigationButtons } from "../../../components/stepper/stepper-navigation-buttons.component";
@@ -28,11 +30,17 @@ export default function StepIntroductionView() {
     setSelectedMethod(method);
   };
 
-  const handleLinkProvider = (provider: "github" | "gitlab") => {
-    linkSocialAccount({
-      provider,
-      callbackURL: `${window.location.origin}/projects/create`,
-    });
+  const handleLinkProvider = async (provider: "github" | "gitlab") => {
+    try {
+      await linkSocialAccount({
+        provider,
+        callbackURL: `${window.location.origin}/projects/create`,
+      });
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, `Unable to link your ${provider} account`)
+      );
+    }
   };
 
   const handleNext = () => {
@@ -62,7 +70,7 @@ export default function StepIntroductionView() {
               isDisabled={!isGithubConnected}
               isLinking={isLinkingSocialAccount}
               onClick={() => handleMethodSelection("github")}
-              onLinkClick={() => handleLinkProvider("github")}
+              onLinkClick={() => void handleLinkProvider("github")}
             />
             <ChooseMethodCard
               icon={FaGitlab}
@@ -72,7 +80,7 @@ export default function StepIntroductionView() {
               isDisabled={!isGitlabConnected}
               isLinking={isLinkingSocialAccount}
               onClick={() => handleMethodSelection("gitlab")}
-              onLinkClick={() => handleLinkProvider("gitlab")}
+              onLinkClick={() => void handleLinkProvider("gitlab")}
             />
           </div>
           <FormNavigationButtons

@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import { RiGithubFill, RiGitlabFill } from "react-icons/ri";
+import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { useClaimProject } from "../hooks/use-projects.hook";
 import type { Project } from "../types/project.type";
@@ -36,20 +38,25 @@ export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
   const { isAuthenticated } = useAuth();
   const projectId = project.id || project.publicId || "";
 
-  const { claimProject, isClaiming } = useClaimProject(projectId);
+  const claimProjectMutation = useClaimProject(projectId);
 
   if (project.owner?.id) {
     return null;
   }
 
-  const handleVerifyAndClaim = () => {
+  const handleVerifyAndClaim = async () => {
     if (!isAuthenticated) {
       router.push("/auth/login");
       return;
     }
-    claimProject(undefined, {
-      onSuccess: () => setIsClaimOpen(false),
-    });
+
+    try {
+      await claimProjectMutation.mutateAsync();
+      toast.success("Project claimed successfully");
+      setIsClaimOpen(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to claim project"));
+    }
   };
 
   const repoPath = extractRepoPath(project.repoUrl);
@@ -68,9 +75,9 @@ export function ClaimProjectButton({ project }: ClaimProjectButtonProps) {
         description={`Take ownership of ${project.title} to help manage this project and grow the open source community.`}
         onCancel={() => setIsClaimOpen(false)}
         cancelText="Cancel"
-        onConfirm={handleVerifyAndClaim}
+        onConfirm={() => void handleVerifyAndClaim()}
         confirmText="Verify & Claim"
-        isLoading={isClaiming}
+        isLoading={claimProjectMutation.isPending}
       >
         <div className="space-y-4 py-2">
           {/* Repository Section */}
