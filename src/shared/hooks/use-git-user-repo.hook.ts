@@ -1,4 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { authKeys } from "@/features/auth/hooks/auth.keys";
 
 import { getGitUserRepositories } from "../services/git-user-repos.service";
 import type {
@@ -6,14 +7,6 @@ import type {
   GitUserRepositoriesResponse,
 } from "../types/git-repository.type";
 
-/**
- * Hook to fetch the repositories of the current user with pagination and filters.
- *
- * This hook does not manage any local state. Provide filters via params.
- *
- * @param params - Filters and pagination parameters
- * @returns A React Query result containing the repositories data.
- */
 export const useGitUserRepositories = (
   params: GitUserRepositoriesQueryParams = {}
 ) => {
@@ -26,7 +19,7 @@ export const useGitUserRepositories = (
   };
 
   return useQuery<GitUserRepositoriesResponse>({
-    queryKey: ["user", "me", "repos", queryParams],
+    queryKey: authKeys.repositoryList(queryParams),
     queryFn: () => getGitUserRepositories(queryParams),
   });
 };
@@ -41,7 +34,7 @@ export const useInfiniteGitUserRepositories = (
   };
 
   return useInfiniteQuery<GitUserRepositoriesResponse, Error>({
-    queryKey: ["user", "me", "repos", queryParams],
+    queryKey: authKeys.repositoryList(queryParams),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) =>
       getGitUserRepositories({

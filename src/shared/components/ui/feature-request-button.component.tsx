@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { FRONTEND_URL } from "@/config/config";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { Button } from "@/shared/components/ui/button";
 import {
   Form,
@@ -30,7 +30,7 @@ export function FeatureRequestButton() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const { currentUser } = useAuth();
+  const currentUser = useCurrentUserQuery().data;
   const featureRequestMutation = useFeatureRequest();
 
   const form = useForm<FeatureRequestFormData>({

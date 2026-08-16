@@ -8,14 +8,14 @@ import { Modal } from "@/shared/components/ui/modal";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { useCacheBustingImage } from "../../../shared/hooks/use-cache-busting-image.hook";
-import { useToggleProjectPublished } from "../hooks/use-projects.hook";
+import { useToggleProjectPublishedMutation } from "../hooks/project.mutations";
 import type { Project } from "../types/project.type";
 import { BookmarkButton } from "./bookmark-button.component";
 import { ClaimProjectButton } from "./claim-project-button.component";
 
 export function ProjectMobileHero({ project }: ProjectHeroProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
-  const toggleProjectPublishedMutation = useToggleProjectPublished();
+  const toggleProjectPublishedMutation = useToggleProjectPublishedMutation();
 
   const {
     id = "",
@@ -118,7 +118,7 @@ export default function ProjectHero({
   hideHeader = false,
 }: ProjectHeroProps) {
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
-  const toggleProjectPublishedMutation = useToggleProjectPublished();
+  const toggleProjectPublishedMutation = useToggleProjectPublishedMutation();
   const {
     id = "",
     title = "",

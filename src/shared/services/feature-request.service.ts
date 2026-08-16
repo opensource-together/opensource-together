@@ -6,12 +6,6 @@ interface FeatureRequestPayload {
   };
 }
 
-/**
- * Send a feature request via Next.js API route
- *
- * @param payload - The feature request data
- * @returns A promise that resolves when the request is sent
- */
 export const sendFeatureRequest = async (
   payload: FeatureRequestPayload
 ): Promise<void> => {

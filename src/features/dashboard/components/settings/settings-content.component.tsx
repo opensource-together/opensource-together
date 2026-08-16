@@ -2,7 +2,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { RiGithubFill, RiGitlabFill } from "react-icons/ri";
 import { toast } from "sonner";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { authKeys } from "@/features/auth/hooks/auth.keys";
+import {
+  useDeleteAccountMutation,
+  useLinkSocialAccountMutation,
+  useLogoutMutation,
+  useUnlinkSocialAccountMutation,
+} from "@/features/auth/hooks/auth.mutations";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
+import type { AuthProvider } from "@/features/auth/types/auth.type";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -17,29 +25,22 @@ export function SettingsContent() {
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [unlinkProviderId, setUnlinkProviderId] = useState<string | null>(null);
-  const {
-    currentUser,
-    isLoading,
-    isError,
-    logout,
-    isLoggingOut,
-    deleteAccount,
-    isDeletingAccount,
-    linkSocialAccount,
-    isLinkingSocialAccount,
-    unlinkSocialAccount,
-    isUnlinkingSocialAccount,
-  } = useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const logoutMutation = useLogoutMutation();
+  const deleteAccountMutation = useDeleteAccountMutation();
+  const linkAccountMutation = useLinkSocialAccountMutation();
+  const unlinkAccountMutation = useUnlinkSocialAccountMutation();
+  const currentUser = currentUserQuery.data;
 
-  if (isLoading) {
+  if (currentUserQuery.isLoading) {
     return <SettingsSkeleton />;
   }
 
-  if (isError || !currentUser) {
+  if (currentUserQuery.isError || !currentUser) {
     return (
       <ErrorState
         message="We couldn't load your settings. Please sign in again."
-        queryKey={["user", "me"]}
+        queryKey={authKeys.currentUser()}
         className="mt-20 mb-28"
         buttonText="Go to login"
         href="/auth/login"
@@ -49,7 +50,7 @@ export function SettingsContent() {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logoutMutation.mutateAsync();
       router.push("/");
     } catch (error) {
       toast.error(getErrorMessage(error, "Unable to sign out"));
@@ -58,7 +59,7 @@ export function SettingsContent() {
 
   const handleConfirmDelete = async () => {
     try {
-      await deleteAccount();
+      await deleteAccountMutation.mutateAsync();
       toast.success("Your account has been deleted");
       setIsDeleteDialogOpen(false);
       router.push("/");
@@ -71,7 +72,9 @@ export function SettingsContent() {
     if (!unlinkProviderId) return;
 
     try {
-      await unlinkSocialAccount(unlinkProviderId);
+      await unlinkAccountMutation.mutateAsync({
+        providerId: unlinkProviderId,
+      });
       toast.success("Social account unlinked successfully");
       setUnlinkProviderId(null);
     } catch (error) {
@@ -81,9 +84,9 @@ export function SettingsContent() {
     }
   };
 
-  const handleLinkAccount = async (providerId: string) => {
+  const handleLinkAccount = async (providerId: AuthProvider) => {
     try {
-      await linkSocialAccount(providerId);
+      await linkAccountMutation.mutateAsync({ provider: providerId });
       toast.success("Social account linked successfully");
     } catch (error) {
       toast.error(
@@ -172,10 +175,10 @@ export function SettingsContent() {
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={isLinkingSocialAccount}
+                      disabled={linkAccountMutation.isPending}
                       onClick={() => void handleLinkAccount(provider.id)}
                     >
-                      {isLinkingSocialAccount ? "Linking..." : "Link"}
+                      {linkAccountMutation.isPending ? "Linking..." : "Link"}
                     </Button>
                   )}
                   {provider.connected &&
@@ -183,10 +186,12 @@ export function SettingsContent() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        disabled={isUnlinkingSocialAccount}
+                        disabled={unlinkAccountMutation.isPending}
                         onClick={() => setUnlinkProviderId(provider.id)}
                       >
-                        {isUnlinkingSocialAccount ? "Unlinking..." : "Unlink"}
+                        {unlinkAccountMutation.isPending
+                          ? "Unlinking..."
+                          : "Unlink"}
                       </Button>
                     )}
                 </div>
@@ -201,11 +206,13 @@ export function SettingsContent() {
               }}
               title={`Unlink ${providers.find((p) => p.id === unlinkProviderId)?.name}?`}
               description={`Are you sure you want to unlink your ${providers.find((p) => p.id === unlinkProviderId)?.name} account? You will no longer be able to sign in using this provider.`}
-              isLoading={isUnlinkingSocialAccount}
+              isLoading={unlinkAccountMutation.isPending}
               onConfirm={() => void handleConfirmUnlink()}
               onCancel={() => setUnlinkProviderId(null)}
               confirmText={
-                isUnlinkingSocialAccount ? "Unlinking..." : "Confirm unlink"
+                unlinkAccountMutation.isPending
+                  ? "Unlinking..."
+                  : "Confirm unlink"
               }
               confirmVariant="destructive"
             />
@@ -223,9 +230,9 @@ export function SettingsContent() {
             <Button
               variant="default"
               onClick={() => void handleLogout()}
-              disabled={isLoggingOut}
+              disabled={logoutMutation.isPending}
             >
-              {isLoggingOut ? "Signing out..." : "Sign out"}
+              {logoutMutation.isPending ? "Signing out..." : "Sign out"}
             </Button>
             <Button
               variant="destructive"
@@ -238,10 +245,14 @@ export function SettingsContent() {
               onOpenChange={setIsDeleteDialogOpen}
               title="Delete account?"
               description="This action is permanent and will remove your account and related data. Depending on your sign-in method, an email confirmation may be required."
-              isLoading={isDeletingAccount}
+              isLoading={deleteAccountMutation.isPending}
               onConfirm={() => void handleConfirmDelete()}
               onCancel={() => setIsDeleteDialogOpen(false)}
-              confirmText={isDeletingAccount ? "Deleting..." : "Confirm delete"}
+              confirmText={
+                deleteAccountMutation.isPending
+                  ? "Deleting..."
+                  : "Confirm delete"
+              }
               confirmVariant="destructive"
             />
           </div>

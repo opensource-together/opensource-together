@@ -6,7 +6,7 @@ import type {
 } from "@/shared/types/pagination.type";
 
 import type { Profile } from "../types/profile.type";
-import type { ProfileSchema } from "../validations/profile.schema";
+import type { UpdateProfileInput } from "../validations/profile.schema";
 
 export interface UserProjectsQueryParams extends PaginationParams {
   published?: boolean;
@@ -20,12 +20,6 @@ export interface UserBookmarksQueryParams extends PaginationParams {}
 export interface PaginatedUserBookmarksResponse
   extends PaginatedResponse<Project> {}
 
-/**
- * Gets a public user by ID.
- *
- * @param id - The user ID to fetch.
- * @returns A promise that resolves to the user data.
- */
 export const getUserById = async (id: string): Promise<Profile> => {
   try {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
@@ -44,25 +38,18 @@ export const getUserById = async (id: string): Promise<Profile> => {
   }
 };
 
-/**
- * Updates the profile of the current user.
- *
- * @param params - The data for the updated profile.
- * @returns A promise that resolves to the updated profile.
- */
 export const updateProfile = async (
   id: string,
-  params: ProfileSchema
+  params: UpdateProfileInput
 ): Promise<Profile> => {
   try {
-    const { image: _omitImage, ...payload } = params;
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(payload),
+      body: JSON.stringify(params),
     });
 
     if (!response.ok) {
@@ -78,13 +65,6 @@ export const updateProfile = async (
   }
 };
 
-/**
- * Updates the profile logo/avatar of a user.
- *
- * @param id - The user ID to update.
- * @param avatarFile - The avatar file to upload.
- * @returns A promise that resolves to the updated image data.
- */
 export const updateProfileLogo = async (
   id: string,
   avatarFile: File
@@ -110,13 +90,6 @@ export const updateProfileLogo = async (
   }
 };
 
-/**
- * Updates the profile banner of a user.
- *
- * @param id - The user ID to update.
- * @param bannerFile - The banner file to upload.
- * @returns A promise that resolves to the updated banner data.
- */
 export const updateProfileBanner = async (
   id: string,
   bannerFile: File
@@ -142,13 +115,6 @@ export const updateProfileBanner = async (
   }
 };
 
-/**
- * Gets the projects for a specific user by their ID.
- *
- * @param userId - The user ID to fetch projects for.
- * @param params - Optional query parameters for pagination and filtering.
- * @returns A promise that resolves to the paginated projects data.
- */
 export const getUserProjects = async (
   userId: string,
   params?: UserProjectsQueryParams

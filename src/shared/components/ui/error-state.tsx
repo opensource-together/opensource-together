@@ -1,6 +1,6 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { type QueryKey, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 import { HiExclamationCircle } from "react-icons/hi";
@@ -20,7 +20,7 @@ interface ErrorStateProps {
   isLoading?: boolean;
   className?: string;
   width?: string;
-  queryKey?: unknown[];
+  queryKey?: QueryKey;
   refetchFn?: () => Promise<unknown>;
 }
 

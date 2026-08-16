@@ -9,10 +9,8 @@ import { Modal } from "@/shared/components/ui/modal";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import FormNavigationButtons from "../../../components/stepper/stepper-navigation-buttons.component";
-import {
-  useProject,
-  useToggleProjectPublished,
-} from "../../../hooks/use-projects.hook";
+import { useToggleProjectPublishedMutation } from "../../../hooks/project.mutations";
+import { useProjectQuery } from "../../../hooks/project.queries";
 import { useProjectCreateStore } from "../../../stores/project-create.store";
 
 export default function StepSuccessView() {
@@ -22,8 +20,8 @@ export default function StepSuccessView() {
   const projectId = searchParams.get("projectId") || "";
   const [isPublishDialogOpen, setPublishDialogOpen] = useState(false);
 
-  const { data: project } = useProject(projectId);
-  const toggleProjectPublishedMutation = useToggleProjectPublished();
+  const { data: project } = useProjectQuery(projectId);
+  const toggleProjectPublishedMutation = useToggleProjectPublishedMutation();
 
   useEffect(() => {
     resetForm();

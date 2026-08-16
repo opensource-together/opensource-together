@@ -4,10 +4,11 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HiMiniSquare2Stack, HiPlus } from "react-icons/hi2";
 import { toast } from "sonner";
+import { profileKeys } from "@/features/profile/hooks/profile.keys";
 import {
-  useDeleteProject,
-  useToggleProjectPublished,
-} from "@/features/projects/hooks/use-projects.hook";
+  useDeleteProjectMutation,
+  useToggleProjectPublishedMutation,
+} from "@/features/projects/hooks/project.mutations";
 import type { Project } from "@/features/projects/types/project.type";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
@@ -17,7 +18,7 @@ import { PaginationInfo } from "@/shared/components/ui/pagination-info.component
 import { Table, TableBody } from "@/shared/components/ui/table";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
-import { useMyProjects } from "../../hooks/use-my-projects.hook";
+import { useMyProjectsQuery } from "../../hooks/my-projects.queries";
 import type { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 import MyProjectRow from "./my-projects-row.component";
@@ -47,10 +48,10 @@ export default function MyProjectsList() {
     data: myProjectsResponse,
     isLoading,
     isError,
-  } = useMyProjects(queryParams);
+  } = useMyProjectsQuery(queryParams);
 
-  const deleteProjectMutation = useDeleteProject();
-  const toggleProjectPublishedMutation = useToggleProjectPublished();
+  const deleteProjectMutation = useDeleteProjectMutation();
+  const toggleProjectPublishedMutation = useToggleProjectPublishedMutation();
 
   const myProjects = myProjectsResponse?.data || [];
   const pagination = myProjectsResponse?.pagination;
@@ -64,7 +65,9 @@ export default function MyProjectsList() {
     if (!projectToDelete?.id) return;
 
     try {
-      await deleteProjectMutation.mutateAsync(projectToDelete.id);
+      await deleteProjectMutation.mutateAsync({
+        projectId: projectToDelete.id,
+      });
       toast.success("Project deleted successfully");
       setDeleteDialogOpen(false);
       setProjectToDelete(null);
@@ -105,7 +108,7 @@ export default function MyProjectsList() {
     return (
       <ErrorState
         message="Failed to fetch projects"
-        queryKey={["user", "me", "projects"]}
+        queryKey={profileKeys.projects("me")}
       />
     );
 

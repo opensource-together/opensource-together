@@ -5,7 +5,8 @@ import { useState } from "react";
 import { FaGithub, FaGitlab } from "react-icons/fa6";
 import { toast } from "sonner";
 
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useLinkSocialAccountMutation } from "@/features/auth/hooks/auth.mutations";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import ChooseMethodCard from "../../../components/stepper/choose-method-card.component";
@@ -19,7 +20,8 @@ export default function StepIntroductionView() {
   const router = useRouter();
   const [selectedMethod, setSelectedMethod] = useState<provider | null>(null);
   const { setMethod } = useProjectCreateStore();
-  const { currentUser, linkSocialAccount, isLinkingSocialAccount } = useAuth();
+  const currentUser = useCurrentUserQuery().data;
+  const linkAccountMutation = useLinkSocialAccountMutation();
 
   const isGithubConnected =
     currentUser?.connectedProviders?.includes("github") || false;
@@ -32,7 +34,7 @@ export default function StepIntroductionView() {
 
   const handleLinkProvider = async (provider: "github" | "gitlab") => {
     try {
-      await linkSocialAccount({
+      await linkAccountMutation.mutateAsync({
         provider,
         callbackURL: `${window.location.origin}/projects/create`,
       });
@@ -68,7 +70,7 @@ export default function StepIntroductionView() {
               description="Import a repository from Github"
               isSelected={selectedMethod === "github"}
               isDisabled={!isGithubConnected}
-              isLinking={isLinkingSocialAccount}
+              isLinking={linkAccountMutation.isPending}
               onClick={() => handleMethodSelection("github")}
               onLinkClick={() => void handleLinkProvider("github")}
             />
@@ -78,7 +80,7 @@ export default function StepIntroductionView() {
               description="Import a repository from Gitlab"
               isSelected={selectedMethod === "gitlab"}
               isDisabled={!isGitlabConnected}
-              isLinking={isLinkingSocialAccount}
+              isLinking={linkAccountMutation.isPending}
               onClick={() => handleMethodSelection("gitlab")}
               onLinkClick={() => void handleLinkProvider("gitlab")}
             />

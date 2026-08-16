@@ -22,10 +22,11 @@ import {
 
 import ProfilePullRequestList from "../components/profile-pull-request-card";
 import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pull-requests-skeleton.component";
+import { profileKeys } from "../hooks/profile.keys";
 import {
-  useUserMyPullRequests,
-  useUserPullRequestsById,
-} from "../hooks/use-profile-pull-request.hook";
+  useCurrentUserPullRequestsQuery,
+  useUserPullRequestsQuery,
+} from "../hooks/profile-pull-request.queries";
 import type { PullRequestQueryParams } from "../types/profile.pull-request.type";
 
 const parseNumber = (value: string | null, fallback: number) => {
@@ -60,8 +61,8 @@ export default function ProfilePullRequests({
     per_page: perPage,
   };
 
-  const myPullRequestsResult = useUserMyPullRequests(queryParams);
-  const userPullRequestsResult = useUserPullRequestsById(
+  const myPullRequestsResult = useCurrentUserPullRequestsQuery(queryParams);
+  const userPullRequestsResult = useUserPullRequestsQuery(
     userId || "",
     queryParams
   );
@@ -146,11 +147,7 @@ export default function ProfilePullRequests({
         {renderFilters()}
         <ErrorState
           message="An error has occurred while loading the pull requests. Please try again later."
-          queryKey={
-            userId
-              ? ["user", userId, "pullrequests"]
-              : ["user", "me", "pullrequests"]
-          }
+          queryKey={profileKeys.pullRequests(userId || "me")}
         />
       </div>
     );

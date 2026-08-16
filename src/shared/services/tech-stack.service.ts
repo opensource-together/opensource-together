@@ -6,11 +6,6 @@ interface TechStackApiResponse {
   data: TechStackType[];
 }
 
-/**
- * Fetch tech stacks from the API
- *
- * @returns A promise that resolves to an array of tech stack types
- */
 export const fetchTechStacks = async (): Promise<TechStackType[]> => {
   try {
     const response = await fetch(`${API_BASE_URL}/techstacks`);

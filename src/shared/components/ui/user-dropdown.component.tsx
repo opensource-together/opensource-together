@@ -11,7 +11,8 @@ import {
   RiUser3Line,
 } from "react-icons/ri";
 import { toast } from "sonner";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useLogoutMutation } from "@/features/auth/hooks/auth.mutations";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { Avatar } from "@/shared/components/ui/avatar";
 import {
   DropdownMenu,
@@ -23,12 +24,14 @@ import {
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 export default function UserDropdown() {
-  const { currentUser, logout, isLoggingOut } = useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const logoutMutation = useLogoutMutation();
+  const currentUser = currentUserQuery.data;
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logoutMutation.mutateAsync();
       router.push("/");
     } catch (error) {
       toast.error(getErrorMessage(error, "Unable to sign out"));
@@ -90,15 +93,15 @@ export default function UserDropdown() {
         </Link>
         <DropdownMenuItem
           onClick={() => void handleLogout()}
-          disabled={isLoggingOut}
+          disabled={logoutMutation.isPending}
           variant="destructive"
         >
-          {isLoggingOut ? (
+          {logoutMutation.isPending ? (
             <RiLoader2Fill className="size-4 animate-spin" />
           ) : (
             <RiLogoutBoxLine className="size-4 text-primary" />
           )}
-          {isLoggingOut ? "Signing out..." : "Sign out"}
+          {logoutMutation.isPending ? "Signing out..." : "Sign out"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

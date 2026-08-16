@@ -26,8 +26,9 @@ import ProjectPullRequestList from "../components/project-pull-request-list.comp
 import ProjectReadme from "../components/project-readme.component";
 import ProjectSideBar from "../components/project-side-bar.component";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
+import { projectKeys } from "../hooks/project.keys";
+import { useProjectQuery } from "../hooks/project.queries";
 import { useDecodedFiles } from "../hooks/use-decoded-files.hook";
-import { useProject } from "../hooks/use-projects.hook";
 
 interface ProjectDetailViewProps {
   projectId: string;
@@ -36,7 +37,7 @@ interface ProjectDetailViewProps {
 export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
-  const { data: project, isLoading, isError } = useProject(projectId);
+  const { data: project, isLoading, isError } = useProjectQuery(projectId);
   const { tab, handleTabChange } = useTabNavigation("overview");
   const { readme, contributionFile, codeOfConduct } = useDecodedFiles(project);
 
@@ -48,7 +49,7 @@ export default function ProjectDetailView({
     return (
       <ErrorState
         message="An error has occurred while loading the project. Please try again later."
-        queryKey={["project", projectId]}
+        queryKey={projectKeys.detail(projectId)}
         className="mt-20 mb-28"
         buttonText="Back to homepage"
         href="/projects"

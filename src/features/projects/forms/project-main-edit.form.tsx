@@ -17,11 +17,11 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Textarea } from "@/shared/components/ui/textarea";
 
 import type { Project } from "../types/project.type";
-import type { UpdateProjectApiData } from "../validations/project.schema";
+import type { UpdateProjectInput } from "../validations/project.schema";
 
 interface ProjectMainEditFormProps {
   project: Project;
-  form: UseFormReturn<UpdateProjectApiData>;
+  form: UseFormReturn<UpdateProjectInput>;
   onSubmit: () => void;
   onImageSelect: (file: File | null) => void;
   isUpdating: boolean;

@@ -5,12 +5,6 @@ import type {
   PullRequestsResponse,
 } from "../types/profile.pull-request.type";
 
-/**
- * Gets the pull requests of the current user.
- *
- * @param params - Optional query parameters to filter pull requests.
- * @returns A promise that resolves to the pull requests data.
- */
 export const getUserMyPullRequests = async (
   params?: PullRequestQueryParams
 ): Promise<PullRequestsResponse> => {
@@ -39,13 +33,6 @@ export const getUserMyPullRequests = async (
   }
 };
 
-/**
- * Gets the pull requests of a specific user by their ID.
- *
- * @param userId - The ID of the user to fetch pull requests for.
- * @param params - Optional query parameters to filter pull requests.
- * @returns A promise that resolves to the pull requests data.
- */
 export const getUserPullRequestsById = async (
   userId: string,
   params?: PullRequestQueryParams

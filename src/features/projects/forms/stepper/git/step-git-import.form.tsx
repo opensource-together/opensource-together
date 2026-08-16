@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useLinkSocialAccountMutation } from "@/features/auth/hooks/auth.mutations";
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useInfiniteGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
@@ -33,7 +33,7 @@ export default function StepGitImportForm({
   const router = useRouter();
   const pathname = usePathname();
   const { selectRepository } = useProjectCreateStore();
-  const { linkSocialAccount, isLinkingSocialAccount } = useAuth();
+  const linkAccountMutation = useLinkSocialAccountMutation();
 
   const {
     data: gitReposPages,
@@ -89,7 +89,7 @@ export default function StepGitImportForm({
   if (isError) {
     const handleLinkAccount = async () => {
       try {
-        await linkSocialAccount({
+        await linkAccountMutation.mutateAsync({
           provider,
           callbackURL: `${window.location.origin}${pathname}`,
         });
@@ -105,9 +105,9 @@ export default function StepGitImportForm({
         title="Error loading repositories"
         message={`We couldn't load your ${provider} repositories. Please link your ${provider} account to continue.`}
         onRetry={handleLinkAccount}
-        isLoading={isLinkingSocialAccount}
+        isLoading={linkAccountMutation.isPending}
         retryText={
-          isLinkingSocialAccount
+          linkAccountMutation.isPending
             ? `Linking ${provider}...`
             : `Link ${provider} account`
         }

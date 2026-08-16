@@ -5,12 +5,6 @@ import type {
   GitUserRepositoriesResponse,
 } from "../types/git-repository.type";
 
-/**
- * Gets the repositories of the current user.
- *
- * @param params - Optional query parameters to filter repositories.
- * @returns A promise that resolves to the repositories data.
- */
 export const getGitUserRepositories = async (
   params?: GitUserRepositoriesQueryParams
 ): Promise<GitUserRepositoriesResponse> => {

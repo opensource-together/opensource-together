@@ -13,32 +13,32 @@ import { getErrorMessage } from "@/shared/lib/get-error-message";
 import SkeletonProjectDetail from "../components/skeletons/skeleton-project-detail.component";
 import ProjectMainEditForm from "../forms/project-main-edit.form";
 import ProjectSidebarEditForm from "../forms/project-sidebar-edit.form";
+import { projectKeys } from "../hooks/project.keys";
 import {
-  useDeleteProjectImage,
-  useProject,
-  useUpdateProject,
-  useUpdateProjectCover,
-  useUpdateProjectLogo,
-} from "../hooks/use-projects.hook";
+  useAddProjectCoverMutation,
+  useDeleteProjectImageMutation,
+  useUpdateProjectLogoMutation,
+  useUpdateProjectMutation,
+} from "../hooks/project.mutations";
+import { useProjectQuery } from "../hooks/project.queries";
 import {
-  type UpdateProjectApiData,
-  type UpdateProjectData,
+  type UpdateProjectInput,
   updateProjectApiSchema,
 } from "../validations/project.schema";
 
 export default function ProjectEditView({ projectId }: { projectId: string }) {
   const router = useRouter();
-  const { data: project, isLoading, isError } = useProject(projectId);
-  const updateProjectMutation = useUpdateProject();
-  const updateProjectLogoMutation = useUpdateProjectLogo();
-  const updateProjectCoverMutation = useUpdateProjectCover();
-  const deleteProjectImageMutation = useDeleteProjectImage();
+  const { data: project, isLoading, isError } = useProjectQuery(projectId);
+  const updateProjectMutation = useUpdateProjectMutation();
+  const updateProjectLogoMutation = useUpdateProjectLogoMutation();
+  const addProjectCoverMutation = useAddProjectCoverMutation();
+  const deleteProjectImageMutation = useDeleteProjectImageMutation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [newCoverFiles, setNewCoverFiles] = useState<File[]>([]);
   const [removedCoverImages, setRemovedCoverImages] = useState<string[]>([]);
 
-  const form = useForm<UpdateProjectApiData>({
+  const form = useForm<UpdateProjectInput>({
     resolver: zodResolver(updateProjectApiSchema),
     defaultValues: {
       logoUrl: project?.logoUrl || undefined,
@@ -113,11 +113,11 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     setIsSubmitting(true);
     try {
       await updateProjectMutation.mutateAsync({
-        id,
-        updateData: {
+        projectId: id,
+        data: {
           ...data,
           imagesUrls: updatedImagesUrls,
-        } as UpdateProjectData,
+        },
       });
 
       await Promise.all([
@@ -131,14 +131,14 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
           ? [
               updateProjectLogoMutation.mutateAsync({
                 projectId: id,
-                logoFile: selectedImageFile,
+                file: selectedImageFile,
               }),
             ]
           : []),
         ...newCoverFiles.map((coverFile) =>
-          updateProjectCoverMutation.mutateAsync({
+          addProjectCoverMutation.mutateAsync({
             projectId: id,
-            coverFile,
+            file: coverFile,
           })
         ),
       ]);
@@ -157,7 +157,7 @@ export default function ProjectEditView({ projectId }: { projectId: string }) {
     return (
       <ErrorState
         message="An error has occurred while loading the project edit. Please try again later."
-        queryKey={["project", projectId]}
+        queryKey={projectKeys.detail(projectId)}
         className="mt-20 mb-28"
         buttonText="Back to project"
         href={`/projects/${projectId}`}

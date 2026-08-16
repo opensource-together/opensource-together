@@ -1,36 +1,36 @@
 "use client";
 
 import { RiGitlabFill } from "react-icons/ri";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
 
 interface GitlabButtonProps {
   text?: string;
   isLoading?: boolean;
+  disabled?: boolean;
+  onClick: () => void;
   variant?: "default" | "outline";
 }
 
 export default function GitlabButton({
   text = "Sign in with Gitlab",
   isLoading = false,
+  disabled = false,
+  onClick,
   variant = "default",
 }: GitlabButtonProps) {
-  const { signInWithProvider, isSigningIn } = useAuth();
-
   const isOutlineVariant = variant === "outline";
-  const isPending = isLoading || isSigningIn;
 
   return (
     <Button
-      onClick={() => signInWithProvider("gitlab")}
-      disabled={isPending}
+      onClick={onClick}
+      disabled={disabled || isLoading}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
       className={`w-[320px] text-sm sm:text-base md:w-[420px] ${
         isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
       }`}
     >
-      {isPending ? (
+      {isLoading ? (
         <div
           className={`size-4 animate-spin rounded-full border-2 ${
             isOutlineVariant ? "border-black/10" : "border-white"
@@ -43,7 +43,7 @@ export default function GitlabButton({
           }
         />
       )}
-      <span className="ml-1">{isPending ? "Signing in..." : text}</span>
+      <span className="ml-1">{isLoading ? "Signing in..." : text}</span>
     </Button>
   );
 }

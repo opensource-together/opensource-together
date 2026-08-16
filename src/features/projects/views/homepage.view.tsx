@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useLayoutEffect, useMemo } from "react";
 import { HiMiniSquare2Stack } from "react-icons/hi2";
 import { useInView } from "react-intersection-observer";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import ProjectDiscoveryHero from "@/features/projects/components/project-discovery-hero.component";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -12,7 +12,8 @@ import { ErrorState } from "@/shared/components/ui/error-state";
 import { BlurredSigninCtaGrid } from "../components/blurred-signin-cta-grid.component";
 import ProjectGrid from "../components/project-grid.component";
 import SkeletonProjectGrid from "../components/skeletons/skeleton-project-grid.component";
-import { useInfiniteProjects } from "../hooks/use-projects.hook";
+import { projectKeys } from "../hooks/project.keys";
+import { useInfiniteProjectsQuery } from "../hooks/project.queries";
 import type { ProjectFilters } from "../types/project-filters.type";
 
 interface HomepageLayoutProps {
@@ -105,7 +106,8 @@ export default function HomepageView() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { isAuthenticated } = useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const isAuthenticated = !!currentUserQuery.data;
   const MAX_FREE_PROJECTS = 60;
 
   /** Keep discovery hero at the top on full reload and client navigation to `/`. */
@@ -142,7 +144,7 @@ export default function HomepageView() {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteProjects(
+  } = useInfiniteProjectsQuery(
     { ...filters, published: true },
     { maxTotalItems: isAuthenticated ? undefined : MAX_FREE_PROJECTS }
   );
@@ -195,7 +197,7 @@ export default function HomepageView() {
       >
         <ErrorState
           message="An error has occurred while loading the projects. Please try again later."
-          queryKey={["projects-infinite", { ...filters, published: true }]}
+          queryKey={projectKeys.lists()}
         />
       </HomepageLayout>
     );

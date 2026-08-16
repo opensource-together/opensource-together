@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HiChevronRight } from "react-icons/hi2";
 
-import { useProfile } from "@/features/profile/hooks/use-profile.hook";
-import { useProject } from "@/features/projects/hooks/use-projects.hook";
+import { useProfileQuery } from "@/features/profile/hooks/profile.queries";
+import { useProjectQuery } from "@/features/projects/hooks/project.queries";
 import {
   type Chapter,
   getHandsOnChapters,
@@ -54,8 +54,8 @@ export default function HeaderBreadcrumb() {
   const projectIdForBreadcrumb =
     publicProjectId && publicProjectId !== "create" ? publicProjectId : "";
 
-  const { data: publicProject } = useProject(projectIdForBreadcrumb);
-  const { data: publicProfile } = useProfile(userId ?? "");
+  const { data: publicProject } = useProjectQuery(projectIdForBreadcrumb);
+  const { data: publicProfile } = useProfileQuery(userId ?? "");
 
   const getBreadcrumbItems = () => {
     if (routeConfig[pathname as keyof typeof routeConfig]) {

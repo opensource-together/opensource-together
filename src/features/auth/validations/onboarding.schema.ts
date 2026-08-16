@@ -15,4 +15,4 @@ export const onboardingSchema = z.object({
     .max(6, "Maximum 6 categories allowed"),
 });
 
-export type OnboardingSchema = z.infer<typeof onboardingSchema>;
+export type OnboardingFormValues = z.infer<typeof onboardingSchema>;

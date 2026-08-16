@@ -7,11 +7,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
 import {
-  useCreateProject,
-  useUpdateProjectCover,
-  useUpdateProjectLogo,
-} from "@/features/projects/hooks/use-projects.hook";
-import type { ProjectSchema } from "@/features/projects/validations/project.schema";
+  useAddProjectCoverMutation,
+  useCreateProjectMutation,
+  useUpdateProjectLogoMutation,
+} from "@/features/projects/hooks/project.mutations";
+import type { CreateProjectInput } from "@/features/projects/validations/project.schema";
 import { Combobox } from "@/shared/components/ui/combobox";
 import {
   Form,
@@ -40,9 +40,9 @@ export function StepTechCategoriesForm() {
   const [pendingFormData, setPendingFormData] =
     useState<StepTechCategoriesFormData | null>(null);
 
-  const createProjectMutation = useCreateProject();
-  const updateProjectLogoMutation = useUpdateProjectLogo();
-  const updateProjectCoverMutation = useUpdateProjectCover();
+  const createProjectMutation = useCreateProjectMutation();
+  const updateProjectLogoMutation = useUpdateProjectLogoMutation();
+  const addProjectCoverMutation = useAddProjectCoverMutation();
   const [isCreating, setIsCreating] = useState(false);
 
   const { formData, updateProjectInfo } = useProjectCreateStore();
@@ -151,30 +151,19 @@ export function StepTechCategoriesForm() {
   const uploadProjectLogo = (projectId: string, logoFile: File) => {
     return updateProjectLogoMutation.mutateAsync({
       projectId,
-      logoFile,
+      file: logoFile,
     });
   };
 
   // Helper function to upload project cover images
   const uploadProjectCovers = async (projectId: string, imageFiles: File[]) => {
     const uploadPromises = imageFiles.map((file) =>
-      updateProjectCoverMutation.mutateAsync({
+      addProjectCoverMutation.mutateAsync({
         projectId,
-        coverFile: file,
+        file,
       })
     );
     return Promise.all(uploadPromises);
-  };
-
-  // Helper function to get project ID from response
-  const getProjectId = (
-    createdProject: { id?: string; data?: { id?: string } } | unknown
-  ): string | undefined => {
-    const anyProject = createdProject as {
-      data?: { id?: string };
-      id?: string;
-    };
-    return anyProject?.data?.id || anyProject?.id;
   };
 
   const handleConfirmCreation = async () => {
@@ -183,7 +172,7 @@ export function StepTechCategoriesForm() {
     setIsCreating(true);
 
     // Prepare project data
-    const projectData: ProjectSchema = {
+    const projectData: CreateProjectInput = {
       title: formData.title,
       description: formData.description,
       provider: formData.method.toUpperCase() as "GITHUB" | "GITLAB",
@@ -212,9 +201,10 @@ export function StepTechCategoriesForm() {
 
     try {
       // Create project
-      const createdProject =
-        await createProjectMutation.mutateAsync(projectData);
-      const projectId = getProjectId(createdProject);
+      const createdProject = await createProjectMutation.mutateAsync({
+        data: projectData,
+      });
+      const projectId = createdProject.id || createdProject.publicId;
 
       if (!projectId) {
         throw new Error("Failed to get project ID from response");

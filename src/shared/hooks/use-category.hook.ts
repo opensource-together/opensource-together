@@ -7,11 +7,6 @@ import type { CategoryType } from "../types/category.type";
 
 export interface CategoryOption extends ComboboxOption {}
 
-/**
- * Hook to get the category options from the API
- * @param options - Optional query options (e.g., enabled)
- * @returns {Object} - An object containing the category options, getCategoryById, and getCategoriesByIds
- */
 export function useCategories(options?: { enabled?: boolean }) {
   const {
     data: categories = [],

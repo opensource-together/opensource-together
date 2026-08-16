@@ -11,7 +11,7 @@ import LogoDropdown from "@/shared/components/layout/logo-dropdown.component";
 import { MobileHeader } from "@/shared/components/layout/mobile-header.component";
 import "@/shared/components/ui/breadcrumb-navigation";
 
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import SearchCommand from "@/features/projects/components/search-command.component";
 import { Button } from "@/shared/components/ui/button";
 import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
@@ -19,7 +19,9 @@ import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
 export default function Header() {
   const pathname = usePathname();
-  const { isAuthenticated, isLoading } = useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const isAuthenticated = !!currentUserQuery.data;
+  const isLoading = currentUserQuery.isLoading;
 
   const navContainerRef = useRef<HTMLDivElement>(null);
   const [blobStyle, setBlobStyle] = useState<React.CSSProperties>({

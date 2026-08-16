@@ -15,7 +15,8 @@ import {
 } from "react-icons/hi2";
 import { RiLoader2Fill } from "react-icons/ri";
 import { toast } from "sonner";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useLogoutMutation } from "@/features/auth/hooks/auth.mutations";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import SearchCommand from "@/features/projects/components/search-command.component";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -56,14 +57,17 @@ const DEFAULT_LINKS: MobileNavLink[] = [
 export function MobileHeader({ links }: MobileHeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, isLoading, currentUser, logout, isLoggingOut } =
-    useAuth();
+  const currentUserQuery = useCurrentUserQuery();
+  const logoutMutation = useLogoutMutation();
+  const currentUser = currentUserQuery.data;
+  const isAuthenticated = !!currentUser;
+  const isLoading = currentUserQuery.isLoading;
   const [isOpen, setIsOpen] = useState(false);
   const resolvedLinks = links ?? (isAuthenticated ? DEFAULT_LINKS : []);
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logoutMutation.mutateAsync();
       setIsOpen(false);
       router.push("/");
     } catch (error) {
@@ -225,15 +229,17 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                         </Link>
                         <DropdownMenuItem
                           onClick={() => void handleLogout()}
-                          disabled={isLoggingOut}
+                          disabled={logoutMutation.isPending}
                           variant="destructive"
                         >
-                          {isLoggingOut ? (
+                          {logoutMutation.isPending ? (
                             <RiLoader2Fill className="size-4 animate-spin" />
                           ) : (
                             <HiLogout className="size-4" />
                           )}
-                          {isLoggingOut ? "Signing out..." : "Sign out"}
+                          {logoutMutation.isPending
+                            ? "Signing out..."
+                            : "Sign out"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

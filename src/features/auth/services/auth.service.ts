@@ -2,7 +2,11 @@ import { API_BASE_URL } from "@/config/config";
 import type { Profile } from "@/features/profile/types/profile.type";
 import { authClient } from "@/shared/lib/auth-client";
 
-export const signInWithProvider = async (provider: string): Promise<void> => {
+import type { AuthProvider } from "../types/auth.type";
+
+export const signInWithProvider = async (
+  provider: AuthProvider
+): Promise<void> => {
   try {
     await authClient.signIn.social({
       provider,
@@ -15,7 +19,7 @@ export const signInWithProvider = async (provider: string): Promise<void> => {
 };
 
 export const linkSocialAccount = async (
-  provider: string,
+  provider: AuthProvider,
   callbackURL?: string
 ): Promise<void> => {
   try {
@@ -46,7 +50,6 @@ export const unlinkSocialAccount = async (
 export const logout = async (): Promise<void> => {
   try {
     await authClient.signOut();
-    if (typeof window !== "undefined") window.location.replace("/");
   } catch (error) {
     console.error("logout error:", error);
     throw error;

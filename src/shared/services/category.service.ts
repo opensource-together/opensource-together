@@ -6,11 +6,6 @@ interface CategoryApiResponse {
   data: CategoryType[];
 }
 
-/**
- * Fetch categories from the API
- *
- * @returns A promise that resolves to an array of category items
- */
 export const fetchCategories = async (): Promise<CategoryType[]> => {
   const response = await fetch(`${API_BASE_URL}/categories`);
 

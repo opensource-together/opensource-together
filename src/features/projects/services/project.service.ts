@@ -7,8 +7,8 @@ import type {
 
 import type { Project } from "../types/project.type";
 import type {
-  ProjectSchema,
-  UpdateProjectData,
+  CreateProjectInput,
+  UpdateProjectInput,
 } from "../validations/project.schema";
 import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
@@ -22,12 +22,6 @@ export interface ProjectQueryParams extends PaginationParams {
 
 export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
 
-/**
- * Fetches the list of all projects.
- *
- * @param params - Optional query parameters to filter projects.
- * @returns A promise that resolves to the projects data.
- */
 export const getProjects = async (
   params?: ProjectQueryParams
 ): Promise<PaginatedProjectsResponse> => {
@@ -57,12 +51,6 @@ export const getProjects = async (
   }
 };
 
-/**
- * Fetches the details of a specific project by its ID.
- *
- * @param projectId - The ID of the project to retrieve.
- * @returns A promise that resolves to the project details.
- */
 export const getProjectDetails = async (
   projectId: string
 ): Promise<Project> => {
@@ -85,14 +73,8 @@ export const getProjectDetails = async (
   }
 };
 
-/**
- * Creates a new project.
- *
- * @param projectData - The project data.
- * @returns A promise that resolves to the created project.
- */
 export const createProject = async (
-  projectData: ProjectSchema
+  projectData: CreateProjectInput
 ): Promise<Project> => {
   const response = await fetch(`${API_BASE_URL}/projects`, {
     method: "POST",
@@ -112,15 +94,9 @@ export const createProject = async (
   return apiResponse?.data || apiResponse;
 };
 
-/**
- * Updates an existing project with optional image handling.
- *
- * @param projectId - The ID of the project to update.
- * @returns A promise that resolves to the updated project.
- */
 export const updateProject = async (
   projectId: string,
-  projectData: UpdateProjectData
+  projectData: UpdateProjectInput
 ): Promise<Project> => {
   const {
     logoUrl: _omitLogoUrl,
@@ -141,15 +117,10 @@ export const updateProject = async (
     throw new Error(error.message || "Error updating project");
   }
 
-  return response.json();
+  const apiResponse = await response.json();
+  return apiResponse?.data || apiResponse;
 };
 
-/**
- * Deletes a project by its ID and cleans up associated media.
- *
- * @param projectId - The ID of the project to delete.
- * @returns A promise that resolves to void.
- */
 export const deleteProject = async (projectId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
@@ -179,13 +150,6 @@ export const updateProjectPublishedStatus = async (
   return updateProject(projectId, payload);
 };
 
-/**
- * Updates the logo of a project.
- *
- * @param projectId - The ID of the project to update.
- * @param logoFile - The logo file to upload.
- * @returns A promise that resolves to the updated project.
- */
 export const updateProjectLogo = async (
   projectId: string,
   logoFile: File
@@ -204,16 +168,10 @@ export const updateProjectLogo = async (
     throw new Error(error.message || "Error updating project logo");
   }
 
-  return response.json();
+  const apiResponse = await response.json();
+  return apiResponse?.data || apiResponse;
 };
 
-/**
- * Updates the cover image of a project.
- *
- * @param projectId - The ID of the project to update.
- * @param coverFile - The cover file to upload.
- * @returns A promise that resolves to the updated project.
- */
 export const updateProjectCover = async (
   projectId: string,
   coverFile: File
@@ -232,16 +190,10 @@ export const updateProjectCover = async (
     throw new Error(error.message || "Error updating project cover");
   }
 
-  return response.json();
+  const apiResponse = await response.json();
+  return apiResponse?.data || apiResponse;
 };
 
-/**
- * Deletes a specific cover image from a project by its URL.
- *
- * @param projectId - The ID or publicId of the project.
- * @param imageUrl - The public URL of the image to delete.
- * @returns A promise that resolves to the updated project.
- */
 export const deleteProjectImage = async (
   projectId: string,
   imageUrl: string
@@ -260,15 +212,10 @@ export const deleteProjectImage = async (
     throw new Error(error.message || "Error deleting project image");
   }
 
-  return response.json();
+  const apiResponse = await response.json();
+  return apiResponse?.data || apiResponse;
 };
 
-/**
- * Claims ownership of a project for the current authenticated user.
- *
- * @param projectId - The public ID of the project to claim.
- * @returns A promise that resolves to the updated project.
- */
 export const claimProject = async (projectId: string): Promise<Project> => {
   try {
     const response = await fetch(
@@ -308,7 +255,7 @@ export const bookmarkProject = async (projectId: string): Promise<Project> => {
     }
 
     const apiResponse = await response.json();
-    return apiResponse;
+    return apiResponse?.data || apiResponse;
   } catch (error) {
     console.error("Error bookmarking project:", error);
     throw error;

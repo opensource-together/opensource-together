@@ -11,12 +11,6 @@ export interface ProjectQueryParams extends PaginationParams {
 
 export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
 
-/**
- * Fetches the list of projects for the current user.
- *
- * @param params - Optional query parameters to filter user projects.
- * @returns A promise that resolves to an array of projects.
- */
 export const getMyProjects = async (
   params?: ProjectQueryParams
 ): Promise<PaginatedProjectsResponse> => {

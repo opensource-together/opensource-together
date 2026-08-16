@@ -7,11 +7,6 @@ import type { TechStackType } from "../types/tech-stack.type";
 
 export type TechStackOption = ComboboxOption;
 
-/**
- * Hook to get the tech stack options from the API
- * @param options - Optional query options (e.g., enabled)
- * @returns {Object} - An object containing the tech stack options, getTechStackById, and getTechStacksByIds
- */
 export function useTechStack(options?: { enabled?: boolean }) {
   const {
     data: techStacks = [],

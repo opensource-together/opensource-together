@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { HiBookmark, HiOutlineBookmark } from "react-icons/hi2";
 import { RiLoader2Fill } from "react-icons/ri";
 import { toast } from "sonner";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { Button } from "@/shared/components/ui/button";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
-import { useProjectBookmark } from "../hooks/use-projects.hook";
+import { useProjectBookmark } from "../hooks/use-project-bookmark";
 
 interface BookmarkButtonProps {
   projectId: string;
@@ -20,12 +20,11 @@ export function BookmarkButton({
   initialIsBookmarked = false,
 }: BookmarkButtonProps) {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
-  const { isBookmarked, toggleBookmarkAsync, isBookmarking } =
-    useProjectBookmark({
-      projectId,
-      initialIsBookmarked,
-    });
+  const isAuthenticated = !!useCurrentUserQuery().data;
+  const { isBookmarked, toggleBookmarkAsync, isPending } = useProjectBookmark({
+    projectId,
+    initialIsBookmarked,
+  });
 
   const handleToggleBookmark = async () => {
     if (!isAuthenticated) {
@@ -59,16 +58,16 @@ export function BookmarkButton({
       variant="outline"
       className="size-9"
       onClick={() => void handleToggleBookmark()}
-      disabled={isBookmarking}
+      disabled={isPending}
       aria-label={
-        isBookmarking
+        isPending
           ? "Updating bookmark"
           : isBookmarked
             ? "Remove bookmark"
             : "Add bookmark"
       }
     >
-      {isBookmarking ? (
+      {isPending ? (
         <RiLoader2Fill className="animate-spin" />
       ) : isBookmarked ? (
         <HiBookmark className="text-primary" />

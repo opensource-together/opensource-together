@@ -24,14 +24,14 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import type { Profile } from "../types/profile.type";
 import {
   experienceSchema,
-  type ProfileSchema,
+  type ProfileFormValues,
 } from "../validations/profile.schema";
 import ExperienceModalForm from "./experience-modal.form";
 import ProfileExperiencesEditor from "./profile-experiences-editor.form";
 
 interface ProfileEditMainFormProps {
   profile: Profile;
-  form: UseFormReturn<ProfileSchema>;
+  form: UseFormReturn<ProfileFormValues>;
   onSubmit: () => void;
   onImageSelect: (file: File | null) => void;
   onBannerSelect: (file: File | null) => void;
