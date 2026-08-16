@@ -37,6 +37,7 @@ export interface UpdateProjectVariables {
 
 export interface DeleteProjectVariables {
   projectId: string;
+  ownerId?: string;
 }
 
 export interface ToggleProjectPublishedVariables {
@@ -132,7 +133,7 @@ export function useDeleteProjectMutation() {
       queryClient.removeQueries({
         queryKey: projectKeys.detail(variables.projectId),
       });
-      await invalidateProjectLists(queryClient);
+      await invalidateProjectLists(queryClient, variables.ownerId);
     },
   });
 }

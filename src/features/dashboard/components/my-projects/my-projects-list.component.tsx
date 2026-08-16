@@ -32,10 +32,7 @@ const parseNumber = (value: string | null, fallback: number) => {
 export default function MyProjectsList() {
   const searchParams = useSearchParams();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [togglingProjectId, setTogglingProjectId] = useState<string | null>(
     null
   );
@@ -56,7 +53,7 @@ export default function MyProjectsList() {
   const myProjects = myProjectsResponse?.data || [];
   const pagination = myProjectsResponse?.pagination;
 
-  const handleDeleteClick = (project: { id: string; title: string }) => {
+  const handleDeleteClick = (project: Project) => {
     setProjectToDelete(project);
     setDeleteDialogOpen(true);
   };
@@ -67,6 +64,7 @@ export default function MyProjectsList() {
     try {
       await deleteProjectMutation.mutateAsync({
         projectId: projectToDelete.id,
+        ownerId: projectToDelete.owner?.id,
       });
       toast.success("Project deleted successfully");
       setDeleteDialogOpen(false);

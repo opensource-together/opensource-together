@@ -19,7 +19,7 @@ import {
 interface ProjectTableActionsProps {
   project: Project;
   onTogglePublish: (project: Project) => void;
-  onDelete: (project: { id: string; title: string }) => void;
+  onDelete: (project: Project) => void;
   isTogglingPublished: boolean;
   togglingProjectId: string | null;
 }
@@ -42,10 +42,7 @@ export function ProjectTableActions({
   };
 
   const handleDelete = () => {
-    onDelete({
-      id: project.id ?? "",
-      title: project.title || "Untitled Project",
-    });
+    onDelete(project);
   };
 
   const isCurrentlyToggling =
