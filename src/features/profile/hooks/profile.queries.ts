@@ -1,19 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import type { PaginationParams } from "@/shared/types/pagination.type";
-
 import {
-  getUserBookmarks,
-  getUserById,
+  getCurrentUserBookmarks,
   getUserProjects,
   type UserBookmarksQueryParams,
   type UserProjectsQueryParams,
-} from "../services/profile.service";
+} from "@/features/projects/services/project.service";
+import type { PaginationParams } from "@/shared/types/pagination.type";
+
+import { getUser } from "../services/profile.service";
 import { profileKeys } from "./profile.keys";
 
 export function useProfileQuery(userId: string) {
   return useQuery({
     queryKey: profileKeys.detail(userId),
-    queryFn: () => getUserById(userId),
+    queryFn: ({ signal }) => getUser(userId, { signal }),
     enabled: !!userId,
   });
 }
@@ -31,7 +31,7 @@ export function useUserProjectsQuery(
 
   return useQuery({
     queryKey: profileKeys.projectList(userId, queryParams),
-    queryFn: () => getUserProjects(userId, queryParams),
+    queryFn: ({ signal }) => getUserProjects(userId, queryParams, { signal }),
     enabled: (options?.enabled ?? true) && !!userId,
   });
 }
@@ -48,7 +48,7 @@ export function useUserBookmarksQuery(
 
   return useQuery({
     queryKey: profileKeys.bookmarkList(queryParams),
-    queryFn: () => getUserBookmarks(queryParams),
+    queryFn: ({ signal }) => getCurrentUserBookmarks(queryParams, { signal }),
     enabled: options?.enabled ?? true,
   });
 }

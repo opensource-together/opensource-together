@@ -2,10 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   deleteAccount,
-  linkSocialAccount,
-  logout,
+  linkProvider,
   signInWithProvider,
-  unlinkSocialAccount,
+  signOut,
+  unlinkProvider,
 } from "../services/auth.service";
 import type { AuthProvider } from "../types/auth.type";
 import { authKeys, authMutationKeys } from "./auth.keys";
@@ -32,7 +32,7 @@ export function useLinkSocialAccountMutation() {
   return useMutation({
     mutationKey: authMutationKeys.linkAccount(),
     mutationFn: ({ provider, callbackURL }: LinkSocialAccountVariables) =>
-      linkSocialAccount(provider, callbackURL),
+      linkProvider(provider, callbackURL),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: authKeys.currentUser(),
@@ -47,7 +47,7 @@ export function useUnlinkSocialAccountMutation() {
   return useMutation({
     mutationKey: authMutationKeys.unlinkAccount(),
     mutationFn: ({ providerId }: UnlinkSocialAccountVariables) =>
-      unlinkSocialAccount(providerId),
+      unlinkProvider(providerId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: authKeys.currentUser(),
@@ -61,7 +61,7 @@ export function useLogoutMutation() {
 
   return useMutation({
     mutationKey: authMutationKeys.logout(),
-    mutationFn: logout,
+    mutationFn: signOut,
     onSuccess: () => {
       queryClient.setQueryData(authKeys.currentUser(), null);
     },

@@ -3,21 +3,21 @@ import { authKeys } from "@/features/auth/hooks/auth.keys";
 
 import {
   updateProfile,
-  updateProfileBanner,
-  updateProfileLogo,
+  uploadProfileAvatar,
+  uploadProfileBanner,
 } from "../services/profile.service";
 import type { UpdateProfileInput } from "../validations/profile.schema";
 import { profileKeys, profileMutationKeys } from "./profile.keys";
 
-export interface UpdateProfileVariables {
+export type UpdateProfileVariables = {
   userId: string;
   data: UpdateProfileInput;
-}
+};
 
-export interface UpdateProfileFileVariables {
+export type UpdateProfileFileVariables = {
   userId: string;
   file: File;
-}
+};
 
 export function useUpdateProfileMutation() {
   const queryClient = useQueryClient();
@@ -26,9 +26,13 @@ export function useUpdateProfileMutation() {
     mutationKey: profileMutationKeys.update(),
     mutationFn: ({ userId, data }: UpdateProfileVariables) =>
       updateProfile(userId, data),
-    onSuccess: (profile) => {
-      queryClient.setQueryData(profileKeys.detail(profile.id), profile);
-      queryClient.setQueryData(authKeys.currentUser(), profile);
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: profileKeys.detail(variables.userId),
+        }),
+        queryClient.invalidateQueries({ queryKey: authKeys.currentUser() }),
+      ]);
     },
   });
 }
@@ -39,7 +43,7 @@ export function useUpdateProfileLogoMutation() {
   return useMutation({
     mutationKey: profileMutationKeys.updateLogo(),
     mutationFn: ({ userId, file }: UpdateProfileFileVariables) =>
-      updateProfileLogo(userId, file),
+      uploadProfileAvatar(userId, file),
     onSuccess: async (_, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
@@ -57,7 +61,7 @@ export function useUpdateProfileBannerMutation() {
   return useMutation({
     mutationKey: profileMutationKeys.updateBanner(),
     mutationFn: ({ userId, file }: UpdateProfileFileVariables) =>
-      updateProfileBanner(userId, file),
+      uploadProfileBanner(userId, file),
     onSuccess: async (_, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({

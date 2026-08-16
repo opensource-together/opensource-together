@@ -1,91 +1,54 @@
-import { API_BASE_URL } from "@/config/config";
 import type { Profile } from "@/features/profile/types/profile.type";
+import {
+  ApiError,
+  type ApiRequestContext,
+  apiData,
+} from "@/shared/lib/api-client";
 import { authClient } from "@/shared/lib/auth-client";
 
 import type { AuthProvider } from "../types/auth.type";
 
-export const signInWithProvider = async (
+export async function signInWithProvider(
   provider: AuthProvider
-): Promise<void> => {
-  try {
-    await authClient.signIn.social({
-      provider,
-      callbackURL: `${window.location.origin}/onboarding`,
-    });
-  } catch (error) {
-    console.error("signInWithProvider error:", error);
-    throw error;
-  }
-};
+): Promise<void> {
+  await authClient.signIn.social({
+    provider,
+    callbackURL: `${window.location.origin}/onboarding`,
+  });
+}
 
-export const linkSocialAccount = async (
+export async function linkProvider(
   provider: AuthProvider,
-  callbackURL?: string
-): Promise<void> => {
+  callbackUrl?: string
+): Promise<void> {
+  await authClient.linkSocial({
+    provider,
+    callbackURL: callbackUrl || `${window.location.origin}/dashboard/settings`,
+  });
+}
+
+export async function unlinkProvider(providerId: string): Promise<void> {
+  await authClient.unlinkAccount({ providerId });
+}
+
+export async function signOut(): Promise<void> {
+  await authClient.signOut();
+}
+
+export async function deleteAccount(): Promise<void> {
+  await authClient.deleteUser({
+    callbackURL: window.location.origin,
+  });
+}
+
+export async function getCurrentUser(
+  context: ApiRequestContext = {}
+): Promise<Profile | null> {
   try {
-    await authClient.linkSocial({
-      provider,
-      callbackURL:
-        callbackURL || `${window.location.origin}/dashboard/settings`,
-    });
+    return await apiData<Profile>("/users/me", context);
   } catch (error) {
-    console.error("linkSocialAccount error:", error);
-    throw error;
-  }
-};
-
-export const unlinkSocialAccount = async (
-  providerId: string
-): Promise<void> => {
-  try {
-    await authClient.unlinkAccount({
-      providerId,
-    });
-  } catch (error) {
-    console.error("unlinkSocialAccount error:", error);
-    throw error;
-  }
-};
-
-export const logout = async (): Promise<void> => {
-  try {
-    await authClient.signOut();
-  } catch (error) {
-    console.error("logout error:", error);
-    throw error;
-  }
-};
-
-export const deleteAccount = async (): Promise<void> => {
-  try {
-    await authClient.deleteUser({
-      callbackURL: window.location.origin,
-    });
-  } catch (error) {
-    console.error("deleteAccount error:", error);
-    throw error;
-  }
-};
-
-export const getCurrentUser = async (): Promise<Profile | null> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      method: "GET",
-      credentials: "include",
-    });
-
     // An anonymous session is a valid application state, not a query failure.
-    if (response.status === 401) return null;
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch user profile");
-    }
-
-    const apiResponse = await response.json();
-    return apiResponse.data || null;
-  } catch (error) {
-    console.error("Error fetching current user:", error);
+    if (error instanceof ApiError && error.status === 401) return null;
     throw error;
   }
-};
+}

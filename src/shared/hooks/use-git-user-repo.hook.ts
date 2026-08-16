@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { authKeys } from "@/features/auth/hooks/auth.keys";
 
-import { getGitUserRepositories } from "../services/git-user-repos.service";
+import { getCurrentUserRepositories } from "../services/git-user-repositories.service";
 import type {
   GitUserRepositoriesQueryParams,
   GitUserRepositoriesResponse,
@@ -20,7 +20,8 @@ export const useGitUserRepositories = (
 
   return useQuery<GitUserRepositoriesResponse>({
     queryKey: authKeys.repositoryList(queryParams),
-    queryFn: () => getGitUserRepositories(queryParams),
+    queryFn: ({ signal }) =>
+      getCurrentUserRepositories(queryParams, { signal }),
   });
 };
 
@@ -36,11 +37,14 @@ export const useInfiniteGitUserRepositories = (
   return useInfiniteQuery<GitUserRepositoriesResponse, Error>({
     queryKey: authKeys.repositoryList(queryParams),
     initialPageParam: 1,
-    queryFn: async ({ pageParam }) =>
-      getGitUserRepositories({
-        ...queryParams,
-        page: pageParam as number,
-      }),
+    queryFn: async ({ pageParam, signal }) =>
+      getCurrentUserRepositories(
+        {
+          ...queryParams,
+          page: pageParam as number,
+        },
+        { signal }
+      ),
     getNextPageParam: (lastPage, _pages, lastPageParam) => {
       const provider = params.provider;
       if (!provider) return undefined;

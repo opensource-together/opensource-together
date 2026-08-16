@@ -6,14 +6,13 @@ import {
 import { profileKeys } from "@/features/profile/hooks/profile.keys";
 
 import {
+  addProjectImage,
   claimProject,
   createProject,
   deleteProject,
   deleteProjectImage,
   updateProject,
-  updateProjectCover,
-  updateProjectLogo,
-  updateProjectPublishedStatus,
+  uploadProjectLogo,
 } from "../services/project.service";
 import type { Project } from "../types/project.type";
 import type {
@@ -22,6 +21,7 @@ import type {
 } from "../validations/project.schema";
 import {
   formatMissingFieldsMessage,
+  transformProjectForPublishedToggle,
   validateProjectForPublishing,
 } from "../validations/publish-toggle.validation";
 import { projectKeys, projectMutationKeys } from "./project.keys";
@@ -150,7 +150,10 @@ export function useToggleProjectPublishedMutation() {
         }
       }
 
-      return updateProjectPublishedStatus(project.id || "", project, published);
+      return updateProject(
+        project.id || "",
+        transformProjectForPublishedToggle(project, published)
+      );
     },
     onSuccess: async (project, variables) => {
       const targetId =
@@ -176,7 +179,7 @@ export function useUpdateProjectLogoMutation() {
   return useMutation({
     mutationKey: projectMutationKeys.updateLogo(),
     mutationFn: ({ projectId, file }: UpdateProjectLogoVariables) =>
-      updateProjectLogo(projectId, file),
+      uploadProjectLogo(projectId, file),
     onSuccess: async (_, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
@@ -194,7 +197,7 @@ export function useAddProjectCoverMutation() {
   return useMutation({
     mutationKey: projectMutationKeys.addCover(),
     mutationFn: ({ projectId, file }: AddProjectCoverVariables) =>
-      updateProjectCover(projectId, file),
+      addProjectImage(projectId, file),
     onSuccess: async (_, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({

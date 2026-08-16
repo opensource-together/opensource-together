@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { profileKeys } from "@/features/profile/hooks/profile.keys";
 
 import {
-  bookmarkProject,
-  removeProjectBookmark,
+  addProjectBookmark,
+  deleteProjectBookmark,
 } from "../services/project.service";
 import { projectKeys, projectMutationKeys } from "./project.keys";
 
@@ -26,7 +26,7 @@ export function useProjectBookmark({
 
   const bookmarkMutation = useMutation({
     mutationKey: projectMutationKeys.bookmark(),
-    mutationFn: () => bookmarkProject(projectId),
+    mutationFn: () => addProjectBookmark(projectId),
     onSuccess: async () => {
       setIsBookmarked(true);
       await Promise.all([
@@ -40,7 +40,7 @@ export function useProjectBookmark({
 
   const removeBookmarkMutation = useMutation({
     mutationKey: projectMutationKeys.removeBookmark(),
-    mutationFn: () => removeProjectBookmark(projectId),
+    mutationFn: () => deleteProjectBookmark(projectId),
     onSuccess: async () => {
       setIsBookmarked(false);
       await Promise.all([

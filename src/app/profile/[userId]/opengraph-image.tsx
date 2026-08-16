@@ -1,5 +1,4 @@
-import { getUserById } from "@/features/profile/services/profile.service";
-import type { Profile } from "@/features/profile/types/profile.type";
+import { getUser } from "@/features/profile/services/profile.service";
 import { Generator } from "@/shared/components/seo/image-metadata/commons/generator/generator";
 import { UserImageMetadata } from "@/shared/components/seo/image-metadata/user/user-image-metadata";
 
@@ -17,7 +16,7 @@ export default async function Image({
   params: { userId: string };
 }) {
   try {
-    const user = (await getUserById(params.userId)) as Profile;
+    const user = await getUser(params.userId);
 
     return Generator({
       children: (

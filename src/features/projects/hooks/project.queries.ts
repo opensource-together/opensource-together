@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import {
-  getProjectDetails,
+  getProject,
   getProjects,
   type PaginatedProjectsResponse,
   type ProjectQueryParams,
@@ -25,11 +25,14 @@ export function useInfiniteProjectsQuery(
 
   return useInfiniteQuery<PaginatedProjectsResponse>({
     queryKey: projectKeys.infiniteList(queryParams),
-    queryFn: ({ pageParam }) =>
-      getProjects({
-        ...queryParams,
-        page: typeof pageParam === "number" ? pageParam : 1,
-      }),
+    queryFn: ({ pageParam, signal }) =>
+      getProjects(
+        {
+          ...queryParams,
+          page: typeof pageParam === "number" ? pageParam : 1,
+        },
+        { signal }
+      ),
     initialPageParam: 1,
     enabled: options?.enabled ?? true,
     getNextPageParam: (lastPage) => {
@@ -51,7 +54,7 @@ export function useInfiniteProjectsQuery(
 export function useProjectQuery(projectId: string) {
   return useQuery<Project>({
     queryKey: projectKeys.detail(projectId),
-    queryFn: () => getProjectDetails(projectId),
+    queryFn: ({ signal }) => getProject(projectId, { signal }),
     enabled: !!projectId,
   });
 }

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { ComboboxOption } from "@/shared/components/ui/combobox";
 
-import { fetchTechStacks } from "../services/tech-stack.service";
+import { getTechStacks } from "../services/tech-stack.service";
 import type { TechStackType } from "../types/tech-stack.type";
 
 export type TechStackOption = ComboboxOption;
@@ -14,7 +14,7 @@ export function useTechStack(options?: { enabled?: boolean }) {
     error,
   } = useQuery({
     queryKey: ["techStacks"],
-    queryFn: fetchTechStacks,
+    queryFn: ({ signal }) => getTechStacks({ signal }),
     enabled: options?.enabled ?? true,
   });
 

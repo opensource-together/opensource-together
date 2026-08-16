@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  getUserMyPullRequests,
-  getUserPullRequestsById,
+  getCurrentUserPullRequests,
+  getUserPullRequests,
 } from "../services/profile-pull-request.service";
 import type {
   PullRequestQueryParams,
@@ -21,7 +21,8 @@ export function useCurrentUserPullRequestsQuery(
 
   return useQuery<PullRequestsResponse>({
     queryKey: profileKeys.pullRequestList("me", queryParams),
-    queryFn: () => getUserMyPullRequests(queryParams),
+    queryFn: ({ signal }) =>
+      getCurrentUserPullRequests(queryParams, { signal }),
   });
 }
 
@@ -37,7 +38,8 @@ export function useUserPullRequestsQuery(
 
   return useQuery<PullRequestsResponse>({
     queryKey: profileKeys.pullRequestList(userId, queryParams),
-    queryFn: () => getUserPullRequestsById(userId, queryParams),
+    queryFn: ({ signal }) =>
+      getUserPullRequests(userId, queryParams, { signal }),
     enabled: !!userId,
   });
 }

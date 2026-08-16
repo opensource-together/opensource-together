@@ -6,7 +6,7 @@ import { authKeys } from "./auth.keys";
 export function useCurrentUserQuery() {
   return useQuery({
     queryKey: authKeys.currentUser(),
-    queryFn: getCurrentUser,
+    queryFn: ({ signal }) => getCurrentUser({ signal }),
     retry: 0,
   });
 }

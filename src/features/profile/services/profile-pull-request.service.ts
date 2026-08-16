@@ -1,63 +1,28 @@
-import { API_BASE_URL } from "@/config/config";
+import type { ApiRequestContext } from "@/shared/lib/api-client";
+import { apiData, withQueryParams } from "@/shared/lib/api-client";
 
 import type {
   PullRequestQueryParams,
   PullRequestsResponse,
 } from "../types/profile.pull-request.type";
 
-export const getUserMyPullRequests = async (
-  params?: PullRequestQueryParams
-): Promise<PullRequestsResponse> => {
-  try {
-    const queryParams = new URLSearchParams(
-      Object.entries(params ?? {})
-        .filter(([_, v]) => v !== undefined && v !== null)
-        .map(([k, v]) => [k, String(v)])
-    );
-    const queryString = queryParams.toString();
-    const url = `${API_BASE_URL}/users/me/pull-requests${queryString ? `?${queryString}` : ""}`;
+export function getCurrentUserPullRequests(
+  params?: PullRequestQueryParams,
+  context: ApiRequestContext = {}
+): Promise<PullRequestsResponse> {
+  return apiData<PullRequestsResponse>(
+    withQueryParams("/users/me/pull-requests", params),
+    context
+  );
+}
 
-    const response = await fetch(url, {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch pull requests");
-    }
-    const apiResponse = await response.json();
-    return apiResponse.data;
-  } catch (error) {
-    console.error("Error fetching pull requests:", error);
-    throw error;
-  }
-};
-
-export const getUserPullRequestsById = async (
+export function getUserPullRequests(
   userId: string,
-  params?: PullRequestQueryParams
-): Promise<PullRequestsResponse> => {
-  try {
-    const queryParams = new URLSearchParams(
-      Object.entries(params ?? {})
-        .filter(([_, v]) => v !== undefined && v !== null)
-        .map(([k, v]) => [k, String(v)])
-    );
-    const queryString = queryParams.toString();
-    const url = `${API_BASE_URL}/users/${userId}/pull-requests${queryString ? `?${queryString}` : ""}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch user pull requests");
-    }
-    const apiResponse = await response.json();
-    return apiResponse.data;
-  } catch (error) {
-    console.error("Error fetching user pull requests:", error);
-    throw error;
-  }
-};
+  params?: PullRequestQueryParams,
+  context: ApiRequestContext = {}
+): Promise<PullRequestsResponse> {
+  return apiData<PullRequestsResponse>(
+    withQueryParams(`/users/${userId}/pull-requests`, params),
+    context
+  );
+}

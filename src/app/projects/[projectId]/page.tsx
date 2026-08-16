@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { FRONTEND_URL } from "@/config/config";
-import { getProjectDetails } from "@/features/projects/services/project.service";
+import { getProject } from "@/features/projects/services/project.service";
 import ProjectDetailView from "@/features/projects/views/project-detail.view";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 
@@ -13,7 +13,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { projectId } = await params;
   try {
-    const project = await getProjectDetails(projectId);
+    const project = await getProject(projectId);
 
     const projectUrl = `${FRONTEND_URL.replace(/\/$/, "")}/projects/${projectId}`;
 

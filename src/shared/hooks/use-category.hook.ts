@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { ComboboxOption } from "@/shared/components/ui/combobox";
 
-import { fetchCategories } from "../services/category.service";
+import { getCategories } from "../services/category.service";
 import type { CategoryType } from "../types/category.type";
 
 export interface CategoryOption extends ComboboxOption {}
@@ -14,7 +14,7 @@ export function useCategories(options?: { enabled?: boolean }) {
     error,
   } = useQuery({
     queryKey: ["categories"],
-    queryFn: fetchCategories,
+    queryFn: ({ signal }) => getCategories({ signal }),
     enabled: options?.enabled ?? true,
   });
 

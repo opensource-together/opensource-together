@@ -1,3 +1,5 @@
+import { apiRequest } from "@/shared/lib/api-client";
+
 interface FeatureRequestPayload {
   request: string;
   userInfo?: {
@@ -6,19 +8,12 @@ interface FeatureRequestPayload {
   };
 }
 
-export const sendFeatureRequest = async (
+export async function sendFeatureRequest(
   payload: FeatureRequestPayload
-): Promise<void> => {
-  const response = await fetch("/api/feature-request", {
+): Promise<void> {
+  await apiRequest("/api/feature-request", {
+    baseUrl: "",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
+    json: payload,
   });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || "Failed to send feature request");
-  }
-};
+}

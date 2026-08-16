@@ -9,6 +9,7 @@ import {
   useDeleteProjectMutation,
   useToggleProjectPublishedMutation,
 } from "@/features/projects/hooks/project.mutations";
+import type { UserProjectsQueryParams } from "@/features/projects/services/project.service";
 import type { Project } from "@/features/projects/types/project.type";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { DataTablePagination } from "@/shared/components/ui/data-table-pagination.component";
@@ -19,7 +20,6 @@ import { Table, TableBody } from "@/shared/components/ui/table";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 import { useMyProjectsQuery } from "../../hooks/my-projects.queries";
-import type { ProjectQueryParams } from "../../services/my-projects.service";
 import MyProjectsSkeleton from "../skeletons/my-projects-skeleton.component";
 import MyProjectRow from "./my-projects-row.component";
 
@@ -42,7 +42,7 @@ export default function MyProjectsList() {
 
   const page = parseNumber(searchParams.get("page"), 1);
   const perPage = parseNumber(searchParams.get("per_page"), 7);
-  const queryParams: ProjectQueryParams = { page, per_page: perPage };
+  const queryParams: UserProjectsQueryParams = { page, per_page: perPage };
 
   const {
     data: myProjectsResponse,
