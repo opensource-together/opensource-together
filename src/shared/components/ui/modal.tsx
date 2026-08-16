@@ -65,6 +65,8 @@ function Modal({
   confirmVariant = "default",
 }: ModalProps) {
   const handleCancel = () => {
+    if (isLoading) return;
+
     if (onCancel) {
       onCancel();
     } else if (onOpenChange) {
@@ -73,7 +75,12 @@ function Modal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!isLoading) onOpenChange?.(nextOpen);
+      }}
+    >
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent
         className={`${sizeClasses[size]} ${className || ""}`}
@@ -99,6 +106,7 @@ function Modal({
                   type="button"
                   variant="secondary"
                   onClick={handleCancel}
+                  disabled={isLoading}
                 >
                   {cancelText}
                 </Button>
@@ -108,6 +116,7 @@ function Modal({
                   variant={confirmVariant}
                   onClick={onConfirm}
                   disabled={isLoading}
+                  aria-busy={isLoading}
                   className={`flex items-center gap-2 ${
                     confirmVariant === "destructive"
                       ? "bg-red-500 hover:bg-red-600"

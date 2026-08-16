@@ -104,7 +104,8 @@ export default function StepGitImportForm({
       <ErrorState
         title="Error loading repositories"
         message={`We couldn't load your ${provider} repositories. Please link your ${provider} account to continue.`}
-        onRetry={() => void handleLinkAccount()}
+        onRetry={handleLinkAccount}
+        isLoading={isLinkingSocialAccount}
         retryText={
           isLinkingSocialAccount
             ? `Linking ${provider}...`

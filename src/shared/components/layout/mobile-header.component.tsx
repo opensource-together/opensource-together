@@ -13,6 +13,7 @@ import {
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
+import { RiLoader2Fill } from "react-icons/ri";
 import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import SearchCommand from "@/features/projects/components/search-command.component";
@@ -55,7 +56,8 @@ const DEFAULT_LINKS: MobileNavLink[] = [
 export function MobileHeader({ links }: MobileHeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, isLoading, currentUser, logout } = useAuth();
+  const { isAuthenticated, isLoading, currentUser, logout, isLoggingOut } =
+    useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const resolvedLinks = links ?? (isAuthenticated ? DEFAULT_LINKS : []);
 
@@ -223,10 +225,15 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                         </Link>
                         <DropdownMenuItem
                           onClick={() => void handleLogout()}
+                          disabled={isLoggingOut}
                           variant="destructive"
                         >
-                          <HiLogout className="size-4" />
-                          Sign out
+                          {isLoggingOut ? (
+                            <RiLoader2Fill className="size-4 animate-spin" />
+                          ) : (
+                            <HiLogout className="size-4" />
+                          )}
+                          {isLoggingOut ? "Signing out..." : "Sign out"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

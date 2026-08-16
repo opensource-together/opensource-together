@@ -15,21 +15,22 @@ export default function GitlabButton({
   isLoading = false,
   variant = "default",
 }: GitlabButtonProps) {
-  const { signInWithProvider } = useAuth();
+  const { signInWithProvider, isSigningIn } = useAuth();
 
   const isOutlineVariant = variant === "outline";
+  const isPending = isLoading || isSigningIn;
 
   return (
     <Button
       onClick={() => signInWithProvider("gitlab")}
-      disabled={isLoading}
+      disabled={isPending}
       variant={isOutlineVariant ? "outline" : "default"}
       size="lg"
       className={`w-[320px] text-sm sm:text-base md:w-[420px] ${
         isOutlineVariant ? "border-none bg-[#FAFAF9]" : ""
       }`}
     >
-      {isLoading ? (
+      {isPending ? (
         <div
           className={`size-4 animate-spin rounded-full border-2 ${
             isOutlineVariant ? "border-black/10" : "border-white"
@@ -42,7 +43,7 @@ export default function GitlabButton({
           }
         />
       )}
-      <span className="ml-1">{text}</span>
+      <span className="ml-1">{isPending ? "Signing in..." : text}</span>
     </Button>
   );
 }

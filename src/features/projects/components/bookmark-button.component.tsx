@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { HiBookmark, HiOutlineBookmark } from "react-icons/hi2";
+import { RiLoader2Fill } from "react-icons/ri";
 import { toast } from "sonner";
 import useAuth from "@/features/auth/hooks/use-auth.hook";
 import { Button } from "@/shared/components/ui/button";
@@ -59,9 +60,17 @@ export function BookmarkButton({
       className="size-9"
       onClick={() => void handleToggleBookmark()}
       disabled={isBookmarking}
-      aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+      aria-label={
+        isBookmarking
+          ? "Updating bookmark"
+          : isBookmarked
+            ? "Remove bookmark"
+            : "Add bookmark"
+      }
     >
-      {isBookmarked ? (
+      {isBookmarking ? (
+        <RiLoader2Fill className="animate-spin" />
+      ) : isBookmarked ? (
         <HiBookmark className="text-primary" />
       ) : (
         <HiOutlineBookmark />

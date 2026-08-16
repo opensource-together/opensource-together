@@ -3,6 +3,7 @@ import {
   RiDeleteBinLine,
   RiEyeLine,
   RiEyeOffLine,
+  RiLoader2Fill,
   RiMoreFill,
   RiPencilLine,
 } from "react-icons/ri";
@@ -70,12 +71,20 @@ export function ProjectTableActions({
           }}
           disabled={isCurrentlyToggling}
         >
-          {project.published ? (
+          {isCurrentlyToggling ? (
+            <RiLoader2Fill className="size-4 animate-spin" />
+          ) : project.published ? (
             <RiEyeOffLine className="size-4 text-primary" />
           ) : (
             <RiEyeLine className="size-4 text-primary" />
           )}
-          {project.published ? "Unpublish" : "Publish"}
+          {isCurrentlyToggling
+            ? project.published
+              ? "Unpublishing..."
+              : "Publishing..."
+            : project.published
+              ? "Unpublish"
+              : "Publish"}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={(e) => {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   RiBookmarkLine,
+  RiLoader2Fill,
   RiLogoutBoxLine,
   RiPencilLine,
   RiSettingsLine,
@@ -22,7 +23,7 @@ import {
 import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 export default function UserDropdown() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, isLoggingOut } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -89,10 +90,15 @@ export default function UserDropdown() {
         </Link>
         <DropdownMenuItem
           onClick={() => void handleLogout()}
+          disabled={isLoggingOut}
           variant="destructive"
         >
-          <RiLogoutBoxLine className="size-4 text-primary" />
-          Sign out
+          {isLoggingOut ? (
+            <RiLoader2Fill className="size-4 animate-spin" />
+          ) : (
+            <RiLogoutBoxLine className="size-4 text-primary" />
+          )}
+          {isLoggingOut ? "Signing out..." : "Sign out"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

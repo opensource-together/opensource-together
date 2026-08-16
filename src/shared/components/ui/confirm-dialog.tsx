@@ -44,7 +44,12 @@ export function ConfirmDialog({
   confirmVariant = "default",
 }: ConfirmDialogProps) {
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!isLoading) onOpenChange(nextOpen);
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-3">
@@ -58,11 +63,14 @@ export function ConfirmDialog({
         </AlertDialogHeader>
         <Separator className="mt-1 mb-1" contentPaddingX={6} />
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel} disabled={isLoading}>
+            Cancel
+          </AlertDialogCancel>
           <Button
             variant={confirmVariant}
             onClick={onConfirm}
             disabled={isLoading}
+            aria-busy={isLoading}
             className="flex items-center gap-2"
           >
             {isLoading ? (
