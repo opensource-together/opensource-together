@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ProjectImportationConfirmDialog } from "@/features/projects/components/stepper/import-confirmation-dialog.component";
@@ -44,6 +44,7 @@ export function StepTechCategoriesForm() {
   const updateProjectLogoMutation = useUpdateProjectLogoMutation();
   const addProjectCoverMutation = useAddProjectCoverMutation();
   const [isCreating, setIsCreating] = useState(false);
+  const createdProjectIdRef = useRef<string | null>(null);
 
   const { formData, updateProjectInfo } = useProjectCreateStore();
   const {
@@ -101,7 +102,6 @@ export function StepTechCategoriesForm() {
     router.push("/projects/create/describe");
   };
 
-  // Helper function to prepare logo file
   const prepareLogoFile = async (): Promise<File | null> => {
     if (formData.logoFile) {
       return formData.logoFile;
@@ -119,7 +119,6 @@ export function StepTechCategoriesForm() {
     return null;
   };
 
-  // Helper function to prepare cover image files
   const prepareCoverFiles = async (): Promise<File[]> => {
     if (formData.imageFiles && formData.imageFiles.length > 0) {
       return formData.imageFiles;
@@ -147,7 +146,6 @@ export function StepTechCategoriesForm() {
     return coverFiles;
   };
 
-  // Helper function to upload project logo
   const uploadProjectLogo = (projectId: string, logoFile: File) => {
     return updateProjectLogoMutation.mutateAsync({
       projectId,
@@ -155,7 +153,6 @@ export function StepTechCategoriesForm() {
     });
   };
 
-  // Helper function to upload project cover images
   const uploadProjectCovers = async (projectId: string, imageFiles: File[]) => {
     const uploadPromises = imageFiles.map((file) =>
       addProjectCoverMutation.mutateAsync({
@@ -171,7 +168,6 @@ export function StepTechCategoriesForm() {
 
     setIsCreating(true);
 
-    // Prepare project data
     const projectData: CreateProjectInput = {
       title: formData.title,
       description: formData.description,
@@ -187,7 +183,6 @@ export function StepTechCategoriesForm() {
       websiteUrl: pendingFormData.websiteUrl || "",
     };
 
-    // Update the store with form data
     updateProjectInfo({
       projectTechStacks: pendingFormData.projectTechStacks || [],
       projectCategories: pendingFormData.projectCategories || [],
@@ -200,14 +195,18 @@ export function StepTechCategoriesForm() {
     });
 
     try {
-      // Create project
-      const createdProject = await createProjectMutation.mutateAsync({
-        data: projectData,
-      });
-      const projectId = createdProject.id || createdProject.publicId;
-
+      let projectId = createdProjectIdRef.current;
       if (!projectId) {
-        throw new Error("Failed to get project ID from response");
+        const createdProject = await createProjectMutation.mutateAsync({
+          data: projectData,
+        });
+        projectId = createdProject.id || createdProject.publicId || null;
+
+        if (!projectId) {
+          throw new Error("Failed to get project ID from response");
+        }
+
+        createdProjectIdRef.current = projectId;
       }
 
       const logoFile = await prepareLogoFile();
@@ -237,10 +236,8 @@ export function StepTechCategoriesForm() {
   };
 
   const onSubmit = handleSubmit((data) => {
-    // Store the form data for confirmation
     setPendingFormData(data);
 
-    // Update the store with form data
     updateProjectInfo({
       projectTechStacks: data.projectTechStacks,
       projectCategories: data.projectCategories,

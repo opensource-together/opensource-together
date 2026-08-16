@@ -63,6 +63,7 @@ export function useLogoutMutation() {
     mutationKey: authMutationKeys.logout(),
     mutationFn: signOut,
     onSuccess: () => {
+      queryClient.clear();
       queryClient.setQueryData(authKeys.currentUser(), null);
     },
   });
