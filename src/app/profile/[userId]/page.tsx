@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 
 import { FRONTEND_URL } from "@/config/config";
 import { getCurrentUser } from "@/features/auth/services/auth.service";
-import { getUserById } from "@/features/profile/services/profile.service";
+import { getUser } from "@/features/profile/services/profile.service";
 import { PublicProfileView } from "@/features/profile/views/public-profile.view";
 import CTAFooter from "@/shared/components/layout/cta-footer";
+import { getServerApiContext } from "@/shared/lib/server-api-context";
 
 interface PublicProfilePageProps {
   params: Promise<{
@@ -18,7 +19,7 @@ export async function generateMetadata({
 }: PublicProfilePageProps): Promise<Metadata> {
   const { userId } = await params;
   try {
-    const user = await getUserById(userId);
+    const user = await getUser(userId);
 
     const userUrl = `${FRONTEND_URL.replace(/\/$/, "")}/profile/${userId}`;
 
@@ -63,9 +64,9 @@ export default async function PublicProfilePage({
 }: PublicProfilePageProps) {
   const { userId } = await params;
 
-  const currentUser = await getCurrentUser().catch(() => null);
+  const apiContext = await getServerApiContext();
+  const currentUser = await getCurrentUser(apiContext).catch(() => null);
   if (currentUser && currentUser.id === userId) {
-    console.log("Redirecting to /profile/me");
     redirect("/profile/me");
   }
 

@@ -1,5 +1,9 @@
-import { API_BASE_URL } from "@/config/config";
-
+import {
+  type ApiRequestContext,
+  apiData,
+  apiRequest,
+  withQueryParams,
+} from "@/shared/lib/api-client";
 import type {
   PaginatedResponse,
   PaginationParams,
@@ -7,10 +11,9 @@ import type {
 
 import type { Project } from "../types/project.type";
 import type {
-  ProjectSchema,
-  UpdateProjectData,
+  CreateProjectInput,
+  UpdateProjectInput,
 } from "../validations/project.schema";
-import { transformProjectForPublishedToggle } from "../validations/publish-toggle.validation";
 
 export interface ProjectQueryParams extends PaginationParams {
   published?: boolean;
@@ -20,319 +23,138 @@ export interface ProjectQueryParams extends PaginationParams {
   orderDirection?: "asc" | "desc";
 }
 
-export interface PaginatedProjectsResponse extends PaginatedResponse<Project> {}
+export interface UserProjectsQueryParams extends PaginationParams {
+  published?: boolean;
+}
 
-/**
- * Fetches the list of all projects.
- *
- * @param params - Optional query parameters to filter projects.
- * @returns A promise that resolves to the projects data.
- */
-export const getProjects = async (
-  params?: ProjectQueryParams
-): Promise<PaginatedProjectsResponse> => {
-  try {
-    const queryParams = new URLSearchParams(
-      Object.entries(params ?? {})
-        .filter(([_, v]) => v !== undefined && v !== null)
-        .map(([k, v]) => [k, String(v)])
-    );
-    const queryString = queryParams.toString();
-    const url = `${API_BASE_URL}/projects${queryString ? `?${queryString}` : ""}`;
-    const response = await fetch(url, {
-      method: "GET",
-      credentials: "include",
-    });
+export type UserBookmarksQueryParams = PaginationParams;
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error fetching projects");
-    }
+export type PaginatedProjectsResponse = PaginatedResponse<Project>;
 
-    const apiResponse = await response.json();
-    return apiResponse;
-  } catch (error) {
-    console.error("Error while sending the request to the API:", error);
-    throw error;
-  }
-};
+export function getProjects(
+  params?: ProjectQueryParams,
+  context: ApiRequestContext = {}
+): Promise<PaginatedProjectsResponse> {
+  return apiRequest<PaginatedProjectsResponse>(
+    withQueryParams("/projects", params),
+    context
+  );
+}
 
-/**
- * Fetches the details of a specific project by its ID.
- *
- * @param projectId - The ID of the project to retrieve.
- * @returns A promise that resolves to the project details.
- */
-export const getProjectDetails = async (
-  projectId: string
-): Promise<Project> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error fetching project details");
-    }
-
-    const apiResponse = await response.json();
-    return apiResponse?.data;
-  } catch (error) {
-    console.error("Error fetching project details:", error);
-    throw error;
-  }
-};
-
-/**
- * Creates a new project.
- *
- * @param projectData - The project data.
- * @returns A promise that resolves to the created project.
- */
-export const createProject = async (
-  projectData: ProjectSchema
-): Promise<Project> => {
-  const response = await fetch(`${API_BASE_URL}/projects`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(projectData),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Error creating project");
-  }
-
-  const apiResponse = await response.json();
-  return apiResponse?.data || apiResponse;
-};
-
-/**
- * Updates an existing project with optional image handling.
- *
- * @param projectId - The ID of the project to update.
- * @returns A promise that resolves to the updated project.
- */
-export const updateProject = async (
+export function getProject(
   projectId: string,
-  projectData: UpdateProjectData
-): Promise<Project> => {
+  context: ApiRequestContext = {}
+): Promise<Project> {
+  return apiData<Project>(`/projects/${projectId}`, context);
+}
+
+export function getUserProjects(
+  userId: string,
+  params?: UserProjectsQueryParams,
+  context: ApiRequestContext = {}
+): Promise<PaginatedProjectsResponse> {
+  return apiRequest<PaginatedProjectsResponse>(
+    withQueryParams(`/users/${userId}/projects`, params),
+    context
+  );
+}
+
+export function getCurrentUserProjects(
+  params?: UserProjectsQueryParams,
+  context: ApiRequestContext = {}
+): Promise<PaginatedProjectsResponse> {
+  return getUserProjects("me", params, context);
+}
+
+export function getCurrentUserBookmarks(
+  params?: UserBookmarksQueryParams,
+  context: ApiRequestContext = {}
+): Promise<PaginatedProjectsResponse> {
+  return apiRequest<PaginatedProjectsResponse>(
+    withQueryParams("/users/me/bookmarks", params),
+    context
+  );
+}
+
+export function createProject(input: CreateProjectInput): Promise<Project> {
+  return apiData<Project>("/projects", {
+    method: "POST",
+    json: input,
+  });
+}
+
+export function updateProject(
+  projectId: string,
+  input: UpdateProjectInput
+): Promise<Project> {
   const {
     logoUrl: _omitLogoUrl,
     imagesUrls: _omitImagesUrls,
     ...payload
-  } = projectData;
-  const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+  } = input;
+
+  return apiData<Project>(`/projects/${projectId}`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(payload),
+    json: payload,
   });
+}
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Error updating project");
-  }
+export function deleteProject(projectId: string): Promise<void> {
+  return apiRequest<void>(`/projects/${projectId}`, {
+    method: "DELETE",
+  });
+}
 
-  return response.json();
-};
-
-/**
- * Deletes a project by its ID and cleans up associated media.
- *
- * @param projectId - The ID of the project to delete.
- * @returns A promise that resolves to void.
- */
-export const deleteProject = async (projectId: string): Promise<void> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error while deleting project");
-    }
-  } catch (error) {
-    console.error("Error deleting project:", error);
-    throw error;
-  }
-};
-
-export const updateProjectPublishedStatus = async (
+export function uploadProjectLogo(
   projectId: string,
-  project: Project,
-  published: boolean
-): Promise<Project> => {
-  const payload = transformProjectForPublishedToggle(project, published);
-  return updateProject(projectId, payload);
-};
-
-/**
- * Updates the logo of a project.
- *
- * @param projectId - The ID of the project to update.
- * @param logoFile - The logo file to upload.
- * @returns A promise that resolves to the updated project.
- */
-export const updateProjectLogo = async (
-  projectId: string,
-  logoFile: File
-): Promise<Project> => {
+  file: File
+): Promise<Project> {
   const formData = new FormData();
-  formData.append("file", logoFile);
+  formData.append("file", file);
 
-  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/logo`, {
+  return apiData<Project>(`/projects/${projectId}/logo`, {
     method: "PATCH",
-    credentials: "include",
     body: formData,
   });
+}
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Error updating project logo");
-  }
-
-  return response.json();
-};
-
-/**
- * Updates the cover image of a project.
- *
- * @param projectId - The ID of the project to update.
- * @param coverFile - The cover file to upload.
- * @returns A promise that resolves to the updated project.
- */
-export const updateProjectCover = async (
+export function addProjectImage(
   projectId: string,
-  coverFile: File
-): Promise<Project> => {
+  file: File
+): Promise<Project> {
   const formData = new FormData();
-  formData.append("file", coverFile);
+  formData.append("file", file);
 
-  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/images`, {
+  return apiData<Project>(`/projects/${projectId}/images`, {
     method: "POST",
-    credentials: "include",
     body: formData,
   });
+}
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Error updating project cover");
-  }
-
-  return response.json();
-};
-
-/**
- * Deletes a specific cover image from a project by its URL.
- *
- * @param projectId - The ID or publicId of the project.
- * @param imageUrl - The public URL of the image to delete.
- * @returns A promise that resolves to the updated project.
- */
-export const deleteProjectImage = async (
+export function deleteProjectImage(
   projectId: string,
   imageUrl: string
-): Promise<Project> => {
-  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/images`, {
+): Promise<Project> {
+  return apiData<Project>(`/projects/${projectId}/images`, {
     method: "DELETE",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ url: imageUrl }),
+    json: { url: imageUrl },
   });
+}
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Error deleting project image");
-  }
+export function claimProject(projectId: string): Promise<Project> {
+  return apiData<Project>(`/projects/${projectId}/claims`, {
+    method: "POST",
+  });
+}
 
-  return response.json();
-};
+export function addProjectBookmark(projectId: string): Promise<Project> {
+  return apiData<Project>(`/projects/${projectId}/bookmarks`, {
+    method: "POST",
+  });
+}
 
-/**
- * Claims ownership of a project for the current authenticated user.
- *
- * @param projectId - The public ID of the project to claim.
- * @returns A promise that resolves to the updated project.
- */
-export const claimProject = async (projectId: string): Promise<Project> => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/projects/${projectId}/claims`,
-      {
-        method: "POST",
-        credentials: "include",
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error while claiming project");
-    }
-
-    const apiResponse = await response.json();
-    return apiResponse?.data || apiResponse;
-  } catch (error) {
-    console.error("Error claiming project:", error);
-    throw error;
-  }
-};
-
-export const bookmarkProject = async (projectId: string): Promise<Project> => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/projects/${projectId}/bookmarks`,
-      {
-        method: "POST",
-        credentials: "include",
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error while bookmarking project");
-    }
-
-    const apiResponse = await response.json();
-    return apiResponse;
-  } catch (error) {
-    console.error("Error bookmarking project:", error);
-    throw error;
-  }
-};
-
-export const removeProjectBookmark = async (
-  projectId: string
-): Promise<void> => {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/projects/${projectId}/bookmarks`,
-      {
-        method: "DELETE",
-        credentials: "include",
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Error while removing bookmark");
-    }
-  } catch (error) {
-    console.error("Error removing bookmark:", error);
-    throw error;
-  }
-};
+export function deleteProjectBookmark(projectId: string): Promise<void> {
+  return apiRequest<void>(`/projects/${projectId}/bookmarks`, {
+    method: "DELETE",
+  });
+}

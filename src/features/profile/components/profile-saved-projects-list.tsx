@@ -9,7 +9,8 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useProjectRepositorySummary } from "@/shared/hooks/use-git-repo-summary.hook";
 
-import { useUserBookmarks } from "../hooks/use-profile.hook";
+import { profileKeys } from "../hooks/profile.keys";
+import { useUserBookmarksQuery } from "../hooks/profile.queries";
 import ProfileProjectsSkeleton from "./skeletons/profile-projects-skeleton.component";
 
 const parseNumber = (value: string | null, fallback: number) => {
@@ -60,7 +61,7 @@ export default function ProfileSavedProjectsList() {
     data: bookmarksResponse,
     isLoading,
     isError,
-  } = useUserBookmarks(
+  } = useUserBookmarksQuery(
     {
       page,
       per_page: perPage,
@@ -76,7 +77,7 @@ export default function ProfileSavedProjectsList() {
     return (
       <ErrorState
         message="Failed to fetch bookmarked projects"
-        queryKey={["user", "me", "bookmarks"]}
+        queryKey={profileKeys.bookmarks()}
       />
     );
 

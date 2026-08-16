@@ -23,7 +23,8 @@ import ProfileSidebar from "../components/profile-sidebar.component";
 import ProfileProjectsSkeleton from "../components/skeletons/profile-projects-skeleton.component";
 import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pull-requests-skeleton.component";
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
-import { useProfile } from "../hooks/use-profile.hook";
+import { profileKeys } from "../hooks/profile.keys";
+import { useProfileQuery } from "../hooks/profile.queries";
 import ProfilePullRequests from "./profile-pull-requests.view";
 
 interface PublicProfileViewProps {
@@ -31,7 +32,7 @@ interface PublicProfileViewProps {
 }
 
 export function PublicProfileView({ userId }: PublicProfileViewProps) {
-  const { data: profile, isLoading, isError } = useProfile(userId);
+  const { data: profile, isLoading, isError } = useProfileQuery(userId);
   const { tab, handleTabChange } = useTabNavigation("overview");
 
   if (!profile && isLoading) {
@@ -42,7 +43,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     return (
       <ErrorState
         message="An error has occurred while loading the profile. Please try again later."
-        queryKey={["user", userId]}
+        queryKey={profileKeys.detail(userId)}
         className="mt-20 mb-28"
         buttonText="Back to projects"
         href="/"

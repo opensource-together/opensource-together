@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiLogout } from "react-icons/hi";
 import {
@@ -13,7 +13,10 @@ import {
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
-import useAuth from "@/features/auth/hooks/use-auth.hook";
+import { RiLoader2Fill } from "react-icons/ri";
+import { toast } from "sonner";
+import { useLogoutMutation } from "@/features/auth/hooks/auth.mutations";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import SearchCommand from "@/features/projects/components/search-command.component";
 import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -30,6 +33,7 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
+import { getErrorMessage } from "@/shared/lib/get-error-message";
 
 type MobileNavLink = {
   label: string;
@@ -52,13 +56,23 @@ const DEFAULT_LINKS: MobileNavLink[] = [
 
 export function MobileHeader({ links }: MobileHeaderProps) {
   const pathname = usePathname();
-  const { isAuthenticated, isLoading, currentUser, logout } = useAuth();
+  const router = useRouter();
+  const currentUserQuery = useCurrentUserQuery();
+  const logoutMutation = useLogoutMutation();
+  const currentUser = currentUserQuery.data;
+  const isAuthenticated = !!currentUser;
+  const isLoading = currentUserQuery.isLoading;
   const [isOpen, setIsOpen] = useState(false);
   const resolvedLinks = links ?? (isAuthenticated ? DEFAULT_LINKS : []);
 
-  const handleLogout = () => {
-    logout();
-    setIsOpen(false);
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+      setIsOpen(false);
+      router.push("/");
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Unable to sign out"));
+    }
   };
 
   const handleLinkClick = () => {
@@ -214,11 +228,18 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                           </DropdownMenuItem>
                         </Link>
                         <DropdownMenuItem
-                          onClick={handleLogout}
+                          onClick={() => void handleLogout()}
+                          disabled={logoutMutation.isPending}
                           variant="destructive"
                         >
-                          <HiLogout className="size-4" />
-                          Sign out
+                          {logoutMutation.isPending ? (
+                            <RiLoader2Fill className="size-4 animate-spin" />
+                          ) : (
+                            <HiLogout className="size-4" />
+                          )}
+                          {logoutMutation.isPending
+                            ? "Signing out..."
+                            : "Sign out"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

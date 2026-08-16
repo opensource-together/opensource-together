@@ -1,9 +1,11 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { type QueryKey, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useState } from "react";
 import { HiExclamationCircle } from "react-icons/hi";
 import type { IconType } from "react-icons/lib";
+import { RiLoader2Fill } from "react-icons/ri";
 
 import { Button } from "./button";
 
@@ -13,11 +15,12 @@ interface ErrorStateProps {
   icon?: IconType | React.ComponentType;
   href?: string;
   buttonText?: string;
-  onRetry?: () => void;
+  onRetry?: () => void | Promise<void>;
   retryText?: string;
+  isLoading?: boolean;
   className?: string;
   width?: string;
-  queryKey?: unknown[];
+  queryKey?: QueryKey;
   refetchFn?: () => Promise<unknown>;
 }
 
@@ -29,23 +32,33 @@ export function ErrorState({
   buttonText,
   onRetry,
   retryText = "Try again",
+  isLoading = false,
   className = "",
   width = "w-[400px]",
   queryKey,
   refetchFn,
 }: ErrorStateProps) {
   const queryClient = useQueryClient();
+  const [isRetrying, setIsRetrying] = useState(false);
   const defaultIcon = icon || HiExclamationCircle;
+  const isPending = isLoading || isRetrying;
 
   const handleRetry = async () => {
-    if (onRetry) {
-      onRetry();
-    } else if (queryKey && queryKey.length > 0) {
-      await queryClient.refetchQueries({ queryKey });
-    } else if (refetchFn) {
-      await refetchFn();
-    } else {
-      await queryClient.refetchQueries();
+    if (isPending) return;
+
+    setIsRetrying(true);
+    try {
+      if (onRetry) {
+        await onRetry();
+      } else if (queryKey && queryKey.length > 0) {
+        await queryClient.refetchQueries({ queryKey });
+      } else if (refetchFn) {
+        await refetchFn();
+      } else {
+        await queryClient.refetchQueries();
+      }
+    } finally {
+      setIsRetrying(false);
     }
   };
 
@@ -75,7 +88,14 @@ export function ErrorState({
           </Link>
         )}
         {(onRetry || queryKey || refetchFn) && (
-          <Button onClick={handleRetry}>{retryText}</Button>
+          <Button
+            onClick={() => void handleRetry()}
+            disabled={isPending}
+            aria-busy={isPending}
+          >
+            {isPending && <RiLoader2Fill className="animate-spin" />}
+            {retryText}
+          </Button>
         )}
       </div>
     </div>

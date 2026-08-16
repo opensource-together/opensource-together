@@ -1,8 +1,9 @@
 "use client";
 
+import { RiLoader2Fill } from "react-icons/ri";
+
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -10,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/shared/components/ui/alert-dialog";
+import { Button } from "@/shared/components/ui/button";
 
 interface ProjectImportationConfirmDialogProps {
   open: boolean;
@@ -29,7 +31,12 @@ export function ProjectImportationConfirmDialog({
   onCancel,
 }: ProjectImportationConfirmDialogProps) {
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!isCreating) onOpenChange(nextOpen);
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-3">
@@ -46,10 +53,18 @@ export function ProjectImportationConfirmDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} disabled={isCreating}>
+          <AlertDialogCancel onClick={onCancel} disabled={isCreating}>
+            Cancel
+          </AlertDialogCancel>
+          <Button
+            type="button"
+            onClick={onConfirm}
+            disabled={isCreating}
+            aria-busy={isCreating}
+          >
+            {isCreating && <RiLoader2Fill className="animate-spin" />}
             {isCreating ? "Creating..." : "Create project"}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

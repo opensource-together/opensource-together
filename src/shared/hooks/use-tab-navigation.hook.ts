@@ -2,11 +2,6 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-/**
- * Hook to manage tab navigation with URL synchronization
- * @param defaultTab - The default tab if no URL parameter is present
- * @returns An object containing the current tab and the function to change the tab
- */
 export function useTabNavigation(defaultTab = "overview") {
   const searchParams = useSearchParams();
   const pathname = usePathname();
