@@ -4,7 +4,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   devIndicators: false,
+  // Cloudflare Workers have no sharp: /_next/image would just proxy originals
+  // through the worker on every request (CPU + no edge caching).
+  // Serve original assets directly so they are cached by the browser/CDN.
   images: {
+    unoptimized: true,
     qualities: [25, 50, 75, 85, 100],
     remotePatterns: [
       {
