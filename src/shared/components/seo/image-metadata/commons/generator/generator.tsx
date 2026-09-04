@@ -7,7 +7,7 @@ import { getEdgeCache } from "@/shared/lib/cloudflare-edge-cache";
 
 const FONT_BASE_URL = `${process.env.NEXT_PUBLIC_METADATA_ASSETS_S3_BUCKET}/fonts`;
 
-const FONT_CACHE_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
+const FONT_CACHE_TTL_SECONDS = 60 * 60 * 24 * 30;
 
 interface SatoriFont {
   name: string;
@@ -16,8 +16,7 @@ interface SatoriFont {
   weight: 400 | 500;
 }
 
-// Only the weights actually used by the metadata components
-// (font-weight 400 and 500 in image-metadata-content.tsx / project-image-metadata.tsx).
+// Only the weights used by the OG metadata components (400/500).
 const fontVariants: { name: string; weight: 400 | 500 }[] = [
   { name: "Geist-Regular.ttf", weight: 400 },
   { name: "Geist-Medium.ttf", weight: 500 },

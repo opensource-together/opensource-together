@@ -1,9 +1,6 @@
 import "server-only";
 
-/**
- * Returns the Cloudflare edge cache (`caches.default`) when running on
- * Cloudflare Workers, or `null` elsewhere (e.g. `next dev` on Node.js).
- */
+/** `caches.default` only exists on Cloudflare Workers; returns null elsewhere (e.g. `next dev`). */
 export function getEdgeCache(): Cache | null {
   const caches = globalThis.caches as
     | (CacheStorage & { default?: Cache })

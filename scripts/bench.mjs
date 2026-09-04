@@ -1,29 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Zero-dependency latency benchmark for the Cloudflare Worker build of this app.
+ * Zero-dependency latency benchmark against the workerd preview (pnpm worker:preview).
  *
- * Usage:
- *   pnpm bench [options] [paths...]
+ * Usage: pnpm bench [--base URL] [--duration SEC] [--concurrency N] [--warmup SEC] [paths...]
  *
- * Options:
- *   --base <url>         Base URL (default: http://localhost:8787)
- *   --duration <sec>     Measurement duration per path (default: 10)
- *   --concurrency <n>    Parallel in-flight requests (default: 4)
- *   --warmup <sec>       Warmup duration per path, excluded from results (default: 3)
- *
- * Typical flow:
- *   pnpm worker:build
- *   pnpm worker:preview          # serves the real workerd on http://localhost:8787
- *   pnpm bench -- / /projects/<some-id> /projects/<some-id>/opengraph-image /sitemap.xml
- *
- * Notes:
- *   - Results are WALL-clock latency of the local workerd (Miniflare). Relative
- *     comparisons before/after a change are meaningful; absolute CPU-time numbers
- *     are not. For real per-request CPU time, check the Cloudflare dashboard
- *     (Workers > your worker > Metrics > CPU time per request) or the GraphQL
- *     Analytics API after deploying.
- *   - Keep concurrency low (1-4): the goal is per-request latency, not throughput.
+ * Reports wall-time percentiles; real per-request CPU time is only visible in
+ * the Cloudflare dashboard (Workers > Metrics > CPU Time per Request).
  */
 
 const DEFAULT_BASE = "http://localhost:8787";
@@ -32,7 +15,6 @@ const DEFAULT_CONCURRENCY = 4;
 const DEFAULT_WARMUP = 3;
 
 function parseArgs(rawArgv) {
-  // Strip npm/pnpm `--` separators; they carry no meaning here.
   const argv = rawArgv.filter((arg) => arg !== "--");
   const options = {
     base: DEFAULT_BASE,
@@ -115,7 +97,6 @@ async function runPhase(base, path, durationSeconds, concurrency) {
       } catch (error) {
         errors++;
         lastError = error;
-        // Back off briefly so a dead server does not spin the CPU.
         await new Promise((resolve) => setTimeout(resolve, 250));
       }
     }
@@ -173,7 +154,6 @@ async function main() {
     `Benchmarking ${options.base} — duration=${options.duration}s, concurrency=${options.concurrency}, warmup=${options.warmup}s per path`
   );
 
-  // Fail fast with a readable message if the server is not up.
   try {
     const probe = await fetch(
       `${options.base.replace(/\/+$/, "")}/robots.txt`,

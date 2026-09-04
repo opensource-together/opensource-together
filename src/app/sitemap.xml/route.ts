@@ -20,7 +20,6 @@ interface SitemapEntry {
 }
 
 const PER_PAGE = 100;
-// Hard cap so a huge catalogue can never make the sitemap crawl unbounded.
 const MAX_PAGES = 20;
 const CACHE_TTL_SECONDS = 60 * 60;
 const FETCH_TIMEOUT_MS = 10_000;
@@ -80,7 +79,6 @@ async function getTrendingProjects(): Promise<Project[]> {
     : 1;
 
   if (lastPage > 1) {
-    // Fetch the remaining pages concurrently instead of one-by-one.
     const remainingPages = await Promise.all(
       Array.from({ length: lastPage - 1 }, (_, index) => fetchPage(index + 2))
     );
@@ -157,10 +155,8 @@ async function generateSitemapXml(): Promise<string> {
   return buildXml([...staticEntries(), ...projectEntries]);
 }
 
-// Always execute at request time: the result is cached at the Cloudflare edge
-// (caches.default) with a 1h TTL, so this costs at most one API crawl per
-// data center per hour. A static prerender here would freeze the sitemap at
-// build time.
+// Request-time execution + edge cache (caches.default, 1h TTL):
+// a build-time prerender would freeze the project list at deploy date.
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
@@ -181,7 +177,6 @@ export async function GET(request: Request) {
     };
 
     if (cache) {
-      // Cache the generated XML at the edge so crawlers don't re-crawl the API.
       await cache.put(request.url, new Response(xml, { headers }));
     }
 
