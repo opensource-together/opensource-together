@@ -19,6 +19,7 @@
     "worker:build": "opennextjs-cloudflare build && node scripts/copy-learn-html.js",
     "worker:preview": "opennextjs-cloudflare preview",
     "worker:deploy": "opennextjs-cloudflare deploy",
+    "bench": "node scripts/bench.mjs",
     "test:mock": "tsx --test src/mocks/handlers.mock.test.ts"
   },
   "dependencies": {
@@ -37,7 +38,6 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-query-devtools": "^5.100.9",
-    "@tanstack/react-query-next-experimental": "^5.100.9",
     "@types/react-syntax-highlighter": "^15.5.13",
     "better-auth": "1.6.29",
     "class-variance-authority": "^0.7.1",

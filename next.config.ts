@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   devIndicators: false,
+  // Workers have no sharp: /_next/image would proxy originals through the worker uncached.
   images: {
+    unoptimized: true,
     qualities: [25, 50, 75, 85, 100],
     remotePatterns: [
       {

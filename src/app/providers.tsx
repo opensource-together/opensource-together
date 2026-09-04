@@ -2,7 +2,6 @@
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import type { ReactNode } from "react";
 
 import { OnboardingRedirect } from "@/features/auth/components/onboarding-redirect.component";
@@ -14,9 +13,11 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
       <OnboardingRedirect />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {children}
+      {process.env.NODE_ENV === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
       <MockSessionToggle />
     </QueryClientProvider>
   );
