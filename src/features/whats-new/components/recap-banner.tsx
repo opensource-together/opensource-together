@@ -77,7 +77,6 @@ export function RecapBanner({ compact = false }: { compact?: boolean }) {
           )}
         </Reveal>
       </div>
-
     </div>
   );
 }

@@ -91,7 +91,7 @@ export function WhatsNewPopup() {
           <Link
             href="/whats-new"
             onClick={dismiss}
-            className="group block focus-visible:-outline-offset-4 focus-visible:outline-2 focus-visible:outline-ost-blue-two"
+            className="group block focus-visible:outline-2 focus-visible:outline-ost-blue-two focus-visible:-outline-offset-4"
           >
             <RecapBanner compact />
             <div className="border-muted-black-stroke border-t p-6">
