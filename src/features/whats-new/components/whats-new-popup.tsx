@@ -76,7 +76,7 @@ export function WhatsNewPopup() {
           transition={
             reducedMotion ? { duration: 0 } : badgeItemAppearTransition
           }
-          className="fixed bottom-4 left-4 z-40 max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-87.5 overflow-y-auto rounded-[22px] border border-muted-black-stroke bg-card shadow-xl md:bottom-6 md:left-6"
+          className="fixed right-4 bottom-4 z-40 max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-87.5 overflow-y-auto rounded-[22px] border border-muted-black-stroke bg-card shadow-xl md:right-6 md:bottom-6"
         >
           <Button
             type="button"
