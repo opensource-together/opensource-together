@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { FRONTEND_URL } from "@/config/config";
+import { WhatsNewPopup } from "@/features/whats-new/components/whats-new-popup";
 
 import Footer from "@/shared/components/layout/footer";
 import Header from "@/shared/components/layout/header";
@@ -132,6 +133,7 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <FeatureRequestButton />
+          <WhatsNewPopup />
         </Providers>
       </body>
     </html>
