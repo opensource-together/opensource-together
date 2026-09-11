@@ -52,7 +52,7 @@ export default function ContributorsList({
           <Button
             variant="outline"
             onClick={() => setVisibleCount((c) => c + 30)}
-            aria-label="Load more issues"
+            aria-label="Load more contributors"
           >
             Load more
           </Button>
