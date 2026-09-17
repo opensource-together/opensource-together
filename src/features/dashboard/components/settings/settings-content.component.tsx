@@ -118,7 +118,7 @@ export function SettingsContent() {
       id: "github",
       name: "GitHub",
       description:
-        "Connect GitHub to import personal and organization repositories.",
+        "Connect GitHub to import your repositories and sync contributions.",
       connected: currentUser.connectedProviders?.includes("github") || false,
       url: currentUser.githubUrl,
       icon: RiGithubFill,
@@ -126,7 +126,8 @@ export function SettingsContent() {
     {
       id: "gitlab",
       name: "GitLab",
-      description: "Connect GitLab to import personal and group projects.",
+      description:
+        "Connect GitLab to import your projects and sync contributions.",
       connected: currentUser.connectedProviders?.includes("gitlab") || false,
       url: currentUser.gitlabUrl,
       icon: RiGitlabFill,
@@ -185,44 +186,46 @@ export function SettingsContent() {
                   )}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  {provider.connected && (
-                    <Badge variant="info">Connected</Badge>
-                  )}
-                  {!provider.connected && (
+                  {provider.connected ? (
+                    <>
+                      <Badge variant="info">Connected</Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={signInMutation.isPending}
+                        onClick={() => void handleReconnectAccount(provider.id)}
+                      >
+                        {signInMutation.isPending &&
+                        signInMutation.variables?.provider === provider.id
+                          ? "Reconnecting..."
+                          : "Reconnect"}
+                      </Button>
+                      {(currentUser.connectedProviders?.length ?? 0) > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={unlinkAccountMutation.isPending}
+                          onClick={() => setUnlinkProviderId(provider.id)}
+                        >
+                          {unlinkAccountMutation.isPending
+                            ? "Unlinking..."
+                            : "Unlink"}
+                        </Button>
+                      )}
+                    </>
+                  ) : (
                     <Button
                       variant="outline"
                       size="sm"
                       disabled={linkAccountMutation.isPending}
                       onClick={() => void handleLinkAccount(provider.id)}
                     >
-                      {linkAccountMutation.isPending ? "Linking..." : "Link"}
+                      {linkAccountMutation.isPending &&
+                      linkAccountMutation.variables?.provider === provider.id
+                        ? "Linking..."
+                        : "Link"}
                     </Button>
                   )}
-                  {provider.connected && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={signInMutation.isPending}
-                      onClick={() => void handleReconnectAccount(provider.id)}
-                    >
-                      {signInMutation.isPending
-                        ? "Reconnecting..."
-                        : "Reconnect"}
-                    </Button>
-                  )}
-                  {provider.connected &&
-                    (currentUser.connectedProviders?.length ?? 0) > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={unlinkAccountMutation.isPending}
-                        onClick={() => setUnlinkProviderId(provider.id)}
-                      >
-                        {unlinkAccountMutation.isPending
-                          ? "Unlinking..."
-                          : "Unlink"}
-                      </Button>
-                    )}
                 </div>
               </div>
             ))}

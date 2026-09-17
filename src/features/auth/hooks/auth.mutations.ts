@@ -10,7 +10,7 @@ import {
 import type { AuthProvider } from "../types/auth.type";
 import { authKeys, authMutationKeys } from "./auth.keys";
 
-export interface LinkSocialAccountVariables {
+export interface SocialAuthCallbackVariables {
   provider: AuthProvider;
   callbackURL?: string;
 }
@@ -22,7 +22,7 @@ export interface UnlinkSocialAccountVariables {
 export function useSignInMutation() {
   return useMutation({
     mutationKey: authMutationKeys.signIn(),
-    mutationFn: ({ provider, callbackURL }: LinkSocialAccountVariables) =>
+    mutationFn: ({ provider, callbackURL }: SocialAuthCallbackVariables) =>
       signInWithProvider(provider, callbackURL),
   });
 }
@@ -32,7 +32,7 @@ export function useLinkSocialAccountMutation() {
 
   return useMutation({
     mutationKey: authMutationKeys.linkAccount(),
-    mutationFn: ({ provider, callbackURL }: LinkSocialAccountVariables) =>
+    mutationFn: ({ provider, callbackURL }: SocialAuthCallbackVariables) =>
       linkProvider(provider, callbackURL),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
