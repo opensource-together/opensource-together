@@ -7,6 +7,7 @@ import { setupServer } from "msw/node";
 import type { PullRequestsResponse } from "@/features/profile/types/profile.pull-request.type";
 import type { Project } from "@/features/projects/types/project.type";
 import { transformProjectForPublishedToggle } from "@/features/projects/validations/publish-toggle.validation";
+import type { GitUserRepositoriesResponse } from "@/shared/types/git-repository.type";
 
 import { db } from "./db.mock";
 import { PROJECT_IDS, projectsResponse } from "./fixtures/projects.mock";
@@ -104,6 +105,20 @@ test("serves the project catalogue through list and detail routes", async () => 
   assert.equal(detailResponse.status, 200);
   assert.equal(detail.data.repoUrl, fixture.repoUrl);
   assert.ok(detail.data.repositoryDetails.contributors.length > 0);
+});
+
+test("returns current-user repositories including organization-owned repos", async () => {
+  const response = await fetch(`${BASE_URL}/users/me/repos?provider=github`);
+  const body = (await response.json()) as { data: GitUserRepositoriesResponse };
+  const htmlUrls = body.data.github?.data.map((repo) => repo.html_url) ?? [];
+
+  assert.equal(response.status, 200);
+  assert.ok(
+    htmlUrls.includes(
+      "https://github.com/opensource-together/opensource-together"
+    )
+  );
+  assert.ok(htmlUrls.every((url) => url.includes("/")));
 });
 
 test("returns pull requests in the provider envelope used by the UI", async () => {

@@ -7,6 +7,7 @@ import {
   useDeleteAccountMutation,
   useLinkSocialAccountMutation,
   useLogoutMutation,
+  useSignInMutation,
   useUnlinkSocialAccountMutation,
 } from "@/features/auth/hooks/auth.mutations";
 import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
@@ -29,6 +30,7 @@ export function SettingsContent() {
   const logoutMutation = useLogoutMutation();
   const deleteAccountMutation = useDeleteAccountMutation();
   const linkAccountMutation = useLinkSocialAccountMutation();
+  const signInMutation = useSignInMutation();
   const unlinkAccountMutation = useUnlinkSocialAccountMutation();
   const currentUser = currentUserQuery.data;
 
@@ -95,12 +97,28 @@ export function SettingsContent() {
     }
   };
 
+  const handleReconnectAccount = async (providerId: AuthProvider) => {
+    try {
+      await signInMutation.mutateAsync({
+        provider: providerId,
+        callbackURL: `${window.location.origin}/dashboard/settings`,
+      });
+    } catch (error) {
+      toast.error(
+        getErrorMessage(
+          error,
+          "An error occurred while reconnecting the account"
+        )
+      );
+    }
+  };
+
   const providers = [
     {
       id: "github",
       name: "GitHub",
       description:
-        "Connect GitHub to import your repositories and sync contributions.",
+        "Connect GitHub to import personal and organization repositories.",
       connected: currentUser.connectedProviders?.includes("github") || false,
       url: currentUser.githubUrl,
       icon: RiGithubFill,
@@ -108,8 +126,7 @@ export function SettingsContent() {
     {
       id: "gitlab",
       name: "GitLab",
-      description:
-        "Connect GitLab to import your projects and sync contributions.",
+      description: "Connect GitLab to import personal and group projects.",
       connected: currentUser.connectedProviders?.includes("gitlab") || false,
       url: currentUser.gitlabUrl,
       icon: RiGitlabFill,
@@ -179,6 +196,18 @@ export function SettingsContent() {
                       onClick={() => void handleLinkAccount(provider.id)}
                     >
                       {linkAccountMutation.isPending ? "Linking..." : "Link"}
+                    </Button>
+                  )}
+                  {provider.connected && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={signInMutation.isPending}
+                      onClick={() => void handleReconnectAccount(provider.id)}
+                    >
+                      {signInMutation.isPending
+                        ? "Reconnecting..."
+                        : "Reconnect"}
                     </Button>
                   )}
                   {provider.connected &&

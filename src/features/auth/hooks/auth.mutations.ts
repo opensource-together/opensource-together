@@ -22,7 +22,8 @@ export interface UnlinkSocialAccountVariables {
 export function useSignInMutation() {
   return useMutation({
     mutationKey: authMutationKeys.signIn(),
-    mutationFn: (provider: AuthProvider) => signInWithProvider(provider),
+    mutationFn: ({ provider, callbackURL }: LinkSocialAccountVariables) =>
+      signInWithProvider(provider, callbackURL),
   });
 }
 

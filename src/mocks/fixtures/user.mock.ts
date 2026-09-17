@@ -170,6 +170,20 @@ export const userRepositories: GitUserRepositoryType[] = [
     updated_at: "2026-08-15T09:05:58.000Z",
     pushed_at: "2026-08-05T23:12:01.000Z",
   },
+  {
+    name: "opensource-together",
+    description:
+      "Platform that helps developers find the right open-source projects",
+    stargazers_count: 108,
+    forks_count: 0,
+    open_issues_count: 4,
+    url: "https://api.github.com/repos/opensource-together/opensource-together",
+    logo_url: "https://avatars.githubusercontent.com/u/201234567?v=4",
+    html_url: "https://github.com/opensource-together/opensource-together",
+    created_at: "2025-01-12T10:00:00.000Z",
+    updated_at: "2026-09-03T09:00:00.000Z",
+    pushed_at: "2026-09-03T08:30:00.000Z",
+  },
 ];
 
 export const pullRequests = [
