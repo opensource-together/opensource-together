@@ -7,6 +7,7 @@ import { setupServer } from "msw/node";
 import type { PullRequestsResponse } from "@/features/profile/types/profile.pull-request.type";
 import type { Project } from "@/features/projects/types/project.type";
 import { transformProjectForPublishedToggle } from "@/features/projects/validations/publish-toggle.validation";
+import { extractRepositoryPath } from "@/shared/lib/utils/extract-repo-owner";
 import type { GitUserRepositoriesResponse } from "@/shared/types/git-repository.type";
 
 import { db } from "./db.mock";
@@ -118,7 +119,7 @@ test("returns current-user repositories including organization-owned repos", asy
       "https://github.com/opensource-together/opensource-together"
     )
   );
-  assert.ok(htmlUrls.every((url) => url.includes("/")));
+  assert.ok(htmlUrls.every((url) => extractRepositoryPath(url) != null));
 });
 
 test("returns pull requests in the provider envelope used by the UI", async () => {

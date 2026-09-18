@@ -14,7 +14,7 @@ export default function LoginForm() {
 
   const handleSignIn = async (provider: AuthProvider) => {
     try {
-      await signInMutation.mutateAsync({ provider });
+      await signInMutation.mutateAsync(provider);
     } catch (error) {
       toast.error(getErrorMessage(error, "Unable to sign in"));
     }
@@ -36,16 +36,14 @@ export default function LoginForm() {
             <GitHubButton
               onClick={() => void handleSignIn("github")}
               isLoading={
-                signInMutation.isPending &&
-                pendingProvider?.provider === "github"
+                signInMutation.isPending && pendingProvider === "github"
               }
               disabled={signInMutation.isPending}
             />
             <GitlabButton
               onClick={() => void handleSignIn("gitlab")}
               isLoading={
-                signInMutation.isPending &&
-                pendingProvider?.provider === "gitlab"
+                signInMutation.isPending && pendingProvider === "gitlab"
               }
               disabled={signInMutation.isPending}
             />

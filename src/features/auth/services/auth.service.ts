@@ -9,12 +9,11 @@ import { authClient } from "@/shared/lib/auth-client";
 import type { AuthProvider } from "../types/auth.type";
 
 export async function signInWithProvider(
-  provider: AuthProvider,
-  callbackURL?: string
+  provider: AuthProvider
 ): Promise<void> {
   await authClient.signIn.social({
     provider,
-    callbackURL: callbackURL || `${window.location.origin}/onboarding`,
+    callbackURL: `${window.location.origin}/onboarding`,
   });
 }
 

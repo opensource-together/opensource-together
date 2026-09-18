@@ -7,7 +7,6 @@ import {
   useDeleteAccountMutation,
   useLinkSocialAccountMutation,
   useLogoutMutation,
-  useSignInMutation,
   useUnlinkSocialAccountMutation,
 } from "@/features/auth/hooks/auth.mutations";
 import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
@@ -30,7 +29,6 @@ export function SettingsContent() {
   const logoutMutation = useLogoutMutation();
   const deleteAccountMutation = useDeleteAccountMutation();
   const linkAccountMutation = useLinkSocialAccountMutation();
-  const signInMutation = useSignInMutation();
   const unlinkAccountMutation = useUnlinkSocialAccountMutation();
   const currentUser = currentUserQuery.data;
 
@@ -93,22 +91,6 @@ export function SettingsContent() {
     } catch (error) {
       toast.error(
         getErrorMessage(error, "An error occurred while linking the account")
-      );
-    }
-  };
-
-  const handleReconnectAccount = async (providerId: AuthProvider) => {
-    try {
-      await signInMutation.mutateAsync({
-        provider: providerId,
-        callbackURL: `${window.location.origin}/dashboard/settings`,
-      });
-    } catch (error) {
-      toast.error(
-        getErrorMessage(
-          error,
-          "An error occurred while reconnecting the account"
-        )
       );
     }
   };
@@ -189,17 +171,6 @@ export function SettingsContent() {
                   {provider.connected ? (
                     <>
                       <Badge variant="info">Connected</Badge>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={signInMutation.isPending}
-                        onClick={() => void handleReconnectAccount(provider.id)}
-                      >
-                        {signInMutation.isPending &&
-                        signInMutation.variables?.provider === provider.id
-                          ? "Reconnecting..."
-                          : "Reconnect"}
-                      </Button>
                       {(currentUser.connectedProviders?.length ?? 0) > 1 && (
                         <Button
                           variant="ghost"

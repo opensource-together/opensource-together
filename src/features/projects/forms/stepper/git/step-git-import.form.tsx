@@ -4,10 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import {
-  useLinkSocialAccountMutation,
-  useSignInMutation,
-} from "@/features/auth/hooks/auth.mutations";
+import { useLinkSocialAccountMutation } from "@/features/auth/hooks/auth.mutations";
 import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useInfiniteGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
@@ -50,7 +47,6 @@ export default function StepGitImportForm({
   const pathname = usePathname();
   const { selectRepository } = useProjectCreateStore();
   const linkAccountMutation = useLinkSocialAccountMutation();
-  const signInMutation = useSignInMutation();
   const access = PROVIDER_ACCESS[provider];
 
   const {
@@ -91,19 +87,6 @@ export default function StepGitImportForm({
   }, []);
 
   const handlePrevious = () => router.push("/projects/create");
-
-  const handleReconnect = async () => {
-    try {
-      await signInMutation.mutateAsync({
-        provider,
-        callbackURL: `${window.location.origin}${pathname}`,
-      });
-    } catch (error) {
-      toast.error(
-        getErrorMessage(error, `Unable to reconnect your ${provider} account`)
-      );
-    }
-  };
 
   const handleSubmit = async () => {
     if (selectedRepo) {
@@ -168,7 +151,7 @@ export default function StepGitImportForm({
             {isLoading ? (
               <RepositorySkeleton />
             ) : (
-              repos.map((repo: GitUserRepositoryType) => {
+              repos?.map((repo: GitUserRepositoryType) => {
                 const selected = selectedRepo?.html_url === repo.html_url;
                 const path = extractRepositoryPath(repo.html_url) ?? repo.name;
 
@@ -221,25 +204,14 @@ export default function StepGitImportForm({
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
         <p className="text-muted-foreground text-sm">{access.hint}</p>
-        <div className="flex items-center gap-3">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            disabled={signInMutation.isPending}
-            onClick={() => void handleReconnect()}
-          >
-            {signInMutation.isPending ? "Reconnecting..." : "Reconnect"}
-          </Button>
-          <Link
-            href={access.url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
-          >
-            Manage access
-          </Link>
-        </div>
+        <Link
+          href={access.url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
+        >
+          Manage access
+        </Link>
       </div>
 
       <div className="mt-4">
