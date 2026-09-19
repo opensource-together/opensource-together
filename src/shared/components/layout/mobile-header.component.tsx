@@ -10,6 +10,7 @@ import {
   HiMiniPencilSquare,
   HiMiniSquare2Stack,
   HiPlus,
+  HiSparkles,
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
@@ -63,7 +64,10 @@ export function MobileHeader({ links }: MobileHeaderProps) {
   const isAuthenticated = !!currentUser;
   const isLoading = currentUserQuery.isLoading;
   const [isOpen, setIsOpen] = useState(false);
-  const resolvedLinks = links ?? (isAuthenticated ? DEFAULT_LINKS : []);
+  const resolvedLinks = links ?? [
+    { label: "What's new", icon: HiSparkles, href: "/whats-new" },
+    ...(isAuthenticated ? DEFAULT_LINKS : []),
+  ];
 
   const handleLogout = async () => {
     try {
