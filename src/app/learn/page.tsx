@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { LearnHeroIntro } from "@/features/learn/components/learn-hero-intro.component";
 import { ChapterProgressCard } from "@/shared/components/ui/chapter-progress-card";
 import {
   getHandsOnChapters,
   getLearnChapters,
 } from "../../../content/chapters";
+import { LearnHeroIntro } from "./learn-hero-intro";
 
 export const metadata: Metadata = {
   title: "Learn",

@@ -7,8 +7,8 @@ export function getProjectIssue(
   issueNumber: number,
   context: ApiRequestContext = {}
 ): Promise<Issue> {
-  return apiData<Issue>(`/api/projects/${projectId}/issues/${issueNumber}`, {
-    baseUrl: "",
-    ...context,
-  });
+  return apiData<Issue>(
+    `/projects/${projectId}/issues/${issueNumber}`,
+    context
+  );
 }

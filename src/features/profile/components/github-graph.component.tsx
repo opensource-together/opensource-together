@@ -78,11 +78,7 @@ export default function GithubGraph({ contributionGraph }: GithubGraphProps) {
     setTooltip(null);
   };
 
-  if (
-    !contributionGraph ||
-    !contributionGraph.weeks ||
-    contributionGraph.weeks.length === 0
-  ) {
+  if (!contributionGraph?.weeks || contributionGraph.weeks.length === 0) {
     return (
       <div className="h-full w-full">
         <div>

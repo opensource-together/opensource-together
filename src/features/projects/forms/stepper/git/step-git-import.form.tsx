@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -8,6 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { ErrorState } from "@/shared/components/ui/error-state";
 import { useInfiniteGitUserRepositories } from "@/shared/hooks/use-git-user-repo.hook";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
+import { extractRepositoryPath } from "@/shared/lib/utils/extract-repo-owner";
 import type { GitUserRepositoryType } from "@/shared/types/git-repository.type";
 
 import CustomScrollbar from "../../../components/stepper/custom-scrollbar.component";
@@ -20,6 +22,17 @@ import {
 interface StepGitImportFormProps {
   provider: provider;
 }
+
+const PROVIDER_ACCESS = {
+  github: {
+    hint: "Don't see an organization repository?",
+    url: "https://github.com/settings/applications",
+  },
+  gitlab: {
+    hint: "Don't see a group project?",
+    url: "https://gitlab.com/-/user_settings/applications",
+  },
+} as const;
 
 export default function StepGitImportForm({
   provider,
@@ -34,6 +47,7 @@ export default function StepGitImportForm({
   const pathname = usePathname();
   const { selectRepository } = useProjectCreateStore();
   const linkAccountMutation = useLinkSocialAccountMutation();
+  const access = PROVIDER_ACCESS[provider];
 
   const {
     data: gitReposPages,
@@ -71,10 +85,6 @@ export default function StepGitImportForm({
       window.removeEventListener("resize", update);
     };
   }, []);
-
-  const handleRepositorySelect = (repo: GitUserRepositoryType) => {
-    setSelectedRepo(repo);
-  };
 
   const handlePrevious = () => router.push("/projects/create");
 
@@ -141,39 +151,40 @@ export default function StepGitImportForm({
             {isLoading ? (
               <RepositorySkeleton />
             ) : (
-              repos?.map((repo: GitUserRepositoryType, idx: number) => (
-                <div
-                  key={idx}
-                  className={`flex h-[64px] items-center justify-between px-6 transition-colors ${
-                    selectedRepo?.name === repo.name
-                      ? "bg-black-50"
-                      : "hover:bg-gray-50"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-black text-sm">
-                      {repo.name}
-                    </span>
+              repos?.map((repo: GitUserRepositoryType) => {
+                const selected = selectedRepo?.html_url === repo.html_url;
+                const path = extractRepositoryPath(repo.html_url) ?? repo.name;
+
+                return (
+                  <div
+                    key={repo.html_url}
+                    className={`flex h-[64px] items-center justify-between gap-4 px-6 transition-colors ${
+                      selected ? "bg-black-50" : "hover:bg-gray-50"
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <span className="block truncate font-medium text-black text-sm">
+                        {path}
+                      </span>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-4">
+                      <span className="text-muted-foreground text-xs">
+                        {repo.updated_at
+                          ? new Date(repo.updated_at).toLocaleDateString()
+                          : "N/A"}
+                      </span>
+                      <Button
+                        type="button"
+                        variant={selected ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedRepo(repo)}
+                      >
+                        {selected ? "Selected" : "Select"}
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-muted-foreground text-xs">
-                      {repo.updated_at
-                        ? new Date(repo.updated_at).toLocaleDateString()
-                        : "N/A"}
-                    </span>
-                    <Button
-                      type="button"
-                      variant={
-                        selectedRepo?.name === repo.name ? "default" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => handleRepositorySelect(repo)}
-                    >
-                      {selectedRepo?.name === repo.name ? "Selected" : "Select"}
-                    </Button>
-                  </div>
-                </div>
-              ))
+                );
+              })
             )}
             {isFetchingNextPage && <RepositorySkeleton />}
           </div>
@@ -189,6 +200,18 @@ export default function StepGitImportForm({
             setScrollTop(value);
           }}
         />
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-muted-foreground text-sm">{access.hint}</p>
+        <Link
+          href={access.url}
+          target="_blank"
+          rel="noreferrer"
+          className="text-muted-foreground text-sm underline-offset-4 hover:text-foreground hover:underline"
+        >
+          Manage access
+        </Link>
       </div>
 
       <div className="mt-4">

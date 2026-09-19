@@ -121,7 +121,7 @@ export async function generateMetadata({
     result = await getChapterContent(slug, "hands-on");
   }
 
-  if (!result || !result.chapter) {
+  if (!result?.chapter) {
     return {
       title: "Chapter Not Found",
     };
@@ -149,7 +149,7 @@ export default async function ChapterPage({ params }: PageProps) {
     type = "hands-on";
   }
 
-  if (!result || !result.chapter) {
+  if (!result?.chapter) {
     notFound();
   }
 

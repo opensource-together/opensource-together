@@ -223,8 +223,7 @@ export default function IssueDetailSheet({
                           {displayIssue.author?.login}
                         </div>
                         <div className="text-muted-foreground text-xs">
-                          Opened about {formatTimeAgo(displayIssue.created_at)}{" "}
-                          ago
+                          Opened about {formatTimeAgo(displayIssue.created_at)}
                         </div>
                       </div>
                     </div>
