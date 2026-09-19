@@ -168,32 +168,35 @@ export function SettingsContent() {
                   )}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  {provider.connected && (
-                    <Badge variant="info">Connected</Badge>
-                  )}
-                  {!provider.connected && (
+                  {provider.connected ? (
+                    <>
+                      <Badge variant="info">Connected</Badge>
+                      {(currentUser.connectedProviders?.length ?? 0) > 1 && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={unlinkAccountMutation.isPending}
+                          onClick={() => setUnlinkProviderId(provider.id)}
+                        >
+                          {unlinkAccountMutation.isPending
+                            ? "Unlinking..."
+                            : "Unlink"}
+                        </Button>
+                      )}
+                    </>
+                  ) : (
                     <Button
                       variant="outline"
                       size="sm"
                       disabled={linkAccountMutation.isPending}
                       onClick={() => void handleLinkAccount(provider.id)}
                     >
-                      {linkAccountMutation.isPending ? "Linking..." : "Link"}
+                      {linkAccountMutation.isPending &&
+                      linkAccountMutation.variables?.provider === provider.id
+                        ? "Linking..."
+                        : "Link"}
                     </Button>
                   )}
-                  {provider.connected &&
-                    (currentUser.connectedProviders?.length ?? 0) > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        disabled={unlinkAccountMutation.isPending}
-                        onClick={() => setUnlinkProviderId(provider.id)}
-                      >
-                        {unlinkAccountMutation.isPending
-                          ? "Unlinking..."
-                          : "Unlink"}
-                      </Button>
-                    )}
                 </div>
               </div>
             ))}
