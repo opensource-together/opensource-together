@@ -63,7 +63,7 @@ export default function ProjectCodeOfConduct({
       </SheetTrigger>
       <SheetContent
         responsive
-        responsiveWidth={{ desktop: "w-[540px]" }}
+        responsiveWidth={{ desktop: "w-[540px] lg:w-[700px] xl:w-[800px]" }}
         className="mt-4 mr-4 overflow-hidden rounded-t-[22px] md:h-[97vh] md:rounded-[22px]"
       >
         <div className="flex h-full min-h-0 flex-col">
