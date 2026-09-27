@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { profileKeys } from "@/features/profile/hooks/profile.keys";
 
 import {
@@ -27,8 +28,15 @@ export function useProjectBookmark({
   const bookmarkMutation = useMutation({
     mutationKey: projectMutationKeys.bookmark(),
     mutationFn: () => addProjectBookmark(projectId),
-    onSuccess: async () => {
+    onMutate: () => {
       setIsBookmarked(true);
+      toast.success("Project bookmarked");
+    },
+    onError: () => {
+      setIsBookmarked(false);
+      toast.error("Failed to add bookmark");
+    },
+    onSettled: async () => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: projectKeys.detail(projectId),
@@ -41,8 +49,15 @@ export function useProjectBookmark({
   const removeBookmarkMutation = useMutation({
     mutationKey: projectMutationKeys.removeBookmark(),
     mutationFn: () => deleteProjectBookmark(projectId),
-    onSuccess: async () => {
+    onMutate: () => {
       setIsBookmarked(false);
+      toast.success("Bookmark removed");
+    },
+    onError: () => {
+      setIsBookmarked(true);
+      toast.error("Failed to remove bookmark");
+    },
+    onSettled: async () => {
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: projectKeys.detail(projectId),
