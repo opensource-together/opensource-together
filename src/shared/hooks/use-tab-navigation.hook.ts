@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 
 export function useTabNavigation(
   defaultTab = "overview",
@@ -15,6 +16,8 @@ export function useTabNavigation(
     tab = defaultTab;
   }
 
+  const [, startTransition] = useTransition();
+
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value === defaultTab) {
@@ -22,7 +25,9 @@ export function useTabNavigation(
     } else {
       params.set("tab", value);
     }
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   };
 
   return {
