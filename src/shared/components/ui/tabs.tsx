@@ -41,6 +41,11 @@ function TabsList({
         width: active.offsetWidth,
         visible: true,
       });
+      active.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
     }
   }, []);
 
@@ -83,7 +88,7 @@ function TabsList({
       ref={listRef as unknown as React.Ref<HTMLDivElement>}
       data-slot="tabs-list"
       className={cn(
-        "relative inline-flex min-w-0 touch-pan-y items-end overflow-x-clip overscroll-x-none border-border border-b [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "relative inline-flex min-w-0 touch-pan-y items-end overflow-x-auto overflow-y-hidden overscroll-x-none border-border border-b [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         className
       )}
       {...props}
