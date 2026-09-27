@@ -2,12 +2,18 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export function useTabNavigation(defaultTab = "overview") {
+export function useTabNavigation(
+  defaultTab = "overview",
+  validTabs?: string[]
+) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const tab = searchParams.get("tab") || defaultTab;
+  let tab = searchParams.get("tab") || defaultTab;
+  if (validTabs && !validTabs.includes(tab)) {
+    tab = defaultTab;
+  }
 
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());

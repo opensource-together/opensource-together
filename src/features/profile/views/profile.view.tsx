@@ -30,7 +30,12 @@ import ProfilePullRequests from "./profile-pull-requests.view";
 export default function ProfileView() {
   const currentUserQuery = useCurrentUserQuery();
   const currentUser = currentUserQuery.data;
-  const { tab, handleTabChange } = useTabNavigation("overview");
+  const { tab, handleTabChange } = useTabNavigation("overview", [
+    "overview",
+    "projects",
+    "pull-request",
+    "saved-projects",
+  ]);
 
   if (currentUserQuery.isLoading) return <SkeletonProfileView />;
   if (currentUserQuery.isError || !currentUser)

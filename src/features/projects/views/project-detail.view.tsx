@@ -38,7 +38,13 @@ export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProjectQuery(projectId);
-  const { tab, handleTabChange } = useTabNavigation("overview");
+  const { tab, handleTabChange } = useTabNavigation("overview", [
+    "overview",
+    "contributing",
+    "open-issues",
+    "pull-requests",
+    "contributions",
+  ]);
   const { readme, contributionFile, codeOfConduct } = useDecodedFiles(project);
 
   if (!project && isLoading) {
