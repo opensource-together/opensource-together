@@ -5,4 +5,5 @@ export const EXTERNAL_LINKS = {
   TWITTER: "https://x.com/OpenSTogether",
   LINKEDIN: "https://www.linkedin.com/company/opensource-together",
   OST_Linker: "https://github.com/opensource-together/ost-linker",
+  DOCS: "https://docs.opensource-together.com",
 } as const;

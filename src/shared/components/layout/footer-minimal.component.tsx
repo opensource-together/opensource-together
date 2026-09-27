@@ -13,6 +13,7 @@ export default function FooterMinimal({
   contentClassName?: string;
 }) {
   const navigationLinks = [
+    { name: "Docs", href: EXTERNAL_LINKS.DOCS },
     { name: "GitHub", href: EXTERNAL_LINKS.GITHUB_ORG },
     { name: "X.com", href: EXTERNAL_LINKS.TWITTER },
     { name: "Discord", href: EXTERNAL_LINKS.DISCORD },

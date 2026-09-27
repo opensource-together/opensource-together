@@ -32,6 +32,12 @@ const footerLinks: {
       id: "resources-learn",
     },
     {
+      label: "Docs",
+      href: EXTERNAL_LINKS.DOCS,
+      external: true,
+      id: "resources-docs",
+    },
+    {
       label: "OST Linker",
       href: EXTERNAL_LINKS.OST_Linker,
       external: true,
