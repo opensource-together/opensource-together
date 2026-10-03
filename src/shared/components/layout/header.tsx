@@ -118,23 +118,18 @@ export default function Header() {
             <div onMouseEnter={handleNavItemEnter} className="relative">
               <SearchCommand noHoverBg onOpen={handleNavLeave} />
             </div>
+            <div onMouseEnter={handleNavItemEnter} className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className={pathname === "/whats-new" ? "bg-accent" : undefined}
+              >
+                <Link href="/whats-new">What&apos;s new</Link>
+              </Button>
+            </div>
             {isAuthenticated && (
               <>
-                <div onMouseEnter={handleNavItemEnter} className="relative">
-                  <Link href="/learn">
-                    <Button
-                      variant="ghost"
-                      className={
-                        pathname.startsWith("/learn")
-                          ? "bg-accent hover:bg-accent"
-                          : undefined
-                      }
-                      size="sm"
-                    >
-                      Learn
-                    </Button>
-                  </Link>
-                </div>
                 <div onMouseEnter={handleNavItemEnter} className="relative">
                   <Link href="/dashboard/my-projects">
                     <Button

@@ -27,6 +27,11 @@ const footerLinks: {
   ],
   resources: [
     {
+      label: "What's new",
+      href: "/whats-new",
+      id: "resources-whats-new",
+    },
+    {
       label: "Learn",
       href: "/learn",
       id: "resources-learn",
@@ -137,6 +142,7 @@ export default function Footer() {
     pathname.startsWith("/not-found") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/onboarding") ||
+    pathname === "/whats-new" ||
     isLearnChapterReader ||
     isLearnHubShortFooter ||
     isProfileEditPage;
