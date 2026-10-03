@@ -10,6 +10,7 @@ import {
   HiCodeBracket,
   HiSquare2Stack,
 } from "react-icons/hi2";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { SkeletonProjectCard } from "@/features/projects/components/skeletons/skeleton-project-grid.component";
 import CTAFooter from "@/shared/components/layout/cta-footer";
 import FooterMinimal from "@/shared/components/layout/footer-minimal.component";
@@ -28,7 +29,14 @@ import { shiftWeek } from "../lib/weekly-recap";
 export default function WhatsNewView() {
   const currentWeek = useCurrentWeek();
   const [offset, setOffset] = useState(0);
-  const week = currentWeek ? shiftWeek(currentWeek, offset) : null;
+  const currentUser = useCurrentUserQuery();
+  const isAuthenticated = !!currentUser.data;
+  const visibleOffset = isAuthenticated ? offset : 0;
+  const week = currentWeek ? shiftWeek(currentWeek, visibleOffset) : null;
+
+  useEffect(() => {
+    if (!isAuthenticated) setOffset(0);
+  }, [isAuthenticated]);
   const recap = useWeeklyRecap(week);
   const projects = recap.data ?? [];
   const technologies = [
@@ -42,9 +50,14 @@ export default function WhatsNewView() {
   const Reveal = reducedMotion ? "div" : FadeUp;
 
   useEffect(() => {
-    if (currentWeek && offset === 0 && recap.isSuccess && projects.length > 0)
+    if (
+      currentWeek &&
+      visibleOffset === 0 &&
+      recap.isSuccess &&
+      projects.length > 0
+    )
       markWeekSeen(currentWeek.id);
-  }, [currentWeek, offset, recap.isSuccess, projects.length]);
+  }, [currentWeek, visibleOffset, recap.isSuccess, projects.length]);
 
   return (
     <>
@@ -59,38 +72,61 @@ export default function WhatsNewView() {
             aria-label="Weekly editions"
             className="flex shrink-0 items-center self-end sm:self-auto"
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={!week}
-              aria-label="Previous week"
-              className="size-7"
-              onClick={() => setOffset((value) => value - 1)}
-            >
-              <HiChevronLeft className="size-3.5" />
-            </Button>
-            <span className="min-w-28 px-1 text-center font-mono text-muted-foreground text-xs">
-              {week?.label ?? "…"}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={offset === 0}
-              aria-label="Next week"
-              className="size-7"
-              onClick={() => setOffset((value) => Math.min(0, value + 1))}
-            >
-              <HiChevronRight className="size-3.5" />
-            </Button>
-            {offset < 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs"
-                onClick={() => setOffset(0)}
-              >
-                Today
-              </Button>
+            {isAuthenticated ? (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={!week}
+                  aria-label="Previous week"
+                  className="size-7"
+                  onClick={() => setOffset((value) => value - 1)}
+                >
+                  <HiChevronLeft className="size-3.5" />
+                </Button>
+                <span className="min-w-28 px-1 text-center font-mono text-muted-foreground text-xs">
+                  {week?.label ?? "…"}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={offset === 0}
+                  aria-label="Next week"
+                  className="size-7"
+                  onClick={() => setOffset((value) => Math.min(0, value + 1))}
+                >
+                  <HiChevronRight className="size-3.5" />
+                </Button>
+                {offset < 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => setOffset(0)}
+                  >
+                    Today
+                  </Button>
+                )}
+              </>
+            ) : (
+              <div className="flex flex-col items-end gap-2">
+                <span className="font-mono text-muted-foreground text-xs">
+                  {week?.label ?? "…"}
+                </span>
+                {!currentUser.isPending && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="h-auto whitespace-normal px-2 py-1.5 text-xs"
+                  >
+                    <Link href="/auth/login">
+                      Sign in to browse previous editions{" "}
+                      <HiArrowUpRight className="size-3.5 shrink-0" />
+                    </Link>
+                  </Button>
+                )}
+              </div>
             )}
           </nav>
         </div>
@@ -118,7 +154,11 @@ export default function WhatsNewView() {
           ) : projects.length === 0 ? (
             <EmptyState
               title="A quiet week. Plenty to discover."
-              description="No new projects were added in this period. Explore an earlier edition or find your next contribution in the directory."
+              description={
+                isAuthenticated
+                  ? "No new projects were added in this period. Explore an earlier edition or find your next contribution in the directory."
+                  : "No new projects were added this week. Find your next contribution in the directory."
+              }
               href="/"
               buttonText="Explore projects"
             />

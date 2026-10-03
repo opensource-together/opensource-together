@@ -29,6 +29,7 @@ export function WhatsNewPopup() {
   // Discovery is the right moment for this invitation; keep forms and readers quiet.
   const eligible = pathname === "/";
   const recap = useWeeklyRecap(week, eligible && !seen);
+  const projects = recap.data ?? [];
 
   useEffect(() => {
     if (!week) return;
@@ -50,7 +51,7 @@ export function WhatsNewPopup() {
     !seen &&
     week &&
     recap.isSuccess &&
-    recap.data.length > 0;
+    projects.length > 0;
   const dismiss = () => {
     if (week) markWeekSeen(week.id);
   };
@@ -99,15 +100,15 @@ export function WhatsNewPopup() {
                 {week.label}
               </p>
               <h2 className="font-medium text-lg tracking-tight">
-                {recap.data.length} new{" "}
-                {recap.data.length === 1 ? "repo" : "repos"} to explore.
+                {projects.length} new {projects.length === 1 ? "repo" : "repos"}{" "}
+                to explore.
               </h2>
               <p className="mt-2 line-clamp-2 text-muted-foreground text-sm leading-relaxed">
-                {recap.data
+                {projects
                   .slice(0, 3)
                   .map((project) => project.title)
                   .join(", ")}
-                {recap.data.length > 3 ? ", and more." : "."}
+                {projects.length > 3 ? ", and more." : "."}
               </p>
               <span className="mt-5 flex items-center gap-2 font-medium text-foreground text-sm">
                 Read the brief{" "}

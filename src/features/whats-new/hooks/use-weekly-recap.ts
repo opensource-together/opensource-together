@@ -2,12 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { getProjects } from "@/features/projects/services/project.service";
-import {
-  collectWeeklyProjects,
-  getWeek,
-  type RecapWeek,
-} from "../lib/weekly-recap";
+import { getWeek, type RecapWeek } from "../lib/weekly-recap";
+import { weeklyRecapQueryOptions } from "../lib/weekly-recap-query";
 
 export function useCurrentWeek() {
   const [week, setWeek] = useState<RecapWeek | null>(null);
@@ -24,24 +22,25 @@ export function useCurrentWeek() {
 }
 
 export function useWeeklyRecap(week: RecapWeek | null, enabled = true) {
-  return useQuery({
-    queryKey: ["whats-new", week?.id],
-    enabled: enabled && week !== null,
-    queryFn: ({ signal }) => {
-      if (!week) throw new Error("A recap week is required");
-      return collectWeeklyProjects(week, (page) =>
-        getProjects(
-          {
-            published: true,
-            orderBy: "createdAt",
-            orderDirection: "desc",
-            page,
-            per_page: 100,
-          },
-          { signal }
-        )
-      );
-    },
-    staleTime: 5 * 60_000,
-  });
+  const currentWeek = useCurrentWeek();
+  const currentUser = useCurrentUserQuery();
+  const options = weeklyRecapQueryOptions(
+    week,
+    currentWeek,
+    !!currentUser.data,
+    (page, signal) =>
+      getProjects(
+        {
+          published: true,
+          orderBy: "createdAt",
+          orderDirection: "desc",
+          page,
+          per_page: 100,
+        },
+        { signal }
+      )
+  );
+  const query = useQuery({ ...options, enabled: enabled && options.enabled });
+  // A disabled query can still contain cached data; don't expose a locked edition.
+  return { ...query, data: options.enabled ? query.data : undefined };
 }
