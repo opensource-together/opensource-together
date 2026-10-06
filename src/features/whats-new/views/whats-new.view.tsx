@@ -25,7 +25,6 @@ import { TechStackList } from "@/shared/components/ui/tech-stack-list";
 import { cn } from "@/shared/lib/utils";
 import { WhatsNewHero } from "../components/whats-new-hero";
 import { useCurrentWeek, useWeeklyRecap } from "../hooks/use-weekly-recap";
-import { markWeekSeen } from "../lib/recap-storage";
 import { shiftWeek } from "../lib/weekly-recap";
 
 export default function WhatsNewView() {
@@ -50,16 +49,6 @@ export default function WhatsNewView() {
   ].sort((a, b) => a.name.localeCompare(b.name));
   const reducedMotion = useReducedMotion();
   const Reveal = reducedMotion ? "div" : FadeUp;
-
-  useEffect(() => {
-    if (
-      currentWeek &&
-      visibleOffset === 0 &&
-      recap.isSuccess &&
-      projects.length > 0
-    )
-      markWeekSeen(currentWeek.id);
-  }, [currentWeek, visibleOffset, recap.isSuccess, projects.length]);
 
   return (
     <>

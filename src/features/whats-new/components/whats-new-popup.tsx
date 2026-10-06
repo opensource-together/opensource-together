@@ -98,11 +98,11 @@ export function WhatsNewPopup() {
               className="absolute -top-10 right-0 -z-10 h-auto w-60 -scale-x-100 brightness-75 contrast-200"
             />
             <div className="flex h-full flex-col justify-center px-4 pb-3">
-              <span className="text-muted-foreground text-sm italic leading-none">
+              <span className="text-muted-foreground text-xs italic leading-none">
                 The
               </span>
               <h2
-                className="mt-1 text-2xl leading-[0.95] tracking-tighter"
+                className="mt-1 text-xl leading-[0.95] tracking-tighter"
                 style={{ fontFamily: "Aspekta", fontWeight: 500 }}
               >
                 Open Source
