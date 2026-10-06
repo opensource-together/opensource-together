@@ -1,10 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { HiArrowUpRight, HiXMark } from "react-icons/hi2";
+import { Avatar } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import {
   badgeItemAppearAnimate,
@@ -18,7 +19,14 @@ import {
   markWeekSeen,
   subscribeToSeenWeek,
 } from "../lib/recap-storage";
-import { RecapBanner } from "./recap-banner";
+
+const MAX_LOGOS = 4;
+
+function formatNames(names: string[]) {
+  if (names.length <= 2) return names.join(" and ");
+  const rest = names.length - 2;
+  return `${names.slice(0, 2).join(", ")} and ${rest} ${rest === 1 ? "other" : "others"}`;
+}
 
 export function WhatsNewPopup() {
   const pathname = usePathname();
@@ -77,45 +85,82 @@ export function WhatsNewPopup() {
           transition={
             reducedMotion ? { duration: 0 } : badgeItemAppearTransition
           }
-          className="fixed right-4 bottom-4 z-40 max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-87.5 overflow-y-auto rounded-[22px] border border-muted-black-stroke bg-card shadow-xl md:right-6 md:bottom-6"
+          className="fixed right-4 bottom-4 z-40 w-[calc(100%-2rem)] max-w-80 rounded-2xl border border-muted-black-stroke bg-card p-1.5 shadow-lg md:right-6 md:bottom-6"
         >
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={dismiss}
-            aria-label="Dismiss this week's recap"
-            className="absolute top-2 right-2 z-10 size-8 text-muted-foreground"
-          >
-            <HiXMark className="size-5" />
-          </Button>
-          <Link
-            href="/whats-new"
-            onClick={dismiss}
-            className="group block focus-visible:outline-2 focus-visible:outline-ost-blue-two focus-visible:-outline-offset-4"
-          >
-            <RecapBanner compact />
-            <div className="border-muted-black-stroke border-t p-6">
-              <p className="mb-2 font-mono text-muted-foreground text-xs uppercase tracking-wider">
-                {week.label}
-              </p>
-              <h2 className="font-medium text-lg tracking-tight">
-                {projects.length} new {projects.length === 1 ? "repo" : "repos"}{" "}
-                to explore.
+          <div className="relative isolate h-32 overflow-hidden rounded-[10px] border border-muted-black-stroke bg-card">
+            <Image
+              src="/illustrations/lord-mobile.png"
+              alt=""
+              width={480}
+              height={406}
+              sizes="240px"
+              quality={85}
+              className="absolute -top-10 right-0 -z-10 h-auto w-60 -scale-x-100 brightness-75 contrast-200"
+            />
+            <div className="flex h-full flex-col justify-center px-4 pb-3">
+              <span className="text-muted-foreground text-sm italic leading-none">
+                The
+              </span>
+              <h2
+                className="mt-1 text-2xl leading-[0.95] tracking-tighter"
+                style={{ fontFamily: "Aspekta", fontWeight: 500 }}
+              >
+                Open Source
+                <br />
+                Brief
               </h2>
-              <p className="mt-2 line-clamp-2 text-muted-foreground text-sm leading-relaxed">
-                {projects
-                  .slice(0, 3)
-                  .map((project) => project.title)
-                  .join(", ")}
-                {projects.length > 3 ? ", and more." : "."}
-              </p>
-              <span className="mt-5 flex items-center gap-2 font-medium text-foreground text-sm">
-                Read the brief{" "}
-                <HiArrowUpRight className="size-4 transition-transform motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5" />
+              <span className="mt-1 text-[10px] text-muted-foreground tabular-nums">
+                {week.label}
               </span>
             </div>
-          </Link>
+          </div>
+          <div className="px-2.5 pb-2.5">
+            <div className="relative -mt-3.5 flex items-end justify-between gap-3">
+              <div className="flex -space-x-1" aria-hidden>
+                {projects.slice(0, MAX_LOGOS).map((project) => (
+                  <Avatar
+                    key={project.id || project.publicId}
+                    src={project.logoUrl}
+                    name={project.title}
+                    size="xs"
+                    shape="sharp"
+                    className="size-7 rounded-md bg-card ring-2 ring-card"
+                  />
+                ))}
+                {projects.length > MAX_LOGOS && (
+                  <span className="relative flex size-7 items-center justify-center rounded-md bg-secondary font-medium text-[10px] text-muted-foreground ring-2 ring-card">
+                    +{projects.length - MAX_LOGOS}
+                  </span>
+                )}
+              </div>
+            </div>
+            <p className="mt-3">
+              <span className="font-medium text-base text-foreground">
+                {projects.length} new{" "}
+                {projects.length === 1 ? "project" : "projects"} this week.
+              </span>{" "}
+            </p>
+            <span className="text-muted-foreground text-sm">
+              {formatNames(projects.map((project) => project.title))} just
+              joined OST.
+            </span>
+            <div className="mt-4 flex items-center gap-2">
+              <Button asChild size="sm">
+                <Link href="/whats-new" onClick={dismiss}>
+                  Read the brief
+                </Link>
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={dismiss}
+                className="text-muted-foreground"
+              >
+                Not now
+              </Button>
+            </div>
+          </div>
         </motion.aside>
       )}
     </AnimatePresence>

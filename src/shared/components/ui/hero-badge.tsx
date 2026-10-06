@@ -8,6 +8,7 @@ interface BadgeProps {
   pillLabel?: string;
   description?: string;
   href?: string;
+  external?: boolean;
 }
 
 const HeroBadge: React.FC<BadgeProps> = ({
@@ -15,12 +16,12 @@ const HeroBadge: React.FC<BadgeProps> = ({
   pillLabel = "Discord",
   description = "Join a community of active contributers",
   href = EXTERNAL_LINKS.DISCORD,
+  external = true,
 }) => {
   return (
     <Link
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      {...(external && { target: "_blank", rel: "noopener noreferrer" })}
       className="group"
     >
       <div
