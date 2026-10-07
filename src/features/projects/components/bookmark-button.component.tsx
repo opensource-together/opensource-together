@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { HiBookmark, HiOutlineBookmark } from "react-icons/hi2";
-import { RiLoader2Fill } from "react-icons/ri";
 import { toast } from "sonner";
 import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
 import { Button } from "@/shared/components/ui/button";
@@ -12,18 +11,18 @@ import { useProjectBookmark } from "../hooks/use-project-bookmark";
 
 interface BookmarkButtonProps {
   projectId: string;
-  initialIsBookmarked?: boolean;
+  isBookmarked?: boolean;
 }
 
 export function BookmarkButton({
   projectId,
-  initialIsBookmarked = false,
+  isBookmarked: isBookmarkedProp = false,
 }: BookmarkButtonProps) {
   const router = useRouter();
   const isAuthenticated = !!useCurrentUserQuery().data;
   const { isBookmarked, toggleBookmarkAsync, isPending } = useProjectBookmark({
     projectId,
-    initialIsBookmarked,
+    isBookmarked: isBookmarkedProp,
   });
 
   const handleToggleBookmark = async () => {
@@ -67,9 +66,7 @@ export function BookmarkButton({
             : "Add bookmark"
       }
     >
-      {isPending ? (
-        <RiLoader2Fill className="animate-spin" />
-      ) : isBookmarked ? (
+      {isBookmarked ? (
         <HiBookmark className="text-primary" />
       ) : (
         <HiOutlineBookmark />
