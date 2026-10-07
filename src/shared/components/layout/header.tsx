@@ -140,9 +140,10 @@ export default function Header({ githubStars }: HeaderProps) {
                 </Link>
               </div>
             )}
+            <div onMouseEnter={handleNavItemEnter} className="relative">
+              <GithubStarsButton stars={githubStars} />
+            </div>
           </div>
-
-          <GithubStarsButton stars={githubStars} />
 
           {isLoading ? (
             <SkeletonUserDropdown />

@@ -10,10 +10,11 @@ import {
   HiMiniPencilSquare,
   HiMiniSquare2Stack,
   HiPlus,
+  HiStar,
   HiUser,
   HiUserCircle,
 } from "react-icons/hi2";
-import { RiLoader2Fill } from "react-icons/ri";
+import { RiGithubFill, RiLoader2Fill } from "react-icons/ri";
 import { toast } from "sonner";
 import { useLogoutMutation } from "@/features/auth/hooks/auth.mutations";
 import { useCurrentUserQuery } from "@/features/auth/hooks/auth.queries";
@@ -33,7 +34,9 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/shared/components/ui/sheet";
+import { EXTERNAL_LINKS } from "@/shared/lib/constants";
 import { getErrorMessage } from "@/shared/lib/get-error-message";
+import { formatNumberShort } from "@/shared/lib/utils/format-number";
 
 type MobileNavLink = {
   label: string;
@@ -43,6 +46,7 @@ type MobileNavLink = {
 
 interface MobileHeaderProps {
   links?: MobileNavLink[];
+  githubStars?: number | null;
 }
 
 const DEFAULT_LINKS: MobileNavLink[] = [
@@ -54,7 +58,7 @@ const DEFAULT_LINKS: MobileNavLink[] = [
   },
 ];
 
-export function MobileHeader({ links }: MobileHeaderProps) {
+export function MobileHeader({ links, githubStars }: MobileHeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const currentUserQuery = useCurrentUserQuery();
@@ -162,6 +166,22 @@ export function MobileHeader({ links }: MobileHeaderProps) {
                       </Link>
                     );
                   })}
+                  <a
+                    href={EXTERNAL_LINKS.GITHUB_REPO}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleLinkClick}
+                    className="flex items-center gap-2 rounded-lg py-2 pl-2 font-medium text-muted-foreground text-sm transition hover:bg-accent"
+                  >
+                    <RiGithubFill className="size-4" />
+                    Star on GitHub
+                    {githubStars != null && (
+                      <span className="flex items-center gap-0.5 tabular-nums">
+                        <HiStar className="size-3.5" />
+                        {formatNumberShort(githubStars)}
+                      </span>
+                    )}
+                  </a>
                   {!isAuthenticated && (
                     <Link
                       href="/auth/login"
