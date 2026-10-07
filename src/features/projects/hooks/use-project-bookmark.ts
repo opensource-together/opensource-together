@@ -1,77 +1,68 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { profileKeys } from "@/features/profile/hooks/profile.keys";
 
 import {
   addProjectBookmark,
   deleteProjectBookmark,
 } from "../services/project.service";
+import type { Project } from "../types/project.type";
 import { projectKeys, projectMutationKeys } from "./project.keys";
 
 interface UseProjectBookmarkOptions {
   projectId: string;
-  initialIsBookmarked?: boolean;
+  isBookmarked?: boolean;
 }
 
 export function useProjectBookmark({
   projectId,
-  initialIsBookmarked = false,
+  isBookmarked = false,
 }: UseProjectBookmarkOptions) {
   const queryClient = useQueryClient();
-  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
-
-  useEffect(() => {
-    setIsBookmarked(initialIsBookmarked);
-  }, [initialIsBookmarked]);
 
   const bookmarkMutation = useMutation({
     mutationKey: projectMutationKeys.bookmark(),
-    mutationFn: () => addProjectBookmark(projectId),
-    onSuccess: async () => {
-      setIsBookmarked(true);
-      await Promise.all([
+    mutationFn: async (nextIsBookmarked: boolean) => {
+      if (nextIsBookmarked) {
+        await addProjectBookmark(projectId);
+      } else {
+        await deleteProjectBookmark(projectId);
+      }
+    },
+    onMutate: async (nextIsBookmarked) => {
+      const detailKey = projectKeys.detail(projectId);
+      await queryClient.cancelQueries({ queryKey: detailKey, exact: true });
+      const previous = queryClient.getQueryData<Project>(detailKey);
+      queryClient.setQueryData<Project>(
+        detailKey,
+        (old) => old && { ...old, isBookmarked: nextIsBookmarked }
+      );
+      return { previous };
+    },
+    onError: (_error, _nextIsBookmarked, context) => {
+      queryClient.setQueryData(
+        projectKeys.detail(projectId),
+        context?.previous
+      );
+    },
+    onSettled: () =>
+      Promise.all([
         queryClient.invalidateQueries({
           queryKey: projectKeys.detail(projectId),
         }),
         queryClient.invalidateQueries({ queryKey: profileKeys.bookmarks() }),
-      ]);
-    },
+      ]),
   });
 
-  const removeBookmarkMutation = useMutation({
-    mutationKey: projectMutationKeys.removeBookmark(),
-    mutationFn: () => deleteProjectBookmark(projectId),
-    onSuccess: async () => {
-      setIsBookmarked(false);
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: projectKeys.detail(projectId),
-        }),
-        queryClient.invalidateQueries({ queryKey: profileKeys.bookmarks() }),
-      ]);
-    },
-  });
-
-  const isPending =
-    bookmarkMutation.isPending || removeBookmarkMutation.isPending;
+  const isPending = bookmarkMutation.isPending;
 
   const toggleBookmarkAsync = useCallback(async () => {
     if (!projectId || isPending) return false;
 
-    if (isBookmarked) {
-      await removeBookmarkMutation.mutateAsync();
-    } else {
-      await bookmarkMutation.mutateAsync();
-    }
+    await bookmarkMutation.mutateAsync(!isBookmarked);
 
     return true;
-  }, [
-    bookmarkMutation.mutateAsync,
-    isBookmarked,
-    isPending,
-    projectId,
-    removeBookmarkMutation.mutateAsync,
-  ]);
+  }, [bookmarkMutation.mutateAsync, isBookmarked, isPending, projectId]);
 
   return {
     isBookmarked,
