@@ -28,6 +28,10 @@ pnpm type-check
 pnpm test:mock
 ```
 
+Pull requests must target `develop`, not `main`. Create each contribution from
+the latest `develop` branch and keep each pull request independent and focused
+on a single issue.
+
 Keep pull requests small and purposeful. For visual changes, include before and
 after screenshots. Avoid unrelated formatting or refactors.
 

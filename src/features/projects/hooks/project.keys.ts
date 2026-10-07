@@ -21,5 +21,4 @@ export const projectMutationKeys = {
   deleteImage: () => ["projects", "delete-image"] as const,
   claim: () => ["projects", "claim"] as const,
   bookmark: () => ["projects", "bookmark"] as const,
-  removeBookmark: () => ["projects", "remove-bookmark"] as const,
 };

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import { HiPlus } from "react-icons/hi2";
 
+import GithubStarsButton from "@/shared/components/layout/github-stars-button.component";
 import HeaderBreadcrumb from "@/shared/components/layout/header-breadcrumb.component";
 import LogoDropdown from "@/shared/components/layout/logo-dropdown.component";
 import { MobileHeader } from "@/shared/components/layout/mobile-header.component";
@@ -17,7 +18,11 @@ import { Button } from "@/shared/components/ui/button";
 import { SkeletonUserDropdown } from "@/shared/components/ui/skeleton-header";
 import UserDropdown from "@/shared/components/ui/user-dropdown.component";
 
-export default function Header() {
+interface HeaderProps {
+  githubStars: number | null;
+}
+
+export default function Header({ githubStars }: HeaderProps) {
   const pathname = usePathname();
   const currentUserQuery = useCurrentUserQuery();
   const isAuthenticated = !!currentUserQuery.data;
@@ -71,7 +76,7 @@ export default function Header() {
 
   return (
     <>
-      <MobileHeader />
+      <MobileHeader githubStars={githubStars} />
 
       <header className="relative sticky top-0 z-40 hidden justify-between px-10 pt-4 pb-9 md:flex">
         <div
@@ -119,39 +124,25 @@ export default function Header() {
               <SearchCommand noHoverBg onOpen={handleNavLeave} />
             </div>
             {isAuthenticated && (
-              <>
-                <div onMouseEnter={handleNavItemEnter} className="relative">
-                  <Link href="/learn">
-                    <Button
-                      variant="ghost"
-                      className={
-                        pathname.startsWith("/learn")
-                          ? "bg-accent hover:bg-accent"
-                          : undefined
-                      }
-                      size="sm"
-                    >
-                      Learn
-                    </Button>
-                  </Link>
-                </div>
-                <div onMouseEnter={handleNavItemEnter} className="relative">
-                  <Link href="/dashboard/my-projects">
-                    <Button
-                      variant="ghost"
-                      className={
-                        pathname.startsWith("/dashboard")
-                          ? "bg-accent hover:bg-accent"
-                          : undefined
-                      }
-                      size="sm"
-                    >
-                      My Projects
-                    </Button>
-                  </Link>
-                </div>
-              </>
+              <div onMouseEnter={handleNavItemEnter} className="relative">
+                <Link href="/dashboard/my-projects">
+                  <Button
+                    variant="ghost"
+                    className={
+                      pathname.startsWith("/dashboard")
+                        ? "bg-accent hover:bg-accent"
+                        : undefined
+                    }
+                    size="sm"
+                  >
+                    My Projects
+                  </Button>
+                </Link>
+              </div>
             )}
+            <div onMouseEnter={handleNavItemEnter} className="relative">
+              <GithubStarsButton stars={githubStars} />
+            </div>
           </div>
 
           {isLoading ? (

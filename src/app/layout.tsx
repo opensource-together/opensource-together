@@ -5,8 +5,8 @@ import { FRONTEND_URL } from "@/config/config";
 
 import Footer from "@/shared/components/layout/footer";
 import Header from "@/shared/components/layout/header";
-import { FeatureRequestButton } from "@/shared/components/ui/feature-request-button.component";
 import { Toaster } from "@/shared/components/ui/sonner";
+import { getGithubRepoStars } from "@/shared/lib/github-stars";
 
 import "../../public/fonts/font-face.css";
 import "./globals.css";
@@ -114,11 +114,13 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const githubStars = await getGithubRepoStars();
+
   return (
     <html
       suppressHydrationWarning
@@ -127,11 +129,10 @@ export default function RootLayout({
     >
       <body suppressHydrationWarning>
         <Providers>
-          <Header />
+          <Header githubStars={githubStars} />
           {children}
           <Footer />
           <Toaster />
-          <FeatureRequestButton />
         </Providers>
       </body>
     </html>

@@ -64,7 +64,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
       <div className="flex items-center gap-2">
         {published ? (
           <>
-            <BookmarkButton projectId={id} initialIsBookmarked={isBookmarked} />
+            <BookmarkButton projectId={id} isBookmarked={isBookmarked} />
             <ClaimProjectButton project={project} />
             <Link
               href={repoUrl || ""}
@@ -77,10 +77,7 @@ export function ProjectMobileHero({ project }: ProjectHeroProps) {
         ) : (
           <>
             {isBookmarked && (
-              <BookmarkButton
-                projectId={id}
-                initialIsBookmarked={isBookmarked}
-              />
+              <BookmarkButton projectId={id} isBookmarked={isBookmarked} />
             )}
             <Button
               variant="outline"
@@ -166,10 +163,7 @@ export default function ProjectHero({
             <div className="flex items-center gap-2">
               {published ? (
                 <>
-                  <BookmarkButton
-                    projectId={id}
-                    initialIsBookmarked={isBookmarked}
-                  />
+                  <BookmarkButton projectId={id} isBookmarked={isBookmarked} />
                   <ClaimProjectButton project={project} />
                   <Link
                     href={repoUrl || ""}
@@ -184,7 +178,7 @@ export default function ProjectHero({
                   {isBookmarked && (
                     <BookmarkButton
                       projectId={id}
-                      initialIsBookmarked={isBookmarked}
+                      isBookmarked={isBookmarked}
                     />
                   )}
                   <Button
