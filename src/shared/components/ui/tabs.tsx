@@ -108,13 +108,30 @@ function TabsTrigger({
   className,
   count,
   children,
+  onKeyDown,
   ...props
 }: TabsTriggerProps) {
+  // Tab / Shift+Tab move between tabs; at either end, native focus leaves the tablist.
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    onKeyDown?.(e);
+    if (e.defaultPrevented || e.key !== "Tab") return;
+    const tabs = Array.from(
+      e.currentTarget
+        .closest('[role="tablist"]')
+        ?.querySelectorAll<HTMLElement>('[role="tab"]:not([disabled])') ?? []
+    );
+    const next = tabs[tabs.indexOf(e.currentTarget) + (e.shiftKey ? -1 : 1)];
+    if (!next) return;
+    e.preventDefault();
+    next.focus();
+  };
+
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
+      onKeyDown={handleKeyDown}
       className={cn(
-        "group mr-2 inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap px-2 py-1.5 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "group mr-2 inline-flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-sm px-2 py-1.5 font-medium text-muted-foreground text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-primary [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -136,7 +153,10 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      className={cn(
+        "flex-1 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        className
+      )}
       {...props}
     />
   );
