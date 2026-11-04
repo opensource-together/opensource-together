@@ -27,10 +27,17 @@ import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pul
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import ProfilePullRequests from "./profile-pull-requests.view";
 
+const PROFILE_TABS = [
+  "overview",
+  "projects",
+  "pull-request",
+  "saved-projects",
+] as const;
+
 export default function ProfileView() {
   const currentUserQuery = useCurrentUserQuery();
   const currentUser = currentUserQuery.data;
-  const { tab, handleTabChange } = useTabNavigation("overview");
+  const { tab, handleTabChange } = useTabNavigation("overview", PROFILE_TABS);
 
   if (currentUserQuery.isLoading) return <SkeletonProfileView />;
   if (currentUserQuery.isError || !currentUser)

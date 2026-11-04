@@ -31,9 +31,14 @@ interface PublicProfileViewProps {
   userId: string;
 }
 
+const PUBLIC_PROFILE_TABS = ["overview", "projects", "pull-requests"] as const;
+
 export function PublicProfileView({ userId }: PublicProfileViewProps) {
   const { data: profile, isLoading, isError } = useProfileQuery(userId);
-  const { tab, handleTabChange } = useTabNavigation("overview");
+  const { tab, handleTabChange } = useTabNavigation(
+    "overview",
+    PUBLIC_PROFILE_TABS
+  );
 
   if (!profile && isLoading) {
     return <SkeletonProfileView />;

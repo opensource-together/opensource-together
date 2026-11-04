@@ -2,14 +2,21 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export function useTabNavigation(defaultTab = "overview") {
+import { resolveTab } from "@/shared/lib/utils/resolve-tab";
+
+export function useTabNavigation(
+  defaultTab: string,
+  allowedTabs: readonly string[]
+) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
-  const tab = searchParams.get("tab") || defaultTab;
+  const tab = resolveTab(searchParams.get("tab"), defaultTab, allowedTabs);
 
   const handleTabChange = (value: string) => {
+    if (!allowedTabs.includes(value)) return;
+
     const params = new URLSearchParams(searchParams.toString());
     if (value === defaultTab) {
       params.delete("tab");
