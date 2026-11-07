@@ -19,7 +19,7 @@
     "worker:build": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion && node scripts/copy-learn-html.js",
     "worker:preview": "opennextjs-cloudflare preview",
     "worker:deploy": "opennextjs-cloudflare deploy",
-    "test:mock": "tsx --test src/mocks/handlers.mock.test.ts src/shared/lib/utils/resolve-tab.test.ts"
+    "test:mock": "tsx --test src/mocks/handlers.mock.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
