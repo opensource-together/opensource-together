@@ -27,10 +27,17 @@ import { ProfilePullRequestsSkeleton } from "../components/skeletons/profile-pul
 import SkeletonProfileView from "../components/skeletons/skeleton-profile-view.component";
 import ProfilePullRequests from "./profile-pull-requests.view";
 
+const PROFILE_TABS = [
+  "overview",
+  "projects",
+  "pull-requests",
+  "saved-projects",
+] as const;
+
 export default function ProfileView() {
   const currentUserQuery = useCurrentUserQuery();
   const currentUser = currentUserQuery.data;
-  const { tab, handleTabChange } = useTabNavigation("overview");
+  const { tab, handleTabChange } = useTabNavigation("overview", PROFILE_TABS);
 
   if (currentUserQuery.isLoading) return <SkeletonProfileView />;
   if (currentUserQuery.isError || !currentUser)
@@ -54,7 +61,7 @@ export default function ProfileView() {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="pull-request">Pull Requests</TabsTrigger>
+          <TabsTrigger value="pull-requests">Pull Requests</TabsTrigger>
           <TabsTrigger value="saved-projects">Bookmarked</TabsTrigger>
         </TabsList>
 
@@ -78,7 +85,7 @@ export default function ProfileView() {
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="pull-request" className="mt-6">
+        <TabsContent value="pull-requests" className="mt-6">
           <Suspense fallback={<ProfilePullRequestsSkeleton />}>
             <ProfilePullRequests />
           </Suspense>

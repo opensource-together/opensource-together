@@ -34,11 +34,19 @@ interface ProjectDetailViewProps {
   projectId: string;
 }
 
+const PROJECT_TABS = [
+  "overview",
+  "contributing",
+  "open-issues",
+  "pull-requests",
+  "contributions",
+] as const;
+
 export default function ProjectDetailView({
   projectId,
 }: ProjectDetailViewProps) {
   const { data: project, isLoading, isError } = useProjectQuery(projectId);
-  const { tab, handleTabChange } = useTabNavigation("overview");
+  const { tab, handleTabChange } = useTabNavigation("overview", PROJECT_TABS);
   const { readme, contributionFile, codeOfConduct } = useDecodedFiles(project);
 
   if (!project && isLoading) {
